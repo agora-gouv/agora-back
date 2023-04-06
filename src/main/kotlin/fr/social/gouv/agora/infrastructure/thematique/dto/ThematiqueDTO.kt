@@ -7,13 +7,14 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import org.hibernate.Hibernate
 import java.io.Serializable
+import java.util.UUID
 
 @Entity
 data class ThematiqueDTO(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @JsonProperty("id")
-    val id: Int,
+    val id: UUID,
     @JsonProperty("label")
     var label: String,
     @JsonProperty("picto")
