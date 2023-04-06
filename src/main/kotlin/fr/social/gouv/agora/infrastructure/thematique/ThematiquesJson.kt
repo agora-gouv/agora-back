@@ -9,7 +9,7 @@ data class ThematiquesJson(
 
 data class ThematiqueJson(
     @JsonProperty("id")
-    val id: Int,
+    val id: String,
     @JsonProperty("label")
     val label: String,
     @JsonProperty("picto")

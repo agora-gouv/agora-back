@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.util.*
 
 
 @ExtendWith(SpringExtension::class)
@@ -45,14 +46,14 @@ internal class ThematiqueRepositoryImplTest {
     private lateinit var cacheManager: CacheManager
 
     private val thematique = Thematique(
-        id = 1337,
+        id = "1337",
         label = "label",
         picto = "picto",
         color = "color",
     )
 
     private val thematiqueDto = ThematiqueDTO(
-        id = 9999,
+        id = UUID.randomUUID(),
         label = "parsedLabel",
         picto = "parsedPicto",
         color = "parsedColor",
