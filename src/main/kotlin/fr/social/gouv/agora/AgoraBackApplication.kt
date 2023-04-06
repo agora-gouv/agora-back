@@ -66,6 +66,7 @@ class JpaConfig {
 class RedisConfig {
 
     companion object {
+        const val DEFAULT_REDIS_USER = "default"
         const val DEFAULT_REDIS_PORT = 6379
     }
 
@@ -76,8 +77,8 @@ class RedisConfig {
             try {
                 val redisURI = URI.create(redisUrl)
                 val userInfo = redisURI.userInfo.split(":")
-                config.username = userInfo[0]
-                config.setPassword(userInfo[0])
+                config.username = userInfo[0].takeUnless { it.isEmpty() } ?: DEFAULT_REDIS_USER
+                config.setPassword(userInfo[1])
                 config.hostName = redisURI.host
                 config.port = redisURI.port
             } catch (e: IllegalArgumentException) {
