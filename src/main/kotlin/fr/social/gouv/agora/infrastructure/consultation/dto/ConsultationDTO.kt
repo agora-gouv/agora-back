@@ -1,7 +1,5 @@
 package fr.social.gouv.agora.infrastructure.consultation.dto
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import fr.social.gouv.agora.infrastructure.thematique.dto.ThematiqueDTO
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import java.io.Serializable
@@ -11,40 +9,27 @@ import java.util.*
 data class ConsultationDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JsonProperty("id")
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
-    @JsonProperty("title")
     @Column(columnDefinition = "TEXT")
-    var title: String,
-    @JsonProperty("abstract")
+    val title: String,
     @Column(columnDefinition = "TEXT")
-    var abstract: String,
-    @JsonProperty("start_date")
-    var start_date: Date,
-    @JsonProperty("end_date")
-    var end_date: Date,
-    @JsonProperty("cover")
+    val abstract: String,
+    val start_date: Date,
+    val end_date: Date,
     @Column(columnDefinition = "TEXT")
-    var cover: String,
-    @JsonProperty("questions_count")
+    val cover: String,
     @Column(columnDefinition = "TEXT")
-    var questions_count: String,
-    @JsonProperty("estimated_time")
+    val questions_count: String,
     @Column(columnDefinition = "TEXT")
-    var estimated_time: String,
-    @JsonProperty("participant_count_goal")
-    var participant_count_goal: Int,
-    @JsonProperty("description")
+    val estimated_time: String,
+    val participant_count_goal: Int,
     @Column(columnDefinition = "TEXT")
-    var description: String,
-    @JsonProperty("tips_description")
+    val description: String,
     @Column(columnDefinition = "TEXT")
-    var tips_description: String,
-    @JsonProperty("id_thematique")
-    @OneToOne(cascade = [CascadeType.REFRESH])
-    @JoinColumn(name = "id_thematique", referencedColumnName = "id")
-    var thematique: ThematiqueDTO,
+    val tips_description: String,
+    @JoinTable(joinColumns = [JoinColumn(name = "id_thematique", table = "thematiques", referencedColumnName = "id")])
+    val id_thematique: UUID,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -61,6 +46,6 @@ data class ConsultationDTO(
         return this::class.simpleName + "(id = $id , title = $title , abstract = $abstract , " +
                 "start_date = $start_date, end_date=$end_date, cover=$cover, questions_count=$questions_count, " +
                 "estimated_time=$estimated_time, participant_count_goal=$participant_count_goal, " +
-                "description=$description, tips_description=$tips_description, id_thematique=${thematique.id})"
+                "description=$description, tips_description=$tips_description, id_thematique=$id_thematique)"
     }
 }

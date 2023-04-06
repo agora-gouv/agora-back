@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.infrastructure.thematique.dto
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import java.io.Serializable
@@ -10,16 +9,12 @@ import java.util.*
 data class ThematiqueDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JsonProperty("id")
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
-    @JsonProperty("label")
     @Column(columnDefinition = "TEXT")
     var label: String,
-    @JsonProperty("picto")
     @Column(columnDefinition = "TEXT")
     var picto: String,
-    @JsonProperty("color")
     @Column(columnDefinition = "TEXT")
     var color: String
 ) : Serializable {
