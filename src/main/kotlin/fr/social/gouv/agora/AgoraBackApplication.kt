@@ -18,8 +18,8 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.stereotype.Component
+import java.net.URI
 import javax.sql.DataSource
-
 
 @SpringBootApplication
 class AgoraBackApplication
@@ -45,9 +45,17 @@ class JpaConfig {
     fun dataSource(): DataSource {
         val dataSourceBuilder = DataSourceBuilder.create()
         dataSourceBuilder.driverClassName("org.postgresql.Driver")
-        dataSourceBuilder.url(System.getenv("DATABASE_URL"))
-        dataSourceBuilder.username(System.getenv("DATABASE_USER"))
-        dataSourceBuilder.password(System.getenv("DATABASE_PASSWORD"))
+        System.getenv("DATABASE_URL")?.let { databaseUrl ->
+            try {
+                val databaseURI = URI.create(databaseUrl)
+                dataSourceBuilder.url("jdbc:${databaseUrl.replace("${databaseURI.userInfo}@", "")}")
+                val userInfo = databaseURI.userInfo.split(":")
+                dataSourceBuilder.username(userInfo[0])
+                dataSourceBuilder.password(userInfo[1])
+            } catch (e: IllegalArgumentException) {
+                println("Invalid Database URL: $databaseUrl")
+            }
+        }
         return dataSourceBuilder.build()
     }
 }
@@ -65,8 +73,16 @@ class RedisConfig {
     fun getConnectionFactory(): JedisConnectionFactory {
         val config = RedisStandaloneConfiguration()
         System.getenv("REDIS_URL")?.let { redisUrl ->
-            config.hostName = redisUrl.substringAfter("redis://").substringBeforeLast(":")
-            config.port = redisUrl.substringAfterLast(":").toIntOrNull() ?: DEFAULT_REDIS_PORT
+            try {
+                val redisURI = URI.create(redisUrl)
+                val userInfo = redisURI.userInfo.split(":")
+                config.username = userInfo[0]
+                config.setPassword(userInfo[0])
+                config.hostName = redisURI.host
+                config.port = redisURI.port
+            } catch (e: IllegalArgumentException) {
+                println("Invalid Redis URL: $redisUrl")
+            }
         }
         return JedisConnectionFactory(config)
     }
