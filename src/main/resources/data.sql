@@ -54,19 +54,19 @@ INSERT INTO thematiques(id, label, picto, color) VALUES (
     '#FFE1E7F3'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultations(id, title, abstract, end_date, cover, question_count, estimated_time, participant_count_goal, description, tips_description, id_thematique) VALUES (
+INSERT INTO consultations(id, title, abstract, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, id_thematique) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'Développer le covoiturage',
     'Comment mutualiser au mieux les trajets pour l''environnement et le pouvoir d''achat des Français ?',
     '2024-01-23',
-    '/images/covoiturage.svg',
+    'https://betagouv.github.io/agora-content/covoiturage.svg',
     '5 à 10 questions',
     '5 minutes',
     30000,
     '<body>La description avec textes <b>en gras</b> et potentiellement des <a href=\"https://google.fr\">liens</a><br/><br/><ul><li>example1 <b>en gras</b></li><li>example2</li></ul></body>',
     '<body>Qui peut aussi être du texte <i>riche</i></body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url;
 
 INSERT INTO questions(id, label, ordre, type, id_consultation) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733301',
