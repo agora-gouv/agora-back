@@ -15,7 +15,7 @@ data class ConsultationDTO(
     val title: String,
     @Column(columnDefinition = "TEXT")
     val abstract: String,
-    val start_date: Date,
+    val start_date: Date?,
     val end_date: Date,
     @Column(columnDefinition = "TEXT")
     val cover: String,

@@ -9,5 +9,5 @@ import java.util.*
 @Repository
 interface ConsultationDatabaseRepository: CrudRepository<ConsultationDTO, UUID> {
     @Query(value = "SELECT * FROM consultations WHERE id = ?1", nativeQuery = true)
-    fun getConsultation(id: UUID): ConsultationDTO
+    fun getConsultation(id: UUID): ConsultationDTO?
 }

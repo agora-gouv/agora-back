@@ -47,20 +47,20 @@ internal class ThematiqueRepositoryImplTest {
 
     private val thematique = Thematique(
         id = "1337",
-        label = "label",
-        picto = "picto",
-        color = "color",
+        label = "domain-label",
+        picto = "domain-picto",
+        color = "domain-color",
     )
 
     private val thematiqueDto = ThematiqueDTO(
         id = UUID.randomUUID(),
-        label = "parsedLabel",
-        picto = "parsedPicto",
-        color = "parsedColor",
+        label = "dto-label",
+        picto = "dto-picto",
+        color = "dto-color",
     )
 
     @BeforeEach
-    fun cleanCache() {
+    fun setUp() {
         cacheManager.getCache(CACHE_NAME)?.clear()
     }
 
@@ -79,7 +79,7 @@ internal class ThematiqueRepositoryImplTest {
     }
 
     @Test
-    fun `getThematiqueList - when has cache - should return parsed entity from databaseRepository calling it only once`() {
+    fun `getThematiqueList - when has cache - should return parsed entity from cache`() {
         // Given
         given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDto))
         given(thematiqueMapper.toDomain(thematiqueDto)).willReturn(thematique)
