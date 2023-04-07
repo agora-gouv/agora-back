@@ -62,7 +62,7 @@ class ConsultationRepositoryImpl(
         abstract = "",
         start_date = null,
         end_date = Date(0),
-        cover = "",
+        cover_url = "",
         question_count = "",
         estimated_time = "",
         participant_count_goal = 0,

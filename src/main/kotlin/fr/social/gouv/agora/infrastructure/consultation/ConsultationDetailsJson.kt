@@ -7,6 +7,8 @@ data class ConsultationDetailsJson(
     val id: String,
     @JsonProperty("thematique_id")
     val id_thematique: String,
+    @JsonProperty("title")
+    val title: String,
     @JsonProperty("cover")
     val cover: String,
     @JsonProperty("end_date")
