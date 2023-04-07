@@ -3,7 +3,7 @@ package fr.social.gouv.agora.infrastructure.consultation.repository
 import fr.social.gouv.agora.domain.Consultation
 import fr.social.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationRepositoryImpl.Companion.CACHE_NAME
-import fr.social.gouv.agora.usecase.consultation.ConsultationRepository
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationRepository
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Component
@@ -63,7 +63,7 @@ class ConsultationRepositoryImpl(
         start_date = null,
         end_date = Date(0),
         cover = "",
-        questions_count = "",
+        question_count = "",
         estimated_time = "",
         participant_count_goal = 0,
         description = "",

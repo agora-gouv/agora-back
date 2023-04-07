@@ -54,12 +54,12 @@ INSERT INTO thematiques(id, label, picto, color) VALUES (
     '#FFE1E7F3'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultations(id, title, abstract, end_date, cover, questions_count, estimated_time, participant_count_goal, description, tips_description, id_thematique) VALUES (
+INSERT INTO consultations(id, title, abstract, end_date, cover, question_count, estimated_time, participant_count_goal, description, tips_description, id_thematique) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'Développer le covoiturage',
     'Comment mutualiser au mieux les trajets pour l''environnement et le pouvoir d''achat des Français ?',
     '2024-01-23',
-    'covoiturage.svg',
+    '/images/covoiturage.svg',
     '5 à 10 questions',
     '5 minutes',
     30000,
