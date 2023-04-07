@@ -1,0 +1,36 @@
+package fr.social.gouv.agora.infrastructure.question.dto
+
+import jakarta.persistence.*
+import org.hibernate.Hibernate
+import java.io.Serializable
+import java.util.UUID
+
+@Entity(name = "questions")
+data class QuestionDTO(
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
+    val id: UUID,
+    @Column(columnDefinition = "TEXT")
+    var label: String,
+    var ordre: Int,
+    @Column(columnDefinition = "TEXT")
+    var type: String,
+    @JoinTable(joinColumns = [JoinColumn(name = "id_consultation", table = "consultations", referencedColumnName = "id")])
+    var id_consultation: UUID,
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as QuestionDTO
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , label = $label , ordre = $ordre , type = $type, id_consultation = $id_consultation)"
+    }
+}

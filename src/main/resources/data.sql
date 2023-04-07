@@ -67,3 +67,62 @@ INSERT INTO consultations(id, title, abstract, end_date, cover, question_count, 
     '<body>Qui peut aussi être du texte <i>riche</i></body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
 ) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, label, ordre, type, id_consultation) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea1733301',
+    'quel est la fréquence d utilisation de transport en commun?',
+    1,
+    'unique',
+    'c29255f2-10ca-4be5-aab1-801ea173337c'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, id_question) VALUES (
+    'c28255f2-10ca-4be5-aab1-801ea1733301',
+    'une à deux fois par semaine',
+    1,
+    'c29255f2-10ca-4be5-aab1-801ea1733301'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, id_question) VALUES (
+    'c28255f2-10ca-4be5-aab1-801ea1733302',
+    'trois fois par semaine',
+    2,
+    'c29255f2-10ca-4be5-aab1-801ea1733301'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, label, ordre, type, id_consultation) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea1733302',
+    'Comment vous motiver pour le covoiturage?',
+    2,
+    'unique',
+    'c29255f2-10ca-4be5-aab1-801ea173337c'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, id_question) VALUES (
+    'c27255f2-10ca-4be5-aab1-801ea1733301',
+    'en me proposant une prime',
+    1,
+    'c29255f2-10ca-4be5-aab1-801ea1733302'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, id_question) VALUES (
+    'c27255f2-10ca-4be5-aab1-801ea1733302',
+    'en réduisant mes impots',
+    2,
+    'c29255f2-10ca-4be5-aab1-801ea1733302'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id,label, ordre, id_question) VALUES (
+    'c27255f2-10ca-4be5-aab1-801ea1733303',
+    'je ne veux pas le faire',
+    3,
+    'c29255f2-10ca-4be5-aab1-801ea1733302'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, label, ordre, type, id_consultation) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea1733303',
+    'questionSSCons',
+    3,
+    'unique',
+    'c29255f2-10ca-4be5-aab1-801ea1733371'
+) ON CONFLICT DO NOTHING;
