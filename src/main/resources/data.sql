@@ -59,7 +59,7 @@ INSERT INTO consultations(id, title, abstract, end_date, cover_url, question_cou
     'Développer le covoiturage',
     'Comment mutualiser au mieux les trajets pour l''environnement et le pouvoir d''achat des Français ?',
     '2024-01-23',
-    'https://betagouv.github.io/agora-content/covoiturage.svg',
+    'https://betagouv.github.io/agora-content/covoiturage.png',
     '5 à 10 questions',
     '5 minutes',
     30000,
