@@ -38,7 +38,7 @@ internal class ConsultationRepositoryImplTest {
     private lateinit var databaseRepository: ConsultationDatabaseRepository
 
     @MockBean
-    private lateinit var thematiqueMapper: ConsultationMapper
+    private lateinit var consultationMapper: ConsultationMapper
 
     @Autowired
     @Suppress("unused")
@@ -123,7 +123,7 @@ internal class ConsultationRepositoryImplTest {
         // Given
         val uuid = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
         given(databaseRepository.getConsultation(uuid)).willReturn(consultationDto)
-        given(thematiqueMapper.toDomain(consultationDto)).willReturn(consultation)
+        given(consultationMapper.toDomain(consultationDto)).willReturn(consultation)
 
         // When
         val result = repository.getConsultation(uuid.toString())
@@ -138,7 +138,7 @@ internal class ConsultationRepositoryImplTest {
         // Given
         val uuid = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
         given(databaseRepository.getConsultation(uuid)).willReturn(consultationDto)
-        given(thematiqueMapper.toDomain(consultationDto)).willReturn(consultation)
+        given(consultationMapper.toDomain(consultationDto)).willReturn(consultation)
 
         // When
         repository.getConsultation(uuid.toString())
