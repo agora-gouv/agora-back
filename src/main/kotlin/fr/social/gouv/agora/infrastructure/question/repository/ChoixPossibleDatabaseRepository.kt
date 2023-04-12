@@ -1,6 +1,6 @@
-package fr.social.gouv.agora.infrastructure.choixpossible.repository
+package fr.social.gouv.agora.infrastructure.question.repository
 
-import fr.social.gouv.agora.infrastructure.choixpossible.dto.ChoixPossibleDTO
+import fr.social.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param

@@ -1,7 +1,7 @@
-package fr.social.gouv.agora.infrastructure.choixpossible.repository
+package fr.social.gouv.agora.infrastructure.question.repository
 
 import fr.social.gouv.agora.domain.ChoixPossible
-import fr.social.gouv.agora.infrastructure.choixpossible.dto.ChoixPossibleDTO
+import fr.social.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.social.gouv.agora.infrastructure.utils.Mapper
 import org.springframework.stereotype.Component
 import java.util.*
