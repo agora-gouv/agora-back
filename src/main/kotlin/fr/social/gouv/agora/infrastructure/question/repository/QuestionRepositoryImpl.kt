@@ -25,23 +25,27 @@ class QuestionRepositoryImpl(
         const val CHOIX_POSSIBLE_CACHE_NAME = "choixPossibleCache"
     }
 
-    override fun getQuestionConsultation(idConsultation: String): List<Question>?{
-            try {
-                val uuid = UUID.fromString(idConsultation)
-                val questionList= mutableListOf<Question>()
-                val questionDtoList = getQuestionConsultationFromCache(uuid) ?: getQuestionConsultationFromDatabase(uuid)
-                return if(questionDtoList!= emptyList<QuestionDTO>()) {
-                    for (questionDto in questionDtoList) {
-                        val listeChoixdto = getChoixPossibleQuestionFromCache(questionDto.id) ?: getChoixPossibleQuestionFromDatabase(questionDto.id)
-                        val question = questionMapper.toDomain(questionDto, listeChoixdto)
-                        questionList.add(question)
-                    }
-                    questionList
-                } else {
-                    emptyList()
+    override fun getConsultationQuestionList(idConsultation: String): List<Question>? {
+        try {
+            val uuid = UUID.fromString(idConsultation)
+            val questionList = mutableListOf<Question>()
+            val questionDtoList = getQuestionConsultationFromCache(uuid) ?: getQuestionConsultationFromDatabase(uuid)
+            return if (questionDtoList != emptyList<QuestionDTO>()) {
+                for (questionDto in questionDtoList) {
+                    val listeChoixdto =
+                        getChoixPossibleQuestionFromCache(questionDto.id) ?: getChoixPossibleQuestionFromDatabase(
+                            questionDto.id
+                        )
+                    val question = questionMapper.toDomain(questionDto, listeChoixdto)
+                    questionList.add(question)
                 }
+                questionList
+            } else {
+                emptyList()
             }
-            catch (e: IllegalArgumentException){return null}
+        } catch (e: IllegalArgumentException) {
+            return null
+        }
     }
 
     private fun getCacheQuestion() = cacheManager.getCache(QUESTION_CACHE_NAME)
@@ -53,17 +57,18 @@ class QuestionRepositoryImpl(
     }
 
     private fun getQuestionConsultationFromDatabase(idConsultation: UUID): List<QuestionDTO> {
-        val questionListDto = questionDatabaseRepository.getQuestionConsultation(idConsultation)?: emptyList()
+        val questionListDto = questionDatabaseRepository.getQuestionConsultation(idConsultation) ?: emptyList()
         getCacheQuestion()?.put(idConsultation.toString(), questionListDto)
         return questionListDto
     }
+
     @Suppress("UNCHECKED_CAST")
     private fun getChoixPossibleQuestionFromCache(idQuestion: UUID): List<ChoixPossibleDTO>? {
         return getCacheChoixPossible()?.get(idQuestion.toString(), List::class.java) as? List<ChoixPossibleDTO>
     }
 
     private fun getChoixPossibleQuestionFromDatabase(idQuestion: UUID): List<ChoixPossibleDTO> {
-        val choixPossibleListDto = choixPossibleDatabaseRepository.getChoixPossibleQuestion(idQuestion)?: emptyList()
+        val choixPossibleListDto = choixPossibleDatabaseRepository.getChoixPossibleQuestion(idQuestion) ?: emptyList()
         getCacheChoixPossible()?.put(idQuestion.toString(), choixPossibleListDto)
         return choixPossibleListDto
     }

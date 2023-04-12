@@ -16,7 +16,7 @@ data class QuestionDTO(
     val ordre: Int,
     @Column(columnDefinition = "TEXT")
     val type: String,
-    @JoinTable(joinColumns = [JoinColumn(name = "consultation_id", table = "consultations", referencedColumnName = "id")])
+    @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
     val consultationId: UUID,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
