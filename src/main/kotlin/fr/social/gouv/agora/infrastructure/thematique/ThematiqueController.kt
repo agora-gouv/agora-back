@@ -12,7 +12,7 @@ class ThematiqueController(
     private val jsonMapper: ThematiqueJsonMapper,
 ) {
     @GetMapping("/thematiques")
-    fun getThematiques(): ResponseEntity<ThematiquesJson> {
+    fun getThematiqueList(): ResponseEntity<ThematiquesJson> {
         return ResponseEntity.ok()
             .body(jsonMapper.toJson(listThematiqueUseCase.getThematiqueList()))
     }

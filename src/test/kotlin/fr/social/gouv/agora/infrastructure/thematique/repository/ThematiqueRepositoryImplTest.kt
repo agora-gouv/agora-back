@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.thematique.repository
 
 import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.infrastructure.thematique.dto.ThematiqueDTO
-import fr.social.gouv.agora.infrastructure.thematique.repository.ThematiqueRepositoryImpl.Companion.CACHE_NAME
+import fr.social.gouv.agora.infrastructure.thematique.repository.ThematiqueRepositoryImpl.Companion.THEMATIQUE_CACHE_NAME
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -61,7 +61,7 @@ internal class ThematiqueRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        cacheManager.getCache(CACHE_NAME)?.clear()
+        cacheManager.getCache(THEMATIQUE_CACHE_NAME)?.clear()
     }
 
     @Test

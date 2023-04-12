@@ -1,24 +1,23 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
 import fr.social.gouv.agora.domain.Consultation
-import fr.social.gouv.agora.infrastructure.utils.JsonMapper
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationDetailsJsonMapper : JsonMapper<Consultation, ConsultationDetailsJson> {
+class ConsultationDetailsJsonMapper {
 
-    override fun toJson(domain: Consultation) = ConsultationDetailsJson(
+    fun toJson(domain: Consultation) = ConsultationDetailsJson(
         id = domain.id,
-        id_thematique = domain.id_thematique,
+        thematiqueId = domain.thematiqueId,
         title = domain.title,
-        cover = domain.cover_url,
-        end_date = domain.end_date.toString(),
-        question_count = domain.question_count,
-        estimated_time = domain.estimated_time,
-        participant_count = 0, // TODO Feat-16
-        participant_count_goal = domain.participant_count_goal,
+        cover = domain.coverUrl,
+        endDate = domain.endDate.toString(),
+        questionCount = domain.questionCount,
+        estimatedTime = domain.estimatedTime,
+        participantCount = 15035, // TODO Feat-16
+        participantCountGoal = domain.participantCountGoal,
         description = domain.description,
-        tips_description = domain.tips_description,
+        tipsDescription = domain.tipsDescription,
     )
 
 }
