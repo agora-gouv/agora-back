@@ -16,7 +16,7 @@ data class QuestionJson(
     val order: Int,
     @JsonProperty("type")
     val type: String,
-    @JsonProperty("possibleChoices:")
+    @JsonProperty("possibleChoices")
     val possibleChoices: List<ChoixPossibleJson>,
 )
 
