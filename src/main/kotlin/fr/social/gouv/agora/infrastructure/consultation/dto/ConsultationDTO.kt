@@ -15,22 +15,23 @@ data class ConsultationDTO(
     val title: String,
     @Column(columnDefinition = "TEXT")
     val abstract: String,
-    val start_date: Date?,
-    val end_date: Date,
+    val startDate: Date?,
+    val endDate: Date,
     @Column(columnDefinition = "TEXT")
-    val cover_url: String,
+    val coverUrl: String,
     @Column(columnDefinition = "TEXT")
-    val question_count: String,
+    val questionCount: String,
     @Column(columnDefinition = "TEXT")
-    val estimated_time: String,
-    val participant_count_goal: Int,
+    val estimatedTime: String,
+    val participantCountGoal: Int,
     @Column(columnDefinition = "TEXT")
     val description: String,
     @Column(columnDefinition = "TEXT")
-    val tips_description: String,
-    @JoinTable(joinColumns = [JoinColumn(name = "id_thematique", table = "thematiques", referencedColumnName = "id")])
-    val id_thematique: UUID,
+    val tipsDescription: String,
+    @JoinTable(joinColumns = [JoinColumn(table = "thematiques", referencedColumnName = "id")])
+    val thematiqueId: UUID,
 ) : Serializable {
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
@@ -44,8 +45,9 @@ data class ConsultationDTO(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id , title = $title , abstract = $abstract , " +
-                "start_date = $start_date, end_date=$end_date, cover=$cover_url, question_count=$question_count, " +
-                "estimated_time=$estimated_time, participant_count_goal=$participant_count_goal, " +
-                "description=$description, tips_description=$tips_description, id_thematique=$id_thematique)"
+                "startDate = $startDate , endDate = $endDate , coverUrl = $coverUrl , questionCount = $questionCount , " +
+                "estimatedTime = $estimatedTime , participantCountGoal = $participantCountGoal , " +
+                "description = $description , tipsDescription = $tipsDescription , thematiqueId = $thematiqueId )"
     }
+
 }

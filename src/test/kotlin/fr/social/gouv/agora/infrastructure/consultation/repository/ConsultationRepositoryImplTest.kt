@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.consultation.repository
 
 import fr.social.gouv.agora.domain.Consultation
 import fr.social.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
-import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationRepositoryImpl.Companion.CACHE_NAME
+import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationRepositoryImpl.Companion.CONSULTATION_CACHE_NAME
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -46,37 +46,37 @@ internal class ConsultationRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        cacheManager.getCache(CACHE_NAME)?.clear()
+        cacheManager.getCache(CONSULTATION_CACHE_NAME)?.clear()
     }
 
     private val consultation = Consultation(
         id = "domain-id",
         title = "domain-title",
         abstract = "domain-abstract",
-        start_date = Date(0),
-        end_date = Date(1),
-        cover_url = "domain-cover_url",
-        question_count = "domain-question_count",
-        estimated_time = "domain-estimated_time",
-        participant_count_goal = 6401,
+        startDate = Date(0),
+        endDate = Date(1),
+        coverUrl = "domain-cover_url",
+        questionCount = "domain-question_count",
+        estimatedTime = "domain-estimated_time",
+        participantCountGoal = 6401,
         description = "domain-description",
-        tips_description = "domain-tips_description",
-        id_thematique = "domain-id_thematique",
+        tipsDescription = "domain-tips_description",
+        thematiqueId = "domain-id_thematique",
     )
 
     private val consultationDto = ConsultationDTO(
         id = UUID.randomUUID(),
         title = "dto-title",
         abstract = "dto-abstract",
-        start_date = Date(0),
-        end_date = Date(1),
-        cover_url = "dto-cover_url",
-        question_count = "dto-question_count",
-        estimated_time = "dto-estimated_time",
-        participant_count_goal = 6401,
+        startDate = Date(0),
+        endDate = Date(1),
+        coverUrl = "dto-cover_url",
+        questionCount = "dto-question_count",
+        estimatedTime = "dto-estimated_time",
+        participantCountGoal = 6401,
         description = "dto-description",
-        tips_description = "dto-tips_description",
-        id_thematique = UUID.randomUUID(),
+        tipsDescription = "dto-tips_description",
+        thematiqueId = UUID.randomUUID(),
     )
 
     @Test

@@ -2,14 +2,14 @@ package fr.social.gouv.agora.infrastructure.thematique.repository
 
 import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.infrastructure.thematique.dto.ThematiqueDTO
-import fr.social.gouv.agora.infrastructure.thematique.repository.ThematiqueRepositoryImpl.Companion.CACHE_NAME
+import fr.social.gouv.agora.infrastructure.thematique.repository.ThematiqueRepositoryImpl.Companion.THEMATIQUE_CACHE_NAME
 import fr.social.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Component
 
 @Component
-@CacheConfig(cacheNames = [CACHE_NAME])
+@CacheConfig(cacheNames = [THEMATIQUE_CACHE_NAME])
 class ThematiqueRepositoryImpl(
     private val databaseRepository: ThematiqueDatabaseRepository,
     private val thematiqueMapper: ThematiqueMapper,
@@ -17,7 +17,7 @@ class ThematiqueRepositoryImpl(
 ) : ThematiqueRepository {
 
     companion object {
-        const val CACHE_NAME = "thematiqueCache"
+        const val THEMATIQUE_CACHE_NAME = "thematiqueCache"
         internal const val CACHE_KEY = "thematiqueList"
     }
 
@@ -26,7 +26,7 @@ class ThematiqueRepositoryImpl(
         return thematiqueList.map { dto -> thematiqueMapper.toDomain(dto) }
     }
 
-    private fun getCache() = cacheManager.getCache(CACHE_NAME)
+    private fun getCache() = cacheManager.getCache(THEMATIQUE_CACHE_NAME)
 
     @Suppress("UNCHECKED_CAST")
     private fun getThematiqueListFromCache(): List<ThematiqueDTO>? {
