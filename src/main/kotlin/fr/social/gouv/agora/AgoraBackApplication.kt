@@ -1,8 +1,8 @@
 package fr.social.gouv.agora
 
 import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.server.ConfigurableWebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
@@ -48,27 +48,25 @@ class JpaConfig {
     }
 
     @Bean
-    fun dataSource(): DataSource {
-        val dataSourceBuilder = DataSourceBuilder.create()
-        dataSourceBuilder.driverClassName("org.postgresql.Driver")
-        System.getenv("DATABASE_URL")?.let { databaseUrl ->
-            try {
-                val databaseURI = URI.create(databaseUrl)
-                dataSourceBuilder.url("jdbc:${databaseUrl.replace("${databaseURI.userInfo}@", "")}")
-                val userInfo = databaseURI.userInfo.split(":")
-                dataSourceBuilder.username(userInfo[0])
-                dataSourceBuilder.password(userInfo[1])
-            } catch (e: IllegalArgumentException) {
-                println("Invalid Database URL: $databaseUrl")
-            }
-        }
-        return dataSourceBuilder.build()
+    fun dataSource(hikariConfig: HikariConfig): DataSource {
+        return HikariDataSource(hikariConfig)
     }
 
     @Bean
     fun hikariConfig(): HikariConfig {
         return HikariConfig().apply {
-            maximumPoolSize = System.getenv("DATABASE_MAX_POOL_SIZE").toIntOrNull() ?: DEFAULT_DB_MAX_POOL_SIZE
+            System.getenv("DATABASE_URL")?.let { databaseUrl ->
+                try {
+                    val databaseURI = URI.create(databaseUrl)
+                    jdbcUrl = "jdbc:${databaseUrl.replace("${databaseURI.userInfo}@", "")}"
+                    val userInfo = databaseURI.userInfo.split(":")
+                    username = userInfo[0]
+                    password = userInfo[1]
+                } catch (e: IllegalArgumentException) {
+                    println("Invalid Database URL: $databaseUrl")
+                }
+                maximumPoolSize = System.getenv("DATABASE_MAX_POOL_SIZE").toIntOrNull() ?: DEFAULT_DB_MAX_POOL_SIZE
+            }
         }
     }
 }
