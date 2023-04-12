@@ -70,7 +70,7 @@ INSERT INTO consultations(id, title, abstract, end_date, cover_url, question_cou
 
 INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733301',
-    'quel est la fréquence d utilisation de transport en commun?',
+    'quel est la fréquence d’utilisation de transport en commun?',
     1,
     'unique',
     'c29255f2-10ca-4be5-aab1-801ea173337c'
@@ -93,7 +93,7 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733302',
     'Comment vous motiver pour le covoiturage?',
-    2,
+    3,
     'unique',
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
@@ -120,9 +120,17 @@ INSERT INTO choixpossible(id,label, ordre, question_id) VALUES (
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
-    'c29255f2-10ca-4be5-aab1-801ea1733303',
-    'questionSSCons',
-    3,
-    'unique',
-    'c29255f2-10ca-4be5-aab1-801ea1733371'
+    '78782e93-71b5-47e7-8f59-79c0ae32af48',
+    'Souhaitez vous préciser davantage ?',
+    2,
+    'ouverte',
+    'c29255f2-10ca-4be5-aab1-801ea173337c'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
+    '89bd9080-0b27-417a-af13-bc2368535ddf',
+    'Avez-vous des suggestions d’amélioration pour cette application ?',
+    4,
+    'ouverte',
+    'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
