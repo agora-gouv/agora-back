@@ -16,7 +16,7 @@ class QuestionController(
 ) {
     @GetMapping("/consultations/{id}/questions")
     fun getQuestions(@PathVariable id: String): HttpEntity<*> {
-        return listQuestionConsultationUseCase.getQuestionConsultation(id)?.let { listQuestions ->
+        return listQuestionConsultationUseCase.getConsultationQuestionList(id)?.let { listQuestions ->
             ResponseEntity.ok()
                 .body(jsonMapper.toJson(listQuestions))
         } ?: ResponseEntity.EMPTY

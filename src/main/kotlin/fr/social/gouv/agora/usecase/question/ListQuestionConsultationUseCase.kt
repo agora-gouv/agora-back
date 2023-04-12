@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class ListQuestionConsultationUseCase(private val repository: QuestionRepository) {
-    fun getQuestionConsultation(id: String): List<Question>? {
-        return repository.getQuestionConsultation(id)
+    fun getConsultationQuestionList(id: String): List<Question>? {
+        return repository.getConsultationQuestionList(id)
     }
 }

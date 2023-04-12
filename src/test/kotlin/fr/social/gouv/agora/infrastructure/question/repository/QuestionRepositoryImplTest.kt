@@ -91,7 +91,7 @@ internal class QuestionRepositoryImplTest {
     @Test
     fun `getQuestionConsultation - when invalid UUID - should return null`() {
         // When
-        val result = questionRepository.getQuestionConsultation("1234")
+        val result = questionRepository.getConsultationQuestionList("1234")
 
         // Then
         assertThat(result).isEqualTo(null)
@@ -103,10 +103,10 @@ internal class QuestionRepositoryImplTest {
     fun `getQuestionConsultation - when questionDatabaseRepository return null and has no cache - should return emptyList`() {
         // Given
         val uuid = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
-        given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(null) //
+        given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(null)
 
         // When
-        val result = questionRepository.getQuestionConsultation(uuid.toString())
+        val result = questionRepository.getConsultationQuestionList(uuid.toString())
 
         // Then
         assertThat(result).isEqualTo(emptyList<Question>())
@@ -121,8 +121,8 @@ internal class QuestionRepositoryImplTest {
         given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(null)
 
         // When
-        questionRepository.getQuestionConsultation(uuid.toString())
-        val result = questionRepository.getQuestionConsultation(uuid.toString())
+        questionRepository.getConsultationQuestionList(uuid.toString())
+        val result = questionRepository.getConsultationQuestionList(uuid.toString())
 
         // Then
         assertThat(result).isEqualTo(emptyList<Question>())
@@ -137,7 +137,7 @@ internal class QuestionRepositoryImplTest {
         given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(emptyList())
 
         // When
-        val result = questionRepository.getQuestionConsultation(uuid.toString())
+        val result = questionRepository.getConsultationQuestionList(uuid.toString())
 
         // Then
         assertThat(result).isEqualTo(emptyList<Question>())
@@ -152,8 +152,8 @@ internal class QuestionRepositoryImplTest {
         given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(emptyList())
 
         // When
-        questionRepository.getQuestionConsultation(uuid.toString())
-        val result = questionRepository.getQuestionConsultation(uuid.toString())
+        questionRepository.getConsultationQuestionList(uuid.toString())
+        val result = questionRepository.getConsultationQuestionList(uuid.toString())
 
         // Then
         assertThat(result).isEqualTo(emptyList<Question>())
@@ -165,13 +165,12 @@ internal class QuestionRepositoryImplTest {
     fun `getQuestionConsultation - when found and has no cache - should return parsed dto from databaseRepository`() {
         // Given
         val uuid = UUID.fromString("c29255f2-10ac-4be5-aab1-801ea173337c")
-        //val uuid_question = UUID.fromString("c29255f2-10ac-4be5-aab1-801ea173340c")
         given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(listOf(questionDTO))
         given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)).willReturn(listOf(choixPossibleDTO))
         given(questionMapper.toDomain(questionDTO, listOf(choixPossibleDTO))).willReturn(question)
 
         // When
-        val result = questionRepository.getQuestionConsultation(uuid.toString())
+        val result = questionRepository.getConsultationQuestionList(uuid.toString())
 
         // Then
         assertThat(result).isEqualTo(listOf(question))
@@ -188,8 +187,8 @@ internal class QuestionRepositoryImplTest {
         given(questionMapper.toDomain(questionDTO, listOf(choixPossibleDTO))).willReturn(question)
 
         // When
-        questionRepository.getQuestionConsultation(uuid.toString())
-        val result = questionRepository.getQuestionConsultation(uuid.toString())
+        questionRepository.getConsultationQuestionList(uuid.toString())
+        val result = questionRepository.getConsultationQuestionList(uuid.toString())
 
         // Then
         assertThat(result).isEqualTo(listOf(question))
