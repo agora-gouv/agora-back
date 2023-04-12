@@ -1,5 +1,6 @@
 package fr.social.gouv.agora
 
+import com.zaxxer.hikari.HikariConfig
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.boot.runApplication
@@ -41,6 +42,11 @@ class ServerPortCustomizer : WebServerFactoryCustomizer<ConfigurableWebServerFac
 @Configuration
 @Suppress("unused")
 class JpaConfig {
+
+    companion object {
+        private const val DEFAULT_DB_MAX_POOL_SIZE = 5
+    }
+
     @Bean
     fun dataSource(): DataSource {
         val dataSourceBuilder = DataSourceBuilder.create()
@@ -57,6 +63,13 @@ class JpaConfig {
             }
         }
         return dataSourceBuilder.build()
+    }
+
+    @Bean
+    fun hikariConfig(): HikariConfig {
+        return HikariConfig().apply {
+            maximumPoolSize = System.getenv("DATABASE_MAX_POOL_SIZE").toIntOrNull() ?: DEFAULT_DB_MAX_POOL_SIZE
+        }
     }
 }
 
