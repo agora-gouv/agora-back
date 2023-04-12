@@ -10,6 +10,6 @@ import java.util.*
 
 @Repository
 interface ChoixPossibleDatabaseRepository : CrudRepository<ChoixPossibleDTO, UUID> {
-    @Query(value = "SELECT * FROM choixpossible where id_question=:id_question", nativeQuery = true)
-    fun getChoixPossibleQuestion(@Param("id_question") id_question:UUID): List<ChoixPossibleDTO>?
+    @Query(value = "SELECT * FROM choixpossible where question_id=:questionId", nativeQuery = true)
+    fun getChoixPossibleQuestion(@Param("questionId") questionId:UUID): List<ChoixPossibleDTO>?
 }

@@ -13,14 +13,14 @@ class ChoixPossibleMapper : Mapper<ChoixPossible, ChoixPossibleDTO> {
         id = dto.id.toString(),
         label = dto.label,
         ordre = dto.ordre,
-        id_question = dto.id_question.toString(),
+        questionId = dto.questionId.toString(),
     )
 
     override fun toDto(domain: ChoixPossible) = ChoixPossibleDTO(
         id = UUID.fromString(domain.id),
         label = domain.label,
         ordre = domain.ordre,
-        id_question = UUID.fromString(domain.id_question),
+        questionId = UUID.fromString(domain.questionId),
     )
 
 }

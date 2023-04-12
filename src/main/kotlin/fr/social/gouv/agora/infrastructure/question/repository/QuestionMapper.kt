@@ -14,7 +14,7 @@ class QuestionMapper (private val choixPossibleMapper: ChoixPossibleMapper) {
         label = dto.label,
         ordre = dto.ordre,
         type = dto.type,
-        id_consultation = dto.id_consultation.toString(),
-        listechoix = choixDTO.map { choixPossibleDTO -> choixPossibleMapper.toDomain(choixPossibleDTO) },
+        consultationId = dto.consultationId.toString(),
+        choixPossibleList = choixDTO.map { choixPossibleDTO -> choixPossibleMapper.toDomain(choixPossibleDTO) },
     )
 }

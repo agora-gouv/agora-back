@@ -16,8 +16,8 @@ data class QuestionDTO(
     val ordre: Int,
     @Column(columnDefinition = "TEXT")
     val type: String,
-    @JoinTable(joinColumns = [JoinColumn(name = "id_consultation", table = "consultations", referencedColumnName = "id")])
-    val id_consultation: UUID,
+    @JoinTable(joinColumns = [JoinColumn(name = "consultation_id", table = "consultations", referencedColumnName = "id")])
+    val consultationId: UUID,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -31,6 +31,6 @@ data class QuestionDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , label = $label , ordre = $ordre , type = $type, id_consultation = $id_consultation)"
+        return this::class.simpleName + "(id = $id , label = $label , ordre = $ordre , type = $type, id_consultation = $consultationId)"
     }
 }

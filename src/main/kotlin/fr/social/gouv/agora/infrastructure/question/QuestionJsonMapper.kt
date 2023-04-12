@@ -14,7 +14,7 @@ class QuestionJsonMapper : JsonMapper<List<Question>, QuestionsJson> {
                 label = domainObject.label,
                 order = domainObject.ordre,
                 type = domainObject.type,
-                possible_choices = domainObject.listechoix.map { obj ->
+                possibleChoices = domainObject.choixPossibleList.map { obj ->
                     ChoixPossibleJson(
                         id = obj.id,
                         label = obj.label,
