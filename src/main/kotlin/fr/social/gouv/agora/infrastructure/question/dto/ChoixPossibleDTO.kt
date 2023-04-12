@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.infrastructure.choixpossible.dto
+package fr.social.gouv.agora.infrastructure.question.dto
 
 import jakarta.persistence.*
 import org.hibernate.Hibernate

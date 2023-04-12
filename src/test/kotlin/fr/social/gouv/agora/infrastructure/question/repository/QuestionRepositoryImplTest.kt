@@ -2,8 +2,7 @@ package fr.social.gouv.agora.infrastructure.question.repository
 
 import fr.social.gouv.agora.domain.ChoixPossible
 import fr.social.gouv.agora.domain.Question
-import fr.social.gouv.agora.infrastructure.choixpossible.dto.ChoixPossibleDTO
-import fr.social.gouv.agora.infrastructure.choixpossible.repository.ChoixPossibleDatabaseRepository
+import fr.social.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.social.gouv.agora.infrastructure.question.dto.QuestionDTO
 import fr.social.gouv.agora.infrastructure.question.repository.QuestionRepositoryImpl.Companion.CHOIX_POSSIBLE_CACHE_NAME
 import fr.social.gouv.agora.infrastructure.question.repository.QuestionRepositoryImpl.Companion.QUESTION_CACHE_NAME
@@ -23,7 +22,6 @@ import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
-
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -82,6 +80,7 @@ internal class QuestionRepositoryImplTest {
         type = "dto-type",
         consultationId = UUID.randomUUID(),
     )
+
     @BeforeEach
     fun setUp() {
         cacheManager.getCache(QUESTION_CACHE_NAME)?.clear()
@@ -89,12 +88,12 @@ internal class QuestionRepositoryImplTest {
     }
 
     @Test
-    fun `getQuestionConsultation - when invalid UUID - should return null`() {
+    fun `getQuestionConsultation - when invalid UUID - should return emptyList`() {
         // When
         val result = questionRepository.getConsultationQuestionList("1234")
 
         // Then
-        assertThat(result).isEqualTo(null)
+        assertThat(result).isEqualTo(emptyList<Question>())
         then(questionDatabaseRepository).shouldHaveNoInteractions()
         then(choixPossibleDatabaseRepository).shouldHaveNoInteractions()
     }
@@ -166,7 +165,11 @@ internal class QuestionRepositoryImplTest {
         // Given
         val uuid = UUID.fromString("c29255f2-10ac-4be5-aab1-801ea173337c")
         given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(listOf(questionDTO))
-        given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)).willReturn(listOf(choixPossibleDTO))
+        given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)).willReturn(
+            listOf(
+                choixPossibleDTO
+            )
+        )
         given(questionMapper.toDomain(questionDTO, listOf(choixPossibleDTO))).willReturn(question)
 
         // When
@@ -183,7 +186,11 @@ internal class QuestionRepositoryImplTest {
         // Given
         val uuid = UUID.fromString("c29255f2-10ac-4be5-aab1-801ea173337c")
         given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(listOf(questionDTO))
-        given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)).willReturn(listOf(choixPossibleDTO))
+        given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)).willReturn(
+            listOf(
+                choixPossibleDTO
+            )
+        )
         given(questionMapper.toDomain(questionDTO, listOf(choixPossibleDTO))).willReturn(question)
 
         // When
@@ -195,7 +202,5 @@ internal class QuestionRepositoryImplTest {
         then(questionDatabaseRepository).should(times(1)).getQuestionConsultation(uuid)
         then(choixPossibleDatabaseRepository).should(times(1)).getChoixPossibleQuestion(questionDTO.id)
     }
-
-
 
 }
