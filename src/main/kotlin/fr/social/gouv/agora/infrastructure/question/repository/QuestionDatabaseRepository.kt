@@ -10,6 +10,6 @@ import java.util.*
 
 @Repository
 interface QuestionDatabaseRepository : CrudRepository<QuestionDTO, UUID> {
-    @Query(value = "SELECT * FROM questions where consultation_id=:consultationId", nativeQuery = true)
-    fun getQuestionConsultation(@Param("consultationId") consultationId:UUID): List<QuestionDTO>?
+    @Query(value = "SELECT * FROM questions where consultation_id = :consultationId ORDER BY ordre", nativeQuery = true)
+    fun getQuestionConsultation(@Param("consultationId") consultationId: UUID): List<QuestionDTO>?
 }
