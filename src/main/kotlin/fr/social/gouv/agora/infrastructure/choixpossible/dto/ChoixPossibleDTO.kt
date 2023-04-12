@@ -12,10 +12,10 @@ data class ChoixPossibleDTO(
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
     @Column(columnDefinition = "TEXT")
-    var label: String,
-    var ordre: Int,
+    val label: String,
+    val ordre: Int,
     @JoinTable(joinColumns = [JoinColumn(name = "id_question", table = "questions", referencedColumnName = "id")])
-    var id_question: UUID,
+    val id_question: UUID,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
