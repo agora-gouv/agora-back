@@ -3,7 +3,6 @@ package fr.social.gouv.agora.infrastructure.question.repository
 import fr.social.gouv.agora.domain.Question
 import fr.social.gouv.agora.infrastructure.choixpossible.dto.ChoixPossibleDTO
 import fr.social.gouv.agora.infrastructure.choixpossible.repository.ChoixPossibleDatabaseRepository
-import fr.social.gouv.agora.infrastructure.choixpossible.repository.ChoixPossibleMapper
 import fr.social.gouv.agora.infrastructure.question.dto.QuestionDTO
 import fr.social.gouv.agora.infrastructure.question.repository.QuestionRepositoryImpl.Companion.QUESTION_CACHE_NAME
 import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
@@ -18,7 +17,6 @@ class QuestionRepositoryImpl(
     private val questionDatabaseRepository: QuestionDatabaseRepository,
     private val choixPossibleDatabaseRepository: ChoixPossibleDatabaseRepository,
     private val questionMapper: QuestionMapper,
-    private val choixPossibleMapper: ChoixPossibleMapper,
     private val cacheManager: CacheManager,
 ) : QuestionRepository {
 
@@ -27,21 +25,21 @@ class QuestionRepositoryImpl(
         const val CHOIX_POSSIBLE_CACHE_NAME = "choixPossibleCache"
     }
 
-    override fun getQuestionConsultation(id_consultation: String): List<Question>?{
+    override fun getQuestionConsultation(idConsultation: String): List<Question>?{
             try {
-                val uuid = UUID.fromString(id_consultation)
-                var questionList= mutableListOf<Question>()
-                var questionDtoList = getQuestionConsultationFromCache(uuid) ?: getQuestionConsultationFromDatabase(uuid)
-                if(questionDtoList!= emptyList<QuestionDTO>())
-                    {
+                val uuid = UUID.fromString(idConsultation)
+                val questionList= mutableListOf<Question>()
+                val questionDtoList = getQuestionConsultationFromCache(uuid) ?: getQuestionConsultationFromDatabase(uuid)
+                return if(questionDtoList!= emptyList<QuestionDTO>()) {
                     for (questionDto in questionDtoList) {
-                        var listeChoixdto = getChoixPossibleQuestionFromCache(questionDto.id) ?: getChoixPossibleQuestionFromDatabase(questionDto.id)
-                        var question = questionMapper.toDomain(questionDto, listeChoixdto)
+                        val listeChoixdto = getChoixPossibleQuestionFromCache(questionDto.id) ?: getChoixPossibleQuestionFromDatabase(questionDto.id)
+                        val question = questionMapper.toDomain(questionDto, listeChoixdto)
                         questionList.add(question)
-                        }
-                        return questionList
                     }
-                else {return emptyList<Question>()}
+                    questionList
+                } else {
+                    emptyList()
+                }
             }
             catch (e: IllegalArgumentException){return null}
     }
@@ -49,26 +47,24 @@ class QuestionRepositoryImpl(
     private fun getCacheQuestion() = cacheManager.getCache(QUESTION_CACHE_NAME)
     private fun getCacheChoixPossible() = cacheManager.getCache(CHOIX_POSSIBLE_CACHE_NAME)
 
-    private fun getQuestionConsultationFromCache(id_consultation: UUID): List<QuestionDTO>? {
-        val CACHE_KEY=id_consultation.toString()
-        return getCacheQuestion()?.get(CACHE_KEY, List::class.java) as? List<QuestionDTO>
+    @Suppress("UNCHECKED_CAST")
+    private fun getQuestionConsultationFromCache(idConsultation: UUID): List<QuestionDTO>? {
+        return getCacheQuestion()?.get(idConsultation.toString(), List::class.java) as? List<QuestionDTO>
     }
 
-    private fun getQuestionConsultationFromDatabase(id_consultation: UUID): List<QuestionDTO> {
-        val questionListDto = questionDatabaseRepository.getQuestionConsultation(id_consultation)?: emptyList<QuestionDTO>()
-        val CACHE_KEY=id_consultation.toString()
-        getCacheQuestion()?.put(CACHE_KEY, questionListDto)
+    private fun getQuestionConsultationFromDatabase(idConsultation: UUID): List<QuestionDTO> {
+        val questionListDto = questionDatabaseRepository.getQuestionConsultation(idConsultation)?: emptyList()
+        getCacheQuestion()?.put(idConsultation.toString(), questionListDto)
         return questionListDto
     }
-    private fun getChoixPossibleQuestionFromCache(id_question: UUID): List<ChoixPossibleDTO>? {
-        val CACHE_KEY=id_question.toString()
-        return getCacheChoixPossible()?.get(CACHE_KEY, List::class.java) as? List<ChoixPossibleDTO>
+    @Suppress("UNCHECKED_CAST")
+    private fun getChoixPossibleQuestionFromCache(idQuestion: UUID): List<ChoixPossibleDTO>? {
+        return getCacheChoixPossible()?.get(idQuestion.toString(), List::class.java) as? List<ChoixPossibleDTO>
     }
 
-    private fun getChoixPossibleQuestionFromDatabase(id_question: UUID): List<ChoixPossibleDTO> {
-        val choixPossibleListDto = choixPossibleDatabaseRepository.getChoixPossibleQuestion(id_question)?: emptyList<ChoixPossibleDTO>()
-        val CACHE_KEY=id_question.toString()
-        getCacheChoixPossible()?.put(CACHE_KEY, choixPossibleListDto)
+    private fun getChoixPossibleQuestionFromDatabase(idQuestion: UUID): List<ChoixPossibleDTO> {
+        val choixPossibleListDto = choixPossibleDatabaseRepository.getChoixPossibleQuestion(idQuestion)?: emptyList()
+        getCacheChoixPossible()?.put(idQuestion.toString(), choixPossibleListDto)
         return choixPossibleListDto
     }
 

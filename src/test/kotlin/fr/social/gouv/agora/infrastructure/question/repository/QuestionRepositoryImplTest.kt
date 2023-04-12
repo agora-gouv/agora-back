@@ -56,14 +56,14 @@ internal class QuestionRepositoryImplTest {
         id = "1337",
         label = "domain-label",
         ordre = 1,
-        id_question = "domain-id-question",
+        questionId = "domain-id-question",
     )
 
     private val choixPossibleDTO = ChoixPossibleDTO(
         id = UUID.randomUUID(),
         label = "domain-label",
         ordre = 1,
-        id_question = UUID.randomUUID(),
+        questionId = UUID.randomUUID(),
     )
 
     private val question = Question(
@@ -71,8 +71,8 @@ internal class QuestionRepositoryImplTest {
         label = "domain-label",
         ordre = 1,
         type = "domain-type",
-        id_consultation = "domain-id-consultation",
-        listechoix = listOf(choixPossible)
+        consultationId = "domain-id-consultation",
+        choixPossibleList = listOf(choixPossible)
     )
 
     private val questionDTO = QuestionDTO(
@@ -80,7 +80,7 @@ internal class QuestionRepositoryImplTest {
         label = "dto-label",
         ordre = 1,
         type = "dto-type",
-        id_consultation = UUID.randomUUID(),
+        consultationId = UUID.randomUUID(),
     )
     @BeforeEach
     fun setUp() {
@@ -123,6 +123,7 @@ internal class QuestionRepositoryImplTest {
         // When
         questionRepository.getQuestionConsultation(uuid.toString())
         val result = questionRepository.getQuestionConsultation(uuid.toString())
+
         // Then
         assertThat(result).isEqualTo(emptyList<Question>())
         then(questionDatabaseRepository).should(times(1)).getQuestionConsultation(uuid)
@@ -133,7 +134,7 @@ internal class QuestionRepositoryImplTest {
     fun `getQuestionConsultation - when questionDatabaseRepository return emptyList and has no cache - should return emptyList`() {
         // Given
         val uuid = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
-        given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(emptyList<QuestionDTO>())
+        given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(emptyList())
 
         // When
         val result = questionRepository.getQuestionConsultation(uuid.toString())
@@ -148,11 +149,12 @@ internal class QuestionRepositoryImplTest {
     fun `getConsultation - when questionDatabaseRepository return emptyList and has cache - should return emptyList`() {
         // Given
         val uuid = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
-        given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(emptyList<QuestionDTO>())
+        given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(emptyList())
 
         // When
         questionRepository.getQuestionConsultation(uuid.toString())
         val result = questionRepository.getQuestionConsultation(uuid.toString())
+
         // Then
         assertThat(result).isEqualTo(emptyList<Question>())
         then(questionDatabaseRepository).should(times(1)).getQuestionConsultation(uuid)
@@ -167,9 +169,6 @@ internal class QuestionRepositoryImplTest {
         given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(listOf(questionDTO))
         given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)).willReturn(listOf(choixPossibleDTO))
         given(questionMapper.toDomain(questionDTO, listOf(choixPossibleDTO))).willReturn(question)
-            /*
-        given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(uuid_question).willReturn(listOf(choixPossibleDTO))
-        given(questionMapper.toDomain(questionDTO)).willReturn(question)*/
 
         // When
         val result = questionRepository.getQuestionConsultation(uuid.toString())
@@ -184,7 +183,6 @@ internal class QuestionRepositoryImplTest {
     fun `getQuestionConsultation - when found and has cache - should return parsed entity from cache`() {
         // Given
         val uuid = UUID.fromString("c29255f2-10ac-4be5-aab1-801ea173337c")
-        //val uuid_question = UUID.fromString("c29255f2-10ac-4be5-aab1-801ea173340c")
         given(questionDatabaseRepository.getQuestionConsultation(uuid)).willReturn(listOf(questionDTO))
         given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)).willReturn(listOf(choixPossibleDTO))
         given(questionMapper.toDomain(questionDTO, listOf(choixPossibleDTO))).willReturn(question)
