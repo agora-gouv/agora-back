@@ -10,7 +10,7 @@ class ConsultationDetailsJsonMapper {
         id = domain.id,
         thematiqueId = domain.thematiqueId,
         title = domain.title,
-        cover = domain.coverUrl,
+        coverUrl = domain.coverUrl,
         endDate = domain.endDate.toString(),
         questionCount = domain.questionCount,
         estimatedTime = domain.estimatedTime,

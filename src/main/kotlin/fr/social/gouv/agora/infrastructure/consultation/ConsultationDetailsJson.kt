@@ -9,8 +9,8 @@ data class ConsultationDetailsJson(
     val thematiqueId: String,
     @JsonProperty("title")
     val title: String,
-    @JsonProperty("cover")
-    val cover: String,
+    @JsonProperty("coverUrl")
+    val coverUrl: String,
     @JsonProperty("endDate")
     val endDate: String,
     @JsonProperty("questionCount")
