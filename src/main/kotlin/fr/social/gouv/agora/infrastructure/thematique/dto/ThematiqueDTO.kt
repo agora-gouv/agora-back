@@ -12,11 +12,11 @@ data class ThematiqueDTO(
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
     @Column(columnDefinition = "TEXT")
-    var label: String,
+    val label: String,
     @Column(columnDefinition = "TEXT")
-    var picto: String,
+    val picto: String,
     @Column(columnDefinition = "TEXT")
-    var color: String
+    val color: String,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

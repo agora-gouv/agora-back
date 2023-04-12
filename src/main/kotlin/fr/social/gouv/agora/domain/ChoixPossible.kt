@@ -1,8 +1,8 @@
 package fr.social.gouv.agora.domain
 
-data class Thematique(
+data class ChoixPossible(
     val id: String,
     val label: String,
-    val picto: String,
-    val color: String,
+    val ordre: Int,
+    val id_question: String,
 )
