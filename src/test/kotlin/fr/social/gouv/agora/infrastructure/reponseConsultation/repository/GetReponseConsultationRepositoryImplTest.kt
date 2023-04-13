@@ -51,6 +51,7 @@ internal class GetReponseConsultationRepositoryImplTest {
         id = "domain-id",
         questionId = "domain-questionId",
         choiceId = "domain-choiceId",
+        participationId = "domain-participationId",
     )
 
     private val reponseConsultationDTO = ReponseConsultationDTO(
@@ -59,6 +60,7 @@ internal class GetReponseConsultationRepositoryImplTest {
         questionId = UUID.randomUUID(),
         choiceId = UUID.randomUUID(),
         responseText = "dto-responseText",
+        participationId = UUID.randomUUID(),
     )
 
     @Test
