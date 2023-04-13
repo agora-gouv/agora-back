@@ -16,24 +16,18 @@ class GetConsultationResultsUseCase(
 ) {
 
     fun getConsultationResults(consultationId: String): ConsultationResult? {
-        consultationRepository.getConsultation(consultationId)?.let { consultation ->
-            consultationUpdateRepository.getConsultationUpdate(consultationId)?.let { consultationUpdate ->
-                questionRepository.getConsultationQuestionList(consultationId).takeUnless { it.isEmpty() }
-                    ?.let { questionList ->
-                        val consultationResponseList =
-                            getReponseConsultationRepository.getConsultationResponses(consultationId)
+        val consultation = consultationRepository.getConsultation(consultationId) ?: return null
+        val consultationUpdate = consultationUpdateRepository.getConsultationUpdate(consultationId) ?: return null
+        val questionList =
+            questionRepository.getConsultationQuestionList(consultationId).takeUnless { it.isEmpty() } ?: return null
+        val consultationResponseList = getReponseConsultationRepository.getConsultationResponses(consultationId)
 
-                        return buildResults(
-                            consultation = consultation,
-                            consultationUpdate = consultationUpdate,
-                            questionList = questionList,
-                            consultationResponseList = consultationResponseList
-                        )
-                    }
-            }
-        }
-
-        return null
+        return buildResults(
+            consultation = consultation,
+            consultationUpdate = consultationUpdate,
+            questionList = questionList,
+            consultationResponseList = consultationResponseList
+        )
     }
 
     private fun buildResults(
@@ -43,17 +37,17 @@ class GetConsultationResultsUseCase(
         consultationResponseList: List<ReponseConsultation>
     ): ConsultationResult {
         val filteredQuestionList = questionList.filter { it.choixPossibleList.isNotEmpty() }
+        val participantCount = consultationResponseList.map { it.participationId }.toSet().size
 
         return ConsultationResult(
             consultation = consultation,
             lastUpdate = consultationUpdate,
-            participantCount = buildParticipantCount(filteredQuestionList, consultationResponseList),
+            participantCount = participantCount,
             results = filteredQuestionList.map { question ->
-                val questionResponsesCount = consultationResponseList.filter { it.questionId == question.id }.size
                 buildQuestionResults(
                     question = question,
-                    consultationResponseList = consultationResponseList,
-                    questionResponsesCount = questionResponsesCount
+                    participantCount = participantCount,
+                    consultationResponseList = consultationResponseList
                 )
             }
         )
@@ -61,41 +55,33 @@ class GetConsultationResultsUseCase(
 
     private fun buildQuestionResults(
         question: Question,
-        consultationResponseList: List<ReponseConsultation>,
-        questionResponsesCount: Int
+        participantCount: Int,
+        consultationResponseList: List<ReponseConsultation>
     ) = QuestionResults(
         question = question,
         responses = question.choixPossibleList.map { choix ->
             buildQuestionResult(
-                consultationResponseList = consultationResponseList,
                 question = question,
                 choix = choix,
-                questionResponsesCount = questionResponsesCount
+                participantCount = participantCount,
+                consultationResponseList = consultationResponseList,
             )
         }
     )
 
-    private fun buildParticipantCount(
-        filteredQuestionList: List<Question>,
-        consultationResponseList: List<ReponseConsultation>
-    ): Int {
-        val participantCount = consultationResponseList.size.toDouble() / filteredQuestionList.size.toDouble()
-        return if (participantCount.isNaN()) 0 else participantCount.toInt()
-    }
-
     private fun buildQuestionResult(
-        consultationResponseList: List<ReponseConsultation>,
         question: Question,
         choix: ChoixPossible,
-        questionResponsesCount: Int
+        participantCount: Int,
+        consultationResponseList: List<ReponseConsultation>,
     ): QuestionResult {
-        val choixCount =
-            consultationResponseList.filter { it.questionId == question.id && it.choiceId == choix.id }.size
-        val ratio = choixCount.toDouble() / questionResponsesCount.toDouble()
+        val choixCount = consultationResponseList.filter {
+            it.questionId == question.id && it.choiceId == choix.id
+        }.size
 
         return QuestionResult(
             choixPossible = choix,
-            ratio = if (ratio.isNaN()) 0.0 else ratio,
+            ratio = (choixCount.toDouble() / participantCount).takeUnless { it.isNaN() } ?: 0.0,
         )
     }
 

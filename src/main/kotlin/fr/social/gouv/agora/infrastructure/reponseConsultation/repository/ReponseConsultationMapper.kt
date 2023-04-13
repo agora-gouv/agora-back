@@ -12,6 +12,7 @@ class ReponseConsultationMapper {
             id = dto.id.toString(),
             questionId = dto.questionId.toString(),
             choiceId = dto.choiceId.toString(),
+            participationId = dto.participationId.toString(),
         )
     }
 

@@ -25,9 +25,9 @@ class QuestionRepositoryImpl(
         const val CHOIX_POSSIBLE_CACHE_NAME = "choixPossibleCache"
     }
 
-    override fun getConsultationQuestionList(idConsultation: String): List<Question> {
+    override fun getConsultationQuestionList(consultationId: String): List<Question> {
         return try {
-            val uuid = UUID.fromString(idConsultation)
+            val uuid = UUID.fromString(consultationId)
             val questionDtoList = getQuestionConsultationFromCache(uuid) ?: getQuestionConsultationFromDatabase(uuid)
             questionDtoList.map { questionDto ->
                 val choixPossibleDtoList =

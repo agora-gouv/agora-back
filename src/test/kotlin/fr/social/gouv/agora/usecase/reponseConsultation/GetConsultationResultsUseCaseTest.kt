@@ -43,9 +43,10 @@ internal class GetConsultationResultsUseCaseTest {
                 testDescription = "when 1 question with 1 choice & 1 response",
                 inputDataList = listOf(
                     InputData(
-                        questionId = "question1", choiceInputs = listOf(
-                            ChoiceTestInput(choiceId = "choice1", count = 1, expectedRatio = 1.0)
-                        )
+                        questionId = "question1",
+                        choiceInputs = listOf(
+                            ChoiceTestInput(choiceId = "choice1", participationIds = listOf("participationId"), expectedRatio = 1.0),
+                        ),
                     ),
                 ),
                 expectedParticipantCount = 1,
@@ -54,9 +55,18 @@ internal class GetConsultationResultsUseCaseTest {
                 testDescription = "when 1 question with 2 choice & some responses",
                 inputDataList = listOf(
                     InputData(
-                        questionId = "question1", choiceInputs = listOf(
-                            ChoiceTestInput(choiceId = "q1choice1", count = 8, expectedRatio = 0.8),
-                            ChoiceTestInput(choiceId = "q1choice2", count = 2, expectedRatio = 0.2)
+                        questionId = "question1",
+                        choiceInputs = listOf(
+                            ChoiceTestInput(
+                                choiceId = "q1choice1",
+                                participationIds = (0 until 8).map { index -> "participationId$index" },
+                                expectedRatio = 0.8
+                            ),
+                            ChoiceTestInput(
+                                choiceId = "q2choice2",
+                                participationIds = (8 until 10).map { index -> "participationId$index" },
+                                expectedRatio = 0.2
+                            ),
                         )
                     ),
                 ),
@@ -66,15 +76,33 @@ internal class GetConsultationResultsUseCaseTest {
                 testDescription = "when 2 questions with choices & some responses",
                 inputDataList = listOf(
                     InputData(
-                        questionId = "question1", choiceInputs = listOf(
-                            ChoiceTestInput(choiceId = "q1choice1", count = 8, expectedRatio = 0.8),
-                            ChoiceTestInput(choiceId = "q1choice2", count = 2, expectedRatio = 0.2)
+                        questionId = "question1",
+                        choiceInputs = listOf(
+                            ChoiceTestInput(
+                                choiceId = "q1choice1",
+                                participationIds = (0 until 8).map { index -> "participationId$index" },
+                                expectedRatio = 0.8
+                            ),
+                            ChoiceTestInput(
+                                choiceId = "choice2",
+                                participationIds = (8 until 10).map { index -> "participationId$index" },
+                                expectedRatio = 0.2
+                            ),
                         )
                     ),
                     InputData(
-                        questionId = "question2", choiceInputs = listOf(
-                            ChoiceTestInput(choiceId = "q2choice1", count = 4, expectedRatio = 0.4),
-                            ChoiceTestInput(choiceId = "q2choice2", count = 6, expectedRatio = 0.6)
+                        questionId = "question2",
+                        choiceInputs = listOf(
+                            ChoiceTestInput(
+                                choiceId = "choice1",
+                                participationIds = (0 until 4).map { index -> "participationId$index" },
+                                expectedRatio = 0.4
+                            ),
+                            ChoiceTestInput(
+                                choiceId = "q2choice2",
+                                participationIds = (4 until 10).map { index -> "participationId$index" },
+                                expectedRatio = 0.6
+                            ),
                         )
                     ),
                 ),
@@ -84,19 +112,59 @@ internal class GetConsultationResultsUseCaseTest {
                 testDescription = "when questions with choices & some responses but some questions do not have choices",
                 inputDataList = listOf(
                     InputData(
-                        questionId = "question1", choiceInputs = listOf(
-                            ChoiceTestInput(choiceId = "q1choice1", count = 8, expectedRatio = 0.8),
-                            ChoiceTestInput(choiceId = "q1choice2", count = 2, expectedRatio = 0.2)
+                        questionId = "question1",
+                        choiceInputs = listOf(
+                            ChoiceTestInput(
+                                choiceId = "q1choice1",
+                                participationIds = (0 until 8).map { index -> "participationId$index" },
+                                expectedRatio = 0.8
+                            ),
+                            ChoiceTestInput(
+                                choiceId = "choice2",
+                                participationIds = (8 until 10).map { index -> "participationId$index" },
+                                expectedRatio = 0.2
+                            ),
                         )
                     ),
                     InputData(
-                        questionId = "question2", choiceInputs = listOf(
-                            ChoiceTestInput(choiceId = "q2choice1", count = 4, expectedRatio = 0.4),
-                            ChoiceTestInput(choiceId = "q2choice2", count = 6, expectedRatio = 0.6)
+                        questionId = "question2",
+                        choiceInputs = listOf(
+                            ChoiceTestInput(
+                                choiceId = "choice1",
+                                participationIds = (0 until 4).map { index -> "participationId$index" },
+                                expectedRatio = 0.4
+                            ),
+                            ChoiceTestInput(
+                                choiceId = "q2choice2",
+                                participationIds = (4 until 10).map { index -> "participationId$index" },
+                                expectedRatio = 0.6
+                            ),
                         )
                     ),
                     InputData(
-                        questionId = "question3", choiceInputs = emptyList()
+                        questionId = "question3",
+                        choiceInputs = emptyList()
+                    ),
+                ),
+                expectedParticipantCount = 10,
+            ),
+            input(
+                testDescription = "when has question with multiple choices",
+                inputDataList = listOf(
+                    InputData(
+                        questionId = "question1",
+                        choiceInputs = listOf(
+                            ChoiceTestInput(
+                                choiceId = "q1choice1",
+                                participationIds = (0 until 10).map { index -> "participationId$index" },
+                                expectedRatio = 1.0
+                            ),
+                            ChoiceTestInput(
+                                choiceId = "choice2",
+                                participationIds = (0 until 6).map { index -> "participationId$index" },
+                                expectedRatio = 0.6
+                            ),
+                        )
                     ),
                 ),
                 expectedParticipantCount = 10,
@@ -257,11 +325,8 @@ internal class GetConsultationResultsUseCaseTest {
             given(it.questionId).willReturn("questionId")
             given(it.choiceId).willReturn("choixId")
         }
-        given(getReponseConsultationRepository.getConsultationResponses("consultationId")).willReturn(
-            listOf(
-                reponseConsultation
-            )
-        )
+        given(getReponseConsultationRepository.getConsultationResponses("consultationId"))
+            .willReturn(listOf(reponseConsultation))
 
         // When
         val result = useCase.getConsultationResults(consultationId = "consultationId")
@@ -346,10 +411,11 @@ internal class GetConsultationResultsUseCaseTest {
         }
 
         val reponseConsultationList = testInput.choiceInputs.flatMap { choiceInput ->
-            (1..choiceInput.count).map {
+            choiceInput.participationIds.map { participationId ->
                 mock(ReponseConsultation::class.java).also {
                     given(it.questionId).willReturn(testInput.questionId)
                     given(it.choiceId).willReturn(choiceInput.choiceId)
+                    given(it.participationId).willReturn(participationId)
                 }
             }
         }
@@ -379,6 +445,6 @@ internal data class InputData(
 
 internal data class ChoiceTestInput(
     val choiceId: String,
-    val count: Int,
+    val participationIds: List<String>,
     val expectedRatio: Double,
 )
