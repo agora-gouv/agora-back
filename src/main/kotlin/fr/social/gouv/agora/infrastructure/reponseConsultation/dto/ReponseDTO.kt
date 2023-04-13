@@ -1,11 +1,11 @@
-package fr.social.gouv.agora.infrastructure.reponse.dto
+package fr.social.gouv.agora.infrastructure.reponseConsultation.dto
 
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import java.io.Serializable
 import java.util.UUID
 
-@Entity(name = "reponses")
+@Entity(name = "reponses_consultation")
 data class ReponseDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
