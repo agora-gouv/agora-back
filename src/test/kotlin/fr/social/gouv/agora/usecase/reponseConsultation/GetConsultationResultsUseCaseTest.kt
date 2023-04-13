@@ -45,7 +45,11 @@ internal class GetConsultationResultsUseCaseTest {
                     InputData(
                         questionId = "question1",
                         choiceInputs = listOf(
-                            ChoiceTestInput(choiceId = "choice1", participationIds = listOf("participationId"), expectedRatio = 1.0),
+                            ChoiceTestInput(
+                                choiceId = "choice1",
+                                participationIds = listOf("participationId"),
+                                expectedRatio = 1.0
+                            ),
                         ),
                     ),
                 ),
