@@ -3,7 +3,7 @@ package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 import fr.social.gouv.agora.domain.ReponseConsultation
 import fr.social.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.social.gouv.agora.infrastructure.reponseConsultation.repository.GetReponseConsultationRepositoryImpl.Companion.REPONSE_CONSULTATION_CACHE_NAME
-import fr.social.gouv.agora.usecase.reponseConsultation.GetReponseConsultationRepository
+import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetReponseConsultationRepository
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Component
