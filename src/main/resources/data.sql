@@ -57,12 +57,12 @@ INSERT INTO thematiques(id, label, picto, color) VALUES (
 INSERT INTO consultations(id, title, abstract, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'Développer le covoiturage',
-    'Comment mutualiser au mieux les trajets pour l''environnement et le pouvoir d''achat des Français ?',
+    'Comment mutualiser au mieux les trajets pour l’environnement et le pouvoir d’achat des Français ?',
     '2024-01-23',
     'https://betagouv.github.io/agora-content/covoiturage.png',
     '5 à 10 questions',
     '5 minutes',
-    30000,
+    100,
     '<body>La description avec textes <b>en gras</b> et potentiellement des <a href="https://google.fr">liens</a><br/><br/><ul><li>example1 <b>en gras</b></li><li>example2</li></ul></body>',
     '<body>Qui peut aussi être du texte <i>riche</i></body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'

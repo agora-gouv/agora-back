@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
+import fr.social.gouv.agora.usecase.consultation.GetConsultationParticipantCountUseCase
 import fr.social.gouv.agora.usecase.consultation.GetConsultationUseCase
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
@@ -12,14 +13,20 @@ import java.util.*
 @Suppress("unused")
 class ConsultationController(
     private val getConsultationUseCase: GetConsultationUseCase,
+    private val getConsultationParticipantCountUseCase: GetConsultationParticipantCountUseCase,
     private val consultationDetailsJsonMapper: ConsultationDetailsJsonMapper,
 ) {
 
-    @GetMapping("/consultations/{id}")
-    fun getConsultationDetails(@PathVariable id: String): HttpEntity<*> {
-        return getConsultationUseCase.getConsultation(id)?.let { consultation ->
+    @GetMapping("/consultations/{consultationId}")
+    fun getConsultationDetails(@PathVariable consultationId: String): HttpEntity<*> {
+        return getConsultationUseCase.getConsultation(consultationId)?.let { consultation ->
             ResponseEntity.ok()
-                .body(consultationDetailsJsonMapper.toJson(consultation))
+                .body(
+                    consultationDetailsJsonMapper.toJson(
+                        domain = consultation,
+                        participantCount = getConsultationParticipantCountUseCase.getCount(consultationId)
+                    )
+                )
         } ?: ResponseEntity.EMPTY
     }
 
