@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.usecase.reponseConsultation.repository
+package fr.social.gouv.agora.usecase.consultationUpdate.repository
 
 import fr.social.gouv.agora.domain.ConsultationUpdate
 

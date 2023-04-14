@@ -2,6 +2,7 @@ package fr.social.gouv.agora.infrastructure.reponseConsultation.dto
 
 import fr.social.gouv.agora.domain.ChoiceResult
 import fr.social.gouv.agora.domain.ConsultationResult
+import fr.social.gouv.agora.domain.ConsultationStatus
 import fr.social.gouv.agora.domain.QuestionResult
 import fr.social.gouv.agora.infrastructure.reponseConsultation.ChoiceResultJson
 import fr.social.gouv.agora.infrastructure.reponseConsultation.ConsultationResultJson
@@ -19,7 +20,11 @@ class ConsultationResultJsonMapper {
             participantCount = domain.participantCount,
             results = domain.results.map(::toQuestionResultJson),
             lastUpdate = ConsultationUpdatesJson(
-                step = domain.lastUpdate.step,
+                step = when (domain.lastUpdate.status) {
+                    ConsultationStatus.COLLECTING_DATA -> 1
+                    ConsultationStatus.POLITICAL_COMMITMENT -> 2
+                    ConsultationStatus.EXECUTION -> 3
+                },
                 description = domain.lastUpdate.description,
             )
         )

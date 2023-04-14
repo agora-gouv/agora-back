@@ -3,7 +3,7 @@ package fr.social.gouv.agora.usecase.reponseConsultation
 import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationRepository
 import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
-import fr.social.gouv.agora.usecase.reponseConsultation.repository.ConsultationUpdateRepository
+import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetReponseConsultationRepository
 import org.springframework.stereotype.Service
 
