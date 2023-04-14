@@ -19,6 +19,7 @@ data class ReponseConsultationDTO(
     val choiceId: UUID ?,
     @Column(columnDefinition = "TEXT")
     val responseText: String,
+    val participationId: UUID,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -32,6 +33,6 @@ data class ReponseConsultationDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , consultationId = $consultationId, questionId = $questionId, choiceId = $choiceId, responseText = $responseText)"
+        return this::class.simpleName + "(id = $id , consultationId = $consultationId, questionId = $questionId, choiceId = $choiceId, responseText = $responseText, participationId = $participationId)"
     }
 }

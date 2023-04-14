@@ -22,9 +22,9 @@ class ConsultationRepositoryImpl(
         private const val CONSULTATION_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
-    override fun getConsultation(id: String): Consultation? {
+    override fun getConsultation(consultationId: String): Consultation? {
         return try {
-            val uuid = UUID.fromString(id)
+            val uuid = UUID.fromString(consultationId)
 
             val cacheResult = getConsultationFromCache(uuid)
             when (cacheResult) {

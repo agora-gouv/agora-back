@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.social.gouv.agora.domain.ReponseConsultation
+import fr.social.gouv.agora.domain.ReponseConsultationInserting
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.ReponseConsultationRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -12,7 +13,7 @@ class ReponseConsultationRepositoryImpl(
 ) : ReponseConsultationRepository {
 
 
-    override fun insertReponseConsultation(reponseConsultation: ReponseConsultation): InsertStatus {
+    override fun insertReponseConsultation(reponseConsultation: ReponseConsultationInserting): InsertStatus {
         val reponsesConsultationDTO = reponseConsultationMapper.toDto(reponseConsultation)
         println(reponsesConsultationDTO)
         val existInDatabase = databaseRepository.existsById(UUID.fromString(reponseConsultation.id))

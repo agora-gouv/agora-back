@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 
-import fr.social.gouv.agora.domain.ReponseConsultation
+import fr.social.gouv.agora.domain.ReponseConsultationInserting
 import fr.social.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -35,22 +35,25 @@ internal class ReponseConsultationRepositoryImplTest {
         questionId = UUID.randomUUID(),
         choiceId = UUID.randomUUID(),
         responseText = "je ne suis pas intéressé",
+        participationId = UUID.randomUUID(),
     )
 
-    private val reponseConsultation = ReponseConsultation(
+    private val reponseConsultation = ReponseConsultationInserting(
         id = "c29255f2-10ca-4be5-aab1-801ea1733302",
         consultationId = "1234",
         questionId = "1234",
         choiceIds = listOf("1234"),
         responseText = "je ne suis pas intéressé",
+        participationId = "1234",
     )
 
-    private val reponseConsultationSansChoice = ReponseConsultation(
+    private val reponseConsultationSansChoice = ReponseConsultationInserting(
         id = "c29255f2-10ca-4be5-aab1-801ea1733302",
         consultationId = "1234",
         questionId = "1234",
         choiceIds = null,
         responseText = "choice est un champs vide",
+        participationId = "1234",
     )
 
     private val reponseConsultationSansChoiceDTO = ReponseConsultationDTO(
@@ -59,6 +62,7 @@ internal class ReponseConsultationRepositoryImplTest {
         questionId = UUID.randomUUID(),
         choiceId = null,
         responseText = "choice est un champs vide",
+        participationId = UUID.randomUUID(),
     )
 
     @Test
