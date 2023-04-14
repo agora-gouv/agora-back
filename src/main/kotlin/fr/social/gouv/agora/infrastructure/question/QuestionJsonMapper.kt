@@ -7,13 +7,14 @@ import org.springframework.stereotype.Component
 class QuestionJsonMapper {
 
     fun toJson(domainList: List<Question>): QuestionsJson {
-        return QuestionsJson(questions = domainList.map { domainObject ->
+        return QuestionsJson(questions = domainList.map { domain ->
             QuestionJson(
-                id = domainObject.id,
-                label = domainObject.label,
-                order = domainObject.ordre,
-                type = domainObject.type,
-                possibleChoices = domainObject.choixPossibleList.map { choixPossible ->
+                id = domain.id,
+                label = domain.label,
+                order = domain.ordre,
+                type = domain.type,
+                maxChoices = domain.maxChoices,
+                possibleChoices = domain.choixPossibleList.map { choixPossible ->
                     ChoixPossibleJson(
                         id = choixPossible.id,
                         label = choixPossible.label,

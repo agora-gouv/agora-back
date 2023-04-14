@@ -13,6 +13,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
         label = dto.label,
         ordre = dto.ordre,
         type = dto.type,
+        maxChoices = dto.maxChoices,
         consultationId = dto.consultationId.toString(),
         choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO -> choixPossibleMapper.toDomain(choixPossibleDTO) },
     )

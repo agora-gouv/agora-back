@@ -69,6 +69,7 @@ internal class QuestionRepositoryImplTest {
         label = "domain-label",
         ordre = 1,
         type = "domain-type",
+        maxChoices = 42,
         consultationId = "domain-id-consultation",
         choixPossibleList = listOf(choixPossible)
     )
@@ -78,6 +79,7 @@ internal class QuestionRepositoryImplTest {
         label = "dto-label",
         ordre = 1,
         type = "dto-type",
+        maxChoices = 507317,
         consultationId = UUID.randomUUID(),
     )
 

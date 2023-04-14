@@ -91,6 +91,14 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
+    '78782e93-71b5-47e7-8f59-79c0ae32af48',
+    'Souhaitez vous préciser davantage ?',
+    2,
+    'ouverte',
+    'c29255f2-10ca-4be5-aab1-801ea173337c'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733302',
     'Comment vous motiver pour le covoiturage?',
     3,
@@ -112,25 +120,47 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733302'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id,label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'c27255f2-10ca-4be5-aab1-801ea1733303',
     'je ne veux pas le faire',
     3,
     'c29255f2-10ca-4be5-aab1-801ea1733302'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
-    '78782e93-71b5-47e7-8f59-79c0ae32af48',
-    'Souhaitez vous préciser davantage ?',
+INSERT INTO questions(id, label, ordre, type, max_choices, consultation_id) VALUES (
+    '18409cad-f31b-45cd-8285-a79c94aaf868',
+    'Quel types de transports en commun utilisez-vous le plus souvent ?',
+    4,
+    'multiple',
     2,
-    'ouverte',
     'c29255f2-10ca-4be5-aab1-801ea173337c'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9b3beb2c-6fd6-42d0-b8fb-6cea10447da2',
+    'Train',
+    1,
+    '18409cad-f31b-45cd-8285-a79c94aaf868'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'eadaa609-2d81-4584-bcb7-fb432396a0c5',
+    'Tram',
+    2,
+    '18409cad-f31b-45cd-8285-a79c94aaf868'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'b4dde6f7-fb75-48fd-9ec7-038adece59df',
+    'Bus',
+    3,
+    '18409cad-f31b-45cd-8285-a79c94aaf868'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
     '89bd9080-0b27-417a-af13-bc2368535ddf',
     'Avez-vous des suggestions d’amélioration pour cette application ?',
-    4,
+    5,
     'ouverte',
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
