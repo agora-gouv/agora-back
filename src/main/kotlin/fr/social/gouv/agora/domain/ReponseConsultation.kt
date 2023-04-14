@@ -6,3 +6,12 @@ data class ReponseConsultation(
     val choiceId: String,
     val participationId: String,
 )
+
+data class ReponseConsultationInserting(
+    val id: String,
+    val consultationId: String,
+    val questionId: String,
+    val choiceIds: List<String>?,
+    val responseText: String,
+    val participationId: String
+)

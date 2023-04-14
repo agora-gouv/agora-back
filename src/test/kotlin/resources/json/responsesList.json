@@ -1,0 +1,24 @@
+{
+  "consultationId": "c29255f2-10ca-4be5-aab1-801ea173337c",
+  "responses": [{
+    "questionId": "c29255f2-10ca-4be5-aab1-801ea173331c",
+    "choiceIds": [
+      "c29255f2-10ca-4be5-aab1-801ea173310c",
+      "c29255f2-10ca-4be5-aab1-801ea173311c"
+    ],
+    "responseText": ""
+  },
+    {
+      "questionId": "c29255f2-10ca-4be5-aab1-801ea173332c",
+      "choiceIds": [
+        "c29255f2-10ca-4be5-aab1-801ea173312c"
+      ],
+      "responseText": ""
+    },
+    {
+      "questionId": "c29255f2-10ca-4be5-aab1-801ea173333c",
+      "choiceIds": [],
+      "responseText": "réponse à champs libre"
+    }
+  ]
+}
