@@ -1,0 +1,108 @@
+package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
+
+import fr.social.gouv.agora.domain.ReponseConsultation
+import fr.social.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.BDDMockito.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.cache.annotation.EnableCaching
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.util.*
+
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
+@EnableCaching
+
+internal class ReponseConsultationRepositoryImplTest {
+
+    @Autowired
+    private lateinit var reponseConsultationRepository: ReponseConsultationRepositoryImpl
+
+    @MockBean
+    private lateinit var reponseConsultationDatabaseRepository: ReponseConsultationDatabaseRepository
+
+    @MockBean
+    private lateinit var reponseConsultationMapper: ReponseConsultationMapper
+
+    private val reponseConsultationDTO = ReponseConsultationDTO(
+        id = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea1733302"),
+        consultationId = UUID.randomUUID(),
+        questionId = UUID.randomUUID(),
+        choiceId = UUID.randomUUID(),
+        responseText = "je ne suis pas intéressé",
+    )
+
+    private val reponseConsultation = ReponseConsultation(
+        id = "c29255f2-10ca-4be5-aab1-801ea1733302",
+        consultationId = "1234",
+        questionId = "1234",
+        choiceIds = listOf("1234"),
+        responseText = "je ne suis pas intéressé",
+    )
+
+    private val reponseConsultationSansChoice = ReponseConsultation(
+        id = "c29255f2-10ca-4be5-aab1-801ea1733302",
+        consultationId = "1234",
+        questionId = "1234",
+        choiceIds = null,
+        responseText = "choice est un champs vide",
+    )
+
+    private val reponseConsultationSansChoiceDTO = ReponseConsultationDTO(
+        id = UUID.randomUUID(),
+        consultationId = UUID.randomUUID(),
+        questionId = UUID.randomUUID(),
+        choiceId = null,
+        responseText = "choice est un champs vide",
+    )
+
+    @Test
+    fun `insertReponseConsultation - when reponseConsultationId is not null - should return reponse insérée avec succès!`() {
+        //Given
+        given(reponseConsultationDatabaseRepository.save(reponseConsultationDTO)).willReturn(reponseConsultationDTO)
+        given(reponseConsultationMapper.toDto(reponseConsultation)).willReturn(listOf(reponseConsultationDTO))
+
+        // When
+        val result = reponseConsultationRepository.insertReponseConsultation(reponseConsultation)
+
+        // Then
+        assertThat(result).isEqualTo(InsertStatus.INSERT_SUCCESS)
+    }
+
+    @Test
+    fun `insertReponseConsultation - when reponseConsultation exist in database- should return la reponse existe déjà en base de données`() {
+        //Given
+        given(reponseConsultationMapper.toDto(reponseConsultation)).willReturn(listOf(reponseConsultationDTO))
+        given(reponseConsultationDatabaseRepository.existsById(reponseConsultationDTO.id)).willReturn(true)
+
+        // When
+        val result = reponseConsultationRepository.insertReponseConsultation(reponseConsultation)
+
+        // Then
+        assertThat(result).isEqualTo(InsertStatus.INSERT_CONFLICT)
+    }
+
+    @Test
+    fun `insertReponseConsultation - when choiceIds is null - should return reponse insérée avec succès!`() {
+        //Given
+        given(reponseConsultationDatabaseRepository.save(reponseConsultationSansChoiceDTO)).willReturn(
+            reponseConsultationSansChoiceDTO
+        )
+        given(reponseConsultationMapper.toDto(reponseConsultationSansChoice)).willReturn(
+            listOf(
+                reponseConsultationSansChoiceDTO
+            )
+        )
+
+        // When
+        val result = reponseConsultationRepository.insertReponseConsultation(reponseConsultationSansChoice)
+
+        // Then
+        assertThat(result).isEqualTo(InsertStatus.INSERT_SUCCESS)
+    }
+}

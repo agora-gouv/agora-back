@@ -6,7 +6,7 @@ import java.io.Serializable
 import java.util.UUID
 
 @Entity(name = "reponses_consultation")
-data class ReponseDTO(
+data class ReponseConsultationDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
@@ -16,14 +16,14 @@ data class ReponseDTO(
     @JoinTable(joinColumns = [JoinColumn(table = "questions", referencedColumnName = "id")])
     val questionId: UUID,
     @JoinTable(joinColumns = [JoinColumn(table = "choixpossible", referencedColumnName = "id")])
-    val choiceId: UUID,
+    val choiceId: UUID ?,
     @Column(columnDefinition = "TEXT")
     val responseText: String,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as ReponseDTO
+        other as ReponseConsultationDTO
 
         return id == other.id
     }
