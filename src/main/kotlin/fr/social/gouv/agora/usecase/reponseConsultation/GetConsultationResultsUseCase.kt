@@ -57,7 +57,7 @@ class GetConsultationResultsUseCase(
         question: Question,
         participantCount: Int,
         consultationResponseList: List<ReponseConsultation>
-    ) = QuestionResults(
+    ) = QuestionResult(
         question = question,
         responses = question.choixPossibleList.map { choix ->
             buildQuestionResult(
@@ -74,12 +74,12 @@ class GetConsultationResultsUseCase(
         choix: ChoixPossible,
         participantCount: Int,
         consultationResponseList: List<ReponseConsultation>,
-    ): QuestionResult {
+    ): ChoiceResult {
         val choixCount = consultationResponseList.filter {
             it.questionId == question.id && it.choiceId == choix.id
         }.size
 
-        return QuestionResult(
+        return ChoiceResult(
             choixPossible = choix,
             ratio = (choixCount.toDouble() / participantCount).takeUnless { it.isNaN() } ?: 0.0,
         )
