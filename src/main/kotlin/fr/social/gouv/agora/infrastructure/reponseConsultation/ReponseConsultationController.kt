@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation
 
+import fr.social.gouv.agora.infrastructure.reponseConsultation.repository.InsertStatus
 import fr.social.gouv.agora.usecase.reponseConsultation.InsertReponseConsultationUseCase
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
@@ -19,9 +20,11 @@ class ReponseConsultationController(
     fun postResponseConsultation(@RequestBody responsesConsultationJson: ReponsesConsultationJson): HttpEntity<*> {
         val participationId = UUID.randomUUID()
         val reponseConsultationList = jsonMapper.toDomain(responsesConsultationJson, participationId)
-        return ResponseEntity.ok()
-            .body(reponseConsultationList.map {
-                insertReponseConsultationUseCase.insertReponseConsultation(it)
-            })
+        val statusInsertion = reponseConsultationList.map {
+            insertReponseConsultationUseCase.insertReponseConsultation(it)
+        }
+        return if (statusInsertion.contains(InsertStatus.INSERT_CONFLICT))
+            ResponseEntity.status(400).body("Erreur d'insertion")
+        else ResponseEntity.ok().body("")
     }
 }
