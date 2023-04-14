@@ -68,6 +68,13 @@ INSERT INTO consultations(id, title, abstract, end_date, cover_url, question_cou
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
 ) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url, description = EXCLUDED.description;
 
+INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
+    '72682956-094b-423b-9086-9ec4f8ef2662',
+    1,
+    '<body>La description avec textes <b>en gras</b> et potentiellement des <a href="https://google.fr">liens</a><br/><br/><ul><li>example1 <b>en gras</b></li><li>example2</li></ul><br/>Dédicasse à Pénéloppe! Comme ça tu peux voir que ce texte vient bien du back 😉</body>',
+    'c29255f2-10ca-4be5-aab1-801ea173337c'
+) ON CONFLICT DO NOTHING;
+
 INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733301',
     'quel est la fréquence d’utilisation de transport en commun?',
