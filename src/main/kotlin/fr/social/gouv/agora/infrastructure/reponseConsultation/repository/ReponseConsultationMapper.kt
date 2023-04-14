@@ -22,7 +22,7 @@ class ReponseConsultationMapper {
         if (domain.choiceIds.isNullOrEmpty()) {
             return listOf(
                 ReponseConsultationDTO(
-                    id = UUID.fromString(domain.id),
+                    id = UUID.randomUUID(),
                     consultationId = UUID.fromString(domain.consultationId),
                     questionId = UUID.fromString(domain.questionId),
                     choiceId = null,
@@ -33,7 +33,7 @@ class ReponseConsultationMapper {
         } else {
             return domain.choiceIds.map { choiceId ->
                 ReponseConsultationDTO(
-                    id = UUID.fromString(domain.id),
+                    id = UUID.randomUUID(),
                     consultationId = UUID.fromString(domain.consultationId),
                     questionId = UUID.fromString(domain.questionId),
                     choiceId = UUID.fromString(choiceId),

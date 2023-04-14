@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -55,7 +54,6 @@ internal class ReponseConsultationRepositoryImplTest {
     )
 
     private val reponseConsultation = ReponseConsultationInserting(
-        id = "c29255f2-10ca-4be5-aab1-801ea1733302",
         consultationId = "1234",
         questionId = "1234",
         choiceIds = listOf("1234"),
@@ -64,7 +62,6 @@ internal class ReponseConsultationRepositoryImplTest {
     )
 
     private val reponseConsultationSansChoice = ReponseConsultationInserting(
-        id = "c29255f2-10ca-4be5-aab1-801ea1733302",
         consultationId = "1234",
         questionId = "1234",
         choiceIds = null,
