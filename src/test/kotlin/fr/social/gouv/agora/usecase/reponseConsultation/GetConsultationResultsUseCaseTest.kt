@@ -48,7 +48,7 @@ internal class GetConsultationResultsUseCaseTest {
                             ChoiceTestInput(
                                 choiceId = "choice1",
                                 participationIds = listOf("participationId"),
-                                expectedRatio = 1.0
+                                expectedRatio = 1.0,
                             ),
                         ),
                     ),
@@ -64,12 +64,12 @@ internal class GetConsultationResultsUseCaseTest {
                             ChoiceTestInput(
                                 choiceId = "q1choice1",
                                 participationIds = (0 until 8).map { index -> "participationId$index" },
-                                expectedRatio = 0.8
+                                expectedRatio = 0.8,
                             ),
                             ChoiceTestInput(
                                 choiceId = "q2choice2",
                                 participationIds = (8 until 10).map { index -> "participationId$index" },
-                                expectedRatio = 0.2
+                                expectedRatio = 0.2,
                             ),
                         )
                     ),
@@ -85,12 +85,12 @@ internal class GetConsultationResultsUseCaseTest {
                             ChoiceTestInput(
                                 choiceId = "q1choice1",
                                 participationIds = (0 until 8).map { index -> "participationId$index" },
-                                expectedRatio = 0.8
+                                expectedRatio = 0.8,
                             ),
                             ChoiceTestInput(
                                 choiceId = "choice2",
                                 participationIds = (8 until 10).map { index -> "participationId$index" },
-                                expectedRatio = 0.2
+                                expectedRatio = 0.2,
                             ),
                         )
                     ),
@@ -100,12 +100,12 @@ internal class GetConsultationResultsUseCaseTest {
                             ChoiceTestInput(
                                 choiceId = "choice1",
                                 participationIds = (0 until 4).map { index -> "participationId$index" },
-                                expectedRatio = 0.4
+                                expectedRatio = 0.4,
                             ),
                             ChoiceTestInput(
                                 choiceId = "q2choice2",
                                 participationIds = (4 until 10).map { index -> "participationId$index" },
-                                expectedRatio = 0.6
+                                expectedRatio = 0.6,
                             ),
                         )
                     ),
@@ -121,12 +121,12 @@ internal class GetConsultationResultsUseCaseTest {
                             ChoiceTestInput(
                                 choiceId = "q1choice1",
                                 participationIds = (0 until 8).map { index -> "participationId$index" },
-                                expectedRatio = 0.8
+                                expectedRatio = 0.8,
                             ),
                             ChoiceTestInput(
                                 choiceId = "choice2",
                                 participationIds = (8 until 10).map { index -> "participationId$index" },
-                                expectedRatio = 0.2
+                                expectedRatio = 0.2,
                             ),
                         )
                     ),
@@ -136,18 +136,18 @@ internal class GetConsultationResultsUseCaseTest {
                             ChoiceTestInput(
                                 choiceId = "choice1",
                                 participationIds = (0 until 4).map { index -> "participationId$index" },
-                                expectedRatio = 0.4
+                                expectedRatio = 0.4,
                             ),
                             ChoiceTestInput(
                                 choiceId = "q2choice2",
                                 participationIds = (4 until 10).map { index -> "participationId$index" },
-                                expectedRatio = 0.6
+                                expectedRatio = 0.6,
                             ),
                         )
                     ),
                     InputData(
                         questionId = "question3",
-                        choiceInputs = emptyList()
+                        choiceInputs = emptyList(),
                     ),
                 ),
                 expectedParticipantCount = 10,
@@ -161,12 +161,12 @@ internal class GetConsultationResultsUseCaseTest {
                             ChoiceTestInput(
                                 choiceId = "q1choice1",
                                 participationIds = (0 until 10).map { index -> "participationId$index" },
-                                expectedRatio = 1.0
+                                expectedRatio = 1.0,
                             ),
                             ChoiceTestInput(
                                 choiceId = "choice2",
                                 participationIds = (0 until 6).map { index -> "participationId$index" },
-                                expectedRatio = 0.6
+                                expectedRatio = 0.6,
                             ),
                         )
                     ),
@@ -257,15 +257,15 @@ internal class GetConsultationResultsUseCaseTest {
                 consultation = consultation,
                 participantCount = 0,
                 results = listOf(
-                    QuestionResults(
+                    QuestionResult(
                         question = question,
                         responses = listOf(
-                            QuestionResult(
+                            ChoiceResult(
                                 choixPossible = choixPossible,
                                 ratio = 0.0,
-                            )
-                        )
-                    )
+                            ),
+                        ),
+                    ),
                 ),
                 lastUpdate = consultationUpdate,
             )
@@ -341,18 +341,18 @@ internal class GetConsultationResultsUseCaseTest {
                 consultation = consultation,
                 participantCount = 1,
                 results = listOf(
-                    QuestionResults(
+                    QuestionResult(
                         question = question,
                         responses = listOf(
-                            QuestionResult(
+                            ChoiceResult(
                                 choixPossible = choixPossible,
                                 ratio = 1.0,
-                            )
-                        )
-                    )
+                            ),
+                        ),
+                    ),
                 ),
                 lastUpdate = consultationUpdate,
-            )
+            ),
         )
         then(consultationRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
@@ -387,9 +387,9 @@ internal class GetConsultationResultsUseCaseTest {
                 participantCount = expectedParticipantCount,
                 results = testDataList.mapNotNull { testData ->
                     testData.expectedQuestionResultList?.let {
-                        QuestionResults(
+                        QuestionResult(
                             question = testData.question,
-                            responses = testData.expectedQuestionResultList
+                            responses = testData.expectedQuestionResultList,
                         )
                     }
                 },
@@ -425,7 +425,7 @@ internal class GetConsultationResultsUseCaseTest {
         }
 
         val expectedQuestionResultList = testInput.choiceInputs.map { choiceInput ->
-            QuestionResult(
+            ChoiceResult(
                 choixPossible = choices.find { it.id == choiceInput.choiceId }!!,
                 ratio = choiceInput.expectedRatio,
             )
@@ -437,7 +437,7 @@ internal class GetConsultationResultsUseCaseTest {
     private data class TestData(
         val question: Question,
         val reponseConsultationList: List<ReponseConsultation>,
-        val expectedQuestionResultList: List<QuestionResult>?,
+        val expectedQuestionResultList: List<ChoiceResult>?,
     )
 
 }
