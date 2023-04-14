@@ -7,8 +7,7 @@ data class ReponsesConsultationJson(
     val consultationId: String,
     @JsonProperty("responses")
     val responses: List<ReponseConsultationJson>,
-
-    )
+)
 
 data class ReponseConsultationJson(
     @JsonProperty("questionId")

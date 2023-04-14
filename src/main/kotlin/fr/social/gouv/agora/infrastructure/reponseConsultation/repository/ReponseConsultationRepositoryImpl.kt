@@ -1,10 +1,8 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 
-import fr.social.gouv.agora.domain.ReponseConsultation
 import fr.social.gouv.agora.domain.ReponseConsultationInserting
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.ReponseConsultationRepository
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class ReponseConsultationRepositoryImpl(
@@ -14,16 +12,14 @@ class ReponseConsultationRepositoryImpl(
 
 
     override fun insertReponseConsultation(reponseConsultation: ReponseConsultationInserting): InsertStatus {
-        val reponsesConsultationDTO = reponseConsultationMapper.toDto(reponseConsultation)
-        println(reponsesConsultationDTO)
-        val existInDatabase = databaseRepository.existsById(UUID.fromString(reponseConsultation.id))
-        return if (existInDatabase)
-            InsertStatus.INSERT_CONFLICT
-        else {
-            for (reponseConsultationDTO in reponsesConsultationDTO)
+        val reponseConsultationDTOList = reponseConsultationMapper.toDto(reponseConsultation)
+        for (reponseConsultationDTO in reponseConsultationDTOList) {
+            if (!databaseRepository.existsById(reponseConsultationDTO.id))
                 databaseRepository.save(reponseConsultationDTO)
-            InsertStatus.INSERT_SUCCESS
+            else
+                return InsertStatus.INSERT_CONFLICT
         }
+        return InsertStatus.INSERT_SUCCESS
     }
 }
 
