@@ -181,3 +181,99 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     'Henri J.',
     '1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15'
 ) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    'c29255f2-10ca-4be5-aab1-801ea1733301',
+    'c28255f2-10ca-4be5-aab1-801ea1733301',
+    '',
+    'b27bb876-d14c-4863-a23b-af6526b96968'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    '78782e93-71b5-47e7-8f59-79c0ae32af48',
+    null,
+    'Réponse avec champs libre',
+    'b27bb876-d14c-4863-a23b-af6526b96968'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    'c29255f2-10ca-4be5-aab1-801ea1733302',
+    'c27255f2-10ca-4be5-aab1-801ea1733301',
+    '',
+    'b27bb876-d14c-4863-a23b-af6526b96968'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    '18409cad-f31b-45cd-8285-a79c94aaf868',
+    '9b3beb2c-6fd6-42d0-b8fb-6cea10447da2',
+    '',
+    'b27bb876-d14c-4863-a23b-af6526b96968'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    '18409cad-f31b-45cd-8285-a79c94aaf868',
+    'b4dde6f7-fb75-48fd-9ec7-038adece59df',
+    '',
+    'b27bb876-d14c-4863-a23b-af6526b96968'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    '89bd9080-0b27-417a-af13-bc2368535ddf',
+    null,
+    'Merci bye bye !',
+    'b27bb876-d14c-4863-a23b-af6526b96968'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    'c29255f2-10ca-4be5-aab1-801ea1733301',
+    'c28255f2-10ca-4be5-aab1-801ea1733302',
+    '',
+    '77c27321-7c6f-41a4-afa3-052128fbbec0'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    '78782e93-71b5-47e7-8f59-79c0ae32af48',
+    null,
+    '2ème réponse avec champs libre',
+    '77c27321-7c6f-41a4-afa3-052128fbbec0'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    'c29255f2-10ca-4be5-aab1-801ea1733302',
+    'c27255f2-10ca-4be5-aab1-801ea1733303',
+    '',
+    '77c27321-7c6f-41a4-afa3-052128fbbec0'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    '18409cad-f31b-45cd-8285-a79c94aaf868',
+    'eadaa609-2d81-4584-bcb7-fb432396a0c5',
+    '',
+    '77c27321-7c6f-41a4-afa3-052128fbbec0'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    '18409cad-f31b-45cd-8285-a79c94aaf868',
+    'b4dde6f7-fb75-48fd-9ec7-038adece59df',
+    '',
+    '77c27321-7c6f-41a4-afa3-052128fbbec0'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c29255f2-10ca-4be5-aab1-801ea173337c',
+    '89bd9080-0b27-417a-af13-bc2368535ddf',
+    null,
+    '@++',
+    '77c27321-7c6f-41a4-afa3-052128fbbec0'
+) ON CONFLICT DO NOTHING;

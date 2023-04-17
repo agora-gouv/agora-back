@@ -40,7 +40,7 @@ class ConsultationResultJsonMapper {
     private fun toChoiceResultJson(domain: ChoiceResult): ChoiceResultJson {
         return ChoiceResultJson(
             label = domain.choixPossible.label,
-            ratio = domain.ratio.roundToInt(),
+            ratio = (domain.ratio * 100).roundToInt(),
         )
     }
 
