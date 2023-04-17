@@ -12,10 +12,12 @@ data class QuestionDTO(
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
     @Column(columnDefinition = "TEXT")
-    val label: String,
+    val title: String,
     val ordre: Int,
     @Column(columnDefinition = "TEXT")
     val type: String,
+    @Column(columnDefinition = "TEXT")
+    val description: String?,
     val maxChoices: Int?,
     @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
     val consultationId: UUID,
@@ -32,6 +34,6 @@ data class QuestionDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , label = $label , ordre = $ordre , type = $type, maxChoices = $maxChoices, consultationId = $consultationId)"
+        return this::class.simpleName + "(id = $id , title = $title , ordre = $ordre , type = $type, description = $description, maxChoices = $maxChoices, consultationId = $consultationId)"
     }
 }

@@ -75,11 +75,13 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733301',
     'quel est la fréquence d’utilisation de transport en commun?',
     1,
     'unique',
+    null,
+    null,
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
 
@@ -97,11 +99,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733301'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '78782e93-71b5-47e7-8f59-79c0ae32af48',
     'Souhaitez vous préciser davantage ?',
     2,
     'ouverte',
+    null,
+    null,
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
 
@@ -110,6 +114,8 @@ INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
     'Comment vous motiver pour le covoiturage?',
     3,
     'unique',
+    null,
+    null,
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
 
@@ -134,11 +140,12 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733302'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, label, ordre, type, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '18409cad-f31b-45cd-8285-a79c94aaf868',
     'Quel types de transports en commun utilisez-vous le plus souvent ?',
-    4,
+    6,
     'multiple',
+    null,
     2,
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
@@ -164,11 +171,23 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '18409cad-f31b-45cd-8285-a79c94aaf868'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '89bd9080-0b27-417a-af13-bc2368535ddf',
     'Avez-vous des suggestions d’amélioration pour cette application ?',
     5,
     'ouverte',
+    null,
+    null,
+    'c29255f2-10ca-4be5-aab1-801ea173337c'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '89bd9080-0b27-417a-af13-bc23685300df',
+    'Ceci est un chapter',
+    4,
+    'chapter',
+    'Ceci est la description du chapter',
+    null,
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
 
@@ -180,16 +199,6 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     1,
     'Henri J.',
     '1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '89bd9080-0b27-417a-af13-bc23685300df',
-    'Ceci est un chapter',
-    4,
-    'chapter',
-    'Ceci est la description du chapter',
-    null,
-    'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (

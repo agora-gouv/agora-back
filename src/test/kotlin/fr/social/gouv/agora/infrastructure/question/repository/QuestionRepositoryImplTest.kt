@@ -2,6 +2,7 @@ package fr.social.gouv.agora.infrastructure.question.repository
 
 import fr.social.gouv.agora.domain.ChoixPossible
 import fr.social.gouv.agora.domain.Question
+import fr.social.gouv.agora.domain.QuestionChoixUnique
 import fr.social.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.social.gouv.agora.infrastructure.question.dto.QuestionDTO
 import fr.social.gouv.agora.infrastructure.question.repository.QuestionRepositoryImpl.Companion.CHOIX_POSSIBLE_CACHE_NAME
@@ -64,22 +65,22 @@ internal class QuestionRepositoryImplTest {
         questionId = UUID.randomUUID(),
     )
 
-    private val question = Question(
+    private val question = QuestionChoixUnique(
         id = "a29255f2-10ca-4be5-aab1-801ea1733310",
-        label = "domain-label",
-        ordre = 1,
-        type = "domain-type",
-        maxChoices = 42,
+        title = "domain-label",
+        order = 1,
         consultationId = "domain-id-consultation",
-        choixPossibleList = listOf(choixPossible)
+        questionProgress = "",
+        choixPossibleList = emptyList(),
     )
 
     private val questionDTO = QuestionDTO(
         id = UUID.randomUUID(),
-        label = "dto-label",
+        title = "dto-label",
         ordre = 1,
         type = "dto-type",
-        maxChoices = 507317,
+        description = null,
+        maxChoices = 2,
         consultationId = UUID.randomUUID(),
     )
 
