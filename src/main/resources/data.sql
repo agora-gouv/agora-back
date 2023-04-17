@@ -171,3 +171,13 @@ INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
     'ouverte',
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
+
+INSERT INTO qags(id, title, description, post_date, status, username, thematique_id) VALUES (
+    'f29c5d6f-9838-4c57-a7ec-0612145bb0c8',
+    'Pour la retraite : comment est-ce qu’on aboutit au chiffre de 65 ans ?',
+    'Le conseil d’orientation des retraites indique que les comptes sont à l’équilibre. A chaque nouveau président l’âge maximal change, qui choisit l’âge de 65 ans et pourquoi ? Je n’ai trouvé aucune justification concrète.',
+    '2023-04-17',
+    1,
+    'Henri J.',
+    '1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15'
+) ON CONFLICT DO NOTHING;
