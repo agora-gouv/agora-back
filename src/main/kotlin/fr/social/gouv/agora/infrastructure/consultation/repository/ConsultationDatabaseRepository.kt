@@ -9,6 +9,6 @@ import java.util.*
 
 @Repository
 interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID> {
-    @Query(value = "SELECT * FROM consultations WHERE id = :consultationId", nativeQuery = true)
+    @Query(value = "SELECT * FROM consultations WHERE id = :consultationId LIMIT 1", nativeQuery = true)
     fun getConsultation(@Param("consultationId") consultationId: UUID): ConsultationDTO?
 }

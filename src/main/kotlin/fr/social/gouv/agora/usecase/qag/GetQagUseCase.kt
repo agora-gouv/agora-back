@@ -1,9 +1,12 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.Qag
+import fr.social.gouv.agora.usecase.qag.repository.GetQagRepository
+import org.springframework.stereotype.Service
 
-class GetQagUseCase {
+@Service
+class GetQagUseCase(private val qagRepository: GetQagRepository) {
     fun getQag(qagId: String): Qag? {
-        TODO()
+        return qagRepository.getQag(qagId)
     }
 }
