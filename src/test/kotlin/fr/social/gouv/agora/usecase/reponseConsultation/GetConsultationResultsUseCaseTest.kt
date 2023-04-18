@@ -7,6 +7,8 @@ import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetReponseConsultationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -46,7 +48,7 @@ internal class GetConsultationResultsUseCaseTest {
                         questionId = "question1",
                         choiceInputs = listOf(
                             ChoiceTestInput(
-                                choiceId = "choice1",
+                                choiceId = "q1choice1",
                                 participationIds = listOf("participationId"),
                                 expectedRatio = 1.0,
                             ),
@@ -88,7 +90,7 @@ internal class GetConsultationResultsUseCaseTest {
                                 expectedRatio = 0.8,
                             ),
                             ChoiceTestInput(
-                                choiceId = "choice2",
+                                choiceId = "q1choice2",
                                 participationIds = (8 until 10).map { index -> "participationId$index" },
                                 expectedRatio = 0.2,
                             ),
@@ -98,7 +100,7 @@ internal class GetConsultationResultsUseCaseTest {
                         questionId = "question2",
                         choiceInputs = listOf(
                             ChoiceTestInput(
-                                choiceId = "choice1",
+                                choiceId = "q2choice1",
                                 participationIds = (0 until 4).map { index -> "participationId$index" },
                                 expectedRatio = 0.4,
                             ),
@@ -124,7 +126,7 @@ internal class GetConsultationResultsUseCaseTest {
                                 expectedRatio = 0.8,
                             ),
                             ChoiceTestInput(
-                                choiceId = "choice2",
+                                choiceId = "q1choice2",
                                 participationIds = (8 until 10).map { index -> "participationId$index" },
                                 expectedRatio = 0.2,
                             ),
@@ -134,7 +136,7 @@ internal class GetConsultationResultsUseCaseTest {
                         questionId = "question2",
                         choiceInputs = listOf(
                             ChoiceTestInput(
-                                choiceId = "choice1",
+                                choiceId = "q1choice1",
                                 participationIds = (0 until 4).map { index -> "participationId$index" },
                                 expectedRatio = 0.4,
                             ),
@@ -164,7 +166,7 @@ internal class GetConsultationResultsUseCaseTest {
                                 expectedRatio = 1.0,
                             ),
                             ChoiceTestInput(
-                                choiceId = "choice2",
+                                choiceId = "q1choice2",
                                 participationIds = (0 until 6).map { index -> "participationId$index" },
                                 expectedRatio = 0.6,
                             ),
@@ -233,131 +235,309 @@ internal class GetConsultationResultsUseCaseTest {
         then(getReponseConsultationRepository).shouldHaveNoInteractions()
     }
 
-    @Test
-    fun `getConsultationResults - when getConsultation not null, getConsultationUpdates not null, getConsultationQuestionList not empty with choixPossible, getConsultationResponses empty - should return expected`() {
-        // Given
-        val consultation = mock(Consultation::class.java)
-        given(consultationRepository.getConsultation("consultationId")).willReturn(consultation)
-        val consultationUpdate = mock(ConsultationUpdate::class.java)
-        given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
+    @Nested
+    inner class ConsultationUpdatesAndQuestionListNotNullButResponsesEmptyCases {
 
-        val choixPossible = mock(ChoixPossible::class.java)
-        val question = mock(Question::class.java).also {
-            given(it.choixPossibleList).willReturn(listOf(choixPossible))
+        private val consultation = mock(Consultation::class.java)
+        private val consultationUpdate = mock(ConsultationUpdate::class.java)
+
+        @BeforeEach
+        fun setUp() {
+            given(consultationRepository.getConsultation("consultationId")).willReturn(consultation)
+            given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
+            given(getReponseConsultationRepository.getConsultationResponses("consultationId")).willReturn(emptyList())
         }
-        given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
-        given(getReponseConsultationRepository.getConsultationResponses("consultationId")).willReturn(emptyList())
 
-        // When
-        val result = useCase.getConsultationResults(consultationId = "consultationId")
+        @Test
+        fun `getConsultationResults - when getConsultationQuestionList return questionChoixUnique without choices - should return object without result`() {
+            // Given
+            val question = mock(QuestionChoixUnique::class.java).also {
+                given(it.choixPossibleList).willReturn(emptyList())
+            }
+            given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
 
-        // Then
-        assertThat(result).isEqualTo(
-            ConsultationResult(
-                consultation = consultation,
-                participantCount = 0,
-                results = listOf(
-                    QuestionResult(
-                        question = question,
-                        responses = listOf(
-                            ChoiceResult(
-                                choixPossible = choixPossible,
-                                ratio = 0.0,
+            // When
+            val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+            // Then
+            assertThat(result).isEqualTo(
+                ConsultationResult(
+                    consultation = consultation,
+                    participantCount = 0,
+                    results = emptyList(),
+                    lastUpdate = consultationUpdate,
+                )
+            )
+            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
+            then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
+            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+        }
+
+        @Test
+        fun `getConsultationResults - when getConsultationQuestionList return questionChoixUnique - should return result with choices with ratio 0`() {
+            // Given
+            val choixPossible = mock(ChoixPossible::class.java)
+            val question = mock(QuestionChoixUnique::class.java).also {
+                given(it.choixPossibleList).willReturn(listOf(choixPossible))
+            }
+            given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
+
+            // When
+            val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+            // Then
+            assertThat(result).isEqualTo(
+                ConsultationResult(
+                    consultation = consultation,
+                    participantCount = 0,
+                    results = listOf(
+                        QuestionResult(
+                            question = question,
+                            responses = listOf(
+                                ChoiceResult(
+                                    choixPossible = choixPossible,
+                                    ratio = 0.0,
+                                ),
                             ),
                         ),
                     ),
-                ),
-                lastUpdate = consultationUpdate,
+                    lastUpdate = consultationUpdate,
+                )
             )
-        )
-        then(consultationRepository).should(only()).getConsultation("consultationId")
-        then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
-        then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-        then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
-    }
-
-    @Test
-    fun `getConsultationResults - when getConsultation not null, getConsultationUpdates not null, getConsultationQuestionList not empty but empty choixPossible, getConsultationResponses empty - should return remove question with empty choixPossible`() {
-        // Given
-        val consultation = mock(Consultation::class.java)
-        given(consultationRepository.getConsultation("consultationId")).willReturn(consultation)
-        val consultationUpdate = mock(ConsultationUpdate::class.java)
-        given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
-
-        val question = mock(Question::class.java).also {
-            given(it.choixPossibleList).willReturn(emptyList())
+            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
+            then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
+            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
         }
-        given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
-        given(getReponseConsultationRepository.getConsultationResponses("consultationId")).willReturn(emptyList())
 
-        // When
-        val result = useCase.getConsultationResults(consultationId = "consultationId")
+        @Test
+        fun `getConsultationResults - when getConsultationQuestionList return questionChoixMultiple without choices - should return object without result`() {
+            // Given
+            val question = mock(QuestionChoixMultiple::class.java).also {
+                given(it.choixPossibleList).willReturn(emptyList())
+            }
+            given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
 
-        // Then
-        assertThat(result).isEqualTo(
-            ConsultationResult(
-                consultation = consultation,
-                participantCount = 0,
-                results = emptyList(),
-                lastUpdate = consultationUpdate,
+            // When
+            val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+            // Then
+            assertThat(result).isEqualTo(
+                ConsultationResult(
+                    consultation = consultation,
+                    participantCount = 0,
+                    results = emptyList(),
+                    lastUpdate = consultationUpdate,
+                )
             )
-        )
-        then(consultationRepository).should(only()).getConsultation("consultationId")
-        then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
-        then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-        then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
-    }
-
-    @Test
-    fun `getConsultationResults - when getConsultation not null, getConsultationUpdates not null, getConsultationQuestionList not empty with choixPossible, getConsultationResponses not empty - should return expected`() {
-        // Given
-        val consultation = mock(Consultation::class.java)
-        given(consultationRepository.getConsultation("consultationId")).willReturn(consultation)
-        val consultationUpdate = mock(ConsultationUpdate::class.java)
-        given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
-
-        val choixPossible = mock(ChoixPossible::class.java).also {
-            given(it.id).willReturn("choixId")
+            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
+            then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
+            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
         }
-        val question = mock(Question::class.java).also {
-            given(it.id).willReturn("questionId")
-            given(it.choixPossibleList).willReturn(listOf(choixPossible))
-        }
-        given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
 
-        val reponseConsultation = mock(ReponseConsultation::class.java).also {
-            given(it.questionId).willReturn("questionId")
-            given(it.choiceId).willReturn("choixId")
-        }
-        given(getReponseConsultationRepository.getConsultationResponses("consultationId"))
-            .willReturn(listOf(reponseConsultation))
+        @Test
+        fun `getConsultationResults - when getConsultationQuestionList return questionChoixMultiple - should return result with choices with ratio 0`() {
+            // Given
+            val choixPossible = mock(ChoixPossible::class.java)
+            val question = mock(QuestionChoixMultiple::class.java).also {
+                given(it.choixPossibleList).willReturn(listOf(choixPossible))
+            }
+            given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
 
-        // When
-        val result = useCase.getConsultationResults(consultationId = "consultationId")
+            // When
+            val result = useCase.getConsultationResults(consultationId = "consultationId")
 
-        // Then
-        assertThat(result).isEqualTo(
-            ConsultationResult(
-                consultation = consultation,
-                participantCount = 1,
-                results = listOf(
-                    QuestionResult(
-                        question = question,
-                        responses = listOf(
-                            ChoiceResult(
-                                choixPossible = choixPossible,
-                                ratio = 1.0,
+            // Then
+            assertThat(result).isEqualTo(
+                ConsultationResult(
+                    consultation = consultation,
+                    participantCount = 0,
+                    results = listOf(
+                        QuestionResult(
+                            question = question,
+                            responses = listOf(
+                                ChoiceResult(
+                                    choixPossible = choixPossible,
+                                    ratio = 0.0,
+                                ),
                             ),
                         ),
                     ),
-                ),
-                lastUpdate = consultationUpdate,
-            ),
-        )
-        then(consultationRepository).should(only()).getConsultation("consultationId")
-        then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
-        then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-        then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+                    lastUpdate = consultationUpdate,
+                )
+            )
+            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
+            then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
+            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+        }
+
+        @Test
+        fun `getConsultationResults - when getConsultationQuestionList return questionOuverte - should return object without results`() {
+            // Given
+            val question = mock(QuestionOpened::class.java)
+            given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
+
+            // When
+            val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+            // Then
+            assertThat(result).isEqualTo(
+                ConsultationResult(
+                    consultation = consultation,
+                    participantCount = 0,
+                    results = emptyList(),
+                    lastUpdate = consultationUpdate,
+                )
+            )
+            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
+            then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
+            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+        }
+
+        @Test
+        fun `getConsultationResults - when getConsultationQuestionList return chapter - should return object without results`() {
+            // Given
+            val question = mock(Chapter::class.java)
+            given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
+
+            // When
+            val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+            // Then
+            assertThat(result).isEqualTo(
+                ConsultationResult(
+                    consultation = consultation,
+                    participantCount = 0,
+                    results = emptyList(),
+                    lastUpdate = consultationUpdate,
+                )
+            )
+            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
+            then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
+            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+        }
+
+    }
+
+    @Nested
+    inner class ConsultationUpdatesAndQuestionListNotNullWithResponsesCases {
+
+        private val consultation = mock(Consultation::class.java)
+        private val consultationUpdate = mock(ConsultationUpdate::class.java)
+
+        @BeforeEach
+        fun setUp() {
+            given(consultationRepository.getConsultation("consultationId")).willReturn(consultation)
+            given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
+        }
+
+        @Test
+        fun `getConsultationResults - when getConsultationQuestionList return questionChoixUnique - should return expected`() {
+            // Given
+            val choixPossible = mock(ChoixPossible::class.java).also {
+                given(it.id).willReturn("choiceId1")
+            }
+            val question = mock(QuestionChoixUnique::class.java).also {
+                given(it.id).willReturn("questionId1")
+                given(it.choixPossibleList).willReturn(listOf(choixPossible))
+            }
+            given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
+
+            val reponseConsultation = mock(ReponseConsultation::class.java).also {
+                given(it.questionId).willReturn("questionId1")
+                given(it.choiceId).willReturn("choiceId1")
+                given(it.participationId).willReturn("participationId1")
+            }
+            given(getReponseConsultationRepository.getConsultationResponses("consultationId"))
+                .willReturn(listOf(reponseConsultation))
+
+            // When
+            val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+            // Then
+            assertThat(result).isEqualTo(
+                ConsultationResult(
+                    consultation = consultation,
+                    participantCount = 1,
+                    results = listOf(
+                        QuestionResult(
+                            question = question,
+                            responses = listOf(
+                                ChoiceResult(
+                                    choixPossible = choixPossible,
+                                    ratio = 1.0,
+                                ),
+                            ),
+                        ),
+                    ),
+                    lastUpdate = consultationUpdate,
+                )
+            )
+            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
+            then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
+            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+        }
+
+        @Test
+        fun `getConsultationResults - when getConsultationQuestionList return questionChoixMultiple - should return expected`() {
+            // Given
+            val choixPossible1 = mock(ChoixPossible::class.java).also {
+                given(it.id).willReturn("choiceId1")
+            }
+            val choixPossible2 = mock(ChoixPossible::class.java).also {
+                given(it.id).willReturn("choiceId2")
+            }
+            val question = mock(QuestionChoixMultiple::class.java).also {
+                given(it.id).willReturn("questionId1")
+                given(it.choixPossibleList).willReturn(listOf(choixPossible1, choixPossible2))
+            }
+            given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
+
+            val reponseConsultation = mock(ReponseConsultation::class.java).also {
+                given(it.questionId).willReturn("questionId1")
+                given(it.choiceId).willReturn("choiceId1")
+                given(it.participationId).willReturn("participationId1")
+            }
+            given(getReponseConsultationRepository.getConsultationResponses("consultationId"))
+                .willReturn(listOf(reponseConsultation))
+
+            // When
+            val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+            // Then
+            assertThat(result).isEqualTo(
+                ConsultationResult(
+                    consultation = consultation,
+                    participantCount = 1,
+                    results = listOf(
+                        QuestionResult(
+                            question = question,
+                            responses = listOf(
+                                ChoiceResult(
+                                    choixPossible = choixPossible1,
+                                    ratio = 1.0,
+                                ),
+                                ChoiceResult(
+                                    choixPossible = choixPossible2,
+                                    ratio = 0.0,
+                                ),
+                            ),
+                        ),
+                    ),
+                    lastUpdate = consultationUpdate,
+                )
+            )
+            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
+            then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
+            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+        }
     }
 
     @ParameterizedTest(name = "getConsultationResults - {0} - should return expected")
@@ -409,7 +589,7 @@ internal class GetConsultationResultsUseCaseTest {
             }
         }
 
-        val question = mock(Question::class.java).also {
+        val question = mock(QuestionChoixUnique::class.java).also {
             given(it.id).willReturn(testInput.questionId)
             given(it.choixPossibleList).willReturn(choices)
         }

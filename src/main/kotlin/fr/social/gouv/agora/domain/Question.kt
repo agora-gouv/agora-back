@@ -7,22 +7,26 @@ sealed class Question {
     abstract val consultationId: String
 }
 
+abstract class QuestionWithChoices : Question() {
+    abstract val choixPossibleList: List<ChoixPossible>
+}
+
 data class QuestionChoixUnique(
     override val id: String,
     override val title: String,
     override val order: Int,
     override val consultationId: String,
-    val choixPossibleList: List<ChoixPossible>,
-) : Question()
+    override val choixPossibleList: List<ChoixPossible>,
+) : QuestionWithChoices()
 
 data class QuestionChoixMultiple(
     override val id: String,
     override val title: String,
     override val order: Int,
     override val consultationId: String,
-    val choixPossibleList: List<ChoixPossible>,
+    override val choixPossibleList: List<ChoixPossible>,
     val maxChoices: Int,
-) : Question()
+) : QuestionWithChoices()
 
 data class QuestionOpened(
     override val id: String,

@@ -32,7 +32,7 @@ class ConsultationResultJsonMapper {
 
     private fun toQuestionResultJson(domain: QuestionResult): QuestionResultJson {
         return QuestionResultJson(
-            questionTitle = domain.question.label,
+            questionTitle = domain.question.title,
             responses = domain.responses.map(::toChoiceResultJson),
         )
     }
