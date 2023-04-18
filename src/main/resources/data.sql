@@ -182,6 +182,16 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     '1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15'
 ) ON CONFLICT DO NOTHING;
 
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '89bd9080-0b27-417a-af13-bc23685300df',
+    'Ceci est un chapter',
+    4,
+    'chapter',
+    'Ceci est la description du chapter',
+    null,
+    'c29255f2-10ca-4be5-aab1-801ea173337c'
+) ON CONFLICT DO NOTHING;
+
 INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'c29255f2-10ca-4be5-aab1-801ea1733301',
