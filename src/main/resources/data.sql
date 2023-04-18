@@ -303,3 +303,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     '@++',
     '77c27321-7c6f-41a4-afa3-052128fbbec0'
 ) ON CONFLICT DO NOTHING;
+
+INSERT INTO supports_qag (user_id, qag_id) VALUES (
+    '54f66df616565d84',
+    'f29c5d6f-9838-4c57-a7ec-0612145bb0c8'
+) ON CONFLICT DO NOTHING;
