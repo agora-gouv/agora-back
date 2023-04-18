@@ -109,7 +109,7 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     'c29255f2-10ca-4be5-aab1-801ea173337c'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, label, ordre, type, consultation_id) VALUES (
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea1733302',
     'Comment vous motiver pour le covoiturage?',
     3,
