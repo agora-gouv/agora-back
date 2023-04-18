@@ -14,16 +14,22 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                 title = dto.title,
                 order = dto.ordre,
                 consultationId = dto.consultationId.toString(),
-                questionProgress = "",
-                choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO -> choixPossibleMapper.toDomain(choixPossibleDTO) })
+                choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO ->
+                    choixPossibleMapper.toDomain(
+                        choixPossibleDTO
+                    )
+                })
 
             "multiple" -> QuestionChoixMultiple(
                 id = dto.id.toString(),
                 title = dto.title,
                 order = dto.ordre,
                 consultationId = dto.consultationId.toString(),
-                questionProgress = "",
-                choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO -> choixPossibleMapper.toDomain(choixPossibleDTO) },
+                choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO ->
+                    choixPossibleMapper.toDomain(
+                        choixPossibleDTO
+                    )
+                },
                 maxChoices = dto.maxChoices!!
             )
 
@@ -32,7 +38,6 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                 title = dto.title,
                 order = dto.ordre,
                 consultationId = dto.consultationId.toString(),
-                questionProgress = "",
             )
 
             "chapter" -> Chapter(
@@ -40,9 +45,9 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                 title = dto.title,
                 order = dto.ordre,
                 consultationId = dto.consultationId.toString(),
-                description = dto.description?:"",
+                description = dto.description ?: "",
 
-            )
+                )
 
             else -> throw IllegalArgumentException("type de question erroné")
         }

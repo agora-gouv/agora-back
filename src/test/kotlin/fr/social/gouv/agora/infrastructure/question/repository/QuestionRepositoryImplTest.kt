@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.infrastructure.question.repository
 
-import fr.social.gouv.agora.domain.ChoixPossible
 import fr.social.gouv.agora.domain.Question
 import fr.social.gouv.agora.domain.QuestionChoixUnique
 import fr.social.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
@@ -51,13 +50,6 @@ internal class QuestionRepositoryImplTest {
     @Suppress("unused")
     private lateinit var cacheManager: CacheManager
 
-    private val choixPossible = ChoixPossible(
-        id = "1337",
-        label = "domain-label",
-        ordre = 1,
-        questionId = "domain-id-question",
-    )
-
     private val choixPossibleDTO = ChoixPossibleDTO(
         id = UUID.randomUUID(),
         label = "domain-label",
@@ -70,7 +62,6 @@ internal class QuestionRepositoryImplTest {
         title = "domain-label",
         order = 1,
         consultationId = "domain-id-consultation",
-        questionProgress = "",
         choixPossibleList = emptyList(),
     )
 
