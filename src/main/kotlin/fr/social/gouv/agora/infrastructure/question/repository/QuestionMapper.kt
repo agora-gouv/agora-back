@@ -9,48 +9,59 @@ import org.springframework.stereotype.Component
 class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
 
     fun toDomain(dto: QuestionDTO, choixPossibleDtoList: List<ChoixPossibleDTO>): Question {
-        val question = when (dto.type) {
-            "unique" -> QuestionChoixUnique(id = dto.id.toString(),
-                title = dto.title,
-                order = dto.ordre,
-                consultationId = dto.consultationId.toString(),
-                choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO ->
-                    choixPossibleMapper.toDomain(
-                        choixPossibleDTO
-                    )
-                })
+        return when (dto.type) {
+            "unique" -> buildQuestionChoixUnique(dto, choixPossibleDtoList)
 
-            "multiple" -> QuestionChoixMultiple(
-                id = dto.id.toString(),
-                title = dto.title,
-                order = dto.ordre,
-                consultationId = dto.consultationId.toString(),
-                choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO ->
-                    choixPossibleMapper.toDomain(
-                        choixPossibleDTO
-                    )
-                },
-                maxChoices = dto.maxChoices!!
-            )
+            "multiple" -> buildQuestionChoixMultiple(dto, choixPossibleDtoList)
 
-            "ouverte" -> QuestionOpened(
-                id = dto.id.toString(),
-                title = dto.title,
-                order = dto.ordre,
-                consultationId = dto.consultationId.toString(),
-            )
+            "ouverte" -> buildQuestionOuverte(dto)
 
-            "chapter" -> Chapter(
-                id = dto.id.toString(),
-                title = dto.title,
-                order = dto.ordre,
-                consultationId = dto.consultationId.toString(),
-                description = dto.description ?: "",
+            "chapter" -> buildChapitre(dto)
 
-                )
-
-            else -> throw IllegalArgumentException("type de question erroné")
+            else -> throw IllegalArgumentException("Invalid question type ${dto.type}")
         }
-        return question
     }
+
+    private fun buildChapitre(dto: QuestionDTO) = Chapitre(
+        id = dto.id.toString(),
+        title = dto.title,
+        order = dto.ordre,
+        consultationId = dto.consultationId.toString(),
+        description = dto.description ?: "",
+    )
+
+    private fun buildQuestionOuverte(dto: QuestionDTO) = QuestionOuverte(
+        id = dto.id.toString(),
+        title = dto.title,
+        order = dto.ordre,
+        consultationId = dto.consultationId.toString(),
+    )
+
+    private fun buildQuestionChoixMultiple(
+        dto: QuestionDTO, choixPossibleDtoList: List<ChoixPossibleDTO>
+    ) = QuestionChoixMultiple(
+        id = dto.id.toString(),
+        title = dto.title,
+        order = dto.ordre,
+        consultationId = dto.consultationId.toString(),
+        choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO ->
+            choixPossibleMapper.toDomain(
+                choixPossibleDTO
+            )
+        },
+        maxChoices = dto.maxChoices!!
+    )
+
+    private fun buildQuestionChoixUnique(
+        dto: QuestionDTO, choixPossibleDtoList: List<ChoixPossibleDTO>
+    ) = QuestionChoixUnique(id = dto.id.toString(),
+        title = dto.title,
+        order = dto.ordre,
+        consultationId = dto.consultationId.toString(),
+        choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO ->
+            choixPossibleMapper.toDomain(
+                choixPossibleDTO
+            )
+        })
+
 }

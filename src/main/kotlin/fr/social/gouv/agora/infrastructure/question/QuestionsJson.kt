@@ -13,34 +13,17 @@ data class QuestionsJson(
     val chapters: List<ChapterJson>,
 )
 
-data class ChapterJson(
+data class QuestionUniqueChoiceJson(
     @JsonProperty("id")
     val id: String,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("order")
     val order: Int,
-    @JsonProperty("consultationId")
-    val consultationId: String,
-    @JsonProperty("description")
-    val description: String,
-)
-
-data class QuestionMultipleChoicesJson(
-    @JsonProperty("id")
-    val id: String,
-    @JsonProperty("title")
-    val title: String,
-    @JsonProperty("order")
-    val order: Int,
-    @JsonProperty("consultationId")
-    val consultationId: String,
     @JsonProperty("questionProgress")
     val questionProgress: String,
     @JsonProperty("possibleChoices")
     val possibleChoices: List<ChoixPossibleJson>,
-    @JsonProperty("maxChoices")
-    val maxChoices: Int,
 )
 
 data class QuestionOpenedJson(
@@ -50,25 +33,34 @@ data class QuestionOpenedJson(
     val title: String,
     @JsonProperty("order")
     val order: Int,
-    @JsonProperty("consultationId")
-    val consultationId: String,
     @JsonProperty("questionProgress")
     val questionProgress: String,
 )
 
-data class QuestionUniqueChoiceJson(
+data class QuestionMultipleChoicesJson(
     @JsonProperty("id")
     val id: String,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("order")
     val order: Int,
-    @JsonProperty("consultationId")
-    val consultationId: String,
     @JsonProperty("questionProgress")
     val questionProgress: String,
+    @JsonProperty("maxChoices")
+    val maxChoices: Int,
     @JsonProperty("possibleChoices")
     val possibleChoices: List<ChoixPossibleJson>,
+)
+
+data class ChapterJson(
+    @JsonProperty("id")
+    val id: String,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("order")
+    val order: Int,
+    @JsonProperty("description")
+    val description: String,
 )
 
 data class ChoixPossibleJson(

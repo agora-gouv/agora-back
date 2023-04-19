@@ -377,7 +377,7 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return questionOuverte - should return object without results`() {
             // Given
-            val question = mock(QuestionOpened::class.java)
+            val question = mock(QuestionOuverte::class.java)
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
 
             // When
@@ -401,7 +401,7 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return chapter - should return object without results`() {
             // Given
-            val question = mock(Chapter::class.java)
+            val question = mock(Chapitre::class.java)
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
 
             // When

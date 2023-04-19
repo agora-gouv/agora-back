@@ -28,14 +28,14 @@ data class QuestionChoixMultiple(
     val maxChoices: Int,
 ) : QuestionWithChoices()
 
-data class QuestionOpened(
+data class QuestionOuverte(
     override val id: String,
     override val title: String,
     override val order: Int,
     override val consultationId: String,
 ) : Question()
 
-data class Chapter(
+data class Chapitre(
     override val id: String,
     override val title: String,
     override val order: Int,

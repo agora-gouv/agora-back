@@ -7,66 +7,76 @@ import org.springframework.stereotype.Component
 class QuestionJsonMapper {
 
     fun toJson(domainList: List<Question>): QuestionsJson {
-        val chapterList = domainList.filterIsInstance<Chapter>()
-        val chapterJsonList = chapterList.map { domain ->
-            ChapterJson(
-                id = domain.id,
-                title = domain.title,
-                order = domain.order,
-                consultationId = domain.consultationId,
-                description = domain.description,
-            )
-        }
+        val chapterList = domainList.filterIsInstance<Chapitre>()
+        val questionsNumber = domainList.size - chapterList.size
+        val chapterJsonList = buildChapterJsonList(chapterList)
         val questionUniqueList = domainList.filterIsInstance<QuestionChoixUnique>()
-        val questionUniqueJsonList = questionUniqueList.map { domain ->
-            QuestionUniqueChoiceJson(
-                id = domain.id,
-                title = domain.title,
-                order = domain.order,
-                consultationId = domain.consultationId,
-                questionProgress = "Question "+ calculateProgress(domain.order, chapterList) +"/"+(domainList.size-chapterList.size),
-                possibleChoices = domain.choixPossibleList.map { choixPossible ->
-                    ChoixPossibleJson(
-                        id = choixPossible.id,
-                        label = choixPossible.label,
-                        order = choixPossible.ordre,
-                    )
-                }
-            )
-        }
-        val questionOpenedList = domainList.filterIsInstance<QuestionOpened>()
-        val questionOpenedJsonList = questionOpenedList.map { domain ->
-            QuestionOpenedJson(
-                id = domain.id,
-                title = domain.title,
-                order = domain.order,
-                consultationId = domain.consultationId,
-                questionProgress = "Question "+ calculateProgress(domain.order, chapterList) +"/"+(domainList.size-chapterList.size),
-            )
-        }
+        val questionUniqueJsonList = buildQuestionUniqueChoiceJsonList(questionUniqueList, chapterList, questionsNumber)
+        val questionOuverteList = domainList.filterIsInstance<QuestionOuverte>()
+        val questionOpenedJsonList = buildQuestionOpenedJsonList(questionOuverteList, chapterList, questionsNumber)
         val questionMultipleList = domainList.filterIsInstance<QuestionChoixMultiple>()
-        val questionMultipleJsonList = questionMultipleList.map { domain ->
-            QuestionMultipleChoicesJson(
-                id = domain.id,
-                title = domain.title,
-                order = domain.order,
-                consultationId = domain.consultationId,
-                questionProgress = "Question "+ calculateProgress(domain.order, chapterList) +"/"+(domainList.size-chapterList.size),
-                maxChoices = domain.maxChoices,
-                possibleChoices = domain.choixPossibleList.map { choixPossible ->
-                    ChoixPossibleJson(
-                        id = choixPossible.id,
-                        label = choixPossible.label,
-                        order = choixPossible.ordre,
-                    )
-                }
-            )
-        }
+        val questionMultipleJsonList =
+            buildQuestionMultipleChoicesJsonList(questionMultipleList, chapterList, questionsNumber)
         return QuestionsJson(questionUniqueJsonList, questionOpenedJsonList, questionMultipleJsonList, chapterJsonList)
     }
 
+    private fun buildQuestionMultipleChoicesJsonList(
+        questionMultipleList: List<QuestionChoixMultiple>, chapterList: List<Chapitre>, questionsNumber: Int
+    ) = questionMultipleList.map { domain ->
+        QuestionMultipleChoicesJson(id = domain.id,
+            title = domain.title,
+            order = domain.order,
+            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            maxChoices = domain.maxChoices,
+            possibleChoices = domain.choixPossibleList.map { choixPossible ->
+                ChoixPossibleJson(
+                    id = choixPossible.id,
+                    label = choixPossible.label,
+                    order = choixPossible.ordre,
+                )
+            })
+    }
+
+    private fun buildQuestionOpenedJsonList(
+        questionOuverteList: List<QuestionOuverte>, chapterList: List<Chapitre>, questionsNumber: Int
+    ) = questionOuverteList.map { domain ->
+        QuestionOpenedJson(
+            id = domain.id,
+            title = domain.title,
+            order = domain.order,
+            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+        )
+    }
+
+    private fun buildQuestionUniqueChoiceJsonList(
+        questionUniqueList: List<QuestionChoixUnique>, chapterList: List<Chapitre>, questionsNumber: Int
+    ) = questionUniqueList.map { domain ->
+        QuestionUniqueChoiceJson(id = domain.id,
+            title = domain.title,
+            order = domain.order,
+            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            possibleChoices = domain.choixPossibleList.map { choixPossible ->
+                ChoixPossibleJson(
+                    id = choixPossible.id,
+                    label = choixPossible.label,
+                    order = choixPossible.ordre,
+                )
+            })
+    }
+
+    private fun buildChapterJsonList(chapterList: List<Chapitre>) = chapterList.map { domain ->
+        ChapterJson(
+            id = domain.id,
+            title = domain.title,
+            order = domain.order,
+            description = domain.description,
+        )
+    }
+
     private fun calculateProgress(
-        order: Int,
-        chapterList: List<Chapter>
+        order: Int, chapterList: List<Chapitre>
     ) = (order - chapterList.count { chapter -> chapter.order < order })
+
+    private fun buildQuestionProgress(order: Int, chapterList: List<Chapitre>, questionsNumber: Int) =
+        "Question " + calculateProgress(order, chapterList) + "/" + questionsNumber
 }

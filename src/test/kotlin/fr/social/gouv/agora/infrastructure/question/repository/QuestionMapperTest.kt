@@ -32,19 +32,20 @@ internal class QuestionMapperTest {
             maxChoices = null,
             consultationId = UUID.randomUUID(),
         )
-        val questionChoixUnique = QuestionChoixUnique(
-            id = questionDTOUnique.id.toString(),
-            title = "dto-label",
-            order = 1,
-            consultationId = questionDTOUnique.consultationId.toString(),
-            choixPossibleList = emptyList(),
-        )
 
         // When
         val result = questionMapper.toDomain(questionDTOUnique, emptyList())
 
         // Then
-        assertThat(result).isEqualTo(questionChoixUnique)
+        assertThat(result).isEqualTo(
+            QuestionChoixUnique(
+                id = questionDTOUnique.id.toString(),
+                title = "dto-label",
+                order = 1,
+                consultationId = questionDTOUnique.consultationId.toString(),
+                choixPossibleList = emptyList(),
+            )
+        )
     }
 
     @Test
@@ -100,20 +101,21 @@ internal class QuestionMapperTest {
             maxChoices = 2,
             consultationId = UUID.randomUUID(),
         )
-        val questionChoixMultiple = QuestionChoixMultiple(
-            id = questionDTOMultiple.id.toString(),
-            title = "dto-label",
-            order = 1,
-            consultationId = questionDTOMultiple.consultationId.toString(),
-            choixPossibleList = emptyList(),
-            maxChoices = 2
-        )
 
         // When
         val result = questionMapper.toDomain(questionDTOMultiple, emptyList())
 
         // Then
-        assertThat(result).isEqualTo(questionChoixMultiple)
+        assertThat(result).isEqualTo(
+            QuestionChoixMultiple(
+                id = questionDTOMultiple.id.toString(),
+                title = "dto-label",
+                order = 1,
+                consultationId = questionDTOMultiple.consultationId.toString(),
+                choixPossibleList = emptyList(),
+                maxChoices = 2
+            )
+        )
     }
 
     @Test
@@ -170,18 +172,19 @@ internal class QuestionMapperTest {
             maxChoices = null,
             consultationId = UUID.randomUUID(),
         )
-        val questionOuverte = QuestionOpened(
-            id = questionDTOOuverte.id.toString(),
-            title = "dto-label",
-            order = 1,
-            consultationId = questionDTOOuverte.consultationId.toString(),
-        )
 
         // When
         val result = questionMapper.toDomain(questionDTOOuverte, emptyList())
 
         // Then
-        assertThat(result).isEqualTo(questionOuverte)
+        assertThat(result).isEqualTo(
+            QuestionOuverte(
+                id = questionDTOOuverte.id.toString(),
+                title = "dto-label",
+                order = 1,
+                consultationId = questionDTOOuverte.consultationId.toString(),
+            )
+        )
     }
 
     @Test
@@ -196,18 +199,19 @@ internal class QuestionMapperTest {
             maxChoices = null,
             consultationId = UUID.randomUUID(),
         )
-        val questionChapter = Chapter(
-            id = questionDTOChapter.id.toString(),
-            title = "dto-label",
-            order = 1,
-            consultationId = questionDTOChapter.consultationId.toString(),
-            description = "dto-description",
-        )
 
         // When
         val result = questionMapper.toDomain(questionDTOChapter, emptyList())
 
         // Then
-        assertThat(result).isEqualTo(questionChapter)
+        assertThat(result).isEqualTo(
+            Chapitre(
+                id = questionDTOChapter.id.toString(),
+                title = "dto-label",
+                order = 1,
+                consultationId = questionDTOChapter.consultationId.toString(),
+                description = "dto-description",
+            )
+        )
     }
 }
