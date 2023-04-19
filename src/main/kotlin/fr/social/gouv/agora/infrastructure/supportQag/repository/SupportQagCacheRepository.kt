@@ -9,10 +9,10 @@ import java.util.*
 class SupportQagCacheRepository(private val cacheManager: CacheManager) {
 
     companion object {
-        private const val SUPPORT_QAG_COUNT_CACHE_NAME = "SupportQagCountCache"
+        const val SUPPORT_QAG_COUNT_CACHE_NAME = "SupportQagCountCache"
 
-        private const val SUPPORT_QAG_CACHE_NAME = "SupportQagCache"
-        private const val SUPPORT_QAG_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
+        const val SUPPORT_QAG_CACHE_NAME = "SupportQagCache"
+        const val SUPPORT_QAG_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
     sealed class CacheResult {
@@ -22,15 +22,23 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
     }
 
     fun getSupportCount(qagId: UUID): Int? {
-        return getSupportQagCountCache()?.get(qagId.toString(), String::class.java)?.toIntOrNull()
+        return try {
+            getCountCache()?.get(qagId.toString(), String::class.java)?.toIntOrNull()
+        } catch (e: IllegalStateException) {
+            null
+        }
     }
 
     fun insertSupportCount(qagId: UUID, supportCount: Int) {
-        getSupportQagCountCache()?.put(qagId.toString(), supportCount.toString())
+        getCountCache()?.put(qagId.toString(), supportCount.toString())
     }
 
     fun getSupportQag(qagId: UUID, userId: String): CacheResult {
-        val supportQagDTO = getSupportQagCache()?.get(buildSupportQagCacheKey(qagId, userId), SupportQagDTO::class.java)
+        val supportQagDTO = try {
+            getCache()?.get(buildSupportQagCacheKey(qagId, userId), SupportQagDTO::class.java)
+        } catch (e: IllegalStateException) {
+            null
+        }
         return when (supportQagDTO?.id?.toString()) {
             null -> CacheResult.CacheNotInitialized
             SUPPORT_QAG_NOT_FOUND_ID -> CacheResult.CachedSupportQagNotFound
@@ -43,14 +51,16 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
         userId: String,
         supportQagDTO: SupportQagDTO?,
     ) {
-        getSupportQagCache()?.put(
+        getCache()?.put(
             buildSupportQagCacheKey(qagId, userId),
             supportQagDTO ?: createSupportQagNotFound(),
         )
+
+        getCountCache()?.evict(qagId.toString())
     }
 
-    private fun getSupportQagCountCache() = cacheManager.getCache(SUPPORT_QAG_COUNT_CACHE_NAME)
-    private fun getSupportQagCache() = cacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
+    private fun getCountCache() = cacheManager.getCache(SUPPORT_QAG_COUNT_CACHE_NAME)
+    private fun getCache() = cacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
 
     private fun buildSupportQagCacheKey(qagId: UUID, userId: String) = "$qagId/$userId"
 

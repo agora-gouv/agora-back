@@ -18,12 +18,12 @@ class GetSupportQagRepositoryImpl(
         return try {
             val qagUUID = UUID.fromString(qagId)
 
-            val supportCount = cacheRepository.getSupportCount(qagUUID) ?: getSupportCountFromDatabase(qagUUID)
             val supportQagDto = when (val cacheResult = cacheRepository.getSupportQag(qagUUID, userId)) {
                 CacheResult.CacheNotInitialized -> getSupportQagFromDatabase(qagUUID, userId)
                 CacheResult.CachedSupportQagNotFound -> null
                 is CacheResult.CachedSupportQag -> cacheResult.supportQagDTO
             }
+            val supportCount = cacheRepository.getSupportCount(qagUUID) ?: getSupportCountFromDatabase(qagUUID)
 
             return mapper.toDomain(supportCount, supportQagDto)
         } catch (e: IllegalArgumentException) {
