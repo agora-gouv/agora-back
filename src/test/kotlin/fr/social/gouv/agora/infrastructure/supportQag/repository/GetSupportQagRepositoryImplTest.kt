@@ -54,7 +54,7 @@ internal class GetSupportQagRepositoryImplTest {
     }
 
     @Test
-    fun `getSupportQag - when CacheNotInitialized - should return mapped object from database and insert result to cache`() {
+    fun `getSupportQag - when CacheNotInitialized - should return supportQag first, then supportCount from database and insert result to cache`() {
         // Given
         val qagUUID = UUID.randomUUID()
         given(cacheRepository.getSupportCount(qagUUID)).willReturn(null)
@@ -74,11 +74,13 @@ internal class GetSupportQagRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(supportQag)
-        then(cacheRepository).should(times(1)).getSupportCount(qagUUID)
-        then(cacheRepository).should(times(1)).getSupportQag(qagId = qagUUID, userId = "userId")
-        then(cacheRepository).should(times(1)).insertSupportCount(qagId = qagUUID, supportCount = 50)
-        then(cacheRepository).should(times(1))
-            .insertSupportQag(qagId = qagUUID, userId = "userId", supportQagDTO = null)
+        inOrder(cacheRepository).also {
+            then(cacheRepository).should(it).getSupportQag(qagId = qagUUID, userId = "userId")
+            then(cacheRepository).should(it).insertSupportQag(qagId = qagUUID, userId = "userId", supportQagDTO = null)
+            then(cacheRepository).should(it).getSupportCount(qagUUID)
+            then(cacheRepository).should(it).insertSupportCount(qagId = qagUUID, supportCount = 50)
+            it.verifyNoMoreInteractions()
+        }
         then(databaseRepository).should(times(1)).getSupportCount(qagUUID)
         then(databaseRepository).should(times(1)).getSupportQag(qagId = qagUUID, userId = "userId")
         then(mapper).should(only()).toDomain(supportCount = 50, dto = null)
