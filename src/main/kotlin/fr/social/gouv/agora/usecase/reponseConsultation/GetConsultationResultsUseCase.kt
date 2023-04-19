@@ -2,8 +2,8 @@ package fr.social.gouv.agora.usecase.reponseConsultation
 
 import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationRepository
-import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
+import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetReponseConsultationRepository
 import org.springframework.stereotype.Service
 
@@ -36,7 +36,8 @@ class GetConsultationResultsUseCase(
         questionList: List<Question>,
         consultationResponseList: List<ReponseConsultation>
     ): ConsultationResult {
-        val filteredQuestionList = questionList.filter { it.choixPossibleList.isNotEmpty() }
+        val filteredQuestionList =
+            questionList.filterIsInstance<QuestionWithChoices>().filter { it.choixPossibleList.isNotEmpty() }
         val participantCount = consultationResponseList.map { it.participationId }.toSet().size
 
         return ConsultationResult(
@@ -54,7 +55,7 @@ class GetConsultationResultsUseCase(
     }
 
     private fun buildQuestionResults(
-        question: Question,
+        question: QuestionWithChoices,
         participantCount: Int,
         consultationResponseList: List<ReponseConsultation>
     ) = QuestionResult(

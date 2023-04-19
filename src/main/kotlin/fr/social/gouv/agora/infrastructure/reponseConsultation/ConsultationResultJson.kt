@@ -7,8 +7,10 @@ data class ConsultationResultJson(
     val title: String,
     @JsonProperty("participantCount")
     val participantCount: Int,
-    @JsonProperty("results")
-    val results: List<QuestionResultJson>,
+    @JsonProperty("resultsUniqueChoice")
+    val resultsUniqueChoice: List<QuestionResultJson>,
+    @JsonProperty("resultsMultipleChoice")
+    val resultsMultipleChoice: List<QuestionResultJson>,
     @JsonProperty("etEnsuite")
     val lastUpdate: ConsultationUpdatesJson,
 )
@@ -16,6 +18,8 @@ data class ConsultationResultJson(
 data class QuestionResultJson(
     @JsonProperty("questionTitle")
     val questionTitle: String,
+    @JsonProperty("order")
+    val order: Int,
     @JsonProperty("responses")
     val responses: List<ChoiceResultJson>,
 )
