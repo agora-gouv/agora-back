@@ -9,25 +9,35 @@ class QuestionJsonMapper {
     fun toJson(domainList: List<Question>): QuestionsJson {
         val chapterList = domainList.filterIsInstance<Chapitre>()
         val questionsNumber = domainList.size - chapterList.size
-        val chapterJsonList = buildChapterJsonList(chapterList)
-        val questionUniqueList = domainList.filterIsInstance<QuestionChoixUnique>()
-        val questionUniqueJsonList = buildQuestionUniqueChoiceJsonList(questionUniqueList, chapterList, questionsNumber)
-        val questionOuverteList = domainList.filterIsInstance<QuestionOuverte>()
-        val questionOpenedJsonList = buildQuestionOpenedJsonList(questionOuverteList, chapterList, questionsNumber)
-        val questionMultipleList = domainList.filterIsInstance<QuestionChoixMultiple>()
-        val questionMultipleJsonList =
-            buildQuestionMultipleChoicesJsonList(questionMultipleList, chapterList, questionsNumber)
-        return QuestionsJson(questionUniqueJsonList, questionOpenedJsonList, questionMultipleJsonList, chapterJsonList)
+        return QuestionsJson(
+            questionsUniqueChoice = buildQuestionUniqueChoiceJsonList(
+                domainList.filterIsInstance<QuestionChoixUnique>(),
+                chapterList,
+                questionsNumber
+            ),
+            questionsOpened = buildQuestionOpenedJsonList(
+                domainList.filterIsInstance<QuestionOuverte>(),
+                chapterList,
+                questionsNumber
+            ),
+            questionsMultipleChoices = buildQuestionMultipleChoicesJsonList(
+                domainList.filterIsInstance<QuestionChoixMultiple>(),
+                chapterList,
+                questionsNumber
+            ),
+            chapters = buildChapterJsonList(chapterList)
+        )
     }
 
-    private fun buildQuestionMultipleChoicesJsonList(
-        questionMultipleList: List<QuestionChoixMultiple>, chapterList: List<Chapitre>, questionsNumber: Int
-    ) = questionMultipleList.map { domain ->
-        QuestionMultipleChoicesJson(id = domain.id,
+    private fun buildQuestionUniqueChoiceJsonList(
+        questionUniqueList: List<QuestionChoixUnique>,
+        chapterList: List<Chapitre>,
+        questionsNumber: Int
+    ) = questionUniqueList.map { domain ->
+        QuestionUniqueChoiceJson(id = domain.id,
             title = domain.title,
             order = domain.order,
             questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
-            maxChoices = domain.maxChoices,
             possibleChoices = domain.choixPossibleList.map { choixPossible ->
                 ChoixPossibleJson(
                     id = choixPossible.id,
@@ -38,7 +48,9 @@ class QuestionJsonMapper {
     }
 
     private fun buildQuestionOpenedJsonList(
-        questionOuverteList: List<QuestionOuverte>, chapterList: List<Chapitre>, questionsNumber: Int
+        questionOuverteList: List<QuestionOuverte>,
+        chapterList: List<Chapitre>,
+        questionsNumber: Int
     ) = questionOuverteList.map { domain ->
         QuestionOpenedJson(
             id = domain.id,
@@ -48,13 +60,17 @@ class QuestionJsonMapper {
         )
     }
 
-    private fun buildQuestionUniqueChoiceJsonList(
-        questionUniqueList: List<QuestionChoixUnique>, chapterList: List<Chapitre>, questionsNumber: Int
-    ) = questionUniqueList.map { domain ->
-        QuestionUniqueChoiceJson(id = domain.id,
+    private fun buildQuestionMultipleChoicesJsonList(
+        questionMultipleList: List<QuestionChoixMultiple>,
+        chapterList: List<Chapitre>,
+        questionsNumber: Int
+    ) = questionMultipleList.map { domain ->
+        QuestionMultipleChoicesJson(
+            id = domain.id,
             title = domain.title,
             order = domain.order,
             questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            maxChoices = domain.maxChoices,
             possibleChoices = domain.choixPossibleList.map { choixPossible ->
                 ChoixPossibleJson(
                     id = choixPossible.id,

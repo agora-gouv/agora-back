@@ -11,35 +11,29 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
     fun toDomain(dto: QuestionDTO, choixPossibleDtoList: List<ChoixPossibleDTO>): Question {
         return when (dto.type) {
             "unique" -> buildQuestionChoixUnique(dto, choixPossibleDtoList)
-
             "multiple" -> buildQuestionChoixMultiple(dto, choixPossibleDtoList)
-
             "ouverte" -> buildQuestionOuverte(dto)
-
             "chapter" -> buildChapitre(dto)
-
             else -> throw IllegalArgumentException("Invalid question type ${dto.type}")
         }
     }
 
-    private fun buildChapitre(dto: QuestionDTO) = Chapitre(
+    private fun buildQuestionChoixUnique(
+        dto: QuestionDTO,
+        choixPossibleDtoList: List<ChoixPossibleDTO>) = QuestionChoixUnique(
         id = dto.id.toString(),
         title = dto.title,
         order = dto.ordre,
         consultationId = dto.consultationId.toString(),
-        description = dto.description ?: "",
-    )
-
-    private fun buildQuestionOuverte(dto: QuestionDTO) = QuestionOuverte(
-        id = dto.id.toString(),
-        title = dto.title,
-        order = dto.ordre,
-        consultationId = dto.consultationId.toString(),
-    )
+        choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO ->
+            choixPossibleMapper.toDomain(
+                choixPossibleDTO
+            )
+        })
 
     private fun buildQuestionChoixMultiple(
-        dto: QuestionDTO, choixPossibleDtoList: List<ChoixPossibleDTO>
-    ) = QuestionChoixMultiple(
+        dto: QuestionDTO,
+        choixPossibleDtoList: List<ChoixPossibleDTO>) = QuestionChoixMultiple(
         id = dto.id.toString(),
         title = dto.title,
         order = dto.ordre,
@@ -52,16 +46,18 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
         maxChoices = dto.maxChoices!!
     )
 
-    private fun buildQuestionChoixUnique(
-        dto: QuestionDTO, choixPossibleDtoList: List<ChoixPossibleDTO>
-    ) = QuestionChoixUnique(id = dto.id.toString(),
+    private fun buildQuestionOuverte(dto: QuestionDTO) = QuestionOuverte(
+        id = dto.id.toString(),
         title = dto.title,
         order = dto.ordre,
         consultationId = dto.consultationId.toString(),
-        choixPossibleList = choixPossibleDtoList.map { choixPossibleDTO ->
-            choixPossibleMapper.toDomain(
-                choixPossibleDTO
-            )
-        })
+    )
 
+    private fun buildChapitre(dto: QuestionDTO) = Chapitre(
+        id = dto.id.toString(),
+        title = dto.title,
+        order = dto.ordre,
+        consultationId = dto.consultationId.toString(),
+        description = dto.description ?: "",
+    )
 }

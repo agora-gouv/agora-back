@@ -54,6 +54,13 @@ INSERT INTO thematiques(id, label, picto, color) VALUES (
     '#FFE1E7F3'
 ) ON CONFLICT DO NOTHING;
 
+INSERT INTO thematiques(id, label, picto, color) VALUES (
+    '47897e51-8e94-4920-a26a-1b1e5e232e82',
+    'Autre',
+    '\ud83d\udce6',
+    '#FFE6CCB3'
+) ON CONFLICT DO NOTHING;
+
 INSERT INTO consultations(id, title, abstract, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'Développer le covoiturage',
