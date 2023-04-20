@@ -204,7 +204,7 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     'Le conseil d’orientation des retraites indique que les comptes sont à l’équilibre. A chaque nouveau président l’âge maximal change, qui choisit l’âge de 65 ans et pourquoi ? Je n’ai trouvé aucune justification concrète.',
     '2023-04-17',
     1,
-    'Henri J.',
+    'Harry P.',
     '1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15'
 ) ON CONFLICT DO NOTHING;
 
@@ -307,4 +307,23 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
 INSERT INTO supports_qag (user_id, qag_id) VALUES (
     '54f66df616565d84',
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qags(id, title, description, post_date, status, username, thematique_id) VALUES (
+    '889b41ad-321b-4338-8596-df745c546919',
+    'Quand l’application AGORA sera-t-elle disponible au grand public ?',
+    'Nous avons cru comprendre qu’il s’agit pour l’instant que d’une expérimentation.',
+    '2023-04-1',
+    1,
+    'Henri J.',
+    '47897e51-8e94-4920-a26a-1b1e5e232e82'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO responses_qag(id, author, authorDescription, responseDate, videoUrl, transcription) VALUES (
+    'fe17ddb7-32d3-4ead-b3a0-3b6593addf47',
+    'The Stormtrooper',
+    'Ministre de rien du tout, porte parole du projet AGORA, ne sais pas viser juste',
+    '2023-04-21',
+    'https://betagouv.github.io/agora-content/QaG-Stormtrooper-Response.mp4',
+    'Bonjour je suis monsieur Stormtrooper et je vais vous répondre à la question de Henry J. sur l’application AGORA. Blablabla blabla. Voilà merci !'
 ) ON CONFLICT DO NOTHING;
