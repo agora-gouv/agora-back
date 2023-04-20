@@ -1,9 +1,9 @@
 package fr.social.gouv.agora.infrastructure.qag.repository
 
-import fr.social.gouv.agora.domain.Qag
+import fr.social.gouv.agora.domain.QagInfo
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.GetQagRepositoryImpl.Companion.QAG_CACHE_NAME
-import fr.social.gouv.agora.usecase.qag.repository.GetQagRepository
+import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoRepositoryImpl.Companion.QAG_CACHE_NAME
+import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Component
@@ -11,18 +11,18 @@ import java.util.*
 
 @Component
 @CacheConfig(cacheNames = [QAG_CACHE_NAME])
-class GetQagRepositoryImpl(
-    private val databaseRepository: GetQagDatabaseRepository,
-    private val mapper: QagMapper,
+class QagInfoRepositoryImpl(
+    private val databaseRepository: QagInfoDatabaseRepository,
+    private val mapper: QagInfoMapper,
     private val cacheManager: CacheManager,
-) : GetQagRepository {
+) : QagInfoRepository {
 
     companion object {
         const val QAG_CACHE_NAME = "qagCache"
         private const val QAG_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
-    override fun getQag(qagId: String): Qag? {
+    override fun getQagInfo(qagId: String): QagInfo? {
         return try {
             val qagUUID = UUID.fromString(qagId)
             val cacheResult = getQagFromCache(qagUUID)
@@ -49,11 +49,11 @@ class GetQagRepositoryImpl(
 
     private fun getQagFromDatabase(qagUUID: UUID): QagDTO? {
         val qagDTO = databaseRepository.getQag(qagUUID)
-        getCache()?.put(qagUUID.toString(), qagDTO ?: createQagNotFound())
+        getCache()?.put(qagUUID.toString(), qagDTO ?: createQagInfoNotFound())
         return qagDTO
     }
 
-    private fun createQagNotFound(): QagDTO {
+    private fun createQagInfoNotFound(): QagDTO {
         return QagDTO(
             id = UUID.fromString(QAG_NOT_FOUND_ID),
             title = "",
