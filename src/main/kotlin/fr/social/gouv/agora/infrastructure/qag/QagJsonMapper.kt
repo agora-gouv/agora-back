@@ -1,13 +1,12 @@
 package fr.social.gouv.agora.infrastructure.qag
 
 import fr.social.gouv.agora.domain.Qag
-import fr.social.gouv.agora.domain.SupportQag
 import org.springframework.stereotype.Component
 
 @Component
 class QagJsonMapper {
 
-    fun toJson(qag: Qag, supportQag: SupportQag?): QagJson {
+    fun toJson(qag: Qag): QagJson {
         return QagJson(
             id = qag.id,
             thematiqueId = qag.thematiqueId,
@@ -15,10 +14,10 @@ class QagJsonMapper {
             description = qag.description,
             date = qag.date,
             username = qag.username,
-            support = supportQag?.let {
+            support = qag.support?.let { support ->
                 SupportQagJson(
-                    supportCount = supportQag.supportCount,
-                    isSupportedByUser = supportQag.isSupportedByUser,
+                    supportCount = support.supportCount,
+                    isSupportedByUser = support.isSupportedByUser,
                 )
             }
         )

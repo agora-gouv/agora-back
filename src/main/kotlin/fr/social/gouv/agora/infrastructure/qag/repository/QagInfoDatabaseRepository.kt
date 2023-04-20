@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface GetQagDatabaseRepository : CrudRepository<QagDTO, UUID> {
+interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Query(value = "SELECT * FROM qags WHERE id = :qagId LIMIT 1", nativeQuery = true)
     fun getQag(@Param("qagId") qagId: UUID): QagDTO?
 }

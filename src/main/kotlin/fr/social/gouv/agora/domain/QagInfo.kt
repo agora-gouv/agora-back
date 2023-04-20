@@ -2,7 +2,7 @@ package fr.social.gouv.agora.domain
 
 import java.util.*
 
-data class Qag(
+data class QagInfo(
     val id: String,
     val thematiqueId: String,
     val title: String,
@@ -10,6 +10,4 @@ data class Qag(
     val date: Date,
     val status: QagStatus,
     val username: String,
-    val support: SupportQag?,
-    val response: ResponseQag?,
 )
