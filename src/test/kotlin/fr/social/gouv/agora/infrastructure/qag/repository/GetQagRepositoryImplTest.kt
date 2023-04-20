@@ -1,9 +1,9 @@
 package fr.social.gouv.agora.infrastructure.qag.repository
 
-import fr.social.gouv.agora.domain.QagInfo
+import fr.social.gouv.agora.domain.Qag
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoRepositoryImpl.Companion.QAG_CACHE_NAME
+import fr.social.gouv.agora.infrastructure.qag.repository.GetQagRepositoryImpl.Companion.QAG_CACHE_NAME
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -28,38 +28,38 @@ import java.util.*
     CacheAutoConfiguration::class,
     RedisAutoConfiguration::class,
 )
-internal class QagInfoRepositoryImplTest {
+internal class GetQagRepositoryImplTest {
 
     @Autowired
-    private lateinit var repository: QagInfoRepositoryImpl
+    private lateinit var repository: GetQagRepositoryImpl
 
     @MockBean
-    private lateinit var databaseRepository: QagInfoDatabaseRepository
+    private lateinit var databaseRepository: GetQagDatabaseRepository
 
     @MockBean
-    private lateinit var mapper: QagInfoMapper
+    private lateinit var mapper: QagMapper
 
     @Autowired
     private lateinit var cacheManager: CacheManager
 
     private val qagDTO = QagDTO(
         id = UUID.randomUUID(),
-        title = "title",
-        description = "description",
+        title = "dto-title",
+        description = "dto-description",
         postDate = Date(42),
         status = 256,
-        username = "username",
+        username = "dto-username",
         thematiqueId = UUID.randomUUID(),
     )
 
-    private val qagInfo = QagInfo(
-        id = "id",
-        thematiqueId = "thematiqueId",
-        title = "title",
-        description = "description",
+    private val qag = Qag(
+        id = "domain-id",
+        thematiqueId = "domain-thematiqueId",
+        title = "domain-title",
+        description = "domain-description",
         date = Date(14),
         status = QagStatus.MODERATED,
-        username = "username",
+        username = "domain-username",
     )
 
     @BeforeEach
@@ -70,7 +70,7 @@ internal class QagInfoRepositoryImplTest {
     @Test
     fun `getQag - when invalid UUID - should return null`() {
         // When
-        val result = repository.getQagInfo("invalid UUID")
+        val result = repository.getQag("invalid UUID")
 
         // Then
         assertThat(result).isEqualTo(null)
@@ -83,7 +83,7 @@ internal class QagInfoRepositoryImplTest {
         given(databaseRepository.getQag(uuid)).willReturn(null)
 
         // When
-        val result = repository.getQagInfo(uuid.toString())
+        val result = repository.getQag(uuid.toString())
 
         // Then
         assertThat(result).isEqualTo(null)
@@ -98,8 +98,8 @@ internal class QagInfoRepositoryImplTest {
         given(databaseRepository.getQag(uuid)).willReturn(null)
 
         // When
-        repository.getQagInfo(uuid.toString())
-        val result = repository.getQagInfo(uuid.toString())
+        repository.getQag(uuid.toString())
+        val result = repository.getQag(uuid.toString())
 
         // Then
         assertThat(result).isEqualTo(null)
@@ -112,13 +112,13 @@ internal class QagInfoRepositoryImplTest {
         // Given
         val uuid = UUID.randomUUID()
         given(databaseRepository.getQag(uuid)).willReturn(qagDTO)
-        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+        given(mapper.toDomain(qagDTO)).willReturn(qag)
 
         // When
-        val result = repository.getQagInfo(uuid.toString())
+        val result = repository.getQag(uuid.toString())
 
         // Then
-        assertThat(result).isEqualTo(qagInfo)
+        assertThat(result).isEqualTo(qag)
         then(databaseRepository).should(only()).getQag(uuid)
         then(mapper).should(only()).toDomain(qagDTO)
     }
@@ -128,14 +128,14 @@ internal class QagInfoRepositoryImplTest {
         // Given
         val uuid = UUID.randomUUID()
         given(databaseRepository.getQag(uuid)).willReturn(qagDTO)
-        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+        given(mapper.toDomain(qagDTO)).willReturn(qag)
 
         // When
-        repository.getQagInfo(uuid.toString())
-        val result = repository.getQagInfo(uuid.toString())
+        repository.getQag(uuid.toString())
+        val result = repository.getQag(uuid.toString())
 
         // Then
-        assertThat(result).isEqualTo(qagInfo)
+        assertThat(result).isEqualTo(qag)
         then(databaseRepository).should(times(1)).getQag(uuid)
         then(mapper).should(times(2)).toDomain(qagDTO)
     }
