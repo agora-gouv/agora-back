@@ -1,12 +1,12 @@
 package fr.social.gouv.agora.infrastructure.qag.repository
 
-import fr.social.gouv.agora.domain.Qag
+import fr.social.gouv.agora.domain.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import org.springframework.stereotype.Component
 
 @Component
-class QagMapper {
+class QagInfoMapper {
 
     companion object {
         private const val STATUS_OPEN = 1
@@ -14,8 +14,8 @@ class QagMapper {
         private const val STATUS_MODERATED = -1
     }
 
-    fun toDomain(dto: QagDTO): Qag {
-        return Qag(
+    fun toDomain(dto: QagDTO): QagInfo {
+        return QagInfo(
             id = dto.id.toString(),
             thematiqueId = dto.thematiqueId.toString(),
             title = dto.title,
