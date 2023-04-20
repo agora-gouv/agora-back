@@ -27,5 +27,4 @@ class SupportQagMapper {
             isSupportedByUser = dto != null,
         )
     }
-
 }

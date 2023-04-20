@@ -13,7 +13,7 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-internal class SupportQagMapperTest {
+internal class SupportQagInsertingMapperTest {
 
     @Autowired
     private lateinit var mapper: SupportQagMapper
@@ -21,13 +21,13 @@ internal class SupportQagMapperTest {
     @Test
     fun `toDto - when invalid UUID for qagId - should return null`() {
         // Given
-        val supportQag = SupportQagInserting(
+        val supportQagInserting = SupportQagInserting(
             userId = "userId",
             qagId = "qagId with invalid UUID",
         )
 
         // When
-        val result = mapper.toDto(supportQag)
+        val result = mapper.toDto(supportQagInserting)
 
         // Then
         assertThat(result).isEqualTo(null)
@@ -36,13 +36,13 @@ internal class SupportQagMapperTest {
     @Test
     fun `toDto - when valid UUID - should return DTO`() {
         // Given
-        val supportQag = SupportQagInserting(
+        val supportQagInserting = SupportQagInserting(
             userId = "userId",
             qagId = "fda60299-fe2d-4282-bb45-284dcb4fa7ee",
         )
 
         // When
-        val result = mapper.toDto(supportQag)
+        val result = mapper.toDto(supportQagInserting)
 
         // Then
         assertThat(result?.userId).isEqualTo("userId")
