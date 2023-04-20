@@ -10,6 +10,4 @@ data class Qag(
     val date: Date,
     val status: QagStatus,
     val username: String,
-    val support: SupportQag?,
-    val response: ResponseQag?,
 )
