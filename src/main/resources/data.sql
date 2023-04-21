@@ -319,11 +319,12 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     '47897e51-8e94-4920-a26a-1b1e5e232e82'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO responses_qag(id, author, author_description, response_date, video_url, transcription) VALUES (
+INSERT INTO responses_qag(id, author, author_description, response_date, video_url, transcription, qag_id) VALUES (
     'fe17ddb7-32d3-4ead-b3a0-3b6593addf47',
     'The Stormtrooper',
     'Ministre de rien du tout, porte parole du projet AGORA, ne sais pas viser juste',
     '2023-04-21',
     'https://betagouv.github.io/agora-content/QaG-Stormtrooper-Response.mp4',
-    'Bonjour je suis monsieur Stormtrooper et je vais vous répondre à la question de Henry J. sur l’application AGORA. Blablabla blabla. Voilà merci !'
+    'Bonjour je suis monsieur Stormtrooper et je vais vous répondre à la question de Henry J. sur l’application AGORA. Blablabla blabla. Voilà merci !',
+    '889b41ad-321b-4338-8596-df745c546919'
 ) ON CONFLICT DO NOTHING;
