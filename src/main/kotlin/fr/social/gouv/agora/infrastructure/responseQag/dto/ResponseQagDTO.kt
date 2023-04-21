@@ -19,6 +19,8 @@ data class ResponseQagDTO(
     val videoUrl: String,
     @Column(columnDefinition = "TEXT")
     val transcription: String,
+    @JoinTable(joinColumns = [JoinColumn(name = "qag_id", table = "qags", referencedColumnName = "id")])
+    val qagId: UUID,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -32,6 +34,7 @@ data class ResponseQagDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , author = $author , authorDescription = $authorDescription , responseDate = $responseDate , videoUrl = $videoUrl , transcription = $transcription )"
+        return this::class.simpleName + "(id = $id , author = $author , authorDescription = $authorDescription , responseDate = $responseDate , videoUrl = $videoUrl , transcription = $transcription , qagId = $qagId )"
     }
+
 }
