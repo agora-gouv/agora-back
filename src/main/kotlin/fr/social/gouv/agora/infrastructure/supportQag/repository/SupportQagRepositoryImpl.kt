@@ -14,22 +14,24 @@ class SupportQagRepositoryImpl(
     private val supportQagCacheRepository: SupportQagCacheRepository,
 ) : SupportQagRepository {
 
+    companion object {
+        private const val MAX_INSERT_RETRY_COUNT = 3
+    }
+
     override fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
-        var supportQagDTO = mapper.toDto(supportQagInserting)
-        if (supportQagDTO != null)
-            repeat(3) {
-                if (databaseRepository.existsById(supportQagDTO!!.id)) {
-                    supportQagDTO = mapper.toDto(supportQagInserting)
-                } else {
-                    databaseRepository.save(supportQagDTO!!)
+        repeat(MAX_INSERT_RETRY_COUNT) {
+            mapper.toDto(supportQagInserting)?.let { supportQagDTO ->
+                if (!databaseRepository.existsById(supportQagDTO.id)) {
+                    databaseRepository.save(supportQagDTO)
                     supportQagCacheRepository.insertSupportQag(
-                        supportQagDTO!!.qagId,
-                        supportQagDTO!!.userId,
-                        supportQagDTO
+                        qagId = supportQagDTO.qagId,
+                        userId = supportQagDTO.userId,
+                        supportQagDTO = supportQagDTO
                     )
                     return SupportQagResult.SUCCESS
                 }
             }
+        }
         return SupportQagResult.FAILURE
     }
 
@@ -39,12 +41,12 @@ class SupportQagRepositoryImpl(
         } catch (e: IllegalArgumentException) {
             return SupportQagResult.FAILURE
         }
-        return try {
-            val qagId = UUID.fromString(supportQagDeleting.qagId)
-            databaseRepository.deleteSupportQag(supportQagDeleting.userId, qagId)
+        val qagId = UUID.fromString(supportQagDeleting.qagId)
+        val resultDelete = databaseRepository.deleteSupportQag(supportQagDeleting.userId, qagId)
+        return if (resultDelete <= 0)
+            SupportQagResult.FAILURE
+        else {
             supportQagCacheRepository.insertSupportQag(qagId, supportQagDeleting.userId, null)
-            SupportQagResult.SUCCESS
-        } catch (e: Exception) {
             SupportQagResult.SUCCESS
         }
     }

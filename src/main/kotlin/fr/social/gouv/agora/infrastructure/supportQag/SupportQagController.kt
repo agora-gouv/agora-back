@@ -15,34 +15,33 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
-
 class SupportQagController(
     private val insertSupportQagUseCase: InsertSupportQagUseCase,
     private val deleteSupportQagUseCase: DeleteSupportQagUseCase,
 ) {
     @PostMapping("/qags/{qagId}/support")
     fun insertSupportQag(@RequestHeader("deviceId") deviceId: String, @PathVariable qagId: String): HttpEntity<*> {
-        return if (insertSupportQagUseCase.insertSupportQag(
-                SupportQagInserting(
-                    deviceId,
-                    qagId
-                )
-            ) == SupportQagResult.SUCCESS
+        val insertResult = insertSupportQagUseCase.insertSupportQag(
+            SupportQagInserting(
+                userId = deviceId,
+                qagId = qagId,
+            )
         )
+        return if (insertResult == SupportQagResult.SUCCESS) {
             ResponseEntity.status(200).body("")
-        else ResponseEntity.status(400).body("Erreur d'insertion")
+        } else ResponseEntity.status(400).body("")
     }
 
     @DeleteMapping("/qags/{qagId}/support")
     fun deleteSupportQag(@RequestHeader("deviceId") deviceId: String, @PathVariable qagId: String): HttpEntity<*> {
-        return if (deleteSupportQagUseCase.deleteSupportQag(
-                SupportQagDeleting(
-                    deviceId,
-                    qagId
-                )
-            ) == SupportQagResult.SUCCESS
+        val deleteResult = deleteSupportQagUseCase.deleteSupportQag(
+            SupportQagDeleting(
+                userId = deviceId,
+                qagId = qagId,
+            )
         )
+        return if (deleteResult == SupportQagResult.SUCCESS) {
             ResponseEntity.status(200).body("")
-        else ResponseEntity.status(400).body("Erreur de suppression")
+        } else ResponseEntity.status(400).body("")
     }
 }
