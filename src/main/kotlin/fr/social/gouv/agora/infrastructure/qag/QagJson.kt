@@ -1,10 +1,10 @@
 package fr.social.gouv.agora.infrastructure.qag
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class QagJson(
     @JsonProperty("id")
     val id: String,
@@ -20,6 +20,8 @@ data class QagJson(
     val username: String,
     @JsonProperty("support")
     val support: SupportQagJson?,
+    @JsonProperty("response")
+    val response: ResponseQagJson?,
 )
 
 data class SupportQagJson(
@@ -27,4 +29,19 @@ data class SupportQagJson(
     val supportCount: Int,
     @JsonProperty("isSupported")
     val isSupportedByUser: Boolean,
+)
+
+data class ResponseQagJson(
+    @JsonProperty("author")
+    val author: String,
+    @JsonProperty("authorDescription")
+    val authorDescription: String,
+    @JsonProperty("responseDate")
+    val responseDate: Date,
+    @JsonProperty("videoUrl")
+    val videoUrl: String,
+    @JsonProperty("transcription")
+    val transcription: String,
+    @JsonProperty("feedbackStatus")
+    val feedbackStatus: Boolean?,
 )
