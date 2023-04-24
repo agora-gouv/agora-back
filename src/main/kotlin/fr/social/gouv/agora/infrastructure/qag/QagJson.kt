@@ -43,5 +43,5 @@ data class ResponseQagJson(
     @JsonProperty("transcription")
     val transcription: String,
     @JsonProperty("feedbackStatus")
-    val feedbackStatus: Boolean?,
+    val feedbackStatus: Boolean,
 )
