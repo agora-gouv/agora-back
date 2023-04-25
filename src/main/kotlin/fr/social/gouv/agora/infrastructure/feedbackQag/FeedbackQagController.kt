@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.infrastructure.feedbackQag
 
-import fr.social.gouv.agora.domain.FeedbackQag
+import fr.social.gouv.agora.domain.FeedbackQagInserting
 import fr.social.gouv.agora.usecase.feedbackQag.InsertFeedbackQagUseCase
 import fr.social.gouv.agora.usecase.feedbackQag.repository.FeedbackQagResult
 import org.springframework.http.HttpEntity
@@ -22,7 +22,7 @@ class FeedbackQagController(private val insertFeedbackQagUseCase: InsertFeedback
         @RequestBody body: FeedbackQagJson,
     ): HttpEntity<*> {
         val insertResult = insertFeedbackQagUseCase.insertFeedbackQag(
-            FeedbackQag(
+            FeedbackQagInserting(
                 userId = deviceId,
                 qagId = qagId,
                 isHelpful = body.isHelpful,

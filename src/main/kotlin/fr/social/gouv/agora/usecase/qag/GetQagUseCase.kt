@@ -1,6 +1,8 @@
 package fr.social.gouv.agora.usecase.qag
 
+import fr.social.gouv.agora.domain.FeedbackQag
 import fr.social.gouv.agora.domain.Qag
+import fr.social.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
@@ -11,6 +13,7 @@ class GetQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val qagSupportQagRepository: GetSupportQagRepository,
     private val responseQagRepository: ResponseQagRepository,
+    private val getFeedbackQagRepository: GetFeedbackQagRepository,
 ) {
     fun getQag(qagId: String, deviceId: String): Qag? {
         // TODO transform deviceId to userId
@@ -25,6 +28,7 @@ class GetQagUseCase(
                 username = qagInfo.username,
                 support = qagSupportQagRepository.getSupportQag(qagId = qagId, userId = deviceId),
                 response = responseQagRepository.getResponseQag(qagId = qagId),
+                feedback = getFeedbackQagRepository.getFeedbackQagStatus(FeedbackQag(qagId = qagId, userId = deviceId))
             )
         }
     }

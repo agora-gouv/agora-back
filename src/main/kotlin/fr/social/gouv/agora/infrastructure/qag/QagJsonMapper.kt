@@ -41,7 +41,7 @@ class QagJsonMapper {
                 responseDate = response.responseDate,
                 videoUrl = response.videoUrl,
                 transcription = response.transcription,
-                feedbackStatus = false, // TODO Feat-40 or Feat-42
+                feedbackStatus = qag.feedback?.isExist?:false,
             )
         }
     }
