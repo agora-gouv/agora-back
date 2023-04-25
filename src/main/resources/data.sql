@@ -312,12 +312,12 @@ INSERT INTO supports_qag (user_id, qag_id) VALUES (
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id) VALUES (
     '889b41ad-321b-4338-8596-df745c546919',
     'Quand l’application AGORA sera-t-elle disponible au grand public ?',
-    'Nous avons cru comprendre qu’il s’agit pour l’instant que d’une expérimentation.',
+    'Bonjour ! Nous avons cru comprendre qu’il s’agit pour l’instant que d’une expérimentation qui sera lancée début juin. Quand une version plus finalisée sera-t-elle lancée et à quand une version lancée à grande échelle ? En tant que testeurs (très) privilégiés, ayant déjà un peu parlé de l’application, ces derniers nous témoignent d’une envie forte de pouvoir tester à leur tour !!',
     '2023-04-1',
     1,
     'Henri J.',
     '47897e51-8e94-4920-a26a-1b1e5e232e82'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
 
 INSERT INTO responses_qag(id, author, author_description, response_date, video_url, transcription, qag_id) VALUES (
     'fe17ddb7-32d3-4ead-b3a0-3b6593addf47',
@@ -325,9 +325,10 @@ INSERT INTO responses_qag(id, author, author_description, response_date, video_u
     'Ministre de rien du tout, porte parole du projet AGORA, ne sais pas viser juste',
     '2023-04-21',
     'https://betagouv.github.io/agora-content/QaG-Stormtrooper-Response.mp4',
-    'Bonjour je suis monsieur Stormtrooper et je vais vous répondre à la question de Henry J. sur l’application AGORA. Blablabla blabla. Voilà merci !',
+    'Bonjour à tous, je suis monsieur Stormtrooper et je vais vous répondre à la question de Henry J. Pour une réponse plus immédiate l’application AGORA lancée fin 2023, une date plus précise sera communiquée porchainement. Quand à l’application elle-même, il s’agit d’une plateforme en ligne qui permettra aux utilisateurs d’échanger avec le gouvernement: sous forme de consultations, ou bien laisser aux citoyens de poser des questions au gouvernement.\nAGORA offre une opportunité unique de connecter les gens à travers la politique et de créer un espace de discussion démocratique pour les citoyens du monde entier. Les sujets politiques proposés sur la plateforme couvriront une grande variété de thématiques telles que l’économie, la santé, l’environnement, l’éducation, la culture, la justice sociale et bien plus encore.\nIl est également important de souligner que l’utilisation d’AGORA doit se faire de manière responsable. Les utilisateurs doivent être conscients que leurs données personnelles pourraient être consultées par d’autres membres de la communauté, et il est donc conseillé de limiter les informations personnelles qu’ils partagent en ligne. Les utilisateurs doivent également être vigilants quant aux risques de sécurité et de protection des données personnelles lors de l’utilisation de l’application.\nEn outre, AGORA n’est pas une plateforme pour partager des contenus haineux, racistes ou offensants. Tout contenu qui enfreint les règles d’utilisation de la plateforme sera signalé et supprimé.\nEn conclusion, AGORA sera une plateforme en ligne passionnante pour les personnes intéressées par les sujets politiques. Cependant, il est important de prendre en compte les risques potentiels et de toujours utiliser l’application AGORA de manière responsable et en respectant les règles d’utilisation de la plateforme.',
     '889b41ad-321b-4338-8596-df745c546919'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET transcription = EXCLUDED.transcription;
+
 INSERT INTO feedbacks_qag (user_id, qag_id, is_helpful) VALUES (
     '54f66df616565d84',
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8',
