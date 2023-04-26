@@ -45,7 +45,7 @@ class FeedbackQagCacheRepository(private val cacheManager: CacheManager) {
         id = UUID.fromString(FEEDBACK_QAG_NOT_FOUND_ID),
         userId = "",
         qagId = UUID.fromString(FEEDBACK_QAG_NOT_FOUND_ID),
-        isHelpful = false,
+        isHelpful = 0,
     )
 
 }

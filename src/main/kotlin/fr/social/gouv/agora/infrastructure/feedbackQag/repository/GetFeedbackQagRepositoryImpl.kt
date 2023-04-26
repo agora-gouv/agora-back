@@ -17,12 +17,11 @@ class GetFeedbackQagRepositoryImpl(
         return try {
             val qagUUID = UUID.fromString(qagId)
 
-            val feedbackQagDto =
-                when (val cacheResult = feedbackQagCacheRepository.getFeedbackQag(qagUUID, userId)) {
-                    CacheResult.CacheNotInitialized -> getFeedbackQagFromDatabase(qagUUID, userId)
-                    CacheResult.CachedFeedbackQagNotFound -> null
-                    is CacheResult.CachedFeedbackQag -> cacheResult.feedbackQagDTO
-                }
+            val feedbackQagDto = when (val cacheResult = feedbackQagCacheRepository.getFeedbackQag(qagUUID, userId)) {
+                CacheResult.CacheNotInitialized -> getFeedbackQagFromDatabase(qagUUID, userId)
+                CacheResult.CachedFeedbackQagNotFound -> null
+                is CacheResult.CachedFeedbackQag -> cacheResult.feedbackQagDTO
+            }
             FeedbackQagStatus(isExist = (feedbackQagDto != null))
         } catch (e: IllegalArgumentException) {
             null
