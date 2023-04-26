@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.infrastructure.feedbackQag.repository
 
-import fr.social.gouv.agora.domain.FeedbackQag
+import fr.social.gouv.agora.domain.FeedbackQagInserting
 import fr.social.gouv.agora.infrastructure.feedbackQag.dto.FeedbackQagDTO
 import fr.social.gouv.agora.usecase.feedbackQag.repository.FeedbackQagResult
 import org.assertj.core.api.Assertions.assertThat
@@ -28,9 +28,9 @@ internal class FeedbackQagRepositoryImplTest {
     @MockBean
     private lateinit var feedbackQagCacheRepository: FeedbackQagCacheRepository
 
-    private val feedbackQag = FeedbackQag(
-        userId = "1234",
+    private val feedbackQag = FeedbackQagInserting(
         qagId = "1f066238-e29b-11ed-b5ea-0242ac120002",
+        userId = "1234",
         isHelpful = true,
     )
 

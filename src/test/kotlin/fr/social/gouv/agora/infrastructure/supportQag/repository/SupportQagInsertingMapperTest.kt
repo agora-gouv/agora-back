@@ -22,8 +22,8 @@ internal class SupportQagInsertingMapperTest {
     fun `toDto - when invalid UUID for qagId - should return null`() {
         // Given
         val supportQagInserting = SupportQagInserting(
-            userId = "userId",
             qagId = "qagId with invalid UUID",
+            userId = "userId",
         )
 
         // When
@@ -37,8 +37,8 @@ internal class SupportQagInsertingMapperTest {
     fun `toDto - when valid UUID - should return DTO`() {
         // Given
         val supportQagInserting = SupportQagInserting(
-            userId = "userId",
             qagId = "fda60299-fe2d-4282-bb45-284dcb4fa7ee",
+            userId = "userId",
         )
 
         // When
