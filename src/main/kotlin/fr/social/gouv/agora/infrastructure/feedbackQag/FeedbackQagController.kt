@@ -23,8 +23,8 @@ class FeedbackQagController(private val insertFeedbackQagUseCase: InsertFeedback
     ): HttpEntity<*> {
         val insertResult = insertFeedbackQagUseCase.insertFeedbackQag(
             FeedbackQagInserting(
-                userId = deviceId,
                 qagId = qagId,
+                userId = deviceId,
                 isHelpful = body.isHelpful,
             )
         )

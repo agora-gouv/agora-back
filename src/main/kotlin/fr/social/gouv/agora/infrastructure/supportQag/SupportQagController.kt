@@ -23,8 +23,8 @@ class SupportQagController(
     fun insertSupportQag(@RequestHeader("deviceId") deviceId: String, @PathVariable qagId: String): HttpEntity<*> {
         val insertResult = insertSupportQagUseCase.insertSupportQag(
             SupportQagInserting(
-                userId = deviceId,
                 qagId = qagId,
+                userId = deviceId,
             )
         )
         return if (insertResult == SupportQagResult.SUCCESS) {
@@ -36,8 +36,8 @@ class SupportQagController(
     fun deleteSupportQag(@RequestHeader("deviceId") deviceId: String, @PathVariable qagId: String): HttpEntity<*> {
         val deleteResult = deleteSupportQagUseCase.deleteSupportQag(
             SupportQagDeleting(
-                userId = deviceId,
                 qagId = qagId,
+                userId = deviceId,
             )
         )
         return if (deleteResult == SupportQagResult.SUCCESS) {

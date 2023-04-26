@@ -1,14 +1,9 @@
 package fr.social.gouv.agora.domain
 
 data class FeedbackQagInserting(
-    val userId: String,
     val qagId: String,
+    val userId: String,
     val isHelpful: Boolean,
-)
-
-data class FeedbackQag(
-    val userId: String,
-    val qagId: String,
 )
 
 data class FeedbackQagStatus(

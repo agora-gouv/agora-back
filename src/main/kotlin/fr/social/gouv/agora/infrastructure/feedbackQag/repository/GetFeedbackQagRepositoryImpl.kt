@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.infrastructure.feedbackQag.repository
 
-import fr.social.gouv.agora.domain.FeedbackQag
 import fr.social.gouv.agora.domain.FeedbackQagStatus
 import fr.social.gouv.agora.infrastructure.feedbackQag.dto.FeedbackQagDTO
 import fr.social.gouv.agora.infrastructure.feedbackQag.repository.FeedbackQagCacheRepository.CacheResult
@@ -14,20 +13,17 @@ class GetFeedbackQagRepositoryImpl(
     private val feedbackQagCacheRepository: FeedbackQagCacheRepository,
 ) : GetFeedbackQagRepository {
 
-    override fun getFeedbackQagStatus(feedbackQag: FeedbackQag): FeedbackQagStatus? {
+    override fun getFeedbackQagStatus(qagId: String, userId: String): FeedbackQagStatus? {
         return try {
-            val qagUUID = UUID.fromString(feedbackQag.qagId)
+            val qagUUID = UUID.fromString(qagId)
 
             val feedbackQagDto =
-                when (val cacheResult = feedbackQagCacheRepository.getFeedbackQag(qagUUID, feedbackQag.userId)) {
-                    CacheResult.CacheNotInitialized -> getFeedbackQagFromDatabase(qagUUID, feedbackQag.userId)
+                when (val cacheResult = feedbackQagCacheRepository.getFeedbackQag(qagUUID, userId)) {
+                    CacheResult.CacheNotInitialized -> getFeedbackQagFromDatabase(qagUUID, userId)
                     CacheResult.CachedFeedbackQagNotFound -> null
                     is CacheResult.CachedFeedbackQag -> cacheResult.feedbackQagDTO
                 }
-            return if (feedbackQagDto == null) {
-                FeedbackQagStatus(isExist = false)
-            } else
-                FeedbackQagStatus(isExist = true)
+            FeedbackQagStatus(isExist = (feedbackQagDto != null))
         } catch (e: IllegalArgumentException) {
             null
         }

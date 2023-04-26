@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.usecase.qag
 
-import fr.social.gouv.agora.domain.FeedbackQag
 import fr.social.gouv.agora.domain.Qag
 import fr.social.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -28,7 +27,7 @@ class GetQagUseCase(
                 username = qagInfo.username,
                 support = qagSupportQagRepository.getSupportQag(qagId = qagId, userId = deviceId),
                 response = responseQagRepository.getResponseQag(qagId = qagId),
-                feedback = getFeedbackQagRepository.getFeedbackQagStatus(FeedbackQag(qagId = qagId, userId = deviceId))
+                feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = deviceId)
             )
         }
     }

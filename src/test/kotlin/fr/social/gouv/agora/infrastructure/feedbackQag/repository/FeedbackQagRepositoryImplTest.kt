@@ -29,8 +29,8 @@ internal class FeedbackQagRepositoryImplTest {
     private lateinit var feedbackQagCacheRepository: FeedbackQagCacheRepository
 
     private val feedbackQag = FeedbackQagInserting(
-        userId = "1234",
         qagId = "1f066238-e29b-11ed-b5ea-0242ac120002",
+        userId = "1234",
         isHelpful = true,
     )
 

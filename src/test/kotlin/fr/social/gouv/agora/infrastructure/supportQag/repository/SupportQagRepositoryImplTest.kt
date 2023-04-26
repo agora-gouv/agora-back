@@ -31,8 +31,8 @@ internal class SupportQagRepositoryImplTest {
     private lateinit var supportQagCacheRepository: SupportQagCacheRepository
 
     private val supportQagInserting = SupportQagInserting(
-        userId = "12345",
         qagId = "f3a26670-df6e-11ed-b5ea-0242ac120002",
+        userId = "12345",
     )
 
     private val supportQagDTO = SupportQagDTO(
@@ -119,8 +119,8 @@ internal class SupportQagRepositoryImplTest {
     fun `deleteSupportQag - when invalid UUID for qagID - should return FAILURE`() {
         // Given
         val supportQagDeletingInvalidUUID = SupportQagDeleting(
-            userId = "12345",
             qagId = "45678",
+            userId = "12345",
         )
         // When
         val result = repository.deleteSupportQag(supportQagDeletingInvalidUUID)
@@ -135,8 +135,8 @@ internal class SupportQagRepositoryImplTest {
     fun `deleteSupportQag - when valid UUID for qagID AND exists in Database should return SUCCESS`() {
         // Given
         val supportQagDeletingValidUUID = SupportQagDeleting(
-            userId = "12345",
             qagId = "a2dd3d9a-df92-11ed-b5ea-0242ac120002",
+            userId = "12345",
         )
         given(
             databaseRepository.deleteSupportQag(
@@ -162,8 +162,8 @@ internal class SupportQagRepositoryImplTest {
     fun `deleteSupportQag - when valid UUID for qagID AND NOT exist in Database should return FAILURE`() {
         // Given
         val supportQagDeletingValidUUID = SupportQagDeleting(
-            userId = "12345",
             qagId = "a2dd3d9a-df92-11ed-b5ea-0242ac120002",
+            userId = "12345",
         )
         given(
             databaseRepository.deleteSupportQag(

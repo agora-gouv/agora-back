@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.infrastructure.feedbackQag.repository
 
-import fr.social.gouv.agora.domain.FeedbackQag
+import fr.social.gouv.agora.domain.FeedbackQagStatus
 import fr.social.gouv.agora.infrastructure.feedbackQag.dto.FeedbackQagDTO
 import fr.social.gouv.agora.infrastructure.feedbackQag.repository.FeedbackQagCacheRepository.CacheResult
 import org.assertj.core.api.Assertions.assertThat
@@ -33,15 +33,15 @@ internal class GetFeedbackQagRepositoryImplTest {
         qagId = UUID.randomUUID(),
         isHelpful = false,
     )
+    private val feedbackQagStatusFalse = FeedbackQagStatus(isExist = false)
+    private val feedbackQagStatusTrue = FeedbackQagStatus(isExist = true)
 
     @Test
     fun `getFeedbackQag - when invalid qagId - should return null`() {
         // When
         val result = repository.getFeedbackQagStatus(
-            FeedbackQag(
                 qagId = "invalid qagId UUID",
                 userId = "userId",
-            )
         )
 
         // Then
@@ -61,14 +61,12 @@ internal class GetFeedbackQagRepositoryImplTest {
 
         // When
         val result = repository.getFeedbackQagStatus(
-            FeedbackQag(
                 qagId = qagUUID.toString(),
                 userId = "userId",
-            )
         )
 
         // Then
-        assertThat(result?.isExist).isEqualTo(false)
+        assertThat(result).isEqualTo(feedbackQagStatusFalse)
         inOrder(cacheRepository).also {
             then(cacheRepository).should(it).getFeedbackQag(qagId = qagUUID, userId = "userId")
             then(cacheRepository).should(it)
@@ -87,16 +85,13 @@ internal class GetFeedbackQagRepositoryImplTest {
 
         // When
         val result = repository.getFeedbackQagStatus(
-            FeedbackQag(
                 qagId = qagUUID.toString(),
                 userId = "userId",
-            )
         )
 
         // Then
-        assertThat(result?.isExist).isEqualTo(false)
-        then(cacheRepository).should(times(1)).getFeedbackQag(qagId = qagUUID, userId = "userId")
-        then(cacheRepository).shouldHaveNoMoreInteractions()
+        assertThat(result).isEqualTo(feedbackQagStatusFalse)
+        then(cacheRepository).should(only()).getFeedbackQag(qagId = qagUUID, userId = "userId")
         then(databaseRepository).shouldHaveNoInteractions()
     }
 
@@ -109,16 +104,13 @@ internal class GetFeedbackQagRepositoryImplTest {
 
         // When
         val result = repository.getFeedbackQagStatus(
-            FeedbackQag(
                 qagId = qagUUID.toString(),
                 userId = "userId",
-            )
         )
 
         // Then
-        assertThat(result?.isExist).isEqualTo(true)
-        then(cacheRepository).should(times(1)).getFeedbackQag(qagId = qagUUID, userId = "userId")
-        then(cacheRepository).shouldHaveNoMoreInteractions()
+        assertThat(result).isEqualTo(feedbackQagStatusTrue)
+        then(cacheRepository).should(only()).getFeedbackQag(qagId = qagUUID, userId = "userId")
         then(databaseRepository).shouldHaveNoInteractions()
     }
 
