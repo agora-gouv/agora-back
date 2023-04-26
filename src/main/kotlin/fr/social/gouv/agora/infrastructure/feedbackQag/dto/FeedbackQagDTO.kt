@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.feedbackQag.dto
 
 import jakarta.persistence.*
 import org.hibernate.Hibernate
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "feedbacks_qag")
 data class FeedbackQagDTO(
@@ -14,9 +14,8 @@ data class FeedbackQagDTO(
     val userId: String,
     @JoinTable(joinColumns = [JoinColumn(name = "qag_id", table = "qags", referencedColumnName = "id")])
     val qagId: UUID,
-    @Column(columnDefinition = "BOOLEAN")
-    val isHelpful: Boolean,
-
+    @Column(columnDefinition = "SMALLINT")
+    val isHelpful: Int,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

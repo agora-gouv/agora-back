@@ -332,5 +332,5 @@ INSERT INTO responses_qag(id, author, author_description, response_date, video_u
 INSERT INTO feedbacks_qag (user_id, qag_id, is_helpful) VALUES (
     '54f66df616565d84',
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8',
-    true
+    1
 ) ON CONFLICT DO NOTHING;

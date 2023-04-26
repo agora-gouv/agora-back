@@ -7,13 +7,20 @@ import java.util.*
 
 @Component
 class FeedbackQagMapper {
+
+    companion object {
+        private const val IS_HELPFUL_TRUE_VALUE = 1
+        private const val IS_HELPFUL_FALSE_VALUE = 0
+    }
+
     fun toDto(domain: FeedbackQagInserting): FeedbackQagDTO? {
         return try {
             FeedbackQagDTO(
                 id = UUID.randomUUID(),
                 userId = domain.userId,
                 qagId = UUID.fromString(domain.qagId),
-                isHelpful = domain.isHelpful,
+                isHelpful = if (domain.isHelpful) IS_HELPFUL_TRUE_VALUE
+                else IS_HELPFUL_FALSE_VALUE,
             )
         } catch (e: IllegalArgumentException) {
             null
