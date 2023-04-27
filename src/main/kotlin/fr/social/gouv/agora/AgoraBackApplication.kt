@@ -26,6 +26,7 @@ import javax.sql.DataSource
 class AgoraBackApplication
 
 fun main(args: Array<String>) {
+    FirebaseWrapper.initFirebase()
     runApplication<AgoraBackApplication>(*args)
 }
 
