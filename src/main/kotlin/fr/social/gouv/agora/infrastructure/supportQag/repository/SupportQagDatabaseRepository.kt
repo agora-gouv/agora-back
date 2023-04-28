@@ -22,4 +22,7 @@ interface SupportQagDatabaseRepository : CrudRepository<SupportQagDTO, UUID> {
     @Transactional
     @Query(value = "DELETE FROM supports_qag WHERE user_id = :userId AND qag_id = :qagId", nativeQuery = true)
     fun deleteSupportQag(@Param("userId") userId: String, @Param("qagId") qagId: UUID): Int
+
+    @Query(value = "SELECT * FROM supports_qag WHERE qag_id = :qagId", nativeQuery = true)
+    fun getSupportQagList(@Param("qagId") qagId: UUID): List<SupportQagDTO>
 }
