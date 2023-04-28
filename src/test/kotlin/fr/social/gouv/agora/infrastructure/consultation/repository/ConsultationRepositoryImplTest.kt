@@ -52,10 +52,10 @@ internal class ConsultationRepositoryImplTest {
     private val consultation = Consultation(
         id = "domain-id",
         title = "domain-title",
+        coverUrl = "domain-cover_url",
         abstract = "domain-abstract",
         startDate = Date(0),
         endDate = Date(1),
-        coverUrl = "domain-cover_url",
         questionCount = "domain-question_count",
         estimatedTime = "domain-estimated_time",
         participantCountGoal = 6401,

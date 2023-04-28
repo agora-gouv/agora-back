@@ -40,8 +40,8 @@ internal class GetFeedbackQagRepositoryImplTest {
     fun `getFeedbackQag - when invalid qagId - should return null`() {
         // When
         val result = repository.getFeedbackQagStatus(
-                qagId = "invalid qagId UUID",
-                userId = "userId",
+            qagId = "invalid qagId UUID",
+            userId = "userId",
         )
 
         // Then
@@ -61,8 +61,8 @@ internal class GetFeedbackQagRepositoryImplTest {
 
         // When
         val result = repository.getFeedbackQagStatus(
-                qagId = qagUUID.toString(),
-                userId = "userId",
+            qagId = qagUUID.toString(),
+            userId = "userId",
         )
 
         // Then
@@ -85,8 +85,8 @@ internal class GetFeedbackQagRepositoryImplTest {
 
         // When
         val result = repository.getFeedbackQagStatus(
-                qagId = qagUUID.toString(),
-                userId = "userId",
+            qagId = qagUUID.toString(),
+            userId = "userId",
         )
 
         // Then
@@ -104,8 +104,8 @@ internal class GetFeedbackQagRepositoryImplTest {
 
         // When
         val result = repository.getFeedbackQagStatus(
-                qagId = qagUUID.toString(),
-                userId = "userId",
+            qagId = qagUUID.toString(),
+            userId = "userId",
         )
 
         // Then

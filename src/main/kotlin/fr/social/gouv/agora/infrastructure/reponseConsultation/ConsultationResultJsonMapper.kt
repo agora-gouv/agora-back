@@ -1,10 +1,6 @@
-package fr.social.gouv.agora.infrastructure.reponseConsultation.dto
+package fr.social.gouv.agora.infrastructure.reponseConsultation
 
 import fr.social.gouv.agora.domain.*
-import fr.social.gouv.agora.infrastructure.reponseConsultation.ChoiceResultJson
-import fr.social.gouv.agora.infrastructure.reponseConsultation.ConsultationResultJson
-import fr.social.gouv.agora.infrastructure.reponseConsultation.ConsultationUpdatesJson
-import fr.social.gouv.agora.infrastructure.reponseConsultation.QuestionResultJson
 import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
 
