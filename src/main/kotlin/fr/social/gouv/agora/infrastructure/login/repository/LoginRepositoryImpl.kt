@@ -17,30 +17,39 @@ class LoginRepositoryImpl(
     }
 
     override fun loginOrRegister(deviceId: String, fcmToken: String): UserInfo? {
-        val userDTO = cacheRepository.getUser(deviceId) ?: getUserFromDatabase(deviceId) ?: generateUser(
+        val cachedUserDTO = cacheRepository.getUser(deviceId)
+        val userDTO = cachedUserDTO ?: databaseRepository.getUser(deviceId) ?: generateUser(
             deviceId = deviceId,
             fcmToken = fcmToken
         )
-        return userDTO?.let { mapper.toDomain(userDTO) }
-    }
+        return userDTO?.let {
+            val updatedUserDTO = updateUserIfRequired(userDTO, fcmToken)
+            val usedUserDTO = updatedUserDTO ?: userDTO
 
-    private fun getUserFromDatabase(deviceId: String): UserDTO? {
-        return databaseRepository.getUser(deviceId)?.also { userDTO ->
-            cacheRepository.insertUser(userDTO)
+            if (cachedUserDTO == null || updatedUserDTO != null) {
+                cacheRepository.insertUser(usedUserDTO)
+            }
+            mapper.toDomain(usedUserDTO)
         }
-
     }
 
     private fun generateUser(deviceId: String, fcmToken: String): UserDTO? {
         repeat(MAX_GENERATE_USER_RETRY_COUNT) {
             val userDTO = mapper.generateDto(deviceId = deviceId, fcmToken = fcmToken)
             if (!databaseRepository.existsById(userDTO.id)) {
-                cacheRepository.insertUser(userDTO)
                 databaseRepository.save(userDTO)
                 return userDTO
             }
         }
         return null
+    }
+
+    private fun updateUserIfRequired(userDTO: UserDTO, fcmToken: String): UserDTO? {
+        return if (userDTO.fcmToken != fcmToken) {
+            val updatedUserDTO = mapper.updateDto(dto = userDTO, fcmToken = fcmToken)
+            databaseRepository.save(updatedUserDTO)
+            updatedUserDTO
+        } else null
     }
 
 }
