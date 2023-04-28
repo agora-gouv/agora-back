@@ -31,7 +31,7 @@ internal class GetFeedbackQagRepositoryImplTest {
         id = UUID.randomUUID(),
         userId = "userId",
         qagId = UUID.randomUUID(),
-        isHelpful = false,
+        isHelpful = 0,
     )
     private val feedbackQagStatusFalse = FeedbackQagStatus(isExist = false)
     private val feedbackQagStatusTrue = FeedbackQagStatus(isExist = true)
