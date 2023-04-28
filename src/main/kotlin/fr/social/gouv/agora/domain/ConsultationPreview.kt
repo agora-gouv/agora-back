@@ -7,7 +7,7 @@ sealed class ConsultationPreview {
     abstract val title: String
     abstract val coverUrl: String
     abstract val endDate: Date
-    abstract val thematique: Thematique?
+    abstract val thematique: Thematique
 }
 
 data class ConsultationPreviewOngoing(
@@ -15,7 +15,7 @@ data class ConsultationPreviewOngoing(
     override val title: String,
     override val coverUrl: String,
     override val endDate: Date,
-    override val thematique: Thematique?,
+    override val thematique: Thematique,
     val hasAnswered: Boolean,
 ) : ConsultationPreview()
 

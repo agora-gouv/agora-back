@@ -10,18 +10,21 @@ class GetConsultationPreviewOngoingListUseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val consultationPreviewOngoingRepository: ConsultationPreviewOngoingRepository,
 ) {
-    fun getConsultationPreviewOngoingList(): List<ConsultationPreviewOngoing>? {
+    fun getConsultationPreviewOngoingList(): List<ConsultationPreviewOngoing> {
         return consultationPreviewOngoingRepository.getConsultationPreviewOngoingList()
-            ?.map { consultationPreviewOngoingInfo ->
-                ConsultationPreviewOngoing(
-                    id = consultationPreviewOngoingInfo.id,
-                    title = consultationPreviewOngoingInfo.title,
-                    coverUrl = consultationPreviewOngoingInfo.coverUrl,
-                    endDate = consultationPreviewOngoingInfo.endDate,
-                    thematique = thematiqueRepository.getThematiqueList()
-                        .find { it.id == consultationPreviewOngoingInfo.thematiqueId },
-                    hasAnswered = false, //TODO feat 99
-                )
+            .mapNotNull { consultationPreviewOngoingInfo ->
+                thematiqueRepository.getThematiqueList()
+                    .find { thematique -> thematique.id == consultationPreviewOngoingInfo.thematiqueId }
+                    ?.let { thematique ->
+                        ConsultationPreviewOngoing(
+                            id = consultationPreviewOngoingInfo.id,
+                            title = consultationPreviewOngoingInfo.title,
+                            coverUrl = consultationPreviewOngoingInfo.coverUrl,
+                            endDate = consultationPreviewOngoingInfo.endDate,
+                            thematique = thematique,
+                            hasAnswered = false, //TODO feat 99
+                        )
+                    }
             }
     }
 }

@@ -22,7 +22,7 @@ data class ConsultationOngoingJson(
     @JsonProperty("endDate")
     val endDate: String,
     @JsonProperty("thematique")
-    val thematique: ThematiqueJson?,
+    val thematique: ThematiqueJson,
     @JsonProperty("hasAnswered")
     val hasAnswered: Boolean,
 )

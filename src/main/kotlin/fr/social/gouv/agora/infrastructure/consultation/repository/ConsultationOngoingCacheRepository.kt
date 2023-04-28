@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository
 @Repository
 class ConsultationOngoingCacheRepository(private val cacheManager: CacheManager) {
     companion object {
-        private const val ONGOING_CACHE_KEY = "consultationOngoingCache"
-        private const val CONSULTATION_ONGOING_CACHE_NAME = "consultationListCache"
+        private const val CONSULTATION_ONGOING_CACHE_KEY = "consultationOngoingCache"
+        private const val CONSULTATION_LIST_CACHE_NAME = "consultationListCache"
     }
 
     sealed class CacheResult {
@@ -19,7 +19,7 @@ class ConsultationOngoingCacheRepository(private val cacheManager: CacheManager)
     @Suppress("UNCHECKED_CAST")
     fun getConsultationOngoingList(): CacheResult {
         val consultationOngoingList = try {
-            getCache()?.get(ONGOING_CACHE_KEY, List::class.java) as? List<ConsultationDTO>
+            getCache()?.get(CONSULTATION_ONGOING_CACHE_KEY, List::class.java) as? List<ConsultationDTO>
         } catch (e: IllegalStateException) {
             null
         }
@@ -31,10 +31,10 @@ class ConsultationOngoingCacheRepository(private val cacheManager: CacheManager)
 
     fun insertConsultationOngoingList(consultationOngoingListDTO: List<ConsultationDTO>?) {
         getCache()?.put(
-            ONGOING_CACHE_KEY,
+            CONSULTATION_ONGOING_CACHE_KEY,
             consultationOngoingListDTO?: emptyList<ConsultationDTO>(),
         )
     }
 
-    private fun getCache() = cacheManager.getCache(CONSULTATION_ONGOING_CACHE_NAME)
+    private fun getCache() = cacheManager.getCache(CONSULTATION_LIST_CACHE_NAME)
 }

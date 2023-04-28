@@ -7,16 +7,10 @@ import org.springframework.stereotype.Component
 @Component
 class ThematiqueJsonMapper {
     fun toJson(domainList: List<Thematique>): ThematiquesJson {
-        return ThematiquesJson(thematiques = domainList.map { domain ->
-            ThematiqueJson(
-                id = domain.id,
-                label = domain.label,
-                picto = UnicodeStringDecoder.decodeUnicode(domain.picto),
-                color = domain.color,
-            )
-        })
+        return ThematiquesJson(thematiques = domainList.map(::toJson))
     }
-    fun thematiqueToJson(domain : Thematique) : ThematiqueJson {
+
+    fun toJson(domain: Thematique): ThematiqueJson {
         return ThematiqueJson(
             id = domain.id,
             label = domain.label,

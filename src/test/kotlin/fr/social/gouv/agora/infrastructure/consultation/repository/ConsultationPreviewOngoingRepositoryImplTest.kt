@@ -68,12 +68,10 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(emptyList<ConsultationPreviewOngoingInfo>())
-        inOrder(cacheRepository).also {
-            then(cacheRepository).should(it).getConsultationOngoingList()
-            then(cacheRepository).should(it).insertConsultationOngoingList(null)
-            it.verifyNoMoreInteractions()
-        }
-        then(databaseRepository).should(times(1)).getConsultationOngoingList()
+        then(cacheRepository).should(times(1)).getConsultationOngoingList()
+        then(cacheRepository).should(times(1)).insertConsultationOngoingList(null)
+        then(cacheRepository).shouldHaveNoMoreInteractions()
+        then(databaseRepository).should(only()).getConsultationOngoingList()
     }
 
     @Test
@@ -90,16 +88,14 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(listOf(consultationPreviewOngoingInfo))
-        inOrder(cacheRepository).also {
-            then(cacheRepository).should(it).getConsultationOngoingList()
-            then(cacheRepository).should(it).insertConsultationOngoingList(listOf(consultationDTO))
-            it.verifyNoMoreInteractions()
-        }
-        then(databaseRepository).should(times(1)).getConsultationOngoingList()
+        then(cacheRepository).should(times(1)).getConsultationOngoingList()
+        then(cacheRepository).should(times(1)).insertConsultationOngoingList(listOf(consultationDTO))
+        then(cacheRepository).shouldHaveNoMoreInteractions()
+        then(databaseRepository).should(only()).getConsultationOngoingList()
     }
 
     @Test
-    fun `getConsultationPreviewOngoingList - when has cache with emptyList- should return emptylist from cache`() {
+    fun `getConsultationPreviewOngoingList - when has cache with emptyList - should return emptylist from cache`() {
         // Given
         given(cacheRepository.getConsultationOngoingList())
             .willReturn(CacheResult.CachedConsultationOngoingList(emptyList()))
@@ -109,12 +105,12 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(emptyList<ConsultationPreviewOngoingInfo>())
-        then(cacheRepository).should(times(1)).getConsultationOngoingList()
+        then(cacheRepository).should(only()).getConsultationOngoingList()
         then(databaseRepository).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `getConsultationPreviewOngoingList - when has cache with listof DTO- should return listof DTO from cache`() {
+    fun `getConsultationPreviewOngoingList - when has cache with listof DTO - should return listof DTO from cache`() {
         // Given
         given(cacheRepository.getConsultationOngoingList())
             .willReturn(CacheResult.CachedConsultationOngoingList(listOf(consultationDTO)))
@@ -125,7 +121,7 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(listOf(consultationPreviewOngoingInfo))
-        then(cacheRepository).should(times(1)).getConsultationOngoingList()
+        then(cacheRepository).should(only()).getConsultationOngoingList()
         then(databaseRepository).shouldHaveNoInteractions()
     }
 }
