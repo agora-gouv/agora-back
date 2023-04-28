@@ -11,4 +11,11 @@ import java.util.*
 interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID> {
     @Query(value = "SELECT * FROM consultations WHERE id = :consultationId LIMIT 1", nativeQuery = true)
     fun getConsultation(@Param("consultationId") consultationId: UUID): ConsultationDTO?
+
+    @Query(
+        value = """SELECT * FROM consultations WHERE id NOT IN 
+            (SELECT consultation_id FROM consultation_updates WHERE step = 2 OR step = 3)""",
+        nativeQuery = true
+    )
+    fun getConsultationOngoingList(): List<ConsultationDTO>?
 }

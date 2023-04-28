@@ -10,10 +10,10 @@ class ConsultationMapper {
     fun toDomain(dto: ConsultationDTO) = Consultation(
         id = dto.id.toString(),
         title = dto.title,
+        coverUrl = dto.coverUrl,
         abstract = dto.abstract,
         startDate = dto.startDate,
         endDate = dto.endDate,
-        coverUrl = dto.coverUrl,
         questionCount = dto.questionCount,
         estimatedTime = dto.estimatedTime,
         participantCountGoal = dto.participantCountGoal,

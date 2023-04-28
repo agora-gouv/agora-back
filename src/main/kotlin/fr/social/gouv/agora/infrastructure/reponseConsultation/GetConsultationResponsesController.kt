@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation
 
-import fr.social.gouv.agora.infrastructure.reponseConsultation.dto.ConsultationResultJsonMapper
 import fr.social.gouv.agora.usecase.reponseConsultation.GetConsultationResultsUseCase
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
