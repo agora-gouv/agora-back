@@ -38,7 +38,7 @@ internal class FeedbackQagRepositoryImplTest {
         id = UUID.randomUUID(),
         userId = "1234",
         qagId = UUID.fromString("1f066238-e29b-11ed-b5ea-0242ac120002"),
-        isHelpful = true,
+        isHelpful = 1,
     )
 
     @Test
