@@ -31,4 +31,8 @@ class UserInfoMapper {
         )
     }
 
+    fun updateDto(dto: UserDTO, fcmToken: String): UserDTO {
+        return dto.copy(fcmToken = fcmToken)
+    }
+
 }
