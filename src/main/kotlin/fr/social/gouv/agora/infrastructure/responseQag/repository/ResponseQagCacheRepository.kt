@@ -47,6 +47,7 @@ class ResponseQagCacheRepository(private val cacheManager: CacheManager) {
         return ResponseQagDTO(
             id = NOT_FOUND_UUID,
             author = "",
+            authorPortraitUrl = "",
             authorDescription = "",
             responseDate = Date(0),
             videoUrl = "",

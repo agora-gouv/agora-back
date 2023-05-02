@@ -13,6 +13,8 @@ data class ResponseQagDTO(
     @Column(columnDefinition = "TEXT")
     val author: String,
     @Column(columnDefinition = "TEXT")
+    val authorPortraitUrl: String,
+    @Column(columnDefinition = "TEXT")
     val authorDescription: String,
     val responseDate: Date,
     @Column(columnDefinition = "TEXT")
@@ -34,7 +36,7 @@ data class ResponseQagDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , author = $author , authorDescription = $authorDescription , responseDate = $responseDate , videoUrl = $videoUrl , transcription = $transcription , qagId = $qagId )"
+        return this::class.simpleName + "(id = $id , author = $author , authorPortraitUrl = $authorPortraitUrl , authorDescription = $authorDescription , responseDate = $responseDate , videoUrl = $videoUrl , transcription = $transcription , qagId = $qagId )"
     }
 
 }

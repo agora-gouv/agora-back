@@ -11,6 +11,7 @@ class ResponseQagMapper {
         return ResponseQag(
             id = dto.id.toString(),
             author = dto.author,
+            authorPortraitUrl = dto.authorPortraitUrl,
             authorDescription = dto.authorDescription,
             responseDate = dto.responseDate,
             videoUrl = dto.videoUrl,
