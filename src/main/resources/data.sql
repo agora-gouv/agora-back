@@ -208,7 +208,8 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     '1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'cc2803e8-5534-4054-9d49-40c6eabb111a',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'c29255f2-10ca-4be5-aab1-801ea1733301',
     'c28255f2-10ca-4be5-aab1-801ea1733301',
@@ -216,7 +217,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     'b27bb876-d14c-4863-a23b-af6526b96968'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    '541e2d2b-9b68-49d3-ab35-53299ea364f2',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     '78782e93-71b5-47e7-8f59-79c0ae32af48',
     null,
@@ -224,7 +226,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     'b27bb876-d14c-4863-a23b-af6526b96968'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c12d31d2-cc9c-40ea-b0b8-f11b45899f0b',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'c29255f2-10ca-4be5-aab1-801ea1733302',
     'c27255f2-10ca-4be5-aab1-801ea1733301',
@@ -232,7 +235,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     'b27bb876-d14c-4863-a23b-af6526b96968'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'd3ad860b-35b3-4383-93c8-ef7374061e00',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     '18409cad-f31b-45cd-8285-a79c94aaf868',
     '9b3beb2c-6fd6-42d0-b8fb-6cea10447da2',
@@ -240,7 +244,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     'b27bb876-d14c-4863-a23b-af6526b96968'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'a3130630-bd32-496e-9937-f10c6de36a51',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     '18409cad-f31b-45cd-8285-a79c94aaf868',
     'b4dde6f7-fb75-48fd-9ec7-038adece59df',
@@ -248,7 +253,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     'b27bb876-d14c-4863-a23b-af6526b96968'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'bb350bc0-52e9-47af-bb1a-525ac2bd1f0a',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     '89bd9080-0b27-417a-af13-bc2368535ddf',
     null,
@@ -256,7 +262,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     'b27bb876-d14c-4863-a23b-af6526b96968'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    '8507bd04-6221-4a33-b4c2-195c8ce913d5',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'c29255f2-10ca-4be5-aab1-801ea1733301',
     'c28255f2-10ca-4be5-aab1-801ea1733302',
@@ -264,7 +271,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     '77c27321-7c6f-41a4-afa3-052128fbbec0'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    '8dea06d1-9920-4ee4-aeee-fda67627c3c9',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     '78782e93-71b5-47e7-8f59-79c0ae32af48',
     null,
@@ -272,7 +280,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     '77c27321-7c6f-41a4-afa3-052128fbbec0'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    '600faff1-6816-4f2c-81cf-1e69c83a6ea0',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     'c29255f2-10ca-4be5-aab1-801ea1733302',
     'c27255f2-10ca-4be5-aab1-801ea1733303',
@@ -280,7 +289,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     '77c27321-7c6f-41a4-afa3-052128fbbec0'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'ec07836e-daa2-47aa-a42f-dd1a25a39e4e',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     '18409cad-f31b-45cd-8285-a79c94aaf868',
     'eadaa609-2d81-4584-bcb7-fb432396a0c5',
@@ -288,7 +298,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     '77c27321-7c6f-41a4-afa3-052128fbbec0'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'eaea908c-73f8-4f9c-9024-fb3536b0466f',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     '18409cad-f31b-45cd-8285-a79c94aaf868',
     'b4dde6f7-fb75-48fd-9ec7-038adece59df',
@@ -296,7 +307,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     '77c27321-7c6f-41a4-afa3-052128fbbec0'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+INSERT INTO reponses_consultation (id, consultation_id, question_id, choice_id, response_text, participation_id) VALUES (
+    'c90f35bd-1be2-48b7-98e5-bb00c39a087a',
     'c29255f2-10ca-4be5-aab1-801ea173337c',
     '89bd9080-0b27-417a-af13-bc2368535ddf',
     null,
@@ -304,7 +316,8 @@ INSERT INTO reponses_consultation (consultation_id, question_id, choice_id, resp
     '77c27321-7c6f-41a4-afa3-052128fbbec0'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO supports_qag (user_id, qag_id) VALUES (
+INSERT INTO supports_qag (id, user_id, qag_id) VALUES (
+    'c7bb24ba-0287-4924-b976-0b1c9c59e386',
     '54f66df616565d84',
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8'
 ) ON CONFLICT DO NOTHING;
@@ -329,7 +342,8 @@ INSERT INTO responses_qag(id, author, author_description, response_date, video_u
     '889b41ad-321b-4338-8596-df745c546919'
 ) ON CONFLICT (id) DO UPDATE SET transcription = EXCLUDED.transcription;
 
-INSERT INTO feedbacks_qag (user_id, qag_id, is_helpful) VALUES (
+INSERT INTO feedbacks_qag (id, user_id, qag_id, is_helpful) VALUES (
+    '92df521e-0c13-49fc-8d2b-9d947785c7cf',
     '54f66df616565d84',
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8',
     1
