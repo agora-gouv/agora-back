@@ -2,6 +2,7 @@ package fr.social.gouv.agora.infrastructure.login.repository
 
 import fr.social.gouv.agora.domain.UserInfo
 import fr.social.gouv.agora.infrastructure.login.dto.UserDTO
+import fr.social.gouv.agora.infrastructure.login.repository.LoginCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.login.repository.LoginRepository
 import org.springframework.stereotype.Component
 
@@ -16,13 +17,23 @@ class LoginRepositoryImpl(
         private const val MAX_GENERATE_USER_RETRY_COUNT = 10
     }
 
+    override fun getUser(deviceId: String): UserInfo? {
+        TODO("Not yet implemented")
+    }
+
     override fun loginOrRegister(deviceId: String, fcmToken: String): UserInfo? {
-        val cachedUserDTO = cacheRepository.getUser(deviceId)
-        val userDTO = cachedUserDTO ?: databaseRepository.getUser(deviceId) ?: generateUser(
+        val (cachedUserDTO, databaseUserDTO) = when (val cacheResult = cacheRepository.getUser(deviceId)) {
+            CacheResult.CacheNotInitialized -> null to databaseRepository.getUser(deviceId)
+            CacheResult.CachedUserNotFound -> null to null
+            is CacheResult.CachedUser -> cacheResult.userDTO to null
+        }
+
+        val userDTO = cachedUserDTO ?: databaseUserDTO ?: generateUser(
             deviceId = deviceId,
             fcmToken = fcmToken
         )
-        return userDTO?.let {
+
+        return if (userDTO != null) {
             val updatedUserDTO = updateUserIfRequired(userDTO, fcmToken)
             val usedUserDTO = updatedUserDTO ?: userDTO
 
@@ -30,6 +41,9 @@ class LoginRepositoryImpl(
                 cacheRepository.insertUser(usedUserDTO)
             }
             mapper.toDomain(usedUserDTO)
+        } else {
+            cacheRepository.insertUserNotFound(deviceId)
+            null
         }
     }
 
