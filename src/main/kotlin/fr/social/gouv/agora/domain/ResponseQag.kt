@@ -10,4 +10,5 @@ data class ResponseQag(
     val responseDate: Date,
     val videoUrl: String,
     val transcription: String,
+    val qagId: String,
 )
