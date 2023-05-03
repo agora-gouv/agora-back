@@ -14,6 +14,5 @@ interface ResponseQagDatabaseRepository : CrudRepository<ResponseQagDTO, UUID> {
     fun getResponseQag(@Param("qagId") qagId: UUID): ResponseQagDTO?
 
     @Query(value = "SELECT * FROM responses_qag ORDER BY response_date DESC LIMIT 10", nativeQuery = true)
-    fun getResponseQagList(): List<ResponseQagDTO>?
-
+    fun getResponseQagList(): List<ResponseQagDTO>
 }

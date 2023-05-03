@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.responseQag.repository
 
 import fr.social.gouv.agora.domain.ResponseQag
 import fr.social.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
-import fr.social.gouv.agora.infrastructure.responseQag.repository.ResponseQagCacheRepository.CacheResult
+import fr.social.gouv.agora.infrastructure.responseQag.repository.ResponseQagCacheRepository.CacheListResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -53,12 +53,12 @@ internal class ResponseQagListRepositoryImplTest {
     )
 
     @Test
-    fun `getResponseQagList - when CacheNotInitialized - should call getResponseQagListFromDatabase and insert result (case result = null) to cache`() {
+    fun `getResponseQagList - when CacheNotInitialized - should call getResponseQagListFromDatabase and insert result (case result = emptylist) to cache`() {
         // Given
         given(cacheRepository.getResponseQagList())
-            .willReturn(CacheResult.CacheNotInitialized)
+            .willReturn(CacheListResult.CacheNotInitialized)
 
-        given(databaseRepository.getResponseQagList()).willReturn(null)
+        given(databaseRepository.getResponseQagList()).willReturn(emptyList())
 
         // When
         val result = repository.getResponseQagList()
@@ -66,7 +66,7 @@ internal class ResponseQagListRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(emptyList<ResponseQag>())
         then(cacheRepository).should(times(1)).getResponseQagList()
-        then(cacheRepository).should(times(1)).insertResponseQagList(null)
+        then(cacheRepository).should(times(1)).insertResponseQagList(emptyList())
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(databaseRepository).should(only()).getResponseQagList()
     }
@@ -75,7 +75,7 @@ internal class ResponseQagListRepositoryImplTest {
     fun `getResponseQagList - when CacheNotInitialized - should call getResponseQagListFromDatabase and insert result (case result not null) to cache`() {
         // Given
         given(cacheRepository.getResponseQagList())
-            .willReturn(CacheResult.CacheNotInitialized)
+            .willReturn(CacheListResult.CacheNotInitialized)
 
         given(databaseRepository.getResponseQagList()).willReturn(listOf(responsaQagDTO))
         given(mapper.toDomain(responsaQagDTO)).willReturn(reponseQag)
@@ -95,7 +95,7 @@ internal class ResponseQagListRepositoryImplTest {
     fun `getResponseQagList - when has cache with emptyList - should return emptylist from cache`() {
         // Given
         given(cacheRepository.getResponseQagList())
-            .willReturn(CacheResult.CachedResponseQagList(emptyList()))
+            .willReturn(CacheListResult.CachedResponseQagList(emptyList()))
 
         // When
         val result = repository.getResponseQagList()
@@ -110,7 +110,7 @@ internal class ResponseQagListRepositoryImplTest {
     fun `getResponseQagList - when has cache with listof DTO - should return listof DTO from cache`() {
         // Given
         given(cacheRepository.getResponseQagList())
-            .willReturn(CacheResult.CachedResponseQagList(listOf(responsaQagDTO)))
+            .willReturn(CacheListResult.CachedResponseQagList(listOf(responsaQagDTO)))
         given(mapper.toDomain(responsaQagDTO)).willReturn(reponseQag)
 
         // When

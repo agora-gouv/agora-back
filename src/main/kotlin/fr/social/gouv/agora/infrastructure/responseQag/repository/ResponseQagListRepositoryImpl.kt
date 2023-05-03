@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.responseQag.repository
 
 import fr.social.gouv.agora.domain.ResponseQag
 import fr.social.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
-import fr.social.gouv.agora.infrastructure.responseQag.repository.ResponseQagCacheRepository.CacheResult
+import fr.social.gouv.agora.infrastructure.responseQag.repository.ResponseQagCacheRepository.CacheListResult
 import fr.social.gouv.agora.usecase.responseQag.repository.ResponseQagListRepository
 import org.springframework.stereotype.Component
 
@@ -16,13 +16,13 @@ class ResponseQagListRepositoryImpl(
     override fun getResponseQagList(): List<ResponseQag> {
         val responseQagDTOList =
             when (val cacheResult = cacheRepository.getResponseQagList()) {
-                is CacheResult.CachedResponseQagList -> cacheResult.responseQagListDTO
-                else -> getResponseQagListFromDatabase()
+                CacheListResult.CacheNotInitialized -> getResponseQagListFromDatabase()
+                is CacheListResult.CachedResponseQagList -> cacheResult.responseQagListDTO
             }
-        return responseQagDTOList?.map { dto -> mapper.toDomain(dto) } ?: emptyList()
+        return responseQagDTOList.map { dto -> mapper.toDomain(dto) }
     }
 
-    private fun getResponseQagListFromDatabase(): List<ResponseQagDTO>? {
+    private fun getResponseQagListFromDatabase(): List<ResponseQagDTO> {
         val responseQagListDTO = databaseRepository.getResponseQagList()
         cacheRepository.insertResponseQagList(responseQagListDTO)
         return responseQagListDTO

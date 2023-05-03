@@ -17,9 +17,13 @@ class ResponseQagCacheRepository(private val cacheManager: CacheManager) {
 
     sealed class CacheResult {
         data class CachedResponseQag(val responseQagDTO: ResponseQagDTO) : CacheResult()
-        data class CachedResponseQagList(val responseQagListDTO: List<ResponseQagDTO>) : CacheResult()
         object CachedResponseQagNotFound : CacheResult()
         object CacheNotInitialized : CacheResult()
+    }
+
+    sealed class CacheListResult {
+        data class CachedResponseQagList(val responseQagListDTO: List<ResponseQagDTO>) : CacheListResult()
+        object CacheNotInitialized : CacheListResult()
     }
 
     fun getResponseQag(qagId: UUID): CacheResult {
@@ -59,23 +63,22 @@ class ResponseQagCacheRepository(private val cacheManager: CacheManager) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun getResponseQagList(): CacheResult {
+    fun getResponseQagList(): CacheListResult {
         val responseQagList = try {
             getCache()?.get(RESPONSE_QAG_CACHE_KEY, List::class.java) as? List<ResponseQagDTO>
         } catch (e: IllegalStateException) {
             null
         }
         return when (responseQagList) {
-            null -> CacheResult.CacheNotInitialized
-            else -> CacheResult.CachedResponseQagList(responseQagList)
+            null -> CacheListResult.CacheNotInitialized
+            else -> CacheListResult.CachedResponseQagList(responseQagList)
         }
     }
 
     fun insertResponseQagList(responseQagListDTO: List<ResponseQagDTO>?) {
         getCache()?.put(
             RESPONSE_QAG_CACHE_KEY,
-            responseQagListDTO?: emptyList<ResponseQagDTO>(),
+            responseQagListDTO ?: emptyList<ResponseQagDTO>(),
         )
     }
-
 }

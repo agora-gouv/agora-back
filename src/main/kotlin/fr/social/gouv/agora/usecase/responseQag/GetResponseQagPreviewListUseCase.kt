@@ -12,7 +12,7 @@ class GetResponseQagPreviewListUseCase(
     private val qagRepository: QagInfoRepository,
     private val responseQagListRepository: ResponseQagListRepository,
 ) {
-    fun getResponseQagPreviewList(): List<ResponseQagPreview>? {
+    fun getResponseQagPreviewList(): List<ResponseQagPreview> {
         return responseQagListRepository.getResponseQagList()
             .mapNotNull { responseQag ->
                 thematiqueRepository.getThematiqueList()

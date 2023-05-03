@@ -20,8 +20,8 @@ class ResponseQagRepositoryImpl(
 
             when (val cacheResult = cacheRepository.getResponseQag(qagUUID)) {
                 CacheResult.CacheNotInitialized -> getResponseQagFromDatabase(qagUUID)
+                CacheResult.CachedResponseQagNotFound -> null
                 is CacheResult.CachedResponseQag -> cacheResult.responseQagDTO
-                else -> null
             }?.let(mapper::toDomain)
         } catch (e: IllegalArgumentException) {
             null
