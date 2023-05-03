@@ -20,6 +20,8 @@ data class ReponseConsultationDTO(
     @Column(columnDefinition = "TEXT")
     val responseText: String,
     val participationId: UUID,
+    @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
+    val userId: UUID,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -33,6 +35,6 @@ data class ReponseConsultationDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , consultationId = $consultationId, questionId = $questionId, choiceId = $choiceId, responseText = $responseText, participationId = $participationId)"
+        return this::class.simpleName + "(id = $id , consultationId = $consultationId, questionId = $questionId, choiceId = $choiceId, responseText = $responseText, participationId = $participationId, userId = $userId)"
     }
 }

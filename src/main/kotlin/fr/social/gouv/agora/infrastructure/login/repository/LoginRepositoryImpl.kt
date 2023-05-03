@@ -18,7 +18,13 @@ class LoginRepositoryImpl(
     }
 
     override fun getUser(deviceId: String): UserInfo? {
-        TODO("Not yet implemented")
+        return when (val cacheResult = cacheRepository.getUser(deviceId)) {
+            CacheResult.CacheNotInitialized -> databaseRepository.getUser(deviceId).also { userDTO ->
+                insertUserToCache(deviceId, userDTO)
+            }
+            CacheResult.CachedUserNotFound -> null
+            is CacheResult.CachedUser -> cacheResult.userDTO
+        }?.let { userDTO -> mapper.toDomain(userDTO) }
     }
 
     override fun loginOrRegister(deviceId: String, fcmToken: String): UserInfo? {
@@ -64,6 +70,14 @@ class LoginRepositoryImpl(
             databaseRepository.save(updatedUserDTO)
             updatedUserDTO
         } else null
+    }
+
+    private fun insertUserToCache(deviceId: String, userDTO: UserDTO?) {
+        if (userDTO != null) {
+            cacheRepository.insertUser(userDTO)
+        } else {
+            cacheRepository.insertUserNotFound(deviceId)
+        }
     }
 
 }
