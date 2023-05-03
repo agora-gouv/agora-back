@@ -30,9 +30,7 @@ class ResponseQagRepositoryImpl(
 
     private fun getResponseQagFromDatabase(qagUUID: UUID): ResponseQagDTO? {
         return databaseRepository.getResponseQag(qagUUID).also { responseQagDTO ->
-            responseQagDTO?.let {
-                cacheRepository.insertResponseQag(qagUUID, responseQagDTO)
-            } ?: cacheRepository.deleteResponseQag(qagUUID)
+            cacheRepository.insertResponseQag(qagUUID, responseQagDTO)
         }
     }
 

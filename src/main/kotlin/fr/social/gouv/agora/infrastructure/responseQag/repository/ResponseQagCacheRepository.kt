@@ -39,12 +39,8 @@ class ResponseQagCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
-    fun insertResponseQag(qagId: UUID, responseQagDTO: ResponseQagDTO) {
-        getCache()?.put(qagId.toString(), responseQagDTO)
-    }
-
-    fun deleteResponseQag(qagId: UUID) {
-        getCache()?.put(qagId.toString(), createResponseQagNotFound())
+    fun insertResponseQag(qagId: UUID, responseQagDTO: ResponseQagDTO?) {
+        getCache()?.put(qagId.toString(), responseQagDTO ?: createResponseQagNotFound())
     }
 
     private fun getCache() = cacheManager.getCache(RESPONSE_QAG_CACHE_NAME)
