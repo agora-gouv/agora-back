@@ -15,10 +15,11 @@ class GetResponseQagPreviewListUseCase(
     fun getResponseQagPreviewList(): List<ResponseQagPreview> {
         return responseQagListRepository.getResponseQagList()
             .mapNotNull { responseQag ->
+                val qagInfo = qagRepository.getQagInfo(responseQag.qagId)
                 thematiqueRepository.getThematiqueList()
-                    .find { thematique -> thematique.id == qagRepository.getQagInfo(responseQag.qagId)?.thematiqueId }
+                    .find { thematique -> thematique.id == qagInfo?.thematiqueId }
                     ?.let { thematique ->
-                        qagRepository.getQagInfo(responseQag.qagId)?.title?.let { title ->
+                        qagInfo?.title?.let { title ->
                             ResponseQagPreview(
                                 qagId = responseQag.qagId,
                                 thematique = thematique,

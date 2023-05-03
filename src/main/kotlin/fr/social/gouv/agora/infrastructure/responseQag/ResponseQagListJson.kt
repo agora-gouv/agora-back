@@ -7,8 +7,6 @@ import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJson
 data class ResponseQagListJson(
     @JsonProperty("responses")
     val responsesList: List<ResponseQagPreviewJson>,
-    @JsonProperty("qags")
-    val qagsList: List<QagJson>,
 )
 
 data class ResponseQagPreviewJson(

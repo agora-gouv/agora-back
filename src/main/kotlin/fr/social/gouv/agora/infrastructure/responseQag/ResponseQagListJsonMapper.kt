@@ -20,6 +20,6 @@ class ResponseQagListJsonMapper(
                 authorPortraitUrl = domain.authorPortraitUrl,
                 responseDate = domain.responseDate.toString(),
             )
-        }, qagsList = emptyList()) //TODO
+        })
     }
 }
