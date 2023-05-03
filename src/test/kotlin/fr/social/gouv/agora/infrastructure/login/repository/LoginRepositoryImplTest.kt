@@ -33,7 +33,86 @@ internal class LoginRepositoryImplTest {
     private lateinit var mapper: UserInfoMapper
 
     @Nested
-    inner class CacheHasDtoCases {
+    inner class GetUserCases {
+
+        @Test
+        fun `getUser - when CacheNotInitialized & database returns null - should insert not found to cache then return null`() {
+            // Given
+            given(cacheRepository.getUser(deviceId = "deviceId")).willReturn(CacheResult.CacheNotInitialized)
+            given(databaseRepository.getUser(deviceId = "deviceId")).willReturn(null)
+
+            // When
+            val result = repository.getUser(deviceId = "deviceId")
+
+            // Then
+            assertThat(result).isEqualTo(null)
+            then(cacheRepository).should(times(1)).getUser(deviceId = "deviceId")
+            then(cacheRepository).should(times(1)).insertUserNotFound(deviceId = "deviceId")
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(databaseRepository).should(only()).getUser(deviceId = "deviceId")
+            then(mapper).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `getUser - when CacheNotInitialized & database returns dto - should insert dto to cache then return mapped dto`() {
+            // Given
+            given(cacheRepository.getUser(deviceId = "deviceId")).willReturn(CacheResult.CacheNotInitialized)
+
+            val userDTO = mock(UserDTO::class.java)
+            given(databaseRepository.getUser(deviceId = "deviceId")).willReturn(userDTO)
+
+            val userInfo = mock(UserInfo::class.java)
+            given(mapper.toDomain(userDTO)).willReturn(userInfo)
+
+            // When
+            val result = repository.getUser(deviceId = "deviceId")
+
+            // Then
+            assertThat(result).isEqualTo(userInfo)
+            then(cacheRepository).should(times(1)).getUser(deviceId = "deviceId")
+            then(cacheRepository).should(times(1)).insertUser(userDTO)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(databaseRepository).should(only()).getUser(deviceId = "deviceId")
+            then(mapper).should(only()).toDomain(userDTO)
+        }
+
+        @Test
+        fun `getUser - when CachedUserNotFound - should return null`() {
+            // Given
+            given(cacheRepository.getUser(deviceId = "deviceId")).willReturn(CacheResult.CachedUserNotFound)
+
+            // When
+            val result = repository.getUser(deviceId = "deviceId")
+
+            // Then
+            assertThat(result).isEqualTo(null)
+            then(cacheRepository).should(only()).getUser(deviceId = "deviceId")
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(mapper).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `getUser - when CachedUser - should return mapped dto`() {
+            // Given
+            val userDTO = mock(UserDTO::class.java)
+            given(cacheRepository.getUser(deviceId = "deviceId")).willReturn(CacheResult.CachedUser(userDTO))
+
+            val userInfo = mock(UserInfo::class.java)
+            given(mapper.toDomain(userDTO)).willReturn(userInfo)
+
+            // When
+            val result = repository.getUser(deviceId = "deviceId")
+
+            // Then
+            assertThat(result).isEqualTo(userInfo)
+            then(cacheRepository).should(only()).getUser(deviceId = "deviceId")
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(mapper).should(only()).toDomain(userDTO)
+        }
+    }
+
+    @Nested
+    inner class LoginOrRegisterCacheHasDtoCases {
         @Test
         fun `loginOrRegister - when cache return dto and fcmToken matches - should return mapped dto`() {
             // Given
@@ -80,7 +159,7 @@ internal class LoginRepositoryImplTest {
     }
 
     @Nested
-    inner class CacheNotInitializedCases {
+    inner class LoginOrRegisterCacheNotInitializedCases {
 
         @BeforeEach
         fun setUp() {
@@ -237,7 +316,7 @@ internal class LoginRepositoryImplTest {
     }
 
     @Nested
-    inner class CacheUserNotFoundCases {
+    inner class LoginOrRegisterCacheUserNotFoundCases {
 
         @BeforeEach
         fun setUp() {
