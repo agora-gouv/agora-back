@@ -11,7 +11,7 @@ class ResponseQagListController(
     private val getResponseQagPreviewListUseCase: GetResponseQagPreviewListUseCase,
     private val responseQagListJsonMapper: ResponseQagListJsonMapper,
 ) {
-    @GetMapping("/consultations")
+    @GetMapping("/qags")
     fun getResponseQagPreviewList(): ResponseEntity<ResponseQagListJson> {
         val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
         return ResponseEntity.ok()
