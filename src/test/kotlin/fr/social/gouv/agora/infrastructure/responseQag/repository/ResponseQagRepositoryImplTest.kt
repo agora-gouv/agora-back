@@ -85,7 +85,7 @@ internal class ResponseQagRepositoryImplTest {
     }
 
     @Test
-    fun `getResponseQag - when cacheResult is CacheNotInitialized and get null from database - should return null and delete from cache`() {
+    fun `getResponseQag - when cacheResult is CacheNotInitialized and get null from database - should return null and insert null in cache`() {
         // Given
         val qagId = UUID.randomUUID()
         given(cacheRepository.getResponseQag(qagId)).willReturn(CacheResult.CacheNotInitialized)
@@ -97,7 +97,7 @@ internal class ResponseQagRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(null)
         then(cacheRepository).should(times(1)).getResponseQag(qagId)
-        then(cacheRepository).should(times(1)).deleteResponseQag(qagId)
+        then(cacheRepository).should(times(1)).insertResponseQag(qagId = qagId, responseQagDTO = null)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(databaseRepository).should(only()).getResponseQag(qagId)
         then(mapper).shouldHaveNoInteractions()
