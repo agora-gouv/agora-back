@@ -8,9 +8,7 @@ data class ReponseConsultation(
 )
 
 data class ReponseConsultationInserting(
-    val consultationId: String,
     val questionId: String,
     val choiceIds: List<String>?,
     val responseText: String,
-    val participationId: String
 )

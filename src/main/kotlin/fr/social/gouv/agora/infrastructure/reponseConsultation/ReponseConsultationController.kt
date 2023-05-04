@@ -1,13 +1,10 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation
 
-import fr.social.gouv.agora.infrastructure.reponseConsultation.repository.InsertStatus
 import fr.social.gouv.agora.usecase.reponseConsultation.InsertReponseConsultationUseCase
+import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
@@ -16,15 +13,20 @@ class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,
     private val jsonMapper: ReponseConsultationJsonMapper
 ) {
-    @PostMapping("/consultations/{id}/responses")
-    fun postResponseConsultation(@RequestBody responsesConsultationJson: ReponsesConsultationJson): HttpEntity<*> {
-        val participationId = UUID.randomUUID()
-        val reponseConsultationList = jsonMapper.toDomain(responsesConsultationJson, participationId)
-        val statusInsertion = reponseConsultationList.map {
-            insertReponseConsultationUseCase.insertReponseConsultation(it)
+    @PostMapping("/consultations/{consultationId}/responses")
+    fun postResponseConsultation(
+        @PathVariable consultationId: String,
+        @RequestHeader deviceId: String,
+        @RequestBody responsesConsultationJson: ReponsesConsultationJson,
+    ): HttpEntity<*> {
+        val statusInsertion = insertReponseConsultationUseCase.insertReponseConsultation(
+            consultationId = consultationId,
+            deviceId = deviceId,
+            consultationResponses = jsonMapper.toDomain(responsesConsultationJson)
+        )
+        return when (statusInsertion) {
+            InsertResult.INSERT_SUCCESS -> ResponseEntity.ok().body("")
+            InsertResult.INSERT_FAILURE -> ResponseEntity.status(400).body("")
         }
-        return if (statusInsertion.contains(InsertStatus.INSERT_CONFLICT))
-            ResponseEntity.status(400).body("Erreur d'insertion")
-        else ResponseEntity.ok().body("")
     }
 }
