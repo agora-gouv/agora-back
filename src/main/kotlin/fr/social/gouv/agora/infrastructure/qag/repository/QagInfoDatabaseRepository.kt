@@ -11,4 +11,6 @@ import java.util.*
 interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Query(value = "SELECT * FROM qags WHERE id = :qagId LIMIT 1", nativeQuery = true)
     fun getQag(@Param("qagId") qagId: UUID): QagDTO?
+    @Query(value = "SELECT * FROM qags ORDER BY post_date DESC LIMIT 10", nativeQuery = true)
+    fun getQagList(): List<QagDTO>
 }
