@@ -3,10 +3,9 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.domain.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoRepositoryImpl.Companion.QAG_CACHE_NAME
+import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -16,7 +15,6 @@ import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
@@ -37,10 +35,10 @@ internal class QagInfoRepositoryImplTest {
     private lateinit var databaseRepository: QagInfoDatabaseRepository
 
     @MockBean
-    private lateinit var mapper: QagInfoMapper
+    private lateinit var cacheRepository: QagCacheRepository
 
-    @Autowired
-    private lateinit var cacheManager: CacheManager
+    @MockBean
+    private lateinit var mapper: QagInfoMapper
 
     private val qagDTO = QagDTO(
         id = UUID.randomUUID(),
@@ -62,11 +60,6 @@ internal class QagInfoRepositoryImplTest {
         username = "username",
     )
 
-    @BeforeEach
-    fun setUp() {
-        cacheManager.getCache(QAG_CACHE_NAME)?.clear()
-    }
-
     @Test
     fun `getQag - when invalid UUID - should return null`() {
         // When
@@ -74,43 +67,16 @@ internal class QagInfoRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(null)
-    }
-
-    @Test
-    fun `getQag - when not found and no cache - should return null from database`() {
-        // Given
-        val uuid = UUID.randomUUID()
-        given(databaseRepository.getQag(uuid)).willReturn(null)
-
-        // When
-        val result = repository.getQagInfo(uuid.toString())
-
-        // Then
-        assertThat(result).isEqualTo(null)
-        then(databaseRepository).should(only()).getQag(uuid)
+        then(cacheRepository).shouldHaveNoInteractions()
+        then(databaseRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `getQag - when not found and has cache - should return null from cache`() {
+    fun `getQag - when cacheResult is CacheNotInitialized and result not null from database- should return mapped object from database and insert it in cache`() {
         // Given
         val uuid = UUID.randomUUID()
-        given(databaseRepository.getQag(uuid)).willReturn(null)
-
-        // When
-        repository.getQagInfo(uuid.toString())
-        val result = repository.getQagInfo(uuid.toString())
-
-        // Then
-        assertThat(result).isEqualTo(null)
-        then(databaseRepository).should(times(1)).getQag(uuid)
-        then(mapper).shouldHaveNoInteractions()
-    }
-
-    @Test
-    fun `getQag - when found and no cache - should return mapped object from database`() {
-        // Given
-        val uuid = UUID.randomUUID()
+        given(cacheRepository.getQag(uuid)).willReturn(CacheResult.CacheNotInitialized)
         given(databaseRepository.getQag(uuid)).willReturn(qagDTO)
         given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
@@ -119,25 +85,60 @@ internal class QagInfoRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(qagInfo)
-        then(databaseRepository).should(only()).getQag(uuid)
+        then(cacheRepository).should(times(1)).getQag(uuid)
+        then(databaseRepository).should(times(1)).getQag(uuid)
+        then(cacheRepository).should(times(1)).insertQag(uuid, qagDTO)
+        then(mapper).should(times(1)).toDomain(qagDTO)
+    }
+
+    @Test
+    fun `getQag - when cacheResult is CacheNotInitialized and result is null from database- should return null and insert QagInfoNotFound in cache`() {
+        // Given
+        val uuid = UUID.randomUUID()
+        given(cacheRepository.getQag(uuid)).willReturn(CacheResult.CacheNotInitialized)
+        given(databaseRepository.getQag(uuid)).willReturn(null)
+
+        // When
+        val result = repository.getQagInfo(uuid.toString())
+
+        // Then
+        assertThat(result).isEqualTo(null)
+        then(cacheRepository).should(times(1)).getQag(uuid)
+        then(databaseRepository).should(times(1)).getQag(uuid)
+        then(cacheRepository).should(times(1)).insertQag(uuid, null)
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getQag - when cacheResult is CachedQagNotFound - should return mapped object from cache`() {
+        // Given
+        val uuid = UUID.randomUUID()
+        given(cacheRepository.getQag(uuid)).willReturn(CacheResult.CachedQagNotFound)
+
+        // When
+        val result = repository.getQagInfo(uuid.toString())
+
+        // Then
+        assertThat(result).isEqualTo(null)
+        then(cacheRepository).should(only()).getQag(uuid)
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getQag - when cacheResult is CachedQag - should return mapped object from cache`() {
+        // Given
+        val uuid = UUID.randomUUID()
+        given(cacheRepository.getQag(uuid)).willReturn(CacheResult.CachedQag(qagDTO))
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.getQagInfo(uuid.toString())
+
+        // Then
+        assertThat(result).isEqualTo(qagInfo)
+        then(cacheRepository).should(only()).getQag(uuid)
+        then(databaseRepository).shouldHaveNoInteractions()
         then(mapper).should(only()).toDomain(qagDTO)
     }
-
-    @Test
-    fun `getQag - when found and has cache - should return mapped object from cache`() {
-        // Given
-        val uuid = UUID.randomUUID()
-        given(databaseRepository.getQag(uuid)).willReturn(qagDTO)
-        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
-
-        // When
-        repository.getQagInfo(uuid.toString())
-        val result = repository.getQagInfo(uuid.toString())
-
-        // Then
-        assertThat(result).isEqualTo(qagInfo)
-        then(databaseRepository).should(times(1)).getQag(uuid)
-        then(mapper).should(times(2)).toDomain(qagDTO)
-    }
-
 }

@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.infrastructure.responseQag
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.social.gouv.agora.infrastructure.qag.QagJson
+import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJson
 
 data class ResponseQagListJson(
@@ -38,6 +38,16 @@ data class QagListJson(
 data class QagPopularJson(
     @JsonProperty("qagId")
     val qagId: String,
+    @JsonProperty("thematique")
+    val thematique: ThematiqueJson,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("username")
+    val username: String,
+    @JsonProperty("date")
+    val date: String,
+    @JsonProperty("support")
+    val support: SupportQagJson,
 )
 
 data class QagLatestJson(

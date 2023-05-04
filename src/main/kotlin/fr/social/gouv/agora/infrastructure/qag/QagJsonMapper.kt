@@ -1,6 +1,8 @@
 package fr.social.gouv.agora.infrastructure.qag
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import fr.social.gouv.agora.domain.Qag
+import fr.social.gouv.agora.domain.SupportQag
 import org.springframework.stereotype.Component
 
 @Component
@@ -23,7 +25,12 @@ class QagJsonMapper {
             response = response,
         )
     }
-
+    fun toJson(supportQag: SupportQag): SupportQagJson{
+        return SupportQagJson (
+            supportCount = supportQag.supportCount,
+            isSupportedByUser = supportQag.isSupportedByUser,
+        )
+    }
     private fun buildSupportQagJson(qag: Qag): SupportQagJson? {
         return qag.support?.let { support ->
             SupportQagJson(
