@@ -59,7 +59,7 @@ class ReponseConsultationMapper {
                 id = UUID.randomUUID(),
                 consultationId = consultationId,
                 questionId = UUID.fromString(domain.questionId),
-                choiceId = UUID.fromString(choiceId),
+                choiceId = choiceId?.let { UUID.fromString(choiceId) },
                 responseText = domain.responseText,
                 participationId = participationId,
                 userId = userId,
