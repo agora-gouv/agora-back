@@ -2,31 +2,20 @@ package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.social.gouv.agora.domain.ReponseConsultation
 import fr.social.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
-import fr.social.gouv.agora.infrastructure.reponseConsultation.repository.GetReponseConsultationRepositoryImpl.Companion.REPONSE_CONSULTATION_CACHE_NAME
+import fr.social.gouv.agora.infrastructure.reponseConsultation.repository.ReponseConsultationCacheRepository.CacheResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.cache.CacheManager
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-@EnableCaching
-@ImportAutoConfiguration(
-    CacheAutoConfiguration::class,
-    RedisAutoConfiguration::class,
-)
 internal class GetReponseConsultationRepositoryImplTest {
 
     @Autowired
@@ -36,16 +25,10 @@ internal class GetReponseConsultationRepositoryImplTest {
     private lateinit var databaseRepository: ReponseConsultationDatabaseRepository
 
     @MockBean
-    private lateinit var reponseConsultationMapper: ReponseConsultationMapper
+    private lateinit var cacheRepository: ReponseConsultationCacheRepository
 
-    @Autowired
-    @Suppress("unused")
-    private lateinit var cacheManager: CacheManager
-
-    @BeforeEach
-    fun setUp() {
-        cacheManager.getCache(REPONSE_CONSULTATION_CACHE_NAME)?.clear()
-    }
+    @MockBean
+    private lateinit var mapper: ReponseConsultationMapper
 
     private val reponseConsultation = ReponseConsultation(
         id = "domain-id",
@@ -61,6 +44,7 @@ internal class GetReponseConsultationRepositoryImplTest {
         choiceId = UUID.randomUUID(),
         responseText = "dto-responseText",
         participationId = UUID.randomUUID(),
+        userId = UUID.randomUUID(),
     )
 
     @Test
@@ -70,14 +54,49 @@ internal class GetReponseConsultationRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(emptyList<ReponseConsultation>())
+        then(cacheRepository).shouldHaveNoInteractions()
         then(databaseRepository).shouldHaveNoInteractions()
-        then(reponseConsultationMapper).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `getConsultationResponses - when databaseRepository returns emptyList and no cache - should return emptyList`() {
+    fun `getConsultationResponses - when cache returns CacheReponseConsultationNotFound - should return emptyList`() {
         // Given
         val consultationUUID = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
+        given(cacheRepository.getReponseConsultationList(consultationUUID)).willReturn(CacheResult.CacheReponseConsultationNotFound)
+
+        // When
+        val result = repository.getConsultationResponses(consultationUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(emptyList<ReponseConsultation>())
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getConsultationResponses - when returns CacheReponseConsultation - should return mapped dtos`() {
+        // Given
+        val consultationUUID = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
+        given(cacheRepository.getReponseConsultationList(consultationUUID))
+            .willReturn(CacheResult.CacheReponseConsultation(listOf(reponseConsultationDTO)))
+        given(mapper.toDomain(reponseConsultationDTO)).willReturn(reponseConsultation)
+
+        // When
+        val result = repository.getConsultationResponses(consultationUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(listOf(reponseConsultation))
+        then(cacheRepository).should(only()).getReponseConsultationList(consultationUUID)
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).should(only()).toDomain(reponseConsultationDTO)
+    }
+
+    @Test
+    fun `getConsultationResponses - when returns CacheNotInitialized and databaseRepository returns emptyList - should return emptyList`() {
+        // Given
+        val consultationUUID = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
+        given(cacheRepository.getReponseConsultationList(consultationUUID)).willReturn(CacheResult.CacheNotInitialized)
         given(databaseRepository.getConsultationResponses(consultationUUID)).willReturn(emptyList())
 
         // When
@@ -85,57 +104,32 @@ internal class GetReponseConsultationRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(emptyList<ReponseConsultation>())
+        then(cacheRepository).should(times(1)).getReponseConsultationList(consultationUUID)
+        then(cacheRepository).should(times(1)).insertReponseConsultationList(consultationUUID, emptyList())
+        then(cacheRepository).shouldHaveNoMoreInteractions()
         then(databaseRepository).should(only()).getConsultationResponses(consultationUUID)
-        then(reponseConsultationMapper).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `getConsultationResponses - when databaseRepository returns emptyList and has cache - should return emptyList`() {
+    fun `getConsultationResponses - when cache return CacheNotInitialized & databaseRepository returns responses - should insert dtos to cache then return mapped dtos`() {
         // Given
         val consultationUUID = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
-        given(databaseRepository.getConsultationResponses(consultationUUID)).willReturn(emptyList())
-
-        // When
-        repository.getConsultationResponses(consultationUUID.toString())
-        val result = repository.getConsultationResponses(consultationUUID.toString())
-
-        // Then
-        assertThat(result).isEqualTo(emptyList<ReponseConsultation>())
-        then(databaseRepository).should(times(1)).getConsultationResponses(consultationUUID)
-        then(reponseConsultationMapper).shouldHaveNoInteractions()
-    }
-
-    @Test
-    fun `getConsultationResponses - when databaseRepository returns responses and no cache - should return mapped list of reponseConsultation from database`() {
-        // Given
-        val consultationUUID = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
+        given(cacheRepository.getReponseConsultationList(consultationUUID)).willReturn(CacheResult.CacheNotInitialized)
         given(databaseRepository.getConsultationResponses(consultationUUID)).willReturn(listOf(reponseConsultationDTO))
-        given(reponseConsultationMapper.toDomain(reponseConsultationDTO)).willReturn(reponseConsultation)
+        given(mapper.toDomain(reponseConsultationDTO)).willReturn(reponseConsultation)
 
         // When
         val result = repository.getConsultationResponses(consultationUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(listOf(reponseConsultation))
+        then(cacheRepository).should(times(1)).getReponseConsultationList(consultationUUID)
+        then(cacheRepository).should(times(1))
+            .insertReponseConsultationList(consultationUUID, listOf(reponseConsultationDTO))
+        then(cacheRepository).shouldHaveNoMoreInteractions()
         then(databaseRepository).should(only()).getConsultationResponses(consultationUUID)
-        then(reponseConsultationMapper).should(only()).toDomain(reponseConsultationDTO)
-    }
-
-    @Test
-    fun `getConsultationResponses - when databaseRepository returns responses and has cache - should return mapped list of reponseConsultation from cache`() {
-        // Given
-        val consultationUUID = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
-        given(databaseRepository.getConsultationResponses(consultationUUID)).willReturn(listOf(reponseConsultationDTO))
-        given(reponseConsultationMapper.toDomain(reponseConsultationDTO)).willReturn(reponseConsultation)
-
-        // When
-        repository.getConsultationResponses(consultationUUID.toString())
-        val result = repository.getConsultationResponses(consultationUUID.toString())
-
-        // Then
-        assertThat(result).isEqualTo(listOf(reponseConsultation))
-        then(databaseRepository).should(times(1)).getConsultationResponses(consultationUUID)
-        then(reponseConsultationMapper).should(times(2)).toDomain(reponseConsultationDTO)
+        then(mapper).should(only()).toDomain(reponseConsultationDTO)
     }
 
 }

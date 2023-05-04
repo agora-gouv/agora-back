@@ -18,29 +18,54 @@ class ReponseConsultationMapper {
         )
     }
 
-    fun toDto(domain: ReponseConsultationInserting): List<ReponseConsultationDTO> {
-        if (domain.choiceIds.isNullOrEmpty()) {
-            return listOf(
-                ReponseConsultationDTO(
-                    id = UUID.randomUUID(),
-                    consultationId = UUID.fromString(domain.consultationId),
-                    questionId = UUID.fromString(domain.questionId),
-                    choiceId = null,
-                    responseText = domain.responseText,
-                    participationId = UUID.fromString(domain.participationId)
+    fun toDto(
+        consultationId: UUID,
+        userId: UUID,
+        participationId: UUID,
+        domain: ReponseConsultationInserting,
+    ): List<ReponseConsultationDTO> {
+        return if (domain.choiceIds.isNullOrEmpty()) {
+            listOfNotNull(
+                toDto(
+                    consultationId = consultationId,
+                    userId = userId,
+                    participationId = participationId,
+                    domain = domain,
+                    choiceId = null
                 )
             )
         } else {
-            return domain.choiceIds.map { choiceId ->
-                ReponseConsultationDTO(
-                    id = UUID.randomUUID(),
-                    consultationId = UUID.fromString(domain.consultationId),
-                    questionId = UUID.fromString(domain.questionId),
-                    choiceId = UUID.fromString(choiceId),
-                    responseText = domain.responseText,
-                    participationId = UUID.fromString(domain.participationId)
+            domain.choiceIds.mapNotNull { choiceId ->
+                toDto(
+                    consultationId = consultationId,
+                    userId = userId,
+                    participationId = participationId,
+                    domain = domain,
+                    choiceId = choiceId
                 )
             }
+        }
+    }
+
+    private fun toDto(
+        consultationId: UUID,
+        userId: UUID,
+        participationId: UUID,
+        domain: ReponseConsultationInserting,
+        choiceId: String?
+    ): ReponseConsultationDTO? {
+        return try {
+            ReponseConsultationDTO(
+                id = UUID.randomUUID(),
+                consultationId = consultationId,
+                questionId = UUID.fromString(domain.questionId),
+                choiceId = UUID.fromString(choiceId),
+                responseText = domain.responseText,
+                participationId = participationId,
+                userId = userId,
+            )
+        } catch (e: IllegalStateException) {
+            null
         }
     }
 }
