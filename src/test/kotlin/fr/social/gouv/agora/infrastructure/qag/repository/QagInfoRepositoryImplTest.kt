@@ -86,8 +86,9 @@ internal class QagInfoRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(qagInfo)
         then(cacheRepository).should(times(1)).getQag(uuid)
-        then(databaseRepository).should(times(1)).getQag(uuid)
+        then(databaseRepository).should(only()).getQag(uuid)
         then(cacheRepository).should(times(1)).insertQag(uuid, qagDTO)
+        then(cacheRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(times(1)).toDomain(qagDTO)
     }
 
@@ -104,8 +105,9 @@ internal class QagInfoRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(null)
         then(cacheRepository).should(times(1)).getQag(uuid)
-        then(databaseRepository).should(times(1)).getQag(uuid)
+        then(databaseRepository).should(only()).getQag(uuid)
         then(cacheRepository).should(times(1)).insertQag(uuid, null)
+        then(cacheRepository).shouldHaveNoMoreInteractions()
         then(mapper).shouldHaveNoInteractions()
     }
 

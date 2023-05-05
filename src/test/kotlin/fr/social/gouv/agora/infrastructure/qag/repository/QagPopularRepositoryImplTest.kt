@@ -52,7 +52,7 @@ internal class QagPopularRepositoryImplTest {
     )
 
     @Test
-    fun `getQagPopularList - when CacheNotInitialized - should call getQagPopularListFromDatabase and insert result (case result = emptylist) to cache`() {
+    fun `getQagPopularList - when cache is not initialized - should call getQagPopularListFromDatabase and insert result (case result = emptylist) to cache`() {
         // Given
         given(cacheRepository.getQagPopularList())
             .willReturn(CachePopularListResult.CacheNotInitialized)
@@ -72,7 +72,7 @@ internal class QagPopularRepositoryImplTest {
     }
 
     @Test
-    fun `getQagPopularList - when CacheNotInitialized - should call getQagPopularListFromDatabase and insert result (case result not null) to cache`() {
+    fun `getQagPopularList - when cache is not initialized - should call getQagPopularListFromDatabase and insert result (case result not null) to cache`() {
         // Given
         given(cacheRepository.getQagPopularList())
             .willReturn(CachePopularListResult.CacheNotInitialized)

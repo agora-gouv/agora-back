@@ -30,7 +30,7 @@ class GetSupportQagRepositoryImpl(
         }
     }
 
-    override fun getSupportCount(qagId: String): Int? {
+    private fun getSupportCount(qagId: String): Int? {
         return try {
             val qagUUID = UUID.fromString(qagId)
             cacheRepository.getSupportCount(qagUUID) ?: getSupportCountFromDatabase(qagUUID)

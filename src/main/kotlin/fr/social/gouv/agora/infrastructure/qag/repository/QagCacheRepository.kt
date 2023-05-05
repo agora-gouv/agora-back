@@ -42,20 +42,6 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
         getCache()?.put(qagUUID.toString(), qagDTO ?: createQagInfoNotFound())
     }
 
-    private fun getCache() = cacheManager.getCache(QAG_CACHE_NAME)
-
-    private fun createQagInfoNotFound(): QagDTO {
-        return QagDTO(
-            id = NOT_FOUND_UUID,
-            title = "",
-            description = "",
-            postDate = Date(0),
-            status = 0,
-            username = "",
-            thematiqueId = NOT_FOUND_UUID,
-        )
-    }
-
     @Suppress("UNCHECKED_CAST")
     fun getQagPopularList(): CachePopularListResult {
         val qagPopularList = try {
@@ -73,6 +59,20 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
         getCache()?.put(
             QAG_POPULAR_CACHE_KEY,
             qagPopularList ?: emptyList<QagDTO>(),
+        )
+    }
+
+    private fun getCache() = cacheManager.getCache(QAG_CACHE_NAME)
+
+    private fun createQagInfoNotFound(): QagDTO {
+        return QagDTO(
+            id = NOT_FOUND_UUID,
+            title = "",
+            description = "",
+            postDate = Date(0),
+            status = 0,
+            username = "",
+            thematiqueId = NOT_FOUND_UUID,
         )
     }
 }
