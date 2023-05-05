@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.usecase.reponseConsultation
 
 import fr.social.gouv.agora.domain.*
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationRepository
 import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
@@ -16,14 +17,15 @@ class GetConsultationResultsUseCase(
 ) {
 
     fun getConsultationResults(consultationId: String): ConsultationResult? {
-        val consultation = consultationRepository.getConsultation(consultationId) ?: return null
+        val consultationInfo = consultationRepository.getConsultation(consultationId) ?: return null
         val consultationUpdate = consultationUpdateRepository.getConsultationUpdate(consultationId) ?: return null
         val questionList =
             questionRepository.getConsultationQuestionList(consultationId).takeUnless { it.isEmpty() } ?: return null
         val consultationResponseList = getReponseConsultationRepository.getConsultationResponses(consultationId)
 
+
         return buildResults(
-            consultation = consultation,
+            consultationInfo = consultationInfo,
             consultationUpdate = consultationUpdate,
             questionList = questionList,
             consultationResponseList = consultationResponseList
@@ -31,7 +33,7 @@ class GetConsultationResultsUseCase(
     }
 
     private fun buildResults(
-        consultation: Consultation,
+        consultationInfo: ConsultationInfo,
         consultationUpdate: ConsultationUpdate,
         questionList: List<Question>,
         consultationResponseList: List<ReponseConsultation>
@@ -41,7 +43,7 @@ class GetConsultationResultsUseCase(
         val participantCount = consultationResponseList.map { it.participationId }.toSet().size
 
         return ConsultationResult(
-            consultation = consultation,
+            consultation = consultationInfo,
             lastUpdate = consultationUpdate,
             participantCount = participantCount,
             results = filteredQuestionList.map { question ->

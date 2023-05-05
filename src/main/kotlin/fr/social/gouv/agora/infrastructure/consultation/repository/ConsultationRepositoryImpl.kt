@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.consultation.repository
 import fr.social.gouv.agora.domain.Consultation
 import fr.social.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationRepositoryImpl.Companion.CONSULTATION_CACHE_NAME
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationRepository
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CacheConfig
@@ -22,7 +23,7 @@ class ConsultationRepositoryImpl(
         private const val CONSULTATION_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
-    override fun getConsultation(consultationId: String): Consultation? {
+    override fun getConsultation(consultationId: String): ConsultationInfo? {
         return try {
             val uuid = UUID.fromString(consultationId)
 

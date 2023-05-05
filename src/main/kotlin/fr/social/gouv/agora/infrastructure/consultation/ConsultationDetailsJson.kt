@@ -1,12 +1,13 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class ConsultationDetailsJson(
     @JsonProperty("id")
     val id: String,
-    @JsonProperty("thematiqueId")
-    val thematiqueId: String,
+    @JsonProperty("thematique")
+    val thematique: ThematiqueJson,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("coverUrl")
@@ -26,3 +27,15 @@ data class ConsultationDetailsJson(
     @JsonProperty("tipsDescription")
     val tipsDescription: String,
 )
+
+data class ThematiqueJson(
+    @JsonProperty("label")
+    val label: String,
+    @JsonProperty("picto")
+    val picto: String,
+    @JsonProperty("color")
+    val color: String,
+
+)
+
+
