@@ -5,6 +5,7 @@ import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CachePopularListResult
 import fr.social.gouv.agora.usecase.qag.repository.QagPopularListRepository
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class QagPopularRepositoryImpl(
@@ -13,18 +14,23 @@ class QagPopularRepositoryImpl(
     private val mapper: QagInfoMapper,
 ) : QagPopularListRepository {
 
-    override fun getQagPopularList(): List<QagInfo> {
-        val qagDTOList =
-            when (val cacheResult = cacheRepository.getQagPopularList()) {
-                CachePopularListResult.CacheNotInitialized -> getQagPopularListFromDatabase()
+    override fun getQagPopularList(thematiqueId: String?): List<QagInfo> {
+        return try {
+            val thematiqueUUID = thematiqueId?.let(UUID::fromString)
+            val qagDTOList = when (val cacheResult = cacheRepository.getQagPopularList(thematiqueUUID)) {
+                CachePopularListResult.CacheNotInitialized -> getQagPopularListFromDatabase(thematiqueUUID)
                 is CachePopularListResult.CachedQagList -> cacheResult.qagListDTO
             }
-        return qagDTOList.map { dto -> mapper.toDomain(dto) }
+            qagDTOList.map { dto -> mapper.toDomain(dto) }
+        } catch (e: IllegalArgumentException) {
+            emptyList()
+        }
     }
 
-    private fun getQagPopularListFromDatabase(): List<QagDTO> {
-        val qagDTO = databaseRepository.getQagPopularList()
-        cacheRepository.insertQagPopularList(qagDTO)
+    private fun getQagPopularListFromDatabase(thematiqueUUID: UUID?): List<QagDTO> {
+        val qagDTO = thematiqueUUID?.let { databaseRepository.getQagPopularListWithThematique(thematiqueUUID) }
+            ?: databaseRepository.getQagPopularList()
+        cacheRepository.insertQagPopularList(thematiqueUUID, qagDTO)
         return qagDTO
     }
 }

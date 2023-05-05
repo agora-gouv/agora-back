@@ -43,9 +43,9 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun getQagPopularList(): CachePopularListResult {
+    fun getQagPopularList(thematiqueId: UUID?): CachePopularListResult {
         val qagPopularList = try {
-            getCache()?.get(QAG_POPULAR_CACHE_KEY, List::class.java) as? List<QagDTO>
+            getCache()?.get(thematiqueId?.toString() ?: QAG_POPULAR_CACHE_KEY, List::class.java) as? List<QagDTO>
         } catch (e: IllegalStateException) {
             null
         }
@@ -55,9 +55,9 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
-    fun insertQagPopularList(qagPopularList: List<QagDTO>?) {
+    fun insertQagPopularList(thematiqueId: UUID?, qagPopularList: List<QagDTO>?) {
         getCache()?.put(
-            QAG_POPULAR_CACHE_KEY,
+            thematiqueId?.toString() ?: QAG_POPULAR_CACHE_KEY,
             qagPopularList ?: emptyList<QagDTO>(),
         )
     }

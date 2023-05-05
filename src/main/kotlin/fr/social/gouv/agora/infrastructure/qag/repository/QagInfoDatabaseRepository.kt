@@ -11,7 +11,29 @@ import java.util.*
 interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Query(value = "SELECT * FROM qags WHERE id = :qagId LIMIT 1", nativeQuery = true)
     fun getQag(@Param("qagId") qagId: UUID): QagDTO?
-    @Query(value = """SELECT * FROM qags WHERE id IN 
-        (SELECT qag_id FROM supports_qag GROUP BY qag_id ORDER BY COUNT(*) DESC LIMIT 10)""", nativeQuery = true)
+
+    @Query(
+        value = """
+SELECT * FROM qags 
+LEFT JOIN (SELECT count(*) as support_count, qag_id from supports_qag GROUP BY qag_id) as support_count_table 
+ON qags.id = support_count_table.qag_id
+WHERE id NOT IN (SELECT qag_id from responses_qag)
+ORDER BY support_count
+LIMIT 10
+    """, nativeQuery = true
+    )
     fun getQagPopularList(): List<QagDTO>
+
+    @Query(
+        value = """
+SELECT * FROM qags 
+LEFT JOIN (SELECT count(*) as support_count, qag_id from supports_qag GROUP BY qag_id) as support_count_table 
+ON qags.id = support_count_table.qag_id
+WHERE id NOT IN (SELECT qag_id from responses_qag)
+AND thematique_id = :thematiqueId
+ORDER BY support_count
+LIMIT 10
+""", nativeQuery = true
+    )
+    fun getQagPopularListWithThematique(@Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
 }
