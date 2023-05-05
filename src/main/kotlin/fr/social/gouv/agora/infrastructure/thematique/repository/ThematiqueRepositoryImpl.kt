@@ -2,41 +2,40 @@ package fr.social.gouv.agora.infrastructure.thematique.repository
 
 import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.infrastructure.thematique.dto.ThematiqueDTO
-import fr.social.gouv.agora.infrastructure.thematique.repository.ThematiqueRepositoryImpl.Companion.THEMATIQUE_CACHE_NAME
+import fr.social.gouv.agora.infrastructure.thematique.repository.ThematiqueCacheRepository.CacheListResult
 import fr.social.gouv.agora.usecase.thematique.repository.ThematiqueRepository
-import org.springframework.cache.CacheManager
-import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
-@CacheConfig(cacheNames = [THEMATIQUE_CACHE_NAME])
 class ThematiqueRepositoryImpl(
+    private val cacheRepository: ThematiqueCacheRepository,
     private val databaseRepository: ThematiqueDatabaseRepository,
-    private val thematiqueMapper: ThematiqueMapper,
-    private val cacheManager: CacheManager,
+    private val mapper: ThematiqueMapper,
 ) : ThematiqueRepository {
 
-    companion object {
-        const val THEMATIQUE_CACHE_NAME = "thematiqueCache"
-        internal const val CACHE_KEY = "thematiqueList"
-    }
-
     override fun getThematiqueList(): List<Thematique> {
-        val thematiqueList = getThematiqueListFromCache() ?: getThematiqueListFromDatabase()
-        return thematiqueList.map { dto -> thematiqueMapper.toDomain(dto) }
+        return getThematiqueListDTO().map(mapper::toDomain)
     }
 
-    private fun getCache() = cacheManager.getCache(THEMATIQUE_CACHE_NAME)
-
-    @Suppress("UNCHECKED_CAST")
-    private fun getThematiqueListFromCache(): List<ThematiqueDTO>? {
-        return getCache()?.get(CACHE_KEY, List::class.java) as? List<ThematiqueDTO>
+    override fun getThematique(thematiqueId: String): Thematique? {
+        return try {
+            val thematiqueUUID = UUID.fromString(thematiqueId)
+            getThematiqueListDTO().find { dto -> dto.id == thematiqueUUID }?.let(mapper::toDomain)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
     }
 
-    internal fun getThematiqueListFromDatabase(): List<ThematiqueDTO> {
-        val thematiqueList = databaseRepository.getThematiqueList()
-        getCache()?.put(CACHE_KEY, thematiqueList)
-        return thematiqueList
+    private fun getThematiqueListDTO() = when (val cacheResult = cacheRepository.getThematiqueList()) {
+        CacheListResult.CacheNotInitialized -> getThematiqueListDtoFromDatabase()
+        is CacheListResult.CachedThematiqueList -> cacheResult.thematiqueListDTO
+    }
+
+    internal fun getThematiqueListDtoFromDatabase(): List<ThematiqueDTO> {
+        val thematiqueListDTO = databaseRepository.getThematiqueList()
+        cacheRepository.insertThematiqueList(thematiqueListDTO)
+        return thematiqueListDTO
     }
 
 }

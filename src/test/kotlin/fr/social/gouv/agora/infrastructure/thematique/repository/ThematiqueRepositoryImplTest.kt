@@ -2,95 +2,199 @@ package fr.social.gouv.agora.infrastructure.thematique.repository
 
 import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.infrastructure.thematique.dto.ThematiqueDTO
-import fr.social.gouv.agora.infrastructure.thematique.repository.ThematiqueRepositoryImpl.Companion.THEMATIQUE_CACHE_NAME
+import fr.social.gouv.agora.infrastructure.thematique.repository.ThematiqueCacheRepository.CacheListResult
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.cache.CacheManager
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 
-
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-@EnableCaching
-@ImportAutoConfiguration(
-    classes = [
-        CacheAutoConfiguration::class,
-        RedisAutoConfiguration::class,
-    ]
-)
 internal class ThematiqueRepositoryImplTest {
 
     @Autowired
     private lateinit var repository: ThematiqueRepositoryImpl
 
     @MockBean
+    private lateinit var cacheRepository: ThematiqueCacheRepository
+
+    @MockBean
     private lateinit var databaseRepository: ThematiqueDatabaseRepository
 
     @MockBean
-    private lateinit var thematiqueMapper: ThematiqueMapper
+    private lateinit var mapper: ThematiqueMapper
 
-    @Autowired
-    @Suppress("unused")
-    private lateinit var cacheManager: CacheManager
+    @Nested
+    inner class GetThematiqueListCases {
 
-    private val thematique = Thematique(
-        id = "1337",
-        label = "domain-label",
-        picto = "domain-picto",
-        color = "domain-color",
-    )
+        @Test
+        fun `getThematiqueList - when cache returns CachedThematiqueList - should return mapped dtos from cache`() {
+            // Given
+            val thematiqueDTO = mock(ThematiqueDTO::class.java)
+            given(cacheRepository.getThematiqueList())
+                .willReturn(CacheListResult.CachedThematiqueList(listOf(thematiqueDTO)))
 
-    private val thematiqueDto = ThematiqueDTO(
-        id = UUID.randomUUID(),
-        label = "dto-label",
-        picto = "dto-picto",
-        color = "dto-color",
-    )
+            val thematique = mock(Thematique::class.java)
+            given(mapper.toDomain(thematiqueDTO)).willReturn(thematique)
 
-    @BeforeEach
-    fun setUp() {
-        cacheManager.getCache(THEMATIQUE_CACHE_NAME)?.clear()
+            // When
+            val result = repository.getThematiqueList()
+
+            // Then
+            assertThat(result).isEqualTo(listOf(thematique))
+            then(cacheRepository).should(only()).getThematiqueList()
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(mapper).should(only()).toDomain(thematiqueDTO)
+        }
+
+        @Test
+        fun `getThematiqueList - when cache returns CacheNotInitialized and database returns emptyList - should insert to cache then return emptyList`() {
+            // Given
+            given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
+            given(databaseRepository.getThematiqueList()).willReturn(emptyList())
+
+            // When
+            val result = repository.getThematiqueList()
+
+            // Then
+            assertThat(result).isEqualTo(emptyList<Thematique>())
+            then(cacheRepository).should().getThematiqueList()
+            then(cacheRepository).should().insertThematiqueList(emptyList())
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(databaseRepository).should(only()).getThematiqueList()
+            then(mapper).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `getThematiqueList - when cache returns CacheNotInitialized and database returns something - should insert to cache then return parsed dto from database`() {
+            // Given
+            val thematiqueDTO = mock(ThematiqueDTO::class.java)
+            given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
+            given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDTO))
+
+            val thematique = mock(Thematique::class.java)
+            given(mapper.toDomain(thematiqueDTO)).willReturn(thematique)
+
+            // When
+            val result = repository.getThematiqueList()
+
+            // Then
+            assertThat(result).isEqualTo(listOf(thematique))
+            then(cacheRepository).should().getThematiqueList()
+            then(cacheRepository).should().insertThematiqueList(listOf(thematiqueDTO))
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(databaseRepository).should(only()).getThematiqueList()
+            then(mapper).should(only()).toDomain(thematiqueDTO)
+        }
+
     }
 
-    @Test
-    fun `getThematiqueList - when has no cache - should return parsed dto from databaseRepository`() {
-        // Given
-        given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDto))
-        given(thematiqueMapper.toDomain(thematiqueDto)).willReturn(thematique)
+    @Nested
+    inner class GetThematiqueCases {
 
-        // When
-        val result = repository.getThematiqueList()
+        @Test
+        fun `getThematique - when invalid thematique UUID - should return null without checking neither cache nor database`() {
+            // When
+            val result = repository.getThematique("invalid thematiqueId")
 
-        // Then
-        assertThat(result).isEqualTo(listOf(thematique))
-        then(databaseRepository).should(only()).getThematiqueList()
-    }
+            // Then
+            assertThat(result).isEqualTo(null)
+            then(cacheRepository).shouldHaveNoInteractions()
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(mapper).shouldHaveNoInteractions()
+        }
 
-    @Test
-    fun `getThematiqueList - when has cache - should return parsed entity from cache`() {
-        // Given
-        given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDto))
-        given(thematiqueMapper.toDomain(thematiqueDto)).willReturn(thematique)
+        @Test
+        fun `getThematique - when cache returns CachedThematiqueList and has matching thematique - should return mapped dto from cache`() {
+            // Given
+            val thematiqueId = UUID.randomUUID()
+            val thematiqueDTO = createThematiqueDTO(id = thematiqueId)
+            given(cacheRepository.getThematiqueList())
+                .willReturn(CacheListResult.CachedThematiqueList(listOf(thematiqueDTO)))
 
-        // When
-        repository.getThematiqueList()
-        val result = repository.getThematiqueList()
+            val thematique = mock(Thematique::class.java)
+            given(mapper.toDomain(thematiqueDTO)).willReturn(thematique)
 
-        // Then
-        assertThat(result).isEqualTo(listOf(thematique))
-        then(databaseRepository).should(times(1)).getThematiqueList()
+            // When
+            val result = repository.getThematique(thematiqueId.toString())
+
+            // Then
+            assertThat(result).isEqualTo(thematique)
+            then(cacheRepository).should(only()).getThematiqueList()
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(mapper).should(only()).toDomain(thematiqueDTO)
+        }
+
+        @Test
+        fun `getThematique - when cache returns CachedThematiqueList and has no matching thematique - should return null`() {
+            // Given
+            val thematiqueDTO = createThematiqueDTO(id = UuidUtils.NOT_FOUND_UUID)
+            given(cacheRepository.getThematiqueList())
+                .willReturn(CacheListResult.CachedThematiqueList(listOf(thematiqueDTO)))
+
+            // When
+            val result = repository.getThematique(UUID.randomUUID().toString())
+
+            // Then
+            assertThat(result).isEqualTo(null)
+            then(cacheRepository).should(only()).getThematiqueList()
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(mapper).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `getThematique - when cache returns CacheNotInitialized and database return a matching thematique - should insert dto to cache then return mapped dto from database`() {
+            // Given
+            val thematiqueId = UUID.randomUUID()
+            val thematiqueDTO = createThematiqueDTO(id = thematiqueId)
+            given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
+            given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDTO))
+
+            val thematique = mock(Thematique::class.java)
+            given(mapper.toDomain(thematiqueDTO)).willReturn(thematique)
+
+            // When
+            val result = repository.getThematique(thematiqueId.toString())
+
+            // Then
+            assertThat(result).isEqualTo(thematique)
+            then(cacheRepository).should().getThematiqueList()
+            then(cacheRepository).should().insertThematiqueList(listOf(thematiqueDTO))
+            then(databaseRepository).should(only()).getThematiqueList()
+            then(mapper).should(only()).toDomain(thematiqueDTO)
+        }
+
+        @Test
+        fun `getThematique - when cache returns CacheNotInitialized and database return no matching thematique - should insert dto to cache then return mapped dto from database`() {
+            // Given
+            val thematiqueDTO = createThematiqueDTO(id = UuidUtils.NOT_FOUND_UUID)
+            given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
+            given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDTO))
+
+            // When
+            val result = repository.getThematique(UUID.randomUUID().toString())
+
+            // Then
+            assertThat(result).isEqualTo(null)
+            then(cacheRepository).should().getThematiqueList()
+            then(cacheRepository).should().insertThematiqueList(listOf(thematiqueDTO))
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(databaseRepository).should(only()).getThematiqueList()
+            then(mapper).shouldHaveNoInteractions()
+        }
+
+        private fun createThematiqueDTO(id: UUID) = mock(ThematiqueDTO::class.java).also {
+            given(it.id).willReturn(id)
+        }
+
     }
 
 }

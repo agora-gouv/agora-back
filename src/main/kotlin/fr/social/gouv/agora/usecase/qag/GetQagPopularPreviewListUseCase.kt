@@ -15,19 +15,18 @@ class GetQagPopularPreviewListUseCase(
     fun getQagPopularPreviewList(userId: String): List<QagPreview> {
         return qagPopularListRepository.getQagPopularList()
             .mapNotNull { qagInfo ->
-                thematiqueRepository.getThematiqueList()
-                    .find { thematique -> thematique.id == qagInfo.thematiqueId }?.let { thematique ->
-                        supportRepository.getSupportQag(qagInfo.id, userId)?.let {
-                            QagPreview(
-                                id = qagInfo.id,
-                                thematique = thematique,
-                                title = qagInfo.title,
-                                username = qagInfo.username,
-                                date = qagInfo.date,
-                                support = it,
-                            )
-                        }
+                thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
+                    supportRepository.getSupportQag(qagInfo.id, userId)?.let { supportQag ->
+                        QagPreview(
+                            id = qagInfo.id,
+                            thematique = thematique,
+                            title = qagInfo.title,
+                            username = qagInfo.username,
+                            date = qagInfo.date,
+                            support = supportQag,
+                        )
                     }
-            }.sortedByDescending {it.support.supportCount}
+                }
+            }.sortedByDescending { it.support.supportCount }
     }
 }
