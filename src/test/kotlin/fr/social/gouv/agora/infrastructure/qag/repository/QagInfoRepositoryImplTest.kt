@@ -89,7 +89,7 @@ internal class QagInfoRepositoryImplTest {
         then(databaseRepository).should(only()).getQag(uuid)
         then(cacheRepository).should(times(1)).insertQag(uuid, qagDTO)
         then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(mapper).should(times(1)).toDomain(qagDTO)
+        then(mapper).should(only()).toDomain(qagDTO)
     }
 
     @Test
