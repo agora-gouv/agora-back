@@ -14,5 +14,5 @@ data class Consultation(
     val participantCountGoal: Int,
     val description: String,
     val tipsDescription: String,
-    val thematiqueId: String,
+    val thematique: Thematique,
 )
