@@ -1,10 +1,10 @@
-package fr.social.gouv.agora.infrastructure.responseQag
+package fr.social.gouv.agora.infrastructure.qagHome
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJson
 
-data class ResponseQagListJson(
+data class QagHomeJson(
     @JsonProperty("responses")
     val responsesList: List<ResponseQagPreviewJson>,
     @JsonProperty("qags")

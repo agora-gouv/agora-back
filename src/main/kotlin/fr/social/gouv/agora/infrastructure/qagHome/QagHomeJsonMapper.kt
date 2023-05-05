@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.infrastructure.responseQag
+package fr.social.gouv.agora.infrastructure.qagHome
 
 import fr.social.gouv.agora.domain.QagPreview
 import fr.social.gouv.agora.domain.ResponseQagPreview
@@ -7,15 +7,15 @@ import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
-class ResponseQagListJsonMapper(
+class QagHomeJsonMapper(
     private val mapperThematique: ThematiqueJsonMapper,
     private val qagMapper: QagJsonMapper,
 ) {
     fun toJson(
         responseQagList: List<ResponseQagPreview>,
         qagPopularList: List<QagPreview>,
-    ): ResponseQagListJson {
-        return ResponseQagListJson(responsesList = responseQagList.map { domain ->
+    ): QagHomeJson {
+        return QagHomeJson(responsesList = responseQagList.map { domain ->
             ResponseQagPreviewJson(
                 qagId = domain.qagId,
                 thematique = mapperThematique.toJson(domain.thematique),
