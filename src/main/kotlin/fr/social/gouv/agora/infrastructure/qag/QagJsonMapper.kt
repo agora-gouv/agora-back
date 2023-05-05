@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component
 class QagJsonMapper {
 
     fun toJson(qag: Qag): QagJson {
+        val thematique = ThematiqueJson(
+            label = qag.thematique.label,
+            picto = qag.thematique.picto,
+            color = qag.thematique.color,
+        )
         val response = buildResponseQagJson(qag)
         val support = if (response == null) {
             buildSupportQagJson(qag)
@@ -15,7 +20,7 @@ class QagJsonMapper {
 
         return QagJson(
             id = qag.id,
-            thematiqueId = qag.thematiqueId,
+            thematique = thematique,
             title = qag.title,
             description = qag.description,
             date = qag.date,

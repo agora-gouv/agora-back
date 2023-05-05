@@ -4,7 +4,7 @@ import java.util.*
 
 data class Qag(
     val id: String,
-    val thematiqueId: String,
+    val thematique: Thematique,
     val title: String,
     val description: String,
     val date: Date,
