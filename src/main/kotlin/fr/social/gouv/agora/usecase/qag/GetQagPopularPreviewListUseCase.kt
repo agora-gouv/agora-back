@@ -12,8 +12,8 @@ class GetQagPopularPreviewListUseCase(
     private val supportRepository: GetSupportQagRepository,
     private val qagPopularListRepository: QagPopularListRepository,
 ) {
-    fun getQagPopularPreviewList(userId: String): List<QagPreview> {
-        return qagPopularListRepository.getQagPopularList()
+    fun getQagPopularPreviewList(userId: String, thematiqueId: String?): List<QagPreview> {
+        return qagPopularListRepository.getQagPopularList(thematiqueId = thematiqueId)
             .mapNotNull { qagInfo ->
                 thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
                     supportRepository.getSupportQag(qagInfo.id, userId)?.let { supportQag ->
