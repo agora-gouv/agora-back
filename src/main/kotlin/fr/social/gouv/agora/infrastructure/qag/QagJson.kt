@@ -8,8 +8,8 @@ import java.util.*
 data class QagJson(
     @JsonProperty("id")
     val id: String,
-    @JsonProperty("thematiqueId")
-    val thematiqueId: String,
+    @JsonProperty("thematique")
+    val thematique: ThematiqueJson,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("description")
@@ -23,6 +23,15 @@ data class QagJson(
     @JsonProperty("response")
     val response: ResponseQagJson?,
 )
+data class ThematiqueJson(
+    @JsonProperty("label")
+    val label: String,
+    @JsonProperty("picto")
+    val picto: String,
+    @JsonProperty("color")
+    val color: String,
+
+    )
 
 data class SupportQagJson(
     @JsonProperty("count")
