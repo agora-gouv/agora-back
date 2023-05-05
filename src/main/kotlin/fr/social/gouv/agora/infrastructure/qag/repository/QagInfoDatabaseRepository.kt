@@ -11,4 +11,7 @@ import java.util.*
 interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Query(value = "SELECT * FROM qags WHERE id = :qagId LIMIT 1", nativeQuery = true)
     fun getQag(@Param("qagId") qagId: UUID): QagDTO?
+    @Query(value = """SELECT * FROM qags WHERE id IN 
+        (SELECT qag_id FROM supports_qag GROUP BY qag_id ORDER BY COUNT(*) DESC LIMIT 10)""", nativeQuery = true)
+    fun getQagPopularList(): List<QagDTO>
 }
