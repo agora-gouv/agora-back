@@ -2,6 +2,7 @@ package fr.social.gouv.agora.infrastructure.qag
 
 import fr.social.gouv.agora.domain.Qag
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.infrastructure.utils.UnicodeStringDecoder
 import org.springframework.stereotype.Component
 
 @Component
@@ -17,7 +18,7 @@ class QagJsonMapper {
             id = qag.id,
             thematique = ThematiqueJson(
                 label = qag.thematique.label,
-                picto = qag.thematique.picto,
+                picto = UnicodeStringDecoder.decodeUnicode(qag.thematique.picto),
                 color = qag.thematique.color,
             ),
             title = qag.title,
