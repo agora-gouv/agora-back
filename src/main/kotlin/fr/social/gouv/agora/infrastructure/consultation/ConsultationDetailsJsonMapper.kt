@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
 import fr.social.gouv.agora.domain.Consultation
+import fr.social.gouv.agora.infrastructure.utils.UnicodeStringDecoder
 import org.springframework.stereotype.Component
 
 @Component
@@ -11,7 +12,7 @@ class ConsultationDetailsJsonMapper {
             id = domain.id,
             thematique = ThematiqueJson(
                 label = domain.thematique.label,
-                picto = domain.thematique.picto,
+                picto = UnicodeStringDecoder.decodeUnicode(domain.thematique.picto),
                 color = domain.thematique.color,
             ),
             title = domain.title,
