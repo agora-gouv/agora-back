@@ -17,5 +17,13 @@ interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID>
             (SELECT consultation_id FROM consultation_updates WHERE step = 2 OR step = 3)""",
         nativeQuery = true
     )
-    fun getConsultationOngoingList(): List<ConsultationDTO>?
+    fun getConsultationOngoingList(): List<ConsultationDTO>
+
+    @Query(
+        value = """SELECT * FROM consultations WHERE id IN 
+            (SELECT DISTINCT consultation_id FROM reponses_consultation WHERE user_id = :userId LIMIT 10)""",
+        nativeQuery = true
+    )
+    fun getConsultationAnsweredList(@Param("userId") userId: UUID): List<ConsultationDTO>
+
 }
