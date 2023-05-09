@@ -1,5 +1,6 @@
-package fr.social.gouv.agora.domain
+package fr.social.gouv.agora.usecase.qag.repository
 
+import fr.social.gouv.agora.domain.QagStatus
 import java.util.*
 
 data class QagInfo(

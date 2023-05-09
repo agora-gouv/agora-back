@@ -1,8 +1,8 @@
 package fr.social.gouv.agora.infrastructure.consultation.repository
 
-import fr.social.gouv.agora.domain.Consultation
 import fr.social.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
-import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationRepositoryImpl.Companion.CONSULTATION_CACHE_NAME
+import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationInfoRepositoryImpl.Companion.CONSULTATION_CACHE_NAME
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -29,16 +29,16 @@ import java.util.*
         RedisAutoConfiguration::class,
     ]
 )
-internal class ConsultationRepositoryImplTest {
+internal class ConsultationInfoRepositoryImplTest {
 
     @Autowired
-    private lateinit var repository: ConsultationRepositoryImpl
+    private lateinit var repository: ConsultationInfoRepositoryImpl
 
     @MockBean
     private lateinit var databaseRepository: ConsultationDatabaseRepository
 
     @MockBean
-    private lateinit var consultationMapper: ConsultationMapper
+    private lateinit var consultationInfoMapper: ConsultationInfoMapper
 
     @Autowired
     @Suppress("unused")
@@ -49,7 +49,7 @@ internal class ConsultationRepositoryImplTest {
         cacheManager.getCache(CONSULTATION_CACHE_NAME)?.clear()
     }
 
-    private val consultation = Consultation(
+    private val consultation = ConsultationInfo(
         id = "domain-id",
         title = "domain-title",
         coverUrl = "domain-cover_url",
@@ -123,7 +123,7 @@ internal class ConsultationRepositoryImplTest {
         // Given
         val uuid = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
         given(databaseRepository.getConsultation(uuid)).willReturn(consultationDto)
-        given(consultationMapper.toDomain(consultationDto)).willReturn(consultation)
+        given(consultationInfoMapper.toDomain(consultationDto)).willReturn(consultation)
 
         // When
         val result = repository.getConsultation(uuid.toString())
@@ -138,7 +138,7 @@ internal class ConsultationRepositoryImplTest {
         // Given
         val uuid = UUID.fromString("c29255f2-10ca-4be5-aab1-801ea173337c")
         given(databaseRepository.getConsultation(uuid)).willReturn(consultationDto)
-        given(consultationMapper.toDomain(consultationDto)).willReturn(consultation)
+        given(consultationInfoMapper.toDomain(consultationDto)).willReturn(consultation)
 
         // When
         repository.getConsultation(uuid.toString())

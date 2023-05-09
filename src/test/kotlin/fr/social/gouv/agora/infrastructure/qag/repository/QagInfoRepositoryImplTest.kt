@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.infrastructure.qag.repository
 
-import fr.social.gouv.agora.domain.QagInfo
+import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheResult

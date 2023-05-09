@@ -1,8 +1,7 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-@JsonInclude(JsonInclude.Include.NON_NULL)
+
 data class ConsultationDetailsJson(
     @JsonProperty("id")
     val id: String,
@@ -35,7 +34,6 @@ data class ThematiqueJson(
     val picto: String,
     @JsonProperty("color")
     val color: String,
-
 )
 
 

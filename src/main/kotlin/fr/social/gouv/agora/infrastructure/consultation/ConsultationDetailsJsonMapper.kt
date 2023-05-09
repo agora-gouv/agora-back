@@ -7,15 +7,13 @@ import org.springframework.stereotype.Component
 class ConsultationDetailsJsonMapper {
 
     fun toJson(domain: Consultation, participantCount: Int): ConsultationDetailsJson {
-        val thematique = ThematiqueJson(
-            label = domain.thematique.label,
-            picto = domain.thematique.picto,
-            color = domain.thematique.color,
-        )
-
         return ConsultationDetailsJson(
             id = domain.id,
-            thematique = thematique,
+            thematique = ThematiqueJson(
+                label = domain.thematique.label,
+                picto = domain.thematique.picto,
+                color = domain.thematique.color,
+            ),
             title = domain.title,
             coverUrl = domain.coverUrl,
             endDate = domain.endDate.toString(),
@@ -29,4 +27,3 @@ class ConsultationDetailsJsonMapper {
     }
 
 }
-

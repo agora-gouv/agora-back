@@ -1,10 +1,9 @@
 package fr.social.gouv.agora.infrastructure.consultation.repository
 
-import fr.social.gouv.agora.domain.Consultation
 import fr.social.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
-import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationRepositoryImpl.Companion.CONSULTATION_CACHE_NAME
+import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationInfoRepositoryImpl.Companion.CONSULTATION_CACHE_NAME
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
-import fr.social.gouv.agora.usecase.consultation.repository.ConsultationRepository
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Component
@@ -12,11 +11,11 @@ import java.util.*
 
 @Component
 @CacheConfig(cacheNames = [CONSULTATION_CACHE_NAME])
-class ConsultationRepositoryImpl(
+class ConsultationInfoRepositoryImpl(
     private val databaseRepository: ConsultationDatabaseRepository,
-    private val consultationMapper: ConsultationMapper,
+    private val consultationInfoMapper: ConsultationInfoMapper,
     private val cacheManager: CacheManager,
-) : ConsultationRepository {
+) : ConsultationInfoRepository {
 
     companion object {
         const val CONSULTATION_CACHE_NAME = "consultationCache"
@@ -33,7 +32,7 @@ class ConsultationRepositoryImpl(
                 CacheResult.CachedConsultationNotFound -> null
                 is CacheResult.CachedConsultation -> cacheResult.consultationDTO
             }?.let { dto ->
-                consultationMapper.toDomain(dto)
+                consultationInfoMapper.toDomain(dto)
             }
         } catch (e: IllegalArgumentException) {
             null
@@ -43,7 +42,11 @@ class ConsultationRepositoryImpl(
     private fun getCache() = cacheManager.getCache(CONSULTATION_CACHE_NAME)
 
     private fun getConsultationFromCache(uuid: UUID): CacheResult {
-        val cachedDto = getCache()?.get(uuid.toString(), ConsultationDTO::class.java)
+        val cachedDto = try {
+            getCache()?.get(uuid.toString(), ConsultationDTO::class.java)
+        } catch (e: IllegalStateException) {
+            null
+        }
         return when (cachedDto?.id?.toString()) {
             null -> CacheResult.CacheNotInitialized
             CONSULTATION_NOT_FOUND_ID -> CacheResult.CachedConsultationNotFound
