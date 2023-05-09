@@ -1,7 +1,8 @@
 package fr.social.gouv.agora.usecase.reponseConsultation
 
 import fr.social.gouv.agora.domain.*
-import fr.social.gouv.agora.usecase.consultation.repository.ConsultationRepository
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetReponseConsultationRepository
@@ -27,7 +28,7 @@ internal class GetConsultationResultsUseCaseTest {
     private lateinit var useCase: GetConsultationResultsUseCase
 
     @MockBean
-    private lateinit var consultationRepository: ConsultationRepository
+    private lateinit var consultationInfoRepository: ConsultationInfoRepository
 
     @MockBean
     private lateinit var questionRepository: QuestionRepository
@@ -187,14 +188,14 @@ internal class GetConsultationResultsUseCaseTest {
     @Test
     fun `getConsultationResults - when getConsultation is null - should return null`() {
         // Given
-        given(consultationRepository.getConsultation("consultationId")).willReturn(null)
+        given(consultationInfoRepository.getConsultation("consultationId")).willReturn(null)
 
         // When
         val result = useCase.getConsultationResults(consultationId = "consultationId")
 
         // Then
         assertThat(result).isEqualTo(null)
-        then(consultationRepository).should(only()).getConsultation("consultationId")
+        then(consultationInfoRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
         then(getReponseConsultationRepository).shouldHaveNoInteractions()
@@ -203,7 +204,7 @@ internal class GetConsultationResultsUseCaseTest {
     @Test
     fun `getConsultationResults - when getConsultation not null, getConsultationUpdates null - should return null`() {
         // Given
-        given(consultationRepository.getConsultation("consultationId")).willReturn(mock(Consultation::class.java))
+        given(consultationInfoRepository.getConsultation("consultationId")).willReturn(mock(ConsultationInfo::class.java))
         given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(null)
 
         // When
@@ -211,7 +212,7 @@ internal class GetConsultationResultsUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(null)
-        then(consultationRepository).should(only()).getConsultation("consultationId")
+        then(consultationInfoRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).shouldHaveNoInteractions()
         then(getReponseConsultationRepository).shouldHaveNoInteractions()
@@ -220,7 +221,7 @@ internal class GetConsultationResultsUseCaseTest {
     @Test
     fun `getConsultationResults - when getConsultation not null, getConsultationUpdates not null, getConsultationQuestionList is empty - should return null`() {
         // Given
-        given(consultationRepository.getConsultation("consultationId")).willReturn(mock(Consultation::class.java))
+        given(consultationInfoRepository.getConsultation("consultationId")).willReturn(mock(ConsultationInfo::class.java))
         given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(mock(ConsultationUpdate::class.java))
         given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(emptyList())
 
@@ -229,7 +230,7 @@ internal class GetConsultationResultsUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(null)
-        then(consultationRepository).should(only()).getConsultation("consultationId")
+        then(consultationInfoRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
         then(getReponseConsultationRepository).shouldHaveNoInteractions()
@@ -238,12 +239,12 @@ internal class GetConsultationResultsUseCaseTest {
     @Nested
     inner class ConsultationUpdatesAndQuestionListNotNullButResponsesEmptyCases {
 
-        private val consultation = mock(Consultation::class.java)
+        private val consultation = mock(ConsultationInfo::class.java)
         private val consultationUpdate = mock(ConsultationUpdate::class.java)
 
         @BeforeEach
         fun setUp() {
-            given(consultationRepository.getConsultation("consultationId")).willReturn(consultation)
+            given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultation)
             given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
             given(getReponseConsultationRepository.getConsultationResponses("consultationId")).willReturn(emptyList())
         }
@@ -268,7 +269,7 @@ internal class GetConsultationResultsUseCaseTest {
                     lastUpdate = consultationUpdate,
                 )
             )
-            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -305,7 +306,7 @@ internal class GetConsultationResultsUseCaseTest {
                     lastUpdate = consultationUpdate,
                 )
             )
-            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -331,7 +332,7 @@ internal class GetConsultationResultsUseCaseTest {
                     lastUpdate = consultationUpdate,
                 )
             )
-            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -368,7 +369,7 @@ internal class GetConsultationResultsUseCaseTest {
                     lastUpdate = consultationUpdate,
                 )
             )
-            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -392,7 +393,7 @@ internal class GetConsultationResultsUseCaseTest {
                     lastUpdate = consultationUpdate,
                 )
             )
-            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -416,7 +417,7 @@ internal class GetConsultationResultsUseCaseTest {
                     lastUpdate = consultationUpdate,
                 )
             )
-            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -427,12 +428,12 @@ internal class GetConsultationResultsUseCaseTest {
     @Nested
     inner class ConsultationUpdatesAndQuestionListNotNullWithResponsesCases {
 
-        private val consultation = mock(Consultation::class.java)
+        private val consultation = mock(ConsultationInfo::class.java)
         private val consultationUpdate = mock(ConsultationUpdate::class.java)
 
         @BeforeEach
         fun setUp() {
-            given(consultationRepository.getConsultation("consultationId")).willReturn(consultation)
+            given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultation)
             given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
         }
 
@@ -478,7 +479,7 @@ internal class GetConsultationResultsUseCaseTest {
                     lastUpdate = consultationUpdate,
                 )
             )
-            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -533,7 +534,7 @@ internal class GetConsultationResultsUseCaseTest {
                     lastUpdate = consultationUpdate,
                 )
             )
-            then(consultationRepository).should(only()).getConsultation("consultationId")
+            then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -548,8 +549,8 @@ internal class GetConsultationResultsUseCaseTest {
         expectedParticipantCount: Int,
     ) {
         // Given
-        val consultation = mock(Consultation::class.java)
-        given(consultationRepository.getConsultation("consultationId")).willReturn(consultation)
+        val consultation = mock(ConsultationInfo::class.java)
+        given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultation)
         val consultationUpdate = mock(ConsultationUpdate::class.java)
         given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
 
@@ -576,7 +577,7 @@ internal class GetConsultationResultsUseCaseTest {
                 lastUpdate = consultationUpdate,
             )
         )
-        then(consultationRepository).should(only()).getConsultation("consultationId")
+        then(consultationInfoRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
         then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
@@ -589,7 +590,7 @@ internal class GetConsultationResultsUseCaseTest {
             }
         }
 
-        val question = mock(QuestionChoixUnique::class.java).also {
+        val question = mock(QuestionWithChoices::class.java).also {
             given(it.id).willReturn(testInput.questionId)
             given(it.choixPossibleList).willReturn(choices)
         }

@@ -17,24 +17,24 @@ class GetQagUseCase(
     private val thematiqueRepository: ThematiqueRepository,
 ) {
     fun getQag(qagId: String, deviceId: String): Qag? {
-        val qagInfo = qagInfoRepository.getQagInfo(qagId)!!
-        val thematiqueList = thematiqueRepository.getThematiqueList()
-        val thematique = thematiqueList.find { it.id == qagInfo.thematiqueId } !!
-
-
         // TODO transform deviceId to userId
-        return Qag(
-                id = qagInfo.id,
-                thematique = thematique,
-                title = qagInfo.title,
-                description = qagInfo.description,
-                date = qagInfo.date,
-                status = qagInfo.status,
-                username = qagInfo.username,
-                support = qagSupportQagRepository.getSupportQag(qagId = qagId, userId = deviceId),
-                response = responseQagRepository.getResponseQag(qagId = qagId),
-                feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = deviceId)
-            )
+        return qagInfoRepository.getQagInfo(qagId)?.let { qagInfo ->
+            thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
+                Qag(
+                    id = qagInfo.id,
+                    thematique = thematique,
+                    title = qagInfo.title,
+                    description = qagInfo.description,
+                    date = qagInfo.date,
+                    status = qagInfo.status,
+                    username = qagInfo.username,
+                    support = qagSupportQagRepository.getSupportQag(qagId = qagId, userId = deviceId),
+                    response = responseQagRepository.getResponseQag(qagId = qagId),
+                    feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = deviceId)
+                )
+            }
         }
     }
+
+}
 
