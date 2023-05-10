@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository
 @Repository
 class ConsultationOngoingCacheRepository(private val cacheManager: CacheManager) {
     companion object {
-        private const val CONSULTATION_ONGOING_CACHE_KEY = "consultationOngoingCache"
-        private const val CONSULTATION_LIST_CACHE_NAME = "consultationListCache"
+        private const val CONSULTATION_ONGOING_CACHE_KEY = "consultationOngoingCacheKey"
+        private const val CONSULTATION_LIST_CACHE_NAME = "consultationOngoingCache"
     }
 
     sealed class CacheResult {
