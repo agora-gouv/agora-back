@@ -18,7 +18,6 @@ class GetConsultationUseCase(
                     id = consultationInfo.id,
                     title = consultationInfo.title,
                     coverUrl = consultationInfo.coverUrl,
-                    abstract = consultationInfo.abstract,
                     startDate = consultationInfo.startDate,
                     endDate = consultationInfo.endDate,
                     questionCount = consultationInfo.questionCount,

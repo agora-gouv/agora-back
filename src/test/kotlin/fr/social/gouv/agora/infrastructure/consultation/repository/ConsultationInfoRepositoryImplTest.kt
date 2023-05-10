@@ -53,7 +53,6 @@ internal class ConsultationInfoRepositoryImplTest {
         id = "domain-id",
         title = "domain-title",
         coverUrl = "domain-cover_url",
-        abstract = "domain-abstract",
         startDate = Date(0),
         endDate = Date(1),
         questionCount = "domain-question_count",
@@ -67,7 +66,6 @@ internal class ConsultationInfoRepositoryImplTest {
     private val consultationDto = ConsultationDTO(
         id = UUID.randomUUID(),
         title = "dto-title",
-        abstract = "dto-abstract",
         startDate = Date(0),
         endDate = Date(1),
         coverUrl = "dto-cover_url",

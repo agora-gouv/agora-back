@@ -63,7 +63,6 @@ class ConsultationInfoRepositoryImpl(
     private fun createConsultationNotFound() = ConsultationDTO(
         id = UUID.fromString(CONSULTATION_NOT_FOUND_ID),
         title = "",
-        abstract = "",
         startDate = null,
         endDate = Date(0),
         coverUrl = "",

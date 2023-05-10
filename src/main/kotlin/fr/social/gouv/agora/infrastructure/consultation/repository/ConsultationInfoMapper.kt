@@ -11,7 +11,6 @@ class ConsultationInfoMapper {
         id = dto.id.toString(),
         title = dto.title,
         coverUrl = dto.coverUrl,
-        abstract = dto.abstract,
         startDate = dto.startDate,
         endDate = dto.endDate,
         questionCount = dto.questionCount,

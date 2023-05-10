@@ -13,8 +13,6 @@ data class ConsultationDTO(
     val id: UUID,
     @Column(columnDefinition = "TEXT")
     val title: String,
-    @Column(columnDefinition = "TEXT")
-    val abstract: String,
     val startDate: Date?,
     val endDate: Date,
     @Column(columnDefinition = "TEXT")
@@ -44,10 +42,10 @@ data class ConsultationDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , title = $title , abstract = $abstract , " +
-                "startDate = $startDate , endDate = $endDate , coverUrl = $coverUrl , questionCount = $questionCount , " +
-                "estimatedTime = $estimatedTime , participantCountGoal = $participantCountGoal , " +
-                "description = $description , tipsDescription = $tipsDescription , thematiqueId = $thematiqueId )"
+        return this::class.simpleName + "(id = $id , title = $title , startDate = $startDate , endDate = $endDate , " +
+                "coverUrl = $coverUrl , questionCount = $questionCount , estimatedTime = $estimatedTime , " +
+                "participantCountGoal = $participantCountGoal , description = $description , " +
+                "tipsDescription = $tipsDescription , thematiqueId = $thematiqueId )"
     }
 
 }
