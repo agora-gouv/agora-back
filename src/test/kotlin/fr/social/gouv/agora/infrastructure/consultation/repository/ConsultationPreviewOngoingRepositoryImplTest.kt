@@ -33,7 +33,6 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
     private val consultationDTO = ConsultationDTO(
         id = UUID.randomUUID(),
         title = "dto-title",
-        abstract = "dto-abstract",
         startDate = Date(0),
         endDate = Date(1),
         coverUrl = "dto-cover_url",
