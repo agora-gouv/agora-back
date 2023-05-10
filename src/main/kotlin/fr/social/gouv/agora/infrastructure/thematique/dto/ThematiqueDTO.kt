@@ -15,8 +15,6 @@ data class ThematiqueDTO(
     val label: String,
     @Column(columnDefinition = "TEXT")
     val picto: String,
-    @Column(columnDefinition = "TEXT")
-    val color: String,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -30,6 +28,6 @@ data class ThematiqueDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , label = $label , picto = $picto , color = $color )"
+        return this::class.simpleName + "(id = $id , label = $label , picto = $picto )"
     }
 }

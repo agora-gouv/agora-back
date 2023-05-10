@@ -13,7 +13,7 @@ class ConsultationDetailsJsonMapper {
             thematique = ThematiqueJson(
                 label = domain.thematique.label,
                 picto = UnicodeStringDecoder.decodeUnicode(domain.thematique.picto),
-                color = domain.thematique.color,
+                color = "", // TODO remove once removed from mobile app
             ),
             title = domain.title,
             coverUrl = domain.coverUrl,
