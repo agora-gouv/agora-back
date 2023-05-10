@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.usecase.reponseConsultation
 
 import fr.social.gouv.agora.domain.ReponseConsultationInserting
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
 import fr.social.gouv.agora.usecase.login.repository.LoginRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertParameters
@@ -11,15 +12,18 @@ import java.util.*
 @Service
 class InsertReponseConsultationUseCase(
     private val loginRepository: LoginRepository,
+    private val consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository,
     private val insertReponseConsultationRepository: InsertReponseConsultationRepository,
 ) {
 
     fun insertReponseConsultation(
         consultationId: String,
         deviceId: String,
-        consultationResponses: List<ReponseConsultationInserting>
+        consultationResponses: List<ReponseConsultationInserting>,
     ): InsertResult {
+
         return loginRepository.getUser(deviceId = deviceId)?.let { userInfo ->
+            consultationPreviewAnsweredRepository.deleteConsultationAnsweredList(userInfo.userId)
             insertReponseConsultationRepository.insertConsultationResponses(
                 insertParameters = InsertParameters(
                     consultationId = consultationId,

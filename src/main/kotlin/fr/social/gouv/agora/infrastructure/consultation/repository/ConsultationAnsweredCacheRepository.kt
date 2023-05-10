@@ -21,7 +21,7 @@ class ConsultationAnsweredCacheRepository(private val cacheManager: CacheManager
     @Suppress("UNCHECKED_CAST")
     fun getConsultationAnsweredList(userId: UUID): CacheResult {
         val consultationAnsweredList = try {
-            getCache()?.get(userId, List::class.java) as? List<ConsultationDTO>
+            getCache()?.get(userId.toString(), List::class.java) as? List<ConsultationDTO>
         } catch (e: IllegalStateException) {
             null
         }
@@ -33,9 +33,13 @@ class ConsultationAnsweredCacheRepository(private val cacheManager: CacheManager
 
     fun insertConsultationAnsweredList(userId: UUID, consultationAnsweredListDTO: List<ConsultationDTO>?) {
         getCache()?.put(
-            userId,
+            userId.toString(),
             consultationAnsweredListDTO ?: emptyList<ConsultationDTO>(),
         )
+    }
+
+    fun deleteConsultationAnsweredList(userId: UUID) {
+        getCache()?.evict(userId.toString())
     }
 
     private fun getCache() = cacheManager.getCache(CONSULTATION_LIST_CACHE_NAME)

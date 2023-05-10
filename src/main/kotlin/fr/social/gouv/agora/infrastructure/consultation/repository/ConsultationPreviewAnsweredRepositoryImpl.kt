@@ -14,18 +14,27 @@ class ConsultationPreviewAnsweredRepositoryImpl(
     private val mapper: ConsultationPreviewAnsweredMapper,
 ) : ConsultationPreviewAnsweredRepository {
 
-    override fun getConsultationAnsweredList(userId: String): List<ConsultationPreviewAnsweredInfo>? {
+    override fun getConsultationAnsweredList(userId: String?): List<ConsultationPreviewAnsweredInfo> {
         return try {
-            val userIdUUID = UUID.fromString(userId)
+            val userIdUUID = userId?.let { UUID.fromString(userId) }
             val consultationAnsweredDTOList =
-                when (val cacheResult = consultationAnsweredCacheRepository.getConsultationAnsweredList(userIdUUID)) {
-                    CacheResult.CacheNotInitialized -> getConsultationAnsweredListFromDatabase(userIdUUID)
-                    is CacheResult.CachedConsultationAnsweredList -> cacheResult.consultationAnsweredListDTO
+                if (userIdUUID != null) {
+                    when (val cacheResult =
+                        consultationAnsweredCacheRepository.getConsultationAnsweredList(userIdUUID)) {
+                        CacheResult.CacheNotInitialized -> getConsultationAnsweredListFromDatabase(userIdUUID)
+                        is CacheResult.CachedConsultationAnsweredList -> cacheResult.consultationAnsweredListDTO
+                    }
+                } else {
+                    emptyList()
                 }
             consultationAnsweredDTOList.map { dto -> mapper.toDomain(dto) }
         } catch (e: IllegalArgumentException) {
-            null
+            emptyList()
         }
+    }
+
+    override fun deleteConsultationAnsweredList(userId: String) {
+        consultationAnsweredCacheRepository.deleteConsultationAnsweredList(UUID.fromString(userId))
     }
 
     private fun getConsultationAnsweredListFromDatabase(userId: UUID): List<ConsultationDTO> {

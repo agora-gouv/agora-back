@@ -55,12 +55,12 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     private val userId = UUID.fromString("c6655dd2-ee48-11ed-a05b-0242ac120003")
 
     @Test
-    fun `getConsultationAnsweredList - when invalid userId - should return null`() {
+    fun `getConsultationAnsweredList - when invalid userId - should return emptyList()`() {
         // When
         val result = repository.getConsultationAnsweredList("1111")
 
         // Then
-        assertThat(result).isNull()
+        assertThat(result).isEqualTo(emptyList<ConsultationPreviewAnsweredInfo>())
         then(cacheRepository).shouldHaveNoInteractions()
         then(databaseRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
@@ -135,6 +135,16 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(listOf(consultationPreviewAnsweredInfo))
         then(cacheRepository).should(only()).getConsultationAnsweredList(userId)
+        then(databaseRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `ConsultationPreviewAnsweredInfo - should delete ConsultationAnsweredList from cache`() {
+        //When
+        repository.deleteConsultationAnsweredList(userId.toString())
+
+        //Then
+        then(cacheRepository).should(only()).deleteConsultationAnsweredList(userId)
         then(databaseRepository).shouldHaveNoInteractions()
     }
 }
