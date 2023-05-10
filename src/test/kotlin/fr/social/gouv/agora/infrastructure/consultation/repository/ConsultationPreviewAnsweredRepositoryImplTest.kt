@@ -33,7 +33,6 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     private val consultationDTO = ConsultationDTO(
         id = UUID.randomUUID(),
         title = "dto-title",
-        abstract = "dto-abstract",
         startDate = Date(0),
         endDate = Date(1),
         coverUrl = "dto-cover_url",
@@ -139,7 +138,7 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     }
 
     @Test
-    fun `ConsultationPreviewAnsweredInfo - should delete ConsultationAnsweredList from cache`() {
+    fun `deleteConsultationAnsweredList - should delete ConsultationAnsweredList from cache`() {
         //When
         repository.deleteConsultationAnsweredList(userId.toString())
 

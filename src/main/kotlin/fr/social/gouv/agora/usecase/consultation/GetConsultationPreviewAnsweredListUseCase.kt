@@ -14,25 +14,24 @@ class GetConsultationPreviewAnsweredListUseCase(
     private val consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository,
     private val consultationUpdateRepository: ConsultationUpdateRepository,
 ) {
-    fun getConsultationPreviewAnsweredList(deviceId: String): List<ConsultationPreviewAnswered>? {
+    fun getConsultationPreviewAnsweredList(deviceId: String): List<ConsultationPreviewAnswered> {
         return consultationPreviewAnsweredRepository.getConsultationAnsweredList(
             userId = loginRepository.getUser(
                 deviceId
             )?.userId
-        )
-            .mapNotNull { consultationPreviewAnsweredInfo ->
-                thematiqueRepository.getThematique(consultationPreviewAnsweredInfo.thematiqueId)
-                    ?.let { thematique ->
-                        consultationUpdateRepository.getConsultationUpdate(consultationPreviewAnsweredInfo.id)?.status?.let {
-                            ConsultationPreviewAnswered(
-                                id = consultationPreviewAnsweredInfo.id,
-                                title = consultationPreviewAnsweredInfo.title,
-                                coverUrl = consultationPreviewAnsweredInfo.coverUrl,
-                                thematique = thematique,
-                                step = it
-                            )
-                        }
+        ).mapNotNull { consultationPreviewAnsweredInfo ->
+            thematiqueRepository.getThematique(consultationPreviewAnsweredInfo.thematiqueId)
+                ?.let { thematique ->
+                    consultationUpdateRepository.getConsultationUpdate(consultationPreviewAnsweredInfo.id)?.status?.let {
+                        ConsultationPreviewAnswered(
+                            id = consultationPreviewAnsweredInfo.id,
+                            title = consultationPreviewAnsweredInfo.title,
+                            coverUrl = consultationPreviewAnsweredInfo.coverUrl,
+                            thematique = thematique,
+                            step = it
+                        )
                     }
-            }
+                }
+        }
     }
 }

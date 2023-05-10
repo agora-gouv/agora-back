@@ -18,7 +18,7 @@ class ConsultationPreviewController(
     fun getConsultationPreviewOngoingList(@RequestHeader("deviceId") deviceId: String): ResponseEntity<ConsultationPreviewJson> {
         val consultationListOngoing = getConsultationPreviewOngoingListUseCase.getConsultationPreviewOngoingList()
         val consultationListAnswered =
-            getConsultationPreviewAnsweredListUseCase.getConsultationPreviewAnsweredList(deviceId) ?: emptyList()
+            getConsultationPreviewAnsweredListUseCase.getConsultationPreviewAnsweredList(deviceId)
         return ResponseEntity.ok()
             .body(
                 consultationPreviewJsonMapper.toJson(
