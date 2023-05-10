@@ -20,7 +20,7 @@ class QagJsonMapper {
             thematique = ThematiqueJson(
                 label = qag.thematique.label,
                 picto = UnicodeStringDecoder.decodeUnicode(qag.thematique.picto),
-                color = "", // TODO remove once removed from mobile app
+                color = "#FFFFFFFF", // TODO remove once removed from mobile app
             ),
             title = qag.title,
             description = qag.description,

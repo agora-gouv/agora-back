@@ -230,9 +230,9 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '5 minutes',
     100,
     '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet. <br/>Le covoiturage est un enjeu majeur pour :<br/><ul><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/>Sources (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>)</body>',
-    '<body>\u1f5e3\ufe0f Consultation proposée par le <b>Ministère des Transports</b><br/>\ud83c\udfaf<b> Objectif</b> : évaluer et améliorer le plan national covoiturage</body>',
+    '<body>🗣 Consultation proposée par le <b>Ministère des Transports</b><br/>🎯<b> Objectif</b> : évaluer et améliorer le plan national covoiturage</body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
-) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url, description = EXCLUDED.description;
+) ON CONFLICT (id) DO UPDATE SET tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'e271ed7a-ef05-11ed-a05b-0242ac120003',
@@ -470,9 +470,9 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '5 minutes',
     100,
     '<body>Promesse de campagne du président de la République, le Service national universel (SNU) a été mis en place à partir de 2019. Son but est de créer du collectif en favorisant le sentiment d’unité nationale, de transmettre le goût de l’engagement et de la République et d’impliquer la jeunesse dans la vie du pays.<br/>Il s’agit concrètement d’un parcours à destination des jeunes de 15 à 17 ans en plusieurs étapes :<br/><ol><li>Un <b>séjour de cohésion de 15 jours</b> avec une centaine de jeunes de toute la France dans un autre département que le sien,</li><li>Une <b>mission d’intérêt général</b> à effectuer sur une année près de chez soi,</li><li>En option, la poursuite par une <b>mission de Service civique</b> ou du bénévolat jusqu’à ses 25 ans.</li></ol><br/>Pensez-vous que le SNU est un dispositif utile ? Comment le rendre plus efficace pour créer de la cohésion nationale auprès des jeunes ?<br/><br/>Sources (<a href="https://www.snu.gouv.fr/](https://www.snu.gouv.fr/">https://www.snu.gouv.fr/](https://www.snu.gouv.fr/</a>)</body>',
-    '<body>\u1f5e3\ufe0f Consultation proposée par le <b>Secrétariat d’Etat chargé de la Jeunesse et du Service national universel</b><br/>\ud83c\udfaf<b> Objectif</b> : évaluer la perception du SNU par les citoyens et le faire évoluer</body>',
+    '<body>🗣 Consultation proposée par le <b>Secrétariat d’Etat chargé de la Jeunesse et du Service national universel</b><br/>🎯<b> Objectif</b> : évaluer la perception du SNU par les citoyens et le faire évoluer</body>',
     '5b9180e6-3e43-4c63-bcb5-4eab621fc016'
-) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url, description = EXCLUDED.description;
+) ON CONFLICT (id) DO UPDATE SET tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'c98bb6f6-ef0f-11ed-a05b-0242ac120003',
@@ -716,9 +716,9 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '5 minutes',
     100,
     '<body>Le Gouvernement souhaite améliorer le parcours des patients par le numérique et la télésanté.<br/>Le numérique en santé est un enjeu majeur pour :<br/><ul><li><b>Faciliter la vie.</b> Permettre aux Français de gérer leur santé plus facilement et plus efficacement grâce à des outils numériques innovants.</li><li><b>Améliorer l’accès aux soins</b>. Réduire les déplacements inutiles des patients en leur offrant des options de consultation à distance, désengorger les établissements de santé et offrir une alternative aux citoyens habitants dans des déserts médicaux.</li><li><b>Améliorer la qualité des soins</b>. Permettre aux professionnels de santé de mieux communiquer et de partager des informations sur les patients conduirait à une prise en charge plus rapide et plus efficace des problèmes de santé.</li></ul></br>Quelle est votre perception de l’utilisation du numérique en santé ? Comment pourrions nous vous faciliter la vie en la matière ?</body>',
-    '<body>\u1f5e3\ufe0f Consultation proposée par le <b>Ministère de la santé</b><br/>\ud83c\udfaf<b> Objectif</b> : évaluer la perception et trouver des idées d’amélioration de l’utilisation du numérique en matière de santé</body>',
+    '<body>🗣 Consultation proposée par le <b>Ministère de la santé</b><br/>🎯<b> Objectif</b> : évaluer la perception et trouver des idées d’amélioration de l’utilisation du numérique en matière de santé</body>',
     'a4bb4b27-3271-4278-83c9-79ac3eee843a'
-) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url, description = EXCLUDED.description;
+) ON CONFLICT (id) DO UPDATE SET tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '95167ec6-ef17-11ed-a05b-0242ac120003',
