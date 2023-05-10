@@ -2,6 +2,7 @@ package fr.social.gouv.agora.infrastructure.qag
 
 import fr.social.gouv.agora.domain.Qag
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.infrastructure.utils.StringUtils
 import fr.social.gouv.agora.infrastructure.utils.UnicodeStringDecoder
 import org.springframework.stereotype.Component
 
@@ -19,7 +20,7 @@ class QagJsonMapper {
             thematique = ThematiqueJson(
                 label = qag.thematique.label,
                 picto = UnicodeStringDecoder.decodeUnicode(qag.thematique.picto),
-                color = qag.thematique.color,
+                color = "", // TODO remove once removed from mobile app
             ),
             title = qag.title,
             description = qag.description,
@@ -53,7 +54,7 @@ class QagJsonMapper {
                 authorDescription = response.authorDescription,
                 responseDate = response.responseDate,
                 videoUrl = response.videoUrl,
-                transcription = response.transcription,
+                transcription = StringUtils.unescapeLineBreaks(response.transcription),
                 feedbackStatus = qag.feedback?.isExist ?: false,
             )
         }

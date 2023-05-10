@@ -11,7 +11,6 @@ class ThematiqueMapper {
         id = dto.id.toString(),
         label = dto.label,
         picto = dto.picto,
-        color = dto.color,
     )
 
 }

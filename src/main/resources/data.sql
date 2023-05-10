@@ -1,71 +1,61 @@
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     '1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15',
     'Travail & emploi',
-    '\ud83d\udcbc',
-    '#FFCFDEFC'
+    '\ud83d\udcbc'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     'bb051bf2-644b-47b6-9488-7759fa727dc0',
     'Transition écologique',
-    '\ud83c\udf31',
-    '#FFCFFCD9'
+    '\ud83c\udf31'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     'a4bb4b27-3271-4278-83c9-79ac3eee843a',
     'Santé',
-    '\ud83e\ude7a',
-    '#FFFCCFDD'
+    '\ud83e\ude7a'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     'c97c3afd-1940-4b6d-950a-734b885ee5cb',
     'Economie',
-    '\ud83d\udcc8',
-    '#FFCFF6FC'
+    '\ud83d\udcc8'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     '5b9180e6-3e43-4c63-bcb5-4eab621fc016',
     'Education',
-    '\ud83c\udf93',
-    '#FFFCE7CF'
+    '\ud83c\udf93'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     '8e200137-df3b-4bde-9981-b39a3d326da7',
     'International',
-    '\ud83c\udf0f',
-    '#FFE8CFFC'
+    '\ud83c\udf0f'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     '0f644115-08f3-46ff-b776-51f19c65fdd1',
     'Transports',
-    '\ud83d\ude8a',
-    '#FFFCF7CF'
+    '\ud83d\ude8a'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     'b276606e-f251-454e-9a73-9b70a6f30bfd',
     'Sécurité',
-    '\ud83d\ude94',
-    '#FFE1E7F3 b6d7a8'
+    '\ud83d\ude94'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     '30671310-ee62-11ed-a05b-0242ac120003',
     'Démocratie',
-    '\uD83D\uDDF3',
-    '#FFB6D7A8'
+    '\uD83D\uDDF3'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto, color) VALUES (
+INSERT INTO thematiques(id, label, picto) VALUES (
     '47897e51-8e94-4920-a26a-1b1e5e232e82',
     'Autre',
-    '\ud83d\udce6',
-    '#FFE6CCB3'
+    '\ud83d\udce6'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id) VALUES (
