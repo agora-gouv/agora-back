@@ -53,6 +53,16 @@ data class QagPopularJson(
 data class QagLatestJson(
     @JsonProperty("qagId")
     val qagId: String,
+    @JsonProperty("thematique")
+    val thematique: ThematiqueJson,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("username")
+    val username: String,
+    @JsonProperty("date")
+    val date: String,
+    @JsonProperty("support")
+    val support: SupportQagJson,
 )
 
 data class QagSupportingJson(

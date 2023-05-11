@@ -14,6 +14,7 @@ class QagHomeJsonMapper(
     fun toJson(
         responseQagList: List<ResponseQagPreview>,
         qagPopularList: List<QagPreview>,
+        qagLatestList: List<QagPreview>,
     ): QagHomeJson {
         return QagHomeJson(responsesList = responseQagList.map { domain ->
             ResponseQagPreviewJson(
@@ -34,7 +35,14 @@ class QagHomeJsonMapper(
                     date = domainQag.date.toString(),
                     support = qagMapper.toJson(domainQag.support)
                 ) },
-                latest = emptyList(),
+                latest = qagLatestList.map { domainQag -> QagLatestJson(
+                    qagId = domainQag.id,
+                    thematique = mapperThematique.toJson(domainQag.thematique),
+                    title = domainQag.title,
+                    username = domainQag.username,
+                    date = domainQag.date.toString(),
+                    support = qagMapper.toJson(domainQag.support)
+                ) },
                 supporting = emptyList()
             )
         )
