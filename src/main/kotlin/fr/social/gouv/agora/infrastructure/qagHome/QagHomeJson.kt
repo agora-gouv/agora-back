@@ -28,14 +28,14 @@ data class ResponseQagPreviewJson(
 
 data class QagListJson(
     @JsonProperty("popular")
-    val popular: List<QagPopularJson>,
+    val popular: List<QagPreviewJson>,
     @JsonProperty("latest")
-    val latest: List<QagLatestJson>,
+    val latest: List<QagPreviewJson>,
     @JsonProperty("supporting")
-    val supporting: List<QagSupportingJson>,
+    val supporting: List<QagPreviewJson>,
 )
 
-data class QagPopularJson(
+data class QagPreviewJson(
     @JsonProperty("qagId")
     val qagId: String,
     @JsonProperty("thematique")
@@ -50,22 +50,3 @@ data class QagPopularJson(
     val support: SupportQagJson,
 )
 
-data class QagLatestJson(
-    @JsonProperty("qagId")
-    val qagId: String,
-    @JsonProperty("thematique")
-    val thematique: ThematiqueJson,
-    @JsonProperty("title")
-    val title: String,
-    @JsonProperty("username")
-    val username: String,
-    @JsonProperty("date")
-    val date: String,
-    @JsonProperty("support")
-    val support: SupportQagJson,
-)
-
-data class QagSupportingJson(
-    @JsonProperty("qagId")
-    val qagId: String,
-)

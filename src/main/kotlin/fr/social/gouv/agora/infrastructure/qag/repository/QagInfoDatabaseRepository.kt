@@ -37,11 +37,17 @@ LIMIT 10
     )
     fun getQagPopularListWithThematique(@Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
 
-    @Query(value = "SELECT * FROM qags ORDER BY post_date DESC LIMIT 10", nativeQuery = true)
+    @Query(
+        value = "SELECT * FROM qags WHERE id NOT IN (SELECT qag_id from responses_qag) ORDER BY post_date DESC LIMIT 10",
+        nativeQuery = true
+    )
     fun getQagLatestList(): List<QagDTO>
 
     @Query(
-        value = "SELECT * FROM qags where thematique_id = :thematiqueId ORDER BY post_date DESC LIMIT 10",
+        value = """
+            SELECT * FROM qags where thematique_id = :thematiqueId AND id NOT IN (SELECT qag_id from responses_qag) 
+            ORDER BY post_date DESC LIMIT 10
+        """,
         nativeQuery = true
     )
     fun getQagLatestListWithThematique(@Param("thematiqueId") thematiqueId: UUID): List<QagDTO>

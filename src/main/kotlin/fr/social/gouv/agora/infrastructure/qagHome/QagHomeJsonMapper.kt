@@ -16,35 +16,33 @@ class QagHomeJsonMapper(
         qagPopularList: List<QagPreview>,
         qagLatestList: List<QagPreview>,
     ): QagHomeJson {
-        return QagHomeJson(responsesList = responseQagList.map { domain ->
-            ResponseQagPreviewJson(
-                qagId = domain.qagId,
-                thematique = mapperThematique.toJson(domain.thematique),
-                title = domain.title,
-                author = domain.author,
-                authorPortraitUrl = domain.authorPortraitUrl,
-                responseDate = domain.responseDate.toString(),
-            )
-        },
+        return QagHomeJson(
+            responsesList = responseQagList.map { domain ->
+                ResponseQagPreviewJson(
+                    qagId = domain.qagId,
+                    thematique = mapperThematique.toJson(domain.thematique),
+                    title = domain.title,
+                    author = domain.author,
+                    authorPortraitUrl = domain.authorPortraitUrl,
+                    responseDate = domain.responseDate.toString(),
+                )
+            },
             qagList = QagListJson(
-                popular = qagPopularList.map { domainQag -> QagPopularJson(
-                    qagId = domainQag.id,
-                    thematique = mapperThematique.toJson(domainQag.thematique),
-                    title = domainQag.title,
-                    username = domainQag.username,
-                    date = domainQag.date.toString(),
-                    support = qagMapper.toJson(domainQag.support)
-                ) },
-                latest = qagLatestList.map { domainQag -> QagLatestJson(
-                    qagId = domainQag.id,
-                    thematique = mapperThematique.toJson(domainQag.thematique),
-                    title = domainQag.title,
-                    username = domainQag.username,
-                    date = domainQag.date.toString(),
-                    support = qagMapper.toJson(domainQag.support)
-                ) },
+                popular = qagPopularList.map { domainQag -> qagToJson(domainQag) },
+                latest = qagLatestList.map { domainQag -> qagToJson(domainQag) },
                 supporting = emptyList()
             )
+        )
+    }
+
+    private fun qagToJson(domainQag: QagPreview): QagPreviewJson {
+        return QagPreviewJson(
+            qagId = domainQag.id,
+            thematique = mapperThematique.toJson(domainQag.thematique),
+            title = domainQag.title,
+            username = domainQag.username,
+            date = domainQag.date.toString(),
+            support = qagMapper.toJson(domainQag.support)
         )
     }
 }
