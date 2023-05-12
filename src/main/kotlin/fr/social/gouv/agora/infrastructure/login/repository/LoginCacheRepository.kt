@@ -11,6 +11,9 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
 
     companion object {
         private const val USER_CACHE_NAME = "userCache"
+        private const val DEVICE_ID_INDEX_CACHE_NAME = "deviceIdIndexCache"
+
+        private const val DEVICE_ID_NOT_FOUND_USER_ID = ""
     }
 
     sealed class CacheResult {
@@ -19,9 +22,9 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         object CacheNotInitialized : CacheResult()
     }
 
-    fun getUser(deviceId: String): CacheResult {
+    fun getUser(userId: String): CacheResult {
         return try {
-            val cachedUserDTO = getCache()?.get(deviceId, UserDTO::class.java)
+            val cachedUserDTO = getUserCache()?.get(userId, UserDTO::class.java)
             when (cachedUserDTO?.id?.toString()) {
                 null -> CacheResult.CacheNotInitialized
                 UuidUtils.NOT_FOUND_UUID_STRING -> CacheResult.CachedUserNotFound
@@ -32,15 +35,35 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
+    fun getUserByDeviceId(deviceId: String): CacheResult {
+        val userId = try {
+            getDeviceIdIndexCache()?.get(deviceId, String::class.java)
+        } catch (e: IllegalStateException) {
+            null
+        }
+
+        return when (userId) {
+            null -> CacheResult.CacheNotInitialized
+            DEVICE_ID_NOT_FOUND_USER_ID -> CacheResult.CachedUserNotFound
+            else -> getUser(userId)
+        }
+    }
+
     fun insertUser(userDTO: UserDTO) {
-        getCache()?.put(userDTO.deviceId, userDTO)
+        getUserCache()?.put(userDTO.id, userDTO)
+        getDeviceIdIndexCache()?.put(userDTO.deviceId, userDTO.id)
     }
 
-    fun insertUserNotFound(deviceId: String) {
-        getCache()?.put(deviceId, createUserNotFound())
+    fun insertUserNotFound(userId: String) {
+        getUserCache()?.put(userId, createUserNotFound())
     }
 
-    private fun getCache() = cacheManager.getCache(USER_CACHE_NAME)
+    fun insertUserDeviceIdNotFound(deviceId: String) {
+        getDeviceIdIndexCache()?.put(deviceId, DEVICE_ID_NOT_FOUND_USER_ID)
+    }
+
+    private fun getUserCache() = cacheManager.getCache(USER_CACHE_NAME)
+    private fun getDeviceIdIndexCache() = cacheManager.getCache(DEVICE_ID_INDEX_CACHE_NAME)
 
     private fun createUserNotFound(): UserDTO {
         return UserDTO(

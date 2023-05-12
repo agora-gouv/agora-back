@@ -10,7 +10,10 @@ import java.util.*
 @Repository
 interface LoginDatabaseRepository : CrudRepository<UserDTO, UUID> {
 
+    @Query("SELECT * FROM agora_users WHERE id = :userId LIMIT 1", nativeQuery = true)
+    fun getUserById(@Param("userId") userId: String): UserDTO?
+
     @Query("SELECT * FROM agora_users WHERE device_id = :deviceId LIMIT 1", nativeQuery = true)
-    fun getUser(@Param("deviceId") deviceId: String): UserDTO?
+    fun getUserByDeviceId(@Param("deviceId") deviceId: String): UserDTO?
 
 }
