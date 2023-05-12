@@ -5,6 +5,7 @@ import fr.social.gouv.agora.infrastructure.login.dto.UserDTO
 import fr.social.gouv.agora.infrastructure.login.repository.LoginCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.login.repository.LoginRepository
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class LoginRepositoryImpl(
@@ -17,19 +18,24 @@ class LoginRepositoryImpl(
         private const val MAX_GENERATE_USER_RETRY_COUNT = 10
     }
 
-    override fun getUser(deviceId: String): UserInfo? {
-        return when (val cacheResult = cacheRepository.getUser(deviceId)) {
-            CacheResult.CacheNotInitialized -> databaseRepository.getUser(deviceId).also { userDTO ->
-                insertUserToCache(deviceId, userDTO)
-            }
-            CacheResult.CachedUserNotFound -> null
-            is CacheResult.CachedUser -> cacheResult.userDTO
-        }?.let { userDTO -> mapper.toDomain(userDTO) }
+    override fun getUser(userId: String): UserInfo? {
+        return try {
+            UUID.fromString(userId)
+            when (val cacheResult = cacheRepository.getUser(userId)) {
+                CacheResult.CacheNotInitialized -> databaseRepository.getUserById(userId).also { userDTO ->
+                    insertUserToCache(userId, userDTO)
+                }
+                CacheResult.CachedUserNotFound -> null
+                is CacheResult.CachedUser -> cacheResult.userDTO
+            }?.let { userDTO -> mapper.toDomain(userDTO) }
+        } catch (e: IllegalArgumentException) {
+            null
+        }
     }
 
     override fun loginOrRegister(deviceId: String, fcmToken: String): UserInfo? {
-        val (cachedUserDTO, databaseUserDTO) = when (val cacheResult = cacheRepository.getUser(deviceId)) {
-            CacheResult.CacheNotInitialized -> null to databaseRepository.getUser(deviceId)
+        val (cachedUserDTO, databaseUserDTO) = when (val cacheResult = cacheRepository.getUserByDeviceId(deviceId)) {
+            CacheResult.CacheNotInitialized -> null to databaseRepository.getUserByDeviceId(deviceId)
             CacheResult.CachedUserNotFound -> null to null
             is CacheResult.CachedUser -> cacheResult.userDTO to null
         }
@@ -48,7 +54,7 @@ class LoginRepositoryImpl(
             }
             mapper.toDomain(usedUserDTO)
         } else {
-            cacheRepository.insertUserNotFound(deviceId)
+            cacheRepository.insertUserDeviceIdNotFound(deviceId = deviceId)
             null
         }
     }
@@ -72,11 +78,11 @@ class LoginRepositoryImpl(
         } else null
     }
 
-    private fun insertUserToCache(deviceId: String, userDTO: UserDTO?) {
+    private fun insertUserToCache(userId: String, userDTO: UserDTO?) {
         if (userDTO != null) {
             cacheRepository.insertUser(userDTO)
         } else {
-            cacheRepository.insertUserNotFound(deviceId)
+            cacheRepository.insertUserNotFound(userId)
         }
     }
 
