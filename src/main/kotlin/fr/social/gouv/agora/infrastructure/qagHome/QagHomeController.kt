@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.qagHome
 
+import fr.social.gouv.agora.usecase.qag.GetQagLatestPreviewListUseCase
 import fr.social.gouv.agora.usecase.qag.GetQagPopularPreviewListUseCase
 import fr.social.gouv.agora.usecase.responseQag.GetResponseQagPreviewListUseCase
 import org.springframework.http.ResponseEntity
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class QagHomeController(
     private val getResponseQagPreviewListUseCase: GetResponseQagPreviewListUseCase,
     private val getQagPopularPreviewListUseCase: GetQagPopularPreviewListUseCase,
+    private val getQagLatestPreviewListUseCase: GetQagLatestPreviewListUseCase,
     private val qagHomeJsonMapper: QagHomeJsonMapper,
 ) {
     @GetMapping("/qags")
@@ -25,7 +27,17 @@ class QagHomeController(
             userId = deviceId,
             thematiqueId = thematiqueId,
         )
+        val qagLatestPreviewList = getQagLatestPreviewListUseCase.getQagLatestPreviewList(
+            userId = deviceId,
+            thematiqueId = thematiqueId,
+        )
         return ResponseEntity.ok()
-            .body(qagHomeJsonMapper.toJson(responseQagPreviewList, qagPopularPreviewList))
+            .body(
+                qagHomeJsonMapper.toJson(
+                    responseQagList = responseQagPreviewList,
+                    qagPopularList = qagPopularPreviewList,
+                    qagLatestList = qagLatestPreviewList
+                )
+            )
     }
 }
