@@ -51,4 +51,29 @@ LIMIT 10
         nativeQuery = true
     )
     fun getQagLatestListWithThematique(@Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
+
+    @Query(
+        value = """
+            SELECT * FROM qags WHERE id 
+            NOT IN (SELECT qag_id from responses_qag) 
+            AND id IN (SELECT qag_id from supports_qag WHERE user_id = :userId) 
+            ORDER BY post_date DESC LIMIT 10
+        """,
+        nativeQuery = true
+    )
+    fun getQagSupportedList(@Param("userId") userId: UUID): List<QagDTO>
+
+    @Query(
+        value = """
+            SELECT * FROM qags where thematique_id = :thematiqueId 
+            AND id NOT IN (SELECT qag_id from responses_qag) 
+            AND id IN (SELECT qag_id from supports_qag WHERE user_id = :userId) 
+            ORDER BY post_date DESC LIMIT 10
+        """,
+        nativeQuery = true
+    )
+    fun getQagSupportedListWithThematique(
+        @Param("thematiqueId") thematiqueId: UUID,
+        @Param("userId") userId: UUID,
+    ): List<QagDTO>
 }

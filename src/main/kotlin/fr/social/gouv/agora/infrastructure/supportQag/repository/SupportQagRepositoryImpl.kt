@@ -38,15 +38,17 @@ class SupportQagRepositoryImpl(
     override fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
         try {
             UUID.fromString(supportQagDeleting.qagId)
+            UUID.fromString(supportQagDeleting.userId)
         } catch (e: IllegalArgumentException) {
             return SupportQagResult.FAILURE
         }
         val qagId = UUID.fromString(supportQagDeleting.qagId)
-        val resultDelete = databaseRepository.deleteSupportQag(supportQagDeleting.userId, qagId)
+        val userId = UUID.fromString(supportQagDeleting.userId)
+        val resultDelete = databaseRepository.deleteSupportQag(userId, qagId)
         return if (resultDelete <= 0)
             SupportQagResult.FAILURE
         else {
-            supportQagCacheRepository.insertSupportQag(qagId, supportQagDeleting.userId, null)
+            supportQagCacheRepository.insertSupportQag(qagId, userId, null)
             SupportQagResult.SUCCESS
         }
     }

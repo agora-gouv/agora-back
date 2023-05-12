@@ -17,7 +17,7 @@ class TestNotificationController(
     private val supportQagDatabaseRepository: SupportQagDatabaseRepository,
     private val loginDatabaseRepository: LoginDatabaseRepository,
 ) {
-
+/*
     @GetMapping("/testNotification")
     fun testNotification(): ResponseEntity<String> {
 
@@ -25,7 +25,7 @@ class TestNotificationController(
         val supportQagDTOs = supportQagDatabaseRepository.getSupportQagList(retraiteQagId)
 
         supportQagDTOs.mapNotNull { supportQagDTO ->
-            loginDatabaseRepository.getUser(supportQagDTO.userId)?.fcmToken.takeUnless { it.isNullOrEmpty() }
+         //   loginDatabaseRepository.getUser(supportQagDTO.userId)?.fcmToken.takeUnless { it.isNullOrEmpty() }
         }.takeUnless { it.isEmpty() }?.let { fcmTokens ->
             val message = MulticastMessage.builder()
                 .setNotification(
@@ -34,7 +34,7 @@ class TestNotificationController(
                         .setBody("Merci de soutenir la question d'Harry P. à propos de la retraite !")
                         .build()
                 )
-                .addAllTokens(fcmTokens)
+      //          .addAllTokens(fcmTokens)
                 .build()
 
             val response = FirebaseMessaging.getInstance().sendMulticast(message)
@@ -43,5 +43,5 @@ class TestNotificationController(
 
         return ResponseEntity.status(400).body("No fcmToken found")
     }
-
+*/
 }

@@ -32,12 +32,12 @@ internal class SupportQagRepositoryImplTest {
 
     private val supportQagInserting = SupportQagInserting(
         qagId = "f3a26670-df6e-11ed-b5ea-0242ac120002",
-        userId = "12345",
+        userId = "bc9e81be-eb4d-11ed-a05b-0242ac120003",
     )
 
     private val supportQagDTO = SupportQagDTO(
         id = UUID.randomUUID(),
-        userId = "12345",
+        userId = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120003"),
         qagId = UUID.fromString("f3a26670-df6e-11ed-b5ea-0242ac120002"),
     )
 
@@ -136,11 +136,11 @@ internal class SupportQagRepositoryImplTest {
         // Given
         val supportQagDeletingValidUUID = SupportQagDeleting(
             qagId = "a2dd3d9a-df92-11ed-b5ea-0242ac120002",
-            userId = "12345",
+            userId = "bc9e81be-eb4d-11ed-a05b-0242ac120003",
         )
         given(
             databaseRepository.deleteSupportQag(
-                supportQagDeletingValidUUID.userId,
+                UUID.fromString(supportQagDeletingValidUUID.userId),
                 UUID.fromString(supportQagDeletingValidUUID.qagId)
             )
         ).willReturn(1)
@@ -150,10 +150,13 @@ internal class SupportQagRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(SupportQagResult.SUCCESS)
         then(databaseRepository).should(times(1))
-            .deleteSupportQag(supportQagDeletingValidUUID.userId, UUID.fromString(supportQagDeletingValidUUID.qagId))
+            .deleteSupportQag(
+                UUID.fromString(supportQagDeletingValidUUID.userId),
+                UUID.fromString(supportQagDeletingValidUUID.qagId)
+            )
         then(supportQagCacheRepository).should(only()).insertSupportQag(
             UUID.fromString(supportQagDeletingValidUUID.qagId),
-            supportQagDeletingValidUUID.userId,
+            UUID.fromString(supportQagDeletingValidUUID.userId),
             null
         )
     }
@@ -163,11 +166,11 @@ internal class SupportQagRepositoryImplTest {
         // Given
         val supportQagDeletingValidUUID = SupportQagDeleting(
             qagId = "a2dd3d9a-df92-11ed-b5ea-0242ac120002",
-            userId = "12345",
+            userId = "bc9e81be-eb4d-11ed-a05b-0242ac120003",
         )
         given(
             databaseRepository.deleteSupportQag(
-                supportQagDeletingValidUUID.userId,
+                UUID.fromString(supportQagDeletingValidUUID.userId),
                 UUID.fromString(supportQagDeletingValidUUID.qagId)
             )
         ).willReturn(0)
@@ -177,7 +180,10 @@ internal class SupportQagRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(SupportQagResult.FAILURE)
         then(databaseRepository).should(times(1))
-            .deleteSupportQag(supportQagDeletingValidUUID.userId, UUID.fromString(supportQagDeletingValidUUID.qagId))
+            .deleteSupportQag(
+                UUID.fromString(supportQagDeletingValidUUID.userId),
+                UUID.fromString(supportQagDeletingValidUUID.qagId)
+            )
         then(supportQagCacheRepository).shouldHaveNoInteractions()
     }
 

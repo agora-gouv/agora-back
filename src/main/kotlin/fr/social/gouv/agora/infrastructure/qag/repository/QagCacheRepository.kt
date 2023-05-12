@@ -31,6 +31,11 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
         object CacheNotInitialized : CacheLatestListResult()
     }
 
+    sealed class CacheSupportedListResult {
+        data class CachedQagList(val qagListDTO: List<QagDTO>) : CacheSupportedListResult()
+        object CacheNotInitialized : CacheSupportedListResult()
+    }
+
     fun getQag(qagUUID: UUID): CacheResult {
         val qagDTO = try {
             getCache()?.get(qagUUID.toString(), QagDTO::class.java)
@@ -60,11 +65,10 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
             else -> CachePopularListResult.CachedQagList(qagPopularList)
         }
     }
-
-    fun insertQagLatestList(thematiqueId: UUID?, qagLatestList: List<QagDTO>?) {
+    fun insertQagPopularList(thematiqueId: UUID?, qagPopularList: List<QagDTO>?) {
         getCache()?.put(
-            thematiqueId?.toString() ?: QAG_LATEST_CACHE_KEY,
-            qagLatestList ?: emptyList<QagDTO>(),
+            thematiqueId?.toString() ?: QAG_POPULAR_CACHE_KEY,
+            qagPopularList ?: emptyList<QagDTO>(),
         )
     }
 
@@ -81,11 +85,35 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
-    fun insertQagPopularList(thematiqueId: UUID?, qagPopularList: List<QagDTO>?) {
+    fun insertQagLatestList(thematiqueId: UUID?, qagLatestList: List<QagDTO>?) {
         getCache()?.put(
-            thematiqueId?.toString() ?: QAG_POPULAR_CACHE_KEY,
-            qagPopularList ?: emptyList<QagDTO>(),
+            thematiqueId?.toString() ?: QAG_LATEST_CACHE_KEY,
+            qagLatestList ?: emptyList<QagDTO>(),
         )
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun getQagSupportedList(thematiqueId: UUID?, userId: UUID): CacheSupportedListResult {
+        val qagSupportedList = try {
+            getCache()?.get(thematiqueId?.toString() ?: userId.toString(), List::class.java) as? List<QagDTO>
+        } catch (e: IllegalStateException) {
+            null
+        }
+        return when (qagSupportedList) {
+            null -> CacheSupportedListResult.CacheNotInitialized
+            else -> CacheSupportedListResult.CachedQagList(qagSupportedList)
+        }
+    }
+
+    fun insertQagSupportedList(thematiqueId: UUID?, qagSupportedList: List<QagDTO>?, userId: UUID) {
+        getCache()?.put(
+            thematiqueId?.toString() ?: userId.toString(),
+            qagSupportedList ?: emptyList<QagDTO>(),
+        )
+    }
+
+    fun deleteQagSupportedList(userId: UUID) {
+        getCache()?.evict(userId.toString())
     }
 
     private fun getCache() = cacheManager.getCache(QAG_CACHE_NAME)

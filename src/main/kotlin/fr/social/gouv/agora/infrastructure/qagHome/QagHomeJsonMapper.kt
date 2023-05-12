@@ -15,6 +15,7 @@ class QagHomeJsonMapper(
         responseQagList: List<ResponseQagPreview>,
         qagPopularList: List<QagPreview>,
         qagLatestList: List<QagPreview>,
+        qagSupportedList: List<QagPreview>,
     ): QagHomeJson {
         return QagHomeJson(
             responsesList = responseQagList.map { domain ->
@@ -30,7 +31,7 @@ class QagHomeJsonMapper(
             qagList = QagListJson(
                 popular = qagPopularList.map { domainQag -> qagToJson(domainQag) },
                 latest = qagLatestList.map { domainQag -> qagToJson(domainQag) },
-                supporting = emptyList()
+                supporting = qagSupportedList.map { domainQag -> qagToJson(domainQag) },
             )
         )
     }

@@ -33,7 +33,7 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
         getCountCache()?.put(qagId.toString(), supportCount.toString())
     }
 
-    fun getSupportQag(qagId: UUID, userId: String): CacheResult {
+    fun getSupportQag(qagId: UUID, userId: UUID): CacheResult {
         val supportQagDTO = try {
             getCache()?.get(buildSupportQagCacheKey(qagId, userId), SupportQagDTO::class.java)
         } catch (e: IllegalStateException) {
@@ -48,7 +48,7 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
 
     fun insertSupportQag(
         qagId: UUID,
-        userId: String,
+        userId: UUID,
         supportQagDTO: SupportQagDTO?,
     ) {
         getCache()?.put(
@@ -62,11 +62,11 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
     private fun getCountCache() = cacheManager.getCache(SUPPORT_QAG_COUNT_CACHE_NAME)
     private fun getCache() = cacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
 
-    private fun buildSupportQagCacheKey(qagId: UUID, userId: String) = "$qagId/$userId"
+    private fun buildSupportQagCacheKey(qagId: UUID, userId: UUID) = "$qagId/$userId"
 
     private fun createSupportQagNotFound() = SupportQagDTO(
         id = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
-        userId = "",
+        userId = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
         qagId = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
     )
 

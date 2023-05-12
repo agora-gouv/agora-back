@@ -10,8 +10,8 @@ data class SupportQagDTO(
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
-    @Column(columnDefinition = "TEXT")
-    val userId: String,
+    @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
+    val userId: UUID,
     @JoinTable(joinColumns = [JoinColumn(name = "qag_id", table = "qags", referencedColumnName = "id")])
     val qagId: UUID,
 ) {
