@@ -29,7 +29,7 @@ internal class GetFeedbackQagRepositoryImplTest {
 
     private val feedbackQagDTO = FeedbackQagDTO(
         id = UUID.randomUUID(),
-        userId = "userId",
+        userId = UUID.randomUUID(),
         qagId = UUID.randomUUID(),
         isHelpful = 0,
     )
@@ -37,11 +37,25 @@ internal class GetFeedbackQagRepositoryImplTest {
     private val feedbackQagStatusTrue = FeedbackQagStatus(isExist = true)
 
     @Test
-    fun `getFeedbackQag - when invalid qagId - should return null`() {
+    fun `getFeedbackQag - when invalid qagId - should return null without doing anything`() {
         // When
         val result = repository.getFeedbackQagStatus(
             qagId = "invalid qagId UUID",
-            userId = "userId",
+            userId = UUID.randomUUID().toString(),
+        )
+
+        // Then
+        assertThat(result).isNull()
+        then(cacheRepository).shouldHaveNoInteractions()
+        then(databaseRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getFeedbackQag - when invalid userId - should return null without doing anything`() {
+        // When
+        val result = repository.getFeedbackQagStatus(
+            qagId = UUID.randomUUID().toString(),
+            userId = "invalid userId",
         )
 
         // Then
@@ -54,44 +68,43 @@ internal class GetFeedbackQagRepositoryImplTest {
     fun `getFeedbackQag - when CacheNotInitialized - should call getFeedbackQag from database and insert result to cache`() {
         // Given
         val qagUUID = UUID.randomUUID()
-        given(cacheRepository.getFeedbackQag(qagId = qagUUID, userId = "userId"))
+        val userUUID = UUID.randomUUID()
+        given(cacheRepository.getFeedbackQag(qagId = qagUUID, userId = userUUID))
             .willReturn(CacheResult.CacheNotInitialized)
 
-        given(databaseRepository.getFeedbackQag(qagId = qagUUID, userId = "userId")).willReturn(null)
+        given(databaseRepository.getFeedbackQag(qagId = qagUUID, userId = userUUID)).willReturn(null)
 
         // When
         val result = repository.getFeedbackQagStatus(
             qagId = qagUUID.toString(),
-            userId = "userId",
+            userId = userUUID.toString(),
         )
 
         // Then
         assertThat(result).isEqualTo(feedbackQagStatusFalse)
-        inOrder(cacheRepository).also {
-            then(cacheRepository).should(it).getFeedbackQag(qagId = qagUUID, userId = "userId")
-            then(cacheRepository).should(it)
-                .insertFeedbackQag(qagId = qagUUID, userId = "userId", feedbackQagDTO = null)
-            it.verifyNoMoreInteractions()
-        }
-        then(databaseRepository).should(times(1)).getFeedbackQag(qagId = qagUUID, userId = "userId")
+        then(cacheRepository).should().getFeedbackQag(qagId = qagUUID, userId = userUUID)
+        then(cacheRepository).should().insertFeedbackQag(qagId = qagUUID, userId = userUUID, feedbackQagDTO = null)
+        then(cacheRepository).shouldHaveNoMoreInteractions()
+        then(databaseRepository).should(times(1)).getFeedbackQag(qagId = qagUUID, userId = userUUID)
     }
 
     @Test
     fun `getFeedbackQag - when CachedFeedbackQagNotFound - should return object from cache`() {
         // Given
         val qagUUID = UUID.randomUUID()
-        given(cacheRepository.getFeedbackQag(qagId = qagUUID, userId = "userId"))
+        val userUUID = UUID.randomUUID()
+        given(cacheRepository.getFeedbackQag(qagId = qagUUID, userId = userUUID))
             .willReturn(CacheResult.CachedFeedbackQagNotFound)
 
         // When
         val result = repository.getFeedbackQagStatus(
             qagId = qagUUID.toString(),
-            userId = "userId",
+            userId = userUUID.toString(),
         )
 
         // Then
         assertThat(result).isEqualTo(feedbackQagStatusFalse)
-        then(cacheRepository).should(only()).getFeedbackQag(qagId = qagUUID, userId = "userId")
+        then(cacheRepository).should(only()).getFeedbackQag(qagId = qagUUID, userId = userUUID)
         then(databaseRepository).shouldHaveNoInteractions()
     }
 
@@ -99,18 +112,19 @@ internal class GetFeedbackQagRepositoryImplTest {
     fun `getFeedbackQag - when CachedFeedbackQag - should return FeedbackQagDTO from cache`() {
         // Given
         val qagUUID = UUID.randomUUID()
-        given(cacheRepository.getFeedbackQag(qagId = qagUUID, userId = "userId"))
+        val userUUID = UUID.randomUUID()
+        given(cacheRepository.getFeedbackQag(qagId = qagUUID, userId = userUUID))
             .willReturn(CacheResult.CachedFeedbackQag(feedbackQagDTO))
 
         // When
         val result = repository.getFeedbackQagStatus(
             qagId = qagUUID.toString(),
-            userId = "userId",
+            userId = userUUID.toString(),
         )
 
         // Then
         assertThat(result).isEqualTo(feedbackQagStatusTrue)
-        then(cacheRepository).should(only()).getFeedbackQag(qagId = qagUUID, userId = "userId")
+        then(cacheRepository).should(only()).getFeedbackQag(qagId = qagUUID, userId = userUUID)
         then(databaseRepository).shouldHaveNoInteractions()
     }
 

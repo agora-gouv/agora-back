@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
+import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.consultation.GetConsultationPreviewAnsweredListUseCase
 import fr.social.gouv.agora.usecase.consultation.GetConsultationPreviewOngoingListUseCase
 import org.springframework.http.ResponseEntity
@@ -15,10 +16,11 @@ class ConsultationPreviewController(
     private val consultationPreviewJsonMapper: ConsultationPreviewJsonMapper,
 ) {
     @GetMapping("/consultations")
-    fun getConsultationPreviewOngoingList(@RequestHeader("deviceId") deviceId: String): ResponseEntity<ConsultationPreviewJson> {
+    fun getConsultationPreviewOngoingList(@RequestHeader("Authorization") jwtToken: String): ResponseEntity<ConsultationPreviewJson> {
         val consultationListOngoing = getConsultationPreviewOngoingListUseCase.getConsultationPreviewOngoingList()
-        val consultationListAnswered =
-            getConsultationPreviewAnsweredListUseCase.getConsultationPreviewAnsweredList(deviceId)
+        val consultationListAnswered = getConsultationPreviewAnsweredListUseCase.getConsultationPreviewAnsweredList(
+            deviceId = JwtTokenUtils.extractUserId(jwtToken) // TODO 96 fix after Feat-88 merge
+        )
         return ResponseEntity.ok()
             .body(
                 consultationPreviewJsonMapper.toJson(

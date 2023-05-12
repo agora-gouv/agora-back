@@ -10,9 +10,9 @@ data class FeedbackQagDTO(
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
-    @Column(columnDefinition = "TEXT")
-    val userId: String,
-    @JoinTable(joinColumns = [JoinColumn(name = "qag_id", table = "qags", referencedColumnName = "id")])
+    @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
+    val userId: UUID,
+    @JoinTable(joinColumns = [JoinColumn(table = "qags", referencedColumnName = "id")])
     val qagId: UUID,
     @Column(columnDefinition = "SMALLINT")
     val isHelpful: Int,

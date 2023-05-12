@@ -17,7 +17,7 @@ class FeedbackQagMapper {
         return try {
             FeedbackQagDTO(
                 id = UUID.randomUUID(),
-                userId = domain.userId,
+                userId = UUID.fromString(domain.userId),
                 qagId = UUID.fromString(domain.qagId),
                 isHelpful = if (domain.isHelpful) IS_HELPFUL_TRUE_VALUE
                 else IS_HELPFUL_FALSE_VALUE,

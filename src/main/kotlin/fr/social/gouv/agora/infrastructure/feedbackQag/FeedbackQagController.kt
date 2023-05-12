@@ -1,15 +1,12 @@
 package fr.social.gouv.agora.infrastructure.feedbackQag
 
 import fr.social.gouv.agora.domain.FeedbackQagInserting
+import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.feedbackQag.InsertFeedbackQagUseCase
 import fr.social.gouv.agora.usecase.feedbackQag.repository.FeedbackQagResult
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
@@ -17,14 +14,14 @@ class FeedbackQagController(private val insertFeedbackQagUseCase: InsertFeedback
 
     @PostMapping("/qags/{qagId}/feedback")
     fun insertFeedbackQag(
-        @RequestHeader("deviceId") deviceId: String,
+        @RequestHeader("Authorization") jwtToken: String,
         @PathVariable qagId: String,
         @RequestBody body: FeedbackQagJson,
     ): HttpEntity<*> {
         val insertResult = insertFeedbackQagUseCase.insertFeedbackQag(
             FeedbackQagInserting(
                 qagId = qagId,
-                userId = deviceId,
+                userId = JwtTokenUtils.extractUserId(jwtToken),
                 isHelpful = body.isHelpful,
             )
         )
