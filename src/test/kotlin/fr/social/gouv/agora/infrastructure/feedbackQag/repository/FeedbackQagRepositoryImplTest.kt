@@ -36,7 +36,7 @@ internal class FeedbackQagRepositoryImplTest {
 
     private val feedbackQagDTO = FeedbackQagDTO(
         id = UUID.randomUUID(),
-        userId = "1234",
+        userId = UUID.randomUUID(),
         qagId = UUID.fromString("1f066238-e29b-11ed-b5ea-0242ac120002"),
         isHelpful = 1,
     )

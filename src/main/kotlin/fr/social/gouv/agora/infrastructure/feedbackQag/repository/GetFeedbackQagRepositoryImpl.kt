@@ -16,9 +16,13 @@ class GetFeedbackQagRepositoryImpl(
     override fun getFeedbackQagStatus(qagId: String, userId: String): FeedbackQagStatus? {
         return try {
             val qagUUID = UUID.fromString(qagId)
+            val userUUID = UUID.fromString(userId)
 
-            val feedbackQagDto = when (val cacheResult = feedbackQagCacheRepository.getFeedbackQag(qagUUID, userId)) {
-                CacheResult.CacheNotInitialized -> getFeedbackQagFromDatabase(qagUUID, userId)
+            val feedbackQagDto = when (val cacheResult = feedbackQagCacheRepository.getFeedbackQag(
+                qagId = qagUUID,
+                userId = userUUID
+            )) {
+                CacheResult.CacheNotInitialized -> getFeedbackQagFromDatabase(qagId = qagUUID, userId = userUUID)
                 CacheResult.CachedFeedbackQagNotFound -> null
                 is CacheResult.CachedFeedbackQag -> cacheResult.feedbackQagDTO
             }
@@ -28,9 +32,9 @@ class GetFeedbackQagRepositoryImpl(
         }
     }
 
-    private fun getFeedbackQagFromDatabase(qagId: UUID, userId: String): FeedbackQagDTO? {
-        val feedbackQagDTO = databaseRepository.getFeedbackQag(qagId, userId)
-        feedbackQagCacheRepository.insertFeedbackQag(qagId, userId, feedbackQagDTO)
+    private fun getFeedbackQagFromDatabase(qagId: UUID, userId: UUID): FeedbackQagDTO? {
+        val feedbackQagDTO = databaseRepository.getFeedbackQag(qagId = qagId, userId = userId)
+        feedbackQagCacheRepository.insertFeedbackQag(qagId = qagId, userId = userId, feedbackQagDTO = feedbackQagDTO)
         return feedbackQagDTO
     }
 }

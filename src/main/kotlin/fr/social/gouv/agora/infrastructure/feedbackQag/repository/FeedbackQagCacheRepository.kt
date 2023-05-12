@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.feedbackQag.repository
 
 import fr.social.gouv.agora.infrastructure.feedbackQag.dto.FeedbackQagDTO
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -9,7 +10,6 @@ import java.util.*
 class FeedbackQagCacheRepository(private val cacheManager: CacheManager) {
     companion object {
         private const val FEEDBACK_QAG_CACHE_NAME = "feedbackQagCache"
-        const val FEEDBACK_QAG_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
     sealed class CacheResult {
@@ -18,14 +18,14 @@ class FeedbackQagCacheRepository(private val cacheManager: CacheManager) {
         object CacheNotInitialized : CacheResult()
     }
 
-    fun insertFeedbackQag(qagId: UUID, userId: String, feedbackQagDTO: FeedbackQagDTO?) {
+    fun insertFeedbackQag(qagId: UUID, userId: UUID, feedbackQagDTO: FeedbackQagDTO?) {
         getCache()?.put(
             buildFeedbackQagCacheKey(qagId, userId),
             feedbackQagDTO ?: createFeedbackQagNotFound(),
         )
     }
 
-    fun getFeedbackQag(qagId: UUID, userId: String): CacheResult {
+    fun getFeedbackQag(qagId: UUID, userId: UUID): CacheResult {
         val feedbackQagDTO = try {
             getCache()?.get(buildFeedbackQagCacheKey(qagId, userId), FeedbackQagDTO::class.java)
         } catch (e: IllegalStateException) {
@@ -33,18 +33,18 @@ class FeedbackQagCacheRepository(private val cacheManager: CacheManager) {
         }
         return when (feedbackQagDTO?.id?.toString()) {
             null -> CacheResult.CacheNotInitialized
-            FEEDBACK_QAG_NOT_FOUND_ID -> CacheResult.CachedFeedbackQagNotFound
+            UuidUtils.NOT_FOUND_UUID_STRING -> CacheResult.CachedFeedbackQagNotFound
             else -> CacheResult.CachedFeedbackQag(feedbackQagDTO)
         }
     }
 
     private fun getCache() = cacheManager.getCache(FEEDBACK_QAG_CACHE_NAME)
-    private fun buildFeedbackQagCacheKey(qagId: UUID, userId: String) = "$qagId/$userId"
+    private fun buildFeedbackQagCacheKey(qagId: UUID, userId: UUID) = "$qagId/$userId"
 
     private fun createFeedbackQagNotFound() = FeedbackQagDTO(
-        id = UUID.fromString(FEEDBACK_QAG_NOT_FOUND_ID),
-        userId = "",
-        qagId = UUID.fromString(FEEDBACK_QAG_NOT_FOUND_ID),
+        id = UuidUtils.NOT_FOUND_UUID,
+        userId = UuidUtils.NOT_FOUND_UUID,
+        qagId = UuidUtils.NOT_FOUND_UUID,
         isHelpful = 0,
     )
 

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.UUID
+import java.util.*
 
 @Repository
 interface FeedbackQagDatabaseRepository : CrudRepository<FeedbackQagDTO, UUID> {
@@ -13,5 +13,5 @@ interface FeedbackQagDatabaseRepository : CrudRepository<FeedbackQagDTO, UUID> {
         value = "SELECT * FROM feedbacks_qag WHERE qag_id = :qagId AND user_id = :userId LIMIT 1",
         nativeQuery = true
     )
-    fun getFeedbackQag(@Param("qagId") qagId: UUID, @Param("userId") userId: String): FeedbackQagDTO?
+    fun getFeedbackQag(@Param("qagId") qagId: UUID, @Param("userId") userId: UUID): FeedbackQagDTO?
 }
