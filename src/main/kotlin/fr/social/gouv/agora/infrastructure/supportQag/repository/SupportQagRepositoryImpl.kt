@@ -43,7 +43,7 @@ class SupportQagRepositoryImpl(
             if (resultDelete <= 0)
                 SupportQagResult.FAILURE
             else {
-                supportQagCacheRepository.insertSupportQag(qagId = qagId, userId = userId, null)
+                supportQagCacheRepository.insertSupportQag(qagId = qagId, userId = userId, supportQagDTO = null)
                 SupportQagResult.SUCCESS
             }
         } catch (e: IllegalArgumentException) {

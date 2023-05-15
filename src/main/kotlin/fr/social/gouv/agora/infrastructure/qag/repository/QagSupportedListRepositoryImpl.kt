@@ -37,7 +37,7 @@ class QagSupportedListRepositoryImpl(
         try {
             val thematiqueUUID = UUID.fromString(thematiqueId)
             val userUUID = UUID.fromString(userId)
-            cacheRepository.deleteQagSupportedList(thematiqueUUID, userUUID)
+            cacheRepository.deleteQagSupportedList(thematiqueId = thematiqueUUID, userId = userUUID)
         }
         catch (e: IllegalArgumentException) {
             //do nothing
