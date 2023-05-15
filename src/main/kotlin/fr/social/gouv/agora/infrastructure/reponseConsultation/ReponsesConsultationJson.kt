@@ -17,3 +17,8 @@ data class ReponseConsultationJson(
     @JsonProperty("responseText")
     val responseText: String,
 )
+
+data class ResponseConsultationResultJson(
+    @JsonProperty("askDemographicInfo")
+    val askDemographicInfo: Boolean,
+)

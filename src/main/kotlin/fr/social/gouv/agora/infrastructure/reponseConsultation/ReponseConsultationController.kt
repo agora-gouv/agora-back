@@ -25,7 +25,8 @@ class ReponseConsultationController(
             consultationResponses = jsonMapper.toDomain(responsesConsultationJson)
         )
         return when (statusInsertion) {
-            InsertResult.INSERT_SUCCESS -> ResponseEntity.ok().body("")
+            InsertResult.INSERT_SUCCESS -> ResponseEntity.ok()
+                .body(ResponseConsultationResultJson(askDemographicInfo = true))
             InsertResult.INSERT_FAILURE -> ResponseEntity.status(400).body("")
         }
     }
