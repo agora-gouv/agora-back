@@ -3,7 +3,7 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheSupportedListResult
+import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheListResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -18,10 +18,10 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-internal class QagSupportedRepositoryImplTest {
+internal class QagSupportedListRepositoryImplTest {
 
     @Autowired
-    private lateinit var repository: QagSupportedRepositoryImpl
+    private lateinit var repository: QagSupportedListRepositoryImpl
 
     @MockBean
     private lateinit var databaseRepository: QagInfoDatabaseRepository
@@ -83,23 +83,10 @@ internal class QagSupportedRepositoryImplTest {
     inner class NullThematiqueIdCases {
 
         @Test
-        fun `getQagSupportedList - when userId is null - should return emptylist without doing anything`() {
-            //When
-            val result =
-                repository.getQagSupportedList(thematiqueId = null, userId = null)
-
-            // Then
-            assertThat(result).isEqualTo(emptyList<QagInfo>())
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
         fun `getQagSupportedList - when CacheNotInitialized & database return emptyList - should call getQagSupportedListFromDatabase and insert emptyList to cache`() {
             // Given
             given(cacheRepository.getQagSupportedList(thematiqueId = null, userId = userUUID))
-                .willReturn(CacheSupportedListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagSupportedList(userId = userUUID)).willReturn(emptyList())
 
             // When
@@ -119,7 +106,7 @@ internal class QagSupportedRepositoryImplTest {
         fun `getQagSupportedList - when CacheNotInitialized & database return listof DTO - should call getQagSupportedListFromDatabase and insert result to cache`() {
             // Given
             given(cacheRepository.getQagSupportedList(thematiqueId = null, userId = userUUID))
-                .willReturn(CacheSupportedListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagSupportedList(userUUID)).willReturn(listOf(qagDTO))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
@@ -140,7 +127,7 @@ internal class QagSupportedRepositoryImplTest {
         fun `getQagSupportedList - when has cache with emptyList - should return emptylist from cache`() {
             // Given
             given(cacheRepository.getQagSupportedList(thematiqueId = null, userId = userUUID))
-                .willReturn(CacheSupportedListResult.CachedQagList(emptyList()))
+                .willReturn(CacheListResult.CachedQagList(emptyList()))
 
             // When
             val result = repository.getQagSupportedList(thematiqueId = null, userId = userUUID.toString())
@@ -156,7 +143,7 @@ internal class QagSupportedRepositoryImplTest {
         fun `getQagSupportedList - when has cache with listof DTO - should return listof DTO from cache`() {
             // Given
             given(cacheRepository.getQagSupportedList(thematiqueId = null, userId = userUUID))
-                .willReturn(CacheSupportedListResult.CachedQagList(listOf(qagDTO)))
+                .willReturn(CacheListResult.CachedQagList(listOf(qagDTO)))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
             // When
@@ -177,23 +164,10 @@ internal class QagSupportedRepositoryImplTest {
         private val thematiqueId = UUID.randomUUID()
 
         @Test
-        fun `getQagSupportedList - when userId is null - should return emptylist without doing anything`() {
-            //When
-            val result =
-                repository.getQagSupportedList(thematiqueId = thematiqueId.toString(), userId = null)
-
-            // Then
-            assertThat(result).isEqualTo(emptyList<QagInfo>())
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
         fun `getQagSupportedList - when CacheNotInitialized & database return emptyList - should call getQagSupportedListFromDatabase and insert emptyList to cache`() {
             // Given
             given(cacheRepository.getQagSupportedList(thematiqueId = thematiqueId, userId = userUUID))
-                .willReturn(CacheSupportedListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(
                 databaseRepository.getQagSupportedListWithThematique(
                     thematiqueId = thematiqueId,
@@ -220,7 +194,7 @@ internal class QagSupportedRepositoryImplTest {
         fun `getQagSupportedList - when CacheNotInitialized & database return listof DTO - should call getQagSupportedListFromDatabase and insert result to cache`() {
             // Given
             given(cacheRepository.getQagSupportedList(thematiqueId = thematiqueId, userId = userUUID))
-                .willReturn(CacheSupportedListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagSupportedListWithThematique(thematiqueId = thematiqueId, userId = userUUID))
                 .willReturn(listOf(qagDTO))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
@@ -248,7 +222,7 @@ internal class QagSupportedRepositoryImplTest {
         fun `getQagSupportedList - when has cache with emptyList - should return emptylist from cache`() {
             // Given
             given(cacheRepository.getQagSupportedList(thematiqueId = thematiqueId, userId = userUUID))
-                .willReturn(CacheSupportedListResult.CachedQagList(emptyList()))
+                .willReturn(CacheListResult.CachedQagList(emptyList()))
 
             // When
             val result =
@@ -265,7 +239,7 @@ internal class QagSupportedRepositoryImplTest {
         fun `getQagSupportedList - when has cache with listof DTO - should return listof DTO from cache`() {
             // Given
             given(cacheRepository.getQagSupportedList(thematiqueId = thematiqueId, userId = userUUID))
-                .willReturn(CacheSupportedListResult.CachedQagList(listOf(qagDTO)))
+                .willReturn(CacheListResult.CachedQagList(listOf(qagDTO)))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
             // When
@@ -282,11 +256,13 @@ internal class QagSupportedRepositoryImplTest {
 
     @Test
     fun `deleteQagSupportedList - should delete QagSupportedList from cache`() {
+        //Given
+        val thematiqueId = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120010")
         //When
-        repository.deleteQagSupportedList(userUUID.toString())
+        repository.deleteQagSupportedList(thematiqueId= thematiqueId.toString(), userId = userUUID.toString())
 
         //Then
-        then(cacheRepository).should(only()).deleteQagSupportedList(userUUID)
+        then(cacheRepository).should(only()).deleteQagSupportedList(thematiqueId = thematiqueId, userId = userUUID)
         then(databaseRepository).shouldHaveNoInteractions()
     }
 }

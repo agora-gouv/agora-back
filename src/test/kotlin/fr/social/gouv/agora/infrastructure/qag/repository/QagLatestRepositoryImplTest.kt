@@ -3,7 +3,7 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheLatestListResult
+import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheListResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -71,7 +71,7 @@ internal class QagLatestRepositoryImplTest {
         fun `getQagLatestList - when CacheNotInitialized & database return emptyList - should call getQagLatestListFromDatabase and insert emptyList to cache`() {
             // Given
             given(cacheRepository.getQagLatestList(thematiqueId = null))
-                .willReturn(CacheLatestListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagLatestList()).willReturn(emptyList())
 
             // When
@@ -91,7 +91,7 @@ internal class QagLatestRepositoryImplTest {
         fun `getQagLatestList - when CacheNotInitialized & database return listof DTO - should call getQagLatestListFromDatabase and insert result to cache`() {
             // Given
             given(cacheRepository.getQagLatestList(thematiqueId = null))
-                .willReturn(CacheLatestListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagLatestList()).willReturn(listOf(qagDTO))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
@@ -112,7 +112,7 @@ internal class QagLatestRepositoryImplTest {
         fun `getQagLatestList - when has cache with emptyList - should return emptylist from cache`() {
             // Given
             given(cacheRepository.getQagLatestList(thematiqueId = null))
-                .willReturn(CacheLatestListResult.CachedQagList(emptyList()))
+                .willReturn(CacheListResult.CachedQagList(emptyList()))
 
             // When
             val result = repository.getQagLatestList(thematiqueId = null)
@@ -128,7 +128,7 @@ internal class QagLatestRepositoryImplTest {
         fun `getQagLatestList - when has cache with listof DTO - should return listof DTO from cache`() {
             // Given
             given(cacheRepository.getQagLatestList(thematiqueId = null))
-                .willReturn(CacheLatestListResult.CachedQagList(listOf(qagDTO)))
+                .willReturn(CacheListResult.CachedQagList(listOf(qagDTO)))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
             // When
@@ -152,7 +152,7 @@ internal class QagLatestRepositoryImplTest {
         fun `getQagLatestList - when CacheNotInitialized & database return emptyList - should call getQagLatestListFromDatabase and insert emptyList to cache`() {
             // Given
             given(cacheRepository.getQagLatestList(thematiqueId = thematiqueId))
-                .willReturn(CacheLatestListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagLatestListWithThematique(thematiqueId = thematiqueId)).willReturn(emptyList())
 
             // When
@@ -172,7 +172,7 @@ internal class QagLatestRepositoryImplTest {
         fun `getQagLatestList - when CacheNotInitialized & database return listof DTO - should call getQagLatestListFromDatabase and insert result to cache`() {
             // Given
             given(cacheRepository.getQagLatestList(thematiqueId = thematiqueId))
-                .willReturn(CacheLatestListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagLatestListWithThematique(thematiqueId = thematiqueId))
                 .willReturn(listOf(qagDTO))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
@@ -194,7 +194,7 @@ internal class QagLatestRepositoryImplTest {
         fun `getQagLatestList - when has cache with emptyList - should return emptylist from cache`() {
             // Given
             given(cacheRepository.getQagLatestList(thematiqueId = thematiqueId))
-                .willReturn(CacheLatestListResult.CachedQagList(emptyList()))
+                .willReturn(CacheListResult.CachedQagList(emptyList()))
 
             // When
             val result = repository.getQagLatestList(thematiqueId = thematiqueId.toString())
@@ -210,7 +210,7 @@ internal class QagLatestRepositoryImplTest {
         fun `getQagLatestList - when has cache with listof DTO - should return listof DTO from cache`() {
             // Given
             given(cacheRepository.getQagLatestList(thematiqueId = thematiqueId))
-                .willReturn(CacheLatestListResult.CachedQagList(listOf(qagDTO)))
+                .willReturn(CacheListResult.CachedQagList(listOf(qagDTO)))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
             // When

@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CachePopularListResult
+import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheListResult
 import fr.social.gouv.agora.usecase.qag.repository.QagPopularListRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -18,8 +18,8 @@ class QagPopularRepositoryImpl(
         return try {
             val thematiqueUUID = thematiqueId?.let(UUID::fromString)
             val qagDTOList = when (val cacheResult = cacheRepository.getQagPopularList(thematiqueUUID)) {
-                CachePopularListResult.CacheNotInitialized -> getQagPopularListFromDatabase(thematiqueUUID)
-                is CachePopularListResult.CachedQagList -> cacheResult.qagListDTO
+                CacheListResult.CacheNotInitialized -> getQagPopularListFromDatabase(thematiqueUUID)
+                is CacheListResult.CachedQagList -> cacheResult.qagListDTO
             }
             qagDTOList.map { dto -> mapper.toDomain(dto) }
         } catch (e: IllegalArgumentException) {
