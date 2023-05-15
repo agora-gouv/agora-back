@@ -1,8 +1,8 @@
 package fr.social.gouv.agora.infrastructure.qag.repository
 
-import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheListResult
+import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagSupportedListRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -38,21 +38,18 @@ class QagSupportedListRepositoryImpl(
             val thematiqueUUID = UUID.fromString(thematiqueId)
             val userUUID = UUID.fromString(userId)
             cacheRepository.deleteQagSupportedList(thematiqueId = thematiqueUUID, userId = userUUID)
-        }
-        catch (e: IllegalArgumentException) {
+        } catch (e: IllegalArgumentException) {
             //do nothing
         }
     }
 
     private fun getQagSupportedListFromDatabase(thematiqueUUID: UUID?, userUUID: UUID): List<QagDTO> {
-        val qagDTOList =
-            thematiqueUUID?.let {
-                databaseRepository.getQagSupportedListWithThematique(
-                    thematiqueId = thematiqueUUID,
-                    userId = userUUID
-                )
-            }
-                ?: databaseRepository.getQagSupportedList(userUUID)
+        val qagDTOList = thematiqueUUID?.let {
+            databaseRepository.getQagSupportedListWithThematique(
+                thematiqueId = thematiqueUUID,
+                userId = userUUID
+            )
+        } ?: databaseRepository.getQagSupportedList(userUUID)
         cacheRepository.insertQagSupportedList(
             thematiqueId = thematiqueUUID,
             qagSupportedList = qagDTOList,

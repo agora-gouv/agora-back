@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit
 object JwtTokenUtils {
 
     private val JWT_TOKEN_VALIDITY = TimeUnit.DAYS.toMillis(1)
+    private const val JWT_HEADER_KEY = "Authorization"
+    private const val JWT_PREFIX = "Bearer "
 
     fun generateToken(userId: String, claims: Map<String, Any> = emptyMap()): String {
         return Jwts.builder()
@@ -24,6 +26,17 @@ object JwtTokenUtils {
 
     fun extractUserId(jwtToken: String): String {
         return extractClaim(jwtToken) { claims -> claims.subject }
+    }
+
+    fun extractJwtFromHeader(authorizationHeader: String): String? {
+        return authorizationHeader
+            .takeIf { it.startsWith(JWT_PREFIX) }
+            ?.substringAfter(JWT_PREFIX)
+            ?.trim()
+    }
+
+    fun extractUserIdFromHeader(authorizationHeader: String): String {
+        return extractUserId(extractJwtFromHeader(authorizationHeader) ?: "")
     }
 
     fun isTokenExpired(jwtToken: String): Boolean {

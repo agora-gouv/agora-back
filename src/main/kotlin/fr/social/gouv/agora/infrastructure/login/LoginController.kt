@@ -15,7 +15,7 @@ class LoginController(private val loginUseCase: LoginUseCase, private val userIn
         @RequestHeader("deviceId") deviceId: String,
         @RequestHeader("fcmToken") fcmToken: String,
     ): ResponseEntity<*> {
-        val userInfo = loginUseCase.login(
+        val userInfo = loginUseCase.loginOrRegister(
             deviceId = deviceId,
             fcmToken = fcmToken,
         )

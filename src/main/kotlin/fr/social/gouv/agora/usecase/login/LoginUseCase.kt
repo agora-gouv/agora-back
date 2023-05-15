@@ -7,7 +7,11 @@ import org.springframework.stereotype.Service
 @Service
 class LoginUseCase(private val loginRepository: LoginRepository) {
 
-    fun login(deviceId: String, fcmToken: String): UserInfo? {
+    fun login(userId: String): UserInfo? {
+        return loginRepository.getUser(userId = userId)
+    }
+
+    fun loginOrRegister(deviceId: String, fcmToken: String): UserInfo? {
         return loginRepository.loginOrRegister(
             deviceId = deviceId,
             fcmToken = fcmToken
