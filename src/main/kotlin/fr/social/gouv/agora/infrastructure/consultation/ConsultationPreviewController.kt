@@ -16,10 +16,10 @@ class ConsultationPreviewController(
     private val consultationPreviewJsonMapper: ConsultationPreviewJsonMapper,
 ) {
     @GetMapping("/consultations")
-    fun getConsultationPreviewOngoingList(@RequestHeader("Authorization") jwtToken: String): ResponseEntity<ConsultationPreviewJson> {
+    fun getConsultationPreviewOngoingList(@RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<ConsultationPreviewJson> {
         val consultationListOngoing = getConsultationPreviewOngoingListUseCase.getConsultationPreviewOngoingList()
         val consultationListAnswered = getConsultationPreviewAnsweredListUseCase.getConsultationPreviewAnsweredList(
-            deviceId = JwtTokenUtils.extractUserId(jwtToken) // TODO 96 fix after Feat-88 merge
+            deviceId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         )
         return ResponseEntity.ok()
             .body(

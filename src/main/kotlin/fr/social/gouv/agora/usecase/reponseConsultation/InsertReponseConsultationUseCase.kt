@@ -2,7 +2,6 @@ package fr.social.gouv.agora.usecase.reponseConsultation
 
 import fr.social.gouv.agora.domain.ReponseConsultationInserting
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
-import fr.social.gouv.agora.usecase.login.repository.LoginRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertParameters
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
@@ -11,28 +10,23 @@ import java.util.*
 
 @Service
 class InsertReponseConsultationUseCase(
-    private val loginRepository: LoginRepository,
     private val consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository,
     private val insertReponseConsultationRepository: InsertReponseConsultationRepository,
 ) {
 
     fun insertReponseConsultation(
         consultationId: String,
-        deviceId: String,
+        userId: String,
         consultationResponses: List<ReponseConsultationInserting>,
     ): InsertResult {
-
-        return loginRepository.getUser(deviceId = deviceId)?.let { userInfo ->
-            consultationPreviewAnsweredRepository.deleteConsultationAnsweredList(userInfo.userId)
-            insertReponseConsultationRepository.insertConsultationResponses(
-                insertParameters = InsertParameters(
-                    consultationId = consultationId,
-                    userId = userInfo.userId,
-                    participationId = UUID.randomUUID().toString(),
-                ),
-                consultationResponses = consultationResponses,
-            )
-        } ?: InsertResult.INSERT_FAILURE
+        consultationPreviewAnsweredRepository.deleteConsultationAnsweredList(userId)
+        return insertReponseConsultationRepository.insertConsultationResponses(
+            insertParameters = InsertParameters(
+                consultationId = consultationId,
+                userId = userId,
+                participationId = UUID.randomUUID().toString(),
+            ),
+            consultationResponses = consultationResponses,
+        )
     }
-
 }

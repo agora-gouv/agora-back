@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.qag
 
+import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagUseCase
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
@@ -17,10 +18,13 @@ class QagController(
 
     @GetMapping("/qags/{qagId}")
     fun getQagDetails(
-        @RequestHeader("deviceId") deviceId: String,
+        @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable qagId: String,
     ): HttpEntity<*> {
-        return getQagUseCase.getQag(qagId, deviceId)?.let { qag ->
+        return getQagUseCase.getQag(
+            qagId = qagId,
+            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+        )?.let { qag ->
             ResponseEntity.ok(mapper.toJson(qag))
         } ?: ResponseEntity.EMPTY
     }

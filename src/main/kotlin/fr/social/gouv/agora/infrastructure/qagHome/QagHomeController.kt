@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.qagHome
 
+import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagLatestPreviewListUseCase
 import fr.social.gouv.agora.usecase.qag.GetQagPopularPreviewListUseCase
 import fr.social.gouv.agora.usecase.qag.GetQagSupportedPreviewListUseCase
@@ -21,20 +22,21 @@ class QagHomeController(
 ) {
     @GetMapping("/qags")
     fun getQagHome(
-        @RequestHeader("deviceId") deviceId: String,
+        @RequestHeader("Authorization") authorizationHeader: String,
         @RequestParam("thematiqueId") thematiqueId: String?,
     ): ResponseEntity<QagHomeJson> {
+        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
         val qagPopularPreviewList = getQagPopularPreviewListUseCase.getQagPopularPreviewList(
-            deviceId = deviceId,
+            userId = userId,
             thematiqueId = thematiqueId,
         )
         val qagLatestPreviewList = getQagLatestPreviewListUseCase.getQagLatestPreviewList(
-            deviceId = deviceId,
+            userId = userId,
             thematiqueId = thematiqueId,
         )
         val qagSupportedPreviewList = getQagSupportedPreviewListUseCase.getQagSupportedPreviewList(
-            deviceId = deviceId,
+            userId = userId,
             thematiqueId = thematiqueId,
         )
         return ResponseEntity.ok()

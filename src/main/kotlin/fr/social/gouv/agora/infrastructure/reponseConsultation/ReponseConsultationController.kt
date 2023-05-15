@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation
 
+import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
 import fr.social.gouv.agora.usecase.reponseConsultation.InsertReponseConsultationUseCase
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
@@ -18,12 +19,12 @@ class ReponseConsultationController(
     @PostMapping("/consultations/{consultationId}/responses")
     fun postResponseConsultation(
         @PathVariable consultationId: String,
-        @RequestHeader deviceId: String,
+        @RequestHeader("Authorization") authorizationHeader: String,
         @RequestBody responsesConsultationJson: ReponsesConsultationJson,
     ): HttpEntity<*> {
         val statusInsertion = insertReponseConsultationUseCase.insertReponseConsultation(
             consultationId = consultationId,
-            deviceId = deviceId,
+            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
             consultationResponses = jsonMapper.toDomain(responsesConsultationJson)
         )
         return when (statusInsertion) {

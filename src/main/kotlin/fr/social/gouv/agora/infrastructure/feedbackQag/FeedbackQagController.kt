@@ -14,14 +14,14 @@ class FeedbackQagController(private val insertFeedbackQagUseCase: InsertFeedback
 
     @PostMapping("/qags/{qagId}/feedback")
     fun insertFeedbackQag(
-        @RequestHeader("Authorization") jwtToken: String,
+        @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable qagId: String,
         @RequestBody body: FeedbackQagJson,
     ): HttpEntity<*> {
         val insertResult = insertFeedbackQagUseCase.insertFeedbackQag(
             FeedbackQagInserting(
                 qagId = qagId,
-                userId = JwtTokenUtils.extractUserId(jwtToken),
+                userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
                 isHelpful = body.isHelpful,
             )
         )
