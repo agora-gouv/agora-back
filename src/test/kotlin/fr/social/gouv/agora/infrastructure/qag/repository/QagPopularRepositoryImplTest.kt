@@ -3,7 +3,7 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CachePopularListResult
+import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheListResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -71,7 +71,7 @@ internal class QagPopularRepositoryImplTest {
         fun `getQagPopularList - when CacheNotInitialized & database return emptyList - should call getQagPopularListFromDatabase and insert emptyList to cache`() {
             // Given
             given(cacheRepository.getQagPopularList(thematiqueId = null))
-                .willReturn(CachePopularListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagPopularList()).willReturn(emptyList())
 
             // When
@@ -91,7 +91,7 @@ internal class QagPopularRepositoryImplTest {
         fun `getQagPopularList - when CacheNotInitialized & database return listof DTO - should call getQagPopularListFromDatabase and insert result to cache`() {
             // Given
             given(cacheRepository.getQagPopularList(thematiqueId = null))
-                .willReturn(CachePopularListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagPopularList()).willReturn(listOf(qagDTO))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
@@ -112,7 +112,7 @@ internal class QagPopularRepositoryImplTest {
         fun `getQagPopularList - when has cache with emptyList - should return emptylist from cache`() {
             // Given
             given(cacheRepository.getQagPopularList(thematiqueId = null))
-                .willReturn(CachePopularListResult.CachedQagList(emptyList()))
+                .willReturn(CacheListResult.CachedQagList(emptyList()))
 
             // When
             val result = repository.getQagPopularList(thematiqueId = null)
@@ -128,7 +128,7 @@ internal class QagPopularRepositoryImplTest {
         fun `getQagPopularList - when has cache with listof DTO - should return listof DTO from cache`() {
             // Given
             given(cacheRepository.getQagPopularList(thematiqueId = null))
-                .willReturn(CachePopularListResult.CachedQagList(listOf(qagDTO)))
+                .willReturn(CacheListResult.CachedQagList(listOf(qagDTO)))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
             // When
@@ -152,7 +152,7 @@ internal class QagPopularRepositoryImplTest {
         fun `getQagPopularList - when CacheNotInitialized & database return emptyList - should call getQagPopularListFromDatabase and insert emptyList to cache`() {
             // Given
             given(cacheRepository.getQagPopularList(thematiqueId = thematiqueId))
-                .willReturn(CachePopularListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagPopularListWithThematique(thematiqueId = thematiqueId)).willReturn(emptyList())
 
             // When
@@ -172,7 +172,7 @@ internal class QagPopularRepositoryImplTest {
         fun `getQagPopularList - when CacheNotInitialized & database return listof DTO - should call getQagPopularListFromDatabase and insert result to cache`() {
             // Given
             given(cacheRepository.getQagPopularList(thematiqueId = thematiqueId))
-                .willReturn(CachePopularListResult.CacheNotInitialized)
+                .willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getQagPopularListWithThematique(thematiqueId = thematiqueId))
                 .willReturn(listOf(qagDTO))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
@@ -194,7 +194,7 @@ internal class QagPopularRepositoryImplTest {
         fun `getQagPopularList - when has cache with emptyList - should return emptylist from cache`() {
             // Given
             given(cacheRepository.getQagPopularList(thematiqueId = thematiqueId))
-                .willReturn(CachePopularListResult.CachedQagList(emptyList()))
+                .willReturn(CacheListResult.CachedQagList(emptyList()))
 
             // When
             val result = repository.getQagPopularList(thematiqueId = thematiqueId.toString())
@@ -210,7 +210,7 @@ internal class QagPopularRepositoryImplTest {
         fun `getQagPopularList - when has cache with listof DTO - should return listof DTO from cache`() {
             // Given
             given(cacheRepository.getQagPopularList(thematiqueId = thematiqueId))
-                .willReturn(CachePopularListResult.CachedQagList(listOf(qagDTO)))
+                .willReturn(CacheListResult.CachedQagList(listOf(qagDTO)))
             given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
             // When

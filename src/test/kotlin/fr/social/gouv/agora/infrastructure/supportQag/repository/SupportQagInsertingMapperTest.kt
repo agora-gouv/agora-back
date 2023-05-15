@@ -38,14 +38,14 @@ internal class SupportQagInsertingMapperTest {
         // Given
         val supportQagInserting = SupportQagInserting(
             qagId = "fda60299-fe2d-4282-bb45-284dcb4fa7ee",
-            userId = "userId",
+            userId = "bc9e81be-eb4d-11ed-a05b-0242ac120003",
         )
 
         // When
         val result = mapper.toDto(supportQagInserting)
 
         // Then
-        assertThat(result?.userId).isEqualTo("userId")
+        assertThat(result?.userId).isEqualTo(UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120003"))
         assertThat(result?.qagId).isEqualTo(UUID.fromString("fda60299-fe2d-4282-bb45-284dcb4fa7ee"))
     }
 }

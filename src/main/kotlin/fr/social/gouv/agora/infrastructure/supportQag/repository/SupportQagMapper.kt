@@ -13,7 +13,7 @@ class SupportQagMapper {
         return try {
             SupportQagDTO(
                 id = UUID.randomUUID(),
-                userId = domain.userId,
+                userId = UUID.fromString(domain.userId),
                 qagId = UUID.fromString(domain.qagId)
             )
         } catch (e: IllegalArgumentException) {
