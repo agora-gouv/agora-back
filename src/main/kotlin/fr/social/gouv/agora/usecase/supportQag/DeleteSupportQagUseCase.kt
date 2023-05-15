@@ -16,12 +16,12 @@ class DeleteSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
 ) {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
+        val validUserId = loginRepository.getUser(supportQagDeleting.userId)?.userId.toString()
         qagInfoRepository.getQagInfo(supportQagDeleting.qagId)?.let {
             qagSupportedListRepository.deleteQagSupportedList(
-                thematiqueId = it.thematiqueId, userId = supportQagDeleting.userId
+                thematiqueId = it.thematiqueId, userId = validUserId
             )
         }
-        val validUserId = loginRepository.getUser(supportQagDeleting.userId)?.userId.toString()
         return repository.deleteSupportQag(SupportQagDeleting(qagId = supportQagDeleting.qagId, userId = validUserId))
     }
 }

@@ -16,32 +16,36 @@ class QagSupportedListRepositoryImpl(
 
     override fun getQagSupportedList(thematiqueId: String?, userId: String): List<QagInfo> {
         return try {
-            val userUUID = userId.let { UUID.fromString(userId) }
+            val userUUID = UUID.fromString(userId)
             val thematiqueUUID = thematiqueId?.let(UUID::fromString)
-            if (userUUID != null) {
-                val qagDTOList = when (val cacheResult =
-                    cacheRepository.getQagSupportedList(thematiqueId = thematiqueUUID, userId = userUUID)) {
-                    CacheListResult.CacheNotInitialized -> getQagSupportedListFromDatabase(
-                        thematiqueUUID,
-                        userUUID
-                    )
+            val qagDTOList = when (val cacheResult =
+                cacheRepository.getQagSupportedList(thematiqueId = thematiqueUUID, userId = userUUID)) {
+                CacheListResult.CacheNotInitialized -> getQagSupportedListFromDatabase(
+                    thematiqueUUID = thematiqueUUID,
+                    userUUID = userUUID
+                )
 
-                    is CacheListResult.CachedQagList -> cacheResult.qagListDTO
-                }
-                qagDTOList.map { dto -> mapper.toDomain(dto) }
-            } else
-                emptyList()
+                is CacheListResult.CachedQagList -> cacheResult.qagListDTO
+            }
+            qagDTOList.map { dto -> mapper.toDomain(dto) }
         } catch (e: IllegalArgumentException) {
             emptyList()
         }
     }
 
     override fun deleteQagSupportedList(thematiqueId: String, userId: String) {
-        cacheRepository.deleteQagSupportedList(UUID.fromString(thematiqueId), UUID.fromString(userId))
+        try {
+            val thematiqueUUID = UUID.fromString(thematiqueId)
+            val userUUID = UUID.fromString(userId)
+            cacheRepository.deleteQagSupportedList(thematiqueUUID, userUUID)
+        }
+        catch (e: IllegalArgumentException) {
+            //do nothing
+        }
     }
 
     private fun getQagSupportedListFromDatabase(thematiqueUUID: UUID?, userUUID: UUID): List<QagDTO> {
-        val qagDTO =
+        val qagDTOList =
             thematiqueUUID?.let {
                 databaseRepository.getQagSupportedListWithThematique(
                     thematiqueId = thematiqueUUID,
@@ -51,10 +55,10 @@ class QagSupportedListRepositoryImpl(
                 ?: databaseRepository.getQagSupportedList(userUUID)
         cacheRepository.insertQagSupportedList(
             thematiqueId = thematiqueUUID,
-            qagSupportedList = qagDTO,
+            qagSupportedList = qagDTOList,
             userId = userUUID
         )
-        return qagDTO
+        return qagDTOList
     }
 }
 

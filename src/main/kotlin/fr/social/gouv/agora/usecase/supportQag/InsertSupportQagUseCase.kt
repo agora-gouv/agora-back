@@ -16,12 +16,12 @@ class InsertSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
 ) {
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
+        val validUserId = loginRepository.getUser(supportQagInserting.userId)?.userId.toString()
         qagInfoRepository.getQagInfo(supportQagInserting.qagId)?.let {
             qagSupportedListRepository.deleteQagSupportedList(
-                thematiqueId = it.thematiqueId, userId = supportQagInserting.userId
+                thematiqueId = it.thematiqueId, userId = validUserId
             )
         }
-        val validUserId = loginRepository.getUser(supportQagInserting.userId)?.userId.toString()
         return repository.insertSupportQag(SupportQagInserting(qagId = supportQagInserting.qagId, userId = validUserId))
     }
 }

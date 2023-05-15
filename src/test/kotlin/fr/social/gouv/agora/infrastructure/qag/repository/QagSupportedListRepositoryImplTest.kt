@@ -255,7 +255,7 @@ internal class QagSupportedListRepositoryImplTest {
     }
 
     @Test
-    fun `deleteQagSupportedList - should delete QagSupportedList from cache`() {
+    fun `deleteQagSupportedList - when thematique has valid UUID - should delete QagSupportedList from cache`() {
         //Given
         val thematiqueId = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120010")
         //When
@@ -263,6 +263,28 @@ internal class QagSupportedListRepositoryImplTest {
 
         //Then
         then(cacheRepository).should(only()).deleteQagSupportedList(thematiqueId = thematiqueId, userId = userUUID)
+        then(databaseRepository).shouldHaveNoInteractions()
+    }
+    @Test
+    fun `deleteQagSupportedList - when thematique has invalid UUID - should do nothing`() {
+        //Given
+        val thematiqueId = "1234"
+        //When
+        repository.deleteQagSupportedList(thematiqueId= thematiqueId, userId = userUUID.toString())
+
+        //Then
+        then(cacheRepository).shouldHaveNoInteractions()
+        then(databaseRepository).shouldHaveNoInteractions()
+    }
+    @Test
+    fun `deleteQagSupportedList - when userId is invalid UUID and thematiqueId is valid UUID - should do nothing`() {
+        //Given
+        val thematiqueId = "bc9e81be-eb4d-11ed-a05b-0242ac120002"
+        //When
+        repository.deleteQagSupportedList(thematiqueId= thematiqueId, userId = "1234")
+
+        //Then
+        then(cacheRepository).shouldHaveNoInteractions()
         then(databaseRepository).shouldHaveNoInteractions()
     }
 }

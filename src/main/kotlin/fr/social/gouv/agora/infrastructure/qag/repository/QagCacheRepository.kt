@@ -46,12 +46,7 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
     @Suppress("UNCHECKED_CAST")
     fun getQagPopularList(thematiqueId: UUID?): CacheListResult {
         val qagPopularList = try {
-            getCache()?.get(thematiqueId?.let {
-                buildQagCacheKey(
-                    thematiqueId.toString(),
-                    QAG_POPULAR_CACHE_KEY
-                )
-            } ?: QAG_POPULAR_CACHE_KEY, List::class.java) as? List<QagDTO>
+            getCache()?.get(buildQagCacheKey(thematiqueId, QAG_POPULAR_CACHE_KEY), List::class.java) as? List<QagDTO>
         } catch (e: IllegalStateException) {
             null
         }
@@ -63,8 +58,7 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
 
     fun insertQagPopularList(thematiqueId: UUID?, qagPopularList: List<QagDTO>?) {
         getCache()?.put(
-            thematiqueId?.let { buildQagCacheKey(thematiqueId.toString(), QAG_POPULAR_CACHE_KEY) }
-                ?: QAG_POPULAR_CACHE_KEY,
+            buildQagCacheKey(thematiqueId, QAG_POPULAR_CACHE_KEY),
             qagPopularList ?: emptyList<QagDTO>(),
         )
     }
@@ -72,8 +66,7 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
     @Suppress("UNCHECKED_CAST")
     fun getQagLatestList(thematiqueId: UUID?): CacheListResult {
         val qagLatestList = try {
-            getCache()?.get(thematiqueId?.let { buildQagCacheKey(thematiqueId.toString(), QAG_LATEST_CACHE_KEY) }
-                ?: QAG_LATEST_CACHE_KEY, List::class.java) as? List<QagDTO>
+            getCache()?.get(buildQagCacheKey(thematiqueId, QAG_LATEST_CACHE_KEY), List::class.java) as? List<QagDTO>
         } catch (e: IllegalStateException) {
             null
         }
@@ -85,8 +78,7 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
 
     fun insertQagLatestList(thematiqueId: UUID?, qagLatestList: List<QagDTO>?) {
         getCache()?.put(
-            thematiqueId?.let { buildQagCacheKey(thematiqueId.toString(), QAG_LATEST_CACHE_KEY) }
-                ?: QAG_LATEST_CACHE_KEY,
+            buildQagCacheKey(thematiqueId, QAG_LATEST_CACHE_KEY),
             qagLatestList ?: emptyList<QagDTO>(),
         )
     }
@@ -94,8 +86,7 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
     @Suppress("UNCHECKED_CAST")
     fun getQagSupportedList(thematiqueId: UUID?, userId: UUID): CacheListResult {
         val qagSupportedList = try {
-            getCache()?.get(thematiqueId?.let { buildQagCacheKey(thematiqueId.toString(), userId.toString()) }
-                ?: userId.toString(), List::class.java) as? List<QagDTO>
+            getCache()?.get(buildQagCacheKey(thematiqueId, userId.toString()), List::class.java) as? List<QagDTO>
         } catch (e: IllegalStateException) {
             null
         }
@@ -107,14 +98,13 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
 
     fun insertQagSupportedList(thematiqueId: UUID?, qagSupportedList: List<QagDTO>?, userId: UUID) {
         getCache()?.put(
-            thematiqueId?.let { buildQagCacheKey(thematiqueId.toString(), userId.toString()) }
-                ?: userId.toString(),
+            buildQagCacheKey(thematiqueId, userId.toString()),
             qagSupportedList ?: emptyList<QagDTO>(),
         )
     }
 
     fun deleteQagSupportedList(thematiqueId: UUID, userId: UUID) {
-        getCache()?.evict(buildQagCacheKey(thematiqueId.toString(), userId.toString()))
+        getCache()?.evict(buildQagCacheKey(thematiqueId, userId.toString()))
         getCache()?.evict(userId.toString())
     }
 
@@ -132,5 +122,5 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
         )
     }
 
-    private fun buildQagCacheKey(thematiqueId: String, key: String) = "$thematiqueId/$key"
+    private fun buildQagCacheKey(thematiqueId: UUID?, key: String) = thematiqueId?.let { "$thematiqueId/$key" } ?: key
 }

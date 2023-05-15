@@ -19,7 +19,7 @@ class GetSupportQagRepositoryImpl(
             val qagUUID = UUID.fromString(qagId)
             val userUUID = UUID.fromString(userId)
             val supportQagDto = when (val cacheResult = cacheRepository.getSupportQag(qagUUID, userUUID)) {
-                CacheResult.CacheNotInitialized -> getSupportQagFromDatabase(qagUUID, userUUID)
+                CacheResult.CacheNotInitialized -> getSupportQagFromDatabase(qagUUID = qagUUID, userUUID = userUUID)
                 CacheResult.CachedSupportQagNotFound -> null
                 is CacheResult.CachedSupportQag -> cacheResult.supportQagDTO
             }
@@ -46,8 +46,8 @@ class GetSupportQagRepositoryImpl(
     }
 
     private fun getSupportQagFromDatabase(qagUUID: UUID, userUUID: UUID): SupportQagDTO? {
-        val supportQagDTO = databaseRepository.getSupportQag(qagUUID, userUUID)
-        cacheRepository.insertSupportQag(qagUUID, userUUID, supportQagDTO)
+        val supportQagDTO = databaseRepository.getSupportQag(qagId = qagUUID, userId = userUUID)
+        cacheRepository.insertSupportQag(qagId = qagUUID, userId = userUUID, supportQagDTO = supportQagDTO)
         return supportQagDTO
     }
 
