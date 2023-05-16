@@ -8,9 +8,9 @@ import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import org.springframework.stereotype.Component
 
 @Component
-class UserInfoJsonMapper {
+class SignupInfoJsonMapper {
 
-    fun toJson(domain: UserInfo, deviceId: String): UserInfoJson? {
+    fun toJson(domain: UserInfo, deviceId: String): SignupInfoJson? {
         val loginTokenResult = LoginTokenGenerator.buildLoginToken(
             LoginTokenData(
                 deviceId = deviceId,
@@ -20,7 +20,7 @@ class UserInfoJsonMapper {
 
         return when (loginTokenResult) {
             BuildResult.Failure -> null
-            is BuildResult.Success -> UserInfoJson(
+            is BuildResult.Success -> SignupInfoJson(
                 jwtToken = JwtTokenUtils.generateToken(userId = domain.userId),
                 loginToken = loginTokenResult.loginToken,
             )

@@ -4,5 +4,6 @@ import fr.social.gouv.agora.domain.UserInfo
 
 interface LoginRepository {
     fun getUser(userId: String): UserInfo?
-    fun loginOrRegister(deviceId: String, fcmToken: String): UserInfo?
+    fun login(userId: String, fcmToken: String): UserInfo?
+    fun signUp(deviceId: String, fcmToken: String): UserInfo?
 }

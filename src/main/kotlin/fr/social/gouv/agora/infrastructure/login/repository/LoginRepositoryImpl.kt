@@ -20,10 +20,10 @@ class LoginRepositoryImpl(
 
     override fun getUser(userId: String): UserInfo? {
         return try {
-            UUID.fromString(userId)
-            when (val cacheResult = cacheRepository.getUser(userId)) {
-                CacheResult.CacheNotInitialized -> databaseRepository.getUserById(userId).also { userDTO ->
-                    insertUserToCache(userId, userDTO)
+            val userUUID = UUID.fromString(userId)
+            when (val cacheResult = cacheRepository.getUser(userUUID)) {
+                CacheResult.CacheNotInitialized -> databaseRepository.getUserById(userUUID).also { userDTO ->
+                    insertUserToCache(userUUID, userDTO)
                 }
                 CacheResult.CachedUserNotFound -> null
                 is CacheResult.CachedUser -> cacheResult.userDTO
@@ -33,30 +33,46 @@ class LoginRepositoryImpl(
         }
     }
 
-    override fun loginOrRegister(deviceId: String, fcmToken: String): UserInfo? {
+    override fun login(userId: String, fcmToken: String): UserInfo? {
+        return try {
+            val userUUID = UUID.fromString(userId)
+            val (cachedUserDTO, databaseUserDTO) = when (val cacheResult = cacheRepository.getUser(userUUID)) {
+                CacheResult.CacheNotInitialized -> null to databaseRepository.getUserById(userUUID)
+                is CacheResult.CachedUser -> cacheResult.userDTO to null
+                CacheResult.CachedUserNotFound -> return null
+            }
+
+            val userDTO = cachedUserDTO ?: databaseUserDTO
+            if (userDTO != null) {
+                val updatedDTO = updateUserIfRequired(userDTO, fcmToken)
+                val usedUserDTO = updatedDTO ?: userDTO
+                if (updatedDTO != null || cachedUserDTO == null) {
+                    cacheRepository.insertUser(usedUserDTO)
+                }
+                return mapper.toDomain(usedUserDTO)
+            } else {
+                cacheRepository.insertUserNotFound(userUUID)
+                null
+            }
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+    }
+
+    override fun signUp(deviceId: String, fcmToken: String): UserInfo? {
         val (cachedUserDTO, databaseUserDTO) = when (val cacheResult = cacheRepository.getUserByDeviceId(deviceId)) {
             CacheResult.CacheNotInitialized -> null to databaseRepository.getUserByDeviceId(deviceId)
             CacheResult.CachedUserNotFound -> null to null
             is CacheResult.CachedUser -> cacheResult.userDTO to null
         }
+        val userDTO = cachedUserDTO ?: databaseUserDTO
 
-        val userDTO = cachedUserDTO ?: databaseUserDTO ?: generateUser(
-            deviceId = deviceId,
-            fcmToken = fcmToken
-        )
-
-        return if (userDTO != null) {
-            val updatedUserDTO = updateUserIfRequired(userDTO, fcmToken)
-            val usedUserDTO = updatedUserDTO ?: userDTO
-
-            if (cachedUserDTO == null || updatedUserDTO != null) {
-                cacheRepository.insertUser(usedUserDTO)
+        return if (userDTO == null) {
+            generateUser(deviceId = deviceId, fcmToken = fcmToken)?.let { newUserDTO ->
+                cacheRepository.insertUser(newUserDTO)
+                mapper.toDomain(newUserDTO)
             }
-            mapper.toDomain(usedUserDTO)
-        } else {
-            cacheRepository.insertUserDeviceIdNotFound(deviceId = deviceId)
-            null
-        }
+        } else null
     }
 
     private fun generateUser(deviceId: String, fcmToken: String): UserDTO? {
@@ -78,7 +94,7 @@ class LoginRepositoryImpl(
         } else null
     }
 
-    private fun insertUserToCache(userId: String, userDTO: UserDTO?) {
+    private fun insertUserToCache(userId: UUID, userDTO: UserDTO?) {
         if (userDTO != null) {
             cacheRepository.insertUser(userDTO)
         } else {

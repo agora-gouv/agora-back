@@ -44,7 +44,7 @@ class AuthenticationTokenFilter(
     }
 
     private fun loginWithUserId(userId: String) {
-        loginUseCase.login(userId)?.let { userInfo ->
+        loginUseCase.findUser(userId)?.let { userInfo ->
             val userDetails = userJwtMapper.toJwt(userInfo)
             SecurityContextHolder.getContext().authentication =
                 UsernamePasswordAuthenticationToken(userDetails, null, null)
