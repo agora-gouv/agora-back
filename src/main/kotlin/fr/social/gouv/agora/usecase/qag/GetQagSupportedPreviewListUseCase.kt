@@ -15,12 +15,12 @@ class GetQagSupportedPreviewListUseCase(
     private val qagSupportedListRepository: QagSupportedListRepository,
 ) {
     fun getQagSupportedPreviewList(deviceId: String, thematiqueId: String?): List<QagPreview> {
-        return qagSupportedListRepository.getQagSupportedList(
-            thematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() },
-            userId = deviceId
-        ).mapNotNull { qagInfo ->
-            thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
-                loginRepository.getUser(deviceId)?.let { userInfo ->
+        return loginRepository.getUser(deviceId)?.let { userInfo ->
+            qagSupportedListRepository.getQagSupportedList(
+                thematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() },
+                userId = userInfo.userId,
+            ).mapNotNull { qagInfo ->
+                thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
                     supportRepository.getSupportQag(qagInfo.id, userInfo.userId)?.let { supportQag ->
                         QagPreview(
                             id = qagInfo.id,
@@ -33,6 +33,6 @@ class GetQagSupportedPreviewListUseCase(
                     }
                 }
             }
-        }.sortedByDescending { it.date }
+        }?.sortedByDescending { it.date } ?: emptyList()
     }
 }
