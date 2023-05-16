@@ -22,9 +22,9 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         object CacheNotInitialized : CacheResult()
     }
 
-    fun getUser(userId: String): CacheResult {
+    fun getUser(userId: UUID): CacheResult {
         return try {
-            val cachedUserDTO = getUserCache()?.get(userId, UserDTO::class.java)
+            val cachedUserDTO = getUserCache()?.get(userId.toString(), UserDTO::class.java)
             when (cachedUserDTO?.id?.toString()) {
                 null -> CacheResult.CacheNotInitialized
                 UuidUtils.NOT_FOUND_UUID_STRING -> CacheResult.CachedUserNotFound
@@ -37,12 +37,12 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
 
     fun getUserByDeviceId(deviceId: String): CacheResult {
         val userId = try {
-            getDeviceIdIndexCache()?.get(deviceId, String::class.java)
+            getDeviceIdIndexCache()?.get(deviceId, String::class.java)?.let(UUID::fromString)
         } catch (e: IllegalStateException) {
             null
         }
 
-        return when (userId) {
+        return when (userId?.toString()) {
             null -> CacheResult.CacheNotInitialized
             DEVICE_ID_NOT_FOUND_USER_ID -> CacheResult.CachedUserNotFound
             else -> getUser(userId)
@@ -54,8 +54,8 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         getDeviceIdIndexCache()?.put(userDTO.deviceId, userDTO.id)
     }
 
-    fun insertUserNotFound(userId: String) {
-        getUserCache()?.put(userId, createUserNotFound())
+    fun insertUserNotFound(userId: UUID) {
+        getUserCache()?.put(userId.toString(), createUserNotFound())
     }
 
     fun insertUserDeviceIdNotFound(deviceId: String) {
