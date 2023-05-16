@@ -26,15 +26,15 @@ class QagHomeController(
     ): ResponseEntity<QagHomeJson> {
         val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
         val qagPopularPreviewList = getQagPopularPreviewListUseCase.getQagPopularPreviewList(
-            userId = deviceId,
+            deviceId = deviceId,
             thematiqueId = thematiqueId,
         )
         val qagLatestPreviewList = getQagLatestPreviewListUseCase.getQagLatestPreviewList(
-            userId = deviceId,
+            deviceId = deviceId,
             thematiqueId = thematiqueId,
         )
         val qagSupportedPreviewList = getQagSupportedPreviewListUseCase.getQagSupportedPreviewList(
-            userId = deviceId,
+            deviceId = deviceId,
             thematiqueId = thematiqueId,
         )
         return ResponseEntity.ok()
