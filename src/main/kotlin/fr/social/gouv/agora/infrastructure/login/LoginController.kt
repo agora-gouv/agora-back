@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
+
 
 @RestController
 @Suppress("unused")
@@ -15,12 +17,13 @@ class LoginController(private val loginUseCase: LoginUseCase, private val userIn
         @RequestHeader("deviceId") deviceId: String,
         @RequestHeader("fcmToken") fcmToken: String,
     ): ResponseEntity<*> {
-        val userInfo = loginUseCase.loginOrRegister(
+        return loginUseCase.loginOrRegister(
             deviceId = deviceId,
             fcmToken = fcmToken,
-        )
-        return userInfo?.let {
-            ResponseEntity.ok(userInfoJsonMapper.toJson(userInfo))
+        )?.let { userInfo ->
+            userInfoJsonMapper.toJson(domain = userInfo, deviceId = deviceId)?.let { userInfoJson ->
+                ResponseEntity.ok().body(userInfoJson)
+            }
         } ?: ResponseEntity.status(400).body(Unit)
     }
 
