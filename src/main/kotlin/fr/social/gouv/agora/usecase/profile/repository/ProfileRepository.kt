@@ -1,5 +1,7 @@
 package fr.social.gouv.agora.usecase.profile.repository
 
+import fr.social.gouv.agora.domain.Profile
+
 interface ProfileRepository {
-    fun askForDemographicInfo(userId: String?): Boolean
+    fun getProfile(userId: String): Profile?
 }

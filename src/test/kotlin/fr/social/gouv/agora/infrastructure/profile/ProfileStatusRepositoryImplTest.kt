@@ -1,11 +1,9 @@
 package fr.social.gouv.agora.infrastructure.profile
 
 import fr.social.gouv.agora.infrastructure.profile.dto.ProfileDTO
-import fr.social.gouv.agora.infrastructure.profile.repository.CachedProfileDTO
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileDatabaseRepository
-import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository
-import fr.social.gouv.agora.infrastructure.profile.repository.ProfileRepositoryImpl
-import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
+import fr.social.gouv.agora.infrastructure.profile.repository.DateDemandeRepositoryImpl
+import fr.social.gouv.agora.infrastructure.profile.repository.DateDemandeRepositoryImpl.CacheResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -31,13 +29,13 @@ import java.util.*
 internal class ProfileStatusRepositoryImplTest {
 
     @Autowired
-    private lateinit var repository: ProfileRepositoryImpl
+    private lateinit var repository: ProfileRepositoryImplttt
 
     @MockBean
     private lateinit var databaseRepository: ProfileDatabaseRepository
 
     @MockBean
-    private lateinit var cacheRepository: ProfileCacheRepository
+    private lateinit var cacheRepository: DateDemandeRepositoryImpl
 
     private val profileDTO = ProfileDTO(
         id = UUID.randomUUID(),
@@ -57,7 +55,7 @@ internal class ProfileStatusRepositoryImplTest {
     @Test
     fun `askForDemographicInfo - when invalid UUID - should return false`() {
         // When
-        val result = repository.askForDemographicInfo("invalid UUID")
+        val result = repository.getProfile("invalid UUID")
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -68,7 +66,7 @@ internal class ProfileStatusRepositoryImplTest {
     @Test
     fun `askForDemographicInfo - when userId is null - should return false`() {
         // When
-        val result = repository.askForDemographicInfo(null)
+        val result = repository.getProfile(null)
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -83,7 +81,7 @@ internal class ProfileStatusRepositoryImplTest {
         given(databaseRepository.getProfile(userUUID)).willReturn(null)
 
         // When
-        val result = repository.askForDemographicInfo(userUUID.toString())
+        val result = repository.getProfile(userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(true)
@@ -99,7 +97,7 @@ internal class ProfileStatusRepositoryImplTest {
         given(databaseRepository.getProfile(userUUID)).willReturn(profileDTO)
 
         // When
-        val result = repository.askForDemographicInfo(userUUID.toString())
+        val result = repository.getProfile(userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -114,7 +112,7 @@ internal class ProfileStatusRepositoryImplTest {
         given(cacheRepository.getProfileStatus(userUUID)).willReturn(CacheResult.CachedProfileFound)
 
         // When
-        val result = repository.askForDemographicInfo(userUUID.toString())
+        val result = repository.getProfile(userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -130,7 +128,7 @@ internal class ProfileStatusRepositoryImplTest {
         ))
 
         // When
-        val result = repository.askForDemographicInfo(userUUID.toString())
+        val result = repository.getProfile(userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(true)
@@ -146,7 +144,7 @@ internal class ProfileStatusRepositoryImplTest {
             CachedProfileDTO("2023-05-06",profileDTO)))
 
         // When
-        val result = repository.askForDemographicInfo(userUUID.toString())
+        val result = repository.getProfile(userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(false)

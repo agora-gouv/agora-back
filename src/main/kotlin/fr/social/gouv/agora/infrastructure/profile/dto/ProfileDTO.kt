@@ -41,8 +41,8 @@ data class ProfileDTO(
     @Override
     override fun toString(): String {
         return this::class.simpleName + """(id = $id , gender = $gender, yearOfBirth = $yearOfBirth , 
-            |department = $department , cityType = $cityType , jobCategory=$jobCategory, 
-            |voteFrequency = $voteFrequency , publicMeetingFrequency = $publicMeetingFrequency , 
-            |consultationFrequency = $consultationFrequency , userId = $userId)"""
+            department = $department , cityType = $cityType , jobCategory=$jobCategory, 
+            voteFrequency = $voteFrequency , publicMeetingFrequency = $publicMeetingFrequency , 
+            consultationFrequency = $consultationFrequency , userId = $userId)"""
     }
 }
