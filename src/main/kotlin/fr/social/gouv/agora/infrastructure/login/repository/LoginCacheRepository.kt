@@ -12,8 +12,6 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
     companion object {
         private const val USER_CACHE_NAME = "userCache"
         private const val DEVICE_ID_INDEX_CACHE_NAME = "deviceIdIndexCache"
-
-        private const val DEVICE_ID_NOT_FOUND_USER_ID = ""
     }
 
     sealed class CacheResult {
@@ -44,14 +42,14 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
 
         return when (userId?.toString()) {
             null -> CacheResult.CacheNotInitialized
-            DEVICE_ID_NOT_FOUND_USER_ID -> CacheResult.CachedUserNotFound
+            UuidUtils.NOT_FOUND_UUID_STRING -> CacheResult.CachedUserNotFound
             else -> getUser(userId)
         }
     }
 
     fun insertUser(userDTO: UserDTO) {
         getUserCache()?.put(userDTO.id, userDTO)
-        getDeviceIdIndexCache()?.put(userDTO.deviceId, userDTO.id)
+        getDeviceIdIndexCache()?.put(userDTO.deviceId, userDTO.id.toString())
     }
 
     fun insertUserNotFound(userId: UUID) {
@@ -59,7 +57,7 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
     }
 
     fun insertUserDeviceIdNotFound(deviceId: String) {
-        getDeviceIdIndexCache()?.put(deviceId, DEVICE_ID_NOT_FOUND_USER_ID)
+        getDeviceIdIndexCache()?.put(deviceId, UuidUtils.NOT_FOUND_UUID_STRING)
     }
 
     private fun getUserCache() = cacheManager.getCache(USER_CACHE_NAME)
