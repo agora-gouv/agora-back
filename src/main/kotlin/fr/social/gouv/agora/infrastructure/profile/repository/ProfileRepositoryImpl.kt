@@ -4,7 +4,6 @@ import fr.social.gouv.agora.domain.Profile
 import fr.social.gouv.agora.infrastructure.profile.dto.ProfileDTO
 import fr.social.gouv.agora.usecase.profile.repository.ProfileRepository
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
-import fr.social.gouv.agora.usecase.profile.repository.DateDemandeRepository
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -12,7 +11,6 @@ import java.util.*
 class ProfileRepositoryImpl(
     private val databaseRepository: ProfileDatabaseRepository,
     private val cacheRepository: ProfileCacheRepository,
-    private val dateDemandeRepository: DateDemandeRepository,
     private val mapper: ProfileMapper,
 ) : ProfileRepository {
 
@@ -32,7 +30,6 @@ class ProfileRepositoryImpl(
     private fun getProfileFromDatabase(userUUID: UUID): ProfileDTO? {
         val profileDTO = databaseRepository.getProfile(userUUID)
         cacheRepository.insertProfile(userUUID, profileDTO)
-        profileDTO?.let { dateDemandeRepository.deleteDate(userUUID) }
         return profileDTO
     }
 }

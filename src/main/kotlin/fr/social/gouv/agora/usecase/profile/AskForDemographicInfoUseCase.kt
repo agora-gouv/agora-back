@@ -1,22 +1,21 @@
 package fr.social.gouv.agora.usecase.profile
 
 import fr.social.gouv.agora.usecase.login.repository.LoginRepository
-import fr.social.gouv.agora.usecase.profile.repository.DateDemandeRepository
+import fr.social.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.social.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @Service
 class AskForDemographicInfoUseCase(
     private val profileRepository: ProfileRepository,
-    private val dateDemandeRepository: DateDemandeRepository,
+    private val demographicInfoAskDateRepository: DemographicInfoAskDateRepository,
     private val loginRepository: LoginRepository,
 ) {
 
     companion object {
-        private const val NOMBRE_JOUR_DEMANDE_INFO_PROFIL = 30
+        private const val DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO = 30
     }
 
     fun askForDemographicInfo(deviceId: String): Boolean {
@@ -24,25 +23,28 @@ class AskForDemographicInfoUseCase(
         val userId = loginRepository.getUser(deviceId)?.userId
         userId?.let {
             if (profileRepository.getProfile(userId) == null) {
-                val dateDemande = dateDemandeRepository.getDate(UUID.fromString(userId))
-                if (dateDemande == null)
+                val dateDemande = demographicInfoAskDateRepository.getDate(userId)
+                if (dateDemande == null) {
                     askForDemographicInfo = true
+                    demographicInfoAskDateRepository.insertDate(userId)
+                }
                 else {
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                     val dateDemandeLocalDate = LocalDate.parse(dateDemande, formatter)
-                    if (LocalDate.now()
-                            .isAfter(
-                                dateDemandeLocalDate.plusDays(
-                                    NOMBRE_JOUR_DEMANDE_INFO_PROFIL.toLong()
-                                )
-                            )
-                    ) {
+                    if (compareDateDemandeWithSYSDate(dateDemandeLocalDate)) {
                         askForDemographicInfo = true
-                        dateDemandeRepository.updateDate(UUID.fromString(userId))
+                        demographicInfoAskDateRepository.updateDate(userId)
                     }
                 }
             }
         }
         return askForDemographicInfo
     }
+
+    private fun compareDateDemandeWithSYSDate(dateDemandeLocalDate: LocalDate) = LocalDate.now()
+        .isAfter(
+            dateDemandeLocalDate.plusDays(
+                DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong()
+            )
+        )
 }

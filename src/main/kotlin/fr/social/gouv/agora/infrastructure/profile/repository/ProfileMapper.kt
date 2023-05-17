@@ -9,14 +9,6 @@ class ProfileMapper {
     fun toDomain(dto: ProfileDTO): Profile {
         return Profile(
             id = dto.id.toString(),
-            gender = dto.gender,
-            yearOfBirth = dto.yearOfBirth,
-            department = dto.department,
-            cityType = dto.cityType,
-            jobCategory = dto.jobCategory,
-            voteFrequency = dto.voteFrequency,
-            publicMeetingFrequency = dto.publicMeetingFrequency,
-            consultationFrequency = dto.consultationFrequency,
         )
     }
 }

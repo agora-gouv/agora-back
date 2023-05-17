@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.infrastructure.profile.repository
 
-import fr.social.gouv.agora.usecase.profile.repository.DateDemandeRepository
 import org.springframework.cache.CacheManager
 import org.springframework.cache.set
 import org.springframework.stereotype.Repository
@@ -8,12 +7,12 @@ import java.time.LocalDate
 import java.util.*
 
 @Repository
-class DateDemandeRepositoryImpl(private val cacheManager: CacheManager) : DateDemandeRepository {
+class DemographicInfoAskDateCacheRepository(private val cacheManager: CacheManager) {
     companion object {
-        private const val DATE_DEMANDE_CACHE_NAME = "dateDemandeCache"
+        private const val DEMO_INFO_ASK_DATE_CACHE_NAME = "demoInfoAskDateCache"
     }
 
-    override fun getDate(userUUID: UUID): String? {
+    fun getDate(userUUID: UUID): String? {
         return try {
             getCache()?.get(userUUID.toString(), String::class.java)
         } catch (e: IllegalStateException) {
@@ -21,17 +20,18 @@ class DateDemandeRepositoryImpl(private val cacheManager: CacheManager) : DateDe
         }
     }
 
-    override fun insertDate(userUUID: UUID) {
+    fun insertDate(userUUID: UUID) {
         getCache()?.put(userUUID.toString(), LocalDate.now().toString())
     }
 
-    override fun updateDate(userUUID: UUID) {
+    fun updateDate(userUUID: UUID) {
         getCache()?.set(userUUID.toString(), LocalDate.now().toString())
     }
 
-    override fun deleteDate(userId: UUID) {
+    fun deleteDate(userId: UUID) {
+        //TODO doit etre appeler quand un user rentre ses donnees demographiques
         getCache()?.evict(userId.toString())
     }
 
-    private fun getCache() = cacheManager.getCache(DATE_DEMANDE_CACHE_NAME)
+    private fun getCache() = cacheManager.getCache(DEMO_INFO_ASK_DATE_CACHE_NAME)
 }
