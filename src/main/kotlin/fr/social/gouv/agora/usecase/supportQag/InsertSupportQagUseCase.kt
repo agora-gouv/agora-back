@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.usecase.supportQag
 
 import fr.social.gouv.agora.domain.SupportQagInserting
-import fr.social.gouv.agora.usecase.login.repository.LoginRepository
+import fr.social.gouv.agora.usecase.login.repository.UserRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagSupportedListRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service
 class InsertSupportQagUseCase(
     private val repository: SupportQagRepository,
     private val qagSupportedListRepository: QagSupportedListRepository,
-    private val loginRepository: LoginRepository,
+    private val userRepository: UserRepository,
     private val qagInfoRepository: QagInfoRepository,
 ) {
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
-        val validUserId = loginRepository.getUser(supportQagInserting.userId)?.userId.toString()
+        val validUserId = userRepository.getUserById(supportQagInserting.userId)?.userId.toString()
         qagInfoRepository.getQagInfo(supportQagInserting.qagId)?.let {
             qagSupportedListRepository.deleteQagSupportedList(
                 thematiqueId = it.thematiqueId, userId = validUserId

@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.usecase.supportQag
 
 import fr.social.gouv.agora.domain.SupportQagDeleting
-import fr.social.gouv.agora.usecase.login.repository.LoginRepository
+import fr.social.gouv.agora.usecase.login.repository.UserRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagSupportedListRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service
 class DeleteSupportQagUseCase(
     private val repository: SupportQagRepository,
     private val qagSupportedListRepository: QagSupportedListRepository,
-    private val loginRepository: LoginRepository,
+    private val userRepository: UserRepository,
     private val qagInfoRepository: QagInfoRepository,
 ) {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
-        val validUserId = loginRepository.getUser(supportQagDeleting.userId)?.userId.toString()
+        val validUserId = userRepository.getUserById(supportQagDeleting.userId)?.userId.toString()
         qagInfoRepository.getQagInfo(supportQagDeleting.qagId)?.let {
             qagSupportedListRepository.deleteQagSupportedList(
                 thematiqueId = it.thematiqueId, userId = validUserId
