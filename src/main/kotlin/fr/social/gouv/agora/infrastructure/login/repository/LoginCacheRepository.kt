@@ -20,7 +20,7 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         object CacheNotInitialized : CacheResult()
     }
 
-    fun getUser(userId: UUID): CacheResult {
+    fun getUserById(userId: UUID): CacheResult {
         return try {
             val cachedUserDTO = getUserCache()?.get(userId.toString(), UserDTO::class.java)
             when (cachedUserDTO?.id?.toString()) {
@@ -43,7 +43,7 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         return when (userId?.toString()) {
             null -> CacheResult.CacheNotInitialized
             UuidUtils.NOT_FOUND_UUID_STRING -> CacheResult.CachedUserNotFound
-            else -> getUser(userId)
+            else -> getUserById(userId)
         }
     }
 

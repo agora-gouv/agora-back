@@ -21,6 +21,7 @@ class UserInfoMapper {
     fun toDomain(dto: UserDTO): UserInfo {
         return UserInfo(
             userId = dto.id.toString(),
+            fcmToken = dto.fcmToken,
             isBanned = dto.isBanned == IS_BANNED_FALSE_VALUE,
             authorizationList = when (dto.authorizationLevel) {
                 DEFAULT_AUTHORIZATION_LEVEL -> UserAuthorization.getUserAuthorizations()
