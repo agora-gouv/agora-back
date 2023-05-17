@@ -1,11 +1,11 @@
 package fr.social.gouv.agora.infrastructure.profile
 
 import fr.social.gouv.agora.infrastructure.profile.dto.ProfileDTO
+import fr.social.gouv.agora.infrastructure.profile.repository.CachedProfileDTO
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileDatabaseRepository
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileRepositoryImpl
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
-import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CachedProfileDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -126,7 +126,8 @@ internal class ProfileStatusRepositoryImplTest {
     fun `askForDemographicInfo - when CachedProfileNotFound and SYS DATE superior ASK DATE + 30 days - should return true`() {
         //Given
         given(cacheRepository.getProfileStatus(userUUID)).willReturn(CacheResult.CachedProfileNotFound(
-            CachedProfileDTO("2023-01-06",profileDTO)))
+            CachedProfileDTO("2023-01-06",profileDTO)
+        ))
 
         // When
         val result = repository.askForDemographicInfo(userUUID.toString())
