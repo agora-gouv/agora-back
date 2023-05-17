@@ -16,7 +16,7 @@ class GetQagPopularPreviewListUseCase(
         return qagPopularListRepository.getQagPopularList(thematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() })
             .mapNotNull { qagInfo ->
                 thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
-                    supportRepository.getSupportQag(qagInfo.id, userId)?.let { supportQag ->
+                    supportRepository.getSupportQag(qagId = qagInfo.id, userId = userId)?.let { supportQag ->
                         QagPreview(
                             id = qagInfo.id,
                             thematique = thematique,
