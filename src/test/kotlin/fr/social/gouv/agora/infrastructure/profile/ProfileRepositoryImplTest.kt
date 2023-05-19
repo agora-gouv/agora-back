@@ -13,22 +13,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-@EnableCaching
-@ImportAutoConfiguration(
-    CacheAutoConfiguration::class,
-    RedisAutoConfiguration::class,
-)
 internal class ProfileRepositoryImplTest {
 
     @Autowired
@@ -56,15 +47,14 @@ internal class ProfileRepositoryImplTest {
         userId = UUID.randomUUID(),
     )
 
-    private val profile = Profile(
-        id = "bc9e81be-eb4d-11ed-a05b-0242ac120000",)
+    private val profile = Profile(id = "bc9e81be-eb4d-11ed-a05b-0242ac120000")
 
     private val userUUID = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120003")
 
     @Test
     fun `getProfile - when invalid UUID - should return null`() {
         // When
-        val result = repository.getProfile("invalid UUID")
+        val result = repository.getProfile(userId = "invalid UUID")
 
         // Then
         assertThat(result).isEqualTo(null)
@@ -75,51 +65,51 @@ internal class ProfileRepositoryImplTest {
     @Test
     fun `getProfile - when cacheResult is CacheNotInitialized and result not null from database- should return mapped object from database and insert it in cache`() {
         // Given
-        given(cacheRepository.getProfile(userUUID)).willReturn(CacheResult.CacheNotInitialized)
-        given(databaseRepository.getProfile(userUUID)).willReturn(profileDTO)
+        given(cacheRepository.getProfile(userUUID = userUUID)).willReturn(CacheResult.CacheNotInitialized)
+        given(databaseRepository.getProfile(userUUId = userUUID)).willReturn(profileDTO)
         given(mapper.toDomain(profileDTO)).willReturn(profile)
 
         // When
-        val result = repository.getProfile(userUUID.toString())
+        val result = repository.getProfile(userId = userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(profile)
-        then(cacheRepository).should(times(1)).getProfile(userUUID)
-        then(databaseRepository).should(only()).getProfile(userUUID)
+        then(cacheRepository).should(times(1)).getProfile(userUUID = userUUID)
+        then(databaseRepository).should(only()).getProfile(userUUId = userUUID)
         then(cacheRepository).should(times(1)).insertProfile(userUUID, profileDTO)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(only()).toDomain(profileDTO)
     }
 
     @Test
-    fun `getProfile - when cacheResult is CacheNotInitialized and result is null from database- should return null and insert ProfileNotFound in cache`() {
+    fun `getProfile - when cacheResult is CacheNotInitialized and result is null from database- should return null and insert null in cache`() {
         // Given
-        given(cacheRepository.getProfile(userUUID)).willReturn(CacheResult.CacheNotInitialized)
-        given(databaseRepository.getProfile(userUUID)).willReturn(null)
+        given(cacheRepository.getProfile(userUUID = userUUID)).willReturn(CacheResult.CacheNotInitialized)
+        given(databaseRepository.getProfile(userUUId = userUUID)).willReturn(null)
 
         // When
-        val result = repository.getProfile(userUUID.toString())
+        val result = repository.getProfile(userId = userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(null)
-        then(cacheRepository).should(times(1)).getProfile(userUUID)
-        then(databaseRepository).should(only()).getProfile(userUUID)
+        then(cacheRepository).should(times(1)).getProfile(userUUID = userUUID)
+        then(databaseRepository).should(only()).getProfile(userUUId = userUUID)
         then(cacheRepository).should(times(1)).insertProfile(userUUID, null)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(mapper).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `getProfile - when cacheResult is CachedProfileNotFound - should return mapped object from cache`() {
+    fun `getProfile - when cacheResult is CachedProfileNotFound - should return null from cache`() {
         // Given
-        given(cacheRepository.getProfile(userUUID)).willReturn(CacheResult.CachedProfileNotFound)
+        given(cacheRepository.getProfile(userUUID = userUUID)).willReturn(CacheResult.CachedProfileNotFound)
 
         // When
-        val result = repository.getProfile(userUUID.toString())
+        val result = repository.getProfile(userId = userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(null)
-        then(cacheRepository).should(only()).getProfile(userUUID)
+        then(cacheRepository).should(only()).getProfile(userUUID = userUUID)
         then(databaseRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
     }
@@ -127,15 +117,15 @@ internal class ProfileRepositoryImplTest {
     @Test
     fun `getProfile - when cacheResult is CachedProfile - should return mapped object from cache`() {
         // Given
-        given(cacheRepository.getProfile(userUUID)).willReturn(CacheResult.CachedProfile(profileDTO))
+        given(cacheRepository.getProfile(userUUID = userUUID)).willReturn(CacheResult.CachedProfile(profileDTO))
         given(mapper.toDomain(profileDTO)).willReturn(profile)
 
         // When
-        val result = repository.getProfile(userUUID.toString())
+        val result = repository.getProfile(userId = userUUID.toString())
 
         // Then
         assertThat(result).isEqualTo(profile)
-        then(cacheRepository).should(only()).getProfile(userUUID)
+        then(cacheRepository).should(only()).getProfile(userUUID = userUUID)
         then(databaseRepository).shouldHaveNoInteractions()
         then(mapper).should(only()).toDomain(profileDTO)
     }

@@ -9,6 +9,6 @@ import java.util.*
 
 @Repository
 interface ProfileDatabaseRepository : CrudRepository<ProfileDTO, UUID> {
-    @Query(value = "SELECT * FROM users_profile WHERE user_id = :userId LIMIT 1", nativeQuery = true)
-    fun getProfile(@Param("userId") userId: UUID): ProfileDTO?
+    @Query(value = "SELECT * FROM users_profile WHERE user_id = :userUUId LIMIT 1", nativeQuery = true)
+    fun getProfile(@Param("userUUId") userUUId: UUID): ProfileDTO?
 }

@@ -5,7 +5,6 @@ import fr.social.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRep
 import fr.social.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @Service
 class AskForDemographicInfoUseCase(
@@ -23,15 +22,12 @@ class AskForDemographicInfoUseCase(
         val userId = loginRepository.getUser(deviceId)?.userId
         userId?.let {
             if (profileRepository.getProfile(userId) == null) {
-                val dateDemande = demographicInfoAskDateRepository.getDate(userId)
-                if (dateDemande == null) {
+                val askDate = demographicInfoAskDateRepository.getDate(userId)
+                if (askDate == null) {
                     askForDemographicInfo = true
                     demographicInfoAskDateRepository.insertDate(userId)
-                }
-                else {
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                    val dateDemandeLocalDate = LocalDate.parse(dateDemande, formatter)
-                    if (compareDateDemandeWithSYSDate(dateDemandeLocalDate)) {
+                } else {
+                    if (compareAskDateWithSYSDate(askDate)) {
                         askForDemographicInfo = true
                         demographicInfoAskDateRepository.updateDate(userId)
                     }
@@ -41,10 +37,6 @@ class AskForDemographicInfoUseCase(
         return askForDemographicInfo
     }
 
-    private fun compareDateDemandeWithSYSDate(dateDemandeLocalDate: LocalDate) = LocalDate.now()
-        .isAfter(
-            dateDemandeLocalDate.plusDays(
-                DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong()
-            )
-        )
+    private fun compareAskDateWithSYSDate(askDate: LocalDate) =
+        LocalDate.now().isAfter(askDate.plusDays(DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong()))
 }

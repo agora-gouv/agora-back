@@ -1,15 +1,17 @@
 package fr.social.gouv.agora.infrastructure.profile.repository
 
 import fr.social.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.util.*
 
-@Repository
+@Component
 class DemographicInfoAskDateRepositoryImpl(
     private val cacheRepository: DemographicInfoAskDateCacheRepository,
 ) : DemographicInfoAskDateRepository {
 
-    override fun getDate(userId: String): String? {
+    override fun getDate(userId: String): LocalDate? {
         return try {
             cacheRepository.getDate(UUID.fromString(userId))
         } catch (e: IllegalArgumentException) {

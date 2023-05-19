@@ -7,14 +7,14 @@ import java.time.LocalDate
 import java.util.*
 
 @Repository
-class DemographicInfoAskDateCacheRepository(private val cacheManager: CacheManager) {
+class DemographicInfoAskDateCacheRepository(private val cacheManager: CacheManager, private val dateMapper: DateMapper) {
     companion object {
-        private const val DEMO_INFO_ASK_DATE_CACHE_NAME = "demoInfoAskDateCache"
+        private const val DEMOGRAPHIC_INFO_ASK_DATE_CACHE_NAME = "demoInfoAskDateCache"
     }
 
-    fun getDate(userUUID: UUID): String? {
+    fun getDate(userUUID: UUID): LocalDate? {
         return try {
-            getCache()?.get(userUUID.toString(), String::class.java)
+            getCache()?.get(userUUID.toString(), String::class.java)?.let { dateMapper.toLocalDate(it) }
         } catch (e: IllegalStateException) {
             null
         }
@@ -33,5 +33,5 @@ class DemographicInfoAskDateCacheRepository(private val cacheManager: CacheManag
         getCache()?.evict(userId.toString())
     }
 
-    private fun getCache() = cacheManager.getCache(DEMO_INFO_ASK_DATE_CACHE_NAME)
+    private fun getCache() = cacheManager.getCache(DEMOGRAPHIC_INFO_ASK_DATE_CACHE_NAME)
 }
