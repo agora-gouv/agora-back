@@ -2,7 +2,6 @@ package fr.social.gouv.agora.infrastructure.profile.repository
 
 import fr.social.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.util.*
 
