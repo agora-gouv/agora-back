@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.infrastructure.profile
 
-import fr.social.gouv.agora.domain.Profile
+import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.infrastructure.profile.dto.ProfileDTO
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileDatabaseRepository
@@ -47,7 +47,16 @@ internal class ProfileRepositoryImplTest {
         userId = UUID.randomUUID(),
     )
 
-    private val profile = Profile(id = "bc9e81be-eb4d-11ed-a05b-0242ac120000")
+    private val profile = Profile(
+        gender = Gender.FEMININ_F,
+        yearOfBirth = 1990,
+        department = Department.ALLIER_3,
+        cityType = CityType.URBAIN_U,
+        jobCategory = JobCategory.OUVRIER_OU,
+        voteFrequency = Frequency.JAMAIS_J,
+        publicMeetingFrequency = Frequency.PARFOIS_P,
+        consultationFrequency = Frequency.SOUVENT_S
+    )
 
     private val userUUID = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120003")
 

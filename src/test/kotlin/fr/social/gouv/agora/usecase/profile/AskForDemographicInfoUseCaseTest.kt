@@ -1,7 +1,6 @@
 package fr.social.gouv.agora.usecase.profile
 
-import fr.social.gouv.agora.domain.Profile
-import fr.social.gouv.agora.domain.UserInfo
+import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.usecase.login.repository.LoginRepository
 import fr.social.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.social.gouv.agora.usecase.profile.repository.ProfileRepository
@@ -36,7 +35,15 @@ internal class AskForDemographicInfoUseCaseTest {
 
 
     private val profile = Profile(
-        id = "bc9e81be-eb4d-11ed-a05b-0242ac120000",)
+        gender = Gender.FEMININ_F,
+        yearOfBirth = 1990,
+        department = Department.ALLIER_3,
+        cityType = CityType.URBAIN_U,
+        jobCategory = JobCategory.OUVRIER_OU,
+        voteFrequency = Frequency.JAMAIS_J,
+        publicMeetingFrequency = Frequency.PARFOIS_P,
+        consultationFrequency = Frequency.SOUVENT_S
+    )
 
     private val userUUID = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120003")
 
@@ -91,15 +98,19 @@ internal class AskForDemographicInfoUseCaseTest {
         then(profileRepository).should(only()).getProfile(userId = userUUID.toString())
         then(demographicInfoAskDateRepository).should(times(1)).getDate(userId = userUUID.toString())
         then(demographicInfoAskDateRepository).should(times(1)).insertDate(userId = userUUID.toString())
+        then(demographicInfoAskDateRepository).shouldHaveNoMoreInteractions()
     }
 
     @Test
-    fun `askForDemographicInfo - when profile is null and getDate returns date previous to (SYSDATE - DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO) - should return true`() {
+    fun `askForDemographicInfo - when profile is null and getDate returns date before to (SYSDATE - DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO) - should return true`() {
         //Given
-        val datePreviousSysDateMinusAskPeriod = LocalDate.now().minusDays(DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong()+1)
+        val datePreviousSysDateMinusAskPeriod =
+            LocalDate.now().minusDays(DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong() + 1)
         given(loginRepository.getUser(deviceId = "1234")).willReturn(UserInfo(userUUID.toString()))
         given(profileRepository.getProfile(userId = userUUID.toString())).willReturn(null)
-        given(demographicInfoAskDateRepository.getDate(userUUID.toString())).willReturn(datePreviousSysDateMinusAskPeriod)
+        given(demographicInfoAskDateRepository.getDate(userUUID.toString())).willReturn(
+            datePreviousSysDateMinusAskPeriod
+        )
 
         // When
         val result = useCase.askForDemographicInfo(deviceId = "1234")
@@ -110,15 +121,19 @@ internal class AskForDemographicInfoUseCaseTest {
         then(profileRepository).should(only()).getProfile(userId = userUUID.toString())
         then(demographicInfoAskDateRepository).should(times(1)).getDate(userId = userUUID.toString())
         then(demographicInfoAskDateRepository).should(times(1)).updateDate(userId = userUUID.toString())
+        then(demographicInfoAskDateRepository).shouldHaveNoMoreInteractions()
     }
 
     @Test
     fun `askForDemographicInfo - when profile is null and getDate returns date in ((SYSDATE - DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO), SYSDATE) - should return false`() {
         //Given
-        val datePreviousSysDateMinusAskPeriod = LocalDate.now().minusDays(DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong()/2)
+        val datePreviousSysDateMinusAskPeriod =
+            LocalDate.now().minusDays(DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong() / 2)
         given(loginRepository.getUser(deviceId = "1234")).willReturn(UserInfo(userUUID.toString()))
         given(profileRepository.getProfile(userId = userUUID.toString())).willReturn(null)
-        given(demographicInfoAskDateRepository.getDate(userUUID.toString())).willReturn(datePreviousSysDateMinusAskPeriod)
+        given(demographicInfoAskDateRepository.getDate(userUUID.toString())).willReturn(
+            datePreviousSysDateMinusAskPeriod
+        )
 
         // When
         val result = useCase.askForDemographicInfo(deviceId = "1234")

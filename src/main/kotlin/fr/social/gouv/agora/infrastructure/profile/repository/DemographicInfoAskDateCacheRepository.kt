@@ -7,7 +7,10 @@ import java.time.LocalDate
 import java.util.*
 
 @Repository
-class DemographicInfoAskDateCacheRepository(private val cacheManager: CacheManager, private val dateMapper: DateMapper) {
+class DemographicInfoAskDateCacheRepository(
+    private val cacheManager: CacheManager,
+    private val dateMapper: DateMapper,
+) {
     companion object {
         private const val DEMOGRAPHIC_INFO_ASK_DATE_CACHE_NAME = "demoInfoAskDateCache"
     }
@@ -29,7 +32,6 @@ class DemographicInfoAskDateCacheRepository(private val cacheManager: CacheManag
     }
 
     fun deleteDate(userId: UUID) {
-        //TODO doit etre appeler quand un user rentre ses donnees demographiques
         getCache()?.evict(userId.toString())
     }
 
