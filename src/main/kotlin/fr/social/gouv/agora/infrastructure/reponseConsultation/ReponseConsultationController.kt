@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation
 
+import fr.social.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
 import fr.social.gouv.agora.usecase.reponseConsultation.InsertReponseConsultationUseCase
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
 import org.springframework.http.HttpEntity
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,
+    private val askForDemographicInfoUseCase: AskForDemographicInfoUseCase,
     private val jsonMapper: ReponseConsultationJsonMapper
 ) {
     @PostMapping("/consultations/{consultationId}/responses")
@@ -26,7 +28,7 @@ class ReponseConsultationController(
         )
         return when (statusInsertion) {
             InsertResult.INSERT_SUCCESS -> ResponseEntity.ok()
-                .body(ResponseConsultationResultJson(askDemographicInfo = true))
+                .body(ResponseConsultationResultJson(askDemographicInfo = askForDemographicInfoUseCase.askForDemographicInfo(deviceId)))
             InsertResult.INSERT_FAILURE -> ResponseEntity.status(400).body("")
         }
     }
