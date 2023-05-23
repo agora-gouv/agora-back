@@ -22,14 +22,18 @@ class ReponseConsultationController(
         @RequestHeader("Authorization") authorizationHeader: String,
         @RequestBody responsesConsultationJson: ReponsesConsultationJson,
     ): HttpEntity<*> {
+        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val statusInsertion = insertReponseConsultationUseCase.insertReponseConsultation(
             consultationId = consultationId,
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+            userId = userId,
             consultationResponses = jsonMapper.toDomain(responsesConsultationJson)
         )
         return when (statusInsertion) {
-            InsertResult.INSERT_SUCCESS -> ResponseEntity.ok()
-                .body(ResponseConsultationResultJson(askDemographicInfo = askForDemographicInfoUseCase.askForDemographicInfo(deviceId)))
+            InsertResult.INSERT_SUCCESS -> {
+                val askDemographicInfo = askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
+                ResponseEntity.ok()
+                    .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
+            }
             InsertResult.INSERT_FAILURE -> ResponseEntity.status(400).body("")
         }
     }
