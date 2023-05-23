@@ -46,7 +46,6 @@ class ProfileJsonMapper {
                 }
             }
         } catch (e: IllegalArgumentException) {
-            println(e.message)
             null
         }
     }
