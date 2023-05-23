@@ -14,4 +14,7 @@ class LoginUseCase(private val loginRepository: LoginRepository) {
         )
     }
 
+    fun getUser(deviceId: String): UserInfo? {
+        return loginRepository.getUser(deviceId)
+    }
 }
