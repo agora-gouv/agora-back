@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.profile
 
+import fr.social.gouv.agora.usecase.login.LoginUseCase
 import fr.social.gouv.agora.usecase.profile.InsertProfileUseCase
 import fr.social.gouv.agora.usecase.profile.repository.ProfileInsertionResult
 import org.springframework.http.HttpEntity
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 class ProfileController(
     private val insertProfileUseCase: InsertProfileUseCase,
+    private val loginUseCase: LoginUseCase,
     private val jsonMapper: ProfileJsonMapper,
 ) {
     @PostMapping("/profile")
@@ -18,11 +20,9 @@ class ProfileController(
         @RequestHeader deviceId: String,
         @RequestBody profileJson: ProfileJson,
     ): HttpEntity<*> {
-        val statusInsertion = insertProfileUseCase.insertProfile(
-            deviceId = deviceId,
-            profile = jsonMapper.toDomain(profileJson)
-        )
-        return when (statusInsertion) {
+        val userId = loginUseCase.getUser(deviceId)?.userId
+        val profile = userId?.let { jsonMapper.toDomain(profileJson, userId) }
+        return when (profile?.let { insertProfileUseCase.insertProfile(profile) } ?: ProfileInsertionResult.FAILURE) {
             ProfileInsertionResult.SUCCESS -> ResponseEntity.status(200).body("")
             ProfileInsertionResult.FAILURE -> ResponseEntity.status(400).body("")
         }

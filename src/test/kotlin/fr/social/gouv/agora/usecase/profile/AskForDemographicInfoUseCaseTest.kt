@@ -35,14 +35,14 @@ internal class AskForDemographicInfoUseCaseTest {
 
 
     private val profile = Profile(
-        gender = Gender.FEMININ_F,
+        gender = Gender.FEMININ,
         yearOfBirth = 1990,
         department = Department.ALLIER_3,
-        cityType = CityType.URBAIN_U,
-        jobCategory = JobCategory.OUVRIER_OU,
-        voteFrequency = Frequency.JAMAIS_J,
-        publicMeetingFrequency = Frequency.PARFOIS_P,
-        consultationFrequency = Frequency.SOUVENT_S
+        cityType = CityType.URBAIN,
+        jobCategory = JobCategory.OUVRIER,
+        voteFrequency = Frequency.JAMAIS,
+        publicMeetingFrequency = Frequency.PARFOIS,
+        consultationFrequency = Frequency.SOUVENT
     )
 
     private val userUUID = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120003")

@@ -7,53 +7,49 @@ import java.util.*
 
 @Component
 class ProfileMapper {
-    fun toDomain(dto: ProfileDTO): Profile {
-        return Profile(
-            gender = when (dto.gender) {
-                "M" -> Gender.MASCULIN
-                "F" -> Gender.FEMININ_F
-                "A" -> Gender.AUTRE_A
-                else -> throw IllegalArgumentException("Invalid profile gender: ${dto.gender}")
-            },
-            yearOfBirth = dto.yearOfBirth,
-            department = findDepartmentByNumber(dto.department)
-                ?: throw IllegalArgumentException("Invalid department: ${dto.department}"),
-            cityType = when (dto.cityType) {
-                "R" -> CityType.RURAL_R
-                "U" -> CityType.URBAIN_U
-                "A" -> CityType.AUTRE_A
-                else -> throw IllegalArgumentException("Invalid city type: ${dto.cityType}")
-            },
-            jobCategory = when (dto.jobCategory) {
-                "AG" -> JobCategory.AGRICULTEUR_AG
-                "AR" -> JobCategory.ARTISAN_AR
-                "CA" -> JobCategory.CADRE_CA
-                "PI" -> JobCategory.PROFESSION_INTERMEDIAIRE_PI
-                "EM" -> JobCategory.EMPLOYE_EM
-                "OU" -> JobCategory.OUVRIER_OU
-                "ND" -> JobCategory.NON_DETERMINE_ND
-                "UN" -> JobCategory.UNKNOWN_UN
-                else -> throw IllegalArgumentException("Invalid job category: ${dto.jobCategory}")
-            },
-            voteFrequency = when (dto.voteFrequency) {
-                "S" -> Frequency.SOUVENT_S
-                "P" -> Frequency.PARFOIS_P
-                "J" -> Frequency.JAMAIS_J
-                else -> throw IllegalArgumentException("Invalid vote frequency: ${dto.voteFrequency}")
-            },
-            publicMeetingFrequency = when (dto.publicMeetingFrequency) {
-                "S" -> Frequency.SOUVENT_S
-                "P" -> Frequency.PARFOIS_P
-                "J" -> Frequency.JAMAIS_J
-                else -> throw IllegalArgumentException("Invalid public meeting frequency: ${dto.publicMeetingFrequency}")
-            },
-            consultationFrequency = when (dto.consultationFrequency) {
-                "S" -> Frequency.SOUVENT_S
-                "P" -> Frequency.PARFOIS_P
-                "J" -> Frequency.JAMAIS_J
-                else -> throw IllegalArgumentException("Invalid consultation frequency: ${dto.consultationFrequency}")
-            },
-        )
+    fun toDomain(dto: ProfileDTO): Profile? {
+        return try {
+            toFrequency(dto.consultationFrequency)?.let {
+                toFrequency(dto.publicMeetingFrequency)?.let { it1 ->
+                    toFrequency(dto.voteFrequency)?.let { it2 ->
+                        Profile(
+                            gender = when (dto.gender) {
+                                "M" -> Gender.MASCULIN
+                                "F" -> Gender.FEMININ
+                                "A" -> Gender.AUTRE
+                                else -> throw IllegalArgumentException("Invalid profile gender: ${dto.gender}")
+                            },
+                            yearOfBirth = dto.yearOfBirth,
+                            department = findDepartmentByNumber(dto.department)
+                                ?: throw IllegalArgumentException("Invalid department: ${dto.department}"),
+                            cityType = when (dto.cityType) {
+                                "R" -> CityType.RURAL
+                                "U" -> CityType.URBAIN
+                                "A" -> CityType.AUTRE
+                                else -> throw IllegalArgumentException("Invalid city type: ${dto.cityType}")
+                            },
+                            jobCategory = when (dto.jobCategory) {
+                                "AG" -> JobCategory.AGRICULTEUR
+                                "AR" -> JobCategory.ARTISAN
+                                "CA" -> JobCategory.CADRE
+                                "PI" -> JobCategory.PROFESSION_INTERMEDIAIRE
+                                "EM" -> JobCategory.EMPLOYE
+                                "OU" -> JobCategory.OUVRIER
+                                "ND" -> JobCategory.NON_DETERMINE
+                                "UN" -> JobCategory.UNKNOWN
+                                else -> throw IllegalArgumentException("Invalid job category: ${dto.jobCategory}")
+                            },
+                            voteFrequency = it2,
+                            publicMeetingFrequency = it1,
+                            consultationFrequency = it,
+                        )
+                    }
+                }
+            }
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+            null
+        }
     }
 
     fun toDto(domain: ProfileInserting): ProfileDTO? {
@@ -62,41 +58,29 @@ class ProfileMapper {
                 id = UUID.randomUUID(),
                 gender = when (domain.gender) {
                     Gender.MASCULIN -> "M"
-                    Gender.FEMININ_F -> "F"
-                    Gender.AUTRE_A -> "A"
+                    Gender.FEMININ -> "F"
+                    Gender.AUTRE -> "A"
                 },
                 yearOfBirth = domain.yearOfBirth,
                 department = toDepartmentNumber(domain.department),
                 cityType = when (domain.cityType) {
-                    CityType.RURAL_R -> "R"
-                    CityType.URBAIN_U -> "U"
-                    CityType.AUTRE_A -> "A"
+                    CityType.RURAL -> "R"
+                    CityType.URBAIN -> "U"
+                    CityType.AUTRE -> "A"
                 },
                 jobCategory = when (domain.jobCategory) {
-                    JobCategory.AGRICULTEUR_AG -> "AG"
-                    JobCategory.ARTISAN_AR -> "AR"
-                    JobCategory.CADRE_CA -> "CA"
-                    JobCategory.PROFESSION_INTERMEDIAIRE_PI -> "PI"
-                    JobCategory.EMPLOYE_EM -> "EM"
-                    JobCategory.OUVRIER_OU -> "OU"
-                    JobCategory.NON_DETERMINE_ND -> "ND"
-                    JobCategory.UNKNOWN_UN -> "UN"
+                    JobCategory.AGRICULTEUR -> "AG"
+                    JobCategory.ARTISAN -> "AR"
+                    JobCategory.CADRE -> "CA"
+                    JobCategory.PROFESSION_INTERMEDIAIRE -> "PI"
+                    JobCategory.EMPLOYE -> "EM"
+                    JobCategory.OUVRIER -> "OU"
+                    JobCategory.NON_DETERMINE -> "ND"
+                    JobCategory.UNKNOWN -> "UN"
                 },
-                voteFrequency = when (domain.voteFrequency) {
-                    Frequency.SOUVENT_S -> "S"
-                    Frequency.PARFOIS_P -> "P"
-                    Frequency.JAMAIS_J -> "J"
-                },
-                publicMeetingFrequency = when (domain.publicMeetingFrequency) {
-                    Frequency.SOUVENT_S -> "S"
-                    Frequency.PARFOIS_P -> "P"
-                    Frequency.JAMAIS_J -> "J"
-                },
-                consultationFrequency = when (domain.consultationFrequency) {
-                    Frequency.SOUVENT_S -> "S"
-                    Frequency.PARFOIS_P -> "P"
-                    Frequency.JAMAIS_J -> "J"
-                },
+                voteFrequency = fromFrequency(domain.voteFrequency),
+                publicMeetingFrequency = fromFrequency(domain.publicMeetingFrequency),
+                consultationFrequency = fromFrequency(domain.consultationFrequency),
                 userId = UUID.fromString(domain.userId),
             )
         } catch (e: IllegalArgumentException) {
@@ -110,5 +94,27 @@ class ProfileMapper {
 
     private fun toDepartmentNumber(department: Department): String {
         return department.name.substringAfterLast("_")
+    }
+
+    private fun toFrequency(frequencyString: String): Frequency? {
+        return try {
+            when (frequencyString) {
+                "S" -> Frequency.SOUVENT
+                "P" -> Frequency.PARFOIS
+                "J" -> Frequency.JAMAIS
+                else -> throw IllegalArgumentException("Invalid frequency: $frequencyString")
+            }
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+            null
+        }
+    }
+
+    private fun fromFrequency(frequency: Frequency): String {
+        return when (frequency) {
+            Frequency.SOUVENT -> "S"
+            Frequency.PARFOIS -> "P"
+            Frequency.JAMAIS -> "J"
+        }
     }
 }

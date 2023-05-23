@@ -102,5 +102,5 @@ enum class Department {
     GUYANE_973,
     LAREUNION_974,
     MAYOTTE_976,
-    HORSDEFRANCE_ETRANGER,
+    ETRANGER_99,
 }
