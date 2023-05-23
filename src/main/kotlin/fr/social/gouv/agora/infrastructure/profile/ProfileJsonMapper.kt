@@ -50,6 +50,35 @@ class ProfileJsonMapper {
         }
     }
 
+    fun toJson(profile: Profile): ProfileJson {
+        return ProfileJson(
+            gender = when (profile.gender) {
+                Gender.MASCULIN -> "M"
+                Gender.FEMININ -> "F"
+                Gender.AUTRE -> "A"
+            },
+            yearOfBirth = profile.yearOfBirth,
+            department = toDepartmentNumber(profile.department),
+            cityType = when (profile.cityType) {
+                CityType.RURAL -> "R"
+                CityType.URBAIN -> "U"
+                CityType.AUTRE -> "A"
+            },
+            jobCategory = when (profile.jobCategory) {
+                JobCategory.AGRICULTEUR -> "AG"
+                JobCategory.ARTISAN -> "AR"
+                JobCategory.CADRE -> "CA"
+                JobCategory.PROFESSION_INTERMEDIAIRE -> "PI"
+                JobCategory.EMPLOYE -> "EM"
+                JobCategory.OUVRIER -> "OU"
+                JobCategory.NON_DETERMINE -> "ND"
+                JobCategory.UNKNOWN -> "UN"
+            },
+            voteFrequency = fromFrequency(profile.voteFrequency),
+            publicMeetingFrequency = fromFrequency(profile.publicMeetingFrequency),
+            consultationFrequency = fromFrequency(profile.consultationFrequency),
+        )
+    }
 
     private fun findDepartmentByNumber(number: String): Department? {
         return Department.values().find { it.name.endsWith("_$number") }
@@ -66,5 +95,17 @@ class ProfileJsonMapper {
         } catch (e: IllegalArgumentException) {
             null
         }
+    }
+
+    private fun fromFrequency(frequency: Frequency): String {
+        return when (frequency) {
+            Frequency.SOUVENT -> "S"
+            Frequency.PARFOIS -> "P"
+            Frequency.JAMAIS -> "J"
+        }
+    }
+
+    private fun toDepartmentNumber(department: Department): String {
+        return department.name.substringAfterLast("_")
     }
 }
