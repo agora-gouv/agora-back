@@ -9,9 +9,9 @@ import java.util.*
 class ProfileMapper {
     fun toDomain(dto: ProfileDTO): Profile? {
         return try {
-            toFrequency(dto.consultationFrequency)?.let {
-                toFrequency(dto.publicMeetingFrequency)?.let { it1 ->
-                    toFrequency(dto.voteFrequency)?.let { it2 ->
+            toFrequency(dto.consultationFrequency)?.let { consultationFrequency ->
+                toFrequency(dto.publicMeetingFrequency)?.let { publicMeetingFrequency ->
+                    toFrequency(dto.voteFrequency)?.let { voteFrequency ->
                         Profile(
                             gender = when (dto.gender) {
                                 "M" -> Gender.MASCULIN
@@ -39,15 +39,14 @@ class ProfileMapper {
                                 "UN" -> JobCategory.UNKNOWN
                                 else -> throw IllegalArgumentException("Invalid job category: ${dto.jobCategory}")
                             },
-                            voteFrequency = it2,
-                            publicMeetingFrequency = it1,
-                            consultationFrequency = it,
+                            voteFrequency = voteFrequency,
+                            publicMeetingFrequency = publicMeetingFrequency,
+                            consultationFrequency = consultationFrequency,
                         )
                     }
                 }
             }
         } catch (e: IllegalArgumentException) {
-            println(e.message)
             null
         }
     }
@@ -105,7 +104,6 @@ class ProfileMapper {
                 else -> throw IllegalArgumentException("Invalid frequency: $frequencyString")
             }
         } catch (e: IllegalArgumentException) {
-            println(e.message)
             null
         }
     }
