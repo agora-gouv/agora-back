@@ -6,7 +6,7 @@ data class ProfileJson(
     @JsonProperty("gender")
     val gender: String,
     @JsonProperty("yearOfBirth")
-    val yearOfBirth: Int,
+    val yearOfBirth: String,
     @JsonProperty("department")
     val department: String,
     @JsonProperty("cityType")

@@ -9,43 +9,23 @@ import java.util.*
 class ProfileMapper {
     fun toDomain(dto: ProfileDTO): Profile? {
         return try {
-            toFrequency(dto.consultationFrequency)?.let { consultationFrequency ->
-                toFrequency(dto.publicMeetingFrequency)?.let { publicMeetingFrequency ->
-                    toFrequency(dto.voteFrequency)?.let { voteFrequency ->
-                        Profile(
-                            gender = when (dto.gender) {
-                                "M" -> Gender.MASCULIN
-                                "F" -> Gender.FEMININ
-                                "A" -> Gender.AUTRE
-                                else -> throw IllegalArgumentException("Invalid profile gender: ${dto.gender}")
-                            },
-                            yearOfBirth = dto.yearOfBirth,
-                            department = findDepartmentByNumber(dto.department)
-                                ?: throw IllegalArgumentException("Invalid department: ${dto.department}"),
-                            cityType = when (dto.cityType) {
-                                "R" -> CityType.RURAL
-                                "U" -> CityType.URBAIN
-                                "A" -> CityType.AUTRE
-                                else -> throw IllegalArgumentException("Invalid city type: ${dto.cityType}")
-                            },
-                            jobCategory = when (dto.jobCategory) {
-                                "AG" -> JobCategory.AGRICULTEUR
-                                "AR" -> JobCategory.ARTISAN
-                                "CA" -> JobCategory.CADRE
-                                "PI" -> JobCategory.PROFESSION_INTERMEDIAIRE
-                                "EM" -> JobCategory.EMPLOYE
-                                "OU" -> JobCategory.OUVRIER
-                                "ND" -> JobCategory.NON_DETERMINE
-                                "UN" -> JobCategory.UNKNOWN
-                                else -> throw IllegalArgumentException("Invalid job category: ${dto.jobCategory}")
-                            },
-                            voteFrequency = voteFrequency,
-                            publicMeetingFrequency = publicMeetingFrequency,
-                            consultationFrequency = consultationFrequency,
-                        )
-                    }
-                }
-            }
+            Profile(
+                gender = toGender(dto.gender)
+                    ?: throw IllegalArgumentException("Invalid profile gender: ${dto.gender}"),
+                yearOfBirth = dto.yearOfBirth,
+                department = findDepartmentByNumber(dto.department)
+                    ?: throw IllegalArgumentException("Invalid department: ${dto.department}"),
+                cityType = toCityType(dto.cityType)
+                    ?: throw IllegalArgumentException("Invalid city type: ${dto.cityType}"),
+                jobCategory = toJobCategory(dto.jobCategory)
+                    ?: throw IllegalArgumentException("Invalid job category: ${dto.jobCategory}"),
+                voteFrequency = toFrequency(dto.voteFrequency)
+                    ?: throw IllegalArgumentException("Invalid voteFrequency: ${dto.voteFrequency}"),
+                publicMeetingFrequency = toFrequency(dto.publicMeetingFrequency)
+                    ?: throw IllegalArgumentException("Invalid publicMeetingFrequency: ${dto.publicMeetingFrequency}"),
+                consultationFrequency = toFrequency(dto.consultationFrequency)
+                    ?: throw IllegalArgumentException("Invalid consultationFrequency: ${dto.consultationFrequency}"),
+            )
         } catch (e: IllegalArgumentException) {
             null
         }
@@ -87,6 +67,32 @@ class ProfileMapper {
         }
     }
 
+    private fun toGender(gender: String) = when (gender) {
+        "M" -> Gender.MASCULIN
+        "F" -> Gender.FEMININ
+        "A" -> Gender.AUTRE
+        else -> null
+    }
+
+    private fun toCityType(cityType: String) = when (cityType) {
+        "R" -> CityType.RURAL
+        "U" -> CityType.URBAIN
+        "A" -> CityType.AUTRE
+        else -> null
+    }
+
+    private fun toJobCategory(jobCategory: String) = when (jobCategory) {
+        "AG" -> JobCategory.AGRICULTEUR
+        "AR" -> JobCategory.ARTISAN
+        "CA" -> JobCategory.CADRE
+        "PI" -> JobCategory.PROFESSION_INTERMEDIAIRE
+        "EM" -> JobCategory.EMPLOYE
+        "OU" -> JobCategory.OUVRIER
+        "ND" -> JobCategory.NON_DETERMINE
+        "UN" -> JobCategory.UNKNOWN
+        else -> null
+    }
+
     private fun findDepartmentByNumber(number: String): Department? {
         return Department.values().find { it.name.endsWith("_$number") }
     }
@@ -96,15 +102,11 @@ class ProfileMapper {
     }
 
     private fun toFrequency(frequencyString: String): Frequency? {
-        return try {
-            when (frequencyString) {
-                "S" -> Frequency.SOUVENT
-                "P" -> Frequency.PARFOIS
-                "J" -> Frequency.JAMAIS
-                else -> throw IllegalArgumentException("Invalid frequency: $frequencyString")
-            }
-        } catch (e: IllegalArgumentException) {
-            null
+        return when (frequencyString) {
+            "S" -> Frequency.SOUVENT
+            "P" -> Frequency.PARFOIS
+            "J" -> Frequency.JAMAIS
+            else -> null
         }
     }
 
