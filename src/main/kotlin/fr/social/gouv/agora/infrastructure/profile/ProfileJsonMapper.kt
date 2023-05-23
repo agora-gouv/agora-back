@@ -7,44 +7,25 @@ import org.springframework.stereotype.Component
 class ProfileJsonMapper {
     fun toDomain(json: ProfileJson, userId: String): ProfileInserting? {
         return try {
-            toFrequency(json.voteFrequency)?.let { voteFrequency ->
-                toFrequency(json.publicMeetingFrequency)?.let { publicMeetingFrequency ->
-                    toFrequency(json.consultationFrequency)?.let { consultationFrequency ->
-                        ProfileInserting(
-                            gender = when (json.gender) {
-                                "M" -> Gender.MASCULIN
-                                "F" -> Gender.FEMININ
-                                "A" -> Gender.AUTRE
-                                else -> throw IllegalArgumentException("Invalid profile gender: ${json.gender}")
-                            },
-                            yearOfBirth = json.yearOfBirth,
-                            department = findDepartmentByNumber(json.department)
-                                ?: throw IllegalArgumentException("Invalid department: ${json.department}"),
-                            cityType = when (json.cityType) {
-                                "R" -> CityType.RURAL
-                                "U" -> CityType.URBAIN
-                                "A" -> CityType.AUTRE
-                                else -> throw IllegalArgumentException("Invalid city type: ${json.cityType}")
-                            },
-                            jobCategory = when (json.jobCategory) {
-                                "AG" -> JobCategory.AGRICULTEUR
-                                "AR" -> JobCategory.ARTISAN
-                                "CA" -> JobCategory.CADRE
-                                "PI" -> JobCategory.PROFESSION_INTERMEDIAIRE
-                                "EM" -> JobCategory.EMPLOYE
-                                "OU" -> JobCategory.OUVRIER
-                                "ND" -> JobCategory.NON_DETERMINE
-                                "UN" -> JobCategory.UNKNOWN
-                                else -> throw IllegalArgumentException("Invalid job category: ${json.jobCategory}")
-                            },
-                            voteFrequency = voteFrequency,
-                            publicMeetingFrequency = publicMeetingFrequency,
-                            consultationFrequency = consultationFrequency,
-                            userId = userId,
-                        )
-                    }
-                }
-            }
+            ProfileInserting(
+                gender = toGender(json.gender)
+                    ?: throw IllegalArgumentException("Invalid profile gender: ${json.gender}"),
+                yearOfBirth = json.yearOfBirth.toIntOrNull()
+                    ?: throw IllegalArgumentException("Invalid yearOfBirth: ${json.department}"),
+                department = findDepartmentByNumber(json.department)
+                    ?: throw IllegalArgumentException("Invalid department: ${json.department}"),
+                cityType = toCityType(json.cityType)
+                    ?: throw IllegalArgumentException("Invalid city type: ${json.cityType}"),
+                jobCategory = toJobCategory(json.jobCategory)
+                    ?: throw IllegalArgumentException("Invalid job category: ${json.jobCategory}"),
+                voteFrequency = toFrequency(json.voteFrequency)
+                    ?: throw IllegalArgumentException("Invalid voteFrequency: ${json.voteFrequency}"),
+                publicMeetingFrequency = toFrequency(json.publicMeetingFrequency)
+                    ?: throw IllegalArgumentException("Invalid publicMeetingFrequency: ${json.publicMeetingFrequency}"),
+                consultationFrequency = toFrequency(json.voteFrequency)
+                    ?: throw IllegalArgumentException("Invalid consultationFrequency: ${json.consultationFrequency}"),
+                userId = userId,
+            )
         } catch (e: IllegalArgumentException) {
             null
         }
@@ -57,7 +38,7 @@ class ProfileJsonMapper {
                 Gender.FEMININ -> "F"
                 Gender.AUTRE -> "A"
             },
-            yearOfBirth = profile.yearOfBirth,
+            yearOfBirth = "${profile.yearOfBirth}",
             department = toDepartmentNumber(profile.department),
             cityType = when (profile.cityType) {
                 CityType.RURAL -> "R"
@@ -80,20 +61,42 @@ class ProfileJsonMapper {
         )
     }
 
+    private fun toGender(gender: String) = when (gender) {
+        "M" -> Gender.MASCULIN
+        "F" -> Gender.FEMININ
+        "A" -> Gender.AUTRE
+        else -> null
+    }
+
+    private fun toCityType(cityType: String) = when (cityType) {
+        "R" -> CityType.RURAL
+        "U" -> CityType.URBAIN
+        "A" -> CityType.AUTRE
+        else -> null
+    }
+
+    private fun toJobCategory(jobCategory: String) = when (jobCategory) {
+        "AG" -> JobCategory.AGRICULTEUR
+        "AR" -> JobCategory.ARTISAN
+        "CA" -> JobCategory.CADRE
+        "PI" -> JobCategory.PROFESSION_INTERMEDIAIRE
+        "EM" -> JobCategory.EMPLOYE
+        "OU" -> JobCategory.OUVRIER
+        "ND" -> JobCategory.NON_DETERMINE
+        "UN" -> JobCategory.UNKNOWN
+        else -> null
+    }
+
     private fun findDepartmentByNumber(number: String): Department? {
         return Department.values().find { it.name.endsWith("_$number") }
     }
 
     private fun toFrequency(frequencyString: String): Frequency? {
-        return try {
-            when (frequencyString) {
-                "S" -> Frequency.SOUVENT
-                "P" -> Frequency.PARFOIS
-                "J" -> Frequency.JAMAIS
-                else -> throw IllegalArgumentException("Invalid frequency: $frequencyString")
-            }
-        } catch (e: IllegalArgumentException) {
-            null
+        return when (frequencyString) {
+            "S" -> Frequency.SOUVENT
+            "P" -> Frequency.PARFOIS
+            "J" -> Frequency.JAMAIS
+            else -> null
         }
     }
 
