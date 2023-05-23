@@ -30,7 +30,4 @@ class LoginUseCase(private val userRepository: UserRepository) {
         return userRepository.generateUser(deviceId = deviceId, fcmToken = fcmToken)
     }
 
-    fun getUser(deviceId: String): UserInfo? {
-        return loginRepository.getUser(deviceId)
-    }
 }
