@@ -1,7 +1,6 @@
 package fr.social.gouv.agora.usecase.profile
 
 import fr.social.gouv.agora.domain.*
-import fr.social.gouv.agora.usecase.login.repository.LoginRepository
 import fr.social.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.social.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -18,7 +17,6 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-
 internal class AskForDemographicInfoUseCaseTest {
 
     @Autowired
@@ -30,10 +28,6 @@ internal class AskForDemographicInfoUseCaseTest {
     @MockBean
     private lateinit var demographicInfoAskDateRepository: DemographicInfoAskDateRepository
 
-    @MockBean
-    private lateinit var loginRepository: LoginRepository
-
-
     private val profile = Profile(
         gender = Gender.FEMININ,
         yearOfBirth = 1990,
@@ -42,86 +36,59 @@ internal class AskForDemographicInfoUseCaseTest {
         jobCategory = JobCategory.OUVRIER,
         voteFrequency = Frequency.JAMAIS,
         publicMeetingFrequency = Frequency.PARFOIS,
-        consultationFrequency = Frequency.SOUVENT
+        consultationFrequency = Frequency.SOUVENT,
     )
-
-    private val userUUID = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120003")
 
     companion object {
         private const val DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO = 30
     }
 
     @Test
-    fun `askForDemographicInfo - when userId is null - should return false`() {
-        //Given
-        given(loginRepository.getUser(deviceId = "1234")).willReturn(null)
-
-        // When
-        val result = useCase.askForDemographicInfo(deviceId = "1234")
-
-        // Then
-        assertThat(result).isEqualTo(false)
-        then(loginRepository).should(only()).getUser(deviceId = "1234")
-        then(profileRepository).shouldHaveNoInteractions()
-        then(demographicInfoAskDateRepository).shouldHaveNoInteractions()
-    }
-
-    @Test
     fun `askForDemographicInfo - when userId is not null and profile is not null - should return false`() {
         //Given
-        given(loginRepository.getUser(deviceId = "1234")).willReturn(UserInfo(userUUID.toString()))
-        given(profileRepository.getProfile(userId = userUUID.toString())).willReturn(profile)
+        given(profileRepository.getProfile(userId = "1234")).willReturn(profile)
 
         // When
-        val result = useCase.askForDemographicInfo(deviceId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234")
 
         // Then
         assertThat(result).isEqualTo(false)
-        then(loginRepository).should(only()).getUser(deviceId = "1234")
-        then(profileRepository).should(only()).getProfile(userId = userUUID.toString())
+        then(profileRepository).should(only()).getProfile(userId = "1234")
         then(demographicInfoAskDateRepository).shouldHaveNoInteractions()
     }
 
     @Test
     fun `askForDemographicInfo - when profile is null and getDate returns null - should return true`() {
         //Given
-        given(loginRepository.getUser(deviceId = "1234")).willReturn(UserInfo(userUUID.toString()))
-        given(profileRepository.getProfile(userId = userUUID.toString())).willReturn(null)
-        given(demographicInfoAskDateRepository.getDate(userUUID.toString())).willReturn(null)
+        given(profileRepository.getProfile(userId = "1234")).willReturn(null)
+        given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(null)
 
         // When
-        val result = useCase.askForDemographicInfo(deviceId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234")
 
         // Then
         assertThat(result).isEqualTo(true)
-        then(loginRepository).should(only()).getUser(deviceId = "1234")
-        then(profileRepository).should(only()).getProfile(userId = userUUID.toString())
-        then(demographicInfoAskDateRepository).should(times(1)).getDate(userId = userUUID.toString())
-        then(demographicInfoAskDateRepository).should(times(1)).insertDate(userId = userUUID.toString())
-        then(demographicInfoAskDateRepository).shouldHaveNoMoreInteractions()
+        then(profileRepository).should(only()).getProfile(userId = "1234")
+        then(demographicInfoAskDateRepository).should(times(1)).getDate(userId = "1234")
+        then(demographicInfoAskDateRepository).should(times(1)).insertDate(userId = "1234")
     }
 
     @Test
-    fun `askForDemographicInfo - when profile is null and getDate returns date before to (SYSDATE - DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO) - should return true`() {
+    fun `askForDemographicInfo - when profile is null and getDate returns date previous to (SYSDATE - DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO) - should return true`() {
         //Given
         val datePreviousSysDateMinusAskPeriod =
             LocalDate.now().minusDays(DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong() + 1)
-        given(loginRepository.getUser(deviceId = "1234")).willReturn(UserInfo(userUUID.toString()))
-        given(profileRepository.getProfile(userId = userUUID.toString())).willReturn(null)
-        given(demographicInfoAskDateRepository.getDate(userUUID.toString())).willReturn(
-            datePreviousSysDateMinusAskPeriod
-        )
+        given(profileRepository.getProfile(userId = "1234")).willReturn(null)
+        given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(datePreviousSysDateMinusAskPeriod)
 
         // When
-        val result = useCase.askForDemographicInfo(deviceId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234")
 
         // Then
         assertThat(result).isEqualTo(true)
-        then(loginRepository).should(only()).getUser(deviceId = "1234")
-        then(profileRepository).should(only()).getProfile(userId = userUUID.toString())
-        then(demographicInfoAskDateRepository).should(times(1)).getDate(userId = userUUID.toString())
-        then(demographicInfoAskDateRepository).should(times(1)).updateDate(userId = userUUID.toString())
-        then(demographicInfoAskDateRepository).shouldHaveNoMoreInteractions()
+        then(profileRepository).should(only()).getProfile(userId = "1234")
+        then(demographicInfoAskDateRepository).should(times(1)).getDate(userId = "1234")
+        then(demographicInfoAskDateRepository).should(times(1)).updateDate(userId = "1234")
     }
 
     @Test
@@ -129,19 +96,15 @@ internal class AskForDemographicInfoUseCaseTest {
         //Given
         val datePreviousSysDateMinusAskPeriod =
             LocalDate.now().minusDays(DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO.toLong() / 2)
-        given(loginRepository.getUser(deviceId = "1234")).willReturn(UserInfo(userUUID.toString()))
-        given(profileRepository.getProfile(userId = userUUID.toString())).willReturn(null)
-        given(demographicInfoAskDateRepository.getDate(userUUID.toString())).willReturn(
-            datePreviousSysDateMinusAskPeriod
-        )
+        given(profileRepository.getProfile(userId = "1234")).willReturn(null)
+        given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(datePreviousSysDateMinusAskPeriod)
 
         // When
-        val result = useCase.askForDemographicInfo(deviceId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234")
 
         // Then
         assertThat(result).isEqualTo(false)
-        then(loginRepository).should(only()).getUser(deviceId = "1234")
-        then(profileRepository).should(only()).getProfile(userId = userUUID.toString())
-        then(demographicInfoAskDateRepository).should(only()).getDate(userId = userUUID.toString())
+        then(profileRepository).should(only()).getProfile(userId = "1234")
+        then(demographicInfoAskDateRepository).should(only()).getDate(userId = "1234")
     }
 }
