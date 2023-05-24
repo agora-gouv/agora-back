@@ -180,6 +180,7 @@ internal class QagInfoRepositoryImplTest {
         fun `insertQagInfo - when mapper returns DTO - should return SUCCESS`() {
             // Given
             given(mapper.toDto(qagInserting)).willReturn(qagDTO)
+            given(databaseRepository.save(qagDTO)).willReturn(qagDTO)
 
             // When
             val result = repository.insertQagInfo(qagInserting)

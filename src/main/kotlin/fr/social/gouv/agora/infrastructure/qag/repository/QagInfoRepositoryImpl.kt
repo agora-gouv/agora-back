@@ -33,8 +33,8 @@ class QagInfoRepositoryImpl(
     override fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult {
         val qagDTO = mapper.toDto(qagInserting)
         return if (qagDTO != null) {
-            databaseRepository.save(qagDTO)
-            cacheRepository.insertQag(qagUUID = qagDTO.id, qagDTO = qagDTO)
+            val savedQagDTO = databaseRepository.save(qagDTO)
+            cacheRepository.insertQag(qagUUID = qagDTO.id, qagDTO = savedQagDTO)
             QagInsertionResult.SUCCESS
         } else QagInsertionResult.FAILURE
     }
