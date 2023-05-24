@@ -11,20 +11,20 @@ data class ProfileDTO(
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
     @Column(columnDefinition = "TEXT")
-    val gender: String,
-    val yearOfBirth: Int,
+    val gender: String?,
+    val yearOfBirth: Int?,
     @Column(columnDefinition = "TEXT")
-    val department: String,
+    val department: String?,
     @Column(columnDefinition = "TEXT")
-    val cityType: String,
+    val cityType: String?,
     @Column(columnDefinition = "TEXT")
-    val jobCategory: String,
+    val jobCategory: String?,
     @Column(columnDefinition = "TEXT")
-    val voteFrequency: String,
+    val voteFrequency: String?,
     @Column(columnDefinition = "TEXT")
-    val publicMeetingFrequency: String,
+    val publicMeetingFrequency: String?,
     @Column(columnDefinition = "TEXT")
-    val consultationFrequency: String,
+    val consultationFrequency: String?,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
 ) {

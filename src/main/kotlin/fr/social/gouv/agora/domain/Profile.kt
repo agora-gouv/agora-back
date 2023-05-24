@@ -1,25 +1,25 @@
 package fr.social.gouv.agora.domain
 
 data class Profile(
-    val gender: Gender,
-    val yearOfBirth: Int,
-    val department: Department,
-    val cityType: CityType,
-    val jobCategory: JobCategory,
-    val voteFrequency: Frequency,
-    val publicMeetingFrequency: Frequency,
-    val consultationFrequency: Frequency,
+    val gender: Gender?,
+    val yearOfBirth: Int?,
+    val department: Department?,
+    val cityType: CityType?,
+    val jobCategory: JobCategory?,
+    val voteFrequency: Frequency?,
+    val publicMeetingFrequency: Frequency?,
+    val consultationFrequency: Frequency?,
 )
 
 data class ProfileInserting(
-    val gender: Gender,
-    val yearOfBirth: Int,
-    val department: Department,
-    val cityType: CityType,
-    val jobCategory: JobCategory,
-    val voteFrequency: Frequency,
-    val publicMeetingFrequency: Frequency,
-    val consultationFrequency: Frequency,
+    val gender: Gender?,
+    val yearOfBirth: Int?,
+    val department: Department?,
+    val cityType: CityType?,
+    val jobCategory: JobCategory?,
+    val voteFrequency: Frequency?,
+    val publicMeetingFrequency: Frequency?,
+    val consultationFrequency: Frequency?,
     val userId: String,
 )
 
