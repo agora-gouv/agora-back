@@ -28,7 +28,7 @@ class SupportQagController(
             )
         )
         return if (insertResult == SupportQagResult.SUCCESS) {
-            ResponseEntity.status(200).body("")
+            ResponseEntity.ok().body("")
         } else ResponseEntity.status(400).body("")
     }
 
@@ -44,7 +44,7 @@ class SupportQagController(
             )
         )
         return if (deleteResult == SupportQagResult.SUCCESS) {
-            ResponseEntity.status(200).body("")
+            ResponseEntity.ok().body("")
         } else ResponseEntity.status(400).body("")
     }
 }

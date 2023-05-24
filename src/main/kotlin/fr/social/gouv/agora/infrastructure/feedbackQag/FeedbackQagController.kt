@@ -26,7 +26,7 @@ class FeedbackQagController(private val insertFeedbackQagUseCase: InsertFeedback
             )
         )
         return if (insertResult == FeedbackQagResult.SUCCESS) {
-            ResponseEntity.status(200).body("")
+            ResponseEntity.ok().body("")
         } else ResponseEntity.status(400).body("")
     }
 }

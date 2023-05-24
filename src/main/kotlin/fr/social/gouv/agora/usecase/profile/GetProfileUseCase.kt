@@ -8,7 +8,18 @@ import org.springframework.stereotype.Service
 class GetProfileUseCase(
     private val profileRepository: ProfileRepository,
 ) {
-    fun getProfile(userId: String): Profile? {
-        return profileRepository.getProfile(userId)
+    fun getProfile(userId: String): Profile {
+        return profileRepository.getProfile(userId) ?: createEmptyProfile()
     }
+
+    private fun createEmptyProfile() = Profile(
+        gender = null,
+        yearOfBirth = null,
+        department = null,
+        cityType = null,
+        jobCategory = null,
+        voteFrequency = null,
+        publicMeetingFrequency = null,
+        consultationFrequency = null,
+    )
 }
