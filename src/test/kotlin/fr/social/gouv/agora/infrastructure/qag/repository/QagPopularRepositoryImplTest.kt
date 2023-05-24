@@ -40,6 +40,7 @@ internal class QagPopularRepositoryImplTest {
         status = 256,
         username = "username",
         thematiqueId = UUID.randomUUID(),
+        userId = UUID.randomUUID(),
     )
 
     private val qagInfo = QagInfo(

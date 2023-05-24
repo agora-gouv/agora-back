@@ -1,11 +1,7 @@
-package fr.social.gouv.agora.infrastructure.profile
+package fr.social.gouv.agora.infrastructure.profile.repository
 
 import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.infrastructure.profile.dto.ProfileDTO
-import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository
-import fr.social.gouv.agora.infrastructure.profile.repository.ProfileDatabaseRepository
-import fr.social.gouv.agora.infrastructure.profile.repository.ProfileMapper
-import fr.social.gouv.agora.infrastructure.profile.repository.ProfileRepositoryImpl
 import fr.social.gouv.agora.usecase.profile.repository.ProfileInsertionResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*

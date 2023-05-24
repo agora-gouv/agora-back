@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.infrastructure.profile
+package fr.social.gouv.agora.infrastructure.profile.repository
 
 import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.infrastructure.profile.dto.ProfileDTO
