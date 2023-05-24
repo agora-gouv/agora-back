@@ -14,10 +14,6 @@ class UserRepositoryImpl(
     private val mapper: UserInfoMapper,
 ) : UserRepository {
 
-    companion object {
-        private const val MAX_GENERATE_USER_RETRY_COUNT = 10
-    }
-
     override fun getUserByDeviceId(deviceId: String): UserInfo? {
         return when (val cacheResult = cacheRepository.getUserByDeviceId(deviceId)) {
             CacheResult.CacheNotInitialized -> databaseRepository.getUserByDeviceId(deviceId).also { userDTO ->
@@ -83,25 +79,10 @@ class UserRepositoryImpl(
     }
 
     override fun generateUser(deviceId: String, fcmToken: String): UserInfo? {
-        val userDTO = generateUserDTO(deviceId = deviceId, fcmToken = fcmToken)
-        return if (userDTO != null) {
-            cacheRepository.insertUser(userDTO)
-            databaseRepository.save(userDTO)
-            mapper.toDomain(userDTO)
-        } else {
-            cacheRepository.insertUserDeviceIdNotFound(deviceId = deviceId)
-            null
-        }
-    }
-
-    fun generateUserDTO(deviceId: String, fcmToken: String): UserDTO? {
-        repeat(MAX_GENERATE_USER_RETRY_COUNT) {
-            val userDTO = mapper.generateDto(deviceId = deviceId, fcmToken = fcmToken)
-            if (!databaseRepository.existsById(userDTO.id)) {
-                return userDTO
-            }
-        }
-        return null
+        val userDTO = mapper.generateDto(deviceId = deviceId, fcmToken = fcmToken)
+        val savedUserDTO = databaseRepository.save(userDTO)
+        cacheRepository.insertUser(savedUserDTO)
+        return mapper.toDomain(savedUserDTO)
     }
 
     private fun updateUserIfRequired(userDTO: UserDTO, fcmToken: String): UserDTO? {

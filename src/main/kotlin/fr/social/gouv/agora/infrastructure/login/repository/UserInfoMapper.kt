@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.login.repository
 import fr.social.gouv.agora.domain.UserAuthorization
 import fr.social.gouv.agora.domain.UserInfo
 import fr.social.gouv.agora.infrastructure.login.dto.UserDTO
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -34,7 +35,7 @@ class UserInfoMapper {
 
     fun generateDto(deviceId: String, fcmToken: String): UserDTO {
         return UserDTO(
-            id = UUID.randomUUID(),
+            id = UuidUtils.NOT_FOUND_UUID,
             deviceId = deviceId,
             password = DEFAULT_PASSWORD,
             fcmToken = fcmToken,
