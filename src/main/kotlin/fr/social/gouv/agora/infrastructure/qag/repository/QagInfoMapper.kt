@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -36,7 +37,7 @@ class QagInfoMapper {
     fun toDto(domain: QagInserting): QagDTO? {
         return try {
             QagDTO(
-                id = UUID.randomUUID(),
+                id = UuidUtils.NOT_FOUND_UUID,
                 title = domain.title,
                 description = domain.description,
                 postDate = domain.date,
