@@ -2,7 +2,6 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 
 import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -39,9 +38,10 @@ internal class QagInfoRepositoryImplInsertTest {
         status = 1,
         username = "username",
         thematiqueId = UUID.randomUUID(),
+        userId = UUID.randomUUID(),
     )
 
-    private val qagInfo = QagInfo(
+    private val qagInserting = QagInserting(
         id = "id",
         thematiqueId = "thematiqueId",
         title = "title",
@@ -49,14 +49,15 @@ internal class QagInfoRepositoryImplInsertTest {
         date = Date(20),
         status = QagStatus.MODERATED,
         username = "username",
+        userId = "userId",
     )
 
     @Test
     fun `insertQagInfo - when mapper returns null - should return FAILURE`() {
-        given(mapper.toDto(qagInfo)).willReturn(null)
+        given(mapper.toDto(qagInserting)).willReturn(null)
 
         // When
-        val result = repository.insertQagInfo(qagInfo)
+        val result = repository.insertQagInfo(qagInserting)
 
         // Then
         assertThat(result).isEqualTo(QagInsertionResult.FAILURE)
@@ -67,11 +68,11 @@ internal class QagInfoRepositoryImplInsertTest {
     @Test
     fun `insertQagInfo - when mapper returns DTO and ID does not exist - should return SUCCESS`() {
         // Given
-        given(mapper.toDto(qagInfo)).willReturn(qagDTO)
+        given(mapper.toDto(qagInserting)).willReturn(qagDTO)
         given(databaseRepository.existsById(qagDTO.id)).willReturn(false)
 
         // When
-        val result = repository.insertQagInfo(qagInfo)
+        val result = repository.insertQagInfo(qagInserting)
 
         // Then
         assertThat(result).isEqualTo(QagInsertionResult.SUCCESS)
@@ -85,16 +86,16 @@ internal class QagInfoRepositoryImplInsertTest {
         // Given
         val qagDTO1 = qagDTO.copy(id = UUID.randomUUID())
         val qagDTO2 = qagDTO.copy(id = UUID.randomUUID())
-        given(mapper.toDto(qagInfo)).willReturn(qagDTO1, qagDTO2)
+        given(mapper.toDto(qagInserting)).willReturn(qagDTO1, qagDTO2)
         given(databaseRepository.existsById(qagDTO1.id)).willReturn(true)
         given(databaseRepository.existsById(qagDTO2.id)).willReturn(false)
 
         // When
-        val result = repository.insertQagInfo(qagInfo)
+        val result = repository.insertQagInfo(qagInserting)
 
         // Then
         assertThat(result).isEqualTo(QagInsertionResult.SUCCESS)
-        then(mapper).should(times(2)).toDto(qagInfo)
+        then(mapper).should(times(2)).toDto(qagInserting)
         inOrder(databaseRepository).also {
             then(databaseRepository).should(it, times(1)).existsById(qagDTO1.id)
             then(databaseRepository).should(it, times(1)).existsById(qagDTO2.id)
@@ -108,15 +109,15 @@ internal class QagInfoRepositoryImplInsertTest {
     @Test
     fun `insertQagInfo - when mapper returns DTO and ID exist 3 times - should return FAILURE`() {
         // Given
-        given(mapper.toDto(qagInfo)).willReturn(qagDTO)
+        given(mapper.toDto(qagInserting)).willReturn(qagDTO)
         given(databaseRepository.existsById(qagDTO.id)).willReturn(true, true, true)
 
         // When
-        val result = repository.insertQagInfo(qagInfo)
+        val result = repository.insertQagInfo(qagInserting)
 
         // Then
         assertThat(result).isEqualTo(QagInsertionResult.FAILURE)
-        then(mapper).should(times(3)).toDto(qagInfo)
+        then(mapper).should(times(3)).toDto(qagInserting)
         inOrder(databaseRepository).also {
             then(databaseRepository).should(it, times(3)).existsById(qagDTO.id)
             it.verifyNoMoreInteractions()

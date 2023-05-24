@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.qag.repository
 
+import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
@@ -32,7 +33,7 @@ class QagInfoMapper {
         )
     }
 
-    fun toDto(domain: QagInfo): QagDTO? {
+    fun toDto(domain: QagInserting): QagDTO? {
         return try {
             QagDTO(
                 id = UUID.randomUUID(),
@@ -46,6 +47,7 @@ class QagInfoMapper {
                 },
                 username = domain.username,
                 thematiqueId = UUID.fromString(domain.thematiqueId),
+                userId = UUID.fromString(domain.userId),
             )
         } catch (e: IllegalArgumentException) {
             null

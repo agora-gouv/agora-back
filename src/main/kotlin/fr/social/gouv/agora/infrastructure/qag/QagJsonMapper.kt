@@ -1,11 +1,11 @@
 package fr.social.gouv.agora.infrastructure.qag
 
 import fr.social.gouv.agora.domain.Qag
+import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.infrastructure.utils.StringUtils
 import fr.social.gouv.agora.infrastructure.utils.UnicodeStringDecoder
-import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -41,8 +41,8 @@ class QagJsonMapper {
         )
     }
 
-    fun toDomain(json: QagJsonInserting): QagInfo {
-        return QagInfo(
+    fun toDomain(json: QagJsonInserting, userId: String): QagInserting {
+        return QagInserting(
             id = UUID.randomUUID().toString(),
             thematiqueId = json.thematiqueId,
             title = json.title,
@@ -50,6 +50,7 @@ class QagJsonMapper {
             date = Calendar.getInstance().time,
             status = QagStatus.OPEN,
             username = json.author,
+            userId = userId,
         )
     }
 
@@ -74,5 +75,4 @@ class QagJsonMapper {
             )
         }
     }
-
 }
