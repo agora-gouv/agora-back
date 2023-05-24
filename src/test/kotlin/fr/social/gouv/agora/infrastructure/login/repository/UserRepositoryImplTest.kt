@@ -361,94 +361,30 @@ internal class UserRepositoryImplTest {
         }
     }
 
-    @Nested
-    inner class GenerateUserCases {
+    @Test
+    fun `generateUser - should generate dto and insert it in database and cache then return saved dto`() {
+        // Given
+        val userDTO = mock(UserDTO::class.java)
+        given(mapper.generateDto(deviceId = "deviceId", fcmToken = "fcmToken")).willReturn(userDTO)
 
-        @Test
-        fun `generateUser - when ID does not exist in database - should generate dto and insert it in cache and database then return mapped dto`() {
-            // Given
-            val newUserUuid = UUID.randomUUID()
-            val userDTO = mock(UserDTO::class.java).also {
-                given(it.id).willReturn(newUserUuid)
-            }
-            given(mapper.generateDto(deviceId = "deviceId", fcmToken = "fcmToken")).willReturn(userDTO)
-            given(databaseRepository.existsById(newUserUuid)).willReturn(false)
+        val savedUserDTO = mock(UserDTO::class.java)
+        given(databaseRepository.save(userDTO)).willReturn(savedUserDTO)
 
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(userDTO)).willReturn(userInfo)
+        val userInfo = mock(UserInfo::class.java)
+        given(mapper.toDomain(savedUserDTO)).willReturn(userInfo)
 
-            // When
-            val result = repository.generateUser(deviceId = "deviceId", fcmToken = "fcmToken")
+        // When
+        val result = repository.generateUser(deviceId = "deviceId", fcmToken = "fcmToken")
 
-            // Then
-            assertThat(result).isEqualTo(userInfo)
-            inOrder(cacheRepository, databaseRepository, mapper).also { inOrder ->
-                then(mapper).should(inOrder).generateDto(deviceId = "deviceId", fcmToken = "fcmToken")
-                then(databaseRepository).should(inOrder).existsById(newUserUuid)
-                then(cacheRepository).should(inOrder).insertUser(userDTO)
-                then(databaseRepository).should(inOrder).save(userDTO)
-                then(mapper).should(inOrder).toDomain(userDTO)
-                inOrder.verifyNoMoreInteractions()
-            }
+        // Then
+        assertThat(result).isEqualTo(userInfo)
+        inOrder(cacheRepository, databaseRepository, mapper).also { inOrder ->
+            then(mapper).should(inOrder).generateDto(deviceId = "deviceId", fcmToken = "fcmToken")
+            then(databaseRepository).should(inOrder).save(userDTO)
+            then(cacheRepository).should(inOrder).insertUser(savedUserDTO)
+            then(mapper).should(inOrder).toDomain(savedUserDTO)
+            inOrder.verifyNoMoreInteractions()
         }
-
-        @Test
-        fun `generateUser - when first ID exist in database - should generate 2 dtos and insert the second one in cache and database then return mapped dto`() {
-            // Given
-            val newUserUuid1 = UUID.randomUUID()
-            val userDTO1 = mock(UserDTO::class.java).also {
-                given(it.id).willReturn(newUserUuid1)
-            }
-            val newUserUuid2 = UUID.randomUUID()
-            val userDTO2 = mock(UserDTO::class.java).also {
-                given(it.id).willReturn(newUserUuid2)
-            }
-            given(mapper.generateDto(deviceId = "deviceId", fcmToken = "fcmToken")).willReturn(userDTO1, userDTO2)
-            given(databaseRepository.existsById(newUserUuid1)).willReturn(true)
-            given(databaseRepository.existsById(newUserUuid2)).willReturn(false)
-
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(userDTO2)).willReturn(userInfo)
-
-            // When
-            val result = repository.generateUser(deviceId = "deviceId", fcmToken = "fcmToken")
-
-            // Then
-            assertThat(result).isEqualTo(userInfo)
-            inOrder(cacheRepository, databaseRepository, mapper).also { inOrder ->
-                then(mapper).should(inOrder).generateDto(deviceId = "deviceId", fcmToken = "fcmToken")
-                then(databaseRepository).should(inOrder).existsById(newUserUuid1)
-                then(mapper).should(inOrder).generateDto(deviceId = "deviceId", fcmToken = "fcmToken")
-                then(databaseRepository).should(inOrder).existsById(newUserUuid2)
-                then(cacheRepository).should(inOrder).insertUser(userDTO2)
-                then(databaseRepository).should(inOrder).save(userDTO2)
-                then(mapper).should(inOrder).toDomain(userDTO2)
-                inOrder.verifyNoMoreInteractions()
-            }
-        }
-
-        @Test
-        fun `generateUser - when 10 generated ID exist in database - should return null without inserting user in database but insert not found in cache`() {
-            // Given
-            val newUserUuid = UUID.randomUUID()
-            val userDTO = mock(UserDTO::class.java).also {
-                given(it.id).willReturn(newUserUuid)
-            }
-            given(mapper.generateDto(deviceId = "deviceId", fcmToken = "fcmToken")).willReturn(userDTO)
-            given(databaseRepository.existsById(newUserUuid)).willReturn(true)
-
-            // When
-            val result = repository.generateUser(deviceId = "deviceId", fcmToken = "fcmToken")
-
-            // Then
-            assertThat(result).isNull()
-            then(cacheRepository).should(only()).insertUserDeviceIdNotFound(deviceId = "deviceId")
-            then(databaseRepository).should(times(10)).existsById(newUserUuid)
-            then(databaseRepository).shouldHaveNoMoreInteractions()
-            then(mapper).should(times(10)).generateDto(deviceId = "deviceId", fcmToken = "fcmToken")
-            then(mapper).shouldHaveNoMoreInteractions()
-        }
-
     }
 
 }
