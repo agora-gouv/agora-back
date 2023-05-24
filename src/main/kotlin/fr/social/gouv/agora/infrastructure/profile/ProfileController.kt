@@ -26,7 +26,7 @@ class ProfileController(
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )
         return when (profile?.let { insertProfileUseCase.insertProfile(profile) } ?: ProfileInsertionResult.FAILURE) {
-            ProfileInsertionResult.SUCCESS -> ResponseEntity.status(200).body("")
+            ProfileInsertionResult.SUCCESS -> ResponseEntity.ok().body("")
             ProfileInsertionResult.FAILURE -> ResponseEntity.status(400).body("")
         }
     }
@@ -36,9 +36,7 @@ class ProfileController(
         @RequestHeader("Authorization") authorizationHeader: String,
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        return when (val profile = getProfileUseCase.getProfile(userId)) {
-            null -> ResponseEntity.status(400).body("")
-            else -> ResponseEntity.status(200).body(jsonMapper.toJson(profile))
-        }
+        val profile = getProfileUseCase.getProfile(userId)
+        return ResponseEntity.ok().body(jsonMapper.toJson(profile))
     }
 }
