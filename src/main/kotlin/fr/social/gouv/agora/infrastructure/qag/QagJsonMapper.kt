@@ -41,9 +41,8 @@ class QagJsonMapper {
         )
     }
 
-    fun toDomain(json: QagJsonInserting, userId: String): QagInserting {
+    fun toDomain(json: QagInsertingJson, userId: String): QagInserting {
         return QagInserting(
-            id = UUID.randomUUID().toString(),
             thematiqueId = json.thematiqueId,
             title = json.title,
             description = json.description,

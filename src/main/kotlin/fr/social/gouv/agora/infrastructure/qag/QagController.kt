@@ -32,11 +32,11 @@ class QagController(
     @PostMapping("/qags")
     fun insertQag(
         @RequestHeader("Authorization") authorizationHeader: String,
-        @RequestBody qagJsonInserting: QagJsonInserting,
+        @RequestBody qagInsertingJson: QagInsertingJson,
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        return when (insertQagUseCase.insertQag(mapper.toDomain(json = qagJsonInserting, userId = userId))) {
-            QagInsertionResult.SUCCESS -> ResponseEntity.status(200).body("")
+        return when (insertQagUseCase.insertQag(mapper.toDomain(json = qagInsertingJson, userId = userId))) {
+            QagInsertionResult.SUCCESS -> ResponseEntity.ok().body("")
             QagInsertionResult.FAILURE -> ResponseEntity.status(400).body("")
         }
     }

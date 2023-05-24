@@ -1,10 +1,8 @@
 package fr.social.gouv.agora.infrastructure.qag
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class QagJsonInserting(
+data class QagInsertingJson(
     @JsonProperty("title")
     val title: String,
     @JsonProperty("thematiqueId")

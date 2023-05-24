@@ -15,9 +15,6 @@ class QagInfoRepositoryImpl(
     private val cacheRepository: QagCacheRepository,
     private val mapper: QagInfoMapper,
 ) : QagInfoRepository {
-    companion object {
-        private const val MAX_INSERT_RETRY_COUNT = 3
-    }
 
     override fun getQagInfo(qagId: String): QagInfo? {
         return try {
@@ -34,16 +31,12 @@ class QagInfoRepositoryImpl(
     }
 
     override fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult {
-        repeat(MAX_INSERT_RETRY_COUNT) {
-            mapper.toDto(qagInserting)?.let { qagDTO ->
-                if (!databaseRepository.existsById(qagDTO.id)) {
-                    databaseRepository.save(qagDTO)
-                    cacheRepository.insertQag(qagUUID = qagDTO.id, qagDTO = qagDTO)
-                    return QagInsertionResult.SUCCESS
-                }
-            }
-        }
-        return QagInsertionResult.FAILURE
+        val qagDTO = mapper.toDto(qagInserting)
+        return if (qagDTO != null) {
+            databaseRepository.save(qagDTO)
+            cacheRepository.insertQag(qagUUID = qagDTO.id, qagDTO = qagDTO)
+            QagInsertionResult.SUCCESS
+        } else QagInsertionResult.FAILURE
     }
 
     private fun getQagFromDatabase(qagUUID: UUID): QagDTO? {
