@@ -2,17 +2,17 @@ package fr.social.gouv.agora.infrastructure.qag
 
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagUseCase
+import fr.social.gouv.agora.usecase.qag.InsertQagUseCase
+import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
 class QagController(
     private val getQagUseCase: GetQagUseCase,
+    private val insertQagUseCase: InsertQagUseCase,
     private val mapper: QagJsonMapper,
 ) {
 
@@ -29,4 +29,13 @@ class QagController(
         } ?: ResponseEntity.EMPTY
     }
 
+    @PostMapping("/qags")
+    fun insertQag(
+        @RequestBody qagJsonInserting: QagJsonInserting,
+    ): HttpEntity<*> {
+        return when (insertQagUseCase.insertQag(mapper.toDomain(qagJsonInserting))) {
+            QagInsertionResult.SUCCESS -> ResponseEntity.status(200).body("")
+            QagInsertionResult.FAILURE -> ResponseEntity.status(400).body("")
+        }
+    }
 }

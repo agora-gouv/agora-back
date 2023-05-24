@@ -4,6 +4,7 @@ import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class QagInfoMapper {
@@ -29,6 +30,26 @@ class QagInfoMapper {
             },
             username = dto.username,
         )
+    }
+
+    fun toDto(domain: QagInfo): QagDTO? {
+        return try {
+            QagDTO(
+                id = UUID.randomUUID(),
+                title = domain.title,
+                description = domain.description,
+                postDate = domain.date,
+                status = when (domain.status) {
+                    QagStatus.OPEN -> STATUS_OPEN
+                    QagStatus.ARCHIVED -> STATUS_ARCHIVED
+                    QagStatus.MODERATED -> STATUS_MODERATED
+                },
+                username = domain.username,
+                thematiqueId = UUID.fromString(domain.thematiqueId),
+            )
+        } catch (e: IllegalArgumentException) {
+            null
+        }
     }
 
 }
