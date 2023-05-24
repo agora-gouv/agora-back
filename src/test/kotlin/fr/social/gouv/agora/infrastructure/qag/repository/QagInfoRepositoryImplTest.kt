@@ -179,8 +179,9 @@ internal class QagInfoRepositoryImplTest {
         @Test
         fun `insertQagInfo - when mapper returns DTO - should return SUCCESS`() {
             // Given
+            val savedQagDTO = qagDTO.copy(id = UUID.randomUUID())
             given(mapper.toDto(qagInserting)).willReturn(qagDTO)
-            given(databaseRepository.save(qagDTO)).willReturn(qagDTO)
+            given(databaseRepository.save(qagDTO)).willReturn(savedQagDTO)
 
             // When
             val result = repository.insertQagInfo(qagInserting)
@@ -189,7 +190,7 @@ internal class QagInfoRepositoryImplTest {
             assertThat(result).isEqualTo(QagInsertionResult.SUCCESS)
             then(databaseRepository).should(only()).save(qagDTO)
             then(cacheRepository).should(only())
-                .insertQag(qagUUID = qagDTO.id, qagDTO = qagDTO)
+                .insertQag(qagUUID = savedQagDTO.id, qagDTO = savedQagDTO)
         }
     }
 }
