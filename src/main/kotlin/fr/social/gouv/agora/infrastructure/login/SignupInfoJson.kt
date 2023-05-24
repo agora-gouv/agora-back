@@ -7,4 +7,6 @@ data class SignupInfoJson(
     val jwtToken: String,
     @JsonProperty("loginToken")
     val loginToken: String,
+    @JsonProperty("isModerator")
+    val isModerator: Boolean = true, // TODO Feat-120 remove default value
 )
