@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class ProfileJson(
     @JsonProperty("gender")
-    val gender: String,
+    val gender: String?,
     @JsonProperty("yearOfBirth")
-    val yearOfBirth: String,
+    val yearOfBirth: String?,
     @JsonProperty("department")
-    val department: String,
+    val department: String?,
     @JsonProperty("cityType")
-    val cityType: String,
+    val cityType: String?,
     @JsonProperty("jobCategory")
-    val jobCategory: String,
+    val jobCategory: String?,
     @JsonProperty("voteFrequency")
-    val voteFrequency: String,
+    val voteFrequency: String?,
     @JsonProperty("publicMeetingFrequency")
-    val publicMeetingFrequency: String,
+    val publicMeetingFrequency: String?,
     @JsonProperty("consultationFrequency")
-    val consultationFrequency: String,
+    val consultationFrequency: String?,
 )
