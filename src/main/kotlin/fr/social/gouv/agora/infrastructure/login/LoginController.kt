@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
-class LoginController(private val loginUseCase: LoginUseCase, private val userInfoJsonMapper: UserInfoJsonMapper) {
+class  LoginController(private val loginUseCase: LoginUseCase, private val userInfoJsonMapper: UserInfoJsonMapper) {
 
     @PostMapping("/login")
     fun login(
