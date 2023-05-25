@@ -14,7 +14,7 @@ class ProfileJsonMapper {
             jobCategory = toJobCategory(json.jobCategory),
             voteFrequency = toFrequency(json.voteFrequency),
             publicMeetingFrequency = toFrequency(json.publicMeetingFrequency),
-            consultationFrequency = toFrequency(json.voteFrequency),
+            consultationFrequency = toFrequency(json.consultationFrequency),
             userId = userId,
         )
     }
