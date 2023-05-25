@@ -108,6 +108,11 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
         getCache()?.evict(userId.toString())
     }
 
+    fun deleteQagLatestList(thematiqueId: UUID) {
+        getCache()?.evict(buildQagCacheKey(thematiqueId, QAG_LATEST_CACHE_KEY))
+        getCache()?.evict(QAG_LATEST_CACHE_KEY)
+    }
+
     private fun getCache() = cacheManager.getCache(QAG_CACHE_NAME)
 
     private fun createQagInfoNotFound(): QagDTO {
