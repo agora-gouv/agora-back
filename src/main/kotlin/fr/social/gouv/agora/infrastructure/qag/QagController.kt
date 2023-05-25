@@ -3,7 +3,7 @@ package fr.social.gouv.agora.infrastructure.qag
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagUseCase
 import fr.social.gouv.agora.usecase.qag.InsertQagUseCase
-import fr.social.gouv.agora.usecase.qag.QagInsertionResult
+import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -36,8 +36,8 @@ class QagController(
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         return when (insertQagUseCase.insertQag(mapper.toDomain(json = qagInsertingJson, userId = userId))) {
-            QagInsertionResult.SUCCESS -> ResponseEntity.ok().body("")
-            QagInsertionResult.FAILURE -> ResponseEntity.status(400).body("")
+            QagInsertionResult.Failure -> ResponseEntity.status(400).body("")
+            is QagInsertionResult.Success -> ResponseEntity.ok().body("")
         }
     }
 }
