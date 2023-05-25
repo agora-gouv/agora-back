@@ -17,23 +17,22 @@ class InsertQagUseCase(
     private val supportQagRepository: SupportQagRepository,
 ) {
     fun insertQag(qagInserting: QagInserting): QagInsertionResult {
-        return when (val qagInsertionResult = qagInfoRepository.insertQagInfo(qagInserting)) {
-            QagInsertionResult.Failure -> QagInsertionResult.Failure
-            is QagInsertionResult.Success -> {
-                qagLatestListRepository.deleteQagLatestList(qagInserting.thematiqueId)
-                qagSupportedListRepository.deleteQagSupportedList(
-                    thematiqueId = qagInserting.thematiqueId,
+        val qagInsertionResult = qagInfoRepository.insertQagInfo(qagInserting)
+
+        if (qagInsertionResult is QagInsertionResult.Success) {
+            qagLatestListRepository.deleteQagLatestList(qagInserting.thematiqueId)
+            supportQagRepository.insertSupportQag(
+                SupportQagInserting(
+                    qagId = qagInsertionResult.qagId.toString(),
                     userId = qagInserting.userId
                 )
-                supportQagRepository.insertSupportQag(
-                    SupportQagInserting(
-                        qagId = qagInsertionResult.qagId.toString(),
-                        userId = qagInserting.userId
-                    )
-                )
-                QagInsertionResult.Success(qagInsertionResult.qagId)
-            }
+            )
+            qagSupportedListRepository.deleteQagSupportedList(
+                thematiqueId = qagInserting.thematiqueId,
+                userId = qagInserting.userId
+            )
         }
+        return qagInsertionResult
     }
 }
 
