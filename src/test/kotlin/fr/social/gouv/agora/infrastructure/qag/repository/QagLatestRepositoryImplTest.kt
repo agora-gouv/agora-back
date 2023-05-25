@@ -242,10 +242,8 @@ internal class QagLatestRepositoryImplTest {
 
         @Test
         fun `deleteQagLatestList - when thematique has invalid UUID - should do nothing`() {
-            //Given
-            val thematiqueId = "1234"
             //When
-            repository.deleteQagLatestList(thematiqueId = thematiqueId)
+            repository.deleteQagLatestList(thematiqueId = "1234")
 
             //Then
             then(cacheRepository).shouldHaveNoInteractions()

@@ -5,6 +5,7 @@ import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheResult
+import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -170,7 +171,7 @@ internal class QagInfoRepositoryImplTest {
             val result = repository.insertQagInfo(qagInserting)
 
             // Then
-            assertThat(result).isEqualTo(null)
+            assertThat(result).isEqualTo(QagInsertionResult.Failure)
             then(databaseRepository).shouldHaveNoInteractions()
             then(cacheRepository).shouldHaveNoInteractions()
         }
@@ -186,7 +187,7 @@ internal class QagInfoRepositoryImplTest {
             val result = repository.insertQagInfo(qagInserting)
 
             // Then
-            assertThat(result).isEqualTo(savedQagDTO.id)
+            assertThat(result).isEqualTo(QagInsertionResult.Success(savedQagDTO.id))
             then(databaseRepository).should(only()).save(qagDTO)
             then(cacheRepository).should(only())
                 .insertQag(qagUUID = savedQagDTO.id, qagDTO = savedQagDTO)
