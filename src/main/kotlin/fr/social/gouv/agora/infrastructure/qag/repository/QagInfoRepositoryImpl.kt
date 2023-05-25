@@ -5,6 +5,7 @@ import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -29,13 +30,13 @@ class QagInfoRepositoryImpl(
         }
     }
 
-    override fun insertQagInfo(qagInserting: QagInserting): UUID? {
+    override fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult {
         val qagDTO = mapper.toDto(qagInserting)
         return if (qagDTO != null) {
             val savedQagDTO = databaseRepository.save(qagDTO)
             cacheRepository.insertQag(qagUUID = savedQagDTO.id, qagDTO = savedQagDTO)
-            savedQagDTO.id
-        } else null
+            QagInsertionResult.Success(savedQagDTO.id)
+        } else QagInsertionResult.Failure
     }
 
     private fun getQagFromDatabase(qagUUID: UUID): QagDTO? {
