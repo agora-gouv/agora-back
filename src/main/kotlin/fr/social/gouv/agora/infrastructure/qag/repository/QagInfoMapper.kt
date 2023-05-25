@@ -41,11 +41,7 @@ class QagInfoMapper {
                 title = domain.title,
                 description = domain.description,
                 postDate = domain.date,
-                status = when (domain.status) {
-                    QagStatus.OPEN -> STATUS_OPEN
-                    QagStatus.ARCHIVED -> STATUS_ARCHIVED
-                    QagStatus.MODERATED -> STATUS_MODERATED
-                },
+                status = STATUS_OPEN,
                 username = domain.username,
                 thematiqueId = UUID.fromString(domain.thematiqueId),
                 userId = UUID.fromString(domain.userId),
@@ -54,5 +50,4 @@ class QagInfoMapper {
             null
         }
     }
-
 }

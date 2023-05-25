@@ -27,6 +27,15 @@ class QagLatestRepositoryImpl(
         }
     }
 
+    override fun deleteQagLatestList(thematiqueId: String) {
+        try {
+            val thematiqueUUID = UUID.fromString(thematiqueId)
+            cacheRepository.deleteQagLatestList(thematiqueUUID)
+        } catch (e: IllegalArgumentException) {
+            //do nothing
+        }
+    }
+
     private fun getQagLatestListFromDatabase(thematiqueUUID: UUID?): List<QagDTO> {
         val qagDTO = thematiqueUUID?.let { databaseRepository.getQagLatestListWithThematique(thematiqueUUID) }
             ?: databaseRepository.getQagLatestList()
