@@ -224,4 +224,32 @@ internal class QagLatestRepositoryImplTest {
             then(mapper).should(only()).toDomain(qagDTO)
         }
     }
+
+    @Nested
+    inner class DeleteQagLatestListTestCases {
+        @Test
+        fun `deleteQagLatestList - when thematique has valid UUID - should delete QagLatestList from cache`() {
+            //Given
+            val thematiqueId = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120010")
+
+            //When
+            repository.deleteQagLatestList(thematiqueId = thematiqueId.toString())
+
+            //Then
+            then(cacheRepository).should(only()).deleteQagLatestList(thematiqueId = thematiqueId)
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `deleteQagLatestList - when thematique has invalid UUID - should do nothing`() {
+            //Given
+            val thematiqueId = "1234"
+            //When
+            repository.deleteQagLatestList(thematiqueId = thematiqueId)
+
+            //Then
+            then(cacheRepository).shouldHaveNoInteractions()
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
+    }
 }
