@@ -12,6 +12,9 @@ class InsertProfileUseCase(
     private val demographicInfoAskDateRepository: DemographicInfoAskDateRepository,
 ) {
     fun insertProfile(profileInserting: ProfileInserting): ProfileInsertionResult {
+        if (profileRepository.getProfile(userId = profileInserting.userId) != null) {
+            return ProfileInsertionResult.FAILURE
+        }
         demographicInfoAskDateRepository.deleteDate(profileInserting.userId)
         return profileRepository.insertProfile(profileInserting)
     }
