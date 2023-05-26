@@ -6,6 +6,7 @@ import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.infrastructure.utils.StringUtils
 import fr.social.gouv.agora.infrastructure.utils.UnicodeStringDecoder
+import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -39,6 +40,10 @@ class QagJsonMapper {
             supportCount = supportQag.supportCount,
             isSupportedByUser = supportQag.isSupportedByUser,
         )
+    }
+
+    fun toJson(qagInsertionResult: QagInsertionResult.Success): QagInsertionResultJson {
+        return QagInsertionResultJson(qagId = qagInsertionResult.qagId.toString())
     }
 
     fun toDomain(json: QagInsertingJson, userId: String): QagInserting {
