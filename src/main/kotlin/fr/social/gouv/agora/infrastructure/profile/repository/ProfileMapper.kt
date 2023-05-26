@@ -39,6 +39,21 @@ class ProfileMapper {
         }
     }
 
+    fun updateProfile(oldProfileDTO: ProfileDTO, newProfileDTO: ProfileDTO): ProfileDTO {
+        return ProfileDTO(
+            id = oldProfileDTO.id,
+            gender = newProfileDTO.gender,
+            yearOfBirth = newProfileDTO.yearOfBirth,
+            department = newProfileDTO.department,
+            cityType = newProfileDTO.cityType,
+            jobCategory = newProfileDTO.jobCategory,
+            voteFrequency = newProfileDTO.voteFrequency,
+            publicMeetingFrequency = newProfileDTO.publicMeetingFrequency,
+            consultationFrequency = newProfileDTO.consultationFrequency,
+            userId = newProfileDTO.userId,
+        )
+    }
+
     private fun toGender(gender: String?) = when (gender) {
         "M" -> Gender.MASCULIN
         "F" -> Gender.FEMININ

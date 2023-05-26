@@ -4,7 +4,7 @@ import fr.social.gouv.agora.domain.Profile
 import fr.social.gouv.agora.domain.ProfileInserting
 import fr.social.gouv.agora.infrastructure.profile.dto.ProfileDTO
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
-import fr.social.gouv.agora.usecase.profile.repository.ProfileInsertionResult
+import fr.social.gouv.agora.usecase.profile.repository.ProfileEditResult
 import fr.social.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -29,13 +29,33 @@ class ProfileRepositoryImpl(
         }
     }
 
-    override fun insertProfile(profileInserting: ProfileInserting): ProfileInsertionResult {
+    override fun insertProfile(profileInserting: ProfileInserting): ProfileEditResult {
         mapper.toDto(profileInserting)?.let { profileDTO ->
             val savedProfileDTO = databaseRepository.save(profileDTO)
             cacheRepository.insertProfile(userUUID = savedProfileDTO.userId, profileDTO = savedProfileDTO)
-            return ProfileInsertionResult.SUCCESS
+            return ProfileEditResult.SUCCESS
         }
-        return ProfileInsertionResult.FAILURE
+        return ProfileEditResult.FAILURE
+    }
+
+    override fun updateProfile(profileInserting: ProfileInserting): ProfileEditResult {
+        return mapper.toDto(profileInserting)?.let { newProfileDTO ->
+            val oldProfileDTO = when (val cacheResult = cacheRepository.getProfile(newProfileDTO.userId)) {
+                CacheResult.CacheNotInitialized -> databaseRepository.getProfile(newProfileDTO.userId)
+                CacheResult.CachedProfileNotFound -> null
+                is CacheResult.CachedProfile -> cacheResult.profileDTO
+            }
+
+            if (oldProfileDTO != null) {
+                val updatedProfileDTO = mapper.updateProfile(
+                    oldProfileDTO = oldProfileDTO,
+                    newProfileDTO = newProfileDTO,
+                )
+                val savedProfileDTO = databaseRepository.save(updatedProfileDTO)
+                cacheRepository.insertProfile(savedProfileDTO.userId, savedProfileDTO)
+                ProfileEditResult.SUCCESS
+            } else ProfileEditResult.FAILURE
+        } ?: ProfileEditResult.FAILURE
     }
 
     private fun getProfileFromDatabase(userUUID: UUID): ProfileDTO? {
