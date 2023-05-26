@@ -5,9 +5,10 @@ import fr.social.gouv.agora.domain.ProfileInserting
 
 interface ProfileRepository {
     fun getProfile(userId: String): Profile?
-    fun insertProfile(profileInserting: ProfileInserting): ProfileInsertionResult
+    fun updateProfile(profileInserting: ProfileInserting): ProfileEditResult
+    fun insertProfile(profileInserting: ProfileInserting): ProfileEditResult
 }
 
-enum class ProfileInsertionResult {
+enum class ProfileEditResult {
     SUCCESS, FAILURE
 }

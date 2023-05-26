@@ -3,7 +3,7 @@ package fr.social.gouv.agora.infrastructure.profile.repository
 import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.infrastructure.profile.dto.ProfileDTO
 import fr.social.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
-import fr.social.gouv.agora.usecase.profile.repository.ProfileInsertionResult
+import fr.social.gouv.agora.usecase.profile.repository.ProfileEditResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -131,7 +131,7 @@ internal class ProfileRepositoryImplTest {
             val result = repository.insertProfile(profileInserting)
 
             // Then
-            assertThat(result).isEqualTo(ProfileInsertionResult.FAILURE)
+            assertThat(result).isEqualTo(ProfileEditResult.FAILURE)
             then(databaseRepository).shouldHaveNoInteractions()
             then(cacheRepository).shouldHaveNoInteractions()
         }
@@ -149,7 +149,7 @@ internal class ProfileRepositoryImplTest {
             val result = repository.insertProfile(profileInserting)
 
             // Then
-            assertThat(result).isEqualTo(ProfileInsertionResult.SUCCESS)
+            assertThat(result).isEqualTo(ProfileEditResult.SUCCESS)
             then(databaseRepository).should(only()).save(profileDTO)
             then(cacheRepository).should(only()).insertProfile(
                 userUUID = savedProfileDTO.userId,
@@ -157,6 +157,130 @@ internal class ProfileRepositoryImplTest {
             )
         }
 
+    }
+
+    @Nested
+    inner class UpdateProfileCases {
+
+        private val profileInserting = mock(ProfileInserting::class.java)
+
+        @Test
+        fun `updateProfile - when mapper returns null - should return Failure`() {
+            // Given
+            given(mapper.toDto(profileInserting)).willReturn(null)
+
+            // When
+            val result = repository.updateProfile(profileInserting)
+
+            // Then
+            assertThat(result).isEqualTo(ProfileEditResult.FAILURE)
+            then(cacheRepository).shouldHaveNoInteractions()
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `updateProfile - when cacheResult is CachedProfileNotFound - should return failure`() {
+            // Given
+            val userId = UUID.randomUUID()
+            val newProfileDTO = mock(ProfileDTO::class.java).also {
+                given(it.userId).willReturn(userId)
+            }
+            given(mapper.toDto(profileInserting)).willReturn(newProfileDTO)
+            given(cacheRepository.getProfile(userId)).willReturn(CacheResult.CachedProfileNotFound)
+
+            // When
+            val result = repository.updateProfile(profileInserting)
+
+            // Then
+            assertThat(result).isEqualTo(ProfileEditResult.FAILURE)
+            then(cacheRepository).should(only()).getProfile(userId)
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `updateProfile - when cacheResult is CachedProfile - should update database and cache then return success`() {
+            // Given
+            val userId = UUID.randomUUID()
+            val newProfileDTO = mock(ProfileDTO::class.java).also {
+                given(it.userId).willReturn(userId)
+            }
+            given(mapper.toDto(profileInserting)).willReturn(newProfileDTO)
+
+            val oldProfileDTO = mock(ProfileDTO::class.java)
+            given(cacheRepository.getProfile(userId)).willReturn(CacheResult.CachedProfile(oldProfileDTO))
+
+            val updatedProfileDTO = mock(ProfileDTO::class.java)
+            given(mapper.updateProfile(oldProfileDTO, newProfileDTO)).willReturn(updatedProfileDTO)
+
+            val savedProfileDTO = mock(ProfileDTO::class.java).also {
+                given(it.userId).willReturn(userId)
+            }
+            given(databaseRepository.save(updatedProfileDTO)).willReturn(savedProfileDTO)
+
+            // When
+            val result = repository.updateProfile(profileInserting)
+
+            // Then
+            assertThat(result).isEqualTo(ProfileEditResult.SUCCESS)
+            then(cacheRepository).should().getProfile(userId)
+            then(cacheRepository).should().insertProfile(userId, savedProfileDTO)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(databaseRepository).should(only()).save(updatedProfileDTO)
+        }
+
+        @Test
+        fun `updateProfile - when cacheResult is CacheNotInitialized and database returns null - should return failure`() {
+            // Given
+            val userId = UUID.randomUUID()
+            val newProfileDTO = mock(ProfileDTO::class.java).also {
+                given(it.userId).willReturn(userId)
+            }
+            given(mapper.toDto(profileInserting)).willReturn(newProfileDTO)
+            given(cacheRepository.getProfile(userId)).willReturn(CacheResult.CacheNotInitialized)
+            given(databaseRepository.getProfile(userId)).willReturn(null)
+
+            // When
+            val result = repository.updateProfile(profileInserting)
+
+            // Then
+            assertThat(result).isEqualTo(ProfileEditResult.FAILURE)
+            then(cacheRepository).should(only()).getProfile(userId)
+            then(databaseRepository).should(only()).getProfile(userId)
+        }
+
+        @Test
+        fun `updateProfile - when cacheResult is CacheNotInitialized and database returns dto - should update database and cache then return success`() {
+            // Given
+            val userId = UUID.randomUUID()
+            val newProfileDTO = mock(ProfileDTO::class.java).also {
+                given(it.userId).willReturn(userId)
+            }
+            given(mapper.toDto(profileInserting)).willReturn(newProfileDTO)
+
+            val oldProfileDTO = mock(ProfileDTO::class.java)
+            given(cacheRepository.getProfile(userId)).willReturn(CacheResult.CacheNotInitialized)
+            given(databaseRepository.getProfile(userId)).willReturn(oldProfileDTO)
+
+            val updatedProfileDTO = mock(ProfileDTO::class.java)
+            given(mapper.updateProfile(oldProfileDTO, newProfileDTO)).willReturn(updatedProfileDTO)
+
+            val savedProfileDTO = mock(ProfileDTO::class.java).also {
+                given(it.userId).willReturn(userId)
+            }
+            given(databaseRepository.save(updatedProfileDTO)).willReturn(savedProfileDTO)
+
+            // When
+            val result = repository.updateProfile(profileInserting)
+
+            // Then
+            assertThat(result).isEqualTo(ProfileEditResult.SUCCESS)
+            then(cacheRepository).should().getProfile(userId)
+            then(cacheRepository).should().insertProfile(userId, savedProfileDTO)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(databaseRepository).should().getProfile(userId)
+            then(databaseRepository).should().save(updatedProfileDTO)
+            then(databaseRepository).shouldHaveNoMoreInteractions()
+        }
     }
 
 }
