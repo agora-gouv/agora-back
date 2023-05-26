@@ -41,6 +41,7 @@ internal class QagLatestRepositoryImplTest {
         username = "username",
         thematiqueId = UUID.randomUUID(),
         userId = UUID.randomUUID(),
+        isAccepted = 0,
     )
 
     private val qagInfo = QagInfo(

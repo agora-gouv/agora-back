@@ -125,6 +125,7 @@ class QagCacheRepository(private val cacheManager: CacheManager) {
             username = "",
             thematiqueId = NOT_FOUND_UUID,
             userId = NOT_FOUND_UUID,
+            isAccepted = 0,
         )
     }
 
