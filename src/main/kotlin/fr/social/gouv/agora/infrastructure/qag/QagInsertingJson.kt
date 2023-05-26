@@ -12,3 +12,8 @@ data class QagInsertingJson(
     @JsonProperty("author")
     val author: String,
 )
+
+data class QagInsertionResultJson(
+    @JsonProperty("qagId")
+    val qagId: String,
+)
