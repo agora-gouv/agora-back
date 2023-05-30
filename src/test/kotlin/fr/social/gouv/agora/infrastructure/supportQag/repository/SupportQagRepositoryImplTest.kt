@@ -66,18 +66,34 @@ internal class SupportQagRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(SupportQagResult.SUCCESS)
         then(databaseRepository).should(only()).save(supportQagDTO)
-        then(cacheRepository).should(only()).insertSupportQag(qagId, userId, savedSupportQagDTO)
+        then(cacheRepository).should(only()).insertSupportQag(savedSupportQagDTO)
     }
 
     @Test
     fun `deleteSupportQag - when invalid UUID for qagID - should return FAILURE`() {
-        // Given
-        val supportQagDeletingInvalidUUID = SupportQagDeleting(
-            qagId = "45678",
-            userId = "12345",
-        )
         // When
-        val result = repository.deleteSupportQag(supportQagDeletingInvalidUUID)
+        val result = repository.deleteSupportQag(
+            SupportQagDeleting(
+                qagId = "invalid qagId UUID",
+                userId = UUID.randomUUID().toString(),
+            )
+        )
+
+        // Then
+        assertThat(result).isEqualTo(SupportQagResult.FAILURE)
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(cacheRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `deleteSupportQag - when invalid UUID for userId - should return FAILURE`() {
+        // When
+        val result = repository.deleteSupportQag(
+            SupportQagDeleting(
+                qagId = UUID.randomUUID().toString(),
+                userId = "invalid userId UUID",
+            )
+        )
 
         // Then
         assertThat(result).isEqualTo(SupportQagResult.FAILURE)
@@ -88,56 +104,40 @@ internal class SupportQagRepositoryImplTest {
     @Test
     fun `deleteSupportQag - when valid UUID for qagID AND exists in Database should return SUCCESS`() {
         // Given
+        val qagId = UUID.randomUUID()
+        val userId = UUID.randomUUID()
         val supportQagDeletingValidUUID = SupportQagDeleting(
-            qagId = "a2dd3d9a-df92-11ed-b5ea-0242ac120002",
-            userId = "bc9e81be-eb4d-11ed-a05b-0242ac120003",
+            qagId = qagId.toString(),
+            userId = userId.toString(),
         )
-        given(
-            databaseRepository.deleteSupportQag(
-                UUID.fromString(supportQagDeletingValidUUID.userId),
-                UUID.fromString(supportQagDeletingValidUUID.qagId)
-            )
-        ).willReturn(1)
+        given(databaseRepository.deleteSupportQag(userId = userId, qagId = qagId)).willReturn(1)
+
         // When
         val result = repository.deleteSupportQag(supportQagDeletingValidUUID)
 
         // Then
         assertThat(result).isEqualTo(SupportQagResult.SUCCESS)
-        then(databaseRepository).should(times(1))
-            .deleteSupportQag(
-                UUID.fromString(supportQagDeletingValidUUID.userId),
-                UUID.fromString(supportQagDeletingValidUUID.qagId)
-            )
-        then(cacheRepository).should(only()).insertSupportQag(
-            UUID.fromString(supportQagDeletingValidUUID.qagId),
-            UUID.fromString(supportQagDeletingValidUUID.userId),
-            null
-        )
+        then(databaseRepository).should(only()).deleteSupportQag(userId = userId, qagId = qagId)
+        then(cacheRepository).should(only()).deleteSupportQag(qagId = qagId, userId = userId)
     }
 
     @Test
     fun `deleteSupportQag - when valid UUID for qagID AND NOT exist in Database should return FAILURE`() {
         // Given
+        val qagId = UUID.randomUUID()
+        val userId = UUID.randomUUID()
         val supportQagDeletingValidUUID = SupportQagDeleting(
-            qagId = "a2dd3d9a-df92-11ed-b5ea-0242ac120002",
-            userId = "bc9e81be-eb4d-11ed-a05b-0242ac120003",
+            qagId = qagId.toString(),
+            userId = userId.toString(),
         )
-        given(
-            databaseRepository.deleteSupportQag(
-                UUID.fromString(supportQagDeletingValidUUID.userId),
-                UUID.fromString(supportQagDeletingValidUUID.qagId)
-            )
-        ).willReturn(0)
+        given(databaseRepository.deleteSupportQag(userId = userId, qagId = qagId)).willReturn(0)
+
         // When
         val result = repository.deleteSupportQag(supportQagDeletingValidUUID)
 
         // Then
         assertThat(result).isEqualTo(SupportQagResult.FAILURE)
-        then(databaseRepository).should(times(1))
-            .deleteSupportQag(
-                UUID.fromString(supportQagDeletingValidUUID.userId),
-                UUID.fromString(supportQagDeletingValidUUID.qagId)
-            )
+        then(databaseRepository).should(only()).deleteSupportQag(userId = userId, qagId = qagId)
         then(cacheRepository).shouldHaveNoInteractions()
     }
 

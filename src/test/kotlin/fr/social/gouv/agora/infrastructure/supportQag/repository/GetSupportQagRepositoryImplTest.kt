@@ -2,7 +2,6 @@ package fr.social.gouv.agora.infrastructure.supportQag.repository
 
 import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.infrastructure.supportQag.dto.SupportQagDTO
-import fr.social.gouv.agora.infrastructure.supportQag.repository.SupportQagCacheRepository.CacheResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -30,15 +29,12 @@ internal class GetSupportQagRepositoryImplTest {
     @MockBean
     private lateinit var mapper: SupportQagMapper
 
-    private val supportQagDTO = mock(SupportQagDTO::class.java)
-    private val supportQag = mock(SupportQag::class.java)
-
     @Test
     fun `getSupportQag - when invalid qagId - should return null`() {
         // When
         val result = repository.getSupportQag(
             qagId = "invalid qagId UUID",
-            userId = "userId",
+            userId = UUID.randomUUID().toString(),
         )
 
         // Then
@@ -49,89 +45,90 @@ internal class GetSupportQagRepositoryImplTest {
     }
 
     @Test
-    fun `getSupportQag - when CacheNotInitialized - should return supportQag first, then supportCount from database and insert result to cache`() {
+    fun `getSupportQag - when invalid userId - should return null`() {
+        // When
+        val result = repository.getSupportQag(
+            qagId = UUID.randomUUID().toString(),
+            userId = "invalid userId UUID",
+        )
+
+        // Then
+        assertThat(result).isNull()
+        then(cacheRepository).shouldHaveNoInteractions()
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getSupportQag - when cache is not initialized - should initialize cache with database then return calculated and mapped result`() {
         // Given
+        given(cacheRepository.isInitialized()).willReturn(false)
+
         val qagUUID = UUID.randomUUID()
-        val userIdUUID = UUID.randomUUID()
-        given(cacheRepository.getSupportCount(qagUUID)).willReturn(null)
-        given(cacheRepository.getSupportQag(qagId = qagUUID, userId = userIdUUID))
-            .willReturn(CacheResult.CacheNotInitialized)
+        val userUUID = UUID.randomUUID()
+        val supportQagDTO = createMockSupportQagDTO(qagId = qagUUID, userId = userUUID)
+        val allSupportQagDTO = listOf(
+            supportQagDTO,
+            createMockSupportQagDTO(qagId = qagUUID, userId = UUID.randomUUID()),
+            createMockSupportQagDTO(qagId = UUID.randomUUID(), userId = UUID.randomUUID()),
+        )
+        given(databaseRepository.getAllSupportQagList()).willReturn(allSupportQagDTO)
 
-        given(databaseRepository.getSupportCount(qagUUID)).willReturn(50)
-        given(databaseRepository.getSupportQag(qagId = qagUUID, userId = userIdUUID)).willReturn(null)
-
-        given(mapper.toDomain(supportCount = 50, dto = null)).willReturn(supportQag)
+        val supportQag = mock(SupportQag::class.java)
+        given(mapper.toDomain(supportCount = 2, dto = supportQagDTO)).willReturn(supportQag)
 
         // When
         val result = repository.getSupportQag(
             qagId = qagUUID.toString(),
-            userId = userIdUUID.toString(),
+            userId = userUUID.toString(),
         )
 
         // Then
         assertThat(result).isEqualTo(supportQag)
-        inOrder(cacheRepository).also {
-            then(cacheRepository).should(it).getSupportQag(qagId = qagUUID, userId = userIdUUID)
-            then(cacheRepository).should(it).insertSupportQag(qagId = qagUUID, userId = userIdUUID, supportQagDTO = null)
-            then(cacheRepository).should(it).getSupportCount(qagUUID)
-            then(cacheRepository).should(it).insertSupportCount(qagId = qagUUID, supportCount = 50)
+        inOrder(cacheRepository, databaseRepository, mapper).also {
+            then(cacheRepository).should(it).isInitialized()
+            then(databaseRepository).should(it).getAllSupportQagList()
+            then(cacheRepository).should(it).initializeCache(allSupportQagDTO)
+            then(mapper).should(it).toDomain(supportCount = 2, dto = supportQagDTO)
             it.verifyNoMoreInteractions()
         }
-        then(databaseRepository).should(times(1)).getSupportCount(qagUUID)
-        then(databaseRepository).should(times(1)).getSupportQag(qagId = qagUUID, userId = userIdUUID)
-        then(mapper).should(only()).toDomain(supportCount = 50, dto = null)
     }
 
     @Test
-    fun `getSupportQag - when CachedSupportQagNotFound - should return mapped object from cache`() {
+    fun `getSupportQag - when cache is initialized - should return calculated and mapped result`() {
         // Given
+        given(cacheRepository.isInitialized()).willReturn(true)
         val qagUUID = UUID.randomUUID()
-        val userIdUUID = UUID.randomUUID()
-        given(cacheRepository.getSupportCount(qagUUID)).willReturn(13)
-        given(cacheRepository.getSupportQag(qagId = qagUUID, userId = userIdUUID))
-            .willReturn(CacheResult.CachedSupportQagNotFound)
+        val userUUID = UUID.randomUUID()
+        val allSupportQagDTO = listOf(
+            createMockSupportQagDTO(qagId = qagUUID, userId = UUID.randomUUID()),
+            createMockSupportQagDTO(qagId = UUID.randomUUID(), userId = UUID.randomUUID()),
+        )
+        given(cacheRepository.getAllSupportQagList()).willReturn(allSupportQagDTO)
 
-        given(mapper.toDomain(supportCount = 13, dto = null)).willReturn(supportQag)
+        val supportQag = mock(SupportQag::class.java)
+        given(mapper.toDomain(supportCount = 1, dto = null)).willReturn(supportQag)
 
         // When
         val result = repository.getSupportQag(
             qagId = qagUUID.toString(),
-            userId = userIdUUID.toString(),
+            userId = userUUID.toString(),
         )
 
         // Then
         assertThat(result).isEqualTo(supportQag)
-        then(cacheRepository).should(times(1)).getSupportCount(qagUUID)
-        then(cacheRepository).should(times(1)).getSupportQag(qagId = qagUUID, userId = userIdUUID)
-        then(cacheRepository).shouldHaveNoMoreInteractions()
+        inOrder(cacheRepository, mapper).also {
+            then(cacheRepository).should(it).isInitialized()
+            then(cacheRepository).should(it).getAllSupportQagList()
+            then(mapper).should(it).toDomain(supportCount = 1, dto = null)
+            it.verifyNoMoreInteractions()
+        }
         then(databaseRepository).shouldHaveNoInteractions()
-        then(mapper).should(only()).toDomain(supportCount = 13, dto = null)
     }
 
-    @Test
-    fun `getSupportQag - when CachedSupportQag - should return mapped object from cache`() {
-        // Given
-        val qagUUID = UUID.randomUUID()
-        val userIdUUID = UUID.randomUUID()
-        given(cacheRepository.getSupportCount(qagUUID)).willReturn(42)
-        given(cacheRepository.getSupportQag(qagId = qagUUID, userId = userIdUUID))
-            .willReturn(CacheResult.CachedSupportQag(supportQagDTO))
-
-        given(mapper.toDomain(supportCount = 42, dto = supportQagDTO)).willReturn(supportQag)
-
-        // When
-        val result = repository.getSupportQag(
-            qagId = qagUUID.toString(),
-            userId = userIdUUID.toString(),
-        )
-
-        // Then
-        assertThat(result).isEqualTo(supportQag)
-        then(cacheRepository).should(times(1)).getSupportCount(qagUUID)
-        then(cacheRepository).should(times(1)).getSupportQag(qagId = qagUUID, userId = userIdUUID)
-        then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(databaseRepository).shouldHaveNoInteractions()
-        then(mapper).should(only()).toDomain(supportCount = 42, dto = supportQagDTO)
+    private fun createMockSupportQagDTO(qagId: UUID, userId: UUID) = mock(SupportQagDTO::class.java).also {
+        given(it.qagId).willReturn(qagId)
+        given(it.userId).willReturn(userId)
     }
 
 }

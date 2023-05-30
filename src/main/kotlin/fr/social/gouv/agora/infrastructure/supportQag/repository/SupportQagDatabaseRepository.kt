@@ -12,17 +12,11 @@ import java.util.*
 @Repository
 interface SupportQagDatabaseRepository : CrudRepository<SupportQagDTO, UUID> {
 
-    @Query(value = "SELECT count(*) FROM supports_qag WHERE qag_id = :qagId", nativeQuery = true)
-    fun getSupportCount(@Param("qagId") qagId: UUID): Int
-
-    @Query(value = "SELECT * FROM supports_qag WHERE qag_id = :qagId AND user_id = :userId LIMIT 1", nativeQuery = true)
-    fun getSupportQag(@Param("qagId") qagId: UUID, @Param("userId") userId: UUID): SupportQagDTO?
-
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM supports_qag WHERE user_id = :userId AND qag_id = :qagId", nativeQuery = true)
     fun deleteSupportQag(@Param("userId") userId: UUID, @Param("qagId") qagId: UUID): Int
 
-    @Query(value = "SELECT * FROM supports_qag WHERE qag_id = :qagId", nativeQuery = true)
-    fun getSupportQagList(@Param("qagId") qagId: UUID): List<SupportQagDTO>
+    @Query(value = "SELECT * FROM supports_qag", nativeQuery = true)
+    fun getAllSupportQagList(): List<SupportQagDTO>
 }
