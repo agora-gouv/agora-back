@@ -50,7 +50,7 @@ internal class QagLatestRepositoryImplTest {
         title = "title",
         description = "description",
         date = Date(14),
-        status = QagStatus.MODERATED,
+        status = QagStatus.MODERATED_ACCEPTED,
         username = "username",
     )
 

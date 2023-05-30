@@ -75,4 +75,17 @@ internal class QagModeratingRepositoryImplTest {
         then(databaseRepository).should(only()).getQagModeratingList()
         then(mapper).should(only()).toDomain(qagDTO)
     }
+
+    @Test
+    fun `getModeratingQagCount - should return ModeratingQagCount from database`() {
+        // Given
+        given(databaseRepository.getModeratingQagCount()).willReturn(40)
+
+        // When
+        val result = repository.getModeratingQagCount()
+
+        // Then
+        assertThat(result).isEqualTo(40)
+        then(mapper).shouldHaveNoInteractions()
+    }
 }

@@ -17,5 +17,9 @@ class QagModeratingRepositoryImpl(
             emptyList()
         }
     }
+
+    override fun getModeratingQagCount(): Int {
+        return databaseRepository.getModeratingQagCount()
+    }
 }
 

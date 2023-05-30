@@ -32,4 +32,8 @@ class GetQagModeratingListUseCase(
             }
         }.sortedBy { it.date }
     }
+
+    fun getModeratingQagCount(): Int {
+        return qagModeratingListRepository.getModeratingQagCount()
+    }
 }

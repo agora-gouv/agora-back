@@ -19,6 +19,7 @@ class QagModeratingController(
         val qagModeratingList = getQagModeratingListUseCase.getQagModeratingList(
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )
-        return ResponseEntity.ok(mapper.toJson(qagModeratingList, qagModeratingList.size))
+        val qagModeratingCount = getQagModeratingListUseCase.getModeratingQagCount()
+        return ResponseEntity.ok(mapper.toJson(qagModeratingList, qagModeratingCount))
     }
 }
