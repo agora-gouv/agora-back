@@ -9,66 +9,47 @@ import java.util.*
 class SupportQagCacheRepository(private val cacheManager: CacheManager) {
 
     companion object {
-        const val SUPPORT_QAG_COUNT_CACHE_NAME = "SupportQagCountCache"
-
         const val SUPPORT_QAG_CACHE_NAME = "SupportQagCache"
-        const val SUPPORT_QAG_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
+        const val ALL_SUPPORT_QAG_CACHE_KEY = "All"
     }
 
-    sealed class CacheResult {
-        data class CachedSupportQag(val supportQagDTO: SupportQagDTO) : CacheResult()
-        object CachedSupportQagNotFound : CacheResult()
-        object CacheNotInitialized : CacheResult()
+    fun isInitialized(): Boolean {
+        return getAllSupportQagDTOFromCache() != null
     }
 
-    fun getSupportCount(qagId: UUID): Int? {
-        return try {
-            getCountCache()?.get(qagId.toString(), String::class.java)?.toIntOrNull()
-        } catch (e: IllegalStateException) {
-            null
-        }
+    fun initializeCache(allSupportQagDTO: List<SupportQagDTO>) {
+        getCache()?.put(ALL_SUPPORT_QAG_CACHE_KEY, allSupportQagDTO)
     }
 
-    fun insertSupportCount(qagId: UUID, supportCount: Int) {
-        getCountCache()?.put(qagId.toString(), supportCount.toString())
+    fun getAllSupportQagList() = getAllSupportQagDTOFromCache() ?: emptyList()
+
+    fun insertSupportQag(supportQagDTO: SupportQagDTO) {
+        getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
+            initializeCache(allSupportQagDTO + supportQagDTO)
+        } ?: throw IllegalStateException("SupportQag cache has not been initialized")
     }
 
-    fun getSupportQag(qagId: UUID, userId: UUID): CacheResult {
-        val supportQagDTO = try {
-            getCache()?.get(buildSupportQagCacheKey(qagId, userId), SupportQagDTO::class.java)
-        } catch (e: IllegalStateException) {
-            null
-        }
-        return when (supportQagDTO?.id?.toString()) {
-            null -> CacheResult.CacheNotInitialized
-            SUPPORT_QAG_NOT_FOUND_ID -> CacheResult.CachedSupportQagNotFound
-            else -> CacheResult.CachedSupportQag(supportQagDTO)
-        }
+    fun deleteSupportQag(qagId: UUID, userId: UUID) {
+        getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
+            val userSupportQagDTO = allSupportQagDTO
+                .find { supportQagDTO -> supportQagDTO.qagId == qagId && supportQagDTO.userId == userId }
+
+            if (userSupportQagDTO != null) {
+                initializeCache(allSupportQagDTO.filterNot { supportQagDTO -> userSupportQagDTO.id == supportQagDTO.id })
+            }
+        } ?: throw IllegalStateException("SupportQag cache has not been initialized")
     }
 
-    fun insertSupportQag(
-        qagId: UUID,
-        userId: UUID,
-        supportQagDTO: SupportQagDTO?,
-    ) {
-        getCache()?.put(
-            buildSupportQagCacheKey(qagId, userId),
-            supportQagDTO ?: createSupportQagNotFound(),
-        )
-
-        getCountCache()?.evict(qagId.toString())
-    }
-
-    private fun getCountCache() = cacheManager.getCache(SUPPORT_QAG_COUNT_CACHE_NAME)
     private fun getCache() = cacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
 
-    private fun buildSupportQagCacheKey(qagId: UUID, userId: UUID) = "$qagId/$userId"
+    @Suppress("UNCHECKED_CAST")
+    private fun getAllSupportQagDTOFromCache(): List<SupportQagDTO>? {
+        return try {
+            getCache()?.get(ALL_SUPPORT_QAG_CACHE_KEY, List::class.java) as? List<SupportQagDTO>
+        } catch (e: IllegalStateException) {
+            null
+        }
+    }
 
-    private fun createSupportQagNotFound() = SupportQagDTO(
-        id = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
-        supportDate = Date(0),
-        userId = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
-        qagId = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
-    )
 
 }

@@ -17,11 +17,7 @@ class SupportQagRepositoryImpl(
     override fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
         return mapper.toDto(supportQagInserting)?.let { supportQagDTO ->
             val savedSupportQagDTO = databaseRepository.save(supportQagDTO)
-            supportQagCacheRepository.insertSupportQag(
-                qagId = savedSupportQagDTO.qagId,
-                userId = savedSupportQagDTO.userId,
-                supportQagDTO = savedSupportQagDTO,
-            )
+            supportQagCacheRepository.insertSupportQag(supportQagDTO = savedSupportQagDTO)
             SupportQagResult.SUCCESS
         } ?: SupportQagResult.FAILURE
     }
@@ -34,7 +30,7 @@ class SupportQagRepositoryImpl(
             if (resultDelete <= 0)
                 SupportQagResult.FAILURE
             else {
-                supportQagCacheRepository.insertSupportQag(qagId = qagId, userId = userId, supportQagDTO = null)
+                supportQagCacheRepository.deleteSupportQag(qagId = qagId, userId = userId)
                 SupportQagResult.SUCCESS
             }
         } catch (e: IllegalArgumentException) {
