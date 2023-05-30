@@ -28,18 +28,10 @@ internal class SupportQagRepositoryImplTest {
     private lateinit var mapper: SupportQagMapper
 
     @MockBean
-    private lateinit var supportQagCacheRepository: SupportQagCacheRepository
+    private lateinit var cacheRepository: SupportQagCacheRepository
 
-    private val supportQagInserting = SupportQagInserting(
-        qagId = "f3a26670-df6e-11ed-b5ea-0242ac120002",
-        userId = "bc9e81be-eb4d-11ed-a05b-0242ac120003",
-    )
-
-    private val supportQagDTO = SupportQagDTO(
-        id = UUID.randomUUID(),
-        userId = UUID.fromString("bc9e81be-eb4d-11ed-a05b-0242ac120003"),
-        qagId = UUID.fromString("f3a26670-df6e-11ed-b5ea-0242ac120002"),
-    )
+    private val supportQagInserting = mock(SupportQagInserting::class.java)
+    private val supportQagDTO = mock(SupportQagDTO::class.java)
 
     @Test
     fun `insertSupportQag - when mapper returns null - should return FAILURE`() {
@@ -52,67 +44,29 @@ internal class SupportQagRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(SupportQagResult.FAILURE)
         then(databaseRepository).shouldHaveNoInteractions()
-        then(supportQagCacheRepository).shouldHaveNoInteractions()
+        then(cacheRepository).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `insertSupportQag - when mapper returns DTO and ID does not exist - should return SUCCESS`() {
+    fun `insertSupportQag - when mapper returns DTO - should return SUCCESS`() {
         // Given
         given(mapper.toDto(supportQagInserting)).willReturn(supportQagDTO)
-        given(databaseRepository.existsById(supportQagDTO.id)).willReturn(false)
+
+        val qagId = UUID.randomUUID()
+        val userId = UUID.randomUUID()
+        val savedSupportQagDTO = mock(SupportQagDTO::class.java).also {
+            given(it.qagId).willReturn(qagId)
+            given(it.userId).willReturn(userId)
+        }
+        given(databaseRepository.save(supportQagDTO)).willReturn(savedSupportQagDTO)
 
         // When
         val result = repository.insertSupportQag(supportQagInserting)
 
         // Then
         assertThat(result).isEqualTo(SupportQagResult.SUCCESS)
-        then(databaseRepository).should(times(1)).save(supportQagDTO)
-        then(supportQagCacheRepository).should(only())
-            .insertSupportQag(supportQagDTO.qagId, supportQagDTO.userId, supportQagDTO)
-    }
-
-    @Test
-    fun `insertSupportQag - when mapper returns DTO and ID exist - should return SUCCESS and save with another DTO`() {
-        // Given
-        val supportQagDTO1 = supportQagDTO.copy(id = UUID.randomUUID())
-        val supportQagDTO2 = supportQagDTO.copy(id = UUID.randomUUID())
-        given(mapper.toDto(supportQagInserting)).willReturn(supportQagDTO1, supportQagDTO2)
-        given(databaseRepository.existsById(supportQagDTO1.id)).willReturn(true)
-        given(databaseRepository.existsById(supportQagDTO2.id)).willReturn(false)
-
-        // When
-        val result = repository.insertSupportQag(supportQagInserting)
-
-        // Then
-        assertThat(result).isEqualTo(SupportQagResult.SUCCESS)
-        then(mapper).should(times(2)).toDto(supportQagInserting)
-        inOrder(databaseRepository).also {
-            then(databaseRepository).should(it, times(1)).existsById(supportQagDTO1.id)
-            then(databaseRepository).should(it, times(1)).existsById(supportQagDTO2.id)
-            then(databaseRepository).should(it).save(supportQagDTO2)
-            it.verifyNoMoreInteractions()
-        }
-        then(supportQagCacheRepository).should(only())
-            .insertSupportQag(supportQagDTO2.qagId, supportQagDTO2.userId, supportQagDTO2)
-    }
-
-    @Test
-    fun `insertSupportQag - when mapper returns DTO and ID exist 3 times - should return FAILURE`() {
-        // Given
-        given(mapper.toDto(supportQagInserting)).willReturn(supportQagDTO)
-        given(databaseRepository.existsById(supportQagDTO.id)).willReturn(true, true, true)
-
-        // When
-        val result = repository.insertSupportQag(supportQagInserting)
-
-        // Then
-        assertThat(result).isEqualTo(SupportQagResult.FAILURE)
-        then(mapper).should(times(3)).toDto(supportQagInserting)
-        inOrder(databaseRepository).also {
-            then(databaseRepository).should(it, times(3)).existsById(supportQagDTO.id)
-            it.verifyNoMoreInteractions()
-        }
-        then(supportQagCacheRepository).shouldHaveNoInteractions()
+        then(databaseRepository).should(only()).save(supportQagDTO)
+        then(cacheRepository).should(only()).insertSupportQag(qagId, userId, savedSupportQagDTO)
     }
 
     @Test
@@ -128,7 +82,7 @@ internal class SupportQagRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(SupportQagResult.FAILURE)
         then(databaseRepository).shouldHaveNoInteractions()
-        then(supportQagCacheRepository).shouldHaveNoInteractions()
+        then(cacheRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -154,7 +108,7 @@ internal class SupportQagRepositoryImplTest {
                 UUID.fromString(supportQagDeletingValidUUID.userId),
                 UUID.fromString(supportQagDeletingValidUUID.qagId)
             )
-        then(supportQagCacheRepository).should(only()).insertSupportQag(
+        then(cacheRepository).should(only()).insertSupportQag(
             UUID.fromString(supportQagDeletingValidUUID.qagId),
             UUID.fromString(supportQagDeletingValidUUID.userId),
             null
@@ -184,7 +138,7 @@ internal class SupportQagRepositoryImplTest {
                 UUID.fromString(supportQagDeletingValidUUID.userId),
                 UUID.fromString(supportQagDeletingValidUUID.qagId)
             )
-        then(supportQagCacheRepository).shouldHaveNoInteractions()
+        then(cacheRepository).shouldHaveNoInteractions()
     }
 
 }

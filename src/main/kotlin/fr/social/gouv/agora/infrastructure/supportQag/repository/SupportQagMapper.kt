@@ -13,6 +13,7 @@ class SupportQagMapper {
         return try {
             SupportQagDTO(
                 id = UUID.randomUUID(),
+                supportDate = Date(),
                 userId = UUID.fromString(domain.userId),
                 qagId = UUID.fromString(domain.qagId)
             )

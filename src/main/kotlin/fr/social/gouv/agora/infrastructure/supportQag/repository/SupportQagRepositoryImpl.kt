@@ -14,25 +14,16 @@ class SupportQagRepositoryImpl(
     private val supportQagCacheRepository: SupportQagCacheRepository,
 ) : SupportQagRepository {
 
-    companion object {
-        private const val MAX_INSERT_RETRY_COUNT = 3
-    }
-
     override fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
-        repeat(MAX_INSERT_RETRY_COUNT) {
-            mapper.toDto(supportQagInserting)?.let { supportQagDTO ->
-                if (!databaseRepository.existsById(supportQagDTO.id)) {
-                    databaseRepository.save(supportQagDTO)
-                    supportQagCacheRepository.insertSupportQag(
-                        qagId = supportQagDTO.qagId,
-                        userId = supportQagDTO.userId,
-                        supportQagDTO = supportQagDTO
-                    )
-                    return SupportQagResult.SUCCESS
-                }
-            }
-        }
-        return SupportQagResult.FAILURE
+        return mapper.toDto(supportQagInserting)?.let { supportQagDTO ->
+            val savedSupportQagDTO = databaseRepository.save(supportQagDTO)
+            supportQagCacheRepository.insertSupportQag(
+                qagId = savedSupportQagDTO.qagId,
+                userId = savedSupportQagDTO.userId,
+                supportQagDTO = savedSupportQagDTO,
+            )
+            SupportQagResult.SUCCESS
+        } ?: SupportQagResult.FAILURE
     }
 
     override fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {

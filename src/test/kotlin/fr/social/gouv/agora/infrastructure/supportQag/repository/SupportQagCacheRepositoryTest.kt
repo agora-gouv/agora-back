@@ -49,12 +49,14 @@ internal class SupportQagCacheRepositoryTest {
 
     private val supportQagDTO = SupportQagDTO(
         id = UUID.randomUUID(),
+        supportDate = Date(1),
         userId = UUID.randomUUID(),
         qagId = UUID.randomUUID(),
     )
 
     private val notFoundSupportQagDto = SupportQagDTO(
         id = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
+        supportDate = Date(0),
         userId = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
         qagId = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
     )
