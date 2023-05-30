@@ -30,12 +30,7 @@ internal class GetSupportQagRepositoryImplTest {
     @MockBean
     private lateinit var mapper: SupportQagMapper
 
-    private val supportQagDTO = SupportQagDTO(
-        id = UUID.randomUUID(),
-        userId = UUID.randomUUID(),
-        qagId = UUID.randomUUID(),
-    )
-
+    private val supportQagDTO = mock(SupportQagDTO::class.java)
     private val supportQag = mock(SupportQag::class.java)
 
     @Test

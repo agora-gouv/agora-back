@@ -66,6 +66,7 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
 
     private fun createSupportQagNotFound() = SupportQagDTO(
         id = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
+        supportDate = Date(0),
         userId = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
         qagId = UUID.fromString(SUPPORT_QAG_NOT_FOUND_ID),
     )
