@@ -17,13 +17,12 @@ class QagModeratingJsonMapper {
                     thematique = ThematiqueJson(
                         label = qagModerating.thematique.label,
                         picto = UnicodeStringDecoder.decodeUnicode(qagModerating.thematique.picto),
-                        color = "#FFFFFFFF", // TODO remove once removed from mobile app
                     ),
                     title = qagModerating.title,
                     description = qagModerating.description,
                     date = qagModerating.date.toString(),
                     username = qagModerating.username,
-                    support = qagModerating.support?.let { toJson(it) },
+                    support = toJson(qagModerating.support),
                 )
             })
     }

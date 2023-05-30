@@ -38,7 +38,7 @@ data class QagDTO(
     @Override
     override fun toString(): String {
         return this::class.simpleName + """(id = $id , title = $title , description = $description , postDate = $postDate , 
-            |status = $status , username = $username , thematiqueId = $thematiqueId , 
-            |userId = $userId, isAccepted = $isAccepted)"""
+            status = $status , username = $username , thematiqueId = $thematiqueId , 
+            userId = $userId, isAccepted = $isAccepted)"""
     }
 }

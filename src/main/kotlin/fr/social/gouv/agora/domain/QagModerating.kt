@@ -9,5 +9,5 @@ data class QagModerating(
     val description: String,
     val username: String,
     val date: Date,
-    val support: SupportQag?,
+    val support: SupportQag,
 )

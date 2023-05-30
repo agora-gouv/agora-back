@@ -1,10 +1,8 @@
 package fr.social.gouv.agora.infrastructure.qag
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class QagModeratingHomeJson(
     @JsonProperty("totalNumber")
     val totalNumber: Int,
@@ -26,7 +24,7 @@ data class QagModeratingJson(
     @JsonProperty("date")
     val date: String,
     @JsonProperty("support")
-    val support: SupportQagJson?,
+    val support: SupportQagJson,
 )
 
 

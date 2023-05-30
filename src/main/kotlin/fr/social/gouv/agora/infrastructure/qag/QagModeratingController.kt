@@ -2,7 +2,6 @@ package fr.social.gouv.agora.infrastructure.qag
 
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagModeratingListUseCase
-import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -14,14 +13,12 @@ class QagModeratingController(
 ) {
 
     @GetMapping("/moderate/qags")
-    fun getQagDetails(
+    fun getQagToModerate(
         @RequestHeader("Authorization") authorizationHeader: String,
-    ): HttpEntity<*> {
+    ): ResponseEntity<QagModeratingHomeJson> {
         val qagModeratingList = getQagModeratingListUseCase.getQagModeratingList(
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )
-        return qagModeratingList.let { qagModerating ->
-            ResponseEntity.ok(mapper.toJson(qagModerating, qagModeratingList.size))
-        }
+        return ResponseEntity.ok(mapper.toJson(qagModeratingList, qagModeratingList.size))
     }
 }

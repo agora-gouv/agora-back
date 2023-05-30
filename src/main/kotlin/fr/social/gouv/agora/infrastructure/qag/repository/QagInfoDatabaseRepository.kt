@@ -81,9 +81,17 @@ LIMIT 10
         value = """
             SELECT * FROM qags where status = 1 
             AND id NOT IN (SELECT qag_id from responses_qag)  
-            ORDER BY post_date DESC
+            ORDER BY post_date ASC LIMIT 10
         """,
         nativeQuery = true
     )
     fun getQagModeratingList(): List<QagDTO>
+
+    @Query(
+        value = "SELECT count(*) FROM qags where status = 1 AND id NOT IN (SELECT qag_id from responses_qag) ",
+        nativeQuery = true
+    )
+    fun getSupportCount(@Param("qagId") qagId: UUID): Int
+
+    //ajout get count pour liste de toutes les qag à modérer et
 }
