@@ -41,7 +41,7 @@ internal class QagSupportedListRepositoryImplTest {
         username = "username",
         thematiqueId = UUID.randomUUID(),
         userId = UUID.randomUUID(),
-        isAccepted = 0,
+        isAccepted = 1,
     )
 
     private val qagInfo = QagInfo(
