@@ -52,7 +52,6 @@ internal class QagInfoRepositoryImplTest {
         username = "username",
         thematiqueId = UUID.randomUUID(),
         userId = UUID.randomUUID(),
-        isAccepted = 1,
     )
 
     private val qagInfo = QagInfo(

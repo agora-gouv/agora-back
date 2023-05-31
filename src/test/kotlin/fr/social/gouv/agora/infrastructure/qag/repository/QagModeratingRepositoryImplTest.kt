@@ -35,7 +35,6 @@ internal class QagModeratingRepositoryImplTest {
         username = "username",
         thematiqueId = UUID.randomUUID(),
         userId = UUID.randomUUID(),
-        isAccepted = 1,
     )
 
     private val qagModeratingInfo = QagModeratingInfo(

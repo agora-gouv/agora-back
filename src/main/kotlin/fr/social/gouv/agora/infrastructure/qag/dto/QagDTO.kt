@@ -22,8 +22,6 @@ data class QagDTO(
     val thematiqueId: UUID,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
-    @Column(columnDefinition = "SMALLINT")
-    val isAccepted: Int,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -39,6 +37,6 @@ data class QagDTO(
     override fun toString(): String {
         return this::class.simpleName + """(id = $id , title = $title , description = $description , postDate = $postDate , 
             status = $status , username = $username , thematiqueId = $thematiqueId , 
-            userId = $userId, isAccepted = $isAccepted)"""
+            userId = $userId)"""
     }
 }
