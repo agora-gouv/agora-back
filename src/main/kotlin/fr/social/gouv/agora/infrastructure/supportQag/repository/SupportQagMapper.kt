@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.supportQag.repository
 
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.domain.SupportQagInfo
 import fr.social.gouv.agora.domain.SupportQagInserting
 import fr.social.gouv.agora.infrastructure.supportQag.dto.SupportQagDTO
 import org.springframework.stereotype.Component
@@ -26,6 +27,14 @@ class SupportQagMapper {
         return SupportQag(
             supportCount = supportCount,
             isSupportedByUser = dto != null,
+        )
+    }
+
+    fun toSupportQagInfo(dto: SupportQagDTO): SupportQagInfo {
+        return SupportQagInfo(
+            qagId = dto.qagId.toString(),
+            userId = dto.userId.toString(),
+            supportDate = dto.supportDate,
         )
     }
 }
