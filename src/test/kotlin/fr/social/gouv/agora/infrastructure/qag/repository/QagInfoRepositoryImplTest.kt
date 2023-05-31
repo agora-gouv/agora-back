@@ -60,7 +60,7 @@ internal class QagInfoRepositoryImplTest {
         title = "title",
         description = "description",
         date = Date(14),
-        status = QagStatus.MODERATED,
+        status = QagStatus.MODERATED_ACCEPTED,
         username = "username",
     )
 
@@ -69,7 +69,7 @@ internal class QagInfoRepositoryImplTest {
         title = "title",
         description = "description",
         date = Date(20),
-        status = QagStatus.MODERATED,
+        status = QagStatus.MODERATED_ACCEPTED,
         username = "username",
         userId = "userId",
     )

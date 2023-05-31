@@ -12,9 +12,10 @@ import java.util.*
 class QagInfoMapper {
 
     companion object {
-        private const val STATUS_OPEN = 1
+        private const val STATUS_OPEN = 0
         private const val STATUS_ARCHIVED = 2
-        private const val STATUS_MODERATED = -1
+        private const val STATUS_MODERATED_REJECTED = -1
+        private const val STATUS_MODERATED_ACCEPTED = 1
     }
 
     fun toDomain(dto: QagDTO): QagInfo {
@@ -27,7 +28,8 @@ class QagInfoMapper {
             status = when (dto.status) {
                 STATUS_OPEN -> QagStatus.OPEN
                 STATUS_ARCHIVED -> QagStatus.ARCHIVED
-                STATUS_MODERATED -> QagStatus.MODERATED
+                STATUS_MODERATED_ACCEPTED -> QagStatus.MODERATED_ACCEPTED
+                STATUS_MODERATED_REJECTED -> QagStatus.MODERATED_REJECTED
                 else -> throw IllegalArgumentException("Invalid QaG status : ${dto.status}")
             },
             username = dto.username,

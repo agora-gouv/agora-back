@@ -15,7 +15,6 @@ class ThematiqueJsonMapper {
             id = domain.id,
             label = domain.label,
             picto = UnicodeStringDecoder.decodeUnicode(domain.picto),
-            color = "#FFFFFFFF", // TODO remove once removed from mobile app
         )
     }
 }

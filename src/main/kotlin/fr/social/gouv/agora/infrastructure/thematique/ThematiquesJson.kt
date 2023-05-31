@@ -14,6 +14,4 @@ data class ThematiqueJson(
     val label: String,
     @JsonProperty("picto")
     val picto: String,
-    @JsonProperty("color")
-    val color: String,
 )

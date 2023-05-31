@@ -76,4 +76,20 @@ LIMIT 10
         @Param("thematiqueId") thematiqueId: UUID,
         @Param("userId") userId: UUID,
     ): List<QagDTO>
+
+    @Query(
+        value = """
+            SELECT * FROM qags where status = 0 
+            AND id NOT IN (SELECT qag_id from responses_qag)  
+            ORDER BY post_date ASC LIMIT 10
+        """,
+        nativeQuery = true
+    )
+    fun getQagModeratingList(): List<QagDTO>
+
+    @Query(
+        value = "SELECT count(*) FROM qags where status = 0 AND id NOT IN (SELECT qag_id from responses_qag) ",
+        nativeQuery = true
+    )
+    fun getModeratingQagCount(): Int
 }
