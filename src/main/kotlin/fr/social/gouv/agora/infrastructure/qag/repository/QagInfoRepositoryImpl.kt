@@ -2,8 +2,6 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
-import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.QagCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.springframework.stereotype.Component
@@ -16,33 +14,36 @@ class QagInfoRepositoryImpl(
     private val mapper: QagInfoMapper,
 ) : QagInfoRepository {
 
+    override fun getAllQagInfo(): List<QagInfo> {
+        return getAllQagDTO().map(mapper::toDomain)
+    }
+
     override fun getQagInfo(qagId: String): QagInfo? {
         return try {
             val qagUUID = UUID.fromString(qagId)
-
-            when (val cacheResult = cacheRepository.getQag(qagUUID)) {
-                CacheResult.CacheNotInitialized -> getQagFromDatabase(qagUUID)
-                CacheResult.CachedQagNotFound -> null
-                is CacheResult.CachedQag -> cacheResult.qagDTO
-            }?.let { qagDTO -> mapper.toDomain(qagDTO) }
+            getAllQagDTO()
+                .find { qagDTO -> qagDTO.id == qagUUID }
+                ?.let(mapper::toDomain)
         } catch (e: IllegalArgumentException) {
             null
         }
     }
 
     override fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult {
-        val qagDTO = mapper.toDto(qagInserting)
-        return if (qagDTO != null) {
+        return mapper.toDto(qagInserting)?.let { qagDTO ->
             val savedQagDTO = databaseRepository.save(qagDTO)
-            cacheRepository.insertQag(qagUUID = savedQagDTO.id, qagDTO = savedQagDTO)
-            QagInsertionResult.Success(savedQagDTO.id)
-        } else QagInsertionResult.Failure
+            cacheRepository.insertQag(qagDTO = savedQagDTO)
+            QagInsertionResult.Success(qagId = savedQagDTO.id)
+        } ?: QagInsertionResult.Failure
     }
 
-    private fun getQagFromDatabase(qagUUID: UUID): QagDTO? {
-        val qagDTO = databaseRepository.getQag(qagUUID)
-        cacheRepository.insertQag(qagUUID, qagDTO)
-        return qagDTO
+    private fun getAllQagDTO() = if (cacheRepository.isInitialized()) {
+        cacheRepository.getAllQagList()
+    } else {
+        databaseRepository.getAllQagList().also { allQagDTO ->
+            cacheRepository.initializeCache(allQagDTO)
+        }
     }
+
 }
 
