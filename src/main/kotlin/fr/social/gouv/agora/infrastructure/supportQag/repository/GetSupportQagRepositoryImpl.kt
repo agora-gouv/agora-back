@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.supportQag.repository
 
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.domain.SupportQagInfo
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -11,6 +12,10 @@ class GetSupportQagRepositoryImpl(
     private val cacheRepository: SupportQagCacheRepository,
     private val mapper: SupportQagMapper,
 ) : GetSupportQagRepository {
+
+    override fun getAllSupportQag(): List<SupportQagInfo> {
+        return getAllSupportQagDTO().map(mapper::toSupportQagInfo)
+    }
 
     override fun getSupportQag(qagId: String, userId: String): SupportQag? {
         return try {
