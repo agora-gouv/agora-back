@@ -77,6 +77,9 @@ LIMIT 10
         @Param("userId") userId: UUID,
     ): List<QagDTO>
 
+    @Query(value = "SELECT * FROM qags", nativeQuery = true)
+    fun getAllQagList(): List<QagDTO>
+
     @Query(
         value = """
             SELECT * FROM qags where status = 0 

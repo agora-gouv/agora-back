@@ -20,7 +20,7 @@ class InsertQagUseCase(
         val qagInsertionResult = qagInfoRepository.insertQagInfo(qagInserting)
 
         if (qagInsertionResult is QagInsertionResult.Success) {
-            qagLatestListRepository.deleteQagLatestList(qagInserting.thematiqueId)
+//            qagLatestListRepository.deleteQagLatestList(qagInserting.thematiqueId)
             supportQagRepository.insertSupportQag(
                 SupportQagInserting(
                     qagId = qagInsertionResult.qagId.toString(),
