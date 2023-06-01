@@ -9,15 +9,15 @@ import java.util.*
 
 @Component
 class SupportQagRepositoryImpl(
+    private val cacheRepository: SupportQagCacheRepository,
     private val databaseRepository: SupportQagDatabaseRepository,
     private val mapper: SupportQagMapper,
-    private val supportQagCacheRepository: SupportQagCacheRepository,
 ) : SupportQagRepository {
 
     override fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
         return mapper.toDto(supportQagInserting)?.let { supportQagDTO ->
             val savedSupportQagDTO = databaseRepository.save(supportQagDTO)
-            supportQagCacheRepository.insertSupportQag(supportQagDTO = savedSupportQagDTO)
+            cacheRepository.insertSupportQag(supportQagDTO = savedSupportQagDTO)
             SupportQagResult.SUCCESS
         } ?: SupportQagResult.FAILURE
     }
@@ -30,7 +30,7 @@ class SupportQagRepositoryImpl(
             if (resultDelete <= 0)
                 SupportQagResult.FAILURE
             else {
-                supportQagCacheRepository.deleteSupportQag(qagId = qagId, userId = userId)
+                cacheRepository.deleteSupportQag(qagId = qagId, userId = userId)
                 SupportQagResult.SUCCESS
             }
         } catch (e: IllegalArgumentException) {

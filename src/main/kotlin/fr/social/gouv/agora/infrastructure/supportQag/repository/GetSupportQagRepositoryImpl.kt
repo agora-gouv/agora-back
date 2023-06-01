@@ -2,6 +2,7 @@ package fr.social.gouv.agora.infrastructure.supportQag.repository
 
 import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.domain.SupportQagInfo
+import fr.social.gouv.agora.infrastructure.supportQag.repository.SupportQagCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -31,10 +32,9 @@ class GetSupportQagRepositoryImpl(
         }
     }
 
-    private fun getAllSupportQagDTO() = if (cacheRepository.isInitialized()) {
-        cacheRepository.getAllSupportQagList()
-    } else {
-        databaseRepository.getAllSupportQagList().also { allSupportQagDTO ->
+    private fun getAllSupportQagDTO() = when (val cacheResult = cacheRepository.getAllSupportQagList()) {
+        is CacheResult.CachedSupportQagList -> cacheResult.allSupportQagDTO
+        CacheResult.CacheNotInitialized -> databaseRepository.getAllSupportQagList().also { allSupportQagDTO ->
             cacheRepository.initializeCache(allSupportQagDTO = allSupportQagDTO)
         }
     }

@@ -10,18 +10,24 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
 
     companion object {
         const val SUPPORT_QAG_CACHE_NAME = "SupportQagCache"
-        const val ALL_SUPPORT_QAG_CACHE_KEY = "All"
+        const val ALL_SUPPORT_QAG_CACHE_KEY = "supportQagList"
     }
 
-    fun isInitialized(): Boolean {
-        return getAllSupportQagDTOFromCache() != null
+    sealed class CacheResult {
+        data class CachedSupportQagList(val allSupportQagDTO: List<SupportQagDTO>) : CacheResult()
+        object CacheNotInitialized : CacheResult()
     }
 
     fun initializeCache(allSupportQagDTO: List<SupportQagDTO>) {
         getCache()?.put(ALL_SUPPORT_QAG_CACHE_KEY, allSupportQagDTO)
     }
 
-    fun getAllSupportQagList() = getAllSupportQagDTOFromCache() ?: emptyList()
+    fun getAllSupportQagList(): CacheResult {
+        return when (val allSupportQagDTO = getAllSupportQagDTOFromCache()) {
+            null -> CacheResult.CacheNotInitialized
+            else -> CacheResult.CachedSupportQagList(allSupportQagDTO)
+        }
+    }
 
     fun insertSupportQag(supportQagDTO: SupportQagDTO) {
         getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
@@ -50,6 +56,5 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
             null
         }
     }
-
 
 }

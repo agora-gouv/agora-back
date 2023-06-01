@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.supportQag.repository
 import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.domain.SupportQagInfo
 import fr.social.gouv.agora.infrastructure.supportQag.dto.SupportQagDTO
+import fr.social.gouv.agora.infrastructure.supportQag.repository.SupportQagCacheRepository.CacheResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -36,7 +37,7 @@ internal class GetSupportQagRepositoryImplTest {
         @Test
         fun `getAllSupportQag - when cache is not initialized - should initialize cache with database then return mapped results`() {
             // Given
-            given(cacheRepository.isInitialized()).willReturn(false)
+            given(cacheRepository.getAllSupportQagList()).willReturn(CacheResult.CacheNotInitialized)
             val supportQagDTO = mock(SupportQagDTO::class.java)
             given(databaseRepository.getAllSupportQagList()).willReturn(listOf(supportQagDTO))
 
@@ -49,7 +50,7 @@ internal class GetSupportQagRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(listOf(supportQagInfo))
             inOrder(cacheRepository, databaseRepository, mapper).also {
-                then(cacheRepository).should(it).isInitialized()
+                then(cacheRepository).should(it).getAllSupportQagList()
                 then(databaseRepository).should(it).getAllSupportQagList()
                 then(cacheRepository).should(it).initializeCache(listOf(supportQagDTO))
                 then(mapper).should(it).toSupportQagInfo(supportQagDTO)
@@ -60,9 +61,9 @@ internal class GetSupportQagRepositoryImplTest {
         @Test
         fun `getAllSupportQag - when cache is initialized - should then return mapped results`() {
             // Given
-            given(cacheRepository.isInitialized()).willReturn(true)
             val supportQagDTO = mock(SupportQagDTO::class.java)
-            given(cacheRepository.getAllSupportQagList()).willReturn(listOf(supportQagDTO))
+            given(cacheRepository.getAllSupportQagList())
+                .willReturn(CacheResult.CachedSupportQagList(listOf(supportQagDTO)))
 
             val supportQagInfo = mock(SupportQagInfo::class.java)
             given(mapper.toSupportQagInfo(supportQagDTO)).willReturn(supportQagInfo)
@@ -73,7 +74,6 @@ internal class GetSupportQagRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(listOf(supportQagInfo))
             inOrder(cacheRepository, mapper).also {
-                then(cacheRepository).should(it).isInitialized()
                 then(cacheRepository).should(it).getAllSupportQagList()
                 then(mapper).should(it).toSupportQagInfo(supportQagDTO)
                 it.verifyNoMoreInteractions()
@@ -117,7 +117,7 @@ internal class GetSupportQagRepositoryImplTest {
         @Test
         fun `getSupportQag - when cache is not initialized - should initialize cache with database then return calculated and mapped result`() {
             // Given
-            given(cacheRepository.isInitialized()).willReturn(false)
+            given(cacheRepository.getAllSupportQagList()).willReturn(CacheResult.CacheNotInitialized)
 
             val qagUUID = UUID.randomUUID()
             val userUUID = UUID.randomUUID()
@@ -141,7 +141,7 @@ internal class GetSupportQagRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(supportQag)
             inOrder(cacheRepository, databaseRepository, mapper).also {
-                then(cacheRepository).should(it).isInitialized()
+                then(cacheRepository).should(it).getAllSupportQagList()
                 then(databaseRepository).should(it).getAllSupportQagList()
                 then(cacheRepository).should(it).initializeCache(allSupportQagDTO)
                 then(mapper).should(it).toDomain(supportCount = 2, dto = supportQagDTO)
@@ -152,14 +152,13 @@ internal class GetSupportQagRepositoryImplTest {
         @Test
         fun `getSupportQag - when cache is initialized - should return calculated and mapped result`() {
             // Given
-            given(cacheRepository.isInitialized()).willReturn(true)
             val qagUUID = UUID.randomUUID()
             val userUUID = UUID.randomUUID()
             val allSupportQagDTO = listOf(
                 createMockSupportQagDTO(qagId = qagUUID, userId = UUID.randomUUID()),
                 createMockSupportQagDTO(qagId = UUID.randomUUID(), userId = UUID.randomUUID()),
             )
-            given(cacheRepository.getAllSupportQagList()).willReturn(allSupportQagDTO)
+            given(cacheRepository.getAllSupportQagList()).willReturn(CacheResult.CachedSupportQagList(allSupportQagDTO))
 
             val supportQag = mock(SupportQag::class.java)
             given(mapper.toDomain(supportCount = 1, dto = null)).willReturn(supportQag)
@@ -173,7 +172,6 @@ internal class GetSupportQagRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(supportQag)
             inOrder(cacheRepository, mapper).also {
-                then(cacheRepository).should(it).isInitialized()
                 then(cacheRepository).should(it).getAllSupportQagList()
                 then(mapper).should(it).toDomain(supportCount = 1, dto = null)
                 it.verifyNoMoreInteractions()
