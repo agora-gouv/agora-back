@@ -6,26 +6,32 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class QagCacheRepository(private val cacheManager: CacheManager) {
+class QagInfoCacheRepository(private val cacheManager: CacheManager) {
     companion object {
         private const val QAG_CACHE_NAME = "qagCache"
-        private const val ALL_QAG_CACHE_KEY = "All"
+        private const val ALL_QAG_CACHE_KEY = "qagCacheList"
     }
 
-    fun isInitialized(): Boolean {
-        return getAllQagDTOFromCache() != null
+    sealed class CacheResult {
+        data class CachedQagList(val allQagDTO: List<QagDTO>) : CacheResult()
+        object CacheNotInitialized : CacheResult()
     }
 
     fun initializeCache(allQagDTO: List<QagDTO>) {
         getCache()?.put(ALL_QAG_CACHE_KEY, allQagDTO)
     }
 
-    fun getAllQagList() = getAllQagDTOFromCache() ?: emptyList()
+    fun getAllQagList(): CacheResult {
+        return when (val allQagDTO = getAllQagDTOFromCache()) {
+            null -> CacheResult.CacheNotInitialized
+            else -> CacheResult.CachedQagList(allQagDTO)
+        }
+    }
 
     fun insertQag(qagDTO: QagDTO) {
         getAllQagDTOFromCache()?.let { allQagDTO ->
             initializeCache(allQagDTO + qagDTO)
-        } ?: throw IllegalStateException("SupportQag cache has not been initialized")
+        } ?: throw IllegalStateException("Qag cache has not been initialized")
     }
 
     private fun getCache() = cacheManager.getCache(QAG_CACHE_NAME)

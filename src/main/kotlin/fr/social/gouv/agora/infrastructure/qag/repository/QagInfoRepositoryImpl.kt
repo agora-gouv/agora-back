@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.qag.repository
 
 import fr.social.gouv.agora.domain.QagInserting
+import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
@@ -10,7 +11,7 @@ import java.util.*
 @Component
 class QagInfoRepositoryImpl(
     private val databaseRepository: QagInfoDatabaseRepository,
-    private val cacheRepository: QagCacheRepository,
+    private val cacheRepository: QagInfoCacheRepository,
     private val mapper: QagInfoMapper,
 ) : QagInfoRepository {
 
@@ -37,13 +38,13 @@ class QagInfoRepositoryImpl(
         } ?: QagInsertionResult.Failure
     }
 
-    private fun getAllQagDTO() = if (cacheRepository.isInitialized()) {
-        cacheRepository.getAllQagList()
-    } else {
-        databaseRepository.getAllQagList().also { allQagDTO ->
+    private fun getAllQagDTO() = when (val cacheResult = cacheRepository.getAllQagList()) {
+        is CacheResult.CachedQagList -> cacheResult.allQagDTO
+        CacheResult.CacheNotInitialized -> databaseRepository.getAllQagList().also { allQagDTO ->
             cacheRepository.initializeCache(allQagDTO)
         }
     }
+
 
 }
 
