@@ -14,23 +14,26 @@ class ResponseQagRepositoryImpl(
     private val mapper: ResponseQagMapper,
 ) : ResponseQagRepository {
 
+    override fun getAllResponseQag(): List<ResponseQag> {
+        return getAllResponseQagDTO().map(mapper::toDomain)
+    }
+
     override fun getResponseQag(qagId: String): ResponseQag? {
         return try {
             val qagUUID = UUID.fromString(qagId)
-
-            when (val cacheResult = cacheRepository.getResponseQag(qagUUID)) {
-                CacheResult.CacheNotInitialized -> getResponseQagFromDatabase(qagUUID)
-                CacheResult.CachedResponseQagNotFound -> null
-                is CacheResult.CachedResponseQag -> cacheResult.responseQagDTO
-            }?.let(mapper::toDomain)
+            getAllResponseQagDTO()
+                .find { responseQagDTO -> responseQagDTO.qagId == qagUUID }
+                ?.let(mapper::toDomain)
         } catch (e: IllegalArgumentException) {
             null
         }
     }
 
-    private fun getResponseQagFromDatabase(qagUUID: UUID): ResponseQagDTO? {
-        return databaseRepository.getResponseQag(qagUUID).also { responseQagDTO ->
-            cacheRepository.insertResponseQag(qagUUID, responseQagDTO)
+    private fun getAllResponseQagDTO(): List<ResponseQagDTO> {
+        return when (val cacheResult = cacheRepository.getAllResponseQagList()) {
+            is CacheResult.CachedResponseQagList -> cacheResult.allResponseQagDTO
+            CacheResult.CacheNotInitialized -> databaseRepository.getAllResponseQagList()
+                .also { allResponseQagDTO -> cacheRepository.initializeCache(allResponseQagDTO) }
         }
     }
 
