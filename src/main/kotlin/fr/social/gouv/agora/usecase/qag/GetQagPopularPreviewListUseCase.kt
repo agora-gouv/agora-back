@@ -33,7 +33,7 @@ class GetQagPopularPreviewListUseCase(
             qagInfo to allSupportQag.filter { supportQagInfo -> supportQagInfo.qagId == qagInfo.id }
         }
         return allQagAndSupport
-            .filter { (qagInfo, _) -> thematiqueId == null || qagInfo.thematiqueId == thematiqueId }
+            .filter { (qagInfo, _) -> thematiqueId.isNullOrBlank() || qagInfo.thematiqueId == thematiqueId }
             .sortedByDescending { it.second.size }
             .mapNotNullWhile(
                 transformMethod = { (qagInfo, supportQagList) ->

@@ -26,7 +26,7 @@ class GetQagLatestPreviewListUseCase(
         val thematiqueMap = mutableMapOf<String, Thematique?>()
 
         return qagInfoRepository.getAllQagInfo()
-            .filter { qagInfo -> thematiqueId == null || qagInfo.thematiqueId == thematiqueId }
+            .filter { qagInfo -> thematiqueId.isNullOrBlank() || qagInfo.thematiqueId == thematiqueId }
             .sortedByDescending { it.date }
             .mapNotNullWhile(
                 transformMethod = { qagInfo -> toQagPreview(qagInfo, userId, thematiqueMap) },

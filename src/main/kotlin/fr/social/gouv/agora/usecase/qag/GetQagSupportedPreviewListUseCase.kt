@@ -36,7 +36,7 @@ class GetQagSupportedPreviewListUseCase(
         }
 
         return allQagAndSupport
-            .filter { qagInfoAndSupport -> thematiqueId == null || qagInfoAndSupport.qagInfo.thematiqueId == thematiqueId }
+            .filter { qagInfoAndSupport -> thematiqueId.isNullOrBlank() || qagInfoAndSupport.qagInfo.thematiqueId == thematiqueId }
             .sortedByDescending { qagInfoAndSupport -> qagInfoAndSupport.userSupportQagInfo.supportDate }
             .mapNotNullWhile(
                 transformMethod = { qagInfoAndSupport ->
