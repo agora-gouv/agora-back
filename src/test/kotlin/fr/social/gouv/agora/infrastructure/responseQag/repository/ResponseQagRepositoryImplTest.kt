@@ -5,6 +5,7 @@ import fr.social.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
 import fr.social.gouv.agora.infrastructure.responseQag.repository.ResponseQagCacheRepository.CacheResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -39,91 +40,118 @@ internal class ResponseQagRepositoryImplTest {
     @MockBean
     private lateinit var mapper: ResponseQagMapper
 
-    @Test
-    fun `getResponseQag - when qagId is invalid UUID - should return null`() {
-        // When
-        val result = repository.getResponseQag("qagId is invalid UUID")
+    @Nested
+    inner class GetAllResponseQagTestCases {
 
-        // Then
-        assertThat(result).isEqualTo(null)
+        @Test
+        fun `getAllResponseQag - when cache is not initialized - should initialize cache with database then return mapped results`() {
+            // Given
+            given(cacheRepository.getAllResponseQagList()).willReturn(CacheResult.CacheNotInitialized)
+
+            val responseQagDTO = mock(ResponseQagDTO::class.java)
+            given(databaseRepository.getAllResponseQagList()).willReturn(listOf(responseQagDTO))
+
+            val responseQag = mock(ResponseQag::class.java)
+            given(mapper.toDomain(responseQagDTO)).willReturn(responseQag)
+
+            // When
+            val result = repository.getAllResponseQag()
+
+            // Then
+            assertThat(result).isEqualTo(listOf(responseQag))
+            inOrder(cacheRepository, databaseRepository, mapper).also {
+                then(cacheRepository).should(it).getAllResponseQagList()
+                then(databaseRepository).should(it).getAllResponseQagList()
+                then(cacheRepository).should(it).initializeCache(listOf(responseQagDTO))
+                then(mapper).should(it).toDomain(responseQagDTO)
+                it.verifyNoMoreInteractions()
+            }
+        }
+
+        @Test
+        fun `getAllResponseQag - when cache is initialized - should return mapped results`() {
+            // Given
+            val responseQagDTO = mock(ResponseQagDTO::class.java)
+            given(cacheRepository.getAllResponseQagList())
+                .willReturn(CacheResult.CachedResponseQagList(listOf(responseQagDTO)))
+
+            val responseQag = mock(ResponseQag::class.java)
+            given(mapper.toDomain(responseQagDTO)).willReturn(responseQag)
+
+            // When
+            val result = repository.getAllResponseQag()
+
+            // Then
+            assertThat(result).isEqualTo(listOf(responseQag))
+            inOrder(cacheRepository, mapper).also {
+                then(cacheRepository).should(it).getAllResponseQagList()
+                then(cacheRepository).should(it).initializeCache(listOf(responseQagDTO))
+                then(mapper).should(it).toDomain(responseQagDTO)
+                it.verifyNoMoreInteractions()
+            }
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
+
     }
 
-    @Test
-    fun `getResponseQag - when cacheResult is CachedResponseQagNotFound - should return null`() {
-        // Given
-        val qagId = UUID.randomUUID()
-        given(cacheRepository.getResponseQag(qagId)).willReturn(CacheResult.CachedResponseQagNotFound)
+    @Nested
+    inner class GetResponseQagTestCases {
 
-        // When
-        val result = repository.getResponseQag(qagId.toString())
+        @Test
+        fun `getResponseQag - when qagId is invalid UUID - should return null`() {
+            // When
+            val result = repository.getResponseQag(qagId = "qagId is invalid UUID")
 
-        // Then
-        assertThat(result).isEqualTo(null)
-        then(cacheRepository).should(only()).getResponseQag(qagId)
-        then(databaseRepository).shouldHaveNoInteractions()
-        then(mapper).shouldHaveNoInteractions()
-    }
+            // Then
+            assertThat(result).isEqualTo(null)
+        }
 
-    @Test
-    fun `getResponseQag - when cacheResult is CachedResponseQag - should return mapped object from cache`() {
-        // Given
-        val qagId = UUID.randomUUID()
-        val responseQagDTO = mock(ResponseQagDTO::class.java)
-        given(cacheRepository.getResponseQag(qagId)).willReturn(CacheResult.CachedResponseQag(responseQagDTO))
+        @Test
+        fun `getResponseQag - when cache is not initialized and has no result - should initialize cache with database then return null`() {
+            // Given
+            given(cacheRepository.getAllResponseQagList()).willReturn(CacheResult.CacheNotInitialized)
+            given(databaseRepository.getAllResponseQagList()).willReturn(emptyList())
 
-        val responseQag = mock(ResponseQag::class.java)
-        given(mapper.toDomain(responseQagDTO)).willReturn(responseQag)
+            // When
+            val result = repository.getResponseQag(qagId = UUID.randomUUID().toString())
 
-        // When
-        val result = repository.getResponseQag(qagId.toString())
+            // Then
+            assertThat(result).isEqualTo(null)
+            inOrder(cacheRepository, databaseRepository).also {
+                then(cacheRepository).should(it).getAllResponseQagList()
+                then(databaseRepository).should(it).getAllResponseQagList()
+                then(cacheRepository).should(it).initializeCache(emptyList())
+                it.verifyNoMoreInteractions()
+            }
+            then(mapper).shouldHaveNoInteractions()
+        }
 
-        // Then
-        assertThat(result).isEqualTo(responseQag)
-        then(cacheRepository).should(only()).getResponseQag(qagId)
-        then(databaseRepository).shouldHaveNoInteractions()
-        then(mapper).should(only()).toDomain(responseQagDTO)
-    }
+        @Test
+        fun `getResponseQag - when cache is initialized and has results - should return mapped results`() {
+            // Given
+            val qagId = UUID.randomUUID()
+            val responseQagDTO = mock(ResponseQagDTO::class.java).also {
+                given(it.qagId).willReturn(qagId)
+            }
+            given(cacheRepository.getAllResponseQagList())
+                .willReturn(CacheResult.CachedResponseQagList(listOf(responseQagDTO)))
 
-    @Test
-    fun `getResponseQag - when cacheResult is CacheNotInitialized and get null from database - should return null and insert null in cache`() {
-        // Given
-        val qagId = UUID.randomUUID()
-        given(cacheRepository.getResponseQag(qagId)).willReturn(CacheResult.CacheNotInitialized)
-        given(databaseRepository.getResponseQag(qagId)).willReturn(null)
+            val responseQag = mock(ResponseQag::class.java)
+            given(mapper.toDomain(responseQagDTO)).willReturn(responseQag)
 
-        // When
-        val result = repository.getResponseQag(qagId.toString())
+            // When
+            val result = repository.getResponseQag(qagId = qagId.toString())
 
-        // Then
-        assertThat(result).isEqualTo(null)
-        then(cacheRepository).should(times(1)).getResponseQag(qagId)
-        then(cacheRepository).should(times(1)).insertResponseQag(qagId = qagId, responseQagDTO = null)
-        then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(databaseRepository).should(only()).getResponseQag(qagId)
-        then(mapper).shouldHaveNoInteractions()
-    }
+            // Then
+            assertThat(result).isEqualTo(responseQag)
+            inOrder(cacheRepository, mapper).also {
+                then(cacheRepository).should(it).getAllResponseQagList()
+                then(mapper).should(it).toDomain(responseQagDTO)
+                it.verifyNoMoreInteractions()
+            }
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
 
-    @Test
-    fun `getResponseQag - when cacheResult is CacheNotInitialized and get dto from database - should insert to it cache and return mapped object`() {
-        // Given
-        val qagId = UUID.randomUUID()
-        val responseQagDTO = mock(ResponseQagDTO::class.java)
-        given(cacheRepository.getResponseQag(qagId)).willReturn(CacheResult.CacheNotInitialized)
-        given(databaseRepository.getResponseQag(qagId)).willReturn(responseQagDTO)
-
-        val responseQag = mock(ResponseQag::class.java)
-        given(mapper.toDomain(responseQagDTO)).willReturn(responseQag)
-
-        // When
-        val result = repository.getResponseQag(qagId.toString())
-
-        // Then
-        assertThat(result).isEqualTo(responseQag)
-        then(cacheRepository).should(times(1)).getResponseQag(qagId)
-        then(cacheRepository).should(times(1)).insertResponseQag(qagId, responseQagDTO)
-        then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(databaseRepository).should(only()).getResponseQag(qagId)
-        then(mapper).should(only()).toDomain(responseQagDTO)
     }
 
 }
