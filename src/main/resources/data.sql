@@ -65,91 +65,91 @@ INSERT INTO thematiques(id, label, picto) VALUES (
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb4732-0153-10ee-be56-0242ac120002',
+    '01c4789a-015e-11ee-be56-0242ac120002',
     'Culture',
     '\ud83c\udfad'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb4732-0153-10aa-be56-0242ac120002',
+    '0ca6f2f6-015e-11ee-be56-0242ac120002',
     'Enseignement sup. & recherche',
     '\ud83e\uddec'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb4732-0151-10ee-be56-0242ac120002',
+    '175ab0b6-015e-11ee-be56-0242ac120002',
     'Outre-mer',
     '\ud83c\udf0d'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb4732-0151-10ee-be56-0242ac120102',
+    '2186bc60-015e-11ee-be56-0242ac120002',
     'Justice',
     '\u2696'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb1732-0151-10ee-be56-0242ac120102',
+    '2d1c72fe-015e-11ee-be56-0242ac120002',
     'Solidarités',
     '\ud83e\udd1d'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb1732-0151-10ee-be56-0240ac120102',
+    '3953a966-015e-11ee-be56-0242ac120002',
     'Autonomie',
     '\ud83d\udc75'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb1332-0151-10ee-be56-0240ac120102',
+    '41dcc98c-015e-11ee-be56-0242ac120002',
     'Handicap',
     '\ud83e\uddd1\u200d\ud83e\uddbd'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb1332-0151-10ee-be36-0240ac120102',
+    '4c379646-015e-11ee-be56-0242ac120002',
     'Sport',
     '\ud83c\udfc0'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb1332-0051-10ee-be36-0240ac120102',
+    '5531afc0-015e-11ee-be56-0242ac120002',
     'Services publics',
     '\ud83c\udfdb'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb1332-0051-10ee-be36-0249ac120102',
+    '5e6bed94-015e-11ee-be56-0242ac120002',
     'Energie',
     '\u26a1'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5cdb1332-0051-19ee-be36-0249ac120102',
+    '6af73b40-015e-11ee-be56-0242ac120002',
     'Egalité femmes / hommes',
     '\uff1d'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5ceb1332-0051-19ee-be36-0249ac120102',
+    '73fa6438-015e-11ee-be56-0242ac120002',
     'Discriminations',
     '\ud83d\udc65'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5ceb1332-1151-19ee-be36-0249ac120102',
+    '801e3eb0-015e-11ee-be56-0242ac120002',
     'Enfance',
     '\ud83d\udc76'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5ceb1552-1151-19ee-be36-0249ac120102',
+    '8a4e95e2-015e-11ee-be56-0242ac120002',
     'Logement',
     '\ud83c\udfe1'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '5ceb1552-1151-19ee-be39-0249ac120102',
+    '92e35378-015e-11ee-be56-0242ac120002',
     'Toutes',
     '\ud83d\udca1'
 ) ON CONFLICT DO NOTHING;
