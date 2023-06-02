@@ -148,12 +148,6 @@ INSERT INTO thematiques(id, label, picto) VALUES (
     '\ud83c\udfe1'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO thematiques(id, label, picto) VALUES (
-    '92e35378-015e-11ee-be56-0242ac120002',
-    'Toutes',
-    '\ud83d\udca1'
-) ON CONFLICT DO NOTHING;
-
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id) VALUES (
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8',
     'Pourquoi avoir créé l’application Agora ?',
