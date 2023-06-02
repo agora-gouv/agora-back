@@ -2,17 +2,17 @@ package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.usecase.qag.repository.ModeratingQagResult
-import fr.social.gouv.agora.usecase.qag.repository.QagModeratingListRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 
 @Service
 class PutQagModeratingUseCase(
-    private val qagModeratingListRepository: QagModeratingListRepository,
+    private val qagModeratingListRepository: QagInfoRepository,
 ) {
     fun putModeratingQagStatus(qagId: String, qagModeratingStatus: Boolean): ModeratingQagResult {
         return if (qagModeratingStatus)
-            qagModeratingListRepository.putModeratingQagStatus(qagId, QagStatus.MODERATED_ACCEPTED)
+            qagModeratingListRepository.updateQagStatus(qagId, QagStatus.MODERATED_ACCEPTED)
         else
-            qagModeratingListRepository.putModeratingQagStatus(qagId, QagStatus.MODERATED_REJECTED)
+            qagModeratingListRepository.updateQagStatus(qagId, QagStatus.MODERATED_REJECTED)
     }
 }

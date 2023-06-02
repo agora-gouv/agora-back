@@ -4,7 +4,6 @@ import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagModeratingListUseCase
 import fr.social.gouv.agora.usecase.qag.PutQagModeratingUseCase
 import fr.social.gouv.agora.usecase.qag.repository.ModeratingQagResult
-import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -23,7 +22,7 @@ class QagModeratingController(
         val qagModeratingList = getQagModeratingListUseCase.getQagModeratingList(
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )
-        val qagModeratingCount = 42//getQagModeratingListUseCase.getModeratingQagCount()
+        val qagModeratingCount = getQagModeratingListUseCase.getModeratingQagCount()
         return ResponseEntity.ok(mapper.toJson(qagModeratingList, qagModeratingCount))
     }
 
@@ -31,7 +30,7 @@ class QagModeratingController(
     fun putModeratingQagStatus(
         @PathVariable qagId: String,
         @RequestBody body: QagModeratingStatusJson,
-    ): HttpEntity<*> {
+    ): ResponseEntity<*> {
         return when (putQagModeratingUseCase.putModeratingQagStatus(qagId = qagId, body.isAccepted)) {
             ModeratingQagResult.FAILURE -> ResponseEntity.status(400).body("")
             ModeratingQagResult.SUCCESS -> ResponseEntity.ok().body("")
