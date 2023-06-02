@@ -27,4 +27,7 @@ data class QagModeratingJson(
     val support: SupportQagJson,
 )
 
-
+data class QagModeratingStatusJson (
+    @JsonProperty("isAccepted")
+    val isAccepted: Boolean,
+)
