@@ -33,10 +33,9 @@ class UserInfoMapper {
         )
     }
 
-    fun generateDto(deviceId: String, fcmToken: String): UserDTO {
+    fun generateDto(fcmToken: String): UserDTO {
         return UserDTO(
             id = UuidUtils.NOT_FOUND_UUID,
-            deviceId = deviceId,
             password = DEFAULT_PASSWORD,
             fcmToken = fcmToken,
             createdDate = Date(),

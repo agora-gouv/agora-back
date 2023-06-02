@@ -125,85 +125,6 @@ internal class UserRepositoryImplTest {
     }
 
     @Nested
-    inner class GetUserByDeviceIdCases {
-
-        @Test
-        fun `getUserByDeviceId - when CacheNotInitialized & database returns null - should insert not found to cache then return null`() {
-            // Given
-            given(cacheRepository.getUserByDeviceId(deviceId = "deviceId")).willReturn(CacheResult.CacheNotInitialized)
-            given(databaseRepository.getUserByDeviceId(deviceId = "deviceId")).willReturn(null)
-
-            // When
-            val result = repository.getUserByDeviceId(deviceId = "deviceId")
-
-            // Then
-            assertThat(result).isEqualTo(null)
-            then(cacheRepository).should().getUserByDeviceId(deviceId = "deviceId")
-            then(cacheRepository).should().insertUserDeviceIdNotFound(deviceId = "deviceId")
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(databaseRepository).should(only()).getUserByDeviceId(deviceId = "deviceId")
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `getUserByDeviceId - when CacheNotInitialized & database returns dto - should insert dto to cache then return mapped dto`() {
-            // Given
-            given(cacheRepository.getUserByDeviceId(deviceId = "deviceId")).willReturn(CacheResult.CacheNotInitialized)
-
-            val userDTO = mock(UserDTO::class.java)
-            given(databaseRepository.getUserByDeviceId(deviceId = "deviceId")).willReturn(userDTO)
-
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(userDTO)).willReturn(userInfo)
-
-            // When
-            val result = repository.getUserByDeviceId(deviceId = "deviceId")
-
-            // Then
-            assertThat(result).isEqualTo(userInfo)
-            then(cacheRepository).should().getUserByDeviceId(deviceId = "deviceId")
-            then(cacheRepository).should().insertUser(userDTO = userDTO)
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(databaseRepository).should(only()).getUserByDeviceId(deviceId = "deviceId")
-            then(mapper).should(only()).toDomain(userDTO)
-        }
-
-        @Test
-        fun `getUserByDeviceId - when CachedUserNotFound - should return null`() {
-            // Given
-            given(cacheRepository.getUserByDeviceId(deviceId = "deviceId")).willReturn(CacheResult.CachedUserNotFound)
-
-            // When
-            val result = repository.getUserByDeviceId(deviceId = "deviceId")
-
-            // Then
-            assertThat(result).isEqualTo(null)
-            then(cacheRepository).should(only()).getUserByDeviceId(deviceId = "deviceId")
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `getUserByDeviceId - when CachedUser - should return mapped dto`() {
-            // Given
-            val userDTO = mock(UserDTO::class.java)
-            given(cacheRepository.getUserByDeviceId(deviceId = "deviceId")).willReturn(CacheResult.CachedUser(userDTO))
-
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(userDTO)).willReturn(userInfo)
-
-            // When
-            val result = repository.getUserByDeviceId(deviceId = "deviceId")
-
-            // Then
-            assertThat(result).isEqualTo(userInfo)
-            then(cacheRepository).should(only()).getUserByDeviceId(deviceId = "deviceId")
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).should(only()).toDomain(userDTO)
-        }
-    }
-
-    @Nested
     inner class UpdateUserFcmTokenCases {
 
         private val userId = UUID.randomUUID()
@@ -365,7 +286,7 @@ internal class UserRepositoryImplTest {
     fun `generateUser - should generate dto and insert it in database and cache then return saved dto`() {
         // Given
         val userDTO = mock(UserDTO::class.java)
-        given(mapper.generateDto(deviceId = "deviceId", fcmToken = "fcmToken")).willReturn(userDTO)
+        given(mapper.generateDto(fcmToken = "fcmToken")).willReturn(userDTO)
 
         val savedUserDTO = mock(UserDTO::class.java)
         given(databaseRepository.save(userDTO)).willReturn(savedUserDTO)
@@ -374,12 +295,12 @@ internal class UserRepositoryImplTest {
         given(mapper.toDomain(savedUserDTO)).willReturn(userInfo)
 
         // When
-        val result = repository.generateUser(deviceId = "deviceId", fcmToken = "fcmToken")
+        val result = repository.generateUser(fcmToken = "fcmToken")
 
         // Then
         assertThat(result).isEqualTo(userInfo)
         inOrder(cacheRepository, databaseRepository, mapper).also { inOrder ->
-            then(mapper).should(inOrder).generateDto(deviceId = "deviceId", fcmToken = "fcmToken")
+            then(mapper).should(inOrder).generateDto(fcmToken = "fcmToken")
             then(databaseRepository).should(inOrder).save(userDTO)
             then(cacheRepository).should(inOrder).insertUser(savedUserDTO)
             then(mapper).should(inOrder).toDomain(savedUserDTO)
