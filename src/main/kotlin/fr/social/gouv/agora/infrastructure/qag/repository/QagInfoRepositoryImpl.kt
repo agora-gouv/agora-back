@@ -49,15 +49,15 @@ class QagInfoRepositoryImpl(
         return try {
             val qagUUID = UUID.fromString(qagId)
             val qagDTO = getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID && qagDTO.status == STATUS_OPEN }
-            val targetStatusDTO = toDtoStatus(qagModeratingStatus)
-            if (qagDTO != null && targetStatusDTO != null) {
-                val targetDTO = qagDTO.copy(status = targetStatusDTO)
-                val savedQagDTO = databaseRepository.save(targetDTO)
-                cacheRepository.updateQag(qagDTOTarget = savedQagDTO)
-                ModeratingQagResult.SUCCESS
-            } else {
-                ModeratingQagResult.FAILURE
-            }
+            if (qagDTO != null) {
+                val targetStatusDTO = toDtoStatus(qagModeratingStatus)
+                if (targetStatusDTO != null) {
+                    val targetDTO = qagDTO.copy(status = targetStatusDTO)
+                    val savedQagDTO = databaseRepository.save(targetDTO)
+                    cacheRepository.updateQag(updatedQagDTO = savedQagDTO)
+                    ModeratingQagResult.SUCCESS
+                } else ModeratingQagResult.FAILURE
+            } else ModeratingQagResult.FAILURE
         } catch (e: IllegalArgumentException) {
             ModeratingQagResult.FAILURE
         }

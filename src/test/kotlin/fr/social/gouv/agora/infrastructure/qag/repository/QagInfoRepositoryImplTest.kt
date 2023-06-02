@@ -250,11 +250,12 @@ internal class QagInfoRepositoryImplTest {
         fun `updateQagStatus - when cache returns DTO and targetStatus is ACCEPTED - should return SUCCESS`() {
             // Given
             val qagId = UUID.randomUUID()
+            val targetDTO = mock(QagDTO::class.java)
             val qagDTO = mock(QagDTO::class.java).also {
                 given(it.id).willReturn(qagId)
                 given(it.status).willReturn(STATUS_OPEN)
+                given(it.copy(status = STATUS_MODERATED_ACCEPTED)).willReturn(targetDTO)
             }
-            val targetDTO = qagDTO.copy(status = STATUS_MODERATED_ACCEPTED)
             val savedQagId = UUID.randomUUID()
             val savedQagDTO = mock(QagDTO::class.java).also {
                 given(it.id).willReturn(savedQagId)
@@ -270,7 +271,7 @@ internal class QagInfoRepositoryImplTest {
             assertThat(result).isEqualTo(ModeratingQagResult.SUCCESS)
             then(databaseRepository).should(only()).save(targetDTO)
             then(cacheRepository).should(times(1)).getAllQagList()
-            then(cacheRepository).should(times(1)).updateQag(qagDTOTarget = savedQagDTO)
+            then(cacheRepository).should(times(1)).updateQag(updatedQagDTO = savedQagDTO)
             then(mapper).shouldHaveNoInteractions()
         }
 
@@ -298,7 +299,7 @@ internal class QagInfoRepositoryImplTest {
             assertThat(result).isEqualTo(ModeratingQagResult.SUCCESS)
             then(databaseRepository).should(only()).save(targetDTO)
             then(cacheRepository).should(times(1)).getAllQagList()
-            then(cacheRepository).should(times(1)).updateQag(qagDTOTarget = savedQagDTO)
+            then(cacheRepository).should(times(1)).updateQag(updatedQagDTO = savedQagDTO)
             then(mapper).shouldHaveNoInteractions()
         }
     }

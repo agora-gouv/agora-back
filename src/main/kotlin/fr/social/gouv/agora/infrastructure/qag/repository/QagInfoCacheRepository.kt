@@ -34,20 +34,10 @@ class QagInfoCacheRepository(private val cacheManager: CacheManager) {
         } ?: throw IllegalStateException("Qag cache has not been initialized")
     }
 
-
-    fun updateQag(qagDTOTarget: QagDTO) {
-        val updatedQagDTOList =
-            getAllQagDTOFromCache()?.map { qagDTO ->
-                if (qagDTO.id == qagDTOTarget.id)
-                    qagDTOTarget
-                else
-                    qagDTO
-            }
-        if (updatedQagDTOList != null) {
-            initializeCache(updatedQagDTOList)
-        } else {
-            throw IllegalStateException("Qag cache has not been initialized")
-        }
+    fun updateQag(updatedQagDTO: QagDTO) {
+        getAllQagDTOFromCache()?.let { allQagDTO ->
+            initializeCache(replaceUpdatedDTO(allQagDTO = allQagDTO, updatedQagDTO = updatedQagDTO))
+        } ?: throw IllegalStateException("Qag cache has not been initialized")
     }
 
     private fun getCache() = cacheManager.getCache(QAG_CACHE_NAME)
@@ -59,5 +49,10 @@ class QagInfoCacheRepository(private val cacheManager: CacheManager) {
         } catch (e: IllegalStateException) {
             null
         }
+    }
+
+    private fun replaceUpdatedDTO(allQagDTO: List<QagDTO>, updatedQagDTO: QagDTO) = allQagDTO.map { qagDTO ->
+        if (qagDTO.id == updatedQagDTO.id) updatedQagDTO
+        else qagDTO
     }
 }
