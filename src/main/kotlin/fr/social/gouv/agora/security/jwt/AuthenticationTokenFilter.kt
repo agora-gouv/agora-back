@@ -24,11 +24,11 @@ class AuthenticationTokenFilter(
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         extractJwt(request)?.let { jwtToken ->
             try {
-                if (!JwtTokenUtils.isTokenExpired(jwtToken)) {
+                if (JwtTokenUtils.isCorrectSignatureAndTokenNotExpired(jwtToken)) {
                     loginWithUserId(JwtTokenUtils.extractUserId(jwtToken))
                 }
             } catch (e: JwtException) {
@@ -46,8 +46,14 @@ class AuthenticationTokenFilter(
     private fun loginWithUserId(userId: String) {
         loginUseCase.findUser(userId)?.let { userInfo ->
             val userDetails = userJwtMapper.toJwt(userInfo)
-            SecurityContextHolder.getContext().authentication =
-                UsernamePasswordAuthenticationToken(userDetails, null, null)
+            SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
+                /* principal */
+                userDetails,
+                /* credentials */
+                null,
+                /* authorities */
+                userDetails.authorizationList,
+            )
         }
     }
 

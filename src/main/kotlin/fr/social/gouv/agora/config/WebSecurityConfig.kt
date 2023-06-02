@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.config
 
+import fr.social.gouv.agora.security.UserAuthorizationJWT
 import fr.social.gouv.agora.security.jwt.AgoraAuthenticationEntryPoint
 import fr.social.gouv.agora.security.jwt.AuthenticationTokenFilter
 import org.springframework.context.annotation.Bean
@@ -21,8 +22,8 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .and()
             .securityMatcher("/**")
             .authorizeHttpRequests()
-            .requestMatchers("/signup").permitAll()
-            .requestMatchers("/login").permitAll()
+            .requestMatchers("/moderate/**").hasAuthority(UserAuthorizationJWT.MODERATE_QAG.authority)
+            .requestMatchers("/signup", "/login").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
