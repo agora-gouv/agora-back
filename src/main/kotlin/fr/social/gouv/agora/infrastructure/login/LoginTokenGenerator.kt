@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.security.cipher
+package fr.social.gouv.agora.infrastructure.login
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fr.social.gouv.agora.domain.LoginTokenData

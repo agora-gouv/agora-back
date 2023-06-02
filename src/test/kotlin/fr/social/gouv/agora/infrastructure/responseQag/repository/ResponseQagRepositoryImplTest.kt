@@ -85,7 +85,6 @@ internal class ResponseQagRepositoryImplTest {
             assertThat(result).isEqualTo(listOf(responseQag))
             inOrder(cacheRepository, mapper).also {
                 then(cacheRepository).should(it).getAllResponseQagList()
-                then(cacheRepository).should(it).initializeCache(listOf(responseQagDTO))
                 then(mapper).should(it).toDomain(responseQagDTO)
                 it.verifyNoMoreInteractions()
             }

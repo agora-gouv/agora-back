@@ -11,7 +11,6 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
 
     companion object {
         private const val USER_CACHE_NAME = "userCache"
-        private const val DEVICE_ID_INDEX_CACHE_NAME = "deviceIdIndexCache"
     }
 
     sealed class CacheResult {
@@ -33,40 +32,19 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
-    fun getUserByDeviceId(deviceId: String): CacheResult {
-        val userId = try {
-            getDeviceIdIndexCache()?.get(deviceId, String::class.java)?.let(UUID::fromString)
-        } catch (e: IllegalStateException) {
-            null
-        }
-
-        return when (userId?.toString()) {
-            null -> CacheResult.CacheNotInitialized
-            UuidUtils.NOT_FOUND_UUID_STRING -> CacheResult.CachedUserNotFound
-            else -> getUserById(userId)
-        }
-    }
-
     fun insertUser(userDTO: UserDTO) {
         getUserCache()?.put(userDTO.id, userDTO)
-        getDeviceIdIndexCache()?.put(userDTO.deviceId, userDTO.id.toString())
     }
 
     fun insertUserNotFound(userId: UUID) {
         getUserCache()?.put(userId.toString(), createUserNotFound())
     }
 
-    fun insertUserDeviceIdNotFound(deviceId: String) {
-        getDeviceIdIndexCache()?.put(deviceId, UuidUtils.NOT_FOUND_UUID_STRING)
-    }
-
     private fun getUserCache() = cacheManager.getCache(USER_CACHE_NAME)
-    private fun getDeviceIdIndexCache() = cacheManager.getCache(DEVICE_ID_INDEX_CACHE_NAME)
 
     private fun createUserNotFound(): UserDTO {
         return UserDTO(
             id = UuidUtils.NOT_FOUND_UUID,
-            deviceId = "",
             password = "",
             fcmToken = "",
             createdDate = Date(0),

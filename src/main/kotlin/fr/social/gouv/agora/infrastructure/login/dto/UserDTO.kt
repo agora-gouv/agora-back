@@ -11,8 +11,6 @@ data class UserDTO(
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
     @Column(columnDefinition = "TEXT")
-    val deviceId: String,
-    @Column(columnDefinition = "TEXT")
     val password: String,
     @Column(columnDefinition = "TEXT")
     val fcmToken: String,
@@ -33,6 +31,6 @@ data class UserDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , deviceId = $deviceId , password = $password , fcmToken = $fcmToken , createdDate = $createdDate , authorizationLevel = $authorizationLevel , isBanned = $isBanned )"
+        return this::class.simpleName + "(id = $id , password = $password , fcmToken = $fcmToken , createdDate = $createdDate , authorizationLevel = $authorizationLevel , isBanned = $isBanned )"
     }
 }

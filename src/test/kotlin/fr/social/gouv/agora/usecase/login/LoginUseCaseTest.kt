@@ -37,23 +37,6 @@ internal class LoginUseCaseTest {
     }
 
     @Test
-    fun `login - when deviceId is not equal to deviceId from loginTokenData - should return null`() {
-        // When
-        val result = useCase.login(
-            deviceId = "deviceId",
-            loginTokenData = LoginTokenData(
-                deviceId = "notTheSameDeviceId",
-                userId = "userId",
-            ),
-            fcmToken = "fcmToken",
-        )
-
-        // Then
-        assertThat(result).isEqualTo(null)
-        then(repository).shouldHaveNoInteractions()
-    }
-
-    @Test
     fun `login - when repository returns user and fcmToken are the same - should return user`() {
         // Given
         val userInfo = mock(UserInfo::class.java).also {
@@ -63,9 +46,7 @@ internal class LoginUseCaseTest {
 
         // When
         val result = useCase.login(
-            deviceId = "deviceId",
             loginTokenData = LoginTokenData(
-                deviceId = "deviceId",
                 userId = "userId",
             ),
             fcmToken = "fcmToken",
@@ -89,9 +70,7 @@ internal class LoginUseCaseTest {
 
         // When
         val result = useCase.login(
-            deviceId = "deviceId",
             loginTokenData = LoginTokenData(
-                deviceId = "deviceId",
                 userId = "userId",
             ),
             fcmToken = "fcmToken",
@@ -103,36 +82,4 @@ internal class LoginUseCaseTest {
         then(repository).should().updateUserFcmToken(userId = "userId", fcmToken = "fcmToken")
         then(repository).shouldHaveNoMoreInteractions()
     }
-
-    @Test
-    fun `signUp - when user with deviceId exists - should return null`() {
-        // Given
-        val userInfo = mock(UserInfo::class.java)
-        given(repository.getUserByDeviceId(deviceId = "deviceId")).willReturn(userInfo)
-
-        // When
-        val result = useCase.signUp(deviceId = "deviceId", fcmToken = "fcmToken")
-
-        // Then
-        assertThat(result).isEqualTo(null)
-        then(repository).should(only()).getUserByDeviceId(deviceId = "deviceId")
-    }
-
-    @Test
-    fun `signUp - when user with deviceId does not exists - should return result from generateUser`() {
-        // Given
-        given(repository.getUserByDeviceId(deviceId = "deviceId")).willReturn(null)
-        val userInfo = mock(UserInfo::class.java)
-        given(repository.generateUser(deviceId = "deviceId", fcmToken = "fcmToken")).willReturn(userInfo)
-
-        // When
-        val result = useCase.signUp(deviceId = "deviceId", fcmToken = "fcmToken")
-
-        // Then
-        assertThat(result).isEqualTo(userInfo)
-        then(repository).should().getUserByDeviceId(deviceId = "deviceId")
-        then(repository).should().generateUser(deviceId = "deviceId", fcmToken = "fcmToken")
-        then(repository).shouldHaveNoMoreInteractions()
-    }
-
 }
