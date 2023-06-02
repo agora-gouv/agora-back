@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.qagHome
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
-import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJson
+import fr.social.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 
 data class QagHomeJson(
     @JsonProperty("responses")
@@ -15,7 +15,7 @@ data class ResponseQagPreviewJson(
     @JsonProperty("qagId")
     val qagId: String,
     @JsonProperty("thematique")
-    val thematique: ThematiqueJson,
+    val thematique: ThematiqueNoIdJson,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("author")
@@ -39,7 +39,7 @@ data class QagPreviewJson(
     @JsonProperty("qagId")
     val qagId: String,
     @JsonProperty("thematique")
-    val thematique: ThematiqueJson,
+    val thematique: ThematiqueNoIdJson,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("username")

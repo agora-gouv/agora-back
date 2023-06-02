@@ -29,7 +29,7 @@ class GetQagModeratingListUseCase(
 
         return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
-            .sortedByDescending { qagInfo -> qagInfo.date }
+            .sortedBy { qagInfo -> qagInfo.date }
             .mapNotNullWhile(
                 transformMethod = { qagInfo -> toQagModerating(qagInfo, userId, thematiqueMap) },
                 loopWhileCondition = { qagPreviewList -> qagPreviewList.size < MAX_MODERATING_LIST_SIZE },

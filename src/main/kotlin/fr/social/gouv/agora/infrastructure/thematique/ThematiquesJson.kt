@@ -15,3 +15,10 @@ data class ThematiqueJson(
     @JsonProperty("picto")
     val picto: String,
 )
+
+data class ThematiqueNoIdJson(
+    @JsonProperty("label")
+    val label: String,
+    @JsonProperty("picto")
+    val picto: String,
+)
