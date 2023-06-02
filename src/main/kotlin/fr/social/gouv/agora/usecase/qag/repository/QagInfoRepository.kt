@@ -8,7 +8,6 @@ interface QagInfoRepository {
     fun getAllQagInfo(): List<QagInfo>
     fun getQagInfo(qagId: String): QagInfo?
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
-
     fun updateQagStatus(qagId: String, qagModeratingStatus: QagStatus): ModeratingQagResult
 }
 
