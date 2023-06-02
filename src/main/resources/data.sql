@@ -1,6 +1,6 @@
 INSERT INTO thematiques(id, label, picto) VALUES (
     '1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15',
-    'Travail & emploi',
+    'Travail',
     '\ud83d\udcbc'
 ) ON CONFLICT DO NOTHING;
 
@@ -13,7 +13,7 @@ INSERT INTO thematiques(id, label, picto) VALUES (
 INSERT INTO thematiques(id, label, picto) VALUES (
     'a4bb4b27-3271-4278-83c9-79ac3eee843a',
     'Santé',
-    '\ud83e\ude7a'
+    '\ud83c\udfe5'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
@@ -24,13 +24,13 @@ INSERT INTO thematiques(id, label, picto) VALUES (
 
 INSERT INTO thematiques(id, label, picto) VALUES (
     '5b9180e6-3e43-4c63-bcb5-4eab621fc016',
-    'Education',
+    'Education & jeunesse',
     '\ud83c\udf93'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
     '8e200137-df3b-4bde-9981-b39a3d326da7',
-    'International',
+    'Europe & international',
     '\ud83c\udf0f'
 ) ON CONFLICT DO NOTHING;
 
@@ -42,8 +42,8 @@ INSERT INTO thematiques(id, label, picto) VALUES (
 
 INSERT INTO thematiques(id, label, picto) VALUES (
     'b276606e-f251-454e-9a73-9b70a6f30bfd',
-    'Sécurité',
-    '\ud83d\ude94'
+    'Sécurité & défense',
+    '\ud83d\udee1'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
@@ -56,6 +56,102 @@ INSERT INTO thematiques(id, label, picto) VALUES (
     '47897e51-8e94-4920-a26a-1b1e5e232e82',
     'Autre',
     '\ud83d\udce6'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb4732-0153-11ee-be56-0242ac120002',
+    'Agriculture & alimentation',
+    '\ud83c\udf3e'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb4732-0153-10ee-be56-0242ac120002',
+    'Culture',
+    '\ud83c\udfad'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb4732-0153-10aa-be56-0242ac120002',
+    'Enseignement sup. & recherche',
+    '\ud83e\uddec'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb4732-0151-10ee-be56-0242ac120002',
+    'Outre-mer',
+    '\ud83c\udf0d'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb4732-0151-10ee-be56-0242ac120102',
+    'Justice',
+    '\u2696'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb1732-0151-10ee-be56-0242ac120102',
+    'Solidarités',
+    '\ud83e\udd1d'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb1732-0151-10ee-be56-0240ac120102',
+    'Autonomie',
+    '\ud83d\udc75'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb1332-0151-10ee-be56-0240ac120102',
+    'Handicap',
+    '\ud83e\uddd1\u200d\ud83e\uddbd'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb1332-0151-10ee-be36-0240ac120102',
+    'Sport',
+    '\ud83c\udfc0'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb1332-0051-10ee-be36-0240ac120102',
+    'Services publics',
+    '\ud83c\udfdb'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb1332-0051-10ee-be36-0249ac120102',
+    'Energie',
+    '\u26a1'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5cdb1332-0051-19ee-be36-0249ac120102',
+    'Egalité femmes / hommes',
+    '\uff1d'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5ceb1332-0051-19ee-be36-0249ac120102',
+    'Discriminations',
+    '\ud83d\udc65'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5ceb1332-1151-19ee-be36-0249ac120102',
+    'Enfance',
+    '\ud83d\udc76'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5ceb1552-1151-19ee-be36-0249ac120102',
+    'Logement',
+    '\ud83c\udfe1'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO thematiques(id, label, picto) VALUES (
+    '5ceb1552-1151-19ee-be39-0249ac120102',
+    'Toutes',
+    '\ud83d\udca1'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id) VALUES (
