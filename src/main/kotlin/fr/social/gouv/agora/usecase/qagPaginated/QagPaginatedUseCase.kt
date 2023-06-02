@@ -76,7 +76,7 @@ class QagPaginatedUseCase(
 
         val qags = qagList
             .sortedByDescending { qag -> sortByDescendingSelector.invoke(qag) }
-            .subList(fromIndex = minIndex, maxIndex)
+            .subList(fromIndex = minIndex, toIndex = maxIndex)
             .map { qag -> mapper.toPreview(qag = qag, userId = userId) }
 
         return QagsAndMaxPageCount(
