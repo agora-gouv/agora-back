@@ -20,7 +20,7 @@ class LoginUseCase(private val userRepository: UserRepository) {
         }
     }
 
-    fun signUp(fcmToken: String): UserInfo? {
+    fun signUp(fcmToken: String): UserInfo {
         return userRepository.generateUser(fcmToken = fcmToken)
     }
 }

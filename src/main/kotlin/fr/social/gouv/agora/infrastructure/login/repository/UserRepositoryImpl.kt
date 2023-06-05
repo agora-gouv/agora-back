@@ -64,7 +64,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override fun generateUser(fcmToken: String): UserInfo? {
+    override fun generateUser(fcmToken: String): UserInfo {
         val userDTO = mapper.generateDto(fcmToken = fcmToken)
         val savedUserDTO = databaseRepository.save(userDTO)
         cacheRepository.insertUser(savedUserDTO)

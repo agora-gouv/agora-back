@@ -19,6 +19,7 @@ class SignupInfoJsonMapper {
         return when (loginTokenResult) {
             BuildResult.Failure -> null
             is BuildResult.Success -> SignupInfoJson(
+                userId = domain.userId,
                 jwtToken = JwtTokenUtils.generateToken(userId = domain.userId),
                 loginToken = loginTokenResult.loginToken,
                 isModerator = domain.authorizationList.contains(UserAuthorization.MODERATE_QAG)
