@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJson
+import fr.social.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 
 data class ConsultationPreviewJson(
     @JsonProperty("ongoing")
@@ -22,7 +22,7 @@ data class ConsultationOngoingJson(
     @JsonProperty("endDate")
     val endDate: String,
     @JsonProperty("thematique")
-    val thematique: ThematiqueJson,
+    val thematique: ThematiqueNoIdJson,
     @JsonProperty("hasAnswered")
     val hasAnswered: Boolean,
 )
@@ -35,7 +35,7 @@ data class ConsultationAnsweredJson(
     @JsonProperty("coverUrl")
     val coverUrl: String,
     @JsonProperty("thematique")
-    val thematique: ThematiqueJson,
+    val thematique: ThematiqueNoIdJson,
     @JsonProperty("step")
     val step: Int,
 )

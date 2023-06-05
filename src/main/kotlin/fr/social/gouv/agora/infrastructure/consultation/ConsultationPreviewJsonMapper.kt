@@ -7,9 +7,7 @@ import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationPreviewJsonMapper(
-    private val mapperThematique: ThematiqueJsonMapper,
-) {
+class ConsultationPreviewJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
     fun toJson(
         domainOngoingList: List<ConsultationPreviewOngoing>,
         domainAnsweredList: List<ConsultationPreviewAnswered>,
@@ -20,7 +18,7 @@ class ConsultationPreviewJsonMapper(
                 title = domain.title,
                 coverUrl = domain.coverUrl,
                 endDate = domain.endDate.toString(),
-                thematique = mapperThematique.toJson(domain.thematique),
+                thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
                 hasAnswered = domain.hasAnswered,
             )
         }, finishedList = emptyList(), answeredList = domainAnsweredList.map { domain ->
@@ -28,7 +26,7 @@ class ConsultationPreviewJsonMapper(
                 id = domain.id,
                 title = domain.title,
                 coverUrl = domain.coverUrl,
-                thematique = mapperThematique.toJson(domain.thematique),
+                thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
                 step = when (domain.step) {
                     COLLECTING_DATA -> 1
                     POLITICAL_COMMITMENT -> 2
