@@ -1,19 +1,16 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
 import fr.social.gouv.agora.domain.Consultation
-import fr.social.gouv.agora.infrastructure.utils.UnicodeStringDecoder
+import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationDetailsJsonMapper {
+class ConsultationDetailsJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
 
     fun toJson(domain: Consultation, participantCount: Int): ConsultationDetailsJson {
         return ConsultationDetailsJson(
             id = domain.id,
-            thematique = ThematiqueJson(
-                label = domain.thematique.label,
-                picto = UnicodeStringDecoder.decodeUnicode(domain.thematique.picto),
-            ),
+            thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
             title = domain.title,
             coverUrl = domain.coverUrl,
             endDate = domain.endDate.toString(),

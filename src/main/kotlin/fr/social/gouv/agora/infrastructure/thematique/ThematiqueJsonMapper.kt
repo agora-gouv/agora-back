@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ThematiqueJsonMapper {
+
     fun toJson(domainList: List<Thematique>): ThematiquesJson {
         return ThematiquesJson(thematiques = domainList.map(::toJson))
     }
@@ -17,4 +18,12 @@ class ThematiqueJsonMapper {
             picto = UnicodeStringDecoder.decodeUnicode(domain.picto),
         )
     }
+
+    fun toNoIdJson(domain: Thematique): ThematiqueNoIdJson {
+        return ThematiqueNoIdJson(
+            label = domain.label,
+            picto = UnicodeStringDecoder.decodeUnicode(domain.picto),
+        )
+    }
+
 }
