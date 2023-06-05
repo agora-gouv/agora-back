@@ -1,5 +1,7 @@
 package fr.social.gouv.agora.infrastructure.login
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fr.social.gouv.agora.domain.LoginTokenData
 import java.util.*
@@ -15,7 +17,9 @@ object LoginTokenGenerator {
             val cipher = Cipher.getInstance(CIPHER_ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, getCipherKey())
 
-            val byteArrayResult = cipher.doFinal(getObjectMapper().writeValueAsString(loginTokenData).toByteArray())
+            val loginTokenDataJson = LoginTokenDataJson(userId = loginTokenData.userId)
+            val byteArrayResult = cipher.doFinal(getObjectMapper().writeValueAsString(loginTokenDataJson).toByteArray())
+
             BuildResult.Success(loginToken = Base64.getEncoder().encodeToString(byteArrayResult))
         } catch (e: Exception) {
             println("Exception while buildLoginToken: $e")
@@ -27,9 +31,11 @@ object LoginTokenGenerator {
         return try {
             val cipher = Cipher.getInstance(CIPHER_ALGORITHM)
             cipher.init(Cipher.DECRYPT_MODE, getCipherKey())
-            val byteArrayResult = cipher.doFinal(Base64.getDecoder().decode(encryptedMessage))
 
-            DecodeResult.Success(getObjectMapper().readValue(byteArrayResult, LoginTokenData::class.java))
+            val byteArrayResult = cipher.doFinal(Base64.getDecoder().decode(encryptedMessage))
+            val loginTokenDataJson = getObjectMapper().readValue(byteArrayResult, LoginTokenDataJson::class.java)
+
+            DecodeResult.Success(LoginTokenData(userId = loginTokenDataJson.userId))
         } catch (e: Exception) {
             println("Exception while decodeLoginToken: $e")
             DecodeResult.Failure
@@ -42,6 +48,12 @@ object LoginTokenGenerator {
     private fun getObjectMapper() = jacksonObjectMapper()
 
 }
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class LoginTokenDataJson(
+    @JsonProperty("userId")
+    val userId: String,
+)
 
 sealed class BuildResult {
     object Failure : BuildResult()
