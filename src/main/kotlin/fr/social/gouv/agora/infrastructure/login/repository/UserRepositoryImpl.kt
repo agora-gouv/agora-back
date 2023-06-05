@@ -14,20 +14,6 @@ class UserRepositoryImpl(
     private val mapper: UserInfoMapper,
 ) : UserRepository {
 
-    override fun getUserByDeviceId(deviceId: String): UserInfo? {
-        return when (val cacheResult = cacheRepository.getUserByDeviceId(deviceId)) {
-            CacheResult.CacheNotInitialized -> databaseRepository.getUserByDeviceId(deviceId).also { userDTO ->
-                if (userDTO != null) {
-                    cacheRepository.insertUser(userDTO)
-                } else {
-                    cacheRepository.insertUserDeviceIdNotFound(deviceId)
-                }
-            }
-            CacheResult.CachedUserNotFound -> null
-            is CacheResult.CachedUser -> cacheResult.userDTO
-        }?.let { userDTO -> mapper.toDomain(userDTO) }
-    }
-
     override fun getUserById(userId: String): UserInfo? {
         return try {
             val userUUID = UUID.fromString(userId)
@@ -78,8 +64,8 @@ class UserRepositoryImpl(
         }
     }
 
-    override fun generateUser(deviceId: String, fcmToken: String): UserInfo? {
-        val userDTO = mapper.generateDto(deviceId = deviceId, fcmToken = fcmToken)
+    override fun generateUser(fcmToken: String): UserInfo {
+        val userDTO = mapper.generateDto(fcmToken = fcmToken)
         val savedUserDTO = databaseRepository.save(userDTO)
         cacheRepository.insertUser(savedUserDTO)
         return mapper.toDomain(savedUserDTO)
@@ -93,5 +79,4 @@ class UserRepositoryImpl(
             updatedUserDTO
         } else null
     }
-
 }

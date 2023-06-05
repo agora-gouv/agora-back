@@ -12,10 +12,7 @@ class LoginUseCase(private val userRepository: UserRepository) {
         return userRepository.getUserById(userId = userId)
     }
 
-    fun login(deviceId: String, loginTokenData: LoginTokenData, fcmToken: String): UserInfo? {
-        if (deviceId != loginTokenData.deviceId) {
-            return null
-        }
+    fun login(loginTokenData: LoginTokenData, fcmToken: String): UserInfo? {
         return userRepository.getUserById(loginTokenData.userId)?.let { userInfo ->
             if (userInfo.fcmToken != fcmToken) {
                 userRepository.updateUserFcmToken(userId = loginTokenData.userId, fcmToken = fcmToken)
@@ -23,11 +20,7 @@ class LoginUseCase(private val userRepository: UserRepository) {
         }
     }
 
-    fun signUp(deviceId: String, fcmToken: String): UserInfo? {
-        val userInfo = userRepository.getUserByDeviceId(deviceId)
-        if (userInfo != null) return null
-
-        return userRepository.generateUser(deviceId = deviceId, fcmToken = fcmToken)
+    fun signUp(fcmToken: String): UserInfo {
+        return userRepository.generateUser(fcmToken = fcmToken)
     }
-
 }

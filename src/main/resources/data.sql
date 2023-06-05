@@ -994,23 +994,3 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
     '<body>👉 Le Ministre de la Santé recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>26 juin à 10h</b>.<br/><br/>Il s’agira notamment de :<br/><br/><ul><li>Faire un <b>premier bilan</b> de la perception du numérique en santé,</li><li>Faire émerger de <b>nouvelles pistes d’action</b>.</li></ul>—<br/><br/><b>🩺 Envie d’aller plus loin ?</b><br/><a href="https://www.monespacesante.fr/">Rendez-vous ici</a> pour activer Mon Espace Santé.</body>',
     '6d82222a-ee71-11ed-a05b-0242ac120010'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
-
-INSERT INTO agora_users(id, device_id, password, fcm_token, created_date, authorization_level, is_banned) VALUES (
-    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    'deviceId-de-test1',
-    '',
-    'fake-fcm-token1',
-    '2023-04-02',
-    '0',
-    '0'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO agora_users(id, device_id, password, fcm_token, created_date, authorization_level, is_banned) VALUES (
-    '2a4b03d6-c575-4a65-bf49-f52ecd54a413',
-    'deviceId-de-test2',
-    '',
-    'fake-fcm-token2',
-    '2023-04-01',
-    '0',
-    '0'
-) ON CONFLICT DO NOTHING;
