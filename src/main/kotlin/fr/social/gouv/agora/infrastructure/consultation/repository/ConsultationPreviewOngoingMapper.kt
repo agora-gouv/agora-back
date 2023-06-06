@@ -12,6 +12,5 @@ class ConsultationPreviewOngoingMapper {
         coverUrl = dto.coverUrl,
         endDate = dto.endDate,
         thematiqueId = dto.thematiqueId.toString(),
-        hasAnswered = false, //TODO Feat 99
     )
 }

@@ -17,9 +17,12 @@ class ConsultationPreviewController(
 ) {
     @GetMapping("/consultations")
     fun getConsultationPreviewOngoingList(@RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<ConsultationPreviewJson> {
-        val consultationListOngoing = getConsultationPreviewOngoingListUseCase.getConsultationPreviewOngoingList()
+        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val consultationListOngoing = getConsultationPreviewOngoingListUseCase.getConsultationPreviewOngoingList(
+            userId = userId,
+        )
         val consultationListAnswered = getConsultationPreviewAnsweredListUseCase.getConsultationPreviewAnsweredList(
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+            userId = userId,
         )
         return ResponseEntity.ok()
             .body(
