@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.FeatureFlags
+import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.social.gouv.agora.usecase.errorMessages.repository.ErrorMessagesRepository
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
@@ -16,20 +17,11 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.ZoneId
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 internal class GetQagErrorTextUseCaseTest {
-
-    companion object {
-        private const val ERROR_TEXT_WITHIN_THE_WEEK =
-            "Vous avez déjà posé une question au Gouvernement cette semaine. " +
-                    "Pendant cette phase d’expérimentation, l’appli est limitée à une question par semaine pour chaque utilisateur. " +
-                    "Nous augmenterons le nombre de questions possibles dès que nos capacités de modération le permettront. " +
-                    "Rendez-vous la semaine prochaine pour votre question suivante. D’ici là, n’hésitez pas à soutenir les questions des utilisateurs, sans limite !"
-    }
 
     @Autowired
     private lateinit var useCase: GetQagErrorTextUseCase
@@ -52,13 +44,14 @@ internal class GetQagErrorTextUseCaseTest {
             given(it.isAskQuestionEnabled).willReturn(false)
         }
         given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
-        given(errorMessagesRepository.getQagErrorMessageFromSystemEnv()).willReturn("QAG IS DISABLED")
+        given(errorMessagesRepository.getQagDisabledErrorMessage()).willReturn("QAG IS DISABLED")
 
         // When
         val result = useCase.getGetQagErrorText(userId)
 
         // Then
         assertThat(result).isEqualTo("QAG IS DISABLED")
+        then(errorMessagesRepository).should(only()).getQagDisabledErrorMessage()
         then(qagInfoRepository).shouldHaveNoInteractions()
     }
 
@@ -91,13 +84,15 @@ internal class GetQagErrorTextUseCaseTest {
         }
         given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
+        given(errorMessagesRepository.getQagErrorMessageOneByWeek()).willReturn("ONE by Week")
 
         // When
         val result = useCase.getGetQagErrorText(userId)
 
         // Then
-        assertThat(result).isEqualTo(ERROR_TEXT_WITHIN_THE_WEEK)
+        assertThat(result).isEqualTo("ONE by Week")
         then(qagInfoRepository).should(only()).getAllQagInfo()
+        then(errorMessagesRepository).should(only()).getQagErrorMessageOneByWeek()
     }
 
     @Test
@@ -107,9 +102,8 @@ internal class GetQagErrorTextUseCaseTest {
             given(it.isAskQuestionEnabled).willReturn(true)
         }
         val localDate = LocalDate.now().with(DayOfWeek.MONDAY).minusDays(1)
-        val date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
         val qagInfo = mock(QagInfo::class.java).also {
-            given(it.date).willReturn(date)
+            given(it.date).willReturn(localDate.toDate())
             given(it.userId).willReturn(userId)
         }
         given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
@@ -130,9 +124,8 @@ internal class GetQagErrorTextUseCaseTest {
             given(it.isAskQuestionEnabled).willReturn(true)
         }
         val localDate = LocalDate.now().with(DayOfWeek.SUNDAY).plusDays(1)
-        val date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
         val qagInfo = mock(QagInfo::class.java).also {
-            given(it.date).willReturn(date)
+            given(it.date).willReturn(localDate.toDate())
             given(it.userId).willReturn(userId)
         }
         given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)

@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.errorMessages.repository
 
 interface ErrorMessagesRepository {
-    fun getQagErrorMessageFromSystemEnv(): String
+    fun getQagDisabledErrorMessage(): String
+    fun getQagErrorMessageOneByWeek(): String
 }
