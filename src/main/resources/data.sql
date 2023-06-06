@@ -72,7 +72,7 @@ INSERT INTO thematiques(id, label, picto) VALUES (
 
 INSERT INTO thematiques(id, label, picto) VALUES (
     '0ca6f2f6-015e-11ee-be56-0242ac120002',
-    'Enseignement sup. & recherche',
+    'Etudes sup. & recherche',
     '\ud83e\uddec'
 ) ON CONFLICT DO NOTHING;
 
@@ -85,7 +85,7 @@ INSERT INTO thematiques(id, label, picto) VALUES (
 INSERT INTO thematiques(id, label, picto) VALUES (
     '2186bc60-015e-11ee-be56-0242ac120002',
     'Justice',
-    '\u2696'
+    '\u2696\ufe0f'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
@@ -125,14 +125,8 @@ INSERT INTO thematiques(id, label, picto) VALUES (
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
-    '6af73b40-015e-11ee-be56-0242ac120002',
-    'Egalité femmes / hommes',
-    '\uff1d'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO thematiques(id, label, picto) VALUES (
     '73fa6438-015e-11ee-be56-0242ac120002',
-    'Discriminations',
+    'Egalité',
     '\ud83d\udc65'
 ) ON CONFLICT DO NOTHING;
 
