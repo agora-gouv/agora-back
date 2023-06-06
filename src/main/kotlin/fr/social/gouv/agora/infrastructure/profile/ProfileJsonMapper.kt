@@ -67,7 +67,9 @@ class ProfileJsonMapper {
         "PI" -> JobCategory.PROFESSION_INTERMEDIAIRE
         "EM" -> JobCategory.EMPLOYE
         "OU" -> JobCategory.OUVRIER
-        "ND" -> JobCategory.NON_DETERMINE
+        "ET" -> JobCategory.ETUDIANTS
+        "RE" -> JobCategory.RETRAITES
+        "AU" -> JobCategory.AUTRESOUSANSACTIVITEPRO
         "UN" -> JobCategory.UNKNOWN
         else -> null
     }
@@ -79,7 +81,9 @@ class ProfileJsonMapper {
         JobCategory.PROFESSION_INTERMEDIAIRE -> "PI"
         JobCategory.EMPLOYE -> "EM"
         JobCategory.OUVRIER -> "OU"
-        JobCategory.NON_DETERMINE -> "ND"
+        JobCategory.ETUDIANTS -> "ET"
+        JobCategory.RETRAITES -> "RE"
+        JobCategory.AUTRESOUSANSACTIVITEPRO -> "AU"
         JobCategory.UNKNOWN -> "UN"
         null -> null
     }
