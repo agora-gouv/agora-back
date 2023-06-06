@@ -119,6 +119,9 @@ internal class InsertReponseConsultationRepositoryImplTest {
             )
         ).willReturn(listOf(reponseConsultationDTO))
 
+        val savedReponseConsultationDTO = mock(ReponseConsultationDTO::class.java)
+        given(databaseRepository.saveAll(listOf(reponseConsultationDTO))).willReturn(listOf(savedReponseConsultationDTO))
+
         // When
         val result = repository.insertConsultationResponses(
             insertParameters = insertParameters,
@@ -127,10 +130,10 @@ internal class InsertReponseConsultationRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
+        then(databaseRepository).should(only()).saveAll(listOf(reponseConsultationDTO))
         then(cacheRepository).should(only()).insertReponseConsultationList(
             consultationId = consultationId,
-            reponseConsultationList = listOf(reponseConsultationDTO)
+            reponseConsultationList = listOf(savedReponseConsultationDTO),
         )
-        then(databaseRepository).should(only()).saveAll(listOf(reponseConsultationDTO))
     }
 }
