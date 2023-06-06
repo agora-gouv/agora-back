@@ -5,6 +5,7 @@ data class ReponseConsultation(
     val questionId: String,
     val choiceId: String,
     val participationId: String,
+    val userId: String,
 )
 
 data class ReponseConsultationInserting(

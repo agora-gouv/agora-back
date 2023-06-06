@@ -14,4 +14,5 @@ data class Consultation(
     val description: String,
     val tipsDescription: String,
     val thematique: Thematique,
+    val hasAnswered: Boolean,
 )

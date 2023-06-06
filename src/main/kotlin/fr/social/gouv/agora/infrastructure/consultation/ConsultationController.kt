@@ -1,11 +1,13 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
+import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.consultation.GetConsultationParticipantCountUseCase
 import fr.social.gouv.agora.usecase.consultation.GetConsultationUseCase
-import org.springframework.http.HttpEntity
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
@@ -18,8 +20,14 @@ class ConsultationController(
 ) {
 
     @GetMapping("/consultations/{consultationId}")
-    fun getConsultationDetails(@PathVariable consultationId: String): HttpEntity<*> {
-        return getConsultationUseCase.getConsultation(consultationId)?.let { consultation ->
+    fun getConsultationDetails(
+        @RequestHeader("Authorization") authorizationHeader: String,
+        @PathVariable consultationId: String,
+    ): ResponseEntity<*> {
+        return getConsultationUseCase.getConsultation(
+            consultationId = consultationId,
+            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+        )?.let { consultation ->
             ResponseEntity.ok()
                 .body(
                     consultationDetailsJsonMapper.toJson(
@@ -27,7 +35,7 @@ class ConsultationController(
                         participantCount = getConsultationParticipantCountUseCase.getCount(consultationId)
                     )
                 )
-        } ?: ResponseEntity.EMPTY
+        } ?: ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Unit)
     }
 
 }
