@@ -74,7 +74,7 @@ INSERT INTO thematiques(id, label, picto) VALUES (
     '0ca6f2f6-015e-11ee-be56-0242ac120002',
     'Etudes sup. & recherche',
     '\ud83e\uddec'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
     '175ab0b6-015e-11ee-be56-0242ac120002',
@@ -86,7 +86,7 @@ INSERT INTO thematiques(id, label, picto) VALUES (
     '2186bc60-015e-11ee-be56-0242ac120002',
     'Justice',
     '\u2696\ufe0f'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET picto = EXCLUDED.picto;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
     '2d1c72fe-015e-11ee-be56-0242ac120002',
@@ -128,7 +128,7 @@ INSERT INTO thematiques(id, label, picto) VALUES (
     '73fa6438-015e-11ee-be56-0242ac120002',
     'Egalité',
     '\ud83d\udc65'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO thematiques(id, label, picto) VALUES (
     '801e3eb0-015e-11ee-be56-0242ac120002',
