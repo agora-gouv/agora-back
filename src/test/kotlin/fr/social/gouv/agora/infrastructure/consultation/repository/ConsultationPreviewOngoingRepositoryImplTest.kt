@@ -50,7 +50,6 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
         coverUrl = "domain-cover-url",
         endDate = Date(1),
         thematiqueId = "5678",
-        hasAnswered = false,
     )
 
 

@@ -15,7 +15,6 @@ data class ConsultationPreviewOngoingInfo(
     override val coverUrl: String,
     override val thematiqueId: String,
     val endDate: Date,
-    val hasAnswered: Boolean,
 ) : ConsultationPreviewInfo()
 
 data class ConsultationPreviewAnsweredInfo(
