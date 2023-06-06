@@ -1,14 +1,18 @@
 package fr.social.gouv.agora.infrastructure.qagHome
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class QagHomeJson(
     @JsonProperty("responses")
     val responsesList: List<ResponseQagPreviewJson>,
     @JsonProperty("qags")
     val qagList: QagListJson,
+    @JsonProperty("askQagErrorText")
+    val askQagErrorText: String?,
 )
 
 data class ResponseQagPreviewJson(

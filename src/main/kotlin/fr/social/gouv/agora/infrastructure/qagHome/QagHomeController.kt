@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.qagHome
 
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
+import fr.social.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.social.gouv.agora.usecase.qag.GetQagLatestPreviewListUseCase
 import fr.social.gouv.agora.usecase.qag.GetQagPopularPreviewListUseCase
 import fr.social.gouv.agora.usecase.qag.GetQagSupportedPreviewListUseCase
@@ -18,6 +19,7 @@ class QagHomeController(
     private val getQagPopularPreviewListUseCase: GetQagPopularPreviewListUseCase,
     private val getQagLatestPreviewListUseCase: GetQagLatestPreviewListUseCase,
     private val getQagSupportedPreviewListUseCase: GetQagSupportedPreviewListUseCase,
+    private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
     private val qagHomeJsonMapper: QagHomeJsonMapper,
 ) {
     @GetMapping("/qags")
@@ -46,6 +48,7 @@ class QagHomeController(
                     qagPopularList = qagPopularPreviewList,
                     qagLatestList = qagLatestPreviewList,
                     qagSupportedList = qagSupportedPreviewList,
+                    qagErrorText = getQagErrorTextUseCase.getGetQagErrorText(userId),
                 )
             )
     }
