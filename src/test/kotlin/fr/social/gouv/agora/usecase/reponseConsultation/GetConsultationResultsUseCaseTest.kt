@@ -5,7 +5,7 @@ import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
-import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetReponseConsultationRepository
+import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -34,7 +34,7 @@ internal class GetConsultationResultsUseCaseTest {
     private lateinit var questionRepository: QuestionRepository
 
     @MockBean
-    private lateinit var getReponseConsultationRepository: GetReponseConsultationRepository
+    private lateinit var getConsultationResponseRepository: GetConsultationResponseRepository
 
     @MockBean
     private lateinit var consultationUpdateRepository: ConsultationUpdateRepository
@@ -198,7 +198,7 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationInfoRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
-        then(getReponseConsultationRepository).shouldHaveNoInteractions()
+        then(getConsultationResponseRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -215,7 +215,7 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationInfoRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).shouldHaveNoInteractions()
-        then(getReponseConsultationRepository).shouldHaveNoInteractions()
+        then(getConsultationResponseRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -233,7 +233,7 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationInfoRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-        then(getReponseConsultationRepository).shouldHaveNoInteractions()
+        then(getConsultationResponseRepository).shouldHaveNoInteractions()
     }
 
     @Nested
@@ -246,7 +246,7 @@ internal class GetConsultationResultsUseCaseTest {
         fun setUp() {
             given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultation)
             given(consultationUpdateRepository.getConsultationUpdate("consultationId")).willReturn(consultationUpdate)
-            given(getReponseConsultationRepository.getConsultationResponses("consultationId")).willReturn(emptyList())
+            given(getConsultationResponseRepository.getConsultationResponses("consultationId")).willReturn(emptyList())
         }
 
         @Test
@@ -272,7 +272,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+            then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
         }
 
         @Test
@@ -309,7 +309,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+            then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
         }
 
         @Test
@@ -335,7 +335,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+            then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
         }
 
         @Test
@@ -372,7 +372,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+            then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
         }
 
         @Test
@@ -396,7 +396,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+            then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
         }
 
         @Test
@@ -420,7 +420,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+            then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
         }
 
     }
@@ -454,7 +454,7 @@ internal class GetConsultationResultsUseCaseTest {
                 given(it.choiceId).willReturn("choiceId1")
                 given(it.participationId).willReturn("participationId1")
             }
-            given(getReponseConsultationRepository.getConsultationResponses("consultationId"))
+            given(getConsultationResponseRepository.getConsultationResponses("consultationId"))
                 .willReturn(listOf(reponseConsultation))
 
             // When
@@ -482,7 +482,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+            then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
         }
 
         @Test
@@ -505,7 +505,7 @@ internal class GetConsultationResultsUseCaseTest {
                 given(it.choiceId).willReturn("choiceId1")
                 given(it.participationId).willReturn("participationId1")
             }
-            given(getReponseConsultationRepository.getConsultationResponses("consultationId"))
+            given(getConsultationResponseRepository.getConsultationResponses("consultationId"))
                 .willReturn(listOf(reponseConsultation))
 
             // When
@@ -537,7 +537,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation("consultationId")
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-            then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+            then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
         }
     }
 
@@ -556,7 +556,7 @@ internal class GetConsultationResultsUseCaseTest {
 
         val testDataList = inputDataList.map(::buildTestData)
         given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
-        given(getReponseConsultationRepository.getConsultationResponses("consultationId")).willReturn(testDataList.flatMap { it.reponseConsultationList })
+        given(getConsultationResponseRepository.getConsultationResponses("consultationId")).willReturn(testDataList.flatMap { it.reponseConsultationList })
 
         // When
         val result = useCase.getConsultationResults(consultationId = "consultationId")
@@ -580,7 +580,7 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationInfoRepository).should(only()).getConsultation("consultationId")
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
-        then(getReponseConsultationRepository).should(only()).getConsultationResponses("consultationId")
+        then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
     }
 
     private fun buildTestData(testInput: InputData): TestData {
