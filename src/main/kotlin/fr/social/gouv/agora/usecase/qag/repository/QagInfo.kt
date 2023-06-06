@@ -11,4 +11,5 @@ data class QagInfo(
     val date: Date,
     val status: QagStatus,
     val username: String,
+    val userId: String,
 )

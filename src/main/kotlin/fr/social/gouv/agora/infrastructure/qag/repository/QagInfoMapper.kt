@@ -33,6 +33,7 @@ class QagInfoMapper {
                 else -> throw IllegalArgumentException("Invalid QaG status : ${dto.status}")
             },
             username = dto.username,
+            userId = dto.userId.toString(),
         )
     }
 
