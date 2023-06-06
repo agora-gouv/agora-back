@@ -21,13 +21,10 @@ class GetQagErrorTextUseCase(
         } else {
             val latestQagByUser =
                 qagInfoRepository.getAllQagInfo().filter { qagInfo -> qagInfo.userId == userId }.maxByOrNull { it.date }
-            if (latestQagByUser == null)
-                null
-            else {
-                if (isDateWithinTheWeek(latestQagByUser.date))
-                    errorMessagesRepository.getQagErrorMessageOneByWeek()
-                else
-                    null
+            when {
+                latestQagByUser == null -> null
+                isDateWithinTheWeek(latestQagByUser.date) -> errorMessagesRepository.getQagErrorMessageOneByWeek()
+                else -> null
             }
         }
     }
