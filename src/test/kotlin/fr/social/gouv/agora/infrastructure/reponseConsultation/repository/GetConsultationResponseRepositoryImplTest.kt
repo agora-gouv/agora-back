@@ -16,10 +16,10 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-internal class GetReponseConsultationRepositoryImplTest {
+internal class GetConsultationResponseRepositoryImplTest {
 
     @Autowired
-    private lateinit var repository: GetReponseConsultationRepositoryImpl
+    private lateinit var repository: GetConsultationResponseRepositoryImpl
 
     @MockBean
     private lateinit var databaseRepository: ReponseConsultationDatabaseRepository
@@ -35,6 +35,7 @@ internal class GetReponseConsultationRepositoryImplTest {
         questionId = "domain-questionId",
         choiceId = "domain-choiceId",
         participationId = "domain-participationId",
+        userId = "domain-userId",
     )
 
     private val reponseConsultationDTO = ReponseConsultationDTO(

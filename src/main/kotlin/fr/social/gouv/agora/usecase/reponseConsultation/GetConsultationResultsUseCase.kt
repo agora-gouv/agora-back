@@ -5,14 +5,14 @@ import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
-import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetReponseConsultationRepository
+import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import org.springframework.stereotype.Service
 
 @Service
 class GetConsultationResultsUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val questionRepository: QuestionRepository,
-    private val getReponseConsultationRepository: GetReponseConsultationRepository,
+    private val getConsultationResponseRepository: GetConsultationResponseRepository,
     private val consultationUpdateRepository: ConsultationUpdateRepository,
 ) {
 
@@ -21,7 +21,7 @@ class GetConsultationResultsUseCase(
         val consultationUpdate = consultationUpdateRepository.getConsultationUpdate(consultationId) ?: return null
         val questionList =
             questionRepository.getConsultationQuestionList(consultationId).takeUnless { it.isEmpty() } ?: return null
-        val consultationResponseList = getReponseConsultationRepository.getConsultationResponses(consultationId)
+        val consultationResponseList = getConsultationResponseRepository.getConsultationResponses(consultationId)
 
 
         return buildResults(

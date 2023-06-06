@@ -3,16 +3,16 @@ package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 import fr.social.gouv.agora.domain.ReponseConsultation
 import fr.social.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.social.gouv.agora.infrastructure.reponseConsultation.repository.ReponseConsultationCacheRepository.CacheResult
-import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetReponseConsultationRepository
+import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class GetReponseConsultationRepositoryImpl(
+class GetConsultationResponseRepositoryImpl(
     private val databaseRepository: ReponseConsultationDatabaseRepository,
     private val cacheRepository: ReponseConsultationCacheRepository,
     private val mapper: ReponseConsultationMapper,
-) : GetReponseConsultationRepository {
+) : GetConsultationResponseRepository {
 
     override fun getConsultationResponses(consultationId: String): List<ReponseConsultation> {
         return try {
