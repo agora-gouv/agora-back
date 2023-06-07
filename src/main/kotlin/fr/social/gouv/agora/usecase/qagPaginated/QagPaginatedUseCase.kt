@@ -12,7 +12,7 @@ import kotlin.math.ceil
 @Service
 class QagPaginatedUseCase(
     private val getQagListUseCase: GetQagWithSupportAndThematiqueUseCase,
-    private val filterGenerator: QagFilterGenerator,
+    private val filterGenerator: QagPaginatedFilterGenerator,
     private val mapper: QagPreviewMapper,
 ) {
 
