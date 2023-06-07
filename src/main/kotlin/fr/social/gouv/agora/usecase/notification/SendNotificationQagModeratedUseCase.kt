@@ -21,6 +21,7 @@ class SendNotificationQagModeratedUseCase(
             userRepository.getUserById(userId = userId)?.fcmToken?.let { fcmToken ->
                 notificationRepository.sendNotificationMessage(
                     fcmToken = fcmToken,
+                    title = notificationMessageRepository.getQagModeratedNotificationTitle(),
                     messageToSend = notificationMessageRepository.getQagModeratedNotificationMessage(),
                 )
             } ?: NotificationResult.FAILURE

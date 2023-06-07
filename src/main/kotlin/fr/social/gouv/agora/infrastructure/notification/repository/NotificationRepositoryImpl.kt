@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component
 @Component
 class NotificationRepositoryImpl : NotificationRepository {
 
-    override fun sendNotificationMessage(fcmToken: String, messageToSend: String): NotificationResult {
+    override fun sendNotificationMessage(fcmToken: String, title: String, messageToSend: String): NotificationResult {
         val message = Message.builder()
             .setNotification(
                 Notification.builder()
-                    .setTitle("Question non conforme à la Charte")
+                    .setTitle(title)
                     .setBody(messageToSend)
                     .build())
             .setToken(fcmToken).build()
