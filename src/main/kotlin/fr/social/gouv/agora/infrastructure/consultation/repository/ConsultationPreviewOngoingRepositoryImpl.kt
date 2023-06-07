@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.consultation.repository
 
 import fr.social.gouv.agora.domain.ConsultationPreviewOngoingInfo
 import fr.social.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
-import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationOngoingCacheRepository.*
+import fr.social.gouv.agora.infrastructure.consultation.repository.ConsultationOngoingCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewOngoingRepository
 import org.springframework.stereotype.Component
 
@@ -19,10 +19,10 @@ class ConsultationPreviewOngoingRepositoryImpl(
                 CacheResult.CacheNotInitialized -> getConsultationOngoingListFromDatabase()
                 is CacheResult.CachedConsultationOngoingList -> cacheResult.consultationOngoingListDTO
             }
-        return consultationOngoingDTOList?.map { dto -> mapper.toDomain(dto) } ?: emptyList()
+        return consultationOngoingDTOList.map { dto -> mapper.toDomain(dto) }
     }
 
-    private fun getConsultationOngoingListFromDatabase(): List<ConsultationDTO>? {
+    private fun getConsultationOngoingListFromDatabase(): List<ConsultationDTO> {
         val consultationOngoingListDTO = consultationDatabaseRepository.getConsultationOngoingList()
         consultationOngoingCacheRepository.insertConsultationOngoingList(consultationOngoingListDTO)
         return consultationOngoingListDTO

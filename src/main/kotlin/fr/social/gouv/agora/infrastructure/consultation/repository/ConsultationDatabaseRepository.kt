@@ -13,8 +13,9 @@ interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID>
     fun getConsultation(@Param("consultationId") consultationId: UUID): ConsultationDTO?
 
     @Query(
-        value = """SELECT * FROM consultations WHERE id NOT IN 
-            (SELECT consultation_id FROM consultation_updates WHERE step = 2 OR step = 3)""",
+        value = """SELECT * FROM consultations 
+            WHERE id NOT IN (SELECT consultation_id FROM consultation_updates WHERE step = 2 OR step = 3)
+            ORDER BY end_date ASC""",
         nativeQuery = true
     )
     fun getConsultationOngoingList(): List<ConsultationDTO>
