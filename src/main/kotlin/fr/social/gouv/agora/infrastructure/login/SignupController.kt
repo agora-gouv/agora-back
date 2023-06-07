@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.login
 
 import fr.social.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
 import fr.social.gouv.agora.usecase.login.LoginUseCase
-import org.springframework.http.HttpStatus
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
@@ -22,14 +22,14 @@ class SignupController(
     fun signup(
         @RequestHeader("fcmToken") fcmToken: String,
     ): ResponseEntity<*> {
-        val isSignUpEnabled = featureFlagsUseCase.getFeatureFlags().isSignUpEnabled
-        return if (isSignUpEnabled)
-            loginUseCase.signUp(fcmToken = fcmToken).let { userInfo ->
-                signupInfoJsonMapper.toJson(domain = userInfo)?.let { userInfoJson ->
-                    ResponseEntity.ok().body(userInfoJson)
-                }
-            } ?: ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Unit)
-        else
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Unit)
+        if (!featureFlagsUseCase.getFeatureFlags().isSignUpEnabled) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
+        }
+
+        return loginUseCase.signUp(fcmToken = fcmToken).let { userInfo ->
+            signupInfoJsonMapper.toJson(domain = userInfo)?.let { userInfoJson ->
+                ResponseEntity.ok().body(userInfoJson)
+            }
+        } ?: ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
     }
 }
