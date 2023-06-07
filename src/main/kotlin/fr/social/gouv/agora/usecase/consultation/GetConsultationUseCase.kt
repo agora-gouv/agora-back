@@ -28,8 +28,10 @@ class GetConsultationUseCase(
                     description = consultationInfo.description,
                     tipsDescription = consultationInfo.tipsDescription,
                     thematique = thematique,
-                    hasAnswered = consultationResponseRepository.getConsultationResponses(consultationId)
-                        .any { consultationResponse -> consultationResponse.userId == userId }
+                    hasAnswered = consultationResponseRepository.hasAnsweredConsultation(
+                        consultationId = consultationId,
+                        userId = userId,
+                    )
                 )
             }
         }

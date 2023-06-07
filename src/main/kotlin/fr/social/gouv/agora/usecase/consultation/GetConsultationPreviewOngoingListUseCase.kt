@@ -24,15 +24,13 @@ class GetConsultationPreviewOngoingListUseCase(
                             coverUrl = consultationPreviewOngoingInfo.coverUrl,
                             endDate = consultationPreviewOngoingInfo.endDate,
                             thematique = thematique,
-                            hasAnswered = hasUserAnsweredConsultation(consultationPreviewOngoingInfo, userId)
+                            hasAnswered = consultationResponseRepository.hasAnsweredConsultation(
+                                consultationId = consultationPreviewOngoingInfo.id,
+                                userId = userId,
+                            ),
                         )
                     }
             }
     }
 
-    private fun hasUserAnsweredConsultation(
-        consultationPreviewOngoingInfo: ConsultationPreviewOngoingInfo,
-        userId: String,
-    ) = consultationResponseRepository.getConsultationResponses(consultationPreviewOngoingInfo.id)
-        .any { consultationResponse -> consultationResponse.userId == userId }
 }
