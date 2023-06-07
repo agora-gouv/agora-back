@@ -13,8 +13,6 @@ class GetQagErrorTextUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val errorMessagesRepository: ErrorMessagesRepository,
 ) {
-
-
     fun getGetQagErrorText(userId: String): String? {
         return if (!featureFlagsRepository.getFeatureFlags().isAskQuestionEnabled) {
             errorMessagesRepository.getQagDisabledErrorMessage()

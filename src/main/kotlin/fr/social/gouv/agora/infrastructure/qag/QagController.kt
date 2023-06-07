@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.qag
 
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
+import fr.social.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.social.gouv.agora.usecase.qag.GetQagUseCase
 import fr.social.gouv.agora.usecase.qag.InsertQagUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*
 class QagController(
     private val getQagUseCase: GetQagUseCase,
     private val insertQagUseCase: InsertQagUseCase,
+    private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
     private val mapper: QagJsonMapper,
 ) {
 
@@ -35,10 +37,12 @@ class QagController(
         @RequestBody qagInsertingJson: QagInsertingJson,
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        return when (val result =
-            insertQagUseCase.insertQag(mapper.toDomain(json = qagInsertingJson, userId = userId))) {
-            QagInsertionResult.Failure -> ResponseEntity.status(400).body("")
-            is QagInsertionResult.Success -> ResponseEntity.ok().body(mapper.toJson(result))
-        }
+        return if (getQagErrorTextUseCase.getGetQagErrorText(userId) == null) {
+            when (val result = insertQagUseCase.insertQag(mapper.toDomain(json = qagInsertingJson, userId = userId))) {
+                QagInsertionResult.Failure -> ResponseEntity.status(400).body("")
+                is QagInsertionResult.Success -> ResponseEntity.ok().body(mapper.toJson(result))
+            }
+        } else
+            ResponseEntity.status(400).body("")
     }
 }
