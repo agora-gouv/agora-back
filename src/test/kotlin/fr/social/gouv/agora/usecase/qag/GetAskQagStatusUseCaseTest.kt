@@ -2,7 +2,6 @@ package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.FeatureFlags
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
-import fr.social.gouv.agora.usecase.errorMessages.repository.ErrorMessagesRepository
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -21,10 +20,10 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-internal class GetQagErrorTextUseCaseTest {
+internal class GetAskQagStatusUseCaseTest {
 
     @Autowired
-    private lateinit var useCase: GetQagErrorTextUseCase
+    private lateinit var useCase: GetAskQagStatusUseCase
 
     @MockBean
     private lateinit var qagInfoRepository: QagInfoRepository
@@ -32,31 +31,26 @@ internal class GetQagErrorTextUseCaseTest {
     @MockBean
     private lateinit var featureFlagsRepository: FeatureFlagsRepository
 
-    @MockBean
-    private lateinit var errorMessagesRepository: ErrorMessagesRepository
-
     private val userId = "userId"
 
     @Test
-    fun `getGetQagErrorText - when feature disabled - should return environment variable error message`() {
+    fun `getGetQagErrorText - when feature disabled - should return DISABLED`() {
         // Given
         val featureFlags = mock(FeatureFlags::class.java).also {
             given(it.isAskQuestionEnabled).willReturn(false)
         }
         given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
-        given(errorMessagesRepository.getQagDisabledErrorMessage()).willReturn("QAG IS DISABLED")
 
         // When
-        val result = useCase.getGetQagErrorText(userId)
+        val result = useCase.getAskQagStatus(userId)
 
         // Then
-        assertThat(result).isEqualTo("QAG IS DISABLED")
-        then(errorMessagesRepository).should(only()).getQagDisabledErrorMessage()
+        assertThat(result).isEqualTo(AskQagStatus.FEATURE_DISABLED)
         then(qagInfoRepository).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `getGetQagErrorText - when feature enabled and user didn't have Qag - should return null`() {
+    fun `getGetQagErrorText - when feature enabled and user didn't have Qag - should return ENABLED`() {
         // Given
         val featureFlags = mock(FeatureFlags::class.java).also {
             given(it.isAskQuestionEnabled).willReturn(true)
@@ -65,15 +59,15 @@ internal class GetQagErrorTextUseCaseTest {
         given(qagInfoRepository.getAllQagInfo()).willReturn(emptyList())
 
         // When
-        val result = useCase.getGetQagErrorText(userId)
+        val result = useCase.getAskQagStatus(userId)
 
         // Then
-        assertThat(result).isEqualTo(null)
+        assertThat(result).isEqualTo(AskQagStatus.ENABLED)
         then(qagInfoRepository).should(only()).getAllQagInfo()
     }
 
     @Test
-    fun `getGetQagErrorText - when feature enabled and user have Qag within the week - should return ERROR_TEXT_WITHIN_THE_WEEK`() {
+    fun `getGetQagErrorText - when feature enabled and user have Qag within the week - should return WEEKLY_LIMIT_REACHED`() {
         // Given
         val featureFlags = mock(FeatureFlags::class.java).also {
             given(it.isAskQuestionEnabled).willReturn(true)
@@ -84,19 +78,17 @@ internal class GetQagErrorTextUseCaseTest {
         }
         given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
-        given(errorMessagesRepository.getQagErrorMessageOneByWeek()).willReturn("ONE by Week")
 
         // When
-        val result = useCase.getGetQagErrorText(userId)
+        val result = useCase.getAskQagStatus(userId)
 
         // Then
-        assertThat(result).isEqualTo("ONE by Week")
+        assertThat(result).isEqualTo(AskQagStatus.WEEKLY_LIMIT_REACHED)
         then(qagInfoRepository).should(only()).getAllQagInfo()
-        then(errorMessagesRepository).should(only()).getQagErrorMessageOneByWeek()
     }
 
     @Test
-    fun `getGetQagErrorText - when feature enabled and user have Qag before Monday of the current week - should return null`() {
+    fun `getGetQagErrorText - when feature enabled and user have Qag before Monday of the current week - should return ENABLED`() {
         // Given
         val featureFlags = mock(FeatureFlags::class.java).also {
             given(it.isAskQuestionEnabled).willReturn(true)
@@ -110,15 +102,15 @@ internal class GetQagErrorTextUseCaseTest {
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
 
         // When
-        val result = useCase.getGetQagErrorText(userId)
+        val result = useCase.getAskQagStatus(userId)
 
         // Then
-        assertThat(result).isEqualTo(null)
+        assertThat(result).isEqualTo(AskQagStatus.ENABLED)
         then(qagInfoRepository).should(only()).getAllQagInfo()
     }
 
     @Test
-    fun `getGetQagErrorText - when feature enabled and user have Qag after Sunday of the current week - should return null`() {
+    fun `getGetQagErrorText - when feature enabled and user have Qag after Sunday of the current week - should return ENABLED`() {
         // Given
         val featureFlags = mock(FeatureFlags::class.java).also {
             given(it.isAskQuestionEnabled).willReturn(true)
@@ -132,10 +124,10 @@ internal class GetQagErrorTextUseCaseTest {
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
 
         // When
-        val result = useCase.getGetQagErrorText(userId)
+        val result = useCase.getAskQagStatus(userId)
 
         // Then
-        assertThat(result).isEqualTo(null)
+        assertThat(result).isEqualTo(AskQagStatus.ENABLED)
         then(qagInfoRepository).should(only()).getAllQagInfo()
     }
 }
