@@ -1,10 +1,9 @@
 package fr.social.gouv.agora.usecase.notification
 
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.Message
-import com.google.firebase.messaging.Notification
-import fr.social.gouv.agora.usecase.errorMessages.repository.ErrorMessagesRepository
 import fr.social.gouv.agora.usecase.login.repository.UserRepository
+import fr.social.gouv.agora.usecase.notification.repository.NotificationMessageRepository
+import fr.social.gouv.agora.usecase.notification.repository.NotificationRepository
+import fr.social.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 
@@ -12,27 +11,20 @@ import org.springframework.stereotype.Service
 class SendNotificationQagModeratedUseCase(
     private val userRepository: UserRepository,
     private val qagInfoRepository: QagInfoRepository,
-    private val errorMessagesRepository: ErrorMessagesRepository,
+    private val notificationRepository: NotificationRepository,
+    private val notificationMessageRepository: NotificationMessageRepository,
 ) {
 
     fun sendNotificationQagModeratedMessage(qagId: String): NotificationResult {
         val userId = qagInfoRepository.getQagInfo(qagId = qagId)?.userId
-        return if (userId != null) {
+        return if (userId != null)
             userRepository.getUserById(userId = userId)?.fcmToken?.let { fcmToken ->
-                val message = Message.builder()
-                    .setNotification(
-                        Notification.builder()
-                            .setBody(errorMessagesRepository.getQagModeratedNotificationMessage())
-                            .build())
-                    .setToken(fcmToken)
-                    .build()
-                FirebaseMessaging.getInstance().send(message)
-                NotificationResult.SUCCESS
+                notificationRepository.sendNotificationMessage(
+                    fcmToken = fcmToken,
+                    messageToSend = notificationMessageRepository.getQagModeratedNotificationMessage(),
+                )
             } ?: NotificationResult.FAILURE
-        } else NotificationResult.FAILURE
+        else NotificationResult.FAILURE
     }
 }
 
-enum class NotificationResult {
-    SUCCESS, FAILURE
-}
