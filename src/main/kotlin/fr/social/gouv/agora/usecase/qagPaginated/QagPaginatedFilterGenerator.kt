@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class QagFilterGenerator(private val dateFreezeRepository: QagDateFreezeRepository) {
+class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreezeRepository) {
 
     fun getPaginatedQagFilters(userId: String, pageNumber: Int, thematiqueId: String?): QagFilters {
         val qagDateFreeze = if (pageNumber == 1) {

@@ -27,7 +27,7 @@ internal class QagPaginatedUseCaseTest {
     private lateinit var useCase: QagPaginatedUseCase
 
     @MockBean
-    private lateinit var filterGenerator: QagFilterGenerator
+    private lateinit var filterGenerator: QagPaginatedFilterGenerator
 
     @MockBean
     private lateinit var getQagListUseCase: GetQagWithSupportAndThematiqueUseCase
