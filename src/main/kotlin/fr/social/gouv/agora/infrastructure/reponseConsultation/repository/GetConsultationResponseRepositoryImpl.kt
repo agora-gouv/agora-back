@@ -15,17 +15,32 @@ class GetConsultationResponseRepositoryImpl(
 ) : GetConsultationResponseRepository {
 
     override fun getConsultationResponses(consultationId: String): List<ReponseConsultation> {
+        return getConsultationResponseDTOList(consultationId).map(mapper::toDomain)
+    }
+
+    override fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean {
+        return try {
+            val userUUID = UUID.fromString(userId)
+            getConsultationResponseDTOList(consultationId).any { consultationResponseDTO ->
+                consultationResponseDTO.userId == userUUID
+            }
+        } catch (e: IllegalArgumentException) {
+            false
+        }
+    }
+
+    private fun getConsultationResponseDTOList(consultationId: String): List<ReponseConsultationDTO> {
         return try {
             val consultationUUID = UUID.fromString(consultationId)
-            val dtoList = when (val cacheResult = cacheRepository.getReponseConsultationList(consultationUUID)) {
+            when (val cacheResult = cacheRepository.getReponseConsultationList(consultationUUID)) {
                 CacheResult.CacheNotInitialized -> getConsultationResponsesFromDatabase(consultationUUID)
                 CacheResult.CacheReponseConsultationNotFound -> emptyList()
                 is CacheResult.CacheReponseConsultation -> cacheResult.reponseConsultationList
             }
-            dtoList.map(mapper::toDomain)
         } catch (e: IllegalArgumentException) {
             emptyList()
         }
+
     }
 
     private fun getConsultationResponsesFromDatabase(consultationUUID: UUID): List<ReponseConsultationDTO> {

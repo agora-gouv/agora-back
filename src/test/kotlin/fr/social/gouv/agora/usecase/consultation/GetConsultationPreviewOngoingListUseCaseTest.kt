@@ -84,7 +84,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
     }
 
     @Test
-    fun `getConsultationPreviewOngoingList - when has consultationInfo and thematique but no response from user - should return Consultation with hasAnswered false`() {
+    fun `getConsultationPreviewOngoingList - when has consultationInfo and thematique - should return ConsultationPreviewOngoing`() {
         // Given
         given(consultationPreviewOngoingRepository.getConsultationPreviewOngoingList())
             .willReturn(listOf(consultationPreviewOngoingInfo))
@@ -92,35 +92,12 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         val thematique = mock(Thematique::class.java)
         given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
 
-        given(consultationResponseRepository.getConsultationResponses(consultationId = "consultationId"))
-            .willReturn(emptyList())
-
-        // When
-        val result = useCase.getConsultationPreviewOngoingList(userId = "userId")
-
-        // Then
-        assertThat(result).isEqualTo(
-            listOf(consultationPreviewOngoing.copy(thematique = thematique, hasAnswered = false))
-        )
-        then(consultationPreviewOngoingRepository).should(only()).getConsultationPreviewOngoingList()
-        then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).should(only()).getConsultationResponses(consultationId = "consultationId")
-    }
-
-    @Test
-    fun `getConsultationPreviewOngoingList - when has consultationInfo and thematique and has response from user - should return Consultation with hasAnswered true`() {
-        // Given
-        given(consultationPreviewOngoingRepository.getConsultationPreviewOngoingList())
-            .willReturn(listOf(consultationPreviewOngoingInfo))
-
-        val thematique = mock(Thematique::class.java)
-        given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
-
-        val responseConsultation = mock(ReponseConsultation::class.java).also {
-            given(it.userId).willReturn("userId")
-        }
-        given(consultationResponseRepository.getConsultationResponses(consultationId = "consultationId"))
-            .willReturn(listOf(responseConsultation))
+        given(
+            consultationResponseRepository.hasAnsweredConsultation(
+                consultationId = "consultationId",
+                userId = "userId",
+            )
+        ).willReturn(true)
 
         // When
         val result = useCase.getConsultationPreviewOngoingList(userId = "userId")
@@ -131,7 +108,8 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         )
         then(consultationPreviewOngoingRepository).should(only()).getConsultationPreviewOngoingList()
         then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).should(only()).getConsultationResponses(consultationId = "consultationId")
+        then(consultationResponseRepository).should(only())
+            .hasAnsweredConsultation(consultationId = "consultationId", userId = "userId")
     }
 
 }

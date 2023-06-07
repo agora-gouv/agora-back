@@ -1,7 +1,6 @@
 package fr.social.gouv.agora.usecase.consultation
 
 import fr.social.gouv.agora.domain.Consultation
-import fr.social.gouv.agora.domain.ReponseConsultation
 import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -98,39 +97,19 @@ internal class GetConsultationUseCaseTest {
     }
 
     @Test
-    fun `getConsultation - when has consultationInfo and thematique but no response from user - should return Consultation with hasAnswered false`() {
+    fun `getConsultation - when has consultationInfo and thematique - should return Consultation`() {
         // Given
         given(consultationInfoRepository.getConsultation(consultationId = "consultationId")).willReturn(consultationInfo)
 
         val thematique = mock(Thematique::class.java)
         given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
 
-        given(consultationResponseRepository.getConsultationResponses(consultationId = "consultationId"))
-            .willReturn(emptyList())
-
-        // When
-        val result = useCase.getConsultation(consultationId = "consultationId", userId = "userId")
-
-        // Then
-        assertThat(result).isEqualTo(consultation.copy(thematique = thematique, hasAnswered = false))
-        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
-        then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).should(only()).getConsultationResponses(consultationId = "consultationId")
-    }
-
-    @Test
-    fun `getConsultation - when has consultationInfo and thematique and has response from user - should return Consultation with hasAnswered true`() {
-        // Given
-        given(consultationInfoRepository.getConsultation(consultationId = "consultationId")).willReturn(consultationInfo)
-
-        val thematique = mock(Thematique::class.java)
-        given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
-
-        val responseConsultation = mock(ReponseConsultation::class.java).also {
-            given(it.userId).willReturn("userId")
-        }
-        given(consultationResponseRepository.getConsultationResponses(consultationId = "consultationId"))
-            .willReturn(listOf(responseConsultation))
+        given(
+            consultationResponseRepository.hasAnsweredConsultation(
+                consultationId = "consultationId",
+                userId = "userId",
+            )
+        ).willReturn(true)
 
         // When
         val result = useCase.getConsultation(consultationId = "consultationId", userId = "userId")
@@ -139,7 +118,8 @@ internal class GetConsultationUseCaseTest {
         assertThat(result).isEqualTo(consultation.copy(thematique = thematique, hasAnswered = true))
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
         then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).should(only()).getConsultationResponses(consultationId = "consultationId")
+        then(consultationResponseRepository).should(only())
+            .hasAnsweredConsultation(consultationId = "consultationId", userId = "userId")
     }
 
 }
