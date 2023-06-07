@@ -10,12 +10,10 @@ import javax.crypto.spec.SecretKeySpec
 
 object LoginTokenGenerator {
 
-    private const val CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding"
-
     fun buildLoginToken(loginTokenData: LoginTokenData): BuildResult {
         return try {
-            val cipher = Cipher.getInstance(CIPHER_ALGORITHM)
-            cipher.init(Cipher.ENCRYPT_MODE, getCipherKey())
+            val cipher = Cipher.getInstance(System.getenv("LOGIN_TOKEN_ENCODE_TRANSFORMATION"))
+            cipher.init(Cipher.ENCRYPT_MODE, getEncodeCipherKey())
 
             val loginTokenDataJson = LoginTokenDataJson(userId = loginTokenData.userId)
             val byteArrayResult = cipher.doFinal(getObjectMapper().writeValueAsString(loginTokenDataJson).toByteArray())
@@ -29,8 +27,8 @@ object LoginTokenGenerator {
 
     fun decodeLoginToken(encryptedMessage: String): DecodeResult {
         return try {
-            val cipher = Cipher.getInstance(CIPHER_ALGORITHM)
-            cipher.init(Cipher.DECRYPT_MODE, getCipherKey())
+            val cipher = Cipher.getInstance(System.getenv("LOGIN_TOKEN_DECODE_TRANSFORMATION"))
+            cipher.init(Cipher.DECRYPT_MODE, getDecodeCipherKey())
 
             val byteArrayResult = cipher.doFinal(Base64.getDecoder().decode(encryptedMessage))
             val loginTokenDataJson = getObjectMapper().readValue(byteArrayResult, LoginTokenDataJson::class.java)
@@ -42,8 +40,17 @@ object LoginTokenGenerator {
         }
     }
 
-    private fun getCipherKey() = SecretKeySpec(Base64.getDecoder().decode(getBase64CipherKey()), "AES")
-    private fun getBase64CipherKey() = System.getenv("LOGIN_TOKEN_SECRET") ?: ""
+    private fun getEncodeCipherKey() =
+        SecretKeySpec(Base64.getDecoder().decode(getBase64EncodeSecret()), getEncodeAlgorithm())
+
+    private fun getBase64EncodeSecret() = System.getenv("LOGIN_TOKEN_ENCODE_SECRET") ?: ""
+    private fun getEncodeAlgorithm() = System.getenv("LOGIN_TOKEN_ENCODE_ALGORITHM") ?: ""
+
+    private fun getDecodeCipherKey() =
+        SecretKeySpec(Base64.getDecoder().decode(getBase64DecodeSecret()), getDecodeAlgorithm())
+
+    private fun getBase64DecodeSecret() = System.getenv("LOGIN_TOKEN_DECODE_SECRET") ?: ""
+    private fun getDecodeAlgorithm() = System.getenv("LOGIN_TOKEN_DECODE_ALGORITHM") ?: ""
 
     private fun getObjectMapper() = jacksonObjectMapper()
 
