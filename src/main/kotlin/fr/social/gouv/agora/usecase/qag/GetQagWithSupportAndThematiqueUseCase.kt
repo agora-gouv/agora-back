@@ -39,7 +39,7 @@ class GetQagWithSupportAndThematiqueUseCase(
                 qagInfo = qagInfo,
                 supportQagList = allSupportQagInfo.filter { supportQagInfo ->
                     supportQagInfo.qagId == qagInfo.id && qagFilters.filterSupportQagInfo.invoke(supportQagInfo)
-                }
+                },
             ).takeIf { qagFilters.filterSupportQagInfoList.invoke(it.supportQagList) }
         }
     }
