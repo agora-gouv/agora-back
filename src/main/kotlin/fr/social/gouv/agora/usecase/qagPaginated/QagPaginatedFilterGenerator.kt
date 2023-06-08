@@ -21,7 +21,7 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
             filterQagInfo = getPaginatedQagInfoFilter(thematiqueId = thematiqueId, qagDateFreeze = qagDateFreeze),
             filterSupportQagInfo = { supportQagInfo -> supportQagInfo.supportDate.before(qagDateFreeze) },
             filterQagWithSupportList = { qagInfoWithSupport ->
-                qagInfoWithSupport.qagInfo.status != QagStatus.OPEN || qagInfoWithSupport.supportQagList.any { it.userId == userId }
+                qagInfoWithSupport.qagInfo.status == QagStatus.MODERATED_ACCEPTED || qagInfoWithSupport.supportQagList.any { it.userId == userId }
             },
         )
     }
@@ -36,9 +36,7 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
         return QagFilters(
             filterQagInfo = getPaginatedQagInfoFilter(thematiqueId = thematiqueId, qagDateFreeze = qagDateFreeze),
             filterSupportQagInfo = { supportQagInfo -> supportQagInfo.supportDate.before(qagDateFreeze) },
-            filterQagWithSupportList = { qagInfoWithSupport ->
-                qagInfoWithSupport.supportQagList.any { it.userId == userId }
-            },
+            filterQagWithSupportList = { qagInfoWithSupport -> qagInfoWithSupport.supportQagList.any { it.userId == userId } },
         )
     }
 

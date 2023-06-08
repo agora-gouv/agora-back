@@ -15,7 +15,7 @@ class QagPreviewFilterGenerator {
             },
             filterSupportQagInfo = { true },
             filterQagWithSupportList = { qagInfoWithSupport ->
-                qagInfoWithSupport.qagInfo.status != QagStatus.OPEN || qagInfoWithSupport.supportQagList.any { it.userId == userId }
+                qagInfoWithSupport.qagInfo.status == QagStatus.MODERATED_ACCEPTED || qagInfoWithSupport.supportQagList.any { it.userId == userId }
             },
         )
     }
