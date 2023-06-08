@@ -49,7 +49,7 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
     ): (QagInfo) -> Boolean {
         return { qagInfo ->
             (thematiqueId == null || qagInfo.thematiqueId == thematiqueId)
-                    && qagInfo.status == QagStatus.MODERATED_ACCEPTED
+                    && (qagInfo.status == QagStatus.OPEN || qagInfo.status == QagStatus.MODERATED_ACCEPTED)
                     && qagInfo.date.before(qagDateFreeze)
         }
     }
