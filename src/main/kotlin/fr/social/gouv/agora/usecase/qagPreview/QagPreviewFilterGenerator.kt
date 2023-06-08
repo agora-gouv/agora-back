@@ -14,7 +14,7 @@ class QagPreviewFilterGenerator {
                         && (qagInfo.status == QagStatus.OPEN || qagInfo.status == QagStatus.MODERATED_ACCEPTED)
             },
             filterSupportQagInfo = { true },
-            filterSupportQagInfoList = { true },
+            filterQagWithSupportList = { true },
         )
     }
 

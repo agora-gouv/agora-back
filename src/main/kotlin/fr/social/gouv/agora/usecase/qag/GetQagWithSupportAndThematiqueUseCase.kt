@@ -40,7 +40,7 @@ class GetQagWithSupportAndThematiqueUseCase(
                 supportQagList = allSupportQagInfo.filter { supportQagInfo ->
                     supportQagInfo.qagId == qagInfo.id && qagFilters.filterSupportQagInfo.invoke(supportQagInfo)
                 },
-            ).takeIf { qagFilters.filterSupportQagInfoList.invoke(it.supportQagList) }
+            ).takeIf { qagFilters.filterQagWithSupportList.invoke(it) }
         }
     }
 
@@ -63,10 +63,10 @@ class GetQagWithSupportAndThematiqueUseCase(
 data class QagFilters(
     val filterQagInfo: (QagInfo) -> Boolean = { _ -> true },
     val filterSupportQagInfo: (SupportQagInfo) -> Boolean = { _ -> true },
-    val filterSupportQagInfoList: (List<SupportQagInfo>) -> Boolean = { _ -> true },
+    val filterQagWithSupportList: (QagInfoWithSupport) -> Boolean = { _ -> true },
 )
 
-private data class QagInfoWithSupport(
+data class QagInfoWithSupport(
     val qagInfo: QagInfo,
     val supportQagList: List<SupportQagInfo>,
 )
