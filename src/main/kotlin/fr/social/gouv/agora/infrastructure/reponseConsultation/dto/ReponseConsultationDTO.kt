@@ -18,7 +18,7 @@ data class ReponseConsultationDTO(
     @JoinTable(joinColumns = [JoinColumn(table = "choixpossible", referencedColumnName = "id")])
     val choiceId: UUID?,
     @Column(columnDefinition = "TEXT")
-    val responseText: String,
+    val responseText: String?,
     val participationId: UUID,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
