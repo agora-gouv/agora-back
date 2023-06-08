@@ -11,5 +11,5 @@ data class ReponseConsultation(
 data class ReponseConsultationInserting(
     val questionId: String,
     val choiceIds: List<String>?,
-    val responseText: String?,
+    val responseText: String,
 )

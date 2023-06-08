@@ -59,7 +59,7 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
         given(cacheRepository.getConsultationOngoingList())
             .willReturn(CacheResult.CacheNotInitialized)
 
-        given(databaseRepository.getConsultationOngoingList()).willReturn(emptyList())
+        given(databaseRepository.getConsultationOngoingList()).willReturn(null)
 
         // When
         val result = repository.getConsultationPreviewOngoingList()
@@ -67,7 +67,7 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(emptyList<ConsultationPreviewOngoingInfo>())
         then(cacheRepository).should(times(1)).getConsultationOngoingList()
-        then(cacheRepository).should(times(1)).insertConsultationOngoingList(emptyList())
+        then(cacheRepository).should(times(1)).insertConsultationOngoingList(null)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(databaseRepository).should(only()).getConsultationOngoingList()
     }
