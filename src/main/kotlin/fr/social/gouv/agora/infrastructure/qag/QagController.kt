@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.infrastructure.qag
 
-import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.*
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
@@ -8,6 +7,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import fr.social.gouv.agora.usecase.qag.QagResult
 
 @RestController
 @Suppress("unused")
@@ -15,7 +15,6 @@ class QagController(
     private val getQagUseCase: GetQagUseCase,
     private val insertQagUseCase: InsertQagUseCase,
     private val getAskQagStatusUseCase: GetAskQagStatusUseCase,
-    private val getQagInfoUseCase: GetQagInfoUseCase,
     private val mapper: QagJsonMapper,
 ) {
 
@@ -24,16 +23,14 @@ class QagController(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable qagId: String,
     ): HttpEntity<*> {
-        val qagStatus = getQagInfoUseCase.getQagStatus(qagId)
-        return if (qagStatus == QagStatus.OPEN || qagStatus == QagStatus.MODERATED_ACCEPTED)
-            getQagUseCase.getQag(
-                qagId = qagId,
-                userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
-            )?.let { qag ->
-                ResponseEntity.ok(mapper.toJson(qag))
-            } ?: ResponseEntity.EMPTY
-        else
-            ResponseEntity.EMPTY
+        val qagResult = getQagUseCase.getQag(
+            qagId = qagId,
+            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+        )
+        return when (qagResult) {
+            is QagResult.QagWithOpenOrAcceptedStatus -> ResponseEntity.ok(mapper.toJson(qagResult.qag))
+            else -> ResponseEntity.EMPTY
+        }
     }
 
     @PostMapping("/qags")
