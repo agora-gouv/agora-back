@@ -25,7 +25,10 @@ class QagHomeController(
     ): ResponseEntity<QagHomeJson> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
-        val qagPreviewList = getQagPreviewListUseCase.getQagPreviewList(userId = userId, thematiqueId = thematiqueId)
+        val qagPreviewList = getQagPreviewListUseCase.getQagPreviewList(
+            userId = userId,
+            thematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() },
+        )
 
         return ResponseEntity.ok()
             .body(
