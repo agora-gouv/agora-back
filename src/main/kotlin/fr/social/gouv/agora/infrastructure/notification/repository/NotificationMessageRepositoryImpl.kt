@@ -8,13 +8,13 @@ class NotificationMessageRepositoryImpl : NotificationMessageRepository {
 
     companion object {
         private const val QAG_MODERATED_NOTIFICATION_MESSAGE =
-            "Votre question au Gouvernement a été modérée. Elle ne correspondait malheureusement pas à la charte de participation. Si vous souhaitez en savoir plus, écrivez à "
+            "Malheureusement, votre question a du être modérée."
         private const val QAG_MODERATED_NOTIFICATION_TITLE =
-            "Question non conforme à la Charte"
+            "Question hors Charte"
     }
 
     override fun getQagModeratedNotificationMessage(): String {
-        return QAG_MODERATED_NOTIFICATION_MESSAGE + System.getenv("CONTACT_EMAIL")
+        return QAG_MODERATED_NOTIFICATION_MESSAGE
     }
     override fun getQagModeratedNotificationTitle(): String {
         return QAG_MODERATED_NOTIFICATION_TITLE
