@@ -28,7 +28,7 @@ class QagController(
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )
         return when (qagResult) {
-            is QagResult.QagWithOpenOrAcceptedStatus -> ResponseEntity.ok(mapper.toJson(qagResult.qag))
+            is QagResult.Success -> ResponseEntity.ok(mapper.toJson(qagResult.qag))
             else -> ResponseEntity.EMPTY
         }
     }

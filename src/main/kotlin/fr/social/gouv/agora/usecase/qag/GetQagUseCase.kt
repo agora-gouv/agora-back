@@ -36,15 +36,15 @@ class GetQagUseCase(
         }
         return when {
             qag == null -> QagResult.QagNotFound
-            qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED -> QagResult.QagWithOpenOrAcceptedStatus(qag)
-            else -> QagResult.StatusDifferentOpenAndAccepted
+            qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED -> QagResult.Success(qag)
+            else -> QagResult.QagInvalidStatus
         }
     }
 }
 
 sealed class QagResult {
-    data class QagWithOpenOrAcceptedStatus(val qag: Qag) : QagResult()
-    object StatusDifferentOpenAndAccepted : QagResult()
+    data class Success(val qag: Qag) : QagResult()
+    object QagInvalidStatus : QagResult()
     object QagNotFound : QagResult()
 }
 
