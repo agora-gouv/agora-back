@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.Qag
+import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
@@ -16,8 +17,8 @@ class GetQagUseCase(
     private val getFeedbackQagRepository: GetFeedbackQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
 ) {
-    fun getQag(qagId: String, userId: String): Qag? {
-        return qagInfoRepository.getQagInfo(qagId)?.let { qagInfo ->
+    fun getQag(qagId: String, userId: String): QagResult {
+        val qag = qagInfoRepository.getQagInfo(qagId)?.let { qagInfo ->
             thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
                 Qag(
                     id = qagInfo.id,
@@ -33,7 +34,18 @@ class GetQagUseCase(
                 )
             }
         }
+        return when {
+            qag == null -> QagResult.QagNotFound
+            qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED -> QagResult.Success(qag)
+            else -> QagResult.QagInvalidStatus
+        }
     }
-
 }
+
+sealed class QagResult {
+    data class Success(val qag: Qag) : QagResult()
+    object QagInvalidStatus : QagResult()
+    object QagNotFound : QagResult()
+}
+
 

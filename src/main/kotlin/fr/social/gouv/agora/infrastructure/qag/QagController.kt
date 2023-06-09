@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import fr.social.gouv.agora.usecase.qag.QagResult
 
 @RestController
 @Suppress("unused")
@@ -22,12 +23,14 @@ class QagController(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable qagId: String,
     ): HttpEntity<*> {
-        return getQagUseCase.getQag(
+        val qagResult = getQagUseCase.getQag(
             qagId = qagId,
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
-        )?.let { qag ->
-            ResponseEntity.ok(mapper.toJson(qag))
-        } ?: ResponseEntity.EMPTY
+        )
+        return when (qagResult) {
+            is QagResult.Success -> ResponseEntity.ok(mapper.toJson(qagResult.qag))
+            else -> ResponseEntity.EMPTY
+        }
     }
 
     @PostMapping("/qags")
