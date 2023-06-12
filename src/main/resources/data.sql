@@ -174,50 +174,6 @@ INSERT INTO responses_qag(id, author, author_portrait_url, author_description, r
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id, user_id) VALUES (
-    '1e9d2830-ee68-11ed-a05b-0242ac120003',
-    'Je suis à la tête d’une TPE et je suis très inquiète pour l’avenir. Que fait l’Etat pour nous aider ?',
-    'Les prévisions de croissance ne sont pas bonnes. La concurrence internationale est particulièrement rude et mes charges explosent. Je me sens particulièrement seule et inquiète. Que se passera-t-il pour mes employés si je mets la clef sous la porte ??',
-    '2023-06-02',
-    1,
-    'Julie',
-    'c97c3afd-1940-4b6d-950a-734b885ee5cb',
-    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
-) ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id;
-
-INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, transcription, qag_id) VALUES (
-    '67c904ea-d6bb-4825-bd98-cd8ec831b4d3',
-    'Olivia Grégoire',
-    'https://betagouv.github.io/agora-content/QaG-OliviaGregoire.png',
-    'Ministre déléguée auprès du ministre de l’Économie, des Finances et de la Souveraineté industrielle et numérique, chargée des Petites et moyennes entreprises, du Commerce, de l’Artisanat et du Tourisme',
-    '2023-06-05',
-    'https://betagouv.github.io/agora-content/qag_response_avenir_tpe.mov',
-    'Bonjour,\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    '1e9d2830-ee68-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO qags(id, title, description, post_date, status, username, thematique_id, user_id) VALUES (
-    '817b5c32-ee69-11ed-a05b-0242ac120003',
-    'Pourquoi ne peut-on pas choisir là où vont précisément nos impôts ? ',
-    'Il est normal de payer ses impôts pour financer notre système. Néanmoins, il me semble qu’il y aurait un consentement plus grand si vous pouvions chacun choisir les postes de dépense auquel nous aimerions contribuer. Cela donnerait plus de sens et moins l’impression de financer “une machine globale”. Qu’en pensez-vous ?',
-    '2023-06-01',
-    1,
-    'Jean',
-    '30671310-ee62-11ed-a05b-0242ac120003',
-    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
-) ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id;
-
-INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, transcription, qag_id) VALUES (
-    '7c4525bb-3557-473d-83da-3bcd940a5a9c',
-    'Gabriel Attal',
-    'https://betagouv.github.io/agora-content/QaG-GabrielAttal.png',
-    'Ministre délégué auprès du ministre de l’Économie, des Finances et de la Souveraineté industrielle et numérique, chargé des Comptes publics',
-    '2023-06-05',
-    'https://betagouv.github.io/agora-content/qag_response_impots_choix_depenses.mov',
-    'Bonjour,\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    '817b5c32-ee69-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO qags(id, title, description, post_date, status, username, thematique_id, user_id) VALUES (
     '996436ca-ee69-11ed-a05b-0242ac120003',
     'On parle beaucoup de l’intelligence artificielle… vous comptez faire quoi pour les emplois qu’elle risque de remplacer ?',
     'ChatGPT est arrivé avec fureur et on voit déjà combien un certain nombre de tâches et de métier pourraient être rapidement remplacés par l’intelligence artificielle… Faut-il interdire ChatGPT? Faut-il ré-orienter les travailleurs concernés ?',
