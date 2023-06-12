@@ -20,6 +20,7 @@ class ConsultationDetailsJsonMapper(private val thematiqueJsonMapper: Thematique
             participantCountGoal = domain.participantCountGoal,
             description = domain.description,
             tipsDescription = domain.tipsDescription,
+            hasAnswered = domain.hasAnswered,
         )
     }
 

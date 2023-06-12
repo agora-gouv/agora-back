@@ -26,6 +26,8 @@ data class ConsultationDetailsJson(
     val description: String,
     @JsonProperty("tipsDescription")
     val tipsDescription: String,
+    @JsonProperty("hasAnswered")
+    val hasAnswered: Boolean,
 )
 
 
