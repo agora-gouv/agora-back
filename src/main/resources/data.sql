@@ -338,7 +338,7 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/>Sources (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>)</body>',
     '<body>🗣 Consultation proposée par le <b>Ministère des Transports</b><br/><br/>🎯<b> Objectif</b> : évaluer et améliorer le plan national covoiturage <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
-) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'e271ed7a-ef05-11ed-a05b-0242ac120003',
@@ -799,4 +799,508 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
     1,
     '<body>👉 Le Ministre des transports recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>6 juillet prochain à l’occasion des 6 mois du plan covoiturage du gouvernement.</b>.<br/><br/>Il s’agira notamment de :<br/><ul><li>Faire un <b>premier bilan</b> des engagements pris grâce au plan,</li><li>Mettre en place de <b>nouvelles actions</b> pour encourager le covoiturage</li></ul><br/>—<br/><br/><b>🚗 Envie d’aller plus loin ?</b><br/>Rendez-vous ici (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>) pour voir comment vous lancer et en savoir plus sur le covoiturage et ses enjeux.</body>',
     '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
+
+INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
+    '98a8ba56-0923-11ee-be56-0242ac120002',
+    'Participation citoyenne : une appli, vos idées',
+    '2023-07-01',
+    'https://betagouv.github.io/agora-content/education.png',
+    '12 questions',
+    '10 minutes',
+    100,
+    '<body>En France, comme dans de nombreuses démocraties, l’abstention augmente, élection après élection. De nombreux citoyens ne font pas confiance aux responsables politiques, aux élus ou encore à l’Etat pour améliorer leur quotidien.<br/><br/>Pour tenter de rétablir ce lien de confiance, le Gouvernement compte, depuis juillet 2022, un ministre délégué auprès de la Première ministre chargé du «<b> renouveau démocratique </b>», Olivier Véran.<br/><br/>Son rôle consiste notamment à <b>développer les démarches de participation citoyenne</b>, pour permettre à chaque citoyen de mieux contribuer à la décision politique.<br/><br/>Cette appli mobile, que vous venez de télécharger, s’inscrit dans cet objectif. Elle est complémentaire de démarches dites « délibératives » en présentiel, comme par exemple, récemment, la Convention citoyenne sur la fin de vie.<br/><br/>Avec cette consultation, donnez-nous votre avis pour nous aider à aller plus loin !</body>',
+    '<body>🗣 Consultation proposée par le <b>Ministre du Renouveau Démocratique</b><br/><br/>🎯<b> Objectif</b> : Contribuer à la feuille de route gouvernementale pour le renouveau démocratique <br/><br/>🚀<b>Axe gouvernemental</b> : Renforcer l’ordre républicain et encourager l’engagement</body>',
+    '30671310-ee62-11ed-a05b-0242ac120003'
+) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'e65beea0-0926-11ee-be56-0242ac120002',
+    'Suivez-vous l’actualité politique ?',
+    1,
+    'unique',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '092557b4-0927-11ee-be56-0242ac120002',
+    'Au quotidien',
+    1,
+    'e65beea0-0926-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '092557b4-0927-11ee-be56-0242ac120001',
+    'De temps en temps',
+    2,
+    'e65beea0-0926-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '092557b4-0927-11ee-be56-0242ac120003',
+    'Uniquement avant une élection',
+    3,
+    'e65beea0-0926-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+     '092557b4-0927-11ee-be56-0242ac120010',
+     'Jamais',
+     4,
+     'e65beea0-0926-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'abe8c6b0-0928-11ee-be56-0242ac120002',
+    'Avez-vous l’impression que les décisions politiques ont un impact sur votre quotidien ?',
+    2,
+    'unique',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'c2ad3e1c-0928-11ee-be56-0242ac120002',
+    'Oui, plutôt en bien',
+    1,
+    'abe8c6b0-0928-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'c2ad3e1c-0928-11ee-be56-0242ac120011',
+    'Oui, plutôt en mal',
+    2,
+    'abe8c6b0-0928-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'c2ad3e1c-0928-11ee-be56-0242ac120012',
+    'Non',
+    3,
+    'abe8c6b0-0928-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+     'c2ad3e1c-0928-11ee-be56-0242ac121002',
+     'Je ne sais pas',
+     4,
+     'abe8c6b0-0928-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '2c154084-0929-11ee-be56-0242ac120002',
+    'Pour vous, le renouveau démocratique passe d’abord par… ?',
+    3,
+    'multiple',
+    null,
+    3,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+     '43f979ae-0929-11ee-be56-0242ac120002',
+     'Un changement de pratiques politiques des élus',
+     1,
+     '2c154084-0929-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+     '43f979ae-0929-11ee-be56-0242ac120102',
+     'Davantage de participation des citoyens aux décisions politiques',
+     2,
+     '2c154084-0929-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+     '43f979ae-0929-11ee-be56-0242ac121002',
+     'Une réforme de nos institutions',
+     3,
+     '2c154084-0929-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+     '43f979ae-0929-11ee-be56-0242ac121102',
+     'Autre',
+     4,
+     '2c154084-0929-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '7763aeda-092a-11ee-be56-0242ac120002',
+    'Avez-vous des idées ou propositions pour renouveler la démocratie en France ?',
+    4,
+    'ouverte',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'dab3dc58-092a-11ee-be56-0242ac120002',
+    'Avez-vous déjà participé à une consultation citoyenne ? (en ligne ou en présentiel)',
+    5,
+    'unique',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '0b7b992a-092b-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    'dab3dc58-092a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '0b7b992a-092b-11ee-be56-0242ac120001',
+    'Non',
+    2,
+    'dab3dc58-092a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '0b7b992a-092b-11ee-be56-0242ac120202',
+    'Je ne sais pas ce que c’est',
+    3,
+    'dab3dc58-092a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '40b7d25c-092b-11ee-be56-0242ac120002',
+    'Pour vous, développer la participation citoyenne est :',
+    6,
+    'unique',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5a0071ec-092b-11ee-be56-0242ac120002',
+    'Inutile',
+    1,
+    '40b7d25c-092b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5a0071ec-092b-11ee-be56-0242ac120001',
+    'Utile, mais non prioritaire',
+    2,
+    '40b7d25c-092b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5a0071ec-092b-11ee-be56-0242ac120000',
+    'Utile et prioritaire',
+    3,
+    '40b7d25c-092b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5a0071ec-092b-11ee-be56-0242ac110000',
+    'Je ne sais pas',
+    4,
+    '40b7d25c-092b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'd4df6396-092b-11ee-be56-0242ac120002',
+    'Pensez-vous que les dispositifs de participation citoyenne ont un impact sur la décision politique ?',
+    7,
+    'unique',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ea68bafa-092b-11ee-be56-0242ac120002',
+    'Le plus souvent',
+    1,
+    'd4df6396-092b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ea68bafa-092b-11ee-be56-0242ac120001',
+    'Parfois',
+    2,
+    'd4df6396-092b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ea68bafa-092b-11ee-be56-0242ac120000',
+    'Jamais',
+    3,
+    'd4df6396-092b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ea68bafa-092b-11ee-be56-0242ac120102',
+    'Je ne sais pas',
+    4,
+    'd4df6396-092b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'b9e813c0-092c-11ee-be56-0242ac120002',
+    'Pouvoir s''exprimer sur les grands projets et les politiques prioritaires du gouvernement via une application dédiée comme celle que vous venez de télécharger ; est-ce une bonne idée selon vous ?',
+    8,
+    'unique',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'd97f36a0-092c-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    'b9e813c0-092c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'd97f36a0-092c-11ee-be56-0242ac120001',
+    'Non',
+    2,
+    'b9e813c0-092c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'd97f36a0-092c-11ee-be56-0242ac120003',
+    'Je ne sais pas',
+    3,
+    'b9e813c0-092c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '4343c204-092d-11ee-be56-0242ac120002',
+    'Sur quels sujets aimeriez-vous être consultés en priorité ?',
+    9,
+    'multiple',
+    null,
+    3,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0932-11ee-be56-0242ac120002',
+    'Agriculture & alimentation',
+    1,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0932-11ee-be56-0242ac121002',
+    'Autonomie',
+    2,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0932-11ee-be56-0242ac120302',
+    'Culture',
+    3,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0932-11ee-be56-0242ac120402',
+    'Démocratie',
+    4,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0932-11ee-be56-0242ac120502',
+    'Economie',
+    5,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0832-11ee-be56-0242ac120002',
+    'Education & jeunesse',
+    6,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0732-11ee-be56-0242ac120002',
+    'Egalité',
+    7,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0232-11ee-be56-0242ac120002',
+    'Energie',
+    8,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0032-11ee-be56-0242ac120002',
+    'Enfance',
+    9,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d61-0932-11ee-be56-0242ac120002',
+    'Etudes sup. & recherche',
+    10,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d62-0932-11ee-be56-0242ac120002',
+    'Europe & international',
+    11,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d63-0932-11ee-be56-0242ac120002',
+    'Handicap',
+    12,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d65-0932-11ee-be56-0242ac120002',
+    'Justice',
+    13,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d68-0932-11ee-be56-0242ac120002',
+    'Logement',
+    14,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8000-0932-11ee-be56-0242ac120002',
+    'Outre-mer',
+    15,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '1f3a8d60-0932-11ee-be56-0242ac120002',
+    'Santé',
+    16,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '0f3a8d60-0932-11ee-be56-0242ac120002',
+    'Sécurité & défense',
+    17,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '3f3a8d60-0932-11ee-be56-0242ac120002',
+    'Services publics',
+    18,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f1a8d60-0932-11ee-be56-0242ac120002',
+    'Solidarités',
+    19,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f2a8d60-0932-11ee-be56-0242ac120002',
+    'Sport',
+    20,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f8a8d60-0932-11ee-be56-0242ac120002',
+    'Transition écologique',
+    21,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f9a8d60-0932-11ee-be56-0242ac120002',
+    'Transports',
+    22,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2f3a8d60-0992-11ee-be56-0242ac120002',
+    'Travail',
+    23,
+    '4343c204-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'b7c7eccc-092d-11ee-be56-0242ac120002',
+    'Sur cette application, le Gouvernement prend l''engagement de répondre chaque semaine à une question posée par les citoyens (celle qui obtient le plus de votes) ; est-ce une bonne idée ?',
+    10,
+    'unique',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'f130db54-092d-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    'b7c7eccc-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'f130db54-092d-11ee-be56-0242ac120001',
+    'Non',
+    2,
+    'b7c7eccc-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'f130db54-092d-11ee-be56-0242ac120202',
+    'Je ne sais pas',
+    3,
+    'b7c7eccc-092d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '5563aeda-092a-11ee-be56-0242ac120002',
+    'Qu’attendez-vous en priorité des réponses que feront les ministres à ces questions ?',
+    11,
+    'ouverte',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '6363aeda-092a-11ee-be56-0242ac120002',
+    'A quoi doit, selon vous, principalement servir cette application ? C’est la dernière question : partagez-nous toutes vos idées !',
+    12,
+    'ouverte',
+    null,
+    null,
+    '98a8ba56-0923-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
+    '68682956-094b-423b-9086-9ec4f8ef2662',
+    1,
+    '<body>👉 Le Ministre du Renouveau démocratique, après lecture de l’ensemble de vos contributions, reviendra vers vous, directement sur cette appli, pour vous partager les mesures que le Gouvernement entend mettre en œuvre pour :<br/><br/><ul><li><b>Améliorer cette application</b></li><li><b>Continuer à développer la participation citoyenne</b></li><li><b>Lutter contre l’abstention et la défiance démocratique</b></li><br/><br/>-<br/><br/>👉 <b>Envie d''aller plus loin ?<br/><br/></b><br/><br/>Rendez-vous <a href="https://www.participation-citoyenne.gouv.fr/">ici</a> <b>(participation-citoyenne.gouv.fr)</b> pour en savoir plus sur les dispositifs de participation citoyenne mis en place de façon volontaire par l’Etat.</br></br>Vous pouvez à tout moment donner vos retours sur l’application dans le bouton “Profil”</body>',
+    '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
