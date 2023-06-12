@@ -329,20 +329,20 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
 
 INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     '6d85522a-ee71-11ed-a05b-0242ac120003',
-    'Développer le covoiturage au quotidien',
-    '2023-06-21',
+    'Covoiturage, roulons ensemble',
+    '2023-07-04',
     'https://betagouv.github.io/agora-content/covoiturage.png',
-    '7 questions',
+    '12 questions',
     '5 minutes',
     100,
-    '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/><a href="https://www.ecologie.gouv.fr/covoiturage">Sources</a></body>',
-    '<body>🗣 Consultation proposée par le <b>Ministère des Transports</b><br/><br/>🎯<b> Objectif</b> : évaluer et améliorer le plan national covoiturage</body>',
+    '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/>Sources (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>)</body>',
+    '<body>🗣 Consultation proposée par le <b>Ministère des Transports</b><br/><br/>🎯<b> Objectif</b> : évaluer et améliorer le plan national covoiturage <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'e271ed7a-ef05-11ed-a05b-0242ac120003',
-    'Pour vous, le covoiturage c’est un sujet …',
+    'Avez-vous une voiture ?',
     1,
     'unique',
     null,
@@ -352,28 +352,21 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'f5dd076e-ef05-11ed-a05b-0242ac120003',
-    'Pas très important',
+    'Oui',
     1,
     'e271ed7a-ef05-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '0fd15904-ef06-11ed-a05b-0242ac120003',
-    'Important',
+    'Non',
     2,
-    'e271ed7a-ef05-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '17c62b58-ef06-11ed-a05b-0242ac120003',
-    'Très important',
-    3,
     'e271ed7a-ef05-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '48d3c502-ef06-11ed-a05b-0242ac120003',
-    'Comment vous rendez-vous généralement sur votre lieu de travail ?',
+    'Dans quel cadre utilisez-vous principalement votre voiture ?',
     2,
     'unique',
     null,
@@ -383,28 +376,28 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120003',
-    'En voiture, seul(e)',
+    'Déplacement quotidien domicile-travail',
     1,
     '48d3c502-ef06-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120010',
-    'En covoiturage',
+    'Déplacement quotidien école / courses',
     2,
     '48d3c502-ef06-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120011',
-    'En transports en commun',
+    'Déplacement pour motif professionnel (hors du lieu habituel de travail)',
     3,
     '48d3c502-ef06-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120012',
-    'En vélo ou à pied',
+    'Déplacement occasionnel (loisir et vacances)',
     4,
     '48d3c502-ef06-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
@@ -418,7 +411,7 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'e52c5868-ef08-11ed-a05b-0242ac120003',
-    'Avez-vous repéré des incitations à vous lancer dans le covoiturage ces derniers mois, dans la presse, à la radio, sur des affiches ou autre ?',
+    'Avez-vous déjà fait du covoiturage? Que ce soit en tant que conducteur ou passager.',
     3,
     'unique',
     null,
@@ -435,77 +428,46 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '1b52a816-ef09-11ed-a05b-0242ac120002',
-    'Je crois mais je n’en suis pas sûr(e)',
-    2,
-    'e52c5868-ef08-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '1b52a816-ef09-11ed-a05b-0242ac120001',
     'Non',
-    3,
+    2,
     'e52c5868-ef08-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'a3ae519c-ef09-11ed-a05b-0242ac120003',
-    'Une campagne de communication a eu lieu à partir de mars.',
+    '867b767a-0905-11ee-be56-0242ac120002',
+    'Êtes-vous prêt à covoiturer en tant que …',
     4,
-    'chapter',
-    '<body>Le plan de covoiturage comporte 3 parties :<br/><ol><li>Une <b>prime de 100 euros</b> pour ceux qui se lancent dans le covoiturage (25 euros au premier trajet et 75 euros au bout du 10ème trajet dans les 3 mois)</li><li>Le <b>forfait mobilités durables</b>, un dispositif financier de soutien aux salariés du secteur privé (jusqu’à 800 euros par an) et agents de services publics (jusqu’à 300 euros par an) pour leurs déplacements domicile-travail</li><li>Un <b>soutien aux aides locales.</b> De nombreuses collectivités proposent des incitations financières et l’Etat double la mise pour les encourager.</li></ol></body>',
+    'unique',
     null,
-    '6d85522a-ee71-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '91c3411c-ef0a-11ed-a05b-0242ac120003',
-    'Avez-vous bénéficié d’une des ces aides ?',
-    5,
-    'multiple',
     null,
-    3,
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac120003',
-    'Prime de 100 euros reversée par les plateformes de covoiturage',
+    '9c3eba80-0905-11ee-be56-0242ac120002',
+    'Conducteur',
     1,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '867b767a-0905-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac120010',
-    'Forfait mobilités durables avec votre employeur',
+    'a3e959f2-0905-11ee-be56-0242ac120002',
+    'Passager',
     2,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '867b767a-0905-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac120011',
-    'Incitation financière de votre collectivité',
+    'ab7d336e-0905-11ee-be56-0242ac120002',
+    'Les deux',
     3,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac120012',
-    'Non et ça ne m’intéresse pas',
-    4,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac120013',
-    'Non, mais je vais me renseigner',
-    5,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '867b767a-0905-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120015',
-    'Avez-vous des idées ou des recommandations pour améliorer ces différentes aides financières ?',
-    6,
+    'Quelle est votre principale difficulté pour recourir au covoiturage ? (conducteur et/ou passager)',
+    5,
     'ouverte',
     null,
     null,
@@ -513,9 +475,99 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '91c3411c-ef0a-11ed-a05b-0242ac120100',
-    'En dehors des aides financières,  qu’est-ce qui marcherait le mieux selon vous pour encourager les personnes à faire du covoiturage ?',
+    '4c85adfe-0906-11ee-be56-0242ac120002',
+    'A quelle fréquence pourriez-vous recourir au covoiturage ?',
+    6,
+    'unique',
+    null,
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5f30b336-0906-11ee-be56-0242ac120002',
+    'Tous les jours',
+    1,
+    '4c85adfe-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5f30b336-0906-11ee-be56-0242ac120001',
+    'Plusieurs fois par semaine',
+    2,
+    '4c85adfe-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5f30b336-0906-11ee-be56-0242ac120003',
+    'Plusieurs fois par mois',
+    3,
+    '4c85adfe-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5f30b336-0906-11ee-be56-0242ac120003',
+    'De manière occasionnelle',
+    4,
+    '4c85adfe-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5f30b336-0906-11ee-be56-0242ac120003',
+    'Je ne suis pas concerné (e)',
+    5,
+    '4c85adfe-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'cea510c2-0906-11ee-be56-0242ac120002',
+    'Pour quel usage principalement ?',
     7,
+    'unique',
+    null,
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '6ed88358-0907-11ee-be56-0242ac120002',
+    'Déplacement quotidien domicile-travail',
+    1,
+    'cea510c2-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '6ed88358-0907-11ee-be56-0242ac120010',
+    'Déplacement quotidien école / courses',
+    2,
+    'cea510c2-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '6ed88358-0907-11ee-be56-0242ac120005',
+    'Déplacement pour motif professionnel (hors du lieu habituel de travail)',
+    3,
+    'cea510c2-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '6ed88358-0907-11ee-be56-0242ac120033',
+    'Déplacement occasionnel (loisir et vacances)',
+    4,
+    'cea510c2-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '6ed88358-0907-11ee-be56-0242ac120011',
+    'Aucun',
+    5,
+    'cea510c2-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    'Parmi les mesures proposées, quelle est la ou les deux mesures qui vous convaincrez le plus pour recourir au covoiturage ?',
+    8,
     'multiple',
     null,
     2,
@@ -523,37 +575,219 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac121000',
-    'Avoir une place réservée et gratuite de parking',
+    'ac24b428-ef0a-11ed-a05b-0242ac120003',
+    'Des places de stationnement au départ et à l’arrivée',
     1,
-    '91c3411c-ef0a-11ed-a05b-0242ac120100'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac121001',
-    'Pouvoir utiliser des voies réservées pour aller plus vite',
+    'ac24b428-ef0a-11ed-a05b-0242ac120010',
+    'Des voies sur les routes ou les autoroutes réservées au covoiturage',
     2,
-    '91c3411c-ef0a-11ed-a05b-0242ac120100'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac121002',
-    'Avoir une meilleure interconnexion avec les autres transports (bus, train, etc.)',
+    'ac24b428-ef0a-11ed-a05b-0242ac120011',
+    'Une incitation financière pour le conducteur',
     3,
-    '91c3411c-ef0a-11ed-a05b-0242ac120100'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'ac24b428-ef0a-11ed-a05b-0242ac121003',
-    'Rien',
+    'ac24b428-ef0a-11ed-a05b-0242ac120012',
+    'Une incitation financière pour le passager',
     4,
-    '91c3411c-ef0a-11ed-a05b-0242ac120100'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ac24b428-ef0a-11ed-a05b-0242ac120013',
+    'Une plateforme unique de mise en relation sur mon territoire',
+    5,
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ac24c428-ef0a-11ed-a05b-0242ac120013',
+    'Des arrêts d’autostop organisé le long d’un axe routier (ligne de covoiturage)',
+    6,
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ac24b428-ef0a-11ed-a05b-0242ac127713',
+    'Un accompagnement et de l’information sur le fonctionnement et les aides au covoiturage',
+    7,
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ac24b428-ef0a-88ed-a05b-0242ac120013',
+    'L’intégration du covoiturage dans une offre plus large de transports (horaires et points de contacts proches des transports en commun)',
+    8,
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'a3ae519c-ef09-11ed-a05b-0242ac120003',
+    'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
+    9,
+    'chapter',
+    '<body>👉Le <b>développement d’infrastructures</b> comme des voies réservées sur routes et autoroutes, des lignes de covoiturage (arrêts d’auto-stop organisé le long d’un axe routier) ou encore des aires de covoiturage clairement identifiées pour prendre ou déposer des passagers se développent partout en France.</body>',
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '9197bab0-0909-11ee-be56-0242ac120002',
+    'Connaissez-vous des infrastructures dédiées au covoiturage proche de vous ?',
+    10,
+    'unique',
+    null,
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9f724178-0909-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    '9197bab0-0909-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9f724178-0909-11ee-be56-0242ac120000',
+    'Non',
+    2,
+    '9197bab0-0909-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9f724178-0909-11ee-be56-0242ac120011',
+    'Je ne sais pas',
+    3,
+    '9197bab0-0909-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'f2aa628a-0909-11ee-be56-0242ac120002',
+    'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
+    11,
+    'chapter',
+    '<body>👉 Les <b>voies dédiées au covoiturage</b> sur routes et autoroutes pour limiter la pollution consistent à réserver ces voies aux seuls véhicules avec 2 personnes minimum à bord. Cette mesure a un impact sur les voies disponibles pour les autres automobilistes.</body>',
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '580bd3c0-090a-11ee-be56-0242ac120002',
+    'Seriez-vous prêt à accepter ce traitement différencié ?',
+    12,
+    'unique',
+    null,
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '66bab292-090a-11ee-be56-0242ac121111',
+    'Oui',
+    1,
+    '580bd3c0-090a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '66bab292-090a-11ee-be56-0242ac120002',
+    'Non',
+    2,
+    '580bd3c0-090a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '66bab292-090a-11ee-be56-0242ac120102',
+    'Je ne sais pas',
+    3,
+    '580bd3c0-090a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '8bdfcbde-090a-11ee-be56-0242ac120002',
+    'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
+    13,
+    'chapter',
+    '<body>👉Des <b>incitations financières</b> à la réalisation de trajets en covoiturage existent : une prime gouvernementale offre 100€ aux nouveaux conducteurs qui effectuent 10 premiers trajets en covoiturage depuis le 1er janvier 2023, les employeurs peuvent verser une aide mobilité jusqu’à 800€ par an aux salariés qui covoiturent pour se rendre au travail, certaines mairies ou régions permettent aux passagers de covoiturer gratuitement sur le territoire et/ou subventionnent les conducteurs.</body>',
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'd6cba992-090a-11ee-be56-0242ac120002',
+    'Connaissez-vous ces incitations ?',
+    14,
+    'unique',
+    null,
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'e615de2c-090a-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    'd6cba992-090a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'e615de2c-090a-11ee-be56-0242ac120003',
+    'Non',
+    2,
+    'd6cba992-090a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'e615de2c-090a-11ee-be56-0242ac120001',
+    'Je ne sais pas',
+    3,
+    'd6cba992-090a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '1f0d4940-090b-11ee-be56-0242ac120002',
+    'Avez-vous déjà bénéficié d’incitations financières au covoiturage ?',
+    15,
+    'unique',
+    null,
+    null,
+    '6d85522a-ee71-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5453e924-090b-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    '1f0d4940-090b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5453e924-090b-11ee-be56-0242ac120001',
+    'Non',
+    2,
+    '1f0d4940-090b-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5453e924-090b-11ee-be56-0242ac120010',
+    'Je ne sais pas',
+    3,
+    '1f0d4940-090b-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120020',
-    'Avez-vous d’autres idées pour encourager le covoiturage en France et améliorer le plan national lancé ?',
-    8,
+    'Avez-vous d’autres idées pour encourager le covoiturage en France ?',
+    16,
     'ouverte',
     null,
     null,
@@ -563,450 +797,6 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '72682956-094b-423b-9086-9ec4f8ef2662',
     1,
-    '<body>👉 Le Ministre des transports recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>22 juin à 10h</b>.<br/><br/>Il s’agira notamment de :<br/><ul><li>Faire un <b>premier bilan</b> des engagements pris grâce au plan,</li><li>Mettre en place de <b>nouvelles actions</b> pour encourager le covoiturage</li></ul><br/>—<br/><br/><b>🚗 Envie d’aller plus loin ?</b><br/><a href="https://www.ecologie.gouv.fr/covoiturage">Rendez-vous ici</a> pour voir comment vous lancer et en savoir plus sur le covoiturage et ses enjeux.</body>',
+    '<body>👉 Le Ministre des transports recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>6 juillet prochain à l’occasion des 6 mois du plan covoiturage du gouvernement.</b>.<br/><br/>Il s’agira notamment de :<br/><ul><li>Faire un <b>premier bilan</b> des engagements pris grâce au plan,</li><li>Mettre en place de <b>nouvelles actions</b> pour encourager le covoiturage</li></ul><br/>—<br/><br/><b>🚗 Envie d’aller plus loin ?</b><br/>Rendez-vous ici (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>) pour voir comment vous lancer et en savoir plus sur le covoiturage et ses enjeux.</body>',
     '6d85522a-ee71-11ed-a05b-0242ac120003'
-) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
-
-INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
-    '6d85522a-ee71-11ed-a05b-0242ac120010',
-    'Généraliser le Service National Universel (SNU)',
-    '2023-06-22',
-    'https://betagouv.github.io/agora-content/education.png',
-    '7 questions',
-    '5 minutes',
-    100,
-    '<body>Promesse de campagne du président de la République, le Service national universel (SNU) a été mis en place à partir de 2019.<br/><br/>Son but est de créer du collectif en favorisant le sentiment d’unité nationale, de transmettre le goût de l’engagement et de la République et d’impliquer la jeunesse dans la vie du pays.<br/><br/>Il s’agit concrètement d’un parcours à destination des jeunes de 15 à 17 ans en plusieurs étapes :<br/><br/><ol><li>Un <b>séjour de cohésion de 15 jours</b> avec une centaine de jeunes de toute la France dans un autre département que le sien,</li><li>Une <b>mission d’intérêt général</b> à effectuer sur une année près de chez soi,</li><li>En option, la poursuite par une <b>mission de Service civique</b> ou du bénévolat jusqu’à ses 25 ans.</li></ol><br/>Pensez-vous que le SNU est un dispositif utile ? Comment le rendre plus efficace pour créer de la cohésion nationale auprès des jeunes ?<br/><br/><a href="https://www.snu.gouv.fr/">Sources</a></body>',
-    '<body>🗣 Consultation proposée par le <b>Secrétariat d’Etat chargé de la Jeunesse et du Service national universel</b><br/><br/>🎯<b> Objectif</b> : évaluer la perception du SNU par les citoyens et le faire évoluer</body>',
-    '5b9180e6-3e43-4c63-bcb5-4eab621fc016'
-) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120003',
-    'Pour vous, le Service national universel c’est un sujet …',
-    1,
-    'unique',
-    null,
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'f8b5a978-ef0f-11ed-a05b-0242ac120003',
-    'Pas très important',
-    1,
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'f8b5a978-ef0f-11ed-a05b-0242ac120001',
-    'Important',
-    2,
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'f8b5a978-ef0f-11ed-a05b-0242ac120002',
-    'Très important',
-    3,
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120100',
-    'Connaissez-vous quelqu’un ayant participé au SNU ?',
-    2,
-    'unique',
-    null,
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'f8b5a978-ef0f-11ed-a05b-0242ac121111',
-    'J’ai moi-même participé',
-    1,
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120100'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'f8b5a978-ef0f-11ed-a05b-0242ac121011',
-    'Je connais une personne ayant participé',
-    2,
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120100'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'f8b5a978-ef0f-11ed-a05b-0242ac121101',
-    'Je connais plusieurs personnes ayant participé',
-    3,
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120100'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'f8b5a978-ef0f-11ed-a05b-0242ac121110',
-    'Je ne connais personne ayant participé',
-    4,
-    'c98bb6f6-ef0f-11ed-a05b-0242ac120100'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'a3ae519c-ef09-11ed-a05b-0242ac120113',
-    'Zoom sur le séjour de cohésion',
-    3,
-    'chapter',
-    '<body>La phase 1 du SNU est le séjour de cohésion.<br/><br/>Pendant 2 semaines, les journées sont rythmées :<br/><br/><ul><li>La journée commence par le lever des couleurs, <b>rituel républicain</b> pendant lequel on lève le drapeau français et on chante l’hymne national, la Marseillaise.</li><li>Ont ensuite lieu des <b>activités diverses</b>, en plein air ou en salle, toujours collectives et participatives : sport et activités physiques, activités culturelles, chantiers participatifs, visites, etc.</li><li>L’hébergement se fait par <b>maisonnée</b> composée d’une douzaine de jeunes et encadrée par un tuteur. Filles et garçons sont séparés. Tous participent aux tâches du centre d’hébergement (repas, nettoyage, gestion des déchets ménagers, organisations des activités, etc.)</li><li>Le séjour de cohésion se termine par une <b>cérémonie de clôture</b>, en présence des autorités locales.</li></ul></body>',
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'dfb1647e-ef11-11ed-a05b-0242ac120003',
-    'Qu’est-ce qui vous semble le plus important dans le séjour de cohésion ?',
-    4,
-    'multiple',
-    null,
-    2,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '05ed3320-ef12-11ed-a05b-0242ac120003',
-    'Sortir de son milieu habituel',
-    1,
-    'dfb1647e-ef11-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '05ed3320-ef12-11ed-a05b-0242ac120000',
-    'Rencontrer d’autres jeunes',
-    2,
-    'dfb1647e-ef11-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '05ed3320-ef12-11ed-a05b-0242ac120001',
-    'L’apprentissage des rites républicains',
-    3,
-    'dfb1647e-ef11-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '05ed3320-ef12-11ed-a05b-0242ac120002',
-    'La découverte de différentes activités',
-    4,
-    'dfb1647e-ef11-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '05ed3320-ef12-11ed-a05b-0242ac120100',
-    'Avez-vous des idées ou des recommandations pour améliorer le séjour de cohésion ?',
-    5,
-    'ouverte',
-    null,
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'a9a2974e-ef12-11ed-a05b-0242ac120003',
-    'Zoom sur la mission d’intérêt général.',
-    6,
-    'chapter',
-    '<body>La phase 2 du SNU est la mission d’intérêt général.<br/><br/><ul><li>Le jeune choisit la <b>cause</b> qu’il souhaite soutenir : environnement et développement durable, solidarité, santé, sport, éducation, sécurité, défense et mémoire, culture ou citoyenneté.</li><li>Il choisit une structure et lui apporte son aide pendant <b>12 jours minimum ou 84 heures dans l’année</b>, de façon ponctuelle ou régulière.</li><li>Cela peut être au sein d’une <b>association</b>, d’un <b>service public</b>, d’un établissement de santé ou encore d’une entreprise solidaire d’utilité sociale agréée.</li></ul></body>',
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '05ed3320-ef12-11ed-a05b-0242ac120102',
-    'Avez-vous des idées ou des recommandations pour améliorer la mission d’intérêt général ?',
-    7,
-    'ouverte',
-    null,
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'e271ed7a-ef05-11ed-a05b-0142ac120003',
-    'Si vous aviez entre 15 et 17 ans, aimeriez-vous participer au SNU ?',
-    8,
-    'unique',
-    null,
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '01ed3320-ef10-11ed-a05b-0242ac120002',
-    'Non, pas du tout',
-    1,
-    'e271ed7a-ef05-11ed-a05b-0142ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '01ed3320-ef11-11ed-a05b-0242ac120002',
-    'Plutôt pas',
-    2,
-    'e271ed7a-ef05-11ed-a05b-0142ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '01ed3320-ef13-11ed-a05b-0242ac120002',
-    'Plutôt oui',
-    3,
-    'e271ed7a-ef05-11ed-a05b-0142ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '01ed3320-ef02-11ed-a05b-0242ac120002',
-    'Oui vraiment',
-    4,
-    'e271ed7a-ef05-11ed-a05b-0142ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'e271ed7a-ef05-10ed-a05b-0142ac120003',
-    'Selon vous, le SNU devrait …',
-    9,
-    'unique',
-    null,
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '01ed3320-ef12-10ed-a05b-0242ac120002',
-    'être supprimé',
-    1,
-    'e271ed7a-ef05-10ed-a05b-0142ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '01ed3320-ef12-12ed-a05b-0242ac120002',
-    'être étendu en restant sur la base du volontariat',
-    2,
-    'e271ed7a-ef05-10ed-a05b-0142ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '01ed3320-ef12-13ed-a05b-0242ac120002',
-    'être rendu obligatoire',
-    3,
-    'e271ed7a-ef05-10ed-a05b-0142ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '05ed3320-ef12-11ed-a05b-0242ac110102',
-    'Souhaitez-vous ajouter un commentaire ou une remarque sur le service national universel ?',
-    10,
-    'ouverte',
-    null,
-    null,
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
-    '72682956-094b-423b-9086-9ec4f8ef2612',
-    1,
-    '<body>👉 La Secrétaire d’Etat en charge de la jeunesse et du Service national universel recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>23 juin à 10h</b>.<br/><br/>Il s’agira notamment de :<br/><br/><ul><li>Faire un <b>bilan</b> de ce que les Français perçoivent du SNU,</li><li>Proposer des pistes d’amélioration pour le SNU.</li></ul>—<br/><br/><b>✊ Envie d’aller plus loin ?</b><br/><br/><a href="https://www.snu.gouv.fr/">Rendez-vous ici</a> pour en savoir plus et proposer des missions d’intérêt général si vous avez une structure qui peut en accueillir.</body>',
-    '6d85522a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
-
-INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
-    '6d82222a-ee71-11ed-a05b-0242ac120010',
-    'Renforcer le numérique au service des patients',
-    '2023-06-23',
-    'https://betagouv.github.io/agora-content/sante.png',
-    '7 questions',
-    '5 minutes',
-    100,
-    '<body>Le Gouvernement souhaite améliorer le parcours des patients par le numérique et la télésanté.<br/><br/>Le numérique en santé est un enjeu majeur pour :<br/><br/><ul><li><b>Faciliter la vie.</b> Permettre aux Français de gérer leur santé plus facilement et plus efficacement grâce à des outils numériques innovants.</li><li><b>Améliorer l’accès aux soins</b>. Réduire les déplacements inutiles des patients en leur offrant des options de consultation à distance, désengorger les établissements de santé et offrir une alternative aux citoyens habitants dans des déserts médicaux.</li><li><b>Améliorer la qualité des soins</b>. Permettre aux professionnels de santé de mieux communiquer et de partager des informations sur les patients conduirait à une prise en charge plus rapide et plus efficace des problèmes de santé.</li></ul></br>Quelle est votre perception de l’utilisation du numérique en santé ? Comment pourrions nous vous faciliter la vie en la matière ?</body>',
-    '<body>🗣 Consultation proposée par le <b>Ministère de la santé</b><br/><br/>🎯<b> Objectif</b> : évaluer la perception et trouver des idées d’amélioration de l’utilisation du numérique en matière de santé</body>',
-    'a4bb4b27-3271-4278-83c9-79ac3eee843a'
-) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '95167ec6-ef17-11ed-a05b-0242ac120003',
-    'Comment prenez-vous généralement vos rendez-vous médicaux ?',
-    1,
-    'unique',
-    null,
-    null,
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'b7c81768-ef17-11ed-a05b-0242ac120003',
-    'En ligne',
-    1,
-    '95167ec6-ef17-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'b7c81768-ef17-11ed-a05b-0242ac120001',
-    'Par téléphone',
-    2,
-    '95167ec6-ef17-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'b7c81768-ef17-11ed-a05b-0242ac120002',
-    'Via un proche',
-    3,
-    '95167ec6-ef17-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'b7c81768-ef17-11ed-a05b-0242ac120010',
-    'Autre',
-    4,
-    '95167ec6-ef17-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '95167ec6-ef17-11ed-a05b-0242ac120010',
-    'Avez-vous déjà effectué une consultation en ligne avec un médecin généraliste ou un spécialiste ?',
-    2,
-    'unique',
-    null,
-    null,
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'b7c81768-ef17-11ed-a05b-0242ac121010',
-    'Oui, et je recommande',
-    1,
-    '95167ec6-ef17-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'b7c81768-ef17-11ed-a05b-0242ac111010',
-    'Oui, mais je ne recommande pas',
-    2,
-    '95167ec6-ef17-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'b7c81768-ef17-11ed-a05b-0242ac011010',
-    'Non, je n’ai pas encore eu l’occasion',
-    3,
-    '95167ec6-ef17-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'b7c81768-ef17-11ed-a05b-0242ac121011',
-    'Non, je ne le souhaite pas',
-    4,
-    '95167ec6-ef17-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '01ed3320-ef12-11ed-a05b-0242ac120100',
-    'D’après vous, comment les consultations en ligne pourraient-elles améliorées ?',
-    3,
-    'ouverte',
-    null,
-    null,
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'a3ae519c-ef09-11ed-a05b-0242ac125503',
-    'Connaissez-vous Mon Espace santé ?',
-    4,
-    'chapter',
-    '<body><ul><li>Mon Espace Santé est un service qui vous permet de <b>stocker et partager vos documents et données de santé</b> en toute confidentialité.  Vous y retrouvez le contenu de votre Dossier Médical Partagé (DMP) si vous en possédez un.</li><li>Grâce à la <b>messagerie sécurisée</b>, vos professionnels de santé peuvent vous envoyer des informations et des documents en toute confidentialité.</li><li>Vous avez à disposition un <b>catalogue de services numériques de confiance</b> dans le domaine de la santé, du bien-être ou du maintien de l''autonomie.</li></ul></body>',
-    null,
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '95167ec6-ef17-11ed-a15b-0242ac120010',
-    'Utilisez-vous “Mon Espace Santé” ?',
-    5,
-    'unique',
-    null,
-    null,
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3932330a-ef19-11ed-a05b-0242ac120003',
-    'Oui, j’utilise principalement le site internet',
-    1,
-    '95167ec6-ef17-11ed-a15b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3932330a-ef19-11ed-a05b-0242ac120000',
-    'Oui, j’utilise principalement l’application mobile',
-    2,
-    '95167ec6-ef17-11ed-a15b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3932330a-ef19-11ed-a05b-0242ac120001',
-    'Non, je ne connais pas',
-    3,
-    '95167ec6-ef17-11ed-a15b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3932330a-ef19-11ed-a05b-0242ac120002',
-    'Non, j’y suis opposé',
-    4,
-    '95167ec6-ef17-11ed-a15b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'a40823b0-ef19-11ed-a05b-0242ac120003',
-    'Avez-vous des recommandations pour rendre “Mon Espace Santé” plus utile et plus agréable à utiliser ?',
-    6,
-    'ouverte',
-    null,
-    null,
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    '95167ec6-ef17-11ed-a15b-0252ac120010',
-    'Globalement, pensez-vous que le numérique en santé est plutôt …',
-    7,
-    'unique',
-    null,
-    null,
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3932220a-ef19-11ed-a05b-0242ac120002',
-    'Un levier à utiliser',
-    1,
-    '95167ec6-ef17-11ed-a15b-0252ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3932220a-ef19-11ed-a05b-0242ac120102',
-    'Une menace dont il faut se prévenir',
-    2,
-    '95167ec6-ef17-11ed-a15b-0252ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'a40823b0-ef19-11ed-a05b-0242ac120100',
-    'Avez-vous une idée ou une remarque sur la question du numérique et de la santé dont vous aimeriez nous faire part ?',
-    8,
-    'ouverte',
-    null,
-    null,
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
-    '72682956-094b-423b-9086-9ec4f8ef2002',
-    1,
-    '<body>👉 Le Ministre de la Santé recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>26 juin à 10h</b>.<br/><br/>Il s’agira notamment de :<br/><br/><ul><li>Faire un <b>premier bilan</b> de la perception du numérique en santé,</li><li>Faire émerger de <b>nouvelles pistes d’action</b>.</li></ul>—<br/><br/><b>🩺 Envie d’aller plus loin ?</b><br/><a href="https://www.monespacesante.fr/">Rendez-vous ici</a> pour activer Mon Espace Santé.</body>',
-    '6d82222a-ee71-11ed-a05b-0242ac120010'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
