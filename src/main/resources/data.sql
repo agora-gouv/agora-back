@@ -291,7 +291,7 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '12 questions',
     '5 minutes',
     10000,
-    '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/>Sources (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>)</body>',
+    '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/><a href="https://www.ecologie.gouv.fr/covoiturage">Sources </a><b>(https://www.ecologie.gouv.fr/covoiturage)</b></body>',
     '<body>🗣 Consultation proposée par le <b>Ministère des Transports</b><br/><br/>🎯<b> Objectif</b> : évaluer et améliorer le plan national covoiturage <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
@@ -317,6 +317,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '0fd15904-ef06-11ed-a05b-0242ac120003',
     'Non',
     2,
+    'e271ed7a-ef05-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '0fd15944-ef06-11ed-a05b-0242ac120003',
+    'Je ne souhaite pas répondre',
+    3,
     'e271ed7a-ef05-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
@@ -367,7 +374,7 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'e52c5868-ef08-11ed-a05b-0242ac120003',
-    'Avez-vous déjà fait du covoiturage? Que ce soit en tant que conducteur ou passager.',
+    'Avez-vous déjà fait du covoiturage ? Que ce soit en tant que conducteur ou passager.',
     3,
     'unique',
     null,
@@ -386,6 +393,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '1b52a816-ef09-11ed-a05b-0242ac120002',
     'Non',
     2,
+    'e52c5868-ef08-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '1b52a816-ef09-12ed-a05b-0242ac120002',
+    'Je ne souhaite pas répondre',
+    3,
     'e52c5868-ef08-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
@@ -417,6 +431,20 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'ab7d336e-0905-11ee-be56-0242ac120002',
     'Les deux',
     3,
+    '867b767a-0905-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ab7d136e-0905-11ee-be56-0242ac120002',
+    'Aucun',
+    4,
+    '867b767a-0905-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ac7d336e-0905-11ee-be56-0242ac120002',
+    'Je ne sais pas',
+    5,
     '867b767a-0905-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
@@ -462,16 +490,23 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '5f30b336-0906-11ee-be56-0242ac120003',
-    'De manière occasionnelle',
+    '5f30b336-0906-10ee-be56-0242ac120003',
+    'Plusieurs fois par an',
     4,
     '4c85adfe-0906-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '5f30b336-0906-11ee-be56-0242ac120003',
-    'Je ne suis pas concerné (e)',
+    '5f30b336-0906-18ee-be56-0242ac120003',
+    'Jamais',
     5,
+    '4c85adfe-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5f30b336-0916-23ee-be56-0242ac120003',
+    'Je ne sais pas',
+    6,
     '4c85adfe-0906-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
@@ -517,6 +552,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '6ed88358-0907-11ee-be56-0242ac120011',
     'Aucun',
     5,
+    'cea510c2-0906-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '6ed00358-0907-11ee-be56-0242ac120011',
+    'Je ne sais pas',
+    6,
     'cea510c2-0906-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
@@ -583,6 +625,20 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'ac24b428-ef0a-88ed-a05b-0242ac120013',
     'L’intégration du covoiturage dans une offre plus large de transports (horaires et points de contacts proches des transports en commun)',
     8,
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ac24b428-ef0a-88ed-a05b-0002ac120013',
+    'Aucun',
+    9,
+    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ac24b428-ef0a-88ed-a10b-0242ac120013',
+    'Je ne sais pas',
+    10,
     '91c3411c-ef0a-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
@@ -753,7 +809,7 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '72682956-094b-423b-9086-9ec4f8ef2662',
     1,
-    '<body>👉 Le Ministre des transports recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>6 juillet prochain à l’occasion des 6 mois du plan covoiturage du gouvernement.</b>.<br/><br/>Il s’agira notamment de :<br/><ul><li>Faire un <b>premier bilan</b> des engagements pris grâce au plan,</li><li>Mettre en place de <b>nouvelles actions</b> pour encourager le covoiturage</li></ul><br/>—<br/><br/><b>🚗 Envie d’aller plus loin ?</b><br/>Rendez-vous ici (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>) pour voir comment vous lancer et en savoir plus sur le covoiturage et ses enjeux.</body>',
+    '<body>👉 Le Ministre des transports recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>6 juillet prochain à l’occasion des 6 mois du plan covoiturage du gouvernement</b>.<br/><br/>Il s’agira notamment de :<br/><ul><li>Faire un <b>premier bilan</b> des engagements pris grâce au plan,</li><li>Mettre en place de <b>nouvelles actions</b> pour encourager le covoiturage</li></ul><br/>—<br/><br/><b>🚗 Envie d’aller plus loin ?</b><br/>Rendez-vous ici (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>) pour voir comment vous lancer et en savoir plus sur le covoiturage et ses enjeux.</body>',
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
 
@@ -805,6 +861,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
      '092557b4-0927-11ee-be56-0242ac120010',
      'Jamais',
      4,
+     'e65beea0-0926-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+     '092557b4-8827-11ee-be56-0242ac120010',
+     'Je ne souhaite pas répondre',
+     5,
      'e65beea0-0926-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
@@ -1205,7 +1268,7 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'b7c7eccc-092d-11ee-be56-0242ac120002',
-    'Sur cette application, le Gouvernement prend l''engagement de répondre chaque semaine à une question posée par les citoyens (celle qui obtient le plus de votes) ; est-ce une bonne idée ?',
+    'Sur cette application, le Gouvernement prend l''engagement de répondre chaque semaine à une question posée par les citoyens (celle qui obtient le plus de soutiens) ; est-ce une bonne idée ?',
     10,
     'unique',
     null,
@@ -1257,6 +1320,6 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '68682956-094b-423b-9086-9ec4f8ef2662',
     1,
-    '<body>👉 Le Ministre du Renouveau démocratique, après lecture de l’ensemble de vos contributions, reviendra vers vous, directement sur cette appli, pour vous partager les mesures que le Gouvernement entend mettre en œuvre pour :<br/><br/><ul><li><b>Améliorer cette application</b></li><li><b>Continuer à développer la participation citoyenne</b></li><li><b>Lutter contre l’abstention et la défiance démocratique</b></li><br/><br/>-<br/><br/>👉 <b>Envie d''aller plus loin ?<br/><br/></b><br/><br/>Rendez-vous <a href="https://www.participation-citoyenne.gouv.fr/">ici</a> <b>(participation-citoyenne.gouv.fr)</b> pour en savoir plus sur les dispositifs de participation citoyenne mis en place de façon volontaire par l’Etat.</br></br>Vous pouvez à tout moment donner vos retours sur l’application dans le bouton “Profil”</body>',
+    '<body>👉 Le Ministre du Renouveau démocratique, après lecture de l’ensemble de vos contributions, reviendra vers vous directement sur cette appli pour vous partager les mesures que le Gouvernement entend mettre en œuvre pour :<br/><br/><ul><li><b>Améliorer cette application</b></li><li><b>Continuer à développer la participation citoyenne</b></li><li><b>Lutter contre l’abstention et la défiance démocratique</b></li><br/><br/>—<br/><br/>💡 <b>Envie d''aller plus loin ?</b><br/><br/>Rendez-vous <a href="https://www.participation-citoyenne.gouv.fr/">ici</a> <b>(participation-citoyenne.gouv.fr)</b> pour en savoir plus sur les dispositifs de participation citoyenne mis en place de façon volontaire par l’Etat.</br></br>Vous pouvez par ailleurs à tout moment donner vos retours sur l’application dans le bouton “Profil”</body>',
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
