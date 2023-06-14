@@ -13,11 +13,11 @@ class QagModeratingLockCacheRepository(
         private const val QAG_MODERATING_LOCK_ID_LIST = "QagIdLockedList"
     }
 
-    fun getLockedQagList(userUUID: UUID): List<String> {
+    fun getLockedQagList(userUUID: UUID): QagLockList? {
         return try {
-            getCache()?.get(userUUID.toString(), QagLockList::class.java)?.qagIdList ?: emptyList()
+            getCache()?.get(userUUID.toString(), QagLockList::class.java)
         } catch (e: IllegalStateException) {
-            emptyList()
+            null
         }
     }
 
