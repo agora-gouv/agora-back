@@ -2,11 +2,11 @@ package fr.social.gouv.agora.infrastructure.qag
 
 import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.domain.SupportQag
-import fr.social.gouv.agora.infrastructure.utils.UnicodeStringDecoder
+import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
-class QagModeratingJsonMapper {
+class QagModeratingJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
 
     fun toJson(qagModeratingList: List<QagModerating>, totalNumberQagModerating: Int): QagModeratingHomeJson {
         return QagModeratingHomeJson(
@@ -14,10 +14,7 @@ class QagModeratingJsonMapper {
             qagsToModerate = qagModeratingList.map { qagModerating ->
                 QagModeratingJson(
                     id = qagModerating.id,
-                    thematique = ThematiqueJson(
-                        label = qagModerating.thematique.label,
-                        picto = UnicodeStringDecoder.decodeUnicode(qagModerating.thematique.picto),
-                    ),
+                    thematique = thematiqueJsonMapper.toNoIdJson(qagModerating.thematique),
                     title = qagModerating.title,
                     description = qagModerating.description,
                     date = qagModerating.date.toString(),

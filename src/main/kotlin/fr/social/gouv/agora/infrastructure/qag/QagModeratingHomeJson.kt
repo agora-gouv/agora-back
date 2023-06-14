@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.qag
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.social.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 import java.util.*
 
 data class QagModeratingHomeJson(
@@ -14,7 +15,7 @@ data class QagModeratingJson(
     @JsonProperty("id")
     val id: String,
     @JsonProperty("thematique")
-    val thematique: ThematiqueJson,
+    val thematique: ThematiqueNoIdJson,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("description")
