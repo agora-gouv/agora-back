@@ -4,9 +4,9 @@ import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoCacheRepository.CacheResult
-import fr.social.gouv.agora.usecase.qag.repository.ModeratingQagResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
+import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -22,12 +22,6 @@ import java.util.*
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 internal class QagInfoRepositoryImplTest {
-
-    companion object {
-        private const val STATUS_OPEN = 0
-        private const val STATUS_MODERATED_REJECTED = -1
-        private const val STATUS_MODERATED_ACCEPTED = 1
-    }
 
     @Autowired
     private lateinit var repository: QagInfoRepositoryImpl
@@ -194,19 +188,21 @@ internal class QagInfoRepositoryImplTest {
             then(cacheRepository).should(only()).insertQag(qagDTO = savedQagDTO)
         }
     }
+
     @Nested
     inner class UpdateQagStatusTestCases {
         @Test
         fun `updateQagStatus - when invalid UUID - should return FAILURE`() {
             // When
-            val result = repository.updateQagStatus(qagId = "invalid UUID", qagModeratingStatus = QagStatus.MODERATED_ACCEPTED)
+            val result = repository.updateQagStatus(qagId = "invalid UUID", newQagStatus = QagStatus.MODERATED_ACCEPTED)
 
             // Then
-            assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
+            assertThat(result).isEqualTo(QagUpdateResult.FAILURE)
             then(cacheRepository).shouldHaveNoInteractions()
             then(databaseRepository).shouldHaveNoInteractions()
             then(mapper).shouldHaveNoInteractions()
         }
+
         @Test
         fun `updateQagStatus - when cache is not initialized and has no result - should return FAILURE`() {
             // Given
@@ -214,10 +210,13 @@ internal class QagInfoRepositoryImplTest {
             given(databaseRepository.getAllQagList()).willReturn(emptyList())
 
             // When
-            val result = repository.updateQagStatus(qagId = UUID.randomUUID().toString(), qagModeratingStatus = QagStatus.MODERATED_ACCEPTED)
+            val result = repository.updateQagStatus(
+                qagId = UUID.randomUUID().toString(),
+                newQagStatus = QagStatus.ARCHIVED
+            )
 
             // Then
-            assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
+            assertThat(result).isEqualTo(QagUpdateResult.FAILURE)
             inOrder(cacheRepository, databaseRepository).also {
                 then(cacheRepository).should(it).getAllQagList()
                 then(databaseRepository).should(it).getAllQagList()
@@ -226,81 +225,33 @@ internal class QagInfoRepositoryImplTest {
             }
             then(mapper).shouldHaveNoInteractions()
         }
-        @Test
-        fun `updateQagStatus - when cache returns DTO and targetStatus is not ACCEPTED or REJECTED - should return FAILURE`() {
-            // Given
-            val qagId = UUID.randomUUID()
-            val qagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(qagId)
-                given(it.status).willReturn(STATUS_OPEN)
-            }
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
-
-            // When
-            val result = repository.updateQagStatus(qagId = qagDTO.id.toString(), qagModeratingStatus = QagStatus.ARCHIVED)
-
-            // Then
-            assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
-            then(cacheRepository).should(only()).getAllQagList()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
 
         @Test
-        fun `updateQagStatus - when cache returns DTO and targetStatus is ACCEPTED - should return SUCCESS`() {
+        fun `updateQagStatus - when cache returns DTO - should return SUCCESS`() {
             // Given
-            val qagId = UUID.randomUUID()
-            val targetDTO = mock(QagDTO::class.java)
-            val qagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(qagId)
-                given(it.status).willReturn(STATUS_OPEN)
-                given(it.copy(status = STATUS_MODERATED_ACCEPTED)).willReturn(targetDTO)
-            }
-            val savedQagId = UUID.randomUUID()
-            val savedQagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(savedQagId)
-                given(it.status).willReturn(STATUS_MODERATED_ACCEPTED)
-            }
-            given(databaseRepository.save(targetDTO)).willReturn(savedQagDTO)
+            val qagDTO = mock(QagDTO::class.java)
             given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
 
-            // When
-            val result = repository.updateQagStatus(qagId = qagDTO.id.toString(), qagModeratingStatus = QagStatus.MODERATED_ACCEPTED)
+            val updatedQagDTO = mock(QagDTO::class.java)
+            given(mapper.updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED))
+                .willReturn(updatedQagDTO)
 
-            // Then
-            assertThat(result).isEqualTo(ModeratingQagResult.SUCCESS)
-            then(databaseRepository).should(only()).save(targetDTO)
-            then(cacheRepository).should(times(1)).getAllQagList()
-            then(cacheRepository).should(times(1)).updateQag(updatedQagDTO = savedQagDTO)
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `updateQagStatus - when cache returns DTO and targetStatus is REJECTED - should return SUCCESS`() {
-            // Given
-            val qagId = UUID.randomUUID()
-            val qagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(qagId)
-                given(it.status).willReturn(STATUS_OPEN)
-            }
-            val targetDTO = qagDTO.copy(status = STATUS_MODERATED_REJECTED)
-            val savedQagId = UUID.randomUUID()
-            val savedQagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(savedQagId)
-                given(it.status).willReturn(STATUS_MODERATED_REJECTED)
-            }
-            given(databaseRepository.save(targetDTO)).willReturn(savedQagDTO)
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
+            val savedQagDTO = mock(QagDTO::class.java)
+            given(databaseRepository.save(updatedQagDTO)).willReturn(savedQagDTO)
 
             // When
-            val result = repository.updateQagStatus(qagId = qagDTO.id.toString(), qagModeratingStatus = QagStatus.MODERATED_REJECTED)
+            val result = repository.updateQagStatus(
+                qagId = UUID.randomUUID().toString(),
+                newQagStatus = QagStatus.MODERATED_ACCEPTED,
+            )
 
             // Then
-            assertThat(result).isEqualTo(ModeratingQagResult.SUCCESS)
-            then(databaseRepository).should(only()).save(targetDTO)
-            then(cacheRepository).should(times(1)).getAllQagList()
-            then(cacheRepository).should(times(1)).updateQag(updatedQagDTO = savedQagDTO)
-            then(mapper).shouldHaveNoInteractions()
+            assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
+            then(databaseRepository).should(only()).save(updatedQagDTO)
+            then(cacheRepository).should().getAllQagList()
+            then(cacheRepository).should().updateQag(updatedQagDTO = savedQagDTO)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(mapper).should(only()).updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
         }
     }
 }

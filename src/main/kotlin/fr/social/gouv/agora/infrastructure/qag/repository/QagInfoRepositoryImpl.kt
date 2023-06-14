@@ -3,10 +3,10 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoCacheRepository.CacheResult
-import fr.social.gouv.agora.usecase.qag.repository.ModeratingQagResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
+import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -16,11 +16,6 @@ class QagInfoRepositoryImpl(
     private val cacheRepository: QagInfoCacheRepository,
     private val mapper: QagInfoMapper,
 ) : QagInfoRepository {
-    companion object {
-        private const val STATUS_OPEN = 0
-        private const val STATUS_MODERATED_REJECTED = -1
-        private const val STATUS_MODERATED_ACCEPTED = 1
-    }
 
     override fun getAllQagInfo(): List<QagInfo> {
         return getAllQagDTO().map(mapper::toDomain)
@@ -45,29 +40,17 @@ class QagInfoRepositoryImpl(
         } ?: QagInsertionResult.Failure
     }
 
-    override fun updateQagStatus(qagId: String, qagModeratingStatus: QagStatus): ModeratingQagResult {
+    override fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult {
         return try {
             val qagUUID = UUID.fromString(qagId)
-            val qagDTO = getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID && qagDTO.status == STATUS_OPEN }
-            if (qagDTO != null) {
-                val targetStatusDTO = toDtoStatus(qagModeratingStatus)
-                if (targetStatusDTO != null) {
-                    val targetDTO = qagDTO.copy(status = targetStatusDTO)
-                    val savedQagDTO = databaseRepository.save(targetDTO)
-                    cacheRepository.updateQag(updatedQagDTO = savedQagDTO)
-                    ModeratingQagResult.SUCCESS
-                } else ModeratingQagResult.FAILURE
-            } else ModeratingQagResult.FAILURE
+            getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID }?.let { qagDTO ->
+                val updatedQagDTO = mapper.updateQagStatus(dto = qagDTO, qagStatus = newQagStatus)
+                val savedQagDTO = databaseRepository.save(updatedQagDTO)
+                cacheRepository.updateQag(updatedQagDTO = savedQagDTO)
+                QagUpdateResult.SUCCESS
+            } ?: QagUpdateResult.FAILURE
         } catch (e: IllegalArgumentException) {
-            ModeratingQagResult.FAILURE
-        }
-    }
-
-    private fun toDtoStatus(qagModeratingStatus: QagStatus): Int? {
-        return when (qagModeratingStatus) {
-            QagStatus.MODERATED_ACCEPTED -> STATUS_MODERATED_ACCEPTED
-            QagStatus.MODERATED_REJECTED -> STATUS_MODERATED_REJECTED
-            else -> null
+            QagUpdateResult.FAILURE
         }
     }
 
@@ -78,6 +61,4 @@ class QagInfoRepositoryImpl(
         }
     }
 
-
 }
-
