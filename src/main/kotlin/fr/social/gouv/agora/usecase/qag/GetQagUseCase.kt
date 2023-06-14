@@ -38,7 +38,7 @@ class GetQagUseCase(
         }
         return when (qag?.status) {
             null, QagStatus.ARCHIVED -> QagResult.QagNotFound
-            QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED -> QagResult.Success(qag)
+            QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED, QagStatus.SELECTED_FOR_RESPONSE -> QagResult.Success(qag)
             QagStatus.MODERATED_REJECTED -> QagResult.QagRejectedStatus
         }
     }

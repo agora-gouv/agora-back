@@ -18,7 +18,7 @@ class DeleteSupportQagUseCase(
         if (responseQagRepository.getResponseQag(supportQagDeleting.qagId) != null) return SupportQagResult.FAILURE
 
         return when (qagInfoRepository.getQagInfo(supportQagDeleting.qagId)?.status) {
-            null, QagStatus.ARCHIVED, QagStatus.MODERATED_REJECTED -> SupportQagResult.FAILURE
+            null, QagStatus.ARCHIVED, QagStatus.MODERATED_REJECTED, QagStatus.SELECTED_FOR_RESPONSE -> SupportQagResult.FAILURE
             QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED -> supportQagRepository.deleteSupportQag(
                 SupportQagDeleting(
                     qagId = supportQagDeleting.qagId,
