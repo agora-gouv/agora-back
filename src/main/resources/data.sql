@@ -156,7 +156,7 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     'Pourquoi avoir créé l’application Agora ?',
     'Quel est le but de l’application Agora ? A quel besoin des Français et des Françaises espérez-vous qu’elle réponde ? Que signifie son caractère expérimental ?',
     '2023-06-01',
-    1,
+    7,
     'Agora',
     '30671310-ee62-11ed-a05b-0242ac120003',
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'

@@ -18,7 +18,7 @@ class InsertSupportQagUseCase(
         if (responseQagRepository.getResponseQag(supportQagInserting.qagId) != null) return SupportQagResult.FAILURE
 
         return when (qagInfoRepository.getQagInfo(supportQagInserting.qagId)?.status) {
-            null, QagStatus.ARCHIVED, QagStatus.MODERATED_REJECTED -> SupportQagResult.FAILURE
+            null, QagStatus.ARCHIVED, QagStatus.MODERATED_REJECTED, QagStatus.SELECTED_FOR_RESPONSE -> SupportQagResult.FAILURE
             QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED -> supportQagRepository.insertSupportQag(
                 SupportQagInserting(
                     qagId = supportQagInserting.qagId,
