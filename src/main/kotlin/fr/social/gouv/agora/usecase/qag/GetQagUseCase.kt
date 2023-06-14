@@ -20,18 +20,20 @@ class GetQagUseCase(
     fun getQag(qagId: String, userId: String): QagResult {
         val qag = qagInfoRepository.getQagInfo(qagId)?.let { qagInfo ->
             thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
-                Qag(
-                    id = qagInfo.id,
-                    thematique = thematique,
-                    title = qagInfo.title,
-                    description = qagInfo.description,
-                    date = qagInfo.date,
-                    status = qagInfo.status,
-                    username = qagInfo.username,
-                    support = qagSupportQagRepository.getSupportQag(qagId = qagId, userId = userId),
-                    response = responseQagRepository.getResponseQag(qagId = qagId),
-                    feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = userId)
-                )
+                qagSupportQagRepository.getSupportQag(qagId = qagId, userId = userId)?.let { supportQag ->
+                    Qag(
+                        id = qagInfo.id,
+                        thematique = thematique,
+                        title = qagInfo.title,
+                        description = qagInfo.description,
+                        date = qagInfo.date,
+                        status = qagInfo.status,
+                        username = qagInfo.username,
+                        support = supportQag,
+                        response = responseQagRepository.getResponseQag(qagId = qagId),
+                        feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = userId)
+                    )
+                }
             }
         }
         return when (qag?.status) {
