@@ -14,11 +14,6 @@ import java.util.*
 class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
 
     fun toJson(qag: Qag): QagJson {
-        val response = buildResponseQagJson(qag)
-        val support = if (response == null) {
-            buildSupportQagJson(qag)
-        } else null
-
         return QagJson(
             id = qag.id,
             thematique = thematiqueJsonMapper.toNoIdJson(qag.thematique),
@@ -28,8 +23,8 @@ class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
             username = qag.username,
             canShare = qag.status == QagStatus.MODERATED_ACCEPTED,
             canSupport = qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED,
-            support = support,
-            response = response,
+            support = buildSupportQagJson(qag),
+            response = buildResponseQagJson(qag),
         )
     }
 
@@ -56,13 +51,11 @@ class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
         )
     }
 
-    private fun buildSupportQagJson(qag: Qag): SupportQagJson? {
-        return qag.support?.let { support ->
-            SupportQagJson(
-                supportCount = support.supportCount,
-                isSupportedByUser = support.isSupportedByUser,
-            )
-        }
+    private fun buildSupportQagJson(qag: Qag): SupportQagJson {
+        return SupportQagJson(
+            supportCount = qag.support.supportCount,
+            isSupportedByUser = qag.support.isSupportedByUser,
+        )
     }
 
     private fun buildResponseQagJson(qag: Qag): ResponseQagJson? {
