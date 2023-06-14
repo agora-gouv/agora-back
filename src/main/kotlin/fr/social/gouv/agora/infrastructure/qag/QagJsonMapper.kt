@@ -4,14 +4,14 @@ import fr.social.gouv.agora.domain.Qag
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.social.gouv.agora.infrastructure.utils.StringUtils
-import fr.social.gouv.agora.infrastructure.utils.UnicodeStringDecoder
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class QagJsonMapper {
+class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
 
     fun toJson(qag: Qag): QagJson {
         val response = buildResponseQagJson(qag)
@@ -21,10 +21,7 @@ class QagJsonMapper {
 
         return QagJson(
             id = qag.id,
-            thematique = ThematiqueJson(
-                label = qag.thematique.label,
-                picto = UnicodeStringDecoder.decodeUnicode(qag.thematique.picto),
-            ),
+            thematique = thematiqueJsonMapper.toNoIdJson(qag.thematique),
             title = qag.title,
             description = qag.description,
             date = qag.date,

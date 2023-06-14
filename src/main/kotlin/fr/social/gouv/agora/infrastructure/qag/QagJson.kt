@@ -2,6 +2,7 @@ package fr.social.gouv.agora.infrastructure.qag
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.social.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 import java.util.*
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -9,7 +10,7 @@ data class QagJson(
     @JsonProperty("id")
     val id: String,
     @JsonProperty("thematique")
-    val thematique: ThematiqueJson,
+    val thematique: ThematiqueNoIdJson,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("description")
@@ -24,13 +25,6 @@ data class QagJson(
     val support: SupportQagJson?,
     @JsonProperty("response")
     val response: ResponseQagJson?,
-)
-
-data class ThematiqueJson(
-    @JsonProperty("label")
-    val label: String,
-    @JsonProperty("picto")
-    val picto: String,
 )
 
 data class SupportQagJson(
