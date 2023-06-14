@@ -18,6 +18,8 @@ data class QagJson(
     val date: Date,
     @JsonProperty("username")
     val username: String,
+    @JsonProperty("canShareQag")
+    val canShareQag: Boolean,
     @JsonProperty("support")
     val support: SupportQagJson?,
     @JsonProperty("response")

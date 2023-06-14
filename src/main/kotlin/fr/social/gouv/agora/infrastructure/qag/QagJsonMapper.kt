@@ -29,6 +29,7 @@ class QagJsonMapper {
             description = qag.description,
             date = qag.date,
             username = qag.username,
+            canShareQag = qag.status == QagStatus.MODERATED_ACCEPTED,
             support = support,
             response = response,
         )
