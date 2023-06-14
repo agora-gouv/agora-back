@@ -3,6 +3,7 @@ package fr.social.gouv.agora.usecase.qag
 import fr.social.gouv.agora.domain.*
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagModeratingLockRepository
 import fr.social.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.social.gouv.agora.usecase.thematique.repository.ThematiqueRepository
@@ -41,6 +42,9 @@ internal class GetQagModeratingListUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @MockBean
+    private lateinit var qagModeratingLockRepository: QagModeratingLockRepository
+
+    @MockBean
     private lateinit var mapper: QagModeratingMapper
 
     @Nested
@@ -68,11 +72,12 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).shouldHaveNoInteractions()
             then(thematiqueRepository).shouldHaveNoInteractions()
             then(supportRepository).shouldHaveNoInteractions()
+            then(qagModeratingLockRepository).shouldHaveNoInteractions()
             then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
-        fun `getQagModeratingList - when has empty qagInfo but status is not OPEN - should return emptyList`() {
+        fun `getQagModeratingList - when has qagInfo but status is not OPEN - should return emptyList`() {
             // Given
             val qagInfo = mock(QagInfo::class.java).also {
                 given(it.status).willReturn(QagStatus.MODERATED_ACCEPTED)
@@ -88,11 +93,12 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).shouldHaveNoInteractions()
             then(thematiqueRepository).shouldHaveNoInteractions()
             then(supportRepository).shouldHaveNoInteractions()
+            then(qagModeratingLockRepository).shouldHaveNoInteractions()
             then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
-        fun `getQagModeratingList - when has qagInfo but has existing responseQag - should return emptyList`() {
+        fun `getQagModeratingList - when has not locked qagInfo but has existing responseQag - should return emptyList`() {
             // Given
             val qagInfo = mock(QagInfo::class.java).also {
                 given(it.id).willReturn("qagId")
@@ -100,6 +106,7 @@ internal class GetQagModeratingListUseCaseTest {
             }
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(mock(ResponseQag::class.java))
+            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(false)
 
             // When
             val result = useCase.getQagModeratingList(userId = userId)
@@ -110,11 +117,12 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
             then(thematiqueRepository).shouldHaveNoInteractions()
             then(supportRepository).shouldHaveNoInteractions()
+            then(qagModeratingLockRepository).should(only()).isQagLocked(qagId = "qagId")
             then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
-        fun `getQagModeratingList - when has qagInfo, no responseQag but no corresponding thematique - should return emptyList`() {
+        fun `getQagModeratingList - when has not locked qagInfo, no responseQag but no corresponding thematique - should return emptyList`() {
             // Given
             val qagInfo = mock(QagInfo::class.java).also {
                 given(it.id).willReturn("qagId")
@@ -124,6 +132,7 @@ internal class GetQagModeratingListUseCaseTest {
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
             given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(null)
+            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(false)
 
             // When
             val result = useCase.getQagModeratingList(userId = userId)
@@ -134,11 +143,12 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
             then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
             then(supportRepository).shouldHaveNoInteractions()
+            then(qagModeratingLockRepository).should(only()).isQagLocked(qagId = "qagId")
             then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
-        fun `getQagModeratingList - when has qagInfo, no responseQag, thematique but no support - should return emptyList`() {
+        fun `getQagModeratingList - when has not locked qagInfo, no responseQag, thematique but no support - should return emptyList`() {
             // Given
             val qagInfo = mock(QagInfo::class.java).also {
                 given(it.id).willReturn("qagId")
@@ -147,6 +157,7 @@ internal class GetQagModeratingListUseCaseTest {
             }
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
+            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(false)
 
             val thematique = mock(Thematique::class.java)
             given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
@@ -162,15 +173,17 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
             then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
             then(supportRepository).should(only()).getSupportQag(qagId = "qagId", userId = userId)
+            then(qagModeratingLockRepository).should(only()).isQagLocked(qagId = "qagId")
             then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
-        fun `getQagModeratingList - when has qagInfo, no responseQag, thematique, support and thematique - should return mapped qagPreview`() {
+        fun `getQagModeratingList - when has not locked qagInfo, no responseQag, thematique, support and thematique - should return mapped qagPreview`() {
             // Given
             val setupData = setupQagInfo(qagId = "qagId")
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(setupData.qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
+            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(false)
 
             // When
             val result = useCase.getQagModeratingList(userId = userId)
@@ -181,7 +194,30 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
             then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
             then(supportRepository).should(only()).getSupportQag(qagId = "qagId", userId = userId)
+            then(qagModeratingLockRepository).should(times(1)).isQagLocked(qagId = "qagId")
+            then(qagModeratingLockRepository).should(times(1)).setQagLocked(setupData.qagModerating.id)
             then(mapper).should(only()).toQagModerating(setupData.qagInfo, thematique, setupData.supportQag)
+        }
+
+        @Test
+        fun `getQagModeratingList - when has locked qagInfo, no responseQag, thematique, support and thematique - should return mapped emptyList`() {
+            // Given
+            val setupData = setupQagInfo(qagId = "qagId")
+            given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(setupData.qagInfo))
+            given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
+            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(true)
+
+            // When
+            val result = useCase.getQagModeratingList(userId = userId)
+
+            // Then
+            assertThat(result).isEqualTo(emptyList<QagPreview>())
+            then(qagInfoRepository).should(only()).getAllQagInfo()
+            then(responseQagRepository).shouldHaveNoInteractions()
+            then(thematiqueRepository).shouldHaveNoInteractions()
+            then(supportRepository).shouldHaveNoInteractions()
+            then(qagModeratingLockRepository).should(only()).isQagLocked(qagId = "qagId")
+            then(mapper).shouldHaveNoInteractions()
         }
 
         private fun setupQagInfo(

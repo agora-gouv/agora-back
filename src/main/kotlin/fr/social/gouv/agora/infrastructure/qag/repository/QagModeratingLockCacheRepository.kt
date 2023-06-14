@@ -1,12 +1,13 @@
 package fr.social.gouv.agora.infrastructure.qag.repository
 
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
 class QagModeratingLockCacheRepository(
-    private val cacheManager: CacheManager,
+    @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager,
 ) {
     companion object {
         private const val QAG_MODERATING_LOCK_CACHE_NAME = "QagModeratingLockCache"
