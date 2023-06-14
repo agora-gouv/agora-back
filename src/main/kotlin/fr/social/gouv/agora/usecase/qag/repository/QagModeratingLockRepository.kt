@@ -1,10 +1,11 @@
 package fr.social.gouv.agora.usecase.qag.repository
 
-import fr.social.gouv.agora.infrastructure.qag.repository.QagLockList
-
 interface QagModeratingLockRepository {
-    fun getLockedQagList(userId: String): QagLockList?
-    fun setLockedQagList(userId: String, qagList: List<String>)
-    fun isQagIdListLocked(qagList: List<String>): Boolean
-    fun deleteQagLockedList(userId: String)
+    fun isQagLocked(qagId: String): Boolean
+    fun setQagLocked(qagId: String)
 }
+
+enregistre liste de qag lockées
+        flitrer pour ne pas renvoyer les qag lockéespris
+        dans le filtre on ne prend pas en compte les lock expiré
+        dans cache couple qagId/date  date /list

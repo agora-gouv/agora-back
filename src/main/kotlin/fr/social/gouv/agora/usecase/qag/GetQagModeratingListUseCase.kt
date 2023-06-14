@@ -55,6 +55,7 @@ class GetQagModeratingListUseCase(
         do {
             qagList = qagInfoRepository.getAllQagInfo()
                 .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
+                .filter { qagInfo  }
                 .sortedBy { qagInfo -> qagInfo.date }
                 .mapNotNullWhile(
                     transformMethod = { qagInfo -> toQagModerating(qagInfo, userId, thematiqueMap) },

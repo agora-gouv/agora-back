@@ -9,39 +9,17 @@ class QagModeratingLockRepositoryImpl(
     private val cacheRepository: QagModeratingLockCacheRepository,
 ) : QagModeratingLockRepository {
 
-    override fun getLockedQagList(userId: String): QagLockList? {
+    override fun isQagLocked(qagId: String): Boolean {
         return try {
-            cacheRepository.getLockedQagList(UUID.fromString(userId))
-        } catch (e: IllegalArgumentException) {
-            null
-        }
-    }
-
-    override fun setLockedQagList(userId: String, qagList: List<String>) {
-        try {
-            var qagUUIDList = emptyList<UUID>()
-            for (qagId in qagList)
-                qagUUIDList = qagUUIDList + UUID.fromString(qagId)
-            cacheRepository.setLockedQagList(userUUID = UUID.fromString(userId), qagUUIDList = qagUUIDList)
-        } catch (e: IllegalArgumentException) {
-            //do nothing
-        }
-    }
-
-    override fun isQagIdListLocked(qagList: List<String>): Boolean {
-        return try {
-            var qagUUIDList = emptyList<UUID>()
-            for (qagId in qagList)
-                qagUUIDList = qagUUIDList + UUID.fromString(qagId)
-            cacheRepository.isQagIdListLocked(qagUUIDList = qagUUIDList)
+            cacheRepository.isQagLocked(UUID.fromString(qagId))
         } catch (e: IllegalArgumentException) {
             false
         }
     }
 
-    override fun deleteQagLockedList(userId: String) {
+    override fun setQagLocked(qagId: String) {
         try {
-            cacheRepository.deleteQagLockedList(userUUID = UUID.fromString(userId))
+            cacheRepository.setQagLocked(UUID.fromString(qagId))
         } catch (e: IllegalArgumentException) {
             //do nothing
         }
