@@ -1323,3 +1323,420 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
     '<body>👉 Le Ministre du Renouveau démocratique, après lecture de l’ensemble de vos contributions, reviendra vers vous directement sur cette appli pour vous partager les mesures que le Gouvernement entend mettre en œuvre pour :<br/><br/><ul><li><b>Améliorer cette application</b></li><li><b>Continuer à développer la participation citoyenne</b></li><li><b>Lutter contre l’abstention et la défiance démocratique</b></li><br/><br/>—<br/><br/>💡 <b>Envie d''aller plus loin ?</b><br/><br/>Rendez-vous <a href="https://www.participation-citoyenne.gouv.fr/">ici</a> <b>(participation-citoyenne.gouv.fr)</b> pour en savoir plus sur les dispositifs de participation citoyenne mis en place de façon volontaire par l’Etat.</br></br>Vous pouvez par ailleurs à tout moment donner vos retours sur l’application dans le bouton “Profil”</body>',
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
+
+INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
+    'c342e83e-0b5a-11ee-be56-0242ac120002',
+    'Vivre mieux en 2050 : comment s’adapter au changement climatique ?',
+    '2023-09-15',
+    'https://betagouv.github.io/agora-content/climate.jpeg',
+    '12 questions',
+    '10 minutes',
+    10000,
+    '<body>Atténuation et adaptation sont les deux volets indispensables et complémentaires de la politique climatique.<br/><ul><li>L''<b>atténuation</b>consiste à agir sur les causes du changement climatique pour en limiter l’ampleur. Il s’agit donc de réduire les émissions de gaz à effet de serre (issues de la combustion d’énergies fossiles, de certains procédés industriels, de la déforestation…) et d’augmenter les puits de gaz à effet de serre (sols, forêts, produits bois, zones humides…).</li><li>L''<b>adaptation</b>au changement climatique consiste à anticiper et gérer les conséquences du changement climatique. Il s’agit de limiter les impacts du changement climatique et les dommages associés sur les populations, les activités socio-économiques et la nature en intervenant sur les facteurs qui contrôlent leur ampleur (par exemple, l’urbanisation des zones à risques) et de profiter des opportunités potentielles.<br/><br/><b>L''accord de Paris fixe l''objectif de rester bien en-dessous de 2 degrés de réchauffement mondial</b> par rapport à l''ère pré-industrielle et de poursuivre les efforts pour ne pas dépasser 1.5 degrés. Cependant <b>nous ne sommes collectivement pas sur la bonne trajectoire</b> : les émissions mondiales de gaz à effet de serre continuent d’augmenter, certes bien moins vite que dans le passé, alors qu’il faudrait qu’elles baissent rapidement et fortement pour freiner le changement climatique.<br/><br/>Si l’atteinte des objectifs de l’Accord de Paris reste notre priorité et notre combat, les engagements pris par les Etats lors des COP climat et les politiques en place nous conduisent vers un réchauffement mondial de l’ordre de 3°C.<br/><br/><b>Nous devons nous préparer, concrètement, aux effets inévitables du changement climatique sur notre territoire et sur nos vies.</b> Cette consultation vise à fournir un premier aperçu des conséquences du réchauffement climatique et des choix d’adaptation qu’il induit.</body>',
+    '<body>🗣 Consultation proposée par le <b>Ministère de la Transition Ecologique et de la Cohésion des Territoires</b><br/><br/>🎯<b> Objectif</b> : adapter la France aux conséquences du réchauffement climatique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
+    '0f644115-08f3-46ff-b776-51f19c65fdd1'
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002',
+    'Avez-vous le sentiment que votre vie quotidienne a déjà changé à cause du réchauffement climatique ?',
+    1,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '4358eb48-0b5d-11ee-be56-0242ac120002',
+    'Oui, beaucoup',
+    1,
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '4358eb48-0b5d-11ee-be56-0242ac120001',
+    'Oui, un peu',
+    2,
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '4358eb48-0b5d-11ee-be56-0242ac120003',
+    'Non, pas vraiment',
+    3,
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '4358eb48-0b5d-11ee-be56-0242ac120004',
+    'Pas du tout',
+    4,
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    'A quelles conséquences du réchauffement climatique avez-vous déjà été confronté ?',
+    2,
+    'multiple',
+    null,
+    5,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-11ee-be56-0242ac120002',
+    'Canicule',
+    1,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-11ee-be56-0242ac120001',
+    'Restriction d’eau',
+    2,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-11ee-be56-0242ac120030',
+    'Sécheresse des sols',
+    3,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-11ee-be56-0242ac120006',
+    'Incendie',
+    4,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-11ee-be56-0242ac120010',
+    'Inondation',
+    5,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-11ee-be56-0242ac120020',
+    'Montée du niveau de la mer',
+    6,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-11ee-be56-0242ac120022',
+    'Recul de l’enneigement',
+    7,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-11ee-be56-0242ac120032',
+    'Autre',
+    8,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '97a30002-0b5e-11ee-be56-0242ac120002',
+    'Êtes-vous prêts, pour des raisons d’adaptation au changement climatique, à accepter que certains trajets soient plus longs ou ralentis ?',
+    3,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'a9cf0d70-0b5e-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    '97a30002-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'a9cf0d70-0b5e-11ee-be56-0242ac120022',
+    'Non',
+    2,
+    '97a30002-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'a9cf0d70-0b5e-11ee-be56-0242ac120222',
+    'Je ne sais pas',
+    3,
+    '97a30002-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'f2e736a4-0b5e-11ee-be56-0242ac120002',
+    'Pensez-vous que, à l’avenir, les conditions climatiques (chaleur, risque d’inondation, etc.) seront un élément déterminant pour choisir votre lieu de vie ?',
+    4,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '129af8aa-0b5f-11ee-be56-0242ac120002',
+    'Oui, totalement',
+    1,
+    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '129af8aa-0b5f-11ee-be56-0242ac120022',
+    'Oui, plutôt',
+    2,
+    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '129af8aa-0b5f-11ee-be56-0242ac120222',
+    'Non',
+    3,
+    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '129af8aa-0b5f-11ee-be56-0242ac122222',
+    'Je ne sais pas',
+    4,
+    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '8cc590cc-0b5f-11ee-be56-0242ac120002',
+    'Préféreriez-vous que tous les logements situés au bord du littoral soient protégés contre la hausse du niveau de la mer, quitte à réaliser des investissements très coûteux ?',
+    5,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9aecb9dc-0b5f-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    '8cc590cc-0b5f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9aecb9dc-0b5f-11ee-be56-0242ac120022',
+    'Non',
+    2,
+    '8cc590cc-0b5f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9aecb9dc-0b5f-11ee-be56-0242ac120222',
+    'Je ne sais pas',
+    3,
+    '8cc590cc-0b5f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'cac40a48-0b5f-11ee-be56-0242ac120002',
+    'Préféreriez-vous que tous les logements situés au bord du littoral soient protégés contre la hausse du niveau de la mer, quitte à réaliser des investissements très coûteux ?',
+    6,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'd8672e00-0b5f-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    'cac40a48-0b5f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'd8672e00-0b5f-11ee-be56-0242ac120022',
+    'Non',
+    2,
+    'cac40a48-0b5f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'd8672e00-0b5f-11ee-be56-0242ac120222',
+    'Je ne sais pas',
+    3,
+    'cac40a48-0b5f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '15973d9c-0b60-11ee-be56-0242ac120002',
+    'Faut-il privilégier le télétravail en cas de forte chaleur ou les entreprises doivent-elles adapter l’environnement de travail qu’elles proposent à leurs collaborateurs, quitte à ce que cela nécessite des investissements très coûteux ?',
+    7,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2ba34d4c-0b60-11ee-be56-0242ac120002',
+    'Privilégier le télétravail quand c’est possible',
+    1,
+    '15973d9c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2ba34d4c-0b60-11ee-be56-0242ac120022',
+    'Adapter l’environnement de travail pour tous quel que soit le prix',
+    2,
+    '15973d9c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2ba34d4c-0b60-11ee-be56-0242ac120222',
+    'Adapter l’environnement de travail uniquement pour ceux qui ne peuvent pas télétravailler',
+    3,
+    '15973d9c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2ba34d4c-0b60-11ee-be56-0242ac122222',
+    'Les deux : télétravail et adaptation, peu importe le prix',
+    4,
+    '15973d9c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '871f4716-0b60-11ee-be56-0242ac120002',
+    'Seriez-vous prêt à travailler systématiquement en horaires décalés en cas de vagues de chaleur ?',
+    8,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9e880816-0b60-11ee-be56-0242ac120002',
+    'Oui, tout à fait',
+    1,
+    '871f4716-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9e880816-0b60-11ee-be56-0242ac120022',
+    'Oui, plutôt',
+    2,
+    '871f4716-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9e880816-0b60-11ee-be56-0242ac120012',
+    'Non',
+    3,
+    '871f4716-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '9e880816-0b60-11ee-be56-0242ac120202',
+    'Je ne sais pas',
+    4,
+    '871f4716-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'db22171c-0b60-11ee-be56-0242ac120002',
+    'Faut-il adapter le rythme des vacances scolaires aux évolutions du climat ?',
+    9,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '1532370c-0b61-11ee-be56-0242ac120002',
+    'Oui, tout à fait',
+    1,
+    'db22171c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '1632370c-0b61-11ee-be56-0242ac120002',
+    'Oui, plutôt',
+    2,
+    'db22171c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2532370c-0b61-11ee-be56-0242ac120002',
+    'Non',
+    3,
+    'db22171c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '5532370c-0b61-11ee-be56-0242ac120002',
+    'Je ne sais pas',
+    4,
+    'db22171c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '4289e362-0b61-11ee-be56-0242ac120002',
+    'Seriez-vous d’accord pour que la forêt que nous connaissons, qui souffre du réchauffement climatique, change de visage avec des essences d’arbre plus adaptées au changement climatique ?',
+    10,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '8bdf40ac-0b61-11ee-be56-0242ac120002',
+    'Oui, tout à fait',
+    1,
+    '4289e362-0b61-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '8bdf40ac-0b61-11ee-be56-0242ac120022',
+    'Oui, plutôt',
+    2,
+    '4289e362-0b61-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '8bdf40ac-0b61-11ee-be56-0242ac120222',
+    'Non',
+    3,
+    '4289e362-0b61-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '8bdf40ac-0b61-11ee-be56-0242ac122222',
+    'Je ne sais pas',
+    4,
+    '4289e362-0b61-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'c0cf651c-0b61-11ee-be56-0242ac120002',
+    'Pensez-vous que certaines infrastructures et activités critiques doivent être préparées à un scénario encore plus pessimiste que celui des 4 degrés de réchauffement climatique en France ?',
+    11,
+    'ouverte',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
+    'e9547964-0b61-11ee-be56-0242ac120002',
+    1,
+    '<body>👉 Les réponses à cette consultation seront présentées au ministre de la Transition écologique et de la Cohésion des territoires et serviront à alimenter les <b>travaux de préparation des politiques d’adaptation au changement climatique.</b><br/><br/>D’ici la fin de l’année 2023, le <b> Plan national d’adaptation au changement climatique </b> (PNACC) doit être révisé et ses mesures renforcées afin de prendre en compte les nouveaux effets du réchauffement climatique. <br/>—<br/><br/><b>🌳 Envie d’aller plus loin ?</b><br/>Rendez-vous ici pour voir comment vous engager pour le climat.</body>',
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
