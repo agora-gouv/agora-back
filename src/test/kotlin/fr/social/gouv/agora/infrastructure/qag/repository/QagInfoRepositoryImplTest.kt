@@ -229,7 +229,10 @@ internal class QagInfoRepositoryImplTest {
         @Test
         fun `updateQagStatus - when cache returns DTO - should return SUCCESS`() {
             // Given
-            val qagDTO = mock(QagDTO::class.java)
+            val qagUUID = UUID.randomUUID()
+            val qagDTO = mock(QagDTO::class.java).also {
+                given(it.id).willReturn(qagUUID)
+            }
             given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
 
             val updatedQagDTO = mock(QagDTO::class.java)
@@ -241,7 +244,7 @@ internal class QagInfoRepositoryImplTest {
 
             // When
             val result = repository.updateQagStatus(
-                qagId = UUID.randomUUID().toString(),
+                qagId = qagUUID.toString(),
                 newQagStatus = QagStatus.MODERATED_ACCEPTED,
             )
 

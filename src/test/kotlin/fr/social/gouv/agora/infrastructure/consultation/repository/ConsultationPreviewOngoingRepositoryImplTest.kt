@@ -52,22 +52,19 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
         thematiqueId = "5678",
     )
 
-
     @Test
     fun `getConsultationPreviewOngoingList - when CacheNotInitialized - should call getConsultationOngoingListFromDatabase and insert result (case result = null) to cache`() {
         // Given
-        given(cacheRepository.getConsultationOngoingList())
-            .willReturn(CacheResult.CacheNotInitialized)
-
-        given(databaseRepository.getConsultationOngoingList()).willReturn(null)
+        given(cacheRepository.getConsultationOngoingList()).willReturn(CacheResult.CacheNotInitialized)
+        given(databaseRepository.getConsultationOngoingList()).willReturn(emptyList())
 
         // When
         val result = repository.getConsultationPreviewOngoingList()
 
         // Then
         assertThat(result).isEqualTo(emptyList<ConsultationPreviewOngoingInfo>())
-        then(cacheRepository).should(times(1)).getConsultationOngoingList()
-        then(cacheRepository).should(times(1)).insertConsultationOngoingList(null)
+        then(cacheRepository).should().getConsultationOngoingList()
+        then(cacheRepository).should().insertConsultationOngoingList(emptyList())
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(databaseRepository).should(only()).getConsultationOngoingList()
     }
@@ -86,8 +83,8 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(listOf(consultationPreviewOngoingInfo))
-        then(cacheRepository).should(times(1)).getConsultationOngoingList()
-        then(cacheRepository).should(times(1)).insertConsultationOngoingList(listOf(consultationDTO))
+        then(cacheRepository).should().getConsultationOngoingList()
+        then(cacheRepository).should().insertConsultationOngoingList(listOf(consultationDTO))
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(databaseRepository).should(only()).getConsultationOngoingList()
     }
