@@ -1,7 +1,9 @@
 package fr.social.gouv.agora.usecase.notification.repository
 
 interface NotificationMessageRepository {
-    fun getQagModeratedNotificationMessage(): String
-    fun getQagModeratedNotificationTitle(): String
+    fun getQagRejectedTitle(): String
+    fun getQagRejectedMessage(): String
+    fun getQagAcceptedTitle(): String
+    fun getQagAcceptedMessage(): String
 }
 
