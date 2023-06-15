@@ -16,25 +16,25 @@ class SendNotificationQagModeratedUseCase(
     private val notificationMessageRepository: NotificationMessageRepository,
 ) {
 
-    fun sendNotificationQagModeratedRejected(qagId: String): NotificationResult {
+    fun sendNotificationQagRejected(qagId: String): NotificationResult {
         return getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
             notificationRepository.sendNotificationMessage(
                 request = NotificationRequest(
                     fcmToken = fcmToken,
-                    title = notificationMessageRepository.getQagModeratedNotificationTitle(),
-                    description = notificationMessageRepository.getQagModeratedNotificationMessage(),
+                    title = notificationMessageRepository.getQagRejectedTitle(),
+                    description = notificationMessageRepository.getQagRejectedMessage(),
                 )
             )
         } ?: NotificationResult.FAILURE
     }
 
-    fun sendNotificationQagModeratedAccepted(qagId: String): NotificationResult {
+    fun sendNotificationQagAccepted(qagId: String): NotificationResult {
         return getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
             notificationRepository.sendQagDetailsNotification(
                 request = NotificationRequest(
                     fcmToken = fcmToken,
-                    title = notificationMessageRepository.getQagModeratedNotificationTitle(),
-                    description = notificationMessageRepository.getQagModeratedNotificationMessage(),
+                    title = notificationMessageRepository.getQagAcceptedTitle(),
+                    description = notificationMessageRepository.getQagAcceptedMessage(),
                 ),
                 qagId = qagId,
             )
