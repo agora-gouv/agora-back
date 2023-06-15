@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.qagHome
 
 import fr.social.gouv.agora.domain.QagPreview
+import fr.social.gouv.agora.domain.QagSelectedForResponse
 import fr.social.gouv.agora.domain.ResponseQagPreview
 import fr.social.gouv.agora.infrastructure.qag.QagJsonMapper
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
@@ -12,6 +13,7 @@ class QagHomeJsonMapper(
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
 ) {
     fun toJson(
+        qagSelectedForResponseList: List<QagSelectedForResponse>,
         responseQagList: List<ResponseQagPreview>,
         qagPopularList: List<QagPreview>,
         qagLatestList: List<QagPreview>,
@@ -19,20 +21,28 @@ class QagHomeJsonMapper(
         qagErrorText: String?,
     ): QagHomeJson {
         return QagHomeJson(
-            responsesList = responseQagList.map { domain ->
+            incomingResponses = qagSelectedForResponseList.map { qagSelectedForResponse ->
+                IncomingResponseQagPreviewJson(
+                    qagId = qagSelectedForResponse.id,
+                    thematique = thematiqueJsonMapper.toNoIdJson(qagSelectedForResponse.thematique),
+                    title = qagSelectedForResponse.title,
+                    support = qagMapper.toJson(qagSelectedForResponse.support)
+                )
+            },
+            responsesList = responseQagList.map { responseQag ->
                 ResponseQagPreviewJson(
-                    qagId = domain.qagId,
-                    thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
-                    title = domain.title,
-                    author = domain.author,
-                    authorPortraitUrl = domain.authorPortraitUrl,
-                    responseDate = domain.responseDate.toString(),
+                    qagId = responseQag.qagId,
+                    thematique = thematiqueJsonMapper.toNoIdJson(responseQag.thematique),
+                    title = responseQag.title,
+                    author = responseQag.author,
+                    authorPortraitUrl = responseQag.authorPortraitUrl,
+                    responseDate = responseQag.responseDate.toString(),
                 )
             },
             qagList = QagListJson(
-                popular = qagPopularList.map { domainQag -> qagToJson(domainQag) },
-                latest = qagLatestList.map { domainQag -> qagToJson(domainQag) },
-                supporting = qagSupportedList.map { domainQag -> qagToJson(domainQag) },
+                popular = qagPopularList.map { qag -> qagToJson(qag) },
+                latest = qagLatestList.map { qag -> qagToJson(qag) },
+                supporting = qagSupportedList.map { qag -> qagToJson(qag) },
             ),
             askQagErrorText = qagErrorText,
         )

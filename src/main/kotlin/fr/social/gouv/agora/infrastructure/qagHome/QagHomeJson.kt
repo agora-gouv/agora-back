@@ -7,12 +7,25 @@ import fr.social.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class QagHomeJson(
+    @JsonProperty("incomingResponses")
+    val incomingResponses: List<IncomingResponseQagPreviewJson>,
     @JsonProperty("responses")
     val responsesList: List<ResponseQagPreviewJson>,
     @JsonProperty("qags")
     val qagList: QagListJson,
     @JsonProperty("askQagErrorText")
     val askQagErrorText: String?,
+)
+
+data class IncomingResponseQagPreviewJson(
+    @JsonProperty("qagId")
+    val qagId: String,
+    @JsonProperty("thematique")
+    val thematique: ThematiqueNoIdJson,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("support")
+    val support: SupportQagJson,
 )
 
 data class ResponseQagPreviewJson(

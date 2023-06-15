@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.qagHome
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.social.gouv.agora.usecase.qagPreview.GetQagPreviewListUseCase
+import fr.social.gouv.agora.usecase.qagSelection.GetQagSelectedForResponseUseCase
 import fr.social.gouv.agora.usecase.responseQag.GetResponseQagPreviewListUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @Suppress("unused")
 class QagHomeController(
+    private val getQagSelectedForResponseUseCase: GetQagSelectedForResponseUseCase,
     private val getResponseQagPreviewListUseCase: GetResponseQagPreviewListUseCase,
     private val getQagPreviewListUseCase: GetQagPreviewListUseCase,
     private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
@@ -24,6 +26,7 @@ class QagHomeController(
         @RequestParam("thematiqueId") thematiqueId: String?,
     ): ResponseEntity<QagHomeJson> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val qagSelectedForResponseList = getQagSelectedForResponseUseCase.getQagSelectedForResponseList(userId = userId)
         val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
         val qagPreviewList = getQagPreviewListUseCase.getQagPreviewList(
             userId = userId,
@@ -33,6 +36,7 @@ class QagHomeController(
         return ResponseEntity.ok()
             .body(
                 qagHomeJsonMapper.toJson(
+                    qagSelectedForResponseList = qagSelectedForResponseList,
                     responseQagList = responseQagPreviewList,
                     qagPopularList = qagPreviewList.popularPreviewList,
                     qagLatestList = qagPreviewList.latestPreviewList,
