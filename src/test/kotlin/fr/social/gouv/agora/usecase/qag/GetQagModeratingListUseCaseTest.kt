@@ -222,7 +222,7 @@ internal class GetQagModeratingListUseCaseTest {
 
         private fun setupQagInfo(
             qagId: String,
-            postDate: Date = Date(0)
+            postDate: Date = Date(0),
         ): SetupData {
             val qagInfo = mock(QagInfo::class.java).also {
                 given(it.id).willReturn(qagId)
@@ -248,26 +248,31 @@ internal class GetQagModeratingListUseCaseTest {
             input(
                 qagIdAndStatusList = listOf("qagId1" to QagStatus.ARCHIVED),
                 responseQagIdList = emptyList(),
+                qagIdLockedList = emptyList(),
                 expectedModeratingQagCount = 0,
             ),
             input(
                 qagIdAndStatusList = listOf("qagId1" to QagStatus.MODERATED_ACCEPTED),
                 responseQagIdList = emptyList(),
+                qagIdLockedList = emptyList(),
                 expectedModeratingQagCount = 0,
             ),
             input(
                 qagIdAndStatusList = listOf("qagId1" to QagStatus.MODERATED_REJECTED),
                 responseQagIdList = emptyList(),
+                qagIdLockedList = emptyList(),
                 expectedModeratingQagCount = 0,
             ),
             input(
                 qagIdAndStatusList = listOf("qagId1" to QagStatus.OPEN),
                 responseQagIdList = emptyList(),
+                qagIdLockedList = emptyList(),
                 expectedModeratingQagCount = 1,
             ),
             input(
                 qagIdAndStatusList = listOf("qagId1" to QagStatus.OPEN),
                 responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = emptyList(),
                 expectedModeratingQagCount = 0,
             ),
             input(
@@ -280,12 +285,54 @@ internal class GetQagModeratingListUseCaseTest {
                     "qagId6" to QagStatus.OPEN,
                 ),
                 responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = emptyList(),
+                expectedModeratingQagCount = 2,
+            ),
+            input(
+                qagIdAndStatusList = listOf(
+                    "qagId1" to QagStatus.OPEN,
+                    "qagId2" to QagStatus.ARCHIVED,
+                    "qagId3" to QagStatus.MODERATED_ACCEPTED,
+                    "qagId4" to QagStatus.MODERATED_REJECTED,
+                    "qagId5" to QagStatus.OPEN,
+                    "qagId6" to QagStatus.OPEN,
+                ),
+                responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = listOf("qagId1"),
+                expectedModeratingQagCount = 2,
+            ),
+
+            input(
+                qagIdAndStatusList = listOf(
+                    "qagId1" to QagStatus.OPEN,
+                    "qagId2" to QagStatus.ARCHIVED,
+                    "qagId3" to QagStatus.MODERATED_ACCEPTED,
+                    "qagId4" to QagStatus.MODERATED_REJECTED,
+                    "qagId5" to QagStatus.OPEN,
+                    "qagId6" to QagStatus.OPEN,
+                ),
+                responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = listOf("qagId5", "qagId6"),
+                expectedModeratingQagCount = 0,
+            ),
+            input(
+                qagIdAndStatusList = listOf(
+                    "qagId1" to QagStatus.OPEN,
+                    "qagId2" to QagStatus.ARCHIVED,
+                    "qagId3" to QagStatus.MODERATED_ACCEPTED,
+                    "qagId4" to QagStatus.MODERATED_REJECTED,
+                    "qagId5" to QagStatus.OPEN,
+                    "qagId6" to QagStatus.OPEN,
+                ),
+                responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = listOf("qagId2", "qagId3", "qagId4"),
                 expectedModeratingQagCount = 2,
             ),
         )
 
         private fun input(
             qagIdAndStatusList: List<Pair<String, QagStatus>>,
+            qagIdLockedList: List<String>,
             responseQagIdList: List<String>,
             expectedModeratingQagCount: Int,
         ) = arrayOf(
@@ -295,6 +342,7 @@ internal class GetQagModeratingListUseCaseTest {
                     given(it.status).willReturn(qagStatus)
                 }
             },
+            qagIdLockedList,
             responseQagIdList.map { qagId ->
                 mock(ResponseQag::class.java).also {
                     given(it.qagId).willReturn(qagId)
@@ -309,12 +357,16 @@ internal class GetQagModeratingListUseCaseTest {
     @MethodSource("getModeratingQagCountTestCases")
     fun `getModeratingQagCount - should return count of qag filtered by status OPEN and filter out qag with response`(
         qagInfoList: List<QagInfo>,
+        qagInfoLockedList: List<String>,
         responseQagList: List<ResponseQag>,
         expectedModeratingQagCount: Int,
     ) {
         // Given
         given(qagInfoRepository.getAllQagInfo()).willReturn(qagInfoList)
         given(responseQagRepository.getAllResponseQag()).willReturn(responseQagList)
+        qagInfoLockedList.map { qagId ->
+            given(qagModeratingLockRepository.isQagLocked(qagId)).willReturn(true)
+        }
 
         // When
         val result = useCase.getModeratingQagCount()
