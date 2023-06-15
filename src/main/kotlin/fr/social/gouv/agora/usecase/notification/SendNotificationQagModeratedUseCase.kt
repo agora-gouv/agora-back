@@ -3,6 +3,7 @@ package fr.social.gouv.agora.usecase.notification
 import fr.social.gouv.agora.usecase.login.repository.UserRepository
 import fr.social.gouv.agora.usecase.notification.repository.NotificationMessageRepository
 import fr.social.gouv.agora.usecase.notification.repository.NotificationRepository
+import fr.social.gouv.agora.usecase.notification.repository.NotificationRequest
 import fr.social.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
@@ -15,17 +16,35 @@ class SendNotificationQagModeratedUseCase(
     private val notificationMessageRepository: NotificationMessageRepository,
 ) {
 
-    fun sendNotificationQagModeratedMessage(qagId: String): NotificationResult {
-        val userId = qagInfoRepository.getQagInfo(qagId = qagId)?.userId
-        return if (userId != null)
-            userRepository.getUserById(userId = userId)?.fcmToken?.let { fcmToken ->
-                notificationRepository.sendNotificationMessage(
+    fun sendNotificationQagModeratedRejected(qagId: String): NotificationResult {
+        return getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
+            notificationRepository.sendNotificationMessage(
+                request = NotificationRequest(
                     fcmToken = fcmToken,
                     title = notificationMessageRepository.getQagModeratedNotificationTitle(),
-                    messageToSend = notificationMessageRepository.getQagModeratedNotificationMessage(),
+                    description = notificationMessageRepository.getQagModeratedNotificationMessage(),
                 )
-            } ?: NotificationResult.FAILURE
-        else NotificationResult.FAILURE
+            )
+        } ?: NotificationResult.FAILURE
+    }
+
+    fun sendNotificationQagModeratedAccepted(qagId: String): NotificationResult {
+        return getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
+            notificationRepository.sendQagDetailsNotification(
+                request = NotificationRequest(
+                    fcmToken = fcmToken,
+                    title = notificationMessageRepository.getQagModeratedNotificationTitle(),
+                    description = notificationMessageRepository.getQagModeratedNotificationMessage(),
+                ),
+                qagId = qagId,
+            )
+        } ?: NotificationResult.FAILURE
+    }
+
+    private fun getQagAuthorFcmToken(qagId: String): String? {
+        return qagInfoRepository.getQagInfo(qagId = qagId)?.userId?.let { userId ->
+            userRepository.getUserById(userId = userId)?.fcmToken
+        }
     }
 }
 

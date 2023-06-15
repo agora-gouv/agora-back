@@ -5,6 +5,7 @@ import com.google.firebase.messaging.FirebaseMessagingException
 import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification
 import fr.social.gouv.agora.usecase.notification.repository.NotificationRepository
+import fr.social.gouv.agora.usecase.notification.repository.NotificationRequest
 import fr.social.gouv.agora.usecase.notification.repository.NotificationResult
 import org.springframework.stereotype.Component
 
@@ -12,18 +13,42 @@ import org.springframework.stereotype.Component
 @Suppress("unused")
 class NotificationRepositoryImpl : NotificationRepository {
 
-    override fun sendNotificationMessage(fcmToken: String, title: String, messageToSend: String): NotificationResult {
-        val message = Message.builder()
+    companion object {
+        private const val NOTIFICATION_TYPE_KEY = "type"
+
+        private const val QAG_DETAILS_NOTIFICATION_TYPE = "qagDetails"
+        private const val QAG_DETAILS_ID_KEY = "qagId"
+    }
+
+    override fun sendNotificationMessage(request: NotificationRequest): NotificationResult {
+        return sendNotification(
+            notificationMessage = createBaseMessage(request).build()
+        )
+    }
+
+    override fun sendQagDetailsNotification(request: NotificationRequest, qagId: String): NotificationResult {
+        return sendNotification(
+            notificationMessage = createBaseMessage(request)
+                .putData(NOTIFICATION_TYPE_KEY, QAG_DETAILS_NOTIFICATION_TYPE)
+                .putData(QAG_DETAILS_ID_KEY, qagId)
+                .build()
+        )
+    }
+
+    private fun createBaseMessage(request: NotificationRequest): Message.Builder {
+        return Message.builder()
             .setNotification(
                 Notification.builder()
-                    .setTitle(title)
-                    .setBody(messageToSend)
+                    .setTitle(request.title)
+                    .setBody(request.description)
                     .build()
             )
-            .setToken(fcmToken).build()
+            .setToken(request.fcmToken)
+    }
 
+    private fun sendNotification(notificationMessage: Message): NotificationResult {
         return try {
-            val response = FirebaseMessaging.getInstance().send(message)
+            val response = FirebaseMessaging.getInstance().send(notificationMessage)
             if (response.isNullOrEmpty())
                 NotificationResult.FAILURE
             else NotificationResult.SUCCESS
