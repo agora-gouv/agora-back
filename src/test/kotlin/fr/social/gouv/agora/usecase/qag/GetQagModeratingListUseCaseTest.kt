@@ -47,10 +47,12 @@ internal class GetQagModeratingListUseCaseTest {
     @MockBean
     private lateinit var mapper: QagModeratingMapper
 
+    private val userId = "userId"
+    private val otherUserId = "otherUserId"
+
     @Nested
     inner class GetQagModeratingListTestCases {
 
-        private val userId = "userId"
         private val thematique = mock(Thematique::class.java)
 
         @BeforeEach
@@ -106,7 +108,7 @@ internal class GetQagModeratingListUseCaseTest {
             }
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(mock(ResponseQag::class.java))
-            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(false)
+            given(qagModeratingLockRepository.getQagLocked(qagId = "qagId")).willReturn(null)
 
             // When
             val result = useCase.getQagModeratingList(userId = userId)
@@ -117,7 +119,7 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
             then(thematiqueRepository).shouldHaveNoInteractions()
             then(supportRepository).shouldHaveNoInteractions()
-            then(qagModeratingLockRepository).should(only()).isQagLocked(qagId = "qagId")
+            then(qagModeratingLockRepository).should(only()).getQagLocked(qagId = "qagId")
             then(mapper).shouldHaveNoInteractions()
         }
 
@@ -132,7 +134,7 @@ internal class GetQagModeratingListUseCaseTest {
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
             given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(null)
-            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(false)
+            given(qagModeratingLockRepository.getQagLocked(qagId = "qagId")).willReturn(null)
 
             // When
             val result = useCase.getQagModeratingList(userId = userId)
@@ -143,7 +145,7 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
             then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
             then(supportRepository).shouldHaveNoInteractions()
-            then(qagModeratingLockRepository).should(only()).isQagLocked(qagId = "qagId")
+            then(qagModeratingLockRepository).should(only()).getQagLocked(qagId = "qagId")
             then(mapper).shouldHaveNoInteractions()
         }
 
@@ -157,7 +159,7 @@ internal class GetQagModeratingListUseCaseTest {
             }
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
-            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(false)
+            given(qagModeratingLockRepository.getQagLocked(qagId = "qagId")).willReturn(null)
 
             val thematique = mock(Thematique::class.java)
             given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
@@ -173,7 +175,7 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
             then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
             then(supportRepository).should(only()).getSupportQag(qagId = "qagId", userId = userId)
-            then(qagModeratingLockRepository).should(only()).isQagLocked(qagId = "qagId")
+            then(qagModeratingLockRepository).should(only()).getQagLocked(qagId = "qagId")
             then(mapper).shouldHaveNoInteractions()
         }
 
@@ -183,7 +185,7 @@ internal class GetQagModeratingListUseCaseTest {
             val setupData = setupQagInfo(qagId = "qagId")
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(setupData.qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
-            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(false)
+            given(qagModeratingLockRepository.getQagLocked(qagId = "qagId")).willReturn(null)
 
             // When
             val result = useCase.getQagModeratingList(userId = userId)
@@ -194,8 +196,9 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
             then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
             then(supportRepository).should(only()).getSupportQag(qagId = "qagId", userId = userId)
-            then(qagModeratingLockRepository).should(times(1)).isQagLocked(qagId = "qagId")
-            then(qagModeratingLockRepository).should(times(1)).setQagLocked(setupData.qagModerating.id)
+            then(qagModeratingLockRepository).should(times(1)).getQagLocked(qagId = "qagId")
+            then(qagModeratingLockRepository).should(times(1))
+                .setQagLocked(qagId = setupData.qagModerating.id, userId = userId)
             then(mapper).should(only()).toQagModerating(setupData.qagInfo, thematique, setupData.supportQag)
         }
 
@@ -205,7 +208,7 @@ internal class GetQagModeratingListUseCaseTest {
             val setupData = setupQagInfo(qagId = "qagId")
             given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(setupData.qagInfo))
             given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
-            given(qagModeratingLockRepository.isQagLocked(qagId = "qagId")).willReturn(true)
+            given(qagModeratingLockRepository.getQagLocked(qagId = "qagId")).willReturn(otherUserId)
 
             // When
             val result = useCase.getQagModeratingList(userId = userId)
@@ -216,8 +219,31 @@ internal class GetQagModeratingListUseCaseTest {
             then(responseQagRepository).shouldHaveNoInteractions()
             then(thematiqueRepository).shouldHaveNoInteractions()
             then(supportRepository).shouldHaveNoInteractions()
-            then(qagModeratingLockRepository).should(only()).isQagLocked(qagId = "qagId")
+            then(qagModeratingLockRepository).should(times(2)).getQagLocked(qagId = "qagId")
             then(mapper).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `getQagModeratingList - when has locked qagInfo by the user, no responseQag, thematique, support and thematique - should return mapped qagPreview`() {
+            // Given
+            val setupData = setupQagInfo(qagId = "qagId")
+            given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(setupData.qagInfo))
+            given(responseQagRepository.getResponseQag(qagId = "qagId")).willReturn(null)
+            given(qagModeratingLockRepository.getQagLocked(qagId = "qagId")).willReturn(userId)
+
+            // When
+            val result = useCase.getQagModeratingList(userId = userId)
+
+            // Then
+            assertThat(result).isEqualTo(listOf(setupData.qagModerating))
+            then(qagInfoRepository).should(only()).getAllQagInfo()
+            then(responseQagRepository).should(only()).getResponseQag(qagId = "qagId")
+            then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
+            then(supportRepository).should(only()).getSupportQag(qagId = "qagId", userId = userId)
+            then(qagModeratingLockRepository).should(times(2)).getQagLocked(qagId = "qagId")
+            then(qagModeratingLockRepository).should(times(1))
+                .setQagLocked(qagId = setupData.qagModerating.id, userId = userId)
+            then(mapper).should(only()).toQagModerating(setupData.qagInfo, thematique, setupData.supportQag)
         }
 
         private fun setupQagInfo(
@@ -329,6 +355,92 @@ internal class GetQagModeratingListUseCaseTest {
                 expectedModeratingQagCount = 2,
             ),
         )
+        @JvmStatic
+        fun getModeratingQagCountTestCasesWhenUserLockedQag() = arrayOf(
+            input(
+                qagIdAndStatusList = listOf("qagId1" to QagStatus.ARCHIVED),
+                responseQagIdList = emptyList(),
+                qagIdLockedList = emptyList(),
+                expectedModeratingQagCount = 0,
+            ),
+            input(
+                qagIdAndStatusList = listOf("qagId1" to QagStatus.MODERATED_ACCEPTED),
+                responseQagIdList = emptyList(),
+                qagIdLockedList = emptyList(),
+                expectedModeratingQagCount = 0,
+            ),
+            input(
+                qagIdAndStatusList = listOf("qagId1" to QagStatus.MODERATED_REJECTED),
+                responseQagIdList = emptyList(),
+                qagIdLockedList = emptyList(),
+                expectedModeratingQagCount = 0,
+            ),
+            input(
+                qagIdAndStatusList = listOf("qagId1" to QagStatus.OPEN),
+                responseQagIdList = emptyList(),
+                qagIdLockedList = emptyList(),
+                expectedModeratingQagCount = 1,
+            ),
+            input(
+                qagIdAndStatusList = listOf("qagId1" to QagStatus.OPEN),
+                responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = emptyList(),
+                expectedModeratingQagCount = 0,
+            ),
+            input(
+                qagIdAndStatusList = listOf(
+                    "qagId1" to QagStatus.OPEN,
+                    "qagId2" to QagStatus.ARCHIVED,
+                    "qagId3" to QagStatus.MODERATED_ACCEPTED,
+                    "qagId4" to QagStatus.MODERATED_REJECTED,
+                    "qagId5" to QagStatus.OPEN,
+                    "qagId6" to QagStatus.OPEN,
+                ),
+                responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = emptyList(),
+                expectedModeratingQagCount = 2,
+            ),
+            input(
+                qagIdAndStatusList = listOf(
+                    "qagId1" to QagStatus.OPEN,
+                    "qagId2" to QagStatus.ARCHIVED,
+                    "qagId3" to QagStatus.MODERATED_ACCEPTED,
+                    "qagId4" to QagStatus.MODERATED_REJECTED,
+                    "qagId5" to QagStatus.OPEN,
+                    "qagId6" to QagStatus.OPEN,
+                ),
+                responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = listOf("qagId1"),
+                expectedModeratingQagCount = 2,
+            ),
+
+            input(
+                qagIdAndStatusList = listOf(
+                    "qagId1" to QagStatus.OPEN,
+                    "qagId2" to QagStatus.ARCHIVED,
+                    "qagId3" to QagStatus.MODERATED_ACCEPTED,
+                    "qagId4" to QagStatus.MODERATED_REJECTED,
+                    "qagId5" to QagStatus.OPEN,
+                    "qagId6" to QagStatus.OPEN,
+                ),
+                responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = listOf("qagId5", "qagId6"),
+                expectedModeratingQagCount = 2,
+            ),
+            input(
+                qagIdAndStatusList = listOf(
+                    "qagId1" to QagStatus.OPEN,
+                    "qagId2" to QagStatus.ARCHIVED,
+                    "qagId3" to QagStatus.MODERATED_ACCEPTED,
+                    "qagId4" to QagStatus.MODERATED_REJECTED,
+                    "qagId5" to QagStatus.OPEN,
+                    "qagId6" to QagStatus.OPEN,
+                ),
+                responseQagIdList = listOf("qagId1"),
+                qagIdLockedList = listOf("qagId2", "qagId3", "qagId4"),
+                expectedModeratingQagCount = 2,
+            ),
+        )
 
         private fun input(
             qagIdAndStatusList: List<Pair<String, QagStatus>>,
@@ -354,8 +466,8 @@ internal class GetQagModeratingListUseCaseTest {
     }
 
     @ParameterizedTest(name = "getModeratingQagCount - when has qags {0} and responses {1} - should return {2}")
-    @MethodSource("getModeratingQagCountTestCases")
-    fun `getModeratingQagCount - should return count of qag filtered by status OPEN and filter out qag with response`(
+    @MethodSource("getModeratingQagCountTestCasesWhenUserLockedQag")
+    fun `getModeratingQagCount - should return count of qag filtered by status OPEN and filter out qag with response and Qag Locked by the user`(
         qagInfoList: List<QagInfo>,
         qagInfoLockedList: List<String>,
         responseQagList: List<ResponseQag>,
@@ -365,11 +477,11 @@ internal class GetQagModeratingListUseCaseTest {
         given(qagInfoRepository.getAllQagInfo()).willReturn(qagInfoList)
         given(responseQagRepository.getAllResponseQag()).willReturn(responseQagList)
         qagInfoLockedList.map { qagId ->
-            given(qagModeratingLockRepository.isQagLocked(qagId)).willReturn(true)
+            given(qagModeratingLockRepository.getQagLocked(qagId)).willReturn(userId)
         }
 
         // When
-        val result = useCase.getModeratingQagCount()
+        val result = useCase.getModeratingQagCount(userId = userId)
 
         // Then
         assertThat(result).isEqualTo(expectedModeratingQagCount)
@@ -382,4 +494,28 @@ internal class GetQagModeratingListUseCaseTest {
         val supportQag: SupportQag,
         val qagModerating: QagModerating,
     )
+
+    @ParameterizedTest(name = "getModeratingQagCount - when has qags {0} and responses {1} - should return {2}")
+    @MethodSource("getModeratingQagCountTestCases")
+    fun `getModeratingQagCount - should return count of qag filtered by status OPEN and filter out qag with response`(
+        qagInfoList: List<QagInfo>,
+        qagInfoLockedList: List<String>,
+        responseQagList: List<ResponseQag>,
+        expectedModeratingQagCount: Int,
+    ) {
+        // Given
+        given(qagInfoRepository.getAllQagInfo()).willReturn(qagInfoList)
+        given(responseQagRepository.getAllResponseQag()).willReturn(responseQagList)
+        qagInfoLockedList.map { qagId ->
+            given(qagModeratingLockRepository.getQagLocked(qagId)).willReturn(otherUserId)
+        }
+
+        // When
+        val result = useCase.getModeratingQagCount(userId = userId)
+
+        // Then
+        assertThat(result).isEqualTo(expectedModeratingQagCount)
+        then(qagInfoRepository).should(only()).getAllQagInfo()
+        then(responseQagRepository).should(only()).getAllResponseQag()
+    }
 }

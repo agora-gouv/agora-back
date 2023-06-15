@@ -21,10 +21,9 @@ class QagModeratingController(
     fun getQagToModerate(
         @RequestHeader("Authorization") authorizationHeader: String,
     ): ResponseEntity<QagModeratingHomeJson> {
-        val qagModeratingList = getQagModeratingListUseCase.getQagModeratingList(
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
-        )
-        val qagModeratingCount = getQagModeratingListUseCase.getModeratingQagCount()
+        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val qagModeratingList = getQagModeratingListUseCase.getQagModeratingList(userId)
+        val qagModeratingCount = getQagModeratingListUseCase.getModeratingQagCount(userId)
         return ResponseEntity.ok(mapper.toJson(qagModeratingList, qagModeratingCount))
     }
 

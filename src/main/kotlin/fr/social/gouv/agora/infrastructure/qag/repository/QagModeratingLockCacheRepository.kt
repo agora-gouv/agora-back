@@ -13,16 +13,16 @@ class QagModeratingLockCacheRepository(
         private const val QAG_MODERATING_LOCK_CACHE_NAME = "QagModeratingLockCache"
     }
 
-    fun isQagLocked(qagUUID: UUID): Boolean {
+    fun getQagLocked(qagUUID: UUID): String? {
         return try {
-            getCache()?.get(qagUUID.toString(), String::class.java)!=null
+            getCache()?.get(qagUUID.toString(), String::class.java)
         } catch (e: IllegalStateException) {
-            false
+            null
         }
     }
 
-    fun setQagLocked(qagUUID: UUID) {
-        getCache()?.put(qagUUID.toString(), qagUUID.toString())
+    fun setQagLocked(qagUUID: UUID, userUUID: UUID) {
+        getCache()?.put(qagUUID.toString(), userUUID.toString())
     }
 
     private fun getCache() = cacheManager.getCache(QAG_MODERATING_LOCK_CACHE_NAME)

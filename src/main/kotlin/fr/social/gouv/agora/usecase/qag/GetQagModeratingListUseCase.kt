@@ -30,21 +30,31 @@ class GetQagModeratingListUseCase(
         val thematiqueMap = mutableMapOf<String, Thematique?>()
 
         val listQag = qagInfoRepository.getAllQagInfo()
-            .filter { qagInfo -> qagInfo.status == QagStatus.OPEN && !qagModeratingLockRepository.isQagLocked(qagInfo.id) }
+            .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
+            .filter { qagInfo ->
+                qagModeratingLockRepository.getQagLocked(qagInfo.id) == null || qagModeratingLockRepository.getQagLocked(
+                    qagInfo.id
+                ) == userId
+            }
             .sortedBy { qagInfo -> qagInfo.date }
             .mapNotNullWhile(
                 transformMethod = { qagInfo -> toQagModerating(qagInfo, userId, thematiqueMap) },
                 loopWhileCondition = { qagPreviewList -> qagPreviewList.size < MAX_MODERATING_LIST_SIZE },
             )
-        for(qagModerating in listQag)
-            qagModeratingLockRepository.setQagLocked(qagModerating.id)
+        for (qagModerating in listQag)
+            qagModeratingLockRepository.setQagLocked(qagId = qagModerating.id, userId = userId)
         return listQag
     }
 
-    fun getModeratingQagCount(): Int {
+    fun getModeratingQagCount(userId: String): Int {
         val allResponseQag = responseQagRepository.getAllResponseQag()
         return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
+            .filter { qagInfo ->
+                qagModeratingLockRepository.getQagLocked(qagInfo.id) == null || qagModeratingLockRepository.getQagLocked(
+                    qagInfo.id
+                ) == userId
+            }
             .filterNot { qagInfo -> allResponseQag.any { responseQag -> responseQag.qagId == qagInfo.id } }
             .count()
     }

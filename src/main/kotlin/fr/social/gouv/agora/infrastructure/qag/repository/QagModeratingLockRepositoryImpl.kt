@@ -9,17 +9,17 @@ class QagModeratingLockRepositoryImpl(
     private val cacheRepository: QagModeratingLockCacheRepository,
 ) : QagModeratingLockRepository {
 
-    override fun isQagLocked(qagId: String): Boolean {
+    override fun getQagLocked(qagId: String): String? {
         return try {
-            cacheRepository.isQagLocked(UUID.fromString(qagId))
+            cacheRepository.getQagLocked(UUID.fromString(qagId))
         } catch (e: IllegalArgumentException) {
-            false
+            null
         }
     }
 
-    override fun setQagLocked(qagId: String) {
+    override fun setQagLocked(qagId: String, userId: String) {
         try {
-            cacheRepository.setQagLocked(UUID.fromString(qagId))
+            cacheRepository.setQagLocked(qagUUID = UUID.fromString(qagId), userUUID = UUID.fromString(userId))
         } catch (e: IllegalArgumentException) {
             //do nothing
         }
