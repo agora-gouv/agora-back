@@ -160,7 +160,7 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     'Agora',
     '30671310-ee62-11ed-a05b-0242ac120003',
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
-) ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id;
+) ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, status = EXCLUDED.status;
 
 INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, transcription, qag_id) VALUES (
     '38990baf-b0ed-4db0-99a5-7ec01790720e',
