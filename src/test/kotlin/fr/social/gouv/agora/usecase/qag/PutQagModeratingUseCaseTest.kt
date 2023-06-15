@@ -120,7 +120,7 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagModeratedMessage(qagId = "qagId")
+        then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagModeratedRejected(qagId = "qagId")
     }
 
     @Test

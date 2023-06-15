@@ -33,7 +33,7 @@ class PutQagModeratingUseCase(
             QagUpdateResult.FAILURE -> ModeratingQagResult.FAILURE
             QagUpdateResult.SUCCESS -> {
                 if (!qagModeratingStatus) {
-                    sendNotificationQagModeratedUseCase.sendNotificationQagModeratedMessage(qagId = qagId)
+                    sendNotificationQagModeratedUseCase.sendNotificationQagModeratedRejected(qagId = qagId)
                 }
                 ModeratingQagResult.SUCCESS
             }
