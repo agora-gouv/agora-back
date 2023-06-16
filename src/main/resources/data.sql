@@ -821,8 +821,8 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '12 questions',
     '10 minutes',
     10000,
-    '<body>En France, comme dans de nombreuses démocraties, l’abstention augmente, élection après élection. De nombreux citoyens ne font pas confiance aux responsables politiques, aux élus ou encore à l’Etat pour améliorer leur quotidien.<br/><br/>Pour tenter de rétablir ce lien de confiance, le Gouvernement compte, depuis juillet 2022, un ministre délégué auprès de la Première ministre chargé du «<b> renouveau démocratique </b>», Olivier Véran.<br/><br/>Son rôle consiste notamment à <b>développer les démarches de participation citoyenne</b>, pour permettre à chaque citoyen de mieux contribuer à la décision politique.<br/><br/>Cette appli mobile, que vous venez de télécharger, s’inscrit dans cet objectif. Elle est complémentaire de démarches dites « délibératives » en présentiel, comme par exemple, récemment, la Convention citoyenne sur la fin de vie.<br/><br/>Avec cette consultation, donnez-nous votre avis pour nous aider à aller plus loin !</body>',
-    '<body>🗣 Consultation proposée par le <b>Ministre du Renouveau Démocratique</b><br/><br/>🎯<b> Objectif</b> : Contribuer à la feuille de route gouvernementale pour le renouveau démocratique <br/><br/>🚀<b>Axe gouvernemental</b> : Renforcer l’ordre républicain et encourager l’engagement</body>',
+    '<body>En France, comme dans de nombreuses démocraties, l’abstention augmente, élection après élection. De nombreux citoyens ne font pas confiance aux responsables politiques, aux élus ou encore à l’Etat pour améliorer leur quotidien.<br/><br/>Pour tenter de rétablir ce lien de confiance, le Gouvernement compte, depuis juillet 2022, un ministre délégué auprès de la Première ministre chargé du <b> renouveau démocratique </b>, Olivier Véran.<br/><br/>Son rôle consiste notamment à <b>développer les démarches de participation citoyenne</b>, pour permettre à chaque citoyen de mieux contribuer à la décision politique.<br/><br/>Cette appli mobile, que vous venez de télécharger, s’inscrit dans cet objectif. Elle est complémentaire de démarches dites « délibératives » en présentiel, comme par exemple, la Convention citoyenne sur la fin de vie ou la concertation nationale sur le mix énergétique.<br/><br/>Avec cette consultation, donnez-nous votre avis pour nous aider à aller plus loin !</body>',
+    '<body>🗣 Consultation proposée par le <b>Ministre du Renouveau Démocratique</b><br/><br/>🎯<b> Objectif</b> : améliorer et co-construire cette application avec les citoyens ; développer la participation citoyenne et faire reculer l’abstention à partir de vos idées <br/><br/>🚀<b>Axe gouvernemental</b> : Renforcer l’ordre républicain et encourager l’engagement</body>',
     '30671310-ee62-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
@@ -861,13 +861,6 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
      '092557b4-0927-11ee-be56-0242ac120010',
      'Jamais',
      4,
-     'e65beea0-0926-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-     '092557b4-8827-11ee-be56-0242ac120010',
-     'Je ne souhaite pas répondre',
-     5,
      'e65beea0-0926-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
@@ -921,10 +914,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
      '43f979ae-0929-11ee-be56-0242ac120002',
-     'Un changement de pratiques politiques des élus',
+     'Un changement de pratiques politiques et/ou de profils des élus',
      1,
      '2c154084-0929-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
      '43f979ae-0929-11ee-be56-0242ac120102',
@@ -990,13 +983,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '40b7d25c-092b-11ee-be56-0242ac120002',
-    'Pour vous, développer la participation citoyenne est :',
+    'Pour vous, recueillir plus souvent l’avis des citoyens pendant la préparation d’une réforme est :',
     6,
     'unique',
     null,
     null,
     '98a8ba56-0923-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '5a0071ec-092b-11ee-be56-0242ac120002',
@@ -1028,13 +1021,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'd4df6396-092b-11ee-be56-0242ac120002',
-    'Pensez-vous que les dispositifs de participation citoyenne ont un impact sur la décision politique ?',
+    'Pensez-vous que cela ait un impact sur la décision politique ?',
     7,
     'unique',
     null,
     null,
     '98a8ba56-0923-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'ea68bafa-092b-11ee-be56-0242ac120002',
@@ -1066,13 +1059,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'b9e813c0-092c-11ee-be56-0242ac120002',
-    'Pouvoir s''exprimer sur les grands projets et les politiques prioritaires du gouvernement via une application dédiée comme celle que vous venez de télécharger ; est-ce une bonne idée selon vous ?',
+    'Pouvoir s''exprimer sur les grands projets et réformes du Gouvernement via une application dédiée comme celle que vous venez de télécharger ; est-ce une bonne idée selon vous ?',
     8,
     'unique',
     null,
     null,
     '98a8ba56-0923-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd97f36a0-092c-11ee-be56-0242ac120002',
@@ -1268,13 +1261,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'b7c7eccc-092d-11ee-be56-0242ac120002',
-    'Sur cette application, le Gouvernement prend l''engagement de répondre chaque semaine à une question posée par les citoyens (celle qui obtient le plus de soutiens) ; est-ce une bonne idée ?',
+    'Pourquoi avez-vous téléchargé cette appli et à quoi, selon vous, doit-elle principalement servir ? C’est la dernière question de cette consultation : partagez-nous toutes vos idées !',
     10,
     'unique',
     null,
     null,
     '98a8ba56-0923-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'f130db54-092d-11ee-be56-0242ac120002',
@@ -1320,7 +1313,7 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '68682956-094b-423b-9086-9ec4f8ef2662',
     1,
-    '<body>👉 Le Ministre du Renouveau démocratique, après lecture de l’ensemble de vos contributions, reviendra vers vous directement sur cette appli pour vous partager les mesures que le Gouvernement entend mettre en œuvre pour :<br/><br/><ul><li><b>Améliorer cette application</b></li><li><b>Continuer à développer la participation citoyenne</b></li><li><b>Lutter contre l’abstention et la défiance démocratique</b></li><br/><br/>—<br/><br/>💡 <b>Envie d''aller plus loin ?</b><br/><br/>Rendez-vous <a href="https://www.participation-citoyenne.gouv.fr/">ici</a> <b>(participation-citoyenne.gouv.fr)</b> pour en savoir plus sur les dispositifs de participation citoyenne mis en place de façon volontaire par l’Etat.</br></br>Vous pouvez par ailleurs à tout moment donner vos retours sur l’application dans le bouton “Profil”</body>',
+    '<body>👉 Le Ministre du Renouveau démocratique, après lecture et analyse de l’ensemble de vos contributions, reviendra vers vous, directement sur cette appli, pour vous partager les mesures que le Gouvernement entend mettre en œuvre pour :<br/><br/><ul><li><b>Améliorer cette application</b></li><br/><br/><li><b>Continuer à développer la participation citoyenne</b></li><br/><br/>—<br/><br/>💡 <b>Envie d''aller plus loin ?</b><br/><br/>Rendez-vous <a href="https://www.participation-citoyenne.gouv.fr/">ici</a> <b> (participation-citoyenne.gouv.fr)</b> pour en savoir plus sur les dispositifs de participation citoyenne mis en place de façon volontaire par l’Etat.</br></br>Et pour nous partager vos retours, critiques et idées pour améliorer l’appli, rendez-vous sur votre page profil.</body>',
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
 
