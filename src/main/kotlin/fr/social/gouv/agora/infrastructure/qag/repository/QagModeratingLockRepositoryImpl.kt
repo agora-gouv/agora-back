@@ -9,9 +9,9 @@ class QagModeratingLockRepositoryImpl(
     private val cacheRepository: QagModeratingLockCacheRepository,
 ) : QagModeratingLockRepository {
 
-    override fun getQagLocked(qagId: String): String? {
+    override fun getUserIdForQagLocked(qagId: String): String? {
         return try {
-            cacheRepository.getQagLocked(UUID.fromString(qagId))
+            cacheRepository.getUserIdForQagLocked(UUID.fromString(qagId))
         } catch (e: IllegalArgumentException) {
             null
         }

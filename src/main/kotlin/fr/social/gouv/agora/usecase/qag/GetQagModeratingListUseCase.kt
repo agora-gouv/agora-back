@@ -23,38 +23,34 @@ class GetQagModeratingListUseCase(
 ) {
 
     companion object {
-        private const val MAX_MODERATING_LIST_SIZE = 20
+        private const val MAX_MODERATING_LIST_SIZE = 5
     }
 
     fun getQagModeratingList(userId: String): List<QagModerating> {
         val thematiqueMap = mutableMapOf<String, Thematique?>()
 
-        val listQag = qagInfoRepository.getAllQagInfo()
+        return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
             .filter { qagInfo ->
-                qagModeratingLockRepository.getQagLocked(qagInfo.id) == null || qagModeratingLockRepository.getQagLocked(
-                    qagInfo.id
-                ) == userId
+                val lockingUserId = qagModeratingLockRepository.getUserIdForQagLocked(qagInfo.id)
+                lockingUserId == null || lockingUserId == userId
             }
             .sortedBy { qagInfo -> qagInfo.date }
             .mapNotNullWhile(
                 transformMethod = { qagInfo -> toQagModerating(qagInfo, userId, thematiqueMap) },
                 loopWhileCondition = { qagPreviewList -> qagPreviewList.size < MAX_MODERATING_LIST_SIZE },
-            )
-        for (qagModerating in listQag)
-            qagModeratingLockRepository.setQagLocked(qagId = qagModerating.id, userId = userId)
-        return listQag
+            ).onEach { qagModerating ->
+                qagModeratingLockRepository.setQagLocked(
+                    qagId = qagModerating.id,
+                    userId = userId,
+                )
+            }
     }
 
     fun getModeratingQagCount(userId: String): Int {
         val allResponseQag = responseQagRepository.getAllResponseQag()
         return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
-            .filter { qagInfo ->
-                qagModeratingLockRepository.getQagLocked(qagInfo.id) == null || qagModeratingLockRepository.getQagLocked(
-                    qagInfo.id
-                ) == userId
-            }
             .filterNot { qagInfo -> allResponseQag.any { responseQag -> responseQag.qagId == qagInfo.id } }
             .count()
     }
