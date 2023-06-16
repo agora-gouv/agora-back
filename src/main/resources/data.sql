@@ -1059,7 +1059,7 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'b9e813c0-092c-11ee-be56-0242ac120002',
-    'Pouvoir s''exprimer sur les grands projets et réformes du Gouvernement via une application dédiée comme celle que vous venez de télécharger ; est-ce une bonne idée selon vous ?',
+    'Pouvoir s’exprimer sur les grands projets et réformes du Gouvernement via une application dédiée comme celle que vous venez de télécharger ; est-ce une bonne idée selon vous ?',
     8,
     'unique',
     null,
@@ -1313,7 +1313,7 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '68682956-094b-423b-9086-9ec4f8ef2662',
     1,
-    '<body>👉 Le Ministre du Renouveau démocratique, après lecture et analyse de l’ensemble de vos contributions, reviendra vers vous, directement sur cette appli, pour vous partager les mesures que le Gouvernement entend mettre en œuvre pour :<br/><br/><ul><li><b>Améliorer cette application</b></li><br/><br/><li><b>Continuer à développer la participation citoyenne</b></li><br/><br/>—<br/><br/>💡 <b>Envie d''aller plus loin ?</b><br/><br/>Rendez-vous <a href="https://www.participation-citoyenne.gouv.fr/">ici</a> <b> (participation-citoyenne.gouv.fr)</b> pour en savoir plus sur les dispositifs de participation citoyenne mis en place de façon volontaire par l’Etat.</br></br>Et pour nous partager vos retours, critiques et idées pour améliorer l’appli, rendez-vous sur votre page profil.</body>',
+    '<body>👉 Le Ministre du Renouveau démocratique, après lecture et analyse de l’ensemble de vos contributions, reviendra vers vous, directement sur cette appli, pour vous partager les mesures que le Gouvernement entend mettre en œuvre pour :<br/><br/><ul><li><b>Améliorer cette application</b></li><br/><br/><li><b>Continuer à développer la participation citoyenne</b></li><br/><br/>—<br/><br/>💡 <b>Envie d’aller plus loin ?</b><br/><br/>Rendez-vous <a href="https://www.participation-citoyenne.gouv.fr/">ici</a> <b> (participation-citoyenne.gouv.fr)</b> pour en savoir plus sur les dispositifs de participation citoyenne mis en place de façon volontaire par l’Etat.</br></br>Et pour nous partager vos retours, critiques et idées pour améliorer l’appli, rendez-vous sur votre page profil.</body>',
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
 
@@ -1325,7 +1325,7 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '11 questions',
     '10 minutes',
     10000,
-    '<body>Atténuation et adaptation sont les deux volets indispensables et complémentaires de la politique climatique.<br/><ul><li>L''<b>atténuation </b>consiste à agir sur les causes du changement climatique pour en limiter l’ampleur. Il s’agit donc de réduire les émissions de gaz à effet de serre (issues de la combustion d’énergies fossiles, de certains procédés industriels, de la déforestation…) et d’augmenter les puits de gaz à effet de serre (sols, forêts, produits bois, zones humides…).</li><li>L''<b>adaptation </b>au changement climatique consiste à anticiper et gérer les conséquences du changement climatique. Il s’agit de limiter les impacts du changement climatique et les dommages associés sur les populations, les activités socio-économiques et la nature en intervenant sur les facteurs qui contrôlent leur ampleur (par exemple, l’urbanisation des zones à risques) et de profiter des opportunités potentielles.</li></ul><br/><br/><b>L''accord de Paris fixe l''objectif de rester bien en-dessous de 2 degrés de réchauffement mondial</b> par rapport à l''ère pré-industrielle et de poursuivre les efforts pour ne pas dépasser 1.5 degrés. Cependant <b>nous ne sommes collectivement pas sur la bonne trajectoire</b> : les émissions mondiales de gaz à effet de serre continuent d’augmenter, certes bien moins vite que dans le passé, alors qu’il faudrait qu’elles baissent rapidement et fortement pour freiner le changement climatique.<br/><br/>Si l’atteinte des objectifs de l’Accord de Paris reste notre priorité et notre combat, les engagements pris par les Etats lors des COP climat et les politiques en place nous conduisent vers un réchauffement mondial de l’ordre de 3°C.<br/><br/><b>Nous devons nous préparer, concrètement, aux effets inévitables du changement climatique sur notre territoire et sur nos vies.</b> Cette consultation vise à fournir un premier aperçu des conséquences du réchauffement climatique et des choix d’adaptation qu’il induit.</body>',
+    '<body>Atténuation et adaptation sont les deux volets indispensables et complémentaires de la politique climatique.<br/><ul><li>L’<b>atténuation </b>consiste à agir sur les causes du changement climatique pour en limiter l’ampleur. Il s’agit donc de réduire les émissions de gaz à effet de serre (issues de la combustion d’énergies fossiles, de certains procédés industriels, de la déforestation…) et d’augmenter les puits de gaz à effet de serre (sols, forêts, produits bois, zones humides…).</li><li>L’<b>adaptation </b>au changement climatique consiste à anticiper et gérer les conséquences du changement climatique. Il s’agit de limiter les impacts du changement climatique et les dommages associés sur les populations, les activités socio-économiques et la nature en intervenant sur les facteurs qui contrôlent leur ampleur (par exemple, l’urbanisation des zones à risques) et de profiter des opportunités potentielles.</li></ul><br/><br/><b>L’accord de Paris fixe l’objectif de rester bien en-dessous de 2 degrés de réchauffement mondial</b> par rapport à l’ère pré-industrielle et de poursuivre les efforts pour ne pas dépasser 1.5 degrés. Cependant <b>nous ne sommes collectivement pas sur la bonne trajectoire</b> : les émissions mondiales de gaz à effet de serre continuent d’augmenter, certes bien moins vite que dans le passé, alors qu’il faudrait qu’elles baissent rapidement et fortement pour freiner le changement climatique.<br/><br/>Si l’atteinte des objectifs de l’Accord de Paris reste notre priorité et notre combat, les engagements pris par les Etats lors des COP climat et les politiques en place nous conduisent vers un réchauffement mondial de l’ordre de 3°C.<br/><br/><b>Nous devons nous préparer, concrètement, aux effets inévitables du changement climatique sur notre territoire et sur nos vies.</b> Cette consultation vise à fournir un premier aperçu des conséquences du réchauffement climatique et des choix d’adaptation qu’il induit.</body>',
     '<body>🗣 Consultation proposée par le <b>Ministère de la Transition Ecologique et de la Cohésion des Territoires</b><br/><br/>🎯<b> Objectif</b> : adapter la France aux conséquences du réchauffement climatique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     'bb051bf2-644b-47b6-9488-7759fa727dc0'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
@@ -1732,4 +1732,390 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
     1,
     '<body>👉 Les réponses à cette consultation seront présentées au ministre de la Transition écologique et de la Cohésion des territoires et serviront à alimenter les <b>travaux de préparation des politiques d’adaptation au changement climatique.</b><br/><br/>D’ici la fin de l’année 2023, le <b> Plan national d’adaptation au changement climatique </b> (PNACC) doit être révisé et ses mesures renforcées afin de prendre en compte les nouveaux effets du réchauffement climatique. <br/>—<br/><br/><b>🌳 Envie d’aller plus loin ?</b><br/>Rendez-vous ici pour voir comment vous engager pour le climat.</body>',
     'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
+
+INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002',
+    'Comment agir durablement en faveur de la sobriété énergétique ?',
+    '2023-09-30',
+    'https://betagouv.github.io/agora-content/energie.jpg',
+    '10 questions',
+    '7 minutes',
+    10000,
+    '<body>En octobre dernier, un <a href= "https://www.ecologie.gouv.fr/sites/default/files/dp-plan-sobriete.pdf">premier plan de sobriété</a> a été présenté par la Première ministre, Elisabeth Borne, et la ministre de la Transition énergétique, Agnès Pannier-Runacher. Ce plan a permis à la France de <b> réduire sa consommation d’énergie de plus de 10%.</b> <br/><br/>Le 20 juin, l’<b>acte 2 du plan de sobriété</b> a été présenté (renvoi vers le plan 2) avec en priorité des mesures pour l’été, sur le numérique et sur le carburant. En octobre 2023, un bilan de la première année d’application du plan de sobriété devra être dressé et des mesures devront être prises afin d’ancrer la sobriété dans la durée.<br/><br/>Car la sobriété énergétique, ce n’était pas seulement pour passer l’hiver dernier, c’est une <b>mesure climatique de long-terme </b>: si nous voulons atteindre la neutralité carbone, nous devrons réduire notre consommation d’énergie de 40% d’ici 2050. L’objectif est donc d’<b>associer les citoyens en faveur de la sobriété dans la durée.</b></body>',
+    '<body>🗣 Consultation proposée par le <b>Ministère de la Transition énergétique</b><br/><br/>🎯<b> Objectif</b> : trouver des solutions pour agir durablement en faveur de la transition énergétique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique et énergétique</body>',
+    '5e6bed94-015e-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '34d997e4-0c4c-11ee-be56-0242ac120002',
+    'Pour vous, la “sobriété énergétique”, c’est …',
+    1,
+    'ouverte',
+    null,
+    null,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '641d7656-0c4c-11ee-be56-0242ac120002',
+    'Si je m’engage pour la sobriété énergétique, c’est en priorité pour :',
+    2,
+    'unique',
+    null,
+    null,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '89e36102-0c4c-11ee-be56-0242ac120002',
+    'Le climat',
+    1,
+    '641d7656-0c4c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '89e36102-0c4c-11ee-be56-0242ac120022',
+    'Mon pouvoir d’achat',
+    2,
+    '641d7656-0c4c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '89e36102-0c4c-11ee-be56-0242ac120202',
+    'Mon confort de vie',
+    3,
+    '641d7656-0c4c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '89e36102-0c4c-11ee-be56-0242ac120222',
+    'Autre / Je ne souhaite pas m’engager',
+    4,
+    '641d7656-0c4c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'd7201d84-0c4c-11ee-be56-0242ac120002',
+    'Réduire sa consommation d’énergie, dans une démarche de sobriété, c’est :',
+    3,
+    'unique',
+    null,
+    null,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2fab57de-0c4d-11ee-be56-0242ac120002',
+    'Une opportunité',
+    1,
+    'd7201d84-0c4c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2fab57de-0c4d-11ee-be56-0242ac120022',
+    'Une contrainte',
+    2,
+    'd7201d84-0c4c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2fab57de-0c4d-11ee-be56-0242ac120202',
+    'Les deux',
+    3,
+    'd7201d84-0c4c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '2fab57de-0c4d-11ee-be56-0242ac120222',
+    'Je ne sais pas',
+    4,
+    'd7201d84-0c4c-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '97950b6a-0c4d-11ee-be56-0242ac120002',
+    'Pour baisser la consommation de mon logement, en priorité, je suis prêt à :',
+    4,
+    'multiple',
+    null,
+    3,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'c78d732a-0c4d-11ee-be56-0242ac120002',
+    'Respecter les consignes de température (19° de chauffage ; 26° de climatisation)',
+    1,
+    '97950b6a-0c4d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'c78d732a-0c4d-11ee-be56-0242ac120022',
+    'Entretenir ma chaudière (baisse de l’ordre de 10 à 15%)',
+    2,
+    '97950b6a-0c4d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'c78d732a-0c4d-11ee-be56-0242ac120202',
+    'M’équiper de thermostats (avec un gain potentiel de 5 à 10%)',
+    3,
+    '97950b6a-0c4d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'c78d732a-0c4d-11ee-be56-0242ac122002',
+    'Donner consigne à mon syndic ou à mon fournisseur d’énergie de piloter, pour moi, ma chaudière selon les indications que je lui donne',
+    4,
+    '97950b6a-0c4d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'c78d732a-0c4d-11ee-be56-0242ac122202',
+    'Ces solutions ne me conviennent pas ou ne sont pas accessibles',
+    5,
+    '97950b6a-0c4d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '5072cd84-0c4e-11ee-be56-0242ac120002',
+    'Pour baisser ma facture de carburant, je suis prêt, en priorité, à :',
+    5,
+    'multiple',
+    null,
+    3,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '68d63c80-0c4e-11ee-be56-0242ac120002',
+    'Lever le pied à bord de mon véhicule, par exemple en roulant à 110 km/h sur autoroute (économies de 20% sur le carburant et les émissions de CO2)',
+    1,
+    '5072cd84-0c4e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '68d63c80-0c4e-11ee-be56-0242ac120202',
+    'Pratiquer le covoiturage via une application ou avec mes proches',
+    2,
+    '5072cd84-0c4e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '68d63c80-0c4e-11ee-be56-0242ac122002',
+    'Adapter ma conduite pour limiter ma consommation (par exemple : si je conduis un véhicule à boîte de vitesse manuelle, j’évite les surrégimes occasionnant une surconsommation de carburant pouvant aller jusqu’à 20 %)',
+    3,
+    '5072cd84-0c4e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '68d63c80-0c4e-11ee-be56-0242ac120022',
+    'Passer au vélo ou à la marche pour les petits trajets',
+    4,
+    '5072cd84-0c4e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '68d63c80-0c4e-11ee-be56-0242ac122202',
+    'Choisir les transports en commun dès lors qu’ils correspondent à mes horaires et à mon trajet',
+    5,
+    '5072cd84-0c4e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '68d63c80-0c4e-11ee-be56-0242ac122222',
+    'Ces solutions ne me conviennent pas ou ne sont pas accessibles',
+    6,
+    '5072cd84-0c4e-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '098d1f68-0c4f-11ee-be56-0242ac120002',
+    'Pour réduire mes usages numériques, en priorité, je suis prêt à :',
+    6,
+    'multiple',
+    null,
+    3,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    'Eteindre mes appareils en veille',
+    1,
+    '098d1f68-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    'Acheter des appareils reconditionnés',
+    2,
+    '098d1f68-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    'Faire attention à mes petits usages les plus énergivores comme le non-archivage des mails',
+    3,
+    '098d1f68-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    'Diminuer ma consommation de vidéos en streaming (réduire la qualité ou télécharger la vidéo consomme moins d’énergie)',
+    4,
+    '098d1f68-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    'Ces solutions ne me conviennent pas',
+    5,
+    '098d1f68-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002',
+    'Quels sont les principaux obstacles qui vous empêchent de passer à un véhicule moins polluant ?',
+    7,
+    'multiple',
+    null,
+    3,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'da2256b6-0c4f-11ee-be56-0242ac120002',
+    'Je ne connais pas les aides financières auxquelles j’ai le droit',
+    1,
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'da2256b6-0c4f-11ee-be56-0242ac120202',
+    'Je connais les aides financières mais elles ne me permettent pas d’acquérir le véhicule que je souhaite',
+    2,
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'da2256b6-0c4f-11ee-be56-0242ac120022',
+    'Je ne sais pas quel véhicule choisir, les réglementations changent tout le temps',
+    3,
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'da2256b6-0c4f-11ee-be56-0242ac120222',
+    'Même avec les aides, je n’aurais pas le prêt de mon banquier dont j’ai besoin pour avancer l’argent',
+    4,
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'da2256b6-0c4f-11ee-be56-0242ac122002',
+    'L’absence d’infrastructures, comme les bornes de recharge, près de chez moi',
+    5,
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'da2256b6-0c4f-11ee-be56-0242ac122202',
+    'Je ne souhaite pas passer à un véhicule moins polluant',
+    6,
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'd7201d84-0c4c-11ee-be56-0242ac122222',
+    'Selon moi, la mesure la plus efficace pour réduire ma consommation d’énergie dans la durée, c’est :',
+    8,
+    'unique',
+    null,
+    null,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'a6c83168-0c50-11ee-be56-0242ac120002',
+    'Réduire l’usage de véhicules polluants',
+    1,
+    'd7201d84-0c4c-11ee-be56-0242ac122222'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'a6c83168-0c50-11ee-be56-0242ac120022',
+    'Rénover et isoler les logements',
+    2,
+    'd7201d84-0c4c-11ee-be56-0242ac122222'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'a6c83168-0c50-11ee-be56-0242ac120222',
+    'Limiter la pollution lumineuse (éclairage, publicité…)',
+    3,
+    'd7201d84-0c4c-11ee-be56-0242ac122222'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'a6c83168-0c50-11ee-be56-0242ac122002',
+    'Allonger la durée de vie des appareils numériques',
+    4,
+    'd7201d84-0c4c-11ee-be56-0242ac122222'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'fb56a610-0c50-11ee-be56-0242ac120002',
+    'La méthode qui me paraît la plus adaptée pour réduire ma consommation d’énergie, c’est :',
+    9,
+    'multiple',
+    null,
+    2,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '21f260b6-0c51-11ee-be56-0242ac120002',
+    'L’incitation : plus de primes pour les comportements vertueux',
+    1,
+    'fb56a610-0c50-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '21f260b6-0c51-11ee-be56-0242ac120022',
+    'La contrainte : plus de sanctions pour les comportements les moins vertueux',
+    2,
+    'fb56a610-0c50-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '21f260b6-0c51-11ee-be56-0242ac120202',
+    'Les règles : plus de normes pour encadrer les usages',
+    3,
+    'fb56a610-0c50-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '21f260b6-0c51-11ee-be56-0242ac122002',
+    'L’accompagnement : plus de pédagogie et de sensibilisation',
+    4,
+    'fb56a610-0c50-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '8488ee98-0c51-11ee-be56-0242ac120002',
+    'Pour poursuivre les efforts qui ont permis à la France de réduire de 12% sa consommation d’énergie, quelle nouvelle mesure recommanderiez-vous ?',
+    10,
+    'ouverte',
+    null,
+    null,
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
+    '22682956-094b-423b-9086-9ec4f8ef2222',
+    1,
+    '<body>👉 La ministre de la Transition énergétique, Agnès Pannier-Runacher, recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses <b>début octobre</b>, dans le cadre du bilan des 1 an du premier plan de sobriété.<br/><br/>—<br/><br/><b>🤓 Envie d’aller plus loin ?</b><br/>Vous pouvez notamment :<br/><ul><li>Explorer les <a href="https://www.ecologie.gouv.fr/sites/default/files/dp-plan-sobriete.pdf">Plans de sobriété</a></li><li><a href="https://www.monecowatt.fr/application-mobile-ecowatt/">Télécharger l’application EcoWatt de RTE</a> pour savoir à quel moment réduire votre consommation et éviter les coupures</li><li><a href="https://librairie.ademe.fr/actualites/10-gestes-pour-economiser-lenergie-n8">Découvrir les 10 gestes de sobriété recommandés par l’ADEME</a></li></ul></body>',
+    'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
