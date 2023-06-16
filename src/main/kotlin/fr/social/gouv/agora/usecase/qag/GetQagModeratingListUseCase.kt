@@ -23,7 +23,7 @@ class GetQagModeratingListUseCase(
 ) {
 
     companion object {
-        private const val MAX_MODERATING_LIST_SIZE = 5
+        private const val MAX_MODERATING_LIST_SIZE = 20
     }
 
     fun getQagModeratingList(userId: String): List<QagModerating> {
@@ -47,7 +47,7 @@ class GetQagModeratingListUseCase(
             }
     }
 
-    fun getModeratingQagCount(userId: String): Int {
+    fun getModeratingQagCount(): Int {
         val allResponseQag = responseQagRepository.getAllResponseQag()
         return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }

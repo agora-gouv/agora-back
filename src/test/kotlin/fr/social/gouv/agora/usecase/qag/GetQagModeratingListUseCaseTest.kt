@@ -269,6 +269,8 @@ internal class GetQagModeratingListUseCaseTest {
     }
 
     companion object {
+        private const val otherUserId = "otherUserId"
+        private const val userId = "userId"
         @JvmStatic
         fun getModeratingQagCountTestCases() = arrayOf(
             input(
@@ -324,7 +326,7 @@ internal class GetQagModeratingListUseCaseTest {
                     "qagId6" to QagStatus.OPEN,
                 ),
                 responseQagIdList = listOf("qagId1"),
-                qagLockedList = listOf(Pair("qagId1", "otherUser")),
+                qagLockedList = listOf("qagId1" to otherUserId),
                 expectedModeratingQagCount = 2,
             ),
 
@@ -338,7 +340,10 @@ internal class GetQagModeratingListUseCaseTest {
                     "qagId6" to QagStatus.OPEN,
                 ),
                 responseQagIdList = listOf("qagId1"),
-                qagLockedList = listOf(Pair("qagId5", "otherUser"), Pair("qagId6", "otherUser")),
+                qagLockedList = listOf(
+                    "qagId5" to otherUserId,
+                    "qagId6" to otherUserId,
+                ),
                 expectedModeratingQagCount = 2,
             ),
             input(
@@ -352,9 +357,9 @@ internal class GetQagModeratingListUseCaseTest {
                 ),
                 responseQagIdList = listOf("qagId1"),
                 qagLockedList = listOf(
-                    Pair("qagId2", "otherUser"),
-                    Pair("qagId3", "otherUser"),
-                    Pair("qagId4", "otherUser")
+                    "qagId2" to otherUserId,
+                    "qagId3" to otherUserId,
+                    "qagId4" to otherUserId,
                 ),
                 expectedModeratingQagCount = 2,
             ),
@@ -370,7 +375,7 @@ internal class GetQagModeratingListUseCaseTest {
                     "qagId6" to QagStatus.OPEN,
                 ),
                 responseQagIdList = listOf("qagId1"),
-                qagLockedList = listOf(Pair("qagId1", "userId")),
+                qagLockedList = listOf("qagId1" to userId),
                 expectedModeratingQagCount = 2,
             ),
 
@@ -384,7 +389,10 @@ internal class GetQagModeratingListUseCaseTest {
                     "qagId6" to QagStatus.OPEN,
                 ),
                 responseQagIdList = listOf("qagId1"),
-                qagLockedList = listOf(Pair("qagId5", "userId"), Pair("qagId6", "userId")),
+                qagLockedList = listOf(
+                    "qagId5" to userId,
+                    "qagId6" to userId,
+                ),
                 expectedModeratingQagCount = 2,
             ),
             input(
@@ -398,9 +406,9 @@ internal class GetQagModeratingListUseCaseTest {
                 ),
                 responseQagIdList = listOf("qagId1"),
                 qagLockedList = listOf(
-                    Pair("qagId2", "userId"),
-                    Pair("qagId3", "userId"),
-                    Pair("qagId4", "userId")
+                    "qagId2" to userId,
+                    "qagId3" to userId,
+                    "qagId4" to userId,
                 ),
                 expectedModeratingQagCount = 2,
             ),
@@ -445,7 +453,7 @@ internal class GetQagModeratingListUseCaseTest {
         }
 
         // When
-        val result = useCase.getModeratingQagCount(userId = userId)
+        val result = useCase.getModeratingQagCount()
 
         // Then
         assertThat(result).isEqualTo(expectedModeratingQagCount)
