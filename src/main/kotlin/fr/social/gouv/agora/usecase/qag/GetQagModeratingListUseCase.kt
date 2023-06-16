@@ -6,6 +6,7 @@ import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.infrastructure.utils.CollectionUtils.mapNotNullWhile
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagModeratingLockRepository
 import fr.social.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.social.gouv.agora.usecase.thematique.repository.ThematiqueRepository
@@ -17,11 +18,12 @@ class GetQagModeratingListUseCase(
     private val responseQagRepository: ResponseQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
     private val supportRepository: GetSupportQagRepository,
+    private val qagModeratingLockRepository: QagModeratingLockRepository,
     private val mapper: QagModeratingMapper,
 ) {
 
     companion object {
-        private const val MAX_MODERATING_LIST_SIZE = 10
+        private const val MAX_MODERATING_LIST_SIZE = 20
     }
 
     fun getQagModeratingList(userId: String): List<QagModerating> {
@@ -29,11 +31,20 @@ class GetQagModeratingListUseCase(
 
         return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
+            .filter { qagInfo ->
+                val lockingUserId = qagModeratingLockRepository.getUserIdForQagLocked(qagInfo.id)
+                lockingUserId == null || lockingUserId == userId
+            }
             .sortedBy { qagInfo -> qagInfo.date }
             .mapNotNullWhile(
                 transformMethod = { qagInfo -> toQagModerating(qagInfo, userId, thematiqueMap) },
                 loopWhileCondition = { qagPreviewList -> qagPreviewList.size < MAX_MODERATING_LIST_SIZE },
-            )
+            ).onEach { qagModerating ->
+                qagModeratingLockRepository.setQagLocked(
+                    qagId = qagModerating.id,
+                    userId = userId,
+                )
+            }
     }
 
     fun getModeratingQagCount(): Int {
@@ -47,7 +58,7 @@ class GetQagModeratingListUseCase(
     private fun toQagModerating(
         qagInfo: QagInfo,
         userId: String,
-        thematiqueMap: MutableMap<String, Thematique?>
+        thematiqueMap: MutableMap<String, Thematique?>,
     ): QagModerating? {
         if (responseQagRepository.getResponseQag(qagId = qagInfo.id) != null) return null
         return getThematique(qagInfo.thematiqueId, thematiqueMap)?.let { thematique ->
