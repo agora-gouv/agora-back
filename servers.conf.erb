@@ -1,0 +1,20 @@
+limit_req_zone $binary_remote_addr zone=signupratelimit:10m rate=1r/m;
+limit_req_zone $binary_remote_addr zone=loginratelimit:10m rate=1r/s;
+
+server {
+    server_name localhost;
+    listen <%= ENV['AGORA_PORT'] %>;
+    charset utf-8;
+
+    location /signup {
+        limit_req zone=signupratelimit;
+    }
+
+    location /login {
+        limit_req zone=loginratelimit;
+    }
+
+    location /thematiques {
+        limit_req zone=signupratelimit;
+    }
+}
