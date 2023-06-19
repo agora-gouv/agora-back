@@ -5,6 +5,7 @@ import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUse
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
+import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -27,6 +28,9 @@ internal class PutQagModeratingUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @MockBean
+    private lateinit var qagUpdatesRepository: QagUpdatesRepository
+
+    @MockBean
     private lateinit var sendNotificationQagModeratedUseCase: SendNotificationQagModeratedUseCase
 
     @Test
@@ -35,12 +39,13 @@ internal class PutQagModeratingUseCaseTest {
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(null)
 
         // When
-        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true)
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
 
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
         then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 
     @Test
