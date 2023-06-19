@@ -11,6 +11,8 @@ data class QuestionsJson(
     val questionsMultipleChoices: List<QuestionMultipleChoicesJson>,
     @JsonProperty("chapters")
     val chapters: List<ChapterJson>,
+    @JsonProperty("questionsWithCondition")
+    val questionsWithCondition: List<QuestionUniqueChoiceJson>,
 )
 
 data class QuestionUniqueChoiceJson(
