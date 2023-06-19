@@ -92,9 +92,10 @@ class QuestionJsonMapperTest {
                         title = "dto-label",
                         order = 1,
                         questionProgress = "Question 1/1",
-                        possibleChoices = emptyList()
+                        possibleChoices = emptyList(),
                     )
-                )
+                ),
+                questionsWithCondition = emptyList(),
             )
         )
     }
@@ -127,7 +128,8 @@ class QuestionJsonMapperTest {
                             )
                         )
                     )
-                )
+                ),
+                questionsWithCondition = emptyList(),
             )
         )
     }
@@ -155,7 +157,8 @@ class QuestionJsonMapperTest {
                         maxChoices = 2,
                         possibleChoices = emptyList()
                     )
-                )
+                ),
+                questionsWithCondition = emptyList(),
             )
         )
     }
@@ -189,7 +192,8 @@ class QuestionJsonMapperTest {
                             )
                         )
                     )
-                )
+                ),
+                questionsWithCondition = emptyList(),
             )
         )
     }
@@ -215,7 +219,8 @@ class QuestionJsonMapperTest {
                         order = 1,
                         description = "dto-description",
                     )
-                )
+                ),
+                questionsWithCondition = emptyList(),
             )
         )
     }
@@ -241,7 +246,8 @@ class QuestionJsonMapperTest {
                         order = 1,
                         questionProgress = "Question 1/1",
                     )
-                )
+                ),
+                questionsWithCondition = emptyList(),
             )
         )
     }
@@ -254,7 +260,7 @@ class QuestionJsonMapperTest {
             questionChapter.copy(order = 2),
             questionChoixMultiple.copy(order = 3),
             questionChapter.copy(order = 4),
-            questionChoixMultiple.copy(order = 5)
+            questionChoixMultiple.copy(order = 5),
         )
 
         // When
