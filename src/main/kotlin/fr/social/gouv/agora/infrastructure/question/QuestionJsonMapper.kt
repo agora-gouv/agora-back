@@ -25,7 +25,8 @@ class QuestionJsonMapper {
                 chapterList,
                 questionsNumber
             ),
-            chapters = buildChapterJsonList(chapterList)
+            chapters = buildChapterJsonList(chapterList),
+            questionsWithCondition = emptyList(),
         )
     }
 
