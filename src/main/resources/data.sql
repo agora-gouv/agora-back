@@ -291,7 +291,7 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '12 questions',
     '5 minutes',
     10000,
-    '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/><a href="https://www.ecologie.gouv.fr/covoiturage">Sources </a><b>(https://www.ecologie.gouv.fr/covoiturage)</b></body>',
+    '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/><a href="https://www.ecologie.gouv.fr/covoiturage">Sources </a>(https://www.ecologie.gouv.fr/covoiturage)</body>',
     '<body>🗣 Consultation proposée par le <b>Ministère des Transports</b><br/><br/>🎯<b> Objectif</b> : évaluer et améliorer le plan national covoiturage <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
@@ -346,10 +346,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120010',
-    'Déplacement quotidien école / courses',
+    'Déplacement quotidien hors domicile-travail (ex : école / courses)',
     2,
     '48d3c502-ef06-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120011',
@@ -367,10 +367,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120013',
-    'Je ne suis pas concerné',
+    'Je ne suis pas concerné(e)',
     5,
     '48d3c502-ef06-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'e52c5868-ef08-11ed-a05b-0242ac120003',
@@ -491,24 +491,17 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '5f30b336-0906-10ee-be56-0242ac120003',
-    'Plusieurs fois par an',
+    'De manière occasionnelle',
     4,
     '4c85adfe-0906-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '5f30b336-0906-18ee-be56-0242ac120003',
-    'Jamais',
+    'Je ne suis pas concerné(e)',
     5,
     '4c85adfe-0906-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '5f30b336-0916-23ee-be56-0242ac120003',
-    'Je ne sais pas',
-    6,
-    '4c85adfe-0906-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'cea510c2-0906-11ee-be56-0242ac120002',
@@ -564,13 +557,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '91c3411c-ef0a-11ed-a05b-0242ac120003',
-    'Parmi les mesures proposées, quelle est la ou les deux mesures qui vous convaincrez le plus pour recourir au covoiturage ?',
+    'Parmi les mesures proposées, quelle est la ou les deux mesures qui vous convaincrai(en)t le plus pour recourir au covoiturage ?',
     8,
     'multiple',
     null,
     2,
     '6d85522a-ee71-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120003',
@@ -647,10 +640,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
     9,
     'chapter',
-    '<body>👉Le <b>développement d’infrastructures</b> comme des voies réservées sur routes et autoroutes, des lignes de covoiturage (arrêts d’auto-stop organisé le long d’un axe routier) ou encore des aires de covoiturage clairement identifiées pour prendre ou déposer des passagers se développent partout en France.</body>',
+    '<body>👉Les <b>infrastructures</b> pour favoriser le covoiturage se développent partout en France : voies réservées sur routes et autoroutes, lignes de covoiturage (arrêts d’auto-stop organisé le long d’un axe routier) ou encore aires de covoiturage clairement identifiées pour prendre ou déposer des passagers.</body>',
     null,
     '6d85522a-ee71-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '9197bab0-0909-11ee-be56-0242ac120002',
@@ -688,7 +681,7 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
     11,
     'chapter',
-    '<body>👉 Les <b>voies dédiées au covoiturage</b> sur routes et autoroutes pour limiter la pollution consistent à réserver ces voies aux seuls véhicules avec 2 personnes minimum à bord. Cette mesure a un impact sur les voies disponibles pour les autres automobilistes.</body>',
+    '<body>👉 Les <b>voies dédiées au covoiturage sur routes et autoroutes</b> pour limiter la pollution consistent à réserver ces voies aux seuls véhicules avec 2 personnes minimum à bord.</body>',
     null,
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
@@ -714,13 +707,6 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '66bab292-090a-11ee-be56-0242ac120002',
     'Non',
     2,
-    '580bd3c0-090a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '66bab292-090a-11ee-be56-0242ac120102',
-    'Je ne sais pas',
-    3,
     '580bd3c0-090a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
@@ -809,7 +795,7 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '72682956-094b-423b-9086-9ec4f8ef2662',
     1,
-    '<body>👉 Le Ministre des transports recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses le <b>6 juillet prochain à l’occasion des 6 mois du plan covoiturage du gouvernement</b>.<br/><br/>Il s’agira notamment de :<br/><ul><li>Faire un <b>premier bilan</b> des engagements pris grâce au plan,</li><li>Mettre en place de <b>nouvelles actions</b> pour encourager le covoiturage</li></ul><br/>—<br/><br/><b>🚗 Envie d’aller plus loin ?</b><br/>Rendez-vous ici (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>) pour voir comment vous lancer et en savoir plus sur le covoiturage et ses enjeux.</body>',
+    '<body>👉 Le Ministère des transports recevra les résultats et en tirera les enseignements pour la suite et les actions qui découleront de vos réponses <b>à l’occasion des 6 mois du plan covoiturage du gouvernement</b>.<br/><br/>Il s’agira notamment de :<br/><ul><li>Faire un <b>premier bilan</b> des engagements pris grâce au plan,</li><li>Mettre en place de <b>nouvelles actions</b> pour encourager le covoiturage</li></ul><br/>—<br/><br/><b>🚗 Envie d’aller plus loin ?</b><br/>Rendez-vous ici (<a href="https://www.ecologie.gouv.fr/covoiturage">https://www.ecologie.gouv.fr/covoiturage</a>) pour voir comment vous lancer et en savoir plus sur le covoiturage et ses enjeux.</body>',
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
 
@@ -1325,8 +1311,8 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '11 questions',
     '10 minutes',
     10000,
-    '<body>Atténuation et adaptation sont les deux volets indispensables et complémentaires de la politique climatique.<br/><ul><li>L’<b>atténuation </b>consiste à agir sur les causes du changement climatique pour en limiter l’ampleur. Il s’agit donc de réduire les émissions de gaz à effet de serre (issues de la combustion d’énergies fossiles, de certains procédés industriels, de la déforestation…) et d’augmenter les puits de gaz à effet de serre (sols, forêts, produits bois, zones humides…).</li><li>L’<b>adaptation </b>au changement climatique consiste à anticiper et gérer les conséquences du changement climatique. Il s’agit de limiter les impacts du changement climatique et les dommages associés sur les populations, les activités socio-économiques et la nature en intervenant sur les facteurs qui contrôlent leur ampleur (par exemple, l’urbanisation des zones à risques) et de profiter des opportunités potentielles.</li></ul><br/><br/><b>L’accord de Paris fixe l’objectif de rester bien en-dessous de 2 degrés de réchauffement mondial</b> par rapport à l’ère pré-industrielle et de poursuivre les efforts pour ne pas dépasser 1.5 degrés. Cependant <b>nous ne sommes collectivement pas sur la bonne trajectoire</b> : les émissions mondiales de gaz à effet de serre continuent d’augmenter, certes bien moins vite que dans le passé, alors qu’il faudrait qu’elles baissent rapidement et fortement pour freiner le changement climatique.<br/><br/>Si l’atteinte des objectifs de l’Accord de Paris reste notre priorité et notre combat, les engagements pris par les Etats lors des COP climat et les politiques en place nous conduisent vers un réchauffement mondial de l’ordre de 3°C.<br/><br/><b>Nous devons nous préparer, concrètement, aux effets inévitables du changement climatique sur notre territoire et sur nos vies.</b> Cette consultation vise à fournir un premier aperçu des conséquences du réchauffement climatique et des choix d’adaptation qu’il induit.</body>',
-    '<body>🗣 Consultation proposée par le <b>Ministère de la Transition Ecologique et de la Cohésion des Territoires</b><br/><br/>🎯<b> Objectif</b> : adapter la France aux conséquences du réchauffement climatique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
+    '<body>Comment s’assurer de vivre mieux, ensemble, dans la France de 2050 ?<br/>Atténuation et adaptation sont les deux volets indispensables et complémentaires de la politique climatique.<br/><ul><li><b>Atténuation </b>: agir sur les causes du changement climatique pour en limiter l’ampleur, comme réduire les émissions de gaz à effet de serre ou augmenter les puits de gaz à effet de serre (sols, forêts, produits bois, zones humides…).</li><li><b>Adaptation </b>: anticiper et limiter les conséquences du changement climatique sur les populations, les activités humaines et la nature, en intervenant, par exemple, sur l’urbanisation.</li></ul><br/><br/><b>L’Accord de Paris</b> fixe l’objectif de rester bien <b>en-dessous de 2 degrés de réchauffement mondial</b> par rapport à l’ère pré-industrielle et de poursuivre les efforts pour ne pas dépasser 1.5 degrés. Cependant nous ne sommes collectivement pas sur la bonne trajectoire : les émissions mondiales de gaz à effet de serre continuent d’augmenter, certes bien moins vite que dans le passé, alors qu’il faudrait qu’elles baissent rapidement et fortement pour freiner le changement climatique.<br/><br/>Si l’atteinte des objectifs de l’Accord de Paris reste notre priorité et notre combat, les engagements pris par les Etats lors des COP climat et les politiques en place nous conduisent <b>vers un réchauffement mondial de l’ordre de 3°C. correspondant à +4°C en France.</b><br/><br/>Nous devons nous préparer, concrètement, aux effets inévitables du changement climatique sur notre territoire et sur nos vies. Cette consultation vise à fournir un premier aperçu des conséquences du réchauffement climatique et des choix d’adaptation qu’il induit.</body>',
+    '<body>🗣 Consultation proposée par le <b>Ministère de la Transition écologique et de la Cohésion des territoires</b><br/><br/>🎯<b> Objectif</b> : adapter la France aux conséquences du réchauffement climatique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     'bb051bf2-644b-47b6-9488-7759fa727dc0'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
@@ -1374,9 +1360,9 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     2,
     'multiple',
     null,
-    5,
+    8,
     'c342e83e-0b5a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET max_choices = EXCLUDED.max_choices;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120002',
@@ -1434,10 +1420,27 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'df7524a6-0b5d-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'ffc3fcfa-0b5d-eeee-be56-0242ac120032',
+    'Aucune',
+    9,
+    'df7524a6-0b5d-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '97a30002-0b5e-11ee-be56-0242ac120002',
-    'Êtes-vous prêts, pour des raisons d’adaptation au changement climatique, à accepter que certains trajets soient plus longs ou ralentis ?',
+    'Selon vous, que faudrait-il changer, en priorité, dans votre quartier pour limiter les conséquences du réchauffement climatique dans votre quotidien ?',
     3,
+    'ouverte',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    '22e736a4-0b5e-11ee-be56-0242ac122222',
+    'En cas d’évènement climatique extrême, et si les usages des moyens de transports devaient être hiérarchisés, êtes-vous prêt à réduire votre liberté de déplacement afin de privilégier l’approvisionnement des magasins et des hôpitaux ?',
+    4,
     'unique',
     null,
     null,
@@ -1448,84 +1451,46 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'a9cf0d70-0b5e-11ee-be56-0242ac120002',
     'Oui',
     1,
-    '97a30002-0b5e-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+    '22e736a4-0b5e-11ee-be56-0242ac122222'
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'a9cf0d70-0b5e-11ee-be56-0242ac120022',
     'Non',
     2,
-    '97a30002-0b5e-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+    '22e736a4-0b5e-11ee-be56-0242ac122222'
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'a9cf0d70-0b5e-11ee-be56-0242ac120222',
     'Je ne sais pas',
     3,
-    '97a30002-0b5e-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'f2e736a4-0b5e-11ee-be56-0242ac120002',
-    'Pensez-vous que, à l’avenir, les conditions climatiques (chaleur, risque d’inondation, etc.) seront un élément déterminant pour choisir votre lieu de vie ?',
-    4,
-    'unique',
-    null,
-    null,
-    'c342e83e-0b5a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '129af8aa-0b5f-11ee-be56-0242ac120002',
-    'Oui, totalement',
-    1,
-    'f2e736a4-0b5e-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '129af8aa-0b5f-11ee-be56-0242ac120022',
-    'Oui, plutôt',
-    2,
-    'f2e736a4-0b5e-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '129af8aa-0b5f-11ee-be56-0242ac120222',
-    'Non',
-    3,
-    'f2e736a4-0b5e-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '129af8aa-0b5f-11ee-be56-0242ac122222',
-    'Je ne sais pas',
-    4,
-    'f2e736a4-0b5e-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+    '22e736a4-0b5e-11ee-be56-0242ac122222'
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '8cc590cc-0b5f-11ee-be56-0242ac120002',
-    'Préféreriez-vous que tous les logements situés au bord du littoral soient protégés contre la hausse du niveau de la mer, quitte à réaliser des investissements très coûteux ?',
+    'Selon vous, il faudrait :',
     5,
     'unique',
     null,
     null,
     'c342e83e-0b5a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '9aecb9dc-0b5f-11ee-be56-0242ac120002',
-    'Oui',
+    'Accepter que certains trajets soient plus longs ou ralentis',
     1,
     '8cc590cc-0b5f-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '9aecb9dc-0b5f-11ee-be56-0242ac120022',
-    'Non',
+    'Maintenir un service de transport maximal en pariant sur l’innovation technologique, quitte à consentir à un coût du transport plus élevé',
     2,
     '8cc590cc-0b5f-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '9aecb9dc-0b5f-11ee-be56-0242ac120222',
@@ -1535,8 +1500,8 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
-    'cac40a48-0b5f-11ee-be56-0242ac120002',
-    'Au contraire, faut-il accepter que certains logements soient détruits au fur et à mesure de la hausse du niveau de la mer, le cas échéant en prévoyant des solutions de logement alternatives ?',
+    'f2e736a4-0b5e-11ee-be56-0242ac120002',
+    'Pensez-vous que, à l’avenir, les conditions climatiques (chaleur, risque d’inondation, etc.) seront un élément déterminant pour choisir votre lieu de vie ?',
     6,
     'unique',
     null,
@@ -1545,18 +1510,49 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'd8672e00-0b5f-11ee-be56-0242ac120002',
+    '129af8aa-0b5f-11ee-be56-0242ac120002',
     'Oui',
     1,
+    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '129af8aa-0b5f-11ee-be56-0242ac120022',
+    'Non',
+    2,
+    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '129af8aa-0b5f-11ee-be56-0242ac122222',
+    'Je ne sais pas',
+    3,
+    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre;
+
+INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+    'cac40a48-0b5f-11ee-be56-0242ac120002',
+    'Selon vous, il faudrait plutôt :',
+    7,
+    'unique',
+    null,
+    null,
+    'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, ordre = EXCLUDED.ordre;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'd8672e00-0b5f-11ee-be56-0242ac120002',
+    'Protéger les logements situés en bord du littoral contre la hausse du niveau de la mer',
+    1,
     'cac40a48-0b5f-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd8672e00-0b5f-11ee-be56-0242ac120022',
-    'Non',
+    'Accepter que certains logements soient détruits au fur et à mesure de la hausse du niveau de la mer, le cas échéant en prévoyant des solutions de logement alternative',
     2,
     'cac40a48-0b5f-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd8672e00-0b5f-11ee-be56-0242ac120222',
@@ -1567,13 +1563,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '15973d9c-0b60-11ee-be56-0242ac120002',
-    'Faut-il privilégier le télétravail en cas de forte chaleur ou les entreprises doivent-elles adapter l’environnement de travail qu’elles proposent à leurs collaborateurs, quitte à ce que cela nécessite des investissements très coûteux ?',
-    7,
-    'unique',
+    'Selon vous, il faudrait plutôt :',
+    8,
+    'multiple',
     null,
-    null,
+    3,
     'c342e83e-0b5a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, ordre = EXCLUDED.ordre, type = EXCLUDED.type, max_choices = EXCLUDED.max_choices;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '2ba34d4c-0b60-11ee-be56-0242ac120002',
@@ -1603,15 +1599,22 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '15973d9c-0b60-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '129af8aa-0b5f-11ee-be56-0242ac120222',
+    'Je ne sais pas',
+    5,
+    '15973d9c-0b60-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
+
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '871f4716-0b60-11ee-be56-0242ac120002',
-    'Seriez-vous prêt à travailler systématiquement en horaires décalés en cas de vagues de chaleur ?',
-    8,
+    'Seriez-vous prêt à travailler systématiquement en horaires décalés (commencer très tôt le matin ou finir très tard le soir, en évitant les pics de chaleur de la mi-journée) en cas de vagues de chaleur ?',
+    9,
     'unique',
     null,
     null,
     'c342e83e-0b5a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, ordre = EXCLUDED.ordre;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '9e880816-0b60-11ee-be56-0242ac120002',
@@ -1644,12 +1647,12 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'db22171c-0b60-11ee-be56-0242ac120002',
     'Faut-il adapter le rythme des vacances scolaires aux évolutions du climat ?',
-    9,
+    10,
     'unique',
     null,
     null,
     'c342e83e-0b5a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '1532370c-0b61-11ee-be56-0242ac120002',
@@ -1682,12 +1685,12 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '4289e362-0b61-11ee-be56-0242ac120002',
     'Seriez-vous d’accord pour que la forêt que nous connaissons, qui souffre du réchauffement climatique, change de visage avec des essences d’arbre plus adaptées au changement climatique ?',
-    10,
+    11,
     'unique',
     null,
     null,
     'c342e83e-0b5a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '8bdf40ac-0b61-11ee-be56-0242ac120002',
@@ -1720,17 +1723,38 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'c0cf651c-0b61-11ee-be56-0242ac120002',
     'Pensez-vous que certaines infrastructures et activités critiques doivent être préparées à un scénario encore plus pessimiste que celui des 4 degrés de réchauffement climatique en France ?',
-    11,
-    'ouverte',
+    12,
+    'unique',
     null,
     null,
     'c342e83e-0b5a-11ee-be56-0242ac120002'
+) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre, type = EXCLUDED.type;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'de636562-0e89-11ee-be56-0242ac120002',
+    'Oui',
+    1,
+    'c0cf651c-0b61-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'de636562-0e89-11ee-be56-0242ac120222',
+    'Non',
+    2,
+    'c0cf651c-0b61-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'de636562-0e89-11ee-be56-0242ac122202',
+    'Je ne sais pas',
+    3,
+    'c0cf651c-0b61-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     'e9547964-0b61-11ee-be56-0242ac120002',
     1,
-    '<body>👉 Les réponses à cette consultation seront présentées au ministre de la Transition écologique et de la Cohésion des territoires et serviront à alimenter les <b>travaux de préparation des politiques d’adaptation au changement climatique.</b><br/><br/>D’ici la fin de l’année 2023, le <b> Plan national d’adaptation au changement climatique </b> (PNACC) doit être révisé et ses mesures renforcées afin de prendre en compte les nouveaux effets du réchauffement climatique. <br/>—<br/><br/><b>🌳 Envie d’aller plus loin ?</b><br/>Rendez-vous ici pour voir comment vous engager pour le climat.</body>',
+    '<body>👉 Les réponses à cette consultation seront présentées au ministre de la Transition écologique et de la Cohésion des territoires et serviront à alimenter les <b>travaux de préparation des politiques d’adaptation au changement climatique.</b><br/><br/>D’ici la fin de l’année 2023, le <b> Plan national d’adaptation au changement climatique </b> (PNACC) doit être révisé et ses mesures renforcées afin de prendre en compte les nouveaux effets du réchauffement climatique.</body>',
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
 
