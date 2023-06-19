@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.profile
 
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
 import fr.social.gouv.agora.usecase.profile.AskDemographicInfoState.*
 import fr.social.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.social.gouv.agora.usecase.profile.repository.ProfileRepository
@@ -8,17 +9,20 @@ import java.time.LocalDate
 
 @Service
 class AskForDemographicInfoUseCase(
+    private val consultationAnsweredRepository: ConsultationPreviewAnsweredRepository,
     private val profileRepository: ProfileRepository,
     private val demographicInfoAskDateRepository: DemographicInfoAskDateRepository,
 ) {
 
     companion object {
+        private const val MINIMUM_CONSULTATION_ANSWERED_REQUIREMENT = 2
         private const val DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO = 30
     }
 
     fun askForDemographicInfo(userId: String): Boolean {
         return when (processAskDemographicInfoState(userId)) {
             HAS_DEMOGRAPHIC_INFO -> false
+            HAS_NOT_ANSWERED_ENOUGH_CONSULTATIONS -> false
             FIRST_TIME_ASK_DEMOGRAPHIC_INFO -> {
                 demographicInfoAskDateRepository.insertDate(userId)
                 true
@@ -35,6 +39,10 @@ class AskForDemographicInfoUseCase(
         if (profileRepository.getProfile(userId) != null) {
             return HAS_DEMOGRAPHIC_INFO
         }
+        if (consultationAnsweredRepository.getConsultationAnsweredList(userId).size < MINIMUM_CONSULTATION_ANSWERED_REQUIREMENT) {
+            return HAS_NOT_ANSWERED_ENOUGH_CONSULTATIONS
+        }
+
         val askDate = demographicInfoAskDateRepository.getDate(userId)
         return when {
             askDate == null -> FIRST_TIME_ASK_DEMOGRAPHIC_INFO
@@ -49,6 +57,7 @@ class AskForDemographicInfoUseCase(
 
 private enum class AskDemographicInfoState {
     HAS_DEMOGRAPHIC_INFO,
+    HAS_NOT_ANSWERED_ENOUGH_CONSULTATIONS,
     FIRST_TIME_ASK_DEMOGRAPHIC_INFO,
     ASK_DEMOGRAPHIC_INFO_DELAY_FINISHED,
     ASK_DEMOGRAPHIC_INFO_DELAY_UNFINISHED
