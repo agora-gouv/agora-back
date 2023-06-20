@@ -585,7 +585,7 @@ internal class GetConsultationResultsUseCaseTest {
 
     private fun buildTestData(testInput: InputData): TestData {
         val choices = testInput.choiceInputs.map { choiceInput ->
-            mock(ChoixPossible::class.java).also {
+            mock(ChoixPossibleDefault::class.java).also {
                 given(it.id).willReturn(choiceInput.choiceId)
             }
         }
