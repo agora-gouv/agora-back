@@ -8,7 +8,11 @@ import org.springframework.stereotype.Component
 @Component
 class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
 
-    fun toDomain(dto: QuestionDTO, choixPossibleDtoList: List<ChoixPossibleDTO>): Question {
+    fun toDomain(
+        dto: QuestionDTO,
+        questionDTOList: List<QuestionDTO>,
+        choixPossibleDtoList: List<ChoixPossibleDTO>,
+    ): Question {
         return when (dto.type) {
             "unique" -> buildQuestionChoixUnique(dto, choixPossibleDtoList)
             "multiple" -> buildQuestionChoixMultiple(dto, choixPossibleDtoList)
