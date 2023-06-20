@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import org.hibernate.Hibernate
 import java.util.*
 
-@Entity(name = "qagUpdates")
+@Entity(name = "qag_updates")
 data class QagUpdatesDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

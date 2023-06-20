@@ -87,73 +87,85 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagAccepted(qagId = "qagId")
         then(qagUpdatesRepository).should(only())
-            .setQagUpdates(QagUpdates(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED, userId = "userId"))
+            .insertQagUpdates(
+                QagUpdates(
+                    qagId = "qagId",
+                    newQagStatus = QagStatus.MODERATED_ACCEPTED,
+                    userId = "userId"
+                )
+            )
     }
 
-        @Test
-        fun `putModeratingQagStatus - when qagModeratingStatus is true and updateQagStatus return FAILURE - should return FAILURE`() {
-            // Given
-            val qagInfo = mock(QagInfo::class.java).also {
-                given(it.status).willReturn(QagStatus.OPEN)
-            }
-            given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
-            given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED))
-                .willReturn(QagUpdateResult.FAILURE)
-
-            // When
-            val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
-
-            // Then
-            assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
-            then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
-            then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED)
-            then(qagInfoRepository).shouldHaveNoMoreInteractions()
-            then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
-            then(qagUpdatesRepository).shouldHaveNoInteractions()
+    @Test
+    fun `putModeratingQagStatus - when qagModeratingStatus is true and updateQagStatus return FAILURE - should return FAILURE`() {
+        // Given
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.status).willReturn(QagStatus.OPEN)
         }
+        given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
+        given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED))
+            .willReturn(QagUpdateResult.FAILURE)
 
-        @Test
-        fun `putModeratingQagStatus - when qagModeratingStatus is false and updateQagStatus return SUCCESS - should return SUCCESS`() {
-            // Given
-            val qagInfo = mock(QagInfo::class.java).also {
-                given(it.status).willReturn(QagStatus.OPEN)
-            }
-            given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
-            given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
-                .willReturn(QagUpdateResult.SUCCESS)
+        // When
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
 
-            // When
-            val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false, userId = "userId")
+        // Then
+        assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
+        then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
+        then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED)
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).shouldHaveNoInteractions()
+    }
 
-            // Then
-            assertThat(result).isEqualTo(ModeratingQagResult.SUCCESS)
-            then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
-            then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
-            then(qagInfoRepository).shouldHaveNoMoreInteractions()
-            then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
-            then(qagUpdatesRepository).should(only())
-                .setQagUpdates(QagUpdates(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED, userId = "userId"))
+    @Test
+    fun `putModeratingQagStatus - when qagModeratingStatus is false and updateQagStatus return SUCCESS - should return SUCCESS`() {
+        // Given
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.status).willReturn(QagStatus.OPEN)
         }
+        given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
+        given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
+            .willReturn(QagUpdateResult.SUCCESS)
 
-        @Test
-        fun `putModeratingQagStatus - when qagModeratingStatus is false and updateQagStatus return FAILURE - should return FAILURE`() {
-            // Given
-            val qagInfo = mock(QagInfo::class.java).also {
-                given(it.status).willReturn(QagStatus.OPEN)
-            }
-            given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
-            given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
-                .willReturn(QagUpdateResult.FAILURE)
+        // When
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false, userId = "userId")
 
-            // When
-            val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false, userId = "userId")
+        // Then
+        assertThat(result).isEqualTo(ModeratingQagResult.SUCCESS)
+        then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
+        then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
+        then(qagUpdatesRepository).should(only())
+            .insertQagUpdates(
+                QagUpdates(
+                    qagId = "qagId",
+                    newQagStatus = QagStatus.MODERATED_REJECTED,
+                    userId = "userId"
+                )
+            )
+    }
 
-            // Then
-            assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
-            then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
-            then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
-            then(qagInfoRepository).shouldHaveNoMoreInteractions()
-            then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
-            then(qagUpdatesRepository).shouldHaveNoInteractions()
+    @Test
+    fun `putModeratingQagStatus - when qagModeratingStatus is false and updateQagStatus return FAILURE - should return FAILURE`() {
+        // Given
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.status).willReturn(QagStatus.OPEN)
         }
+        given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
+        given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
+            .willReturn(QagUpdateResult.FAILURE)
+
+        // When
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false, userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
+        then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
+        then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).shouldHaveNoInteractions()
+    }
 }

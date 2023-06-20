@@ -10,7 +10,7 @@ class QagUpdatesRepositoryImpl(
     private val mapper: QagUpdatesMapper,
 ) : QagUpdatesRepository {
 
-    override fun setQagUpdates(qagUpdates: QagUpdates) {
+    override fun insertQagUpdates(qagUpdates: QagUpdates) {
         mapper.toDto(qagUpdates)?.let { qagUpdatesDTO -> databaseRepository.save(qagUpdatesDTO) }
     }
 }

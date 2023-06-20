@@ -24,7 +24,7 @@ class QagUpdatesMapper {
                 userId = UUID.fromString(domain.userId),
                 status = if (domain.newQagStatus == QagStatus.MODERATED_ACCEPTED) STATUS_MODERATED_ACCEPTED
                 else STATUS_MODERATED_REJECTED,
-                moderatedDate = LocalDate.now().toDate(),
+                moderatedDate = Date(),
             )
         } catch (e: IllegalArgumentException) {
             null
