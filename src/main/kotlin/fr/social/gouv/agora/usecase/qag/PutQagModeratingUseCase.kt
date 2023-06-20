@@ -1,22 +1,26 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagStatus
+import fr.social.gouv.agora.domain.QagUpdates
 import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
+import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.springframework.stereotype.Service
 
 @Service
 class PutQagModeratingUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val sendNotificationQagModeratedUseCase: SendNotificationQagModeratedUseCase,
+    private val qagUpdatesRepository: QagUpdatesRepository,
 ) {
-    fun putModeratingQagStatus(qagId: String, qagModeratingStatus: Boolean): ModeratingQagResult {
+    fun putModeratingQagStatus(qagId: String, qagModeratingStatus: Boolean, userId: String): ModeratingQagResult {
         return when (qagInfoRepository.getQagInfo(qagId = qagId)?.status) {
             null, QagStatus.ARCHIVED, QagStatus.MODERATED_ACCEPTED, QagStatus.MODERATED_REJECTED, QagStatus.SELECTED_FOR_RESPONSE -> ModeratingQagResult.FAILURE
             QagStatus.OPEN -> updateStatusAndSendNotificationIfRequired(
                 qagId = qagId,
                 qagModeratingStatus = qagModeratingStatus,
+                userId = userId,
             )
         }
     }
@@ -24,6 +28,7 @@ class PutQagModeratingUseCase(
     private fun updateStatusAndSendNotificationIfRequired(
         qagId: String,
         qagModeratingStatus: Boolean,
+        userId: String,
     ): ModeratingQagResult {
         val updateQagStatus = qagInfoRepository.updateQagStatus(
             qagId = qagId,
@@ -32,6 +37,13 @@ class PutQagModeratingUseCase(
         return when (updateQagStatus) {
             QagUpdateResult.FAILURE -> ModeratingQagResult.FAILURE
             QagUpdateResult.SUCCESS -> {
+                qagUpdatesRepository.insertQagUpdates(
+                    QagUpdates(
+                        qagId = qagId,
+                        newQagStatus = toQagStatus(qagModeratingStatus),
+                        userId = userId
+                    )
+                )
                 if (qagModeratingStatus) {
                     sendNotificationQagModeratedUseCase.sendNotificationQagAccepted(qagId = qagId)
                 } else {

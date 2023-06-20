@@ -1,10 +1,12 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagStatus
+import fr.social.gouv.agora.domain.QagUpdates
 import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
+import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -27,6 +29,9 @@ internal class PutQagModeratingUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @MockBean
+    private lateinit var qagUpdatesRepository: QagUpdatesRepository
+
+    @MockBean
     private lateinit var sendNotificationQagModeratedUseCase: SendNotificationQagModeratedUseCase
 
     @Test
@@ -35,12 +40,13 @@ internal class PutQagModeratingUseCaseTest {
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(null)
 
         // When
-        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true)
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
 
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
         then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -52,12 +58,13 @@ internal class PutQagModeratingUseCaseTest {
         given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
 
         // When
-        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true)
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
 
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
         then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -71,7 +78,7 @@ internal class PutQagModeratingUseCaseTest {
             .willReturn(QagUpdateResult.SUCCESS)
 
         // When
-        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true)
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
 
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.SUCCESS)
@@ -79,6 +86,14 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagAccepted(qagId = "qagId")
+        then(qagUpdatesRepository).should(only())
+            .insertQagUpdates(
+                QagUpdates(
+                    qagId = "qagId",
+                    newQagStatus = QagStatus.MODERATED_ACCEPTED,
+                    userId = "userId"
+                )
+            )
     }
 
     @Test
@@ -92,7 +107,7 @@ internal class PutQagModeratingUseCaseTest {
             .willReturn(QagUpdateResult.FAILURE)
 
         // When
-        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true)
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
 
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
@@ -100,6 +115,7 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -113,7 +129,7 @@ internal class PutQagModeratingUseCaseTest {
             .willReturn(QagUpdateResult.SUCCESS)
 
         // When
-        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false)
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false, userId = "userId")
 
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.SUCCESS)
@@ -121,6 +137,14 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
+        then(qagUpdatesRepository).should(only())
+            .insertQagUpdates(
+                QagUpdates(
+                    qagId = "qagId",
+                    newQagStatus = QagStatus.MODERATED_REJECTED,
+                    userId = "userId"
+                )
+            )
     }
 
     @Test
@@ -134,7 +158,7 @@ internal class PutQagModeratingUseCaseTest {
             .willReturn(QagUpdateResult.FAILURE)
 
         // When
-        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false)
+        val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false, userId = "userId")
 
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
@@ -142,5 +166,6 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 }

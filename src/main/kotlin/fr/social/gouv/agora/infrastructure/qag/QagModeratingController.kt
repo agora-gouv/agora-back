@@ -30,10 +30,16 @@ class QagModeratingController(
 
     @PutMapping("/moderate/qags/{qagId}")
     fun putModeratingQagStatus(
+        @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable qagId: String,
         @RequestBody body: QagModeratingStatusJson,
     ): ResponseEntity<*> {
-        return when (putQagModeratingUseCase.putModeratingQagStatus(qagId = qagId, body.isAccepted)) {
+        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        return when (putQagModeratingUseCase.putModeratingQagStatus(
+            qagId = qagId,
+            qagModeratingStatus = body.isAccepted,
+            userId = userId,
+        )) {
             ModeratingQagResult.FAILURE -> ResponseEntity.status(400).body("")
             ModeratingQagResult.SUCCESS -> ResponseEntity.ok().body("")
         }

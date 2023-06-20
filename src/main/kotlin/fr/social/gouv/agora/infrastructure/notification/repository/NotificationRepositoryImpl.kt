@@ -52,7 +52,7 @@ class NotificationRepositoryImpl : NotificationRepository {
             if (response.isNullOrEmpty())
                 NotificationResult.FAILURE
             else NotificationResult.SUCCESS
-        } catch (e: FirebaseMessagingException) {
+        } catch (e: Exception) {
             NotificationResult.FAILURE
         }
     }
