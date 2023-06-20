@@ -13,58 +13,52 @@ class QuestionJsonMapper {
             questionsUniqueChoice = buildQuestionUniqueChoiceJsonList(
                 domainList.filterIsInstance<QuestionUniqueChoice>(),
                 chapterList,
-                questionsNumber
-            ),
-            questionsOpened = buildQuestionOpenedJsonList(
-                domainList.filterIsInstance<QuestionOpen>(),
-                chapterList,
-                questionsNumber
+                questionsNumber,
             ),
             questionsMultipleChoices = buildQuestionMultipleChoicesJsonList(
                 domainList.filterIsInstance<QuestionMultipleChoices>(),
                 chapterList,
-                questionsNumber
+                questionsNumber,
+            ),
+            questionsOpened = buildQuestionOpenedJsonList(
+                domainList.filterIsInstance<QuestionOpen>(),
+                chapterList,
+                questionsNumber,
             ),
             chapters = buildChapterJsonList(chapterList),
-            questionsWithCondition = emptyList(),
+            questionsWithCondition = buildQuestionConditionalJsonList(
+                domainList.filterIsInstance<QuestionConditional>(),
+                chapterList,
+                questionsNumber,
+            ),
         )
     }
 
     private fun buildQuestionUniqueChoiceJsonList(
         questionUniqueList: List<QuestionUniqueChoice>,
         chapterList: List<QuestionChapter>,
-        questionsNumber: Int
+        questionsNumber: Int,
     ) = questionUniqueList.map { domain ->
         QuestionUniqueChoiceJson(id = domain.id,
             title = domain.title,
             order = domain.order,
             questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            nextQuestionId = domain.nextQuestionId,
             possibleChoices = domain.choixPossibleList.map { choixPossible ->
                 ChoixPossibleJson(
                     id = choixPossible.id,
                     label = choixPossible.label,
                     order = choixPossible.ordre,
+                    nextQuestionId = null,
                 )
-            })
-    }
-
-    private fun buildQuestionOpenedJsonList(
-        questionOpenList: List<QuestionOpen>,
-        chapterList: List<QuestionChapter>,
-        questionsNumber: Int
-    ) = questionOpenList.map { domain ->
-        QuestionOpenedJson(
-            id = domain.id,
-            title = domain.title,
-            order = domain.order,
-            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            }
         )
     }
 
     private fun buildQuestionMultipleChoicesJsonList(
         questionMultipleList: List<QuestionMultipleChoices>,
         chapterList: List<QuestionChapter>,
-        questionsNumber: Int
+        questionsNumber: Int,
     ) = questionMultipleList.map { domain ->
         QuestionMultipleChoicesJson(
             id = domain.id,
@@ -72,21 +66,59 @@ class QuestionJsonMapper {
             order = domain.order,
             questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
             maxChoices = domain.maxChoices,
+            nextQuestionId = domain.nextQuestionId,
             possibleChoices = domain.choixPossibleList.map { choixPossible ->
                 ChoixPossibleJson(
                     id = choixPossible.id,
                     label = choixPossible.label,
                     order = choixPossible.ordre,
+                    nextQuestionId = null,
                 )
-            })
+            }
+        )
+    }
+
+    private fun buildQuestionOpenedJsonList(
+        questionOpenList: List<QuestionOpen>,
+        chapterList: List<QuestionChapter>,
+        questionsNumber: Int,
+    ) = questionOpenList.map { domain ->
+        QuestionOpenedJson(
+            id = domain.id,
+            title = domain.title,
+            order = domain.order,
+            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            nextQuestionId = domain.nextQuestionId,
+        )
     }
 
     private fun buildChapterJsonList(chapterList: List<QuestionChapter>) = chapterList.map { domain ->
-        ChapterJson(
+        QuestionChapterJson(
             id = domain.id,
             title = domain.title,
             order = domain.order,
             description = domain.description,
+            nextQuestionId = domain.nextQuestionId,
+        )
+    }
+
+    private fun buildQuestionConditionalJsonList(
+        questionUniqueList: List<QuestionConditional>,
+        chapterList: List<QuestionChapter>,
+        questionsNumber: Int,
+    ) = questionUniqueList.map { domain ->
+        QuestionConditionalJson(id = domain.id,
+            title = domain.title,
+            order = domain.order,
+            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            possibleChoices = domain.choixPossibleList.map { choixPossible ->
+                ChoixPossibleJson(
+                    id = choixPossible.id,
+                    label = choixPossible.label,
+                    order = choixPossible.ordre,
+                    nextQuestionId = choixPossible.nextQuestionId,
+                )
+            }
         )
     }
 

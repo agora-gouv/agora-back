@@ -16,69 +16,127 @@ class QuestionJsonMapperTest {
     @Autowired
     private lateinit var questionJsonMapper: QuestionJsonMapper
 
-    private val choixPossible = ChoixPossible(
-        id = "choix_id",
-        label = "dto-label",
+    private val choixPossibleDefault = ChoixPossibleDefault(
+        id = "choixPossibleId",
+        label = "label",
         ordre = 1,
-        questionId = "question_id",
+        questionId = "questionId",
     )
 
-    private val questionChoixUnique = QuestionChoixUnique(
-        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        title = "dto-label",
+    private val expectedChoixPossibleDefaultJson = ChoixPossibleJson(
+        id = "choixPossibleId",
+        label = "label",
         order = 1,
-        consultationId = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        choixPossibleList = emptyList(),
+        nextQuestionId = null,
     )
 
-    private val questionChoixUniqueWithChoixPossible = QuestionChoixUnique(
-        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        title = "dto-label",
-        order = 1,
-        consultationId = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        choixPossibleList = listOf(choixPossible),
+    private val choixPossibleConditional = ChoixPossibleConditional(
+        id = "choixPossibleId",
+        label = "label",
+        ordre = 1,
+        questionId = "questionId",
+        nextQuestionId = "nextQuestionId",
     )
 
-    private val questionChoixMultiple = QuestionChoixMultiple(
-        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        title = "dto-label",
+    private val expectedChoixPossibleConditionalJson = ChoixPossibleJson(
+        id = "choixPossibleId",
+        label = "label",
         order = 1,
-        consultationId = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        choixPossibleList = emptyList(),
-        maxChoices = 2
+        nextQuestionId = "nextQuestionId",
     )
 
-    private val questionChoixMultipleWithChoixPossible = QuestionChoixMultiple(
-        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        title = "dto-label",
+    private val questionUniqueChoice = QuestionUniqueChoice(
+        id = "questionUniqueChoiceId",
+        title = "title",
         order = 1,
-        consultationId = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        choixPossibleList = listOf(choixPossible),
-        maxChoices = 2
+        consultationId = "consultationId",
+        nextQuestionId = "nextQuestionId",
+        choixPossibleList = listOf(choixPossibleDefault),
     )
 
-    private val questionChapter = Chapitre(
-        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        title = "dto-label",
+    private val expectedQuestionUniqueChoiceJson = QuestionUniqueChoiceJson(
+        id = "questionUniqueChoiceId",
+        title = "title",
         order = 1,
-        consultationId = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        description = "dto-description",
+        questionProgress = "Question 1/1",
+        nextQuestionId = "nextQuestionId",
+        possibleChoices = listOf(expectedChoixPossibleDefaultJson),
     )
 
-    private val questionOpen = QuestionOuverte(
-        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-        title = "dto-label",
+    private val questionChoixMultiple = QuestionMultipleChoices(
+        id = "questionMultipleChoicesId",
+        title = "title",
         order = 1,
-        consultationId = "c29255f2-10ca-4be5-aab1-801ea173337c",
+        consultationId = "consultationId",
+        nextQuestionId = "nextQuestionId",
+        choixPossibleList = listOf(choixPossibleDefault),
+        maxChoices = 2,
+    )
+
+    private val expectedQuestionMultipleChoiceJson = QuestionMultipleChoicesJson(
+        id = "questionMultipleChoicesId",
+        title = "title",
+        order = 1,
+        questionProgress = "Question 1/1",
+        maxChoices = 2,
+        nextQuestionId = "nextQuestionId",
+        possibleChoices = listOf(expectedChoixPossibleDefaultJson),
+    )
+
+    private val questionChapter = QuestionChapter(
+        id = "questionChapterId",
+        title = "title",
+        order = 1,
+        consultationId = "consultationId",
+        nextQuestionId = "nextQuestionId",
+        description = "description",
+    )
+
+    private val expectedQuestionChapterJson = QuestionChapterJson(
+        id = "questionChapterId",
+        title = "title",
+        order = 1,
+        description = "description",
+        nextQuestionId = "nextQuestionId",
+    )
+
+    private val questionOpen = QuestionOpen(
+        id = "questionOpenId",
+        title = "title",
+        order = 1,
+        consultationId = "consultationId",
+        nextQuestionId = "nextQuestionId",
+    )
+
+    private val expectedQuestionOpenJson = QuestionOpenedJson(
+        id = "questionOpenId",
+        title = "title",
+        order = 1,
+        questionProgress = "Question 1/1",
+        nextQuestionId = "nextQuestionId"
+    )
+
+    private val questionConditional = QuestionConditional(
+        id = "questionConditionalId",
+        title = "title",
+        order = 1,
+        consultationId = "consultationId",
+        nextQuestionId = "nextQuestionId",
+        choixPossibleList = listOf(choixPossibleConditional),
+    )
+
+    private val expectedQuestionConditionalJson = QuestionConditionalJson(
+        id = "questionConditionalId",
+        title = "title",
+        order = 1,
+        questionProgress = "Question 1/1",
+        possibleChoices = listOf(expectedChoixPossibleConditionalJson),
     )
 
     @Test
-    fun `toJson of list of QuestionChoixUnique with no ChoixPossible should return QuestionsJson with empty list for questionsOpened, questionsMultipleChoices, chapters `() {
-        // Given
-        val questionsUniqueChoice = listOf(questionChoixUnique.copy(order = 1))
-
+    fun `toJson - when QuestionUniqueChoice - should return QuestionUniqueChoiceJson only`() {
         // When
-        val result = questionJsonMapper.toJson(questionsUniqueChoice)
+        val result = questionJsonMapper.toJson(listOf(questionUniqueChoice))
 
         // Then
         assertThat(result).isEqualTo(
@@ -86,56 +144,14 @@ class QuestionJsonMapperTest {
                 chapters = emptyList(),
                 questionsMultipleChoices = emptyList(),
                 questionsOpened = emptyList(),
-                questionsUniqueChoice = listOf(
-                    QuestionUniqueChoiceJson(
-                        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-                        title = "dto-label",
-                        order = 1,
-                        questionProgress = "Question 1/1",
-                        possibleChoices = emptyList(),
-                    )
-                ),
+                questionsUniqueChoice = listOf(expectedQuestionUniqueChoiceJson),
                 questionsWithCondition = emptyList(),
             )
         )
     }
 
     @Test
-    fun `toJson of list of QuestionChoixUnique with ChoixPossible should return QuestionsJson with empty list for questionsOpened, questionsMultipleChoices, chapters `() {
-        // Given
-        val questionsUniqueChoice = listOf(questionChoixUniqueWithChoixPossible.copy(order = 1))
-
-        // When
-        val result = questionJsonMapper.toJson(questionsUniqueChoice)
-
-        // Then
-        assertThat(result).isEqualTo(
-            QuestionsJson(
-                chapters = emptyList(),
-                questionsMultipleChoices = emptyList(),
-                questionsOpened = emptyList(),
-                questionsUniqueChoice = listOf(
-                    QuestionUniqueChoiceJson(
-                        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-                        title = "dto-label",
-                        order = 1,
-                        questionProgress = "Question 1/1",
-                        possibleChoices = listOf(
-                            ChoixPossibleJson(
-                                id = "choix_id",
-                                label = "dto-label",
-                                order = 1,
-                            )
-                        )
-                    )
-                ),
-                questionsWithCondition = emptyList(),
-            )
-        )
-    }
-
-    @Test
-    fun `toJson of list of QuestionChoixMultiple with no ChoixPossible should return QuestionsJson with empty list for questionsOpened, questionsUniqueChoice, chapters `() {
+    fun `toJson - when QuestionChoixMultiple - should return QuestionMultipleChoicesJson only`() {
         // Given
         val questionsMultipleChoice = listOf(questionChoixMultiple.copy(order = 1))
 
@@ -148,90 +164,16 @@ class QuestionJsonMapperTest {
                 chapters = emptyList(),
                 questionsUniqueChoice = emptyList(),
                 questionsOpened = emptyList(),
-                questionsMultipleChoices = listOf(
-                    QuestionMultipleChoicesJson(
-                        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-                        title = "dto-label",
-                        order = 1,
-                        questionProgress = "Question 1/1",
-                        maxChoices = 2,
-                        possibleChoices = emptyList()
-                    )
-                ),
+                questionsMultipleChoices = listOf(expectedQuestionMultipleChoiceJson),
                 questionsWithCondition = emptyList(),
             )
         )
     }
 
     @Test
-    fun `toJson of list of QuestionChoixMultiple with ChoixPossible should return QuestionsJson with empty list for questionsOpened, questionsUniqueChoice, chapters `() {
-        // Given
-        val questionsMultipleChoice = listOf(questionChoixMultipleWithChoixPossible.copy(order = 1))
-
+    fun `toJson - when QuestionOpen - should return QuestionOpenedJson only`() {
         // When
-        val result = questionJsonMapper.toJson(questionsMultipleChoice)
-
-        // Then
-        assertThat(result).isEqualTo(
-            QuestionsJson(
-                chapters = emptyList(),
-                questionsUniqueChoice = emptyList(),
-                questionsOpened = emptyList(),
-                questionsMultipleChoices = listOf(
-                    QuestionMultipleChoicesJson(
-                        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-                        title = "dto-label",
-                        order = 1,
-                        questionProgress = "Question 1/1",
-                        maxChoices = 2,
-                        possibleChoices = listOf(
-                            ChoixPossibleJson(
-                                id = "choix_id",
-                                label = "dto-label",
-                                order = 1,
-                            )
-                        )
-                    )
-                ),
-                questionsWithCondition = emptyList(),
-            )
-        )
-    }
-
-    @Test
-    fun `toJson of list of Chapter should return QuestionsJson with empty list for questionsOpened, questionsUniqueChoice, questionsMultipleChoices `() {
-        // Given
-        val questionsChapter = listOf(questionChapter.copy(order = 1))
-
-        // When
-        val result = questionJsonMapper.toJson(questionsChapter)
-
-        // Then
-        assertThat(result).isEqualTo(
-            QuestionsJson(
-                questionsMultipleChoices = emptyList(),
-                questionsUniqueChoice = emptyList(),
-                questionsOpened = emptyList(),
-                chapters = listOf(
-                    ChapterJson(
-                        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-                        title = "dto-label",
-                        order = 1,
-                        description = "dto-description",
-                    )
-                ),
-                questionsWithCondition = emptyList(),
-            )
-        )
-    }
-
-    @Test
-    fun `toJson of list of QuestionOpened should return QuestionsJson with empty list for questionsMultipleChoices, questionsUniqueChoice, chapters `() {
-        // Given
-        val questionsOpen = listOf(questionOpen.copy(order = 1))
-
-        // When
-        val result = questionJsonMapper.toJson(questionsOpen)
+        val result = questionJsonMapper.toJson(listOf(questionOpen))
 
         // Then
         assertThat(result).isEqualTo(
@@ -239,28 +181,55 @@ class QuestionJsonMapperTest {
                 questionsMultipleChoices = emptyList(),
                 questionsUniqueChoice = emptyList(),
                 chapters = emptyList(),
-                questionsOpened = listOf(
-                    QuestionOpenedJson(
-                        id = "c29255f2-10ca-4be5-aab1-801ea173337c",
-                        title = "dto-label",
-                        order = 1,
-                        questionProgress = "Question 1/1",
-                    )
-                ),
+                questionsOpened = listOf(expectedQuestionOpenJson),
+                questionsWithCondition = listOf(),
+            )
+        )
+    }
+
+    @Test
+    fun `toJson - when QuestionChapter - should return QuestionChapterJson only`() {
+        // When
+        val result = questionJsonMapper.toJson(listOf(questionChapter))
+
+        // Then
+        assertThat(result).isEqualTo(
+            QuestionsJson(
+                questionsMultipleChoices = emptyList(),
+                questionsUniqueChoice = emptyList(),
+                questionsOpened = emptyList(),
+                chapters = listOf(expectedQuestionChapterJson),
                 questionsWithCondition = emptyList(),
             )
         )
     }
 
     @Test
-    fun `toJson of list of Questions should return the correct question Progress `() {
+    fun `toJson - when QuestionConditional - should return QuestionConditionalJson only`() {
+        // When
+        val result = questionJsonMapper.toJson(listOf(questionConditional))
+
+        // Then
+        assertThat(result).isEqualTo(
+            QuestionsJson(
+                questionsMultipleChoices = emptyList(),
+                questionsUniqueChoice = emptyList(),
+                chapters = emptyList(),
+                questionsOpened = listOf(),
+                questionsWithCondition = listOf(expectedQuestionConditionalJson),
+            )
+        )
+    }
+
+    @Test
+    fun `toJson - should return the correct question Progress`() {
         // Given
         val questions = listOf(
             questionOpen.copy(order = 1),
             questionChapter.copy(order = 2),
             questionChoixMultiple.copy(order = 3),
             questionChapter.copy(order = 4),
-            questionChoixMultiple.copy(order = 5),
+            questionUniqueChoice.copy(order = 5),
         )
 
         // When
@@ -269,6 +238,6 @@ class QuestionJsonMapperTest {
         // Then
         assertThat(result.questionsOpened[0].questionProgress).isEqualTo("Question 1/3")
         assertThat(result.questionsMultipleChoices[0].questionProgress).isEqualTo("Question 2/3")
-        assertThat(result.questionsMultipleChoices[1].questionProgress).isEqualTo("Question 3/3")
+        assertThat(result.questionsUniqueChoice[0].questionProgress).isEqualTo("Question 3/3")
     }
 }

@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.question
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class QuestionsJson(
@@ -10,9 +11,9 @@ data class QuestionsJson(
     @JsonProperty("questionsMultipleChoices")
     val questionsMultipleChoices: List<QuestionMultipleChoicesJson>,
     @JsonProperty("chapters")
-    val chapters: List<ChapterJson>,
+    val chapters: List<QuestionChapterJson>,
     @JsonProperty("questionsWithCondition")
-    val questionsWithCondition: List<QuestionUniqueChoiceJson>,
+    val questionsWithCondition: List<QuestionConditionalJson>,
 )
 
 data class QuestionUniqueChoiceJson(
@@ -24,19 +25,10 @@ data class QuestionUniqueChoiceJson(
     val order: Int,
     @JsonProperty("questionProgress")
     val questionProgress: String,
+    @JsonProperty("nextQuestionId")
+    val nextQuestionId: String?,
     @JsonProperty("possibleChoices")
     val possibleChoices: List<ChoixPossibleJson>,
-)
-
-data class QuestionOpenedJson(
-    @JsonProperty("id")
-    val id: String,
-    @JsonProperty("title")
-    val title: String,
-    @JsonProperty("order")
-    val order: Int,
-    @JsonProperty("questionProgress")
-    val questionProgress: String,
 )
 
 data class QuestionMultipleChoicesJson(
@@ -50,11 +42,26 @@ data class QuestionMultipleChoicesJson(
     val questionProgress: String,
     @JsonProperty("maxChoices")
     val maxChoices: Int,
+    @JsonProperty("nextQuestionId")
+    val nextQuestionId: String?,
     @JsonProperty("possibleChoices")
     val possibleChoices: List<ChoixPossibleJson>,
 )
 
-data class ChapterJson(
+data class QuestionOpenedJson(
+    @JsonProperty("id")
+    val id: String,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("order")
+    val order: Int,
+    @JsonProperty("questionProgress")
+    val questionProgress: String,
+    @JsonProperty("nextQuestionId")
+    val nextQuestionId: String?,
+)
+
+data class QuestionChapterJson(
     @JsonProperty("id")
     val id: String,
     @JsonProperty("title")
@@ -63,8 +70,24 @@ data class ChapterJson(
     val order: Int,
     @JsonProperty("description")
     val description: String,
+    @JsonProperty("nextQuestionId")
+    val nextQuestionId: String?,
 )
 
+data class QuestionConditionalJson(
+    @JsonProperty("id")
+    val id: String,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("order")
+    val order: Int,
+    @JsonProperty("questionProgress")
+    val questionProgress: String,
+    @JsonProperty("possibleChoices")
+    val possibleChoices: List<ChoixPossibleJson>,
+)
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class ChoixPossibleJson(
     @JsonProperty("id")
     val id: String,
@@ -72,4 +95,6 @@ data class ChoixPossibleJson(
     val label: String,
     @JsonProperty("order")
     val order: Int,
+    @JsonProperty("nextQuestionId")
+    val nextQuestionId: String?,
 )
