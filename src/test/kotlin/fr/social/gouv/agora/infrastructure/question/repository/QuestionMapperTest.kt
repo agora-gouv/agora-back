@@ -5,11 +5,13 @@ import fr.social.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.social.gouv.agora.infrastructure.question.dto.QuestionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 
@@ -20,198 +22,463 @@ internal class QuestionMapperTest {
     @Autowired
     private lateinit var questionMapper: QuestionMapper
 
-    @Test
-    fun `toDomain when DTO has type unique should return QuestionChoixUnique`() {
-        // Given
-        val questionDTOUnique = QuestionDTO(
-            id = UUID.randomUUID(),
-            title = "dto-label",
-            ordre = 1,
-            type = "unique",
-            description = null,
-            maxChoices = null,
-            consultationId = UUID.randomUUID(),
+    @MockBean
+    private lateinit var choixPossibleMapper: ChoixPossibleMapper
+
+    private val questionUUID = UUID.randomUUID()
+    private val consultationUUID = UUID.randomUUID()
+
+    private val questionDTO = QuestionDTO(
+        id = questionUUID,
+        title = "title",
+        ordre = 1,
+        type = "unknown",
+        description = null,
+        maxChoices = null,
+        nextQuestionId = null,
+        consultationId = consultationUUID,
+    )
+
+    @Nested
+    inner class UniqueChoiceTestCases {
+
+        private val questionUniqueChoiceDTO = questionDTO.copy(type = "unique")
+
+        private val expectedQuestion = QuestionUniqueChoice(
+            id = questionUUID.toString(),
+            title = "title",
+            order = 1,
+            nextQuestionId = null,
+            consultationId = consultationUUID.toString(),
+            choixPossibleList = emptyList(),
         )
 
-        // When
-        val result = questionMapper.toDomain(questionDTOUnique, emptyList())
+        @Test
+        fun `toDomain - when has non null nextQuestionId - should return QuestionUniqueChoice with nextQuestionId`() {
+            // Given
+            val nextQuestionUUID = UUID.randomUUID()
+            val questionUniqueChoiceDTO = questionUniqueChoiceDTO.copy(nextQuestionId = nextQuestionUUID)
 
-        // Then
-        assertThat(result).isEqualTo(
-            QuestionChoixUnique(
-                id = questionDTOUnique.id.toString(),
-                title = "dto-label",
-                order = 1,
-                consultationId = questionDTOUnique.consultationId.toString(),
-                choixPossibleList = emptyList(),
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionUniqueChoiceDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
             )
-        )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has no next question in list - should return QuestionUniqueChoice with null nextQuestionId`() {
+            // Given
+            val questionUniqueChoiceDTO = questionUniqueChoiceDTO.copy(nextQuestionId = null)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionUniqueChoiceDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = null))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has next question in list - should return QuestionUniqueChoice with nextQuestionId equal to id of question with ordre 2`() {
+            // Given
+            val questionUniqueChoiceDTO = questionUniqueChoiceDTO.copy(nextQuestionId = null)
+            val nextQuestionUUID = UUID.randomUUID()
+            val nextQuestionDTO = questionUniqueChoiceDTO.copy(
+                id = nextQuestionUUID,
+                ordre = 2,
+            )
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionUniqueChoiceDTO,
+                questionDTOList = listOf(questionUniqueChoiceDTO, nextQuestionDTO),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
+        @Test
+        fun `toDomain - when has choixPossibleDTOList - should return QuestionUniqueChoice with mapped choixPossible`() {
+            // Given
+            val choixPossibleDTO = mock(ChoixPossibleDTO::class.java)
+            val choixPossible = mock(ChoixPossibleDefault::class.java)
+            given(choixPossibleMapper.toDefault(choixPossibleDTO)).willReturn(choixPossible)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionUniqueChoiceDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = listOf(choixPossibleDTO),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(choixPossibleList = listOf(choixPossible)))
+        }
+
     }
 
-    @Test
-    fun `toDomain when DTO has type unique and list choixPossibleDTO should return QuestionChoixUnique with list choixPossible`() {
-        // Given
-        val questionDTOUnique = QuestionDTO(
-            id = UUID.randomUUID(),
-            title = "dto-label",
-            ordre = 1,
-            type = "unique",
-            description = null,
-            maxChoices = null,
-            consultationId = UUID.randomUUID(),
-        )
-        val choixPossibleDTO = ChoixPossibleDTO(
-            id = UUID.randomUUID(),
-            label = "label-choix",
-            ordre = 1,
-            questionId = UUID.randomUUID(),
+    @Nested
+    inner class MultipleChoicesTestCases {
+
+        private val questionMultipleChoicesDTO = questionDTO.copy(type = "multiple", maxChoices = 5)
+
+        private val expectedQuestion = QuestionMultipleChoices(
+            id = questionUUID.toString(),
+            title = "title",
+            order = 1,
+            nextQuestionId = null,
+            consultationId = consultationUUID.toString(),
+            choixPossibleList = emptyList(),
+            maxChoices = 5,
         )
 
-        // When
-        val result = questionMapper.toDomain(questionDTOUnique, listOf(choixPossibleDTO))
+        @Test
+        fun `toDomain - when has null maxChoices - should throw exception`() {
+            // Given
+            val questionMultipleChoicesDTO = questionMultipleChoicesDTO.copy(maxChoices = null)
 
-        // Then
-        assertThat(result).isEqualTo(
-            QuestionChoixUnique(
-                id = questionDTOUnique.id.toString(),
-                title = "dto-label",
-                order = 1,
-                consultationId = questionDTOUnique.consultationId.toString(),
-                choixPossibleList = listOf(
-                    ChoixPossible(
-                        id = choixPossibleDTO.id.toString(),
-                        label = "label-choix",
-                        ordre = 1,
-                        questionId = choixPossibleDTO.questionId.toString(),
-                    )
-                ),
+            // When
+            val hasException = try {
+                questionMapper.toDomain(
+                    dto = questionMultipleChoicesDTO,
+                    questionDTOList = emptyList(),
+                    choixPossibleDTOList = emptyList(),
+                )
+                false
+            } catch (e: Exception) {
+                true
+            }
+
+            // Then
+            assertThat(hasException).isEqualTo(true)
+        }
+
+        @Test
+        fun `toDomain - when has non null nextQuestionId - should return QuestionMultipleChoices with nextQuestionId`() {
+            // Given
+            val nextQuestionUUID = UUID.randomUUID()
+            val questionMultipleChoicesDTO = questionMultipleChoicesDTO.copy(nextQuestionId = nextQuestionUUID)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionMultipleChoicesDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
             )
-        )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has no next question in list - should return QuestionMultipleChoices with null nextQuestionId`() {
+            // Given
+            val questionMultipleChoicesDTO = questionMultipleChoicesDTO.copy(nextQuestionId = null)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionMultipleChoicesDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = null))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has next question in list - should return QuestionMultipleChoices with nextQuestionId equal to id of question with ordre 2`() {
+            // Given
+            val questionMultipleChoicesDTO = questionMultipleChoicesDTO.copy(nextQuestionId = null)
+            val nextQuestionUUID = UUID.randomUUID()
+            val nextQuestionDTO = questionMultipleChoicesDTO.copy(
+                id = nextQuestionUUID,
+                ordre = 2,
+            )
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionMultipleChoicesDTO,
+                questionDTOList = listOf(questionMultipleChoicesDTO, nextQuestionDTO),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
+        @Test
+        fun `toDomain - when has choixPossibleDTOList - should return QuestionMultipleChoices with mapped choixPossible`() {
+            // Given
+            val choixPossibleDTO = mock(ChoixPossibleDTO::class.java)
+            val choixPossible = mock(ChoixPossibleDefault::class.java)
+            given(choixPossibleMapper.toDefault(choixPossibleDTO)).willReturn(choixPossible)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionMultipleChoicesDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = listOf(choixPossibleDTO),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(choixPossibleList = listOf(choixPossible)))
+        }
+
     }
 
-    @Test
-    fun `toDomain when DTO has type multiple should return QuestionChoixMultiple`() {
-        // Given
-        val questionDTOMultiple = QuestionDTO(
-            id = UUID.randomUUID(),
-            title = "dto-label",
-            ordre = 1,
-            type = "multiple",
-            description = null,
-            maxChoices = 2,
-            consultationId = UUID.randomUUID(),
+    @Nested
+    inner class OpenTestCases {
+
+        private val questionOpenDTO = questionDTO.copy(type = "open")
+
+        private val expectedQuestion = QuestionOpen(
+            id = questionUUID.toString(),
+            title = "title",
+            order = 1,
+            nextQuestionId = null,
+            consultationId = consultationUUID.toString(),
         )
 
-        // When
-        val result = questionMapper.toDomain(questionDTOMultiple, emptyList())
+        @Test
+        fun `toDomain - when has non null nextQuestionId - should return QuestionOpen with nextQuestionId`() {
+            // Given
+            val nextQuestionUUID = UUID.randomUUID()
+            val questionOpenDTO = questionOpenDTO.copy(nextQuestionId = nextQuestionUUID)
 
-        // Then
-        assertThat(result).isEqualTo(
-            QuestionChoixMultiple(
-                id = questionDTOMultiple.id.toString(),
-                title = "dto-label",
-                order = 1,
-                consultationId = questionDTOMultiple.consultationId.toString(),
-                choixPossibleList = emptyList(),
-                maxChoices = 2
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionOpenDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
             )
-        )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has no next question in list - should return QuestionOpen with null nextQuestionId`() {
+            // Given
+            val questionOpenDTO = questionOpenDTO.copy(nextQuestionId = null)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionOpenDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = null))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has next question in list - should return QuestionOpen with nextQuestionId equal to id of question with ordre 2`() {
+            // Given
+            val questionOpenDTO = questionOpenDTO.copy(nextQuestionId = null)
+            val nextQuestionUUID = UUID.randomUUID()
+            val nextQuestionDTO = questionOpenDTO.copy(
+                id = nextQuestionUUID,
+                ordre = 2,
+            )
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionOpenDTO,
+                questionDTOList = listOf(questionOpenDTO, nextQuestionDTO),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
     }
 
-    @Test
-    fun `toDomain when DTO has type multiple and list choixPossibleDTO should return QuestionChoixMultiple with list choixPossible`() {
-        // Given
-        val questionDTOMultiple = QuestionDTO(
-            id = UUID.randomUUID(),
-            title = "dto-label",
-            ordre = 1,
-            type = "multiple",
-            description = null,
-            maxChoices = 2,
-            consultationId = UUID.randomUUID(),
-        )
-        val choixPossibleDTO = ChoixPossibleDTO(
-            id = UUID.randomUUID(),
-            label = "label-choix",
-            ordre = 1,
-            questionId = UUID.randomUUID(),
+    @Nested
+    inner class ChapterTestCases {
+
+        private val questionChapterDTO = questionDTO.copy(type = "chapter", description = "description")
+
+        private val expectedQuestion = QuestionChapter(
+            id = questionUUID.toString(),
+            title = "title",
+            order = 1,
+            nextQuestionId = null,
+            consultationId = consultationUUID.toString(),
+            description = "description",
         )
 
-        // When
-        val result = questionMapper.toDomain(questionDTOMultiple, listOf(choixPossibleDTO))
+        @Test
+        fun `toDomain - when has non null nextQuestionId - should return QuestionChapter with nextQuestionId`() {
+            // Given
+            val nextQuestionUUID = UUID.randomUUID()
+            val questionChapterDTO = questionChapterDTO.copy(nextQuestionId = nextQuestionUUID)
 
-        // Then
-        assertThat(result).isEqualTo(
-            QuestionChoixMultiple(
-                id = questionDTOMultiple.id.toString(),
-                title = "dto-label",
-                order = 1,
-                consultationId = questionDTOMultiple.consultationId.toString(),
-                choixPossibleList = listOf(
-                    ChoixPossible(
-                        id = choixPossibleDTO.id.toString(),
-                        label = "label-choix",
-                        ordre = 1,
-                        questionId = choixPossibleDTO.questionId.toString(),
-                    )
-                ),
-                maxChoices = 2,
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionChapterDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
             )
-        )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has no next question in list - should return QuestionChapter with null nextQuestionId`() {
+            // Given
+            val questionChapterDTO = questionChapterDTO.copy(nextQuestionId = null)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionChapterDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = null))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has next question in list - should return QuestionChapter with nextQuestionId equal to id of question with ordre 2`() {
+            // Given
+            val questionChapterDTO = questionChapterDTO.copy(nextQuestionId = null)
+            val nextQuestionUUID = UUID.randomUUID()
+            val nextQuestionDTO = questionChapterDTO.copy(
+                id = nextQuestionUUID,
+                ordre = 2,
+            )
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionChapterDTO,
+                questionDTOList = listOf(questionChapterDTO, nextQuestionDTO),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
     }
 
-    @Test
-    fun `toDomain when DTO has type ouverte should return QuestionOpened`() {
-        // Given
-        val questionDTOOuverte = QuestionDTO(
-            id = UUID.randomUUID(),
-            title = "dto-label",
-            ordre = 1,
-            type = "ouverte",
-            description = null,
-            maxChoices = null,
-            consultationId = UUID.randomUUID(),
+    @Nested
+    inner class ConditionalChoiceTestCases {
+
+        private val questionConditionalDTO = questionDTO.copy(type = "conditional")
+
+        private val expectedQuestion = QuestionConditional(
+            id = questionUUID.toString(),
+            title = "title",
+            order = 1,
+            nextQuestionId = null,
+            consultationId = consultationUUID.toString(),
+            choixPossibleList = emptyList(),
         )
 
-        // When
-        val result = questionMapper.toDomain(questionDTOOuverte, emptyList())
+        @Test
+        fun `toDomain - when has non null nextQuestionId - should return QuestionConditional with nextQuestionId`() {
+            // Given
+            val nextQuestionUUID = UUID.randomUUID()
+            val questionConditionalDTO = questionConditionalDTO.copy(nextQuestionId = nextQuestionUUID)
 
-        // Then
-        assertThat(result).isEqualTo(
-            QuestionOuverte(
-                id = questionDTOOuverte.id.toString(),
-                title = "dto-label",
-                order = 1,
-                consultationId = questionDTOOuverte.consultationId.toString(),
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionConditionalDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
             )
-        )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has no next question in list - should return QuestionConditional with null nextQuestionId`() {
+            // Given
+            val questionConditionalDTO = questionConditionalDTO.copy(nextQuestionId = null)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionConditionalDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = null))
+        }
+
+        @Test
+        fun `toDomain - when has null nextQuestionId and questionList has next question in list - should return QuestionConditional with nextQuestionId equal to id of question with ordre 2`() {
+            // Given
+            val questionConditionalDTO = questionConditionalDTO.copy(nextQuestionId = null)
+            val nextQuestionUUID = UUID.randomUUID()
+            val nextQuestionDTO = questionConditionalDTO.copy(
+                id = nextQuestionUUID,
+                ordre = 2,
+            )
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionConditionalDTO,
+                questionDTOList = listOf(questionConditionalDTO, nextQuestionDTO),
+                choixPossibleDTOList = emptyList(),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(nextQuestionId = nextQuestionUUID.toString()))
+        }
+
+        @Test
+        fun `toDomain - when has choixPossibleDTOList but mapped to null - should return QuestionConditional empty choixPossibleList`() {
+            // Given
+            val choixPossibleDTO = mock(ChoixPossibleDTO::class.java)
+            given(choixPossibleMapper.toConditional(choixPossibleDTO)).willReturn(null)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionConditionalDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = listOf(choixPossibleDTO),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(choixPossibleList = emptyList()))
+        }
+
+        @Test
+        fun `toDomain - when has choixPossibleDTOList mapped to an object - should return QuestionConditional with mapped choixPossible`() {
+            // Given
+            val choixPossibleDTO = mock(ChoixPossibleDTO::class.java)
+            val choixPossible = mock(ChoixPossibleConditional::class.java)
+            given(choixPossibleMapper.toConditional(choixPossibleDTO)).willReturn(choixPossible)
+
+            // When
+            val result = questionMapper.toDomain(
+                dto = questionConditionalDTO,
+                questionDTOList = emptyList(),
+                choixPossibleDTOList = listOf(choixPossibleDTO),
+            )
+
+            // Then
+            assertThat(result).isEqualTo(expectedQuestion.copy(choixPossibleList = listOf(choixPossible)))
+        }
+
     }
 
-    @Test
-    fun `toDomain when DTO has type chapter should return Chapter`() {
-        // Given
-        val questionDTOChapter = QuestionDTO(
-            id = UUID.randomUUID(),
-            title = "dto-label",
-            ordre = 1,
-            type = "chapter",
-            description = "dto-description",
-            maxChoices = null,
-            consultationId = UUID.randomUUID(),
-        )
-
-        // When
-        val result = questionMapper.toDomain(questionDTOChapter, emptyList())
-
-        // Then
-        assertThat(result).isEqualTo(
-            Chapitre(
-                id = questionDTOChapter.id.toString(),
-                title = "dto-label",
-                order = 1,
-                consultationId = questionDTOChapter.consultationId.toString(),
-                description = "dto-description",
-            )
-        )
-    }
 }

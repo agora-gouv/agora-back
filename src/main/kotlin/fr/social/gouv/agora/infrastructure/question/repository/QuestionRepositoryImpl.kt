@@ -26,7 +26,7 @@ class QuestionRepositoryImpl(
                 questionMapper.toDomain(
                     dto = questionDTO,
                     questionDTOList = questionDTOList,
-                    choixPossibleDtoList = choixPossibleDTOList,
+                    choixPossibleDTOList = choixPossibleDTOList,
                 )
             }
         } catch (e: IllegalArgumentException) {
