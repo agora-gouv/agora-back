@@ -19,6 +19,7 @@ data class QuestionDTO(
     @Column(columnDefinition = "TEXT")
     val description: String?,
     val maxChoices: Int?,
+    val nextQuestionId: UUID?,
     @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
     val consultationId: UUID,
 ) : Serializable {
@@ -34,6 +35,6 @@ data class QuestionDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , title = $title , ordre = $ordre , type = $type, description = $description, maxChoices = $maxChoices, consultationId = $consultationId)"
+        return this::class.simpleName + "(id = $id , title = $title , ordre = $ordre , type = $type, description = $description, maxChoices = $maxChoices, nextQuestionId = $nextQuestionId, consultationId = $consultationId)"
     }
 }

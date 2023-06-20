@@ -16,6 +16,8 @@ data class ChoixPossibleDTO(
     val ordre: Int,
     @JoinTable(joinColumns = [JoinColumn(name = "id_question", table = "questions", referencedColumnName = "id")])
     val questionId: UUID,
+    @JoinTable(joinColumns = [JoinColumn(name = "id_question", table = "questions", referencedColumnName = "id")])
+    val nextQuestionId: UUID?,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -29,6 +31,6 @@ data class ChoixPossibleDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , label = $label , ordre = $ordre , id_question = $questionId )"
+        return this::class.simpleName + "(id = $id, label = $label, ordre = $ordre, questionId = $questionId, nextQuestionId = $nextQuestionId)"
     }
 }
