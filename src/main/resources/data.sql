@@ -291,7 +291,7 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '12 questions',
     '5 minutes',
     10000,
-    '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiture, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/><a href="https://www.ecologie.gouv.fr/covoiturage">Sources </a>(https://www.ecologie.gouv.fr/covoiturage)</body>',
+    '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiturage, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><br/><br/><a href="https://www.ecologie.gouv.fr/covoiturage">Sources </a>(https://www.ecologie.gouv.fr/covoiturage)</body>',
     '<body>🗣 Consultation proposée par le <b>Ministère des Transports</b><br/><br/>🎯<b> Objectif</b> : évaluer et améliorer le plan national covoiturage <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
@@ -674,7 +674,7 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'Je ne sais pas',
     3,
     '9197bab0-0909-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'f2aa628a-0909-11ee-be56-0242ac120002',
@@ -744,13 +744,6 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd6cba992-090a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    'e615de2c-090a-11ee-be56-0242ac120001',
-    'Je ne sais pas',
-    3,
-    'd6cba992-090a-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '1f0d4940-090b-11ee-be56-0242ac120002',
     'Avez-vous déjà bénéficié d’incitations financières au covoiturage ?',
@@ -807,7 +800,7 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '12 questions',
     '10 minutes',
     10000,
-    '<body>En France, comme dans de nombreuses démocraties, l’abstention augmente, élection après élection. De nombreux citoyens ne font pas confiance aux responsables politiques, aux élus ou encore à l’Etat pour améliorer leur quotidien.<br/><br/>Pour tenter de rétablir ce lien de confiance, le Gouvernement compte, depuis juillet 2022, un ministre délégué auprès de la Première ministre chargé du <b> renouveau démocratique </b>, Olivier Véran.<br/><br/>Son rôle consiste notamment à <b>développer les démarches de participation citoyenne</b>, pour permettre à chaque citoyen de mieux contribuer à la décision politique.<br/><br/>Cette appli mobile, que vous venez de télécharger, s’inscrit dans cet objectif. Elle est complémentaire de démarches dites « délibératives » en présentiel, comme par exemple, la Convention citoyenne sur la fin de vie ou la concertation nationale sur le mix énergétique.<br/><br/>Avec cette consultation, donnez-nous votre avis pour nous aider à aller plus loin !</body>',
+    '<body>En France, comme dans de nombreuses démocraties, l’abstention augmente, élection après élection. De nombreux citoyens ne font pas confiance aux responsables politiques, aux élus ou encore à l’Etat pour améliorer leur quotidien.<br/><br/>Pour tenter de rétablir ce lien de confiance, le Gouvernement compte, depuis juillet 2022, un ministre délégué auprès de la Première ministre chargé du <b>renouveau démocratique</b>, Olivier Véran.<br/><br/>Son rôle consiste notamment à <b>développer les démarches de participation citoyenne</b>, pour permettre à chaque citoyen de mieux contribuer à la décision politique.<br/><br/>Cette appli mobile, que vous venez de télécharger, s’inscrit dans cet objectif. Elle est complémentaire de démarches dites « délibératives » en présentiel, comme par exemple, la Convention citoyenne sur la fin de vie ou la concertation nationale sur le mix énergétique.<br/><br/>Avec cette consultation, donnez-nous votre avis pour nous aider à aller plus loin !</body>',
     '<body>🗣 Consultation proposée par le <b>Ministre du Renouveau Démocratique</b><br/><br/>🎯<b> Objectif</b> : améliorer et co-construire cette application avec les citoyens ; développer la participation citoyenne et faire reculer l’abstention à partir de vos idées <br/><br/>🚀<b>Axe gouvernemental</b> : Renforcer l’ordre républicain et encourager l’engagement</body>',
     '30671310-ee62-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
@@ -1247,7 +1240,7 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'b7c7eccc-092d-11ee-be56-0242ac120002',
-    'Pourquoi avez-vous téléchargé cette appli et à quoi, selon vous, doit-elle principalement servir ? C’est la dernière question de cette consultation : partagez-nous toutes vos idées !',
+    'Sur cette application, le Gouvernement prend l’engagement de répondre chaque semaine à une question posée par les citoyens (celle qui obtient le plus de votes) ; est-ce une bonne idée ?”',
     10,
     'unique',
     null,
@@ -1288,13 +1281,13 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '6363aeda-092a-11ee-be56-0242ac120002',
-    'A quoi doit, selon vous, principalement servir cette application ? C’est la dernière question : partagez-nous toutes vos idées !',
+    'Pourquoi avez-vous téléchargé cette appli et à quoi, selon vous, doit-elle principalement servir ? C’est la dernière question de cette consultation : partagez-nous toutes vos idées !',
     12,
     'ouverte',
     null,
     null,
     '98a8ba56-0923-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '68682956-094b-423b-9086-9ec4f8ef2662',
@@ -1311,7 +1304,7 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '11 questions',
     '10 minutes',
     10000,
-    '<body>Comment s’assurer de vivre mieux, ensemble, dans la France de 2050 ?<br/>Atténuation et adaptation sont les deux volets indispensables et complémentaires de la politique climatique.<br/><ul><li><b>Atténuation </b>: agir sur les causes du changement climatique pour en limiter l’ampleur, comme réduire les émissions de gaz à effet de serre ou augmenter les puits de gaz à effet de serre (sols, forêts, produits bois, zones humides…).</li><li><b>Adaptation </b>: anticiper et limiter les conséquences du changement climatique sur les populations, les activités humaines et la nature, en intervenant, par exemple, sur l’urbanisation.</li></ul><br/><br/><b>L’Accord de Paris</b> fixe l’objectif de rester bien <b>en-dessous de 2 degrés de réchauffement mondial</b> par rapport à l’ère pré-industrielle et de poursuivre les efforts pour ne pas dépasser 1.5 degrés. Cependant nous ne sommes collectivement pas sur la bonne trajectoire : les émissions mondiales de gaz à effet de serre continuent d’augmenter, certes bien moins vite que dans le passé, alors qu’il faudrait qu’elles baissent rapidement et fortement pour freiner le changement climatique.<br/><br/>Si l’atteinte des objectifs de l’Accord de Paris reste notre priorité et notre combat, les engagements pris par les Etats lors des COP climat et les politiques en place nous conduisent <b>vers un réchauffement mondial de l’ordre de 3°C. correspondant à +4°C en France.</b><br/><br/>Nous devons nous préparer, concrètement, aux effets inévitables du changement climatique sur notre territoire et sur nos vies. Cette consultation vise à fournir un premier aperçu des conséquences du réchauffement climatique et des choix d’adaptation qu’il induit.</body>',
+    '<body>Comment s’assurer de vivre mieux, ensemble, dans la France de 2050 ? Atténuation et adaptation sont les deux volets indispensables et complémentaires de la politique climatique.<br/><ul><li><b>Atténuation </b>: agir sur les causes du changement climatique pour en limiter l’ampleur, comme réduire les émissions de gaz à effet de serre ou augmenter les puits de gaz à effet de serre (sols, forêts, produits bois, zones humides…).</li><br/><br/><li><b>Adaptation </b>: anticiper et limiter les conséquences du changement climatique sur les populations, les activités humaines et la nature, en intervenant, par exemple, sur l’urbanisation.</li></ul><br/><br/>L’<b>Accord de Paris</b> fixe l’objectif de rester bien <b>en-dessous de 2 degrés de réchauffement mondial</b> par rapport à l’ère pré-industrielle et de poursuivre les efforts pour ne pas dépasser 1.5 degrés. Cependant nous ne sommes collectivement pas sur la bonne trajectoire : les émissions mondiales de gaz à effet de serre continuent d’augmenter, certes bien moins vite que dans le passé, alors qu’il faudrait qu’elles baissent rapidement et fortement pour freiner le changement climatique.<br/><br/>Si l’atteinte des objectifs de l’Accord de Paris reste notre priorité et notre combat, les engagements pris par les Etats lors des COP climat et les politiques en place nous conduisent <b>vers un réchauffement mondial de l’ordre de 3°C, correspondant à +4°C en France.</b><br/><br/>Nous devons nous préparer, concrètement, aux effets inévitables du changement climatique sur notre territoire et sur nos vies. Cette consultation vise à fournir un premier aperçu des conséquences du réchauffement climatique et des choix d’adaptation qu’il induit.</body>',
     '<body>🗣 Consultation proposée par le <b>Ministère de la Transition écologique et de la Cohésion des territoires</b><br/><br/>🎯<b> Objectif</b> : adapter la France aux conséquences du réchauffement climatique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     'bb051bf2-644b-47b6-9488-7759fa727dc0'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
@@ -1766,7 +1759,7 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '10 questions',
     '7 minutes',
     10000,
-    '<body>En octobre dernier, un <a href= "https://www.ecologie.gouv.fr/sites/default/files/dp-plan-sobriete.pdf">premier plan de sobriété</a> a été présenté par la Première ministre, Elisabeth Borne, et la ministre de la Transition énergétique, Agnès Pannier-Runacher. Ce plan a permis à la France de <b> réduire sa consommation d’énergie de plus de 10%.</b> <br/><br/>Le 20 juin, l’<b>acte 2 du plan de sobriété</b> a été présenté (renvoi vers le plan 2) avec en priorité des mesures pour l’été, sur le numérique et sur le carburant. En octobre 2023, un bilan de la première année d’application du plan de sobriété devra être dressé et des mesures devront être prises afin d’ancrer la sobriété dans la durée.<br/><br/>Car la sobriété énergétique, ce n’était pas seulement pour passer l’hiver dernier, c’est une <b>mesure climatique de long-terme </b>: si nous voulons atteindre la neutralité carbone, nous devrons réduire notre consommation d’énergie de 40% d’ici 2050. L’objectif est donc d’<b>associer les citoyens en faveur de la sobriété dans la durée.</b></body>',
+    '<body>En octobre dernier, un <a href= "https://www.ecologie.gouv.fr/sites/default/files/dp-plan-sobriete.pdf">premier plan de sobriété</a> a été présenté par la Première ministre, Elisabeth Borne, et la ministre de la Transition énergétique, Agnès Pannier-Runacher. Ce plan a permis à la France de <b> réduire sa consommation d’énergie de plus de 10%.</b> <br/><br/>Le 20 juin, l’<b>acte 2 du plan de sobriété</b> a été présenté avec en priorité des mesures pour l’été, sur le numérique et sur le carburant. En octobre 2023, un bilan de la première année d’application du plan de sobriété devra être dressé et des mesures devront être prises afin d’ancrer la sobriété dans la durée.<br/><br/>Car la sobriété énergétique, ce n’était pas seulement pour passer l’hiver dernier, c’est une <b>mesure climatique de long-terme </b>: si nous voulons atteindre la neutralité carbone, nous devrons réduire notre consommation d’énergie de 40% d’ici 2050. L’objectif est donc d’<b>associer les citoyens en faveur de la sobriété dans la durée.</b></body>',
     '<body>🗣 Consultation proposée par le <b>Ministère de la Transition énergétique</b><br/><br/>🎯<b> Objectif</b> : trouver des solutions pour agir durablement en faveur de la transition énergétique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique et énergétique</body>',
     '5e6bed94-015e-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
@@ -1972,28 +1965,28 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    '3b50381e-0c4f-11ee-be56-0242ac120022',
     'Acheter des appareils reconditionnés',
     2,
     '098d1f68-0c4f-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    '3b50381e-0c4f-11ee-be56-0242ac122202',
     'Faire attention à mes petits usages les plus énergivores comme le non-archivage des mails',
     3,
     '098d1f68-0c4f-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    '3b50381e-0c4f-11ee-be56-0242ac122002',
     'Diminuer ma consommation de vidéos en streaming (réduire la qualité ou télécharger la vidéo consomme moins d’énergie)',
     4,
     '098d1f68-0c4f-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
-    '3b50381e-0c4f-11ee-be56-0242ac120002',
+    '3b50381e-0c4f-11ee-be56-0242ac122222',
     'Ces solutions ne me conviennent pas',
     5,
     '098d1f68-0c4f-11ee-be56-0242ac120002'
@@ -2051,6 +2044,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'a60aaf9a-0c4f-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'da2256b6-004f-111e-be56-0242ac122202',
+    'Je ne suis pas concerné(e)',
+    7,
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'd7201d84-0c4c-11ee-be56-0242ac122222',
     'Selon moi, la mesure la plus efficace pour réduire ma consommation d’énergie dans la durée, c’est :',
@@ -2089,6 +2089,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd7201d84-0c4c-11ee-be56-0242ac122222'
 ) ON CONFLICT DO NOTHING;
 
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    'a6c83168-0c50-11ee-be56-0300ac122002',
+    'Je ne sais pas',
+    5,
+    'd7201d84-0c4c-11ee-be56-0242ac122222'
+) ON CONFLICT DO NOTHING;
+
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'fb56a610-0c50-11ee-be56-0242ac120002',
     'La méthode qui me paraît la plus adaptée pour réduire ma consommation d’énergie, c’est :',
@@ -2124,6 +2131,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '21f260b6-0c51-11ee-be56-0242ac122002',
     'L’accompagnement : plus de pédagogie et de sensibilisation',
     4,
+    'fb56a610-0c50-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '21f260b6-0c51-1111-be56-0242ac122222',
+    'Je ne sais pas',
+    5,
     'fb56a610-0c50-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
