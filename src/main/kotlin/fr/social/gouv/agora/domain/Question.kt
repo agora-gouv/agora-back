@@ -12,7 +12,7 @@ abstract class QuestionWithChoices : Question() {
     abstract val choixPossibleList: List<ChoixPossible>
 }
 
-data class QuestionChoixUnique(
+data class QuestionUniqueChoice(
     override val id: String,
     override val title: String,
     override val order: Int,
@@ -21,7 +21,7 @@ data class QuestionChoixUnique(
     override val choixPossibleList: List<ChoixPossibleDefault>,
 ) : QuestionWithChoices()
 
-data class QuestionChoixMultiple(
+data class QuestionMultipleChoices(
     override val id: String,
     override val title: String,
     override val order: Int,
@@ -31,7 +31,7 @@ data class QuestionChoixMultiple(
     val maxChoices: Int,
 ) : QuestionWithChoices()
 
-data class QuestionOuverte(
+data class QuestionOpen(
     override val id: String,
     override val title: String,
     override val order: Int,
@@ -39,7 +39,7 @@ data class QuestionOuverte(
     override val consultationId: String,
 ) : Question()
 
-data class Chapitre(
+data class QuestionChapter(
     override val id: String,
     override val title: String,
     override val order: Int,

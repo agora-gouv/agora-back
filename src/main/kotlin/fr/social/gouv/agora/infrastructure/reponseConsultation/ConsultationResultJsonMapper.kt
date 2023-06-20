@@ -12,10 +12,10 @@ class ConsultationResultJsonMapper {
             title = domain.consultation.title,
             participantCount = domain.participantCount,
             resultsUniqueChoice = domain.results.filter { result ->
-                result.question is QuestionChoixUnique
+                result.question is QuestionUniqueChoice
             }.map(::toQuestionResultJson),
             resultsMultipleChoice = domain.results.filter { result ->
-                result.question is QuestionChoixMultiple
+                result.question is QuestionMultipleChoices
             }.map(::toQuestionResultJson),
             lastUpdate = ConsultationUpdatesJson(
                 step = when (domain.lastUpdate.status) {
