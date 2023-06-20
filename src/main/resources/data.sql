@@ -710,6 +710,13 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '580bd3c0-090a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
+INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+    '66bab292-090a-11ee-be56-0242ac122222',
+    'Je ne sais pas',
+    3,
+    '580bd3c0-090a-11ee-be56-0242ac120002'
+) ON CONFLICT DO NOTHING;
+
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '8bdfcbde-090a-11ee-be56-0242ac120002',
     'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
@@ -1240,7 +1247,7 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'b7c7eccc-092d-11ee-be56-0242ac120002',
-    'Sur cette application, le Gouvernement prend l’engagement de répondre chaque semaine à une question posée par les citoyens (celle qui obtient le plus de votes) ; est-ce une bonne idée ?”',
+    'Sur cette application, le Gouvernement prend l’engagement de répondre chaque semaine à une question posée par les citoyens (celle qui obtient le plus de votes) ; est-ce une bonne idée ?',
     10,
     'unique',
     null,
