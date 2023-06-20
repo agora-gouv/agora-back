@@ -1,7 +1,6 @@
 package fr.social.gouv.agora.infrastructure.notification.repository
 
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.FirebaseMessagingException
 import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification
 import fr.social.gouv.agora.usecase.notification.repository.NotificationRepository
@@ -21,18 +20,24 @@ class NotificationRepositoryImpl : NotificationRepository {
     }
 
     override fun sendNotificationMessage(request: NotificationRequest): NotificationResult {
-        return sendNotification(
-            notificationMessage = createBaseMessage(request).build()
-        )
+        return try {
+            sendNotification(notificationMessage = createBaseMessage(request).build())
+        } catch (e: IllegalArgumentException) {
+            NotificationResult.FAILURE
+        }
     }
 
     override fun sendQagDetailsNotification(request: NotificationRequest, qagId: String): NotificationResult {
-        return sendNotification(
-            notificationMessage = createBaseMessage(request)
-                .putData(NOTIFICATION_TYPE_KEY, QAG_DETAILS_NOTIFICATION_TYPE)
-                .putData(QAG_DETAILS_ID_KEY, qagId)
-                .build()
-        )
+        return try {
+            sendNotification(
+                notificationMessage = createBaseMessage(request)
+                    .putData(NOTIFICATION_TYPE_KEY, QAG_DETAILS_NOTIFICATION_TYPE)
+                    .putData(QAG_DETAILS_ID_KEY, qagId)
+                    .build()
+            )
+        } catch (e: IllegalArgumentException) {
+            NotificationResult.FAILURE
+        }
     }
 
     private fun createBaseMessage(request: NotificationRequest): Message.Builder {
