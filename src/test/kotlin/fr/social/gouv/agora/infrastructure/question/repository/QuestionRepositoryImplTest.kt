@@ -1,8 +1,8 @@
 package fr.social.gouv.agora.infrastructure.question.repository
 
 import fr.social.gouv.agora.domain.Question
-import fr.social.gouv.agora.domain.QuestionChoixUnique
-import fr.social.gouv.agora.domain.QuestionOuverte
+import fr.social.gouv.agora.domain.QuestionMultipleChoices
+import fr.social.gouv.agora.domain.QuestionUniqueChoice
 import fr.social.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.social.gouv.agora.infrastructure.question.dto.QuestionDTO
 import org.assertj.core.api.Assertions.assertThat
@@ -65,7 +65,7 @@ internal class QuestionRepositoryImplTest {
         given(choixPossibleCacheRepository.getChoixPossibleList(questionId = questionUUID))
             .willReturn(ChoixPossibleCacheRepository.CacheResult.CachedChoixPossibleList(listOf(choixPossibleDTO)))
 
-        val question = mock(QuestionChoixUnique::class.java)
+        val question = mock(QuestionUniqueChoice::class.java)
         given(
             mapper.toDomain(
                 dto = questionDTO,
@@ -110,7 +110,7 @@ internal class QuestionRepositoryImplTest {
         given(choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionId = questionUUID))
             .willReturn(listOf(choixPossibleDTO))
 
-        val question = mock(QuestionOuverte::class.java)
+        val question = mock(QuestionMultipleChoices::class.java)
         given(
             mapper.toDomain(
                 dto = questionDTO,

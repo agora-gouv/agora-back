@@ -7,21 +7,21 @@ import org.springframework.stereotype.Component
 class QuestionJsonMapper {
 
     fun toJson(domainList: List<Question>): QuestionsJson {
-        val chapterList = domainList.filterIsInstance<Chapitre>()
+        val chapterList = domainList.filterIsInstance<QuestionChapter>()
         val questionsNumber = domainList.size - chapterList.size
         return QuestionsJson(
             questionsUniqueChoice = buildQuestionUniqueChoiceJsonList(
-                domainList.filterIsInstance<QuestionChoixUnique>(),
+                domainList.filterIsInstance<QuestionUniqueChoice>(),
                 chapterList,
                 questionsNumber
             ),
             questionsOpened = buildQuestionOpenedJsonList(
-                domainList.filterIsInstance<QuestionOuverte>(),
+                domainList.filterIsInstance<QuestionOpen>(),
                 chapterList,
                 questionsNumber
             ),
             questionsMultipleChoices = buildQuestionMultipleChoicesJsonList(
-                domainList.filterIsInstance<QuestionChoixMultiple>(),
+                domainList.filterIsInstance<QuestionMultipleChoices>(),
                 chapterList,
                 questionsNumber
             ),
@@ -31,8 +31,8 @@ class QuestionJsonMapper {
     }
 
     private fun buildQuestionUniqueChoiceJsonList(
-        questionUniqueList: List<QuestionChoixUnique>,
-        chapterList: List<Chapitre>,
+        questionUniqueList: List<QuestionUniqueChoice>,
+        chapterList: List<QuestionChapter>,
         questionsNumber: Int
     ) = questionUniqueList.map { domain ->
         QuestionUniqueChoiceJson(id = domain.id,
@@ -49,10 +49,10 @@ class QuestionJsonMapper {
     }
 
     private fun buildQuestionOpenedJsonList(
-        questionOuverteList: List<QuestionOuverte>,
-        chapterList: List<Chapitre>,
+        questionOpenList: List<QuestionOpen>,
+        chapterList: List<QuestionChapter>,
         questionsNumber: Int
-    ) = questionOuverteList.map { domain ->
+    ) = questionOpenList.map { domain ->
         QuestionOpenedJson(
             id = domain.id,
             title = domain.title,
@@ -62,8 +62,8 @@ class QuestionJsonMapper {
     }
 
     private fun buildQuestionMultipleChoicesJsonList(
-        questionMultipleList: List<QuestionChoixMultiple>,
-        chapterList: List<Chapitre>,
+        questionMultipleList: List<QuestionMultipleChoices>,
+        chapterList: List<QuestionChapter>,
         questionsNumber: Int
     ) = questionMultipleList.map { domain ->
         QuestionMultipleChoicesJson(
@@ -81,7 +81,7 @@ class QuestionJsonMapper {
             })
     }
 
-    private fun buildChapterJsonList(chapterList: List<Chapitre>) = chapterList.map { domain ->
+    private fun buildChapterJsonList(chapterList: List<QuestionChapter>) = chapterList.map { domain ->
         ChapterJson(
             id = domain.id,
             title = domain.title,
@@ -91,9 +91,9 @@ class QuestionJsonMapper {
     }
 
     private fun calculateProgress(
-        order: Int, chapterList: List<Chapitre>
+        order: Int, chapterList: List<QuestionChapter>
     ) = (order - chapterList.count { chapter -> chapter.order < order })
 
-    private fun buildQuestionProgress(order: Int, chapterList: List<Chapitre>, questionsNumber: Int) =
+    private fun buildQuestionProgress(order: Int, chapterList: List<QuestionChapter>, questionsNumber: Int) =
         "Question " + calculateProgress(order, chapterList) + "/" + questionsNumber
 }

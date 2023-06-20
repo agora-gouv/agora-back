@@ -252,7 +252,7 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return questionChoixUnique without choices - should return object without result`() {
             // Given
-            val question = mock(QuestionChoixUnique::class.java).also {
+            val question = mock(QuestionUniqueChoice::class.java).also {
                 given(it.choixPossibleList).willReturn(emptyList())
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
@@ -278,8 +278,8 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return questionChoixUnique - should return result with choices with ratio 0`() {
             // Given
-            val choixPossible = mock(ChoixPossible::class.java)
-            val question = mock(QuestionChoixUnique::class.java).also {
+            val choixPossible = mock(ChoixPossibleDefault::class.java)
+            val question = mock(QuestionUniqueChoice::class.java).also {
                 given(it.choixPossibleList).willReturn(listOf(choixPossible))
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
@@ -315,7 +315,7 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return questionChoixMultiple without choices - should return object without result`() {
             // Given
-            val question = mock(QuestionChoixMultiple::class.java).also {
+            val question = mock(QuestionMultipleChoices::class.java).also {
                 given(it.choixPossibleList).willReturn(emptyList())
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
@@ -341,8 +341,8 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return questionChoixMultiple - should return result with choices with ratio 0`() {
             // Given
-            val choixPossible = mock(ChoixPossible::class.java)
-            val question = mock(QuestionChoixMultiple::class.java).also {
+            val choixPossible = mock(ChoixPossibleDefault::class.java)
+            val question = mock(QuestionMultipleChoices::class.java).also {
                 given(it.choixPossibleList).willReturn(listOf(choixPossible))
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
@@ -378,7 +378,7 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return questionOuverte - should return object without results`() {
             // Given
-            val question = mock(QuestionOuverte::class.java)
+            val question = mock(QuestionOpen::class.java)
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
 
             // When
@@ -402,7 +402,7 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return chapter - should return object without results`() {
             // Given
-            val question = mock(Chapitre::class.java)
+            val question = mock(QuestionChapter::class.java)
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
 
             // When
@@ -440,10 +440,10 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return questionChoixUnique - should return expected`() {
             // Given
-            val choixPossible = mock(ChoixPossible::class.java).also {
+            val choixPossible = mock(ChoixPossibleDefault::class.java).also {
                 given(it.id).willReturn("choiceId1")
             }
-            val question = mock(QuestionChoixUnique::class.java).also {
+            val question = mock(QuestionUniqueChoice::class.java).also {
                 given(it.id).willReturn("questionId1")
                 given(it.choixPossibleList).willReturn(listOf(choixPossible))
             }
@@ -488,13 +488,13 @@ internal class GetConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return questionChoixMultiple - should return expected`() {
             // Given
-            val choixPossible1 = mock(ChoixPossible::class.java).also {
+            val choixPossible1 = mock(ChoixPossibleDefault::class.java).also {
                 given(it.id).willReturn("choiceId1")
             }
-            val choixPossible2 = mock(ChoixPossible::class.java).also {
+            val choixPossible2 = mock(ChoixPossibleDefault::class.java).also {
                 given(it.id).willReturn("choiceId2")
             }
-            val question = mock(QuestionChoixMultiple::class.java).also {
+            val question = mock(QuestionMultipleChoices::class.java).also {
                 given(it.id).willReturn("questionId1")
                 given(it.choixPossibleList).willReturn(listOf(choixPossible1, choixPossible2))
             }

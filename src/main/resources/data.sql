@@ -452,11 +452,11 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     'ac24b428-ef0a-11ed-a05b-0242ac120015',
     'Quelle est votre principale difficulté pour recourir au covoiturage ? (conducteur et/ou passager)',
     5,
-    'ouverte',
+    'open',
     null,
     null,
     '6d85522a-ee71-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '4c85adfe-0906-11ee-be56-0242ac120002',
@@ -779,11 +779,11 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     'ac24b428-ef0a-11ed-a05b-0242ac120020',
     'Avez-vous d’autres idées pour encourager le covoiturage en France ?',
     16,
-    'ouverte',
+    'open',
     null,
     null,
     '6d85522a-ee71-11ed-a05b-0242ac120003'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '72682956-094b-423b-9086-9ec4f8ef2662',
@@ -923,11 +923,11 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '7763aeda-092a-11ee-be56-0242ac120002',
     'Avez-vous des idées ou propositions pour renouveler la démocratie en France ?',
     4,
-    'ouverte',
+    'open',
     null,
     null,
     '98a8ba56-0923-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     'dab3dc58-092a-11ee-be56-0242ac120002',
@@ -1273,21 +1273,21 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '5563aeda-092a-11ee-be56-0242ac120002',
     'Qu’attendez-vous en priorité des réponses que feront les ministres à ces questions ?',
     11,
-    'ouverte',
+    'open',
     null,
     null,
     '98a8ba56-0923-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '6363aeda-092a-11ee-be56-0242ac120002',
     'Pourquoi avez-vous téléchargé cette appli et à quoi, selon vous, doit-elle principalement servir ? C’est la dernière question de cette consultation : partagez-nous toutes vos idées !',
     12,
-    'ouverte',
+    'open',
     null,
     null,
     '98a8ba56-0923-11ee-be56-0242ac120002'
-) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title,  type = EXCLUDED.type;
 
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '68682956-094b-423b-9086-9ec4f8ef2662',
@@ -1424,7 +1424,7 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '97a30002-0b5e-11ee-be56-0242ac120002',
     'Selon vous, que faudrait-il changer, en priorité, dans votre quartier pour limiter les conséquences du réchauffement climatique dans votre quotidien ?',
     3,
-    'ouverte',
+    'open',
     null,
     null,
     'c342e83e-0b5a-11ee-be56-0242ac120002'
@@ -1768,11 +1768,11 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '34d997e4-0c4c-11ee-be56-0242ac120002',
     'Pour vous, la “sobriété énergétique”, c’est …',
     1,
-    'ouverte',
+    'open',
     null,
     null,
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
 INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
     '641d7656-0c4c-11ee-be56-0242ac120002',
@@ -2145,11 +2145,11 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '8488ee98-0c51-11ee-be56-0242ac120002',
     'Pour poursuivre les efforts qui ont permis à la France de réduire de 12% sa consommation d’énergie, quelle nouvelle mesure recommanderiez-vous ?',
     10,
-    'ouverte',
+    'open',
     null,
     null,
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
     '22682956-094b-423b-9086-9ec4f8ef2222',
