@@ -19,5 +19,5 @@ data class ChoixPossibleConditional(
     override val label: String,
     override val ordre: Int,
     override val questionId: String,
-    val nextQuestionId: String?,
+    val nextQuestionId: String,
 ) : ChoixPossible()

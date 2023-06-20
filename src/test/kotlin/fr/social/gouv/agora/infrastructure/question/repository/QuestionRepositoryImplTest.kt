@@ -70,7 +70,7 @@ internal class QuestionRepositoryImplTest {
             mapper.toDomain(
                 dto = questionDTO,
                 questionDTOList = listOf(questionDTO),
-                choixPossibleDtoList = listOf(choixPossibleDTO),
+                choixPossibleDTOList = listOf(choixPossibleDTO),
             )
         ).willReturn(question)
 
@@ -86,7 +86,7 @@ internal class QuestionRepositoryImplTest {
         then(mapper).should(only()).toDomain(
             dto = questionDTO,
             questionDTOList = listOf(questionDTO),
-            choixPossibleDtoList = listOf(choixPossibleDTO),
+            choixPossibleDTOList = listOf(choixPossibleDTO),
         )
     }
 
@@ -115,7 +115,7 @@ internal class QuestionRepositoryImplTest {
             mapper.toDomain(
                 dto = questionDTO,
                 questionDTOList = listOf(questionDTO),
-                choixPossibleDtoList = listOf(choixPossibleDTO),
+                choixPossibleDTOList = listOf(choixPossibleDTO),
             )
         ).willReturn(question)
 
@@ -141,7 +141,7 @@ internal class QuestionRepositoryImplTest {
         then(mapper).should(only()).toDomain(
             dto = questionDTO,
             questionDTOList = listOf(questionDTO),
-            choixPossibleDtoList = listOf(choixPossibleDTO),
+            choixPossibleDTOList = listOf(choixPossibleDTO),
         )
     }
 
