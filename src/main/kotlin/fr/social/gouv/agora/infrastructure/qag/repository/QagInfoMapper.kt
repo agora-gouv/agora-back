@@ -68,5 +68,11 @@ class QagInfoMapper {
         )
     }
 
-    fun archiveQag()
+    fun archiveQag(dto: QagDTO): QagDTO{
+        return dto.copy(
+            status = STATUS_ARCHIVED,
+            username = "",
+            userId = UUID.fromString(""),
+        )
+    }
 }

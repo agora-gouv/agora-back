@@ -55,16 +55,15 @@ class QagInfoRepositoryImpl(
         return try {
             val qagUUID = UUID.fromString(qagId)
             getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID }?.let { qagDTO ->
-                val updatedQagDTO = mapper.updateQagStatus(dto = qagDTO, qagStatus = newQagStatus)
-                val savedQagDTO = databaseRepository.save(updatedQagDTO)
-                cacheRepository.updateQag(updatedQagDTO = savedQagDTO)
-                QagUpdateResult.SUCCESS
-            } ?: QagUpdateResult.FAILURE
+                val archivedQagDTO = mapper.archiveQag(dto = qagDTO)
+                databaseRepository.save(archivedQagDTO)
+                cacheRepository.deleteQag(qagDTO)
+                QagArchiveResult.SUCCESS
+            } ?: QagArchiveResult.FAILURE
         } catch (e: IllegalArgumentException) {
-            QagUpdateResult.FAILURE
+            QagArchiveResult.FAILURE
         }
     }
-
 
     private fun getAllQagDTO() = when (val cacheResult = cacheRepository.getAllQagList()) {
         is CacheResult.CachedQagList -> cacheResult.allQagDTO
@@ -72,5 +71,4 @@ class QagInfoRepositoryImpl(
             cacheRepository.initializeCache(allQagDTO)
         }
     }
-
 }

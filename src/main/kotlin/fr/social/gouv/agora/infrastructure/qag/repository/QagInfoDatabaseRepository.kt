@@ -9,7 +9,6 @@ import java.util.*
 @Repository
 interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
 
-    @Query(value = "SELECT * FROM qags", nativeQuery = true)
+    @Query(value = "SELECT status FROM qags WHERE status not in (2, -1)", nativeQuery = true)
     fun getAllQagList(): List<QagDTO>
-
 }
