@@ -9,6 +9,7 @@ interface QagInfoRepository {
     fun getQagInfo(qagId: String): QagInfo?
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
+    fun archiveQag(qagId: String): QagArchiveResult
 }
 
 sealed class QagInsertionResult {
@@ -17,5 +18,9 @@ sealed class QagInsertionResult {
 }
 
 enum class QagUpdateResult {
+    SUCCESS, FAILURE
+}
+
+enum class QagArchiveResult {
     SUCCESS, FAILURE
 }

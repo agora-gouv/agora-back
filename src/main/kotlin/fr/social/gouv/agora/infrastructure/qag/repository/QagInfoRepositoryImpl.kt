@@ -3,10 +3,7 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoCacheRepository.CacheResult
-import fr.social.gouv.agora.usecase.qag.repository.QagInfo
-import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
-import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
+import fr.social.gouv.agora.usecase.qag.repository.*
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -53,6 +50,21 @@ class QagInfoRepositoryImpl(
             QagUpdateResult.FAILURE
         }
     }
+
+    override fun archiveQag(qagId: String): QagArchiveResult {
+        return try {
+            val qagUUID = UUID.fromString(qagId)
+            getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID }?.let { qagDTO ->
+                val updatedQagDTO = mapper.updateQagStatus(dto = qagDTO, qagStatus = newQagStatus)
+                val savedQagDTO = databaseRepository.save(updatedQagDTO)
+                cacheRepository.updateQag(updatedQagDTO = savedQagDTO)
+                QagUpdateResult.SUCCESS
+            } ?: QagUpdateResult.FAILURE
+        } catch (e: IllegalArgumentException) {
+            QagUpdateResult.FAILURE
+        }
+    }
+
 
     private fun getAllQagDTO() = when (val cacheResult = cacheRepository.getAllQagList()) {
         is CacheResult.CachedQagList -> cacheResult.allQagDTO

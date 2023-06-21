@@ -67,4 +67,6 @@ class QagInfoMapper {
             }
         )
     }
+
+    fun archiveQag()
 }
