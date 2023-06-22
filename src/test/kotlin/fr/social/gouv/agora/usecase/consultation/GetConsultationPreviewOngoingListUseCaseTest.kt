@@ -31,22 +31,8 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
     @MockBean
     private lateinit var consultationResponseRepository: GetConsultationResponseRepository
 
-    private val consultationPreviewOngoingInfo = mock(ConsultationPreviewOngoingInfo::class.java).also {
-        given(it.id).willReturn("consultationId")
-        given(it.title).willReturn("title")
-        given(it.coverUrl).willReturn("coverUrl")
-        given(it.thematiqueId).willReturn("thematiqueId")
-        given(it.endDate).willReturn(Date(1))
-    }
-
-    private val consultationPreviewOngoing = ConsultationPreviewOngoing(
-        id = "consultationId",
-        title = "title",
-        coverUrl = "coverUrl",
-        endDate = Date(1),
-        thematique = mock(Thematique::class.java),
-        hasAnswered = false,
-    )
+    @MockBean
+    private lateinit var mapper: ConsultationPreviewOngoingMapper
 
     @Test
     fun `getConsultationPreviewOngoingList - when has empty consultation - should return emptyList`() {
@@ -84,8 +70,12 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
     }
 
     @Test
-    fun `getConsultationPreviewOngoingList - when has consultationInfo and thematique - should return ConsultationPreviewOngoing`() {
+    fun `getConsultationPreviewOngoingList - when has consultationInfo and thematique - should return mapped ConsultationPreviewOngoing`() {
         // Given
+        val consultationPreviewOngoingInfo = mock(ConsultationPreviewOngoingInfo::class.java).also {
+            given(it.id).willReturn("consultationId")
+            given(it.thematiqueId).willReturn("thematiqueId")
+        }
         given(consultationPreviewOngoingRepository.getConsultationPreviewOngoingList())
             .willReturn(listOf(consultationPreviewOngoingInfo))
 
@@ -99,13 +89,20 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
             )
         ).willReturn(true)
 
+        val consultationPreviewOngoing = mock(ConsultationPreviewOngoing::class.java)
+        given(
+            mapper.toConsultationPreviewOngoing(
+                consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
+                thematique = thematique,
+                hasAnswered = true,
+            )
+        ).willReturn(consultationPreviewOngoing)
+
         // When
         val result = useCase.getConsultationPreviewOngoingList(userId = "userId")
 
         // Then
-        assertThat(result).isEqualTo(
-            listOf(consultationPreviewOngoing.copy(thematique = thematique, hasAnswered = true))
-        )
+        assertThat(result).isEqualTo(listOf(consultationPreviewOngoing))
         then(consultationPreviewOngoingRepository).should(only()).getConsultationPreviewOngoingList()
         then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
         then(consultationResponseRepository).should(only())

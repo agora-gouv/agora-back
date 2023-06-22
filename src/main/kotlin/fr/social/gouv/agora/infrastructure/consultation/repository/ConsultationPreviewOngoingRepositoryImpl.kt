@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class ConsultationPreviewOngoingRepositoryImpl(
     private val consultationDatabaseRepository: ConsultationDatabaseRepository,
     private val consultationOngoingCacheRepository: ConsultationOngoingCacheRepository,
-    private val mapper: ConsultationPreviewOngoingMapper,
+    private val mapper: ConsultationPreviewOngoingInfoMapper,
 ) : ConsultationPreviewOngoingRepository {
 
     override fun getConsultationPreviewOngoingList(): List<ConsultationPreviewOngoingInfo> {
