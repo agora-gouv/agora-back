@@ -5,7 +5,7 @@ import fr.social.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationPreviewOngoingMapper {
+class ConsultationPreviewOngoingInfoMapper {
     fun toDomain(dto: ConsultationDTO) = ConsultationPreviewOngoingInfo(
         id = dto.id.toString(),
         title = dto.title,
