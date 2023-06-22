@@ -40,7 +40,7 @@ class QagInfoRepositoryImpl(
     override fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult {
         return try {
             val qagUUID = UUID.fromString(qagId)
-            getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID }?.let { qagDTO ->
+            findQagDTO(qagUUID)?.let { qagDTO ->
                 val updatedQagDTO = mapper.updateQagStatus(dto = qagDTO, qagStatus = newQagStatus)
                 val savedQagDTO = databaseRepository.save(updatedQagDTO)
                 cacheRepository.updateQag(updatedQagDTO = savedQagDTO)
@@ -54,14 +54,22 @@ class QagInfoRepositoryImpl(
     override fun archiveQag(qagId: String): QagArchiveResult {
         return try {
             val qagUUID = UUID.fromString(qagId)
-            getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID }?.let { qagDTO ->
+            findQagDTO(qagUUID)?.let { qagDTO ->
                 val archivedQagDTO = mapper.archiveQag(dto = qagDTO)
                 databaseRepository.save(archivedQagDTO)
-                cacheRepository.deleteQag(qagDTO)
                 QagArchiveResult.SUCCESS
             } ?: QagArchiveResult.FAILURE
         } catch (e: IllegalArgumentException) {
             QagArchiveResult.FAILURE
+        }
+    }
+
+    override fun deleteQagList(qagIdList: List<String>): QagDeleteResult {
+        return try {
+            cacheRepository.deleteQagList(qagIdList.map { qagId -> UUID.fromString(qagId) })
+            QagDeleteResult.SUCCESS
+        } catch (e: IllegalArgumentException) {
+            QagDeleteResult.FAILURE
         }
     }
 
@@ -71,4 +79,9 @@ class QagInfoRepositoryImpl(
             cacheRepository.initializeCache(allQagDTO)
         }
     }
+
+    private fun findQagDTO(qagUUID: UUID?) = getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID }
 }
+
+
+

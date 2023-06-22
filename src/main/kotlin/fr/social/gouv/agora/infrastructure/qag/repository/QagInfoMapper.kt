@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.social.gouv.agora.infrastructure.utils.UuidUtils
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.DELETED_UUID
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import org.springframework.stereotype.Component
 import java.util.*
@@ -72,7 +73,7 @@ class QagInfoMapper {
         return dto.copy(
             status = STATUS_ARCHIVED,
             username = "",
-            userId = UUID.fromString(""),
+            userId = DELETED_UUID,
         )
     }
 }
