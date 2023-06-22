@@ -21,7 +21,7 @@ class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
             description = qag.description,
             date = qag.date,
             username = qag.username,
-            canShare = qag.status == QagStatus.MODERATED_ACCEPTED,
+            canShare = qag.status == QagStatus.MODERATED_ACCEPTED || qag.status == QagStatus.SELECTED_FOR_RESPONSE,
             canSupport = qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED,
             support = buildSupportQagJson(qag),
             response = buildResponseQagJson(qag),
