@@ -22,4 +22,8 @@ object DateUtils {
         return LocalDate.ofInstant(this.toInstant(), ZoneId.systemDefault())
     }
 
+    fun Date.toLocalDateTime(): LocalDateTime {
+        return LocalDateTime.ofInstant(this.toInstant(), ZoneId.systemDefault())
+    }
+
 }
