@@ -49,49 +49,49 @@ internal class ConsultationPreviewOngoingMapperTest {
         @JvmStatic
         fun toConsultationPreviewOngoingCases() = arrayOf(
             input(
-                whenTestDescription = "consultationEndDate is more than 15 days away from today",
-                consultationEndDate = LocalDate.of(1998, Month.JULY, 12),
-                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
+                whenTestDescription = "consultationEndDate is more than 15 days away in the future from today",
+                serverDate = LocalDate.of(1998, Month.JULY, 12),
+                consultationEndDate = LocalDate.of(2012, Month.DECEMBER, 21),
                 expectedHighlightLabel = null,
             ),
             input(
-                whenTestDescription = "consultationEndDate is 15 days from today",
-                consultationEndDate = LocalDate.of(2000, Month.JANUARY, 1),
-                serverDate = LocalDate.of(2000, Month.JANUARY, 16),
+                whenTestDescription = "consultationEndDate is 15 days in the future from today",
+                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
+                consultationEndDate = LocalDate.of(2000, Month.JANUARY, 16),
                 expectedHighlightLabel = "Plus que 15 jours",
             ),
             input(
                 whenTestDescription = "consultationEndDate is 1 days from today",
-                consultationEndDate = LocalDate.of(2000, Month.JANUARY, 1),
-                serverDate = LocalDate.of(2000, Month.JANUARY, 2),
+                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
+                consultationEndDate = LocalDate.of(2000, Month.JANUARY, 2),
                 expectedHighlightLabel = "Dernier jour !",
             ),
             input(
                 whenTestDescription = "consultationEndDate is today",
+                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
                 consultationEndDate = LocalDate.of(2020, Month.JANUARY, 1),
-                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
                 expectedHighlightLabel = null,
             ),
             input(
-                whenTestDescription = "consultationEndDate is in the near future",
-                consultationEndDate = LocalDate.of(2020, Month.JANUARY, 5),
+                whenTestDescription = "consultationEndDate is in the near past",
                 serverDate = LocalDate.of(2000, Month.JANUARY, 1),
+                consultationEndDate = LocalDate.of(1999, Month.DECEMBER, 25),
                 expectedHighlightLabel = null,
             ),
             input(
-                whenTestDescription = "consultationEndDate is in a very late future",
-                consultationEndDate = LocalDate.of(2023, Month.JANUARY, 1),
+                whenTestDescription = "consultationEndDate is very far away in the past",
                 serverDate = LocalDate.of(2000, Month.JANUARY, 1),
+                consultationEndDate = LocalDate.of(1989, Month.JANUARY, 1),
                 expectedHighlightLabel = null,
             ),
         )
 
         private fun input(
             whenTestDescription: String,
-            consultationEndDate: LocalDate,
             serverDate: LocalDate,
+            consultationEndDate: LocalDate,
             expectedHighlightLabel: String?,
-        ) = arrayOf(whenTestDescription, consultationEndDate, serverDate, expectedHighlightLabel)
+        ) = arrayOf(whenTestDescription, serverDate, consultationEndDate, expectedHighlightLabel)
 
     }
 
@@ -99,14 +99,14 @@ internal class ConsultationPreviewOngoingMapperTest {
     @MethodSource("toConsultationPreviewOngoingCases")
     fun `toConsultationPreviewOngoing - should return expected`(
         whenTestDescription: String,
-        consultationEndDate: LocalDate,
         serverDate: LocalDate,
+        consultationEndDate: LocalDate,
         expectedHighlightLabel: String?,
     ) {
+        setupNowDate(serverDate)
         // Given
         val endDate = consultationEndDate.toDate()
         val consultationPreviewOngoingInfo = consultationPreviewOngoingInfo.copy(endDate = endDate)
-        setupNowDate(serverDate)
 
         // When
         val result = mapper.toConsultationPreviewOngoing(
