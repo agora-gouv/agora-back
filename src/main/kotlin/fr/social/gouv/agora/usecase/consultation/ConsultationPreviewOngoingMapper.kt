@@ -38,7 +38,7 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
     fun buildHighlightLabel(endDate: Date): String? {
         return when (val daysDifference = ChronoUnit.DAYS.between(LocalDate.now(clock), endDate.toLocalDate())) {
             1L -> "Dernier jour !"
-            in 1L..MAXIMUM_DAYS_DIFFERENCE_TO_HIGHLIGHT -> "Plus que $daysDifference jours"
+            in 1L..MAXIMUM_DAYS_DIFFERENCE_TO_HIGHLIGHT -> "Plus que $daysDifference jours !"
             else -> null
         }
     }
