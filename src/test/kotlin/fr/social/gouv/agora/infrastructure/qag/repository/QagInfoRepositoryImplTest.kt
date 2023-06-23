@@ -249,8 +249,8 @@ internal class QagInfoRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
             then(databaseRepository).should(only()).save(updatedQagDTO)
-            then(cacheRepository).should().getAllQagList()
-            then(cacheRepository).should().updateQag(updatedQagDTO = savedQagDTO)
+            then(cacheRepository).should(times(1)).getAllQagList()
+            then(cacheRepository).should(times(1)).updateQag(updatedQagDTO = savedQagDTO)
             then(cacheRepository).shouldHaveNoMoreInteractions()
             then(mapper).should(only()).updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
         }
@@ -307,8 +307,7 @@ internal class QagInfoRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(QagArchiveResult.SUCCESS)
             then(databaseRepository).should(only()).save(archivedQagDTO)
-            then(cacheRepository).should().getAllQagList()
-            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(cacheRepository).should(only()).getAllQagList()
             then(mapper).should(only()).archiveQag(dto = qagDTO)
         }
     }
@@ -317,7 +316,7 @@ internal class QagInfoRepositoryImplTest {
     inner class DeleteQagListTestCases {
         @Test
         fun `deleteQagList - when invalid UUID - should return FAILURE`() {
-            val result = repository.deleteQagList(listOf("qagId"))
+            val result = repository.deleteQagListFromCache(listOf("qagId"))
 
             //Then
             assertThat(result).isEqualTo(QagDeleteResult.FAILURE)
@@ -329,7 +328,7 @@ internal class QagInfoRepositoryImplTest {
         @Test
         fun `deleteQagList - when valid UUID - should return SUCCESS`() {
             val qagId = UUID.randomUUID()
-            val result = repository.deleteQagList(listOf(qagId.toString()))
+            val result = repository.deleteQagListFromCache(listOf(qagId.toString()))
 
             //Then
             assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)

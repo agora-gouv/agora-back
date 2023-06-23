@@ -10,7 +10,7 @@ interface QagInfoRepository {
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun archiveQag(qagId: String): QagArchiveResult
-    fun deleteQagList(qagIdList: List<String>): QagDeleteResult
+    fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult
 }
 
 sealed class QagInsertionResult {

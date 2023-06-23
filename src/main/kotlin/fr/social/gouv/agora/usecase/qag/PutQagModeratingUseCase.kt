@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagStatus
-import fr.social.gouv.agora.domain.QagUpdates
+import fr.social.gouv.agora.domain.QagInsertingUpdates
 import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
@@ -38,7 +38,7 @@ class PutQagModeratingUseCase(
             QagUpdateResult.FAILURE -> ModeratingQagResult.FAILURE
             QagUpdateResult.SUCCESS -> {
                 qagUpdatesRepository.insertQagUpdates(
-                    QagUpdates(
+                    QagInsertingUpdates(
                         qagId = qagId,
                         newQagStatus = toQagStatus(qagModeratingStatus),
                         userId = userId

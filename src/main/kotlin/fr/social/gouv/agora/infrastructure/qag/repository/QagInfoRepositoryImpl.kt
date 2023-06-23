@@ -64,7 +64,7 @@ class QagInfoRepositoryImpl(
         }
     }
 
-    override fun deleteQagList(qagIdList: List<String>): QagDeleteResult {
+    override fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult {
         return try {
             cacheRepository.deleteQagList(qagIdList.map { qagId -> UUID.fromString(qagId) })
             QagDeleteResult.SUCCESS

@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagStatus
-import fr.social.gouv.agora.domain.QagUpdates
+import fr.social.gouv.agora.domain.QagInsertingUpdates
 import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -88,7 +88,7 @@ internal class PutQagModeratingUseCaseTest {
         then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagAccepted(qagId = "qagId")
         then(qagUpdatesRepository).should(only())
             .insertQagUpdates(
-                QagUpdates(
+                QagInsertingUpdates(
                     qagId = "qagId",
                     newQagStatus = QagStatus.MODERATED_ACCEPTED,
                     userId = "userId"
@@ -139,7 +139,7 @@ internal class PutQagModeratingUseCaseTest {
         then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
         then(qagUpdatesRepository).should(only())
             .insertQagUpdates(
-                QagUpdates(
+                QagInsertingUpdates(
                     qagId = "qagId",
                     newQagStatus = QagStatus.MODERATED_REJECTED,
                     userId = "userId"

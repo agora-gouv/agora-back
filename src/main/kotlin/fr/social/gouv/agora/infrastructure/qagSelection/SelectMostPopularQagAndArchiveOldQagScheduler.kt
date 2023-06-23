@@ -13,7 +13,7 @@ class SelectMostPopularQagAndArchiveOldQagScheduler(
 ) {
 
     @Scheduled(cron = "0 0 14 * * WED")
-    fun selectMostPopularQag() {
+    fun selectMostPopularQagAndArchiveOldQag() {
         selectMostPopularQagUseCase.putMostPopularQagInSelectedStatus()
         archiveOldQagUseCase.archiveOldQag()
     }
