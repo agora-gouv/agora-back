@@ -24,7 +24,7 @@ class InsertReponseConsultationUseCase(
             return InsertResult.INSERT_FAILURE
         }
 
-        consultationPreviewAnsweredRepository.deleteConsultationAnsweredList(userId)
+        consultationPreviewAnsweredRepository.deleteConsultationAnsweredListFromCache(userId)
         return insertReponseConsultationRepository.insertConsultationResponses(
             insertParameters = insertConsultationResponseParametersMapper.toInsertParameters(
                 consultationId = consultationId,

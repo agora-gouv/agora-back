@@ -26,7 +26,7 @@ class ConsultationPreviewAnsweredRepositoryImpl(
         }
     }
 
-    override fun deleteConsultationAnsweredList(userId: String) {
+    override fun deleteConsultationAnsweredListFromCache(userId: String) {
         consultationAnsweredCacheRepository.deleteConsultationAnsweredList(UUID.fromString(userId))
     }
 
