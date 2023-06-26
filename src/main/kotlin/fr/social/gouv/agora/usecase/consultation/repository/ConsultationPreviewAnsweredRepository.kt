@@ -4,5 +4,5 @@ import fr.social.gouv.agora.domain.ConsultationPreviewAnsweredInfo
 
 interface ConsultationPreviewAnsweredRepository {
     fun getConsultationAnsweredList(userId: String): List<ConsultationPreviewAnsweredInfo>
-    fun deleteConsultationAnsweredList(userId: String)
+    fun deleteConsultationAnsweredListFromCache(userId: String)
 }

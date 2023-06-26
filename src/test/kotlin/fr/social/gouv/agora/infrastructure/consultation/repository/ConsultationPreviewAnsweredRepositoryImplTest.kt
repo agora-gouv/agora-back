@@ -54,7 +54,7 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     private val userId = UUID.fromString("c6655dd2-ee48-11ed-a05b-0242ac120003")
 
     @Test
-    fun `getConsultationAnsweredList - when invalid userId - should return emptyList()`() {
+    fun `deleteConsultationAnsweredListFromCache - when invalid userId - should return emptyList()`() {
         // When
         val result = repository.getConsultationAnsweredList("1111")
 
@@ -66,7 +66,7 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     }
 
     @Test
-    fun `getConsultationAnsweredList - when CacheNotInitialized & database return emptyList - should call getConsultationAnsweredListFromDatabase and insert emptylist to cache`() {
+    fun `deleteConsultationAnsweredListFromCache - when CacheNotInitialized & database return emptyList - should call getConsultationAnsweredListFromDatabase and insert emptylist to cache`() {
         // Given
         given(cacheRepository.getConsultationAnsweredList(userId))
             .willReturn(CacheResult.CacheNotInitialized)
@@ -86,7 +86,7 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     }
 
     @Test
-    fun `getConsultationAnsweredList - when CacheNotInitialized & database return listof DTO - should call getConsultationAnsweredListFromDatabase and insert result to cache`() {
+    fun `deleteConsultationAnsweredListFromCache - when CacheNotInitialized & database return listof DTO - should call getConsultationAnsweredListFromDatabase and insert result to cache`() {
         // Given
         given(cacheRepository.getConsultationAnsweredList(userId))
             .willReturn(CacheResult.CacheNotInitialized)
@@ -107,7 +107,7 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     }
 
     @Test
-    fun `getConsultationAnsweredList - when has cache with emptyList - should return emptylist from cache`() {
+    fun `deleteConsultationAnsweredListFromCache - when has cache with emptyList - should return emptylist from cache`() {
         // Given
         given(cacheRepository.getConsultationAnsweredList(userId))
             .willReturn(CacheResult.CachedConsultationAnsweredList(emptyList()))
@@ -122,7 +122,7 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     }
 
     @Test
-    fun `getConsultationAnsweredList - when has cache with listof DTO - should return listof DTO from cache`() {
+    fun `deleteConsultationAnsweredListFromCache - when has cache with listof DTO - should return listof DTO from cache`() {
         // Given
         given(cacheRepository.getConsultationAnsweredList(userId))
             .willReturn(CacheResult.CachedConsultationAnsweredList(listOf(consultationDTO)))
@@ -140,7 +140,7 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     @Test
     fun `deleteConsultationAnsweredList - should delete ConsultationAnsweredList from cache`() {
         //When
-        repository.deleteConsultationAnsweredList(userId.toString())
+        repository.deleteConsultationAnsweredListFromCache(userId.toString())
 
         //Then
         then(cacheRepository).should(only()).deleteConsultationAnsweredList(userId)

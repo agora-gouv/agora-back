@@ -102,7 +102,7 @@ internal class InsertReponseConsultationUseCaseTest {
             consultationId = "consultationId",
             userId = "userId",
         )
-        then(consultationPreviewAnsweredRepository).should(only()).deleteConsultationAnsweredList(userId = "userId")
+        then(consultationPreviewAnsweredRepository).should(only()).deleteConsultationAnsweredListFromCache(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
             consultationResponses = consultationResponses,
