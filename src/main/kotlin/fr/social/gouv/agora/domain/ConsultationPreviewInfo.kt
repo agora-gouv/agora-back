@@ -17,10 +17,16 @@ data class ConsultationPreviewOngoingInfo(
     val endDate: Date,
 ) : ConsultationPreviewInfo()
 
-data class ConsultationPreviewAnsweredInfo(
+data class ConsultationPreviewFinishedInfo(
     override val id: String,
     override val title: String,
     override val coverUrl: String,
     override val thematiqueId: String,
 ) : ConsultationPreviewInfo()
 
+data class ConsultationPreviewAnsweredInfo(
+    override val id: String,
+    override val title: String,
+    override val coverUrl: String,
+    override val thematiqueId: String,
+) : ConsultationPreviewInfo()
