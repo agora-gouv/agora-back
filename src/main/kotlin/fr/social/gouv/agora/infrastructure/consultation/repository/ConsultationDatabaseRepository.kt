@@ -14,11 +14,20 @@ interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID>
 
     @Query(
         value = """SELECT * FROM consultations 
-            WHERE id NOT IN (SELECT consultation_id FROM consultation_updates WHERE step = 2 OR step = 3)
+            WHERE end_date < CURRENT_DATE
             ORDER BY end_date ASC""",
         nativeQuery = true
     )
     fun getConsultationOngoingList(): List<ConsultationDTO>
+
+    @Query(
+        value = """SELECT * FROM consultations 
+            WHERE end_date >= CURRENT_DATE
+            ORDER BY end_date ASC
+            LIMIT 10""",
+        nativeQuery = true
+    )
+    fun getConsultationFinishedList(): List<ConsultationDTO>
 
     @Query(
         value = """SELECT * FROM consultations WHERE id IN 
