@@ -28,7 +28,7 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
     private lateinit var cacheRepository: ConsultationAnsweredCacheRepository
 
     @MockBean
-    private lateinit var mapper: ConsultationPreviewAnsweredMapper
+    private lateinit var mapper: ConsultationPreviewAnsweredInfoMapper
 
     private val consultationDTO = ConsultationDTO(
         id = UUID.randomUUID(),
