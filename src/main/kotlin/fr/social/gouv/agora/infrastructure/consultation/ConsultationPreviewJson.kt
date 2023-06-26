@@ -7,7 +7,7 @@ data class ConsultationPreviewJson(
     @JsonProperty("ongoing")
     val ongoingList: List<ConsultationOngoingJson>,
     @JsonProperty("finished")
-    val finishedList: List<ConsultationOngoingJson>, //TODO à remplacer par ConsultationFinishedJson
+    val finishedList: List<ConsultationFinishedJson>,
     @JsonProperty("answered")
     val answeredList: List<ConsultationAnsweredJson>,
 )
@@ -27,6 +27,19 @@ data class ConsultationOngoingJson(
     val highlightLabel: String?,
     @JsonProperty("hasAnswered")
     val hasAnswered: Boolean,
+)
+
+data class ConsultationFinishedJson(
+    @JsonProperty("id")
+    val id: String,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("coverUrl")
+    val coverUrl: String,
+    @JsonProperty("thematique")
+    val thematique: ThematiqueNoIdJson,
+    @JsonProperty("step")
+    val step: Int,
 )
 
 data class ConsultationAnsweredJson(

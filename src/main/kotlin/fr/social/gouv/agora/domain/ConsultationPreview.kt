@@ -19,6 +19,14 @@ data class ConsultationPreviewOngoing(
     val hasAnswered: Boolean,
 ) : ConsultationPreview()
 
+data class ConsultationPreviewFinished(
+    override val id: String,
+    override val title: String,
+    override val coverUrl: String,
+    override val thematique: Thematique,
+    val step: ConsultationStatus,
+) : ConsultationPreview()
+
 data class ConsultationPreviewAnswered(
     override val id: String,
     override val title: String,
