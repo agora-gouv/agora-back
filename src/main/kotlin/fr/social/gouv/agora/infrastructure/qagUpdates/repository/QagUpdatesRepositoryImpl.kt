@@ -16,16 +16,12 @@ class QagUpdatesRepositoryImpl(
         mapper.toDto(qagInsertingUpdates)?.let { qagUpdatesDTO -> databaseRepository.save(qagUpdatesDTO) }
     }
 
-    override fun getQagUpdates(qagId: String): QagUpdates? {
+    override fun getQagUpdates(qagIdList: List<String>): List<QagUpdates> {
         return try {
-            val qagUUID = UUID.fromString(qagId)
-            databaseRepository.getQagUpdates(qagUUID)?.let(mapper::toDomain)
+            val qagUUIDList = qagIdList.map { qagId -> UUID.fromString(qagId) }
+            databaseRepository.getQagUpdates(qagUUIDList).mapNotNull(mapper::toDomain)
         } catch (e: IllegalArgumentException) {
-            null
+            emptyList()
         }
-    }
-
-    override fun gelAllQagUpdates(): List<QagUpdates> {
-        return databaseRepository.findAll().map(mapper::toDomain)
     }
 }

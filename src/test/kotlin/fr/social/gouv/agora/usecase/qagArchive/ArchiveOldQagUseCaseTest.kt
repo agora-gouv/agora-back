@@ -66,7 +66,7 @@ internal class ArchiveOldQagUseCaseTest {
     }
 
     @Test
-    fun `archiveOldQag - when has Qag with status MODERATED ACCEPTED and posteDate within 14 days - should return FAILURE`() {
+    fun `archiveOldQag - when has Qag with status MODERATED ACCEPTED and moderatedDate within 14 days - should not archive any QaG and return FAILURE`() {
         // Given
         val qagId = UUID.randomUUID().toString()
         val qagInfo = mock(QagInfo::class.java).also {
@@ -79,7 +79,7 @@ internal class ArchiveOldQagUseCaseTest {
         }
 
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
-        given(qagUpdatesRepository.getQagUpdates(qagInfo.id)).willReturn(qagUpdates)
+        given(qagUpdatesRepository.getQagUpdates(listOf(qagInfo.id))).willReturn(listOf(qagUpdates))
 
         // When
         val result = useCase.archiveOldQag()
@@ -87,11 +87,11 @@ internal class ArchiveOldQagUseCaseTest {
         // Then
         assertThat(result).isEqualTo(ArchiveQagListResult.FAILURE)
         then(qagInfoRepository).should(only()).getAllQagInfo()
-        then(qagUpdatesRepository).should(only()).getQagUpdates(qagInfo.id)
+        then(qagUpdatesRepository).should(only()).getQagUpdates(listOf(qagInfo.id))
     }
 
     @Test
-    fun `archiveOldQag - when has Qag with status MODERATED ACCEPTED and postDate older than 14 days and the Qag is archived with SUCCESS - should return SUCCESS`() {
+    fun `archiveOldQag - when has Qag with status MODERATED ACCEPTED and moderatedDate older than 14 days and the Qag is archived with SUCCESS - should return SUCCESS`() {
         // Given
         val qagId = UUID.randomUUID().toString()
         val qagInfo = mock(QagInfo::class.java).also {
@@ -105,7 +105,7 @@ internal class ArchiveOldQagUseCaseTest {
 
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
         given(qagInfoRepository.archiveQag(qagInfo.id)).willReturn(QagArchiveResult.SUCCESS)
-        given(qagUpdatesRepository.getQagUpdates(qagId)).willReturn(qagUpdates)
+        given(qagUpdatesRepository.getQagUpdates(listOf(qagId))).willReturn(listOf(qagUpdates))
 
         // When
         val result = useCase.archiveOldQag()
@@ -115,11 +115,12 @@ internal class ArchiveOldQagUseCaseTest {
         then(qagInfoRepository).should(times(1)).getAllQagInfo()
         then(qagInfoRepository).should(times(1)).archiveQag(qagInfo.id)
         then(qagInfoRepository).should(times(1)).deleteQagListFromCache(listOf(qagInfo.id))
-        then(qagUpdatesRepository).should(only()).getQagUpdates(qagId)
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(qagUpdatesRepository).should(only()).getQagUpdates(listOf(qagId))
     }
 
     @Test
-    fun `archiveOldQag - when has Qag with status MODERATED ACCEPTED and postDate older than 14 days and archiveQag returns FAILURE - should return FAILURE`() {
+    fun `archiveOldQag - when has Qag with status MODERATED ACCEPTED and moderatedDate older than 14 days and archiveQag returns FAILURE - should return FAILURE`() {
         // Given
         val qagId = UUID.randomUUID().toString()
         val qagInfo = mock(QagInfo::class.java).also {
@@ -133,7 +134,7 @@ internal class ArchiveOldQagUseCaseTest {
 
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
         given(qagInfoRepository.archiveQag(qagInfo.id)).willReturn(QagArchiveResult.FAILURE)
-        given(qagUpdatesRepository.getQagUpdates(qagInfo.id)).willReturn(qagUpdates)
+        given(qagUpdatesRepository.getQagUpdates(listOf(qagInfo.id))).willReturn(listOf(qagUpdates))
 
         // When
         val result = useCase.archiveOldQag()
@@ -143,11 +144,11 @@ internal class ArchiveOldQagUseCaseTest {
         then(qagInfoRepository).should(times(1)).getAllQagInfo()
         then(qagInfoRepository).should(times(1)).archiveQag(qagInfo.id)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(qagUpdatesRepository).should(only()).getQagUpdates(qagInfo.id)
+        then(qagUpdatesRepository).should(only()).getQagUpdates(listOf(qagInfo.id))
     }
 
     @Test
-    fun `archiveOldQag - when has two Qag with status MODERATED ACCEPTED and postDate older than 14 days and archiveQag returns FAILURE for one qag and SUCCESS for the other qag - should return FAILURE`() {
+    fun `archiveOldQag - when has two Qag with status MODERATED ACCEPTED and moderatedDate older than 14 days and archiveQag returns FAILURE for one qag and SUCCESS for the other qag - should archive filtered Qags anyway then return FAILURE`() {
         // Given
         val qagId1 = UUID.randomUUID().toString()
         val qagId2 = UUID.randomUUID().toString()
@@ -171,8 +172,12 @@ internal class ArchiveOldQagUseCaseTest {
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo1, qagInfo2))
         given(qagInfoRepository.archiveQag(qagInfo1.id)).willReturn(QagArchiveResult.FAILURE)
         given(qagInfoRepository.archiveQag(qagInfo2.id)).willReturn(QagArchiveResult.SUCCESS)
-        given(qagUpdatesRepository.getQagUpdates(qagInfo1.id)).willReturn(qagUpdates1)
-        given(qagUpdatesRepository.getQagUpdates(qagInfo2.id)).willReturn(qagUpdates2)
+        given(qagUpdatesRepository.getQagUpdates(listOf(qagInfo1.id, qagInfo2.id))).willReturn(
+            listOf(
+                qagUpdates1,
+                qagUpdates2
+            )
+        )
 
         // When
         val result = useCase.archiveOldQag()
@@ -183,14 +188,13 @@ internal class ArchiveOldQagUseCaseTest {
         then(qagInfoRepository).should(times(1)).archiveQag(qagInfo1.id)
         then(qagInfoRepository).should(times(1)).archiveQag(qagInfo2.id)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(qagUpdatesRepository).should(times(1)).getQagUpdates(qagInfo1.id)
-        then(qagUpdatesRepository).should(times(1)).getQagUpdates(qagInfo2.id)
+        then(qagUpdatesRepository).should(times(1)).getQagUpdates(listOf(qagInfo1.id, qagInfo2.id))
         then(qagUpdatesRepository).shouldHaveNoMoreInteractions()
     }
 
 
     @Test
-    fun `archiveOldQag - when has Qag with status MODERATED REJECTED and postDate is one second after the reset date - should return FAILURE`() {
+    fun `archiveOldQag - when has Qag with status MODERATED REJECTED and moderatedDate is one second after the reset date - should return FAILURE`() {
         // Given
         val qagId = UUID.randomUUID().toString()
         val qagInfo = mock(QagInfo::class.java).also {
@@ -202,7 +206,7 @@ internal class ArchiveOldQagUseCaseTest {
             given(it.moderatedDate).willReturn(LocalDateTime.of(2023, Month.JUNE, 8, 14, 0, 1).toDate())
         }
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
-        given(qagUpdatesRepository.getQagUpdates(qagInfo.id)).willReturn(qagUpdates)
+        given(qagUpdatesRepository.getQagUpdates(listOf(qagInfo.id))).willReturn(listOf(qagUpdates))
 
         // When
         val result = useCase.archiveOldQag()
@@ -210,11 +214,11 @@ internal class ArchiveOldQagUseCaseTest {
         // Then
         assertThat(result).isEqualTo(ArchiveQagListResult.FAILURE)
         then(qagInfoRepository).should(only()).getAllQagInfo()
-        then(qagUpdatesRepository).should(only()).getQagUpdates(qagInfo.id)
+        then(qagUpdatesRepository).should(only()).getQagUpdates(listOf(qagInfo.id))
     }
 
     @Test
-    fun `archiveOldQag - when has Qag with status MODERATED REJECTED and postDate is one second before the reset date and archiveQag returns SUCCESS- should return SUCCESS`() {
+    fun `archiveOldQag - when has Qag with status MODERATED REJECTED and moderatedDate is one second before the reset date and archiveQag returns SUCCESS- should return SUCCESS`() {
         // Given
         val qagId = UUID.randomUUID().toString()
         val qagInfo = mock(QagInfo::class.java).also {
@@ -227,7 +231,7 @@ internal class ArchiveOldQagUseCaseTest {
         }
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
         given(qagInfoRepository.archiveQag(qagInfo.id)).willReturn(QagArchiveResult.SUCCESS)
-        given(qagUpdatesRepository.getQagUpdates(qagInfo.id)).willReturn(qagUpdates)
+        given(qagUpdatesRepository.getQagUpdates(listOf(qagInfo.id))).willReturn(listOf(qagUpdates))
 
         // When
         val result = useCase.archiveOldQag()
@@ -238,7 +242,7 @@ internal class ArchiveOldQagUseCaseTest {
         then(qagInfoRepository).should(times(1)).archiveQag(qagInfo.id)
         then(qagInfoRepository).should(times(1)).deleteQagListFromCache(listOf(qagInfo.id))
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(qagUpdatesRepository).should(only()).getQagUpdates(qagInfo.id)
+        then(qagUpdatesRepository).should(only()).getQagUpdates(listOf(qagInfo.id))
     }
 
     private fun setupNowDate(dateTime: LocalDateTime) {

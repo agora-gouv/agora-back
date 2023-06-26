@@ -33,19 +33,23 @@ class QagUpdatesMapper {
         }
     }
 
-    fun toDomain(dto: QagUpdatesDTO): QagUpdates {
-        return QagUpdates(
-            qagId = dto.qagId.toString(),
-            qagStatus = when (dto.status) {
-                STATUS_OPEN -> QagStatus.OPEN
-                STATUS_ARCHIVED -> QagStatus.ARCHIVED
-                STATUS_MODERATED_ACCEPTED -> QagStatus.MODERATED_ACCEPTED
-                STATUS_MODERATED_REJECTED -> QagStatus.MODERATED_REJECTED
-                STATUS_SELECTED_FOR_RESPONSE -> QagStatus.SELECTED_FOR_RESPONSE
-                else -> throw IllegalArgumentException("Invalid QaG status : ${dto.status}")
-            },
-            userId = dto.userId.toString(),
-            moderatedDate = dto.moderatedDate,
-        )
+    fun toDomain(dto: QagUpdatesDTO): QagUpdates? {
+        return try {
+            QagUpdates(
+                qagId = dto.qagId.toString(),
+                qagStatus = when (dto.status) {
+                    STATUS_OPEN -> QagStatus.OPEN
+                    STATUS_ARCHIVED -> QagStatus.ARCHIVED
+                    STATUS_MODERATED_ACCEPTED -> QagStatus.MODERATED_ACCEPTED
+                    STATUS_MODERATED_REJECTED -> QagStatus.MODERATED_REJECTED
+                    STATUS_SELECTED_FOR_RESPONSE -> QagStatus.SELECTED_FOR_RESPONSE
+                    else -> throw IllegalArgumentException("Invalid QaG status : ${dto.status}")
+                },
+                userId = dto.userId.toString(),
+                moderatedDate = dto.moderatedDate,
+            )
+        } catch (e: IllegalArgumentException) {
+            null
+        }
     }
 }

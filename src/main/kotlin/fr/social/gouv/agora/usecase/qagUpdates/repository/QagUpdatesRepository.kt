@@ -5,7 +5,6 @@ import fr.social.gouv.agora.domain.QagUpdates
 
 interface QagUpdatesRepository {
     fun insertQagUpdates(qagInsertingUpdates: QagInsertingUpdates)
-    fun getQagUpdates(qagId: String): QagUpdates?
-    fun gelAllQagUpdates(): List<QagUpdates>
+    fun getQagUpdates(qagIdList: List<String>): List<QagUpdates>
 }
 

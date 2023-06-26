@@ -22,20 +22,24 @@ class ArchiveOldQagUseCase(
 
     fun archiveOldQag(): ArchiveQagListResult {
         val archivingStartTime = LocalDateTime.now(clock).minusDays(DAYS_BEFORE_ARCHIVING_QAG.toLong()).toDate()
-        val qagOldList = qagInfoRepository.getAllQagInfo()
+        val qagModeratedIdList = qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.MODERATED_ACCEPTED || qagInfo.status == QagStatus.MODERATED_REJECTED }
-            .filter { qagInfo ->
-                val qagUpdates = qagUpdatesRepository.getQagUpdates(qagInfo.id)
-                qagUpdates != null && qagUpdates.moderatedDate < archivingStartTime
-            }
-        return if (qagOldList.isNotEmpty()) {
-            val qagArchiveListStatus = qagOldList.map { qagInfo -> qagInfoRepository.archiveQag(qagInfo.id) }
-            if (QagArchiveResult.FAILURE in qagArchiveListStatus) ArchiveQagListResult.FAILURE
-            else {
-                qagInfoRepository.deleteQagListFromCache(qagOldList.map { qagInfo -> qagInfo.id })
-                ArchiveQagListResult.SUCCESS
-            }
-        } else ArchiveQagListResult.FAILURE
+            .map { qagInfo -> qagInfo.id }
+        return if (qagModeratedIdList.isEmpty())
+            ArchiveQagListResult.FAILURE
+        else {
+            val qagToArchiveList = qagUpdatesRepository.getQagUpdates(qagModeratedIdList)
+                .filter { qagUpdates -> qagUpdates.moderatedDate < archivingStartTime }
+            if (qagToArchiveList.isNotEmpty()) {
+                val qagArchiveListStatus =
+                    qagToArchiveList.map { qagUpdates -> qagInfoRepository.archiveQag(qagUpdates.qagId) }
+                if (QagArchiveResult.FAILURE in qagArchiveListStatus) ArchiveQagListResult.FAILURE
+                else {
+                    qagInfoRepository.deleteQagListFromCache(qagToArchiveList.map { qagUpdates -> qagUpdates.qagId })
+                    ArchiveQagListResult.SUCCESS
+                }
+            } else ArchiveQagListResult.FAILURE
+        }
     }
 }
 

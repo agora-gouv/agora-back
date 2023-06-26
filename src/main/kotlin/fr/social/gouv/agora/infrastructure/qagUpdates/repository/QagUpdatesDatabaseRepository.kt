@@ -10,6 +10,6 @@ import java.util.*
 @Repository
 interface QagUpdatesDatabaseRepository : CrudRepository<QagUpdatesDTO, UUID> {
 
-    @Query(value = "SELECT * FROM qag_updates WHERE qagId = :qagUUID LIMIT 1", nativeQuery = true)
-    fun getQagUpdates(@Param("qagUUID") qagUUID: UUID): QagUpdatesDTO?
+    @Query(value = "SELECT * FROM qag_updates WHERE qag_id in :qagUUIDList", nativeQuery = true)
+    fun getQagUpdates(@Param("qagUUIDList") qagUUIDList: List<UUID>): List<QagUpdatesDTO>
 }
