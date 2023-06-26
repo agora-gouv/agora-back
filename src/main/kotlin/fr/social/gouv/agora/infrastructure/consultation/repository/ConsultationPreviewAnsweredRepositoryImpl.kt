@@ -11,7 +11,7 @@ import java.util.*
 class ConsultationPreviewAnsweredRepositoryImpl(
     private val consultationDatabaseRepository: ConsultationDatabaseRepository,
     private val consultationAnsweredCacheRepository: ConsultationAnsweredCacheRepository,
-    private val mapper: ConsultationPreviewAnsweredMapper,
+    private val mapper: ConsultationPreviewAnsweredInfoMapper,
 ) : ConsultationPreviewAnsweredRepository {
 
     override fun getConsultationAnsweredList(userId: String): List<ConsultationPreviewAnsweredInfo> {
