@@ -40,6 +40,12 @@ class QagInfoCacheRepository(private val cacheManager: CacheManager) {
         } ?: throw IllegalStateException("Qag cache has not been initialized")
     }
 
+    fun deleteQagList(qagUUIDList: List<UUID>) {
+        getAllQagDTOFromCache()?.let { allQagDTO ->
+            initializeCache(deleteListDTO(allQagDTO = allQagDTO, qagUUIDList = qagUUIDList))
+        } ?: throw IllegalStateException("Qag cache has not been initialized")
+    }
+
     private fun getCache() = cacheManager.getCache(QAG_CACHE_NAME)
 
     @Suppress("UNCHECKED_CAST")
@@ -54,5 +60,9 @@ class QagInfoCacheRepository(private val cacheManager: CacheManager) {
     private fun replaceUpdatedDTO(allQagDTO: List<QagDTO>, updatedQagDTO: QagDTO) = allQagDTO.map { qagDTO ->
         if (qagDTO.id == updatedQagDTO.id) updatedQagDTO
         else qagDTO
+    }
+
+    private fun deleteListDTO(allQagDTO: List<QagDTO>, qagUUIDList: List<UUID>) = allQagDTO.filterNot { qagDTO ->
+        qagDTO.id in qagUUIDList
     }
 }

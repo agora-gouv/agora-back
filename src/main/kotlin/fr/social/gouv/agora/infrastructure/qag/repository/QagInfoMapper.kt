@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.social.gouv.agora.infrastructure.utils.UuidUtils
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.DELETED_UUID
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import org.springframework.stereotype.Component
 import java.util.*
@@ -65,6 +66,14 @@ class QagInfoMapper {
                 QagStatus.MODERATED_REJECTED -> STATUS_MODERATED_REJECTED
                 QagStatus.SELECTED_FOR_RESPONSE -> STATUS_SELECTED_FOR_RESPONSE
             }
+        )
+    }
+
+    fun archiveQag(dto: QagDTO): QagDTO{
+        return dto.copy(
+            status = STATUS_ARCHIVED,
+            username = "",
+            userId = DELETED_UUID,
         )
     }
 }
