@@ -4,13 +4,21 @@ data class ConsultationUpdate(
     val status: ConsultationStatus,
     val description: String,
     val explanationsTitle: String?,
-    val explanations: List<Explanation>,
-    val videoTitle: String?,
-    val videoIntro: String?,
-    val videoUrl: String?,
-    val videoWidth: String?,
-    val videoHeight: String?,
-    val videoTranscription: String?,
-    val conclusionTitle: String?,
-    val conclusionDescription: String?,
+    val explanations: List<Explanation>?,
+    val video: Video?,
+    val conclusion: Conclusion?,
+)
+
+data class Video(
+    val title: String,
+    val intro: String,
+    val url: String,
+    val width: Int,
+    val height: Int,
+    val transcription: String,
+)
+
+data class Conclusion(
+    val title: String,
+    val description: String,
 )

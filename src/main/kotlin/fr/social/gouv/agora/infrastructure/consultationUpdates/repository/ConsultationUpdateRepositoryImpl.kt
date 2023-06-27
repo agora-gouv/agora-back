@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.consultationUpdates.repository
 import fr.social.gouv.agora.domain.ConsultationUpdate
 import fr.social.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateDTO
 import fr.social.gouv.agora.infrastructure.consultationUpdates.dto.ExplanationDTO
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.NOT_FOUND_UUID
 import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -16,10 +17,6 @@ class ConsultationUpdateRepositoryImpl(
     private val mapper: ConsultationUpdateMapper,
 ) : ConsultationUpdateRepository {
 
-    companion object {
-        private const val CONSULTATION_UPDATE_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
-    }
-
     override fun getConsultationUpdate(consultationId: String): ConsultationUpdate? {
         return try {
             val consultationUUID = UUID.fromString(consultationId)
@@ -29,6 +26,7 @@ class ConsultationUpdateRepositoryImpl(
                 ConsultationUpdatesCacheRepository.CacheResult.CacheNotInitialized -> getConsultationUpdateFromDatabase(
                     consultationUUID
                 )
+
                 ConsultationUpdatesCacheRepository.CacheResult.CachedConsultationUpdateNotFound -> null
                 is ConsultationUpdatesCacheRepository.CacheResult.CachedConsultationUpdate -> cacheResult.consultationUpdateDTO
             }?.let { consultationUpdateDTO ->
@@ -49,7 +47,10 @@ class ConsultationUpdateRepositoryImpl(
 
     private fun getExplanations(consultationUpdateUUId: UUID): List<ExplanationDTO> {
         return when (val cacheResult = explanationCacheRepository.getExplanationList(consultationUpdateUUId)) {
-            ExplanationCacheRepository.CacheResult.CacheNotInitialized -> getExplanationsFromDatabase(consultationUpdateUUId)
+            ExplanationCacheRepository.CacheResult.CacheNotInitialized -> getExplanationsFromDatabase(
+                consultationUpdateUUId
+            )
+
             is ExplanationCacheRepository.CacheResult.CachedExplanationList -> cacheResult.explanationDTOList
         }
     }
@@ -62,10 +63,10 @@ class ConsultationUpdateRepositoryImpl(
 
 
     private fun createConsultationUpdateNotFound() = ConsultationUpdateDTO(
-        id = UUID.fromString(CONSULTATION_UPDATE_NOT_FOUND_ID),
+        id = NOT_FOUND_UUID,
         step = 0,
         description = "",
-        consultationId = UUID.fromString(CONSULTATION_UPDATE_NOT_FOUND_ID),
+        consultationId = NOT_FOUND_UUID,
         explanationsTitle = null,
         videoTitle = null,
         videoIntro = null,
