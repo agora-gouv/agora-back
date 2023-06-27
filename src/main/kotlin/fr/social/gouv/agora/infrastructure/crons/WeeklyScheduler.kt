@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.infrastructure.qagSelection
+package fr.social.gouv.agora.infrastructure.crons
 
 import fr.social.gouv.agora.usecase.qagArchive.ArchiveOldQagUseCase
 import fr.social.gouv.agora.usecase.qagSelection.SelectMostPopularQagUseCase
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
-class SelectMostPopularQagAndArchiveOldQagScheduler(
+class WeeklyScheduler(
     private val selectMostPopularQagUseCase: SelectMostPopularQagUseCase,
     private val archiveOldQagUseCase: ArchiveOldQagUseCase,
 ) {

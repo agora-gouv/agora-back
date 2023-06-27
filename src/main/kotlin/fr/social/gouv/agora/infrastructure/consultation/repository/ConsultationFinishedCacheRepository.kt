@@ -37,6 +37,10 @@ class ConsultationFinishedCacheRepository(private val cacheManager: CacheManager
         )
     }
 
+    fun clearCache() {
+        getCache()?.evict(CONSULTATION_FINISHED_CACHE_KEY)
+    }
+
     private fun getCache() = cacheManager.getCache(CONSULTATION_FINISHED_CACHE_NAME)
 
 }

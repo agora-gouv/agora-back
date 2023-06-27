@@ -36,5 +36,9 @@ class ConsultationOngoingCacheRepository(private val cacheManager: CacheManager)
         )
     }
 
+    fun clearCache() {
+        getCache()?.evict(CONSULTATION_ONGOING_CACHE_KEY)
+    }
+
     private fun getCache() = cacheManager.getCache(CONSULTATION_LIST_CACHE_NAME)
 }

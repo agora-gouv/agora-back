@@ -19,6 +19,10 @@ class ConsultationPreviewFinishedRepositoryImpl(
         }.map(mapper::toDomain)
     }
 
+    override fun clearCache() {
+        cacheRepository.clearCache()
+    }
+
     private fun getConsultationFinishedFromDatabase(): List<ConsultationDTO> {
         return databaseRepository.getConsultationFinishedList().also { consultationDTOList ->
             cacheRepository.insertConsultationFinishedList(consultationDTOList)

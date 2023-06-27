@@ -8,23 +8,27 @@ import org.springframework.stereotype.Component
 
 @Component
 class ConsultationPreviewOngoingRepositoryImpl(
-    private val consultationDatabaseRepository: ConsultationDatabaseRepository,
-    private val consultationOngoingCacheRepository: ConsultationOngoingCacheRepository,
+    private val databaseRepository: ConsultationDatabaseRepository,
+    private val cacheRepository: ConsultationOngoingCacheRepository,
     private val mapper: ConsultationPreviewOngoingInfoMapper,
 ) : ConsultationPreviewOngoingRepository {
 
     override fun getConsultationPreviewOngoingList(): List<ConsultationPreviewOngoingInfo> {
         val consultationOngoingDTOList =
-            when (val cacheResult = consultationOngoingCacheRepository.getConsultationOngoingList()) {
+            when (val cacheResult = cacheRepository.getConsultationOngoingList()) {
                 CacheResult.CacheNotInitialized -> getConsultationOngoingListFromDatabase()
                 is CacheResult.CachedConsultationOngoingList -> cacheResult.consultationOngoingListDTO
             }
         return consultationOngoingDTOList.map { dto -> mapper.toDomain(dto) }
     }
 
+    override fun clearCache() {
+        cacheRepository.clearCache()
+    }
+
     private fun getConsultationOngoingListFromDatabase(): List<ConsultationDTO> {
-        val consultationOngoingListDTO = consultationDatabaseRepository.getConsultationOngoingList()
-        consultationOngoingCacheRepository.insertConsultationOngoingList(consultationOngoingListDTO)
+        val consultationOngoingListDTO = databaseRepository.getConsultationOngoingList()
+        cacheRepository.insertConsultationOngoingList(consultationOngoingListDTO)
         return consultationOngoingListDTO
     }
 
