@@ -4,4 +4,6 @@ data class FeatureFlags(
     val isAskQuestionEnabled: Boolean,
     val isSignUpEnabled: Boolean,
     val isLoginEnabled: Boolean,
+    val isQagSelectEnabled: Boolean,
+    val isQagArchiveEnabled: Boolean,
 )

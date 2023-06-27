@@ -1,8 +1,11 @@
 package fr.social.gouv.agora.usecase.qagArchive
 
+import fr.social.gouv.agora.TestUtils
+import fr.social.gouv.agora.domain.FeatureFlags
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagUpdates
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
+import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagArchiveResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -13,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -24,8 +26,10 @@ import java.util.*
 @SpringBootTest
 internal class ArchiveOldQagUseCaseTest {
 
-    @Autowired
     private lateinit var useCase: ArchiveOldQagUseCase
+
+    @MockBean
+    private lateinit var featureFlagsRepository: FeatureFlagsRepository
 
     @MockBean
     private lateinit var qagInfoRepository: QagInfoRepository
@@ -34,7 +38,37 @@ internal class ArchiveOldQagUseCaseTest {
     private lateinit var qagUpdatesRepository: QagUpdatesRepository
 
     @BeforeEach
-    fun setUpDate() = setupNowDate(LocalDateTime.of(2023, Month.JUNE, 22, 14, 0, 0))
+    fun setUp() {
+        useCase = ArchiveOldQagUseCase(
+            featureFlagsRepository = featureFlagsRepository,
+            qagInfoRepository = qagInfoRepository,
+            qagUpdatesRepository = qagUpdatesRepository,
+            clock = TestUtils.getFixedClock(LocalDateTime.of(2023, Month.JUNE, 22, 14, 0, 0)),
+        )
+
+        val featureFlags = mock(FeatureFlags::class.java).also {
+            given(it.isQagArchiveEnabled).willReturn(true)
+        }
+        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+    }
+
+    @Test
+    fun `archiveOldQag - when feature disabled - should do nothing and return FAILURE`() {
+        // Given
+        val featureFlags = mock(FeatureFlags::class.java).also {
+            given(it.isQagArchiveEnabled).willReturn(false)
+        }
+        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+
+        // When
+        val result = useCase.archiveOldQag()
+
+        // Then
+        assertThat(result).isEqualTo(ArchiveQagListResult.FAILURE)
+        then(featureFlagsRepository).should(only()).getFeatureFlags()
+        then(qagInfoRepository).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).shouldHaveNoInteractions()
+    }
 
     @Test
     fun `archiveOldQag - when no Qag - should return FAILURE`() {
@@ -245,11 +279,4 @@ internal class ArchiveOldQagUseCaseTest {
         then(qagUpdatesRepository).should(only()).getQagUpdates(listOf(qagInfo.id))
     }
 
-    private fun setupNowDate(dateTime: LocalDateTime) {
-        useCase = ArchiveOldQagUseCase(
-            qagInfoRepository = qagInfoRepository,
-            qagUpdatesRepository = qagUpdatesRepository,
-            clock = Clock.fixed(dateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault()),
-        )
-    }
 }

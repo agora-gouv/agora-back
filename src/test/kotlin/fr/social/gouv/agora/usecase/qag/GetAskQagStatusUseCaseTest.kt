@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.qag
 
+import fr.social.gouv.agora.TestUtils
 import fr.social.gouv.agora.domain.FeatureFlags
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
@@ -16,10 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.Clock
 import java.time.LocalDateTime
 import java.time.Month
-import java.time.ZoneId
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
@@ -147,18 +146,21 @@ internal class GetAskQagStatusUseCaseTest {
         serverDate: LocalDateTime,
         expectedStatus: AskQagStatus,
     ) {
+        useCase = GetAskQagStatusUseCase(
+            qagInfoRepository = qagInfoRepository,
+            featureFlagsRepository = featureFlagsRepository,
+            clock = TestUtils.getFixedClock(serverDate),
+        )
+
         val featureFlags = mock(FeatureFlags::class.java).also {
             given(it.isAskQuestionEnabled).willReturn(true)
         }
         given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
 
         val qagInfo = mock(QagInfo::class.java).also {
-            // Thursday
             given(it.date).willReturn(qagPostDate.toDate())
             given(it.userId).willReturn(userId)
         }
-        // Friday
-        setupNowDate(serverDate)
         given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
 
         // When
@@ -169,13 +171,6 @@ internal class GetAskQagStatusUseCaseTest {
         then(qagInfoRepository).should(only()).getAllQagInfo()
     }
 
-    private fun setupNowDate(dateTime: LocalDateTime) {
-        useCase = GetAskQagStatusUseCase(
-            qagInfoRepository = qagInfoRepository,
-            featureFlagsRepository = featureFlagsRepository,
-            clock = Clock.fixed(dateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault()),
-        )
-    }
 }
 
 
