@@ -15,6 +15,24 @@ data class ConsultationUpdateDTO(
     val description: String,
     @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
     val consultationId: UUID,
+    @Column(columnDefinition = "TEXT")
+    val explanationsTitle: String?,
+    @Column(columnDefinition = "TEXT")
+    val videoTitle: String?,
+    @Column(columnDefinition = "TEXT")
+    val videoIntro: String?,
+    @Column(columnDefinition = "TEXT")
+    val videoUrl: String?,
+    @Column(columnDefinition = "TEXT")
+    val videoWidth: String?,
+    @Column(columnDefinition = "TEXT")
+    val videoHeight: String?,
+    @Column(columnDefinition = "TEXT")
+    val videoTranscription: String?,
+    @Column(columnDefinition = "TEXT")
+    val conclusionTitle: String?,
+    @Column(columnDefinition = "TEXT")
+    val conclusionDescription: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -28,6 +46,9 @@ data class ConsultationUpdateDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , step = $step , description = $description , consultationId = $consultationId )"
+        return this::class.simpleName + """(id = $id , step = $step , description = $description , consultationId = $consultationId , 
+            explanationsTitle = $explanationsTitle , videoTitle = $videoTitle , videoIntro = $videoIntro , videoUrl = $videoUrl , 
+            videoWidth = $videoWidth , videoHeight = $videoHeight , videoTranscription = $videoTranscription , 
+            conclusionTitle = $conclusionTitle , conclusionDescription = $conclusionDescription)"""
     }
 }

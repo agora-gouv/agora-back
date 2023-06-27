@@ -2,71 +2,80 @@ package fr.social.gouv.agora.infrastructure.consultationUpdates.repository
 
 import fr.social.gouv.agora.domain.ConsultationUpdate
 import fr.social.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateDTO
-import fr.social.gouv.agora.infrastructure.consultationUpdates.repository.ConsultationUpdateRepositoryImpl.Companion.CONSULTATION_UPDATE_CACHE
+import fr.social.gouv.agora.infrastructure.consultationUpdates.dto.ExplanationDTO
 import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
-import org.springframework.cache.CacheManager
-import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-@CacheConfig(cacheNames = [CONSULTATION_UPDATE_CACHE])
 class ConsultationUpdateRepositoryImpl(
-    private val databaseRepository: ConsultationUpdateDatabaseRepository,
+    private val consultationUpdateDatabaseRepository: ConsultationUpdateDatabaseRepository,
+    private val consultationUpdatesCacheRepository: ConsultationUpdatesCacheRepository,
+    private val explanationCacheRepository: ExplanationCacheRepository,
+    private val explanationDatabaseRepository: ExplanationDatabaseRepository,
     private val mapper: ConsultationUpdateMapper,
-    private val cacheManager: CacheManager,
 ) : ConsultationUpdateRepository {
 
     companion object {
-        const val CONSULTATION_UPDATE_CACHE = "consultationUpdateCache"
         private const val CONSULTATION_UPDATE_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
     override fun getConsultationUpdate(consultationId: String): ConsultationUpdate? {
         return try {
             val consultationUUID = UUID.fromString(consultationId)
-            val cacheResult = getConsultationUpdateFromCache(consultationUUID)
+            val cacheResult = consultationUpdatesCacheRepository.getConsultationUpdate(consultationUUID)
 
             when (cacheResult) {
-                CacheResult.CacheNotInitialized -> getConsultationUpdateFromDatabase(consultationUUID)
-                CacheResult.CachedConsultationUpdateNotFound -> null
-                is CacheResult.CachedConsultationUpdate -> cacheResult.consultationUpdateDTO
-            }?.let { consultationUpdateDTO -> mapper.toDomain(consultationUpdateDTO) }
+                ConsultationUpdatesCacheRepository.CacheResult.CacheNotInitialized -> getConsultationUpdateFromDatabase(
+                    consultationUUID
+                )
+                ConsultationUpdatesCacheRepository.CacheResult.CachedConsultationUpdateNotFound -> null
+                is ConsultationUpdatesCacheRepository.CacheResult.CachedConsultationUpdate -> cacheResult.consultationUpdateDTO
+            }?.let { consultationUpdateDTO ->
+                val explanationList = getExplanations(consultationUpdateDTO.id)
+                mapper.toDomain(consultationUpdateDTO, explanationList)
+            }
         } catch (e: IllegalArgumentException) {
             null
         }
     }
 
-    private fun getCache() = cacheManager.getCache(CONSULTATION_UPDATE_CACHE)
+    private fun getConsultationUpdateFromDatabase(consultationUUID: UUID): ConsultationUpdateDTO? {
+        val consultationUpdateDTO = consultationUpdateDatabaseRepository.getLastConsultationUpdate(consultationUUID)
+        val putDto = consultationUpdateDTO ?: createConsultationUpdateNotFound()
+        consultationUpdatesCacheRepository.insertConsultationUpdate(consultationUUID, putDto)
+        return consultationUpdateDTO
+    }
 
-    private fun getConsultationUpdateFromCache(consultationUUID: UUID): CacheResult {
-        val consultationUpdateDTO = getCache()?.get(consultationUUID.toString(), ConsultationUpdateDTO::class.java)
-
-        return when (consultationUpdateDTO?.id?.toString()) {
-            null -> CacheResult.CacheNotInitialized
-            CONSULTATION_UPDATE_NOT_FOUND_ID -> CacheResult.CachedConsultationUpdateNotFound
-            else -> CacheResult.CachedConsultationUpdate(consultationUpdateDTO)
+    private fun getExplanations(consultationUpdateUUId: UUID): List<ExplanationDTO> {
+        return when (val cacheResult = explanationCacheRepository.getExplanationList(consultationUpdateUUId)) {
+            ExplanationCacheRepository.CacheResult.CacheNotInitialized -> getExplanationsFromDatabase(consultationUpdateUUId)
+            is ExplanationCacheRepository.CacheResult.CachedExplanationList -> cacheResult.explanationDTOList
         }
     }
 
-    private fun getConsultationUpdateFromDatabase(consultationUUID: UUID): ConsultationUpdateDTO? {
-        val consultationUpdateDTO = databaseRepository.getLastConsultationUpdate(consultationUUID)
-        val putDto = consultationUpdateDTO ?: createConsultationUpdateNotFound()
-        getCache()?.put(consultationUUID.toString(), putDto)
-        return consultationUpdateDTO
+    private fun getExplanationsFromDatabase(consultationUpdateUUId: UUID): List<ExplanationDTO> {
+        val explanationDTOList = explanationDatabaseRepository.getExplanationList(consultationUpdateUUId)
+        explanationCacheRepository.insertExplanationList(consultationUpdateUUId, explanationDTOList)
+        return explanationDTOList
     }
+
 
     private fun createConsultationUpdateNotFound() = ConsultationUpdateDTO(
         id = UUID.fromString(CONSULTATION_UPDATE_NOT_FOUND_ID),
         step = 0,
         description = "",
         consultationId = UUID.fromString(CONSULTATION_UPDATE_NOT_FOUND_ID),
+        explanationsTitle = null,
+        videoTitle = null,
+        videoIntro = null,
+        videoUrl = null,
+        videoWidth = null,
+        videoHeight = null,
+        videoTranscription = null,
+        conclusionTitle = null,
+        conclusionDescription = null,
     )
 
 }
 
-private sealed class CacheResult {
-    data class CachedConsultationUpdate(val consultationUpdateDTO: ConsultationUpdateDTO) : CacheResult()
-    object CachedConsultationUpdateNotFound : CacheResult()
-    object CacheNotInitialized : CacheResult()
-}
