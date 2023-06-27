@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.consultation
 
+import fr.social.gouv.agora.TestUtils
 import fr.social.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.social.gouv.agora.domain.ConsultationPreviewOngoingInfo
 import fr.social.gouv.agora.domain.Thematique
@@ -58,7 +59,7 @@ internal class ConsultationPreviewOngoingMapperTest {
                 whenTestDescription = "consultationEndDate is 15 days in the future from today",
                 serverDate = LocalDate.of(2000, Month.JANUARY, 1),
                 consultationEndDate = LocalDate.of(2000, Month.JANUARY, 16),
-                expectedHighlightLabel = "Plus que 15 jours",
+                expectedHighlightLabel = "Plus que 15 jours !",
             ),
             input(
                 whenTestDescription = "consultationEndDate is 1 days from today",
@@ -103,8 +104,8 @@ internal class ConsultationPreviewOngoingMapperTest {
         consultationEndDate: LocalDate,
         expectedHighlightLabel: String?,
     ) {
-        setupNowDate(serverDate)
         // Given
+        mapper = ConsultationPreviewOngoingMapper(clock = TestUtils.getFixedClock(serverDate))
         val endDate = consultationEndDate.toDate()
         val consultationPreviewOngoingInfo = consultationPreviewOngoingInfo.copy(endDate = endDate)
 
@@ -121,12 +122,6 @@ internal class ConsultationPreviewOngoingMapperTest {
                 endDate = endDate,
                 highlightLabel = expectedHighlightLabel,
             )
-        )
-    }
-
-    private fun setupNowDate(date: LocalDate) {
-        mapper = ConsultationPreviewOngoingMapper(
-            clock = Clock.fixed(date.toDate().toInstant(), ZoneId.systemDefault()),
         )
     }
 

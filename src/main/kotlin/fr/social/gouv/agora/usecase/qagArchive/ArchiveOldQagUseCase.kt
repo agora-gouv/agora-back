@@ -2,6 +2,7 @@ package fr.social.gouv.agora.usecase.qagArchive
 
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
+import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagArchiveResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
@@ -11,6 +12,7 @@ import java.time.LocalDateTime
 
 @Service
 class ArchiveOldQagUseCase(
+    private val featureFlagsRepository: FeatureFlagsRepository,
     private val qagInfoRepository: QagInfoRepository,
     private val qagUpdatesRepository: QagUpdatesRepository,
     private val clock: Clock,
@@ -21,6 +23,8 @@ class ArchiveOldQagUseCase(
     }
 
     fun archiveOldQag(): ArchiveQagListResult {
+        if (featureFlagsRepository.getFeatureFlags().isQagArchiveEnabled.not()) return ArchiveQagListResult.FAILURE
+
         val archivingStartTime = LocalDateTime.now(clock).minusDays(DAYS_BEFORE_ARCHIVING_QAG.toLong()).toDate()
         val qagModeratedIdList = qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.MODERATED_ACCEPTED || qagInfo.status == QagStatus.MODERATED_REJECTED }

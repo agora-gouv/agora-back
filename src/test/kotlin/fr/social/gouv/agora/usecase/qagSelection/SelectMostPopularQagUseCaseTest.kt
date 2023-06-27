@@ -1,13 +1,16 @@
 package fr.social.gouv.agora.usecase.qagSelection
 
+import fr.social.gouv.agora.domain.FeatureFlags
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQagInfo
+import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.GetQagWithSupportAndThematiqueUseCase
 import fr.social.gouv.agora.usecase.qag.QagFilters
 import fr.social.gouv.agora.usecase.qag.QagInfoWithSupportAndThematique
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -24,6 +27,9 @@ internal class SelectMostPopularQagUseCaseTest {
     private lateinit var useCase: SelectMostPopularQagUseCase
 
     @MockBean
+    private lateinit var featureFlagsRepository: FeatureFlagsRepository
+
+    @MockBean
     private lateinit var qagListUseCase: GetQagWithSupportAndThematiqueUseCase
 
     @MockBean
@@ -34,6 +40,33 @@ internal class SelectMostPopularQagUseCaseTest {
 
     @MockBean
     private lateinit var randomQagSelector: RandomQagSelector
+
+    @BeforeEach
+    fun setUp() {
+        val featureFlags = mock(FeatureFlags::class.java).also {
+            given(it.isQagSelectEnabled).willReturn(true)
+        }
+        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+    }
+
+    @Test
+    fun `putMostPopularQagInSelectedStatus - when feature is disabled - should do nothing`() {
+        // Given
+        val featureFlags = mock(FeatureFlags::class.java).also {
+            given(it.isQagSelectEnabled).willReturn(false)
+        }
+        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+
+        // When
+        useCase.putMostPopularQagInSelectedStatus()
+
+        // Then
+        then(featureFlagsRepository).should(only()).getFeatureFlags()
+        then(filterGenerator).shouldHaveNoInteractions()
+        then(qagListUseCase).shouldHaveNoInteractions()
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(randomQagSelector).shouldHaveNoMoreInteractions()
+    }
 
     @Test
     fun `putMostPopularQagInSelectedStatus - when has no qag - should do nothing`() {
