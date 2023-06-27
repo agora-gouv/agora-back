@@ -14,7 +14,8 @@ interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID>
 
     @Query(
         value = """SELECT * FROM consultations 
-            WHERE end_date < CURRENT_DATE
+            WHERE CURRENT_DATE < end_date
+            AND (start_date IS NULL OR CURRENT_DATE >= start_date) 
             ORDER BY end_date ASC""",
         nativeQuery = true
     )
@@ -22,7 +23,7 @@ interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID>
 
     @Query(
         value = """SELECT * FROM consultations 
-            WHERE end_date >= CURRENT_DATE
+            WHERE CURRENT_DATE >= end_date
             ORDER BY end_date ASC
             LIMIT 10""",
         nativeQuery = true
