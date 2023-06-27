@@ -69,4 +69,15 @@ internal class ConsultationPreviewFinishedRepositoryImplTest {
         then(databaseRepository).shouldHaveNoInteractions()
     }
 
+    @Test
+    fun `clearCache - should only clear cache`() {
+        // When
+        repository.clearCache()
+
+        // Then
+        then(cacheRepository).should(only()).clearCache()
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
 }

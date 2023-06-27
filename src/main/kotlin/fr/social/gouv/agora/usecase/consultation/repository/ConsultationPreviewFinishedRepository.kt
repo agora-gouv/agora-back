@@ -4,4 +4,5 @@ import fr.social.gouv.agora.domain.ConsultationPreviewFinishedInfo
 
 interface ConsultationPreviewFinishedRepository {
     fun getConsultationFinishedList(): List<ConsultationPreviewFinishedInfo>
+    fun clearCache()
 }

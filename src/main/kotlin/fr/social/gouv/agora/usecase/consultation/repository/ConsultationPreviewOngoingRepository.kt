@@ -4,4 +4,5 @@ import fr.social.gouv.agora.domain.ConsultationPreviewOngoingInfo
 
 interface ConsultationPreviewOngoingRepository {
     fun getConsultationPreviewOngoingList(): List<ConsultationPreviewOngoingInfo>
+    fun clearCache()
 }
