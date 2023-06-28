@@ -23,10 +23,8 @@ data class ConsultationUpdateDTO(
     val videoIntro: String?,
     @Column(columnDefinition = "TEXT")
     val videoUrl: String?,
-    @Column(columnDefinition = "TEXT")
-    val videoWidth: String?,
-    @Column(columnDefinition = "TEXT")
-    val videoHeight: String?,
+    val videoWidth: Int?,
+    val videoHeight: Int?,
     @Column(columnDefinition = "TEXT")
     val videoTranscription: String?,
     @Column(columnDefinition = "TEXT")

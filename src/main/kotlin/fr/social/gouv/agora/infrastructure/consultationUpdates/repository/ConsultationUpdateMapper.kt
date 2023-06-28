@@ -27,8 +27,8 @@ class ConsultationUpdateMapper(private val explanationMapper: ExplanationMapper)
                     title = dto.videoTitle ?: "",
                     intro = dto.videoIntro ?: "",
                     url = dto.videoUrl,
-                    width = dto.videoWidth?.toInt() ?: 0,
-                    height = dto.videoHeight?.toInt() ?: 0,
+                    width = dto.videoWidth?: 0,
+                    height = dto.videoHeight?: 0,
                     transcription = dto.videoTranscription ?: "",
                 )
             },
