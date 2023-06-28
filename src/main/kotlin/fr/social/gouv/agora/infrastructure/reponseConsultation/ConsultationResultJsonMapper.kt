@@ -24,6 +24,10 @@ class ConsultationResultJsonMapper {
                     ConsultationStatus.EXECUTION -> 3
                 },
                 description = domain.lastUpdate.description,
+                explanationsTitle = domain.lastUpdate.explanationsTitle,
+                explanations = domain.lastUpdate.explanations?.map(::toExplanationJson),
+                video = domain.lastUpdate.video?.let { video -> toVideoJson(video) },
+                conclusion = domain.lastUpdate.conclusion?.let { conclusion -> toConclusionJson(conclusion) },
             )
         )
     }
@@ -43,4 +47,31 @@ class ConsultationResultJsonMapper {
         )
     }
 
+    private fun toExplanationJson(domain: Explanation): ExplanationJson {
+        return ExplanationJson(
+            isTogglable = domain.isTogglable,
+            title = domain.title,
+            intro = domain.intro,
+            imageUrl = domain.imageUrl,
+            description = domain.description,
+        )
+    }
+
+    private fun toVideoJson(domain: Video): VideoJson {
+        return VideoJson(
+            title = domain.title,
+            intro = domain.intro,
+            videoUrl = domain.url,
+            videoWidth = domain.width,
+            videoHeight = domain.height,
+            transcription = domain.transcription,
+        )
+    }
+
+    private fun toConclusionJson(domain: Conclusion): ConclusionJson {
+        return ConclusionJson(
+            title = domain.title,
+            description = domain.description,
+        )
+    }
 }
