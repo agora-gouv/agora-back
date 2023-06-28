@@ -6,10 +6,10 @@ import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.login.LoginUseCase
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -19,27 +19,41 @@ class TestNotificationController(
 ) {
 
     @GetMapping("/moderate/testNotification")
-    fun testNotification(@RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<*> {
-        return loginUseCase.findUser(JwtTokenUtils.extractUserIdFromHeader(authorizationHeader))?.let { userInfo ->
-            val message = Message.builder()
+    fun testNotification(
+        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestParam("userId") userId: String?,
+        @RequestParam("title") title: String?,
+        @RequestParam("description") description: String?,
+        @RequestParam("type") type: String?,
+        @RequestParam("qagId") qagId: String?,
+        @RequestParam("consultationId") consultationId: String?,
+    ): ResponseEntity<*> {
+        val usedUserId =
+            userId.takeUnless { it.isNullOrBlank() } ?: JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val usedTitle = title.takeUnless { it.isNullOrBlank() } ?: "Titre de la notification"
+        val usedDescription = title.takeUnless { it.isNullOrBlank() } ?: "Description de la notification"
+
+        return loginUseCase.findUser(usedUserId)?.let { userInfo ->
+            val messageBuilder = Message.builder()
                 .setNotification(
                     Notification.builder()
-                        .setTitle("Titre de la notification")
-                        .setBody("Description de la notification")
+                        .setTitle(usedTitle)
+                        .setBody(usedDescription)
                         .build()
                 )
                 .setToken(userInfo.fcmToken)
-                .putData("type", "qagDetails")
-                .putData("qagId", "996436ca-ee69-11ed-a05b-0242ac120003")
-                .build()
+            type.takeUnless { it.isNullOrBlank() }.let { messageBuilder.putData("type", type) }
+            qagId.takeUnless { it.isNullOrBlank() }.let { messageBuilder.putData("qagId", qagId) }
+            consultationId.takeUnless { it.isNullOrBlank() }
+                .let { messageBuilder.putData("consultationId", consultationId) }
 
             try {
-                FirebaseMessaging.getInstance().send(message)
+                FirebaseMessaging.getInstance().send(messageBuilder.build())
                 ResponseEntity.ok().body(Unit)
             } catch (e: FirebaseMessagingException) {
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Unit)
+                ResponseEntity.badRequest().body(Unit)
             }
-        } ?: ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Unit)
+        } ?: ResponseEntity.badRequest().body(Unit)
     }
 
 }
