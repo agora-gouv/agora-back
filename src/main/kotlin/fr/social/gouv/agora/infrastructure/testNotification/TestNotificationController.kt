@@ -31,7 +31,7 @@ class TestNotificationController(
         val usedUserId =
             userId.takeUnless { it.isNullOrBlank() } ?: JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val usedTitle = title.takeUnless { it.isNullOrBlank() } ?: "Titre de la notification"
-        val usedDescription = title.takeUnless { it.isNullOrBlank() } ?: "Description de la notification"
+        val usedDescription = description.takeUnless { it.isNullOrBlank() } ?: "Description de la notification"
 
         return loginUseCase.findUser(usedUserId)?.let { userInfo ->
             val messageBuilder = Message.builder()
