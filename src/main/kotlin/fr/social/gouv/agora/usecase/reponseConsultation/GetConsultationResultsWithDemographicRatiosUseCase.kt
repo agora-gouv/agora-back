@@ -54,7 +54,7 @@ class GetConsultationResultsWithDemographicInfoUseCase(
                     demographicData = demographicData,
                 )
             },
-            demographicInfo = buildDemographicInfo(demographicData),
+            demographicInfo = buildDemographicInfo(demographicData, participantCount),
         )
     }
 
@@ -83,39 +83,62 @@ class GetConsultationResultsWithDemographicInfoUseCase(
         consultationResponseList: List<ReponseConsultation>,
         demographicData: Map<String, Profile?>,
     ): ChoiceResultWithDemographicInfo {
-        val choixResponses = consultationResponseList.filter {
-            it.questionId == question.id && it.choiceId == choix.id
-        }
+        val questionResponses = consultationResponseList.filter { it.questionId == question.id }
+        val choixResponses = questionResponses.filter { it.choiceId == choix.id }
 
         return ChoiceResultWithDemographicInfo(
             choixPossible = choix,
-            ratio = (choixResponses.size.toDouble() / participantCount).takeUnless { it.isNaN() } ?: 0.0,
+            countAndRatio = getCountAndRatio(
+                count = choixResponses.size,
+                allCount = participantCount,
+            ),
             demographicInfo = buildDemographicInfo(
-                demographicData.filter { (userId, _) ->
+                demographicData = demographicData.filter { (userId, _) ->
                     choixResponses.any { choixResponse -> choixResponse.userId == userId }
-                }
+                },
+                participantCount = questionResponses.map { it.participationId }.toSet().size,
             ),
         )
     }
 
-    private fun buildDemographicInfo(demographicData: Map<String, Profile?>): DemographicInfo {
+    private fun buildDemographicInfo(
+        demographicData: Map<String, Profile?>,
+        participantCount: Int,
+    ): DemographicInfo {
         return DemographicInfo(
-            genderCount = buildCountMap(demographicData) { profile -> profile?.gender },
-            yearOfBirthCount = buildCountMap(demographicData) { profile -> profile?.yearOfBirth },
-            departmentCount = buildCountMap(demographicData) { profile -> profile?.department },
-            cityTypeCount = buildCountMap(demographicData) { profile -> profile?.cityType },
-            jobCategoryCount = buildCountMap(demographicData) { profile -> profile?.jobCategory },
-            voteFrequencyCount = buildCountMap(demographicData) { profile -> profile?.voteFrequency },
-            publicMeetingFrequencyCount = buildCountMap(demographicData) { profile -> profile?.publicMeetingFrequency },
-            consultationFrequencyCount = buildCountMap(demographicData) { profile -> profile?.consultationFrequency },
+            genderCount = buildDataMap(demographicData, participantCount) { profile -> profile?.gender },
+            yearOfBirthCount = buildDataMap(demographicData, participantCount) { profile -> profile?.yearOfBirth },
+            departmentCount = buildDataMap(demographicData, participantCount) { profile -> profile?.department },
+            cityTypeCount = buildDataMap(demographicData, participantCount) { profile -> profile?.cityType },
+            jobCategoryCount = buildDataMap(demographicData, participantCount) { profile -> profile?.jobCategory },
+            voteFrequencyCount = buildDataMap(demographicData, participantCount) { profile -> profile?.voteFrequency },
+            publicMeetingFrequencyCount = buildDataMap(
+                demographicData,
+                participantCount,
+            ) { profile -> profile?.publicMeetingFrequency },
+            consultationFrequencyCount = buildDataMap(
+                demographicData,
+                participantCount,
+            ) { profile -> profile?.consultationFrequency },
         )
     }
 
-    private fun <K> buildCountMap(
+    private fun <K> buildDataMap(
         demographicData: Map<String, Profile?>,
+        participantCount: Int,
         keySelector: (Profile?) -> K,
-    ): Map<K, Int> {
-        return demographicData.values.groupBy(keySelector).map { (key: K, profiles) -> key to profiles.size }.toMap()
+    ): Map<K, CountAndRatio> {
+        return demographicData.values
+            .groupBy(keySelector)
+            .map { (key: K, profiles) -> key to getCountAndRatio(profiles.size, participantCount) }
+            .toMap()
+    }
+
+    private fun getCountAndRatio(count: Int, allCount: Int): CountAndRatio {
+        return CountAndRatio(
+            count = count,
+            ratio = (count.toDouble() / allCount).takeUnless { it.isNaN() } ?: 0.0,
+        )
     }
 
 }

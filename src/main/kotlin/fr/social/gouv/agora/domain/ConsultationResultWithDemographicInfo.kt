@@ -16,17 +16,22 @@ data class QuestionResultWithDemographicInfo(
 
 data class ChoiceResultWithDemographicInfo(
     val choixPossible: ChoixPossible,
-    val ratio: Double,
+    val countAndRatio: CountAndRatio,
     val demographicInfo: DemographicInfo,
 )
 
 data class DemographicInfo(
-    val genderCount: Map<Gender?, Int>,
-    val yearOfBirthCount: Map<Int?, Int>,
-    val departmentCount: Map<Department?, Int>,
-    val cityTypeCount: Map<CityType?, Int>,
-    val jobCategoryCount: Map<JobCategory?, Int>,
-    val voteFrequencyCount: Map<Frequency?, Int>,
-    val publicMeetingFrequencyCount: Map<Frequency?, Int>,
-    val consultationFrequencyCount: Map<Frequency?, Int>,
+    val genderCount: Map<Gender?, CountAndRatio>,
+    val yearOfBirthCount: Map<Int?, CountAndRatio>,
+    val departmentCount: Map<Department?, CountAndRatio>,
+    val cityTypeCount: Map<CityType?, CountAndRatio>,
+    val jobCategoryCount: Map<JobCategory?, CountAndRatio>,
+    val voteFrequencyCount: Map<Frequency?, CountAndRatio>,
+    val publicMeetingFrequencyCount: Map<Frequency?, CountAndRatio>,
+    val consultationFrequencyCount: Map<Frequency?, CountAndRatio>,
+)
+
+data class CountAndRatio(
+    val count: Int,
+    val ratio: Double,
 )
