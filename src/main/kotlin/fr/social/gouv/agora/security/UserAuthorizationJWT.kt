@@ -10,7 +10,7 @@ enum class UserAuthorizationJWT(private val authorityValue: String) : GrantedAut
     FEEDBACK_QAG_RESPONSE("FEEDBACK_QAG_RESPONSE"),
     ADD_QAG("ADD_QAG"),
     MODERATE_QAG("MODERATE_QAG"),
-    ADMIN_API("ADMIN_API"),
+    ADMIN_APIS("ADMIN_APIS"),
     ;
 
     override fun getAuthority() = authorityValue
