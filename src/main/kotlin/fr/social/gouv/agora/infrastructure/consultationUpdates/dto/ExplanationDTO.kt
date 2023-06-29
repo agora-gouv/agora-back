@@ -10,8 +10,6 @@ data class ExplanationDTO(
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
-    @Column(columnDefinition = "SMALLINT")
-    val isTogglable: Int,
     @Column(columnDefinition = "TEXT")
     val title: String,
     @Column(columnDefinition = "TEXT")
@@ -22,6 +20,8 @@ data class ExplanationDTO(
     val description: String,
     @JoinTable(joinColumns = [JoinColumn(table = "consultation_updates", referencedColumnName = "id")])
     val consultationUpdatesId: UUID,
+    @Column(columnDefinition = "TEXT")
+    val toggleable: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -35,6 +35,6 @@ data class ExplanationDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , isTogglable = $isTogglable , title = $title , intro = $intro , imageUrl = $imageUrl , description = $description)"
+        return this::class.simpleName + "(id = $id , toggleable = $toggleable , title = $title , intro = $intro , imageUrl = $imageUrl , description = $description)"
     }
 }
