@@ -24,7 +24,7 @@ class UserJwtMapper {
             UserAuthorization.FEEDBACK_QAG_RESPONSE -> UserAuthorizationJWT.FEEDBACK_QAG_RESPONSE
             UserAuthorization.ADD_QAG -> UserAuthorizationJWT.ADD_QAG
             UserAuthorization.MODERATE_QAG -> UserAuthorizationJWT.MODERATE_QAG
-            UserAuthorization.ADMIN_API -> UserAuthorizationJWT.ADMIN_API
+            UserAuthorization.ADMIN_APIS -> UserAuthorizationJWT.ADMIN_APIS
         }
     }
 

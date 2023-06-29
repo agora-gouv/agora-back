@@ -8,7 +8,7 @@ enum class UserAuthorization {
     FEEDBACK_QAG_RESPONSE,
     ADD_QAG,
     MODERATE_QAG,
-    ADMIN_API,
+    ADMIN_APIS,
     ;
 
     companion object {

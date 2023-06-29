@@ -22,6 +22,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .and()
             .securityMatcher("/**")
             .authorizeHttpRequests()
+            .requestMatchers("/admin/**").hasAuthority(UserAuthorizationJWT.ADMIN_APIS.authority)
             .requestMatchers("/moderate/**").hasAuthority(UserAuthorizationJWT.MODERATE_QAG.authority)
             .requestMatchers("/signup", "/login").permitAll()
             .anyRequest().authenticated()
