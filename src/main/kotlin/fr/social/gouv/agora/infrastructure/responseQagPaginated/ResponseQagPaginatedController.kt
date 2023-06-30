@@ -22,6 +22,6 @@ class ResponseQagPaginatedController(
             getResponseQagPreviewPaginatedListUseCase.getResponseQagPreviewPaginatedList(pageNumber = pageNumberInt)
         }?.let { responseQagPaginatedList ->
             ResponseEntity.ok(responseQagPaginatedJsonMapper.toJson(responseQagPaginatedList))
-        } ?: ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Unit)
+        } ?: ResponseEntity.badRequest().body(Unit)
     }
 }
