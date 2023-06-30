@@ -42,7 +42,7 @@ data class ResponseQagJson(
     @JsonProperty("authorDescription")
     val authorDescription: String,
     @JsonProperty("responseDate")
-    val responseDate: Date,
+    val responseDate: String,
     @JsonProperty("videoUrl")
     val videoUrl: String,
     @JsonProperty("transcription")
