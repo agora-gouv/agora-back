@@ -32,6 +32,8 @@ class GetAskQagStatusUseCase(
     private fun isDateWithinTheWeek(postDate: Date): Boolean {
         val postDateLocalDateTime = postDate.toLocalDateTime()
         val currentDate = LocalDateTime.now(clock)
+        println("GetAskQagStatusUseCase - postDate = $postDateLocalDateTime")
+        println("GetAskQagStatusUseCase - currentDate = $currentDate")
         val wednesdayThisWeek = currentDate.with(DayOfWeek.WEDNESDAY).withHour(14).withMinute(0).withSecond(0)
 
         val (previousWednesday, nextWednesday) = when {
@@ -39,6 +41,8 @@ class GetAskQagStatusUseCase(
             currentDate > wednesdayThisWeek -> wednesdayThisWeek to wednesdayThisWeek.plusDays(7)
             else -> wednesdayThisWeek to wednesdayThisWeek.plusDays(7) // equals case
         }
+        println("GetAskQagStatusUseCase - previousWednesday = $previousWednesday")
+        println("GetAskQagStatusUseCase - nextWednesday = $nextWednesday")
 
         return postDateLocalDateTime >= previousWednesday && postDateLocalDateTime < nextWednesday
     }
