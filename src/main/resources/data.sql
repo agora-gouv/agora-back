@@ -2164,3 +2164,107 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
     '<body>👉 La ministre de la Transition énergétique, Agnès Pannier-Runacher, recevra les résultats et viendra annoncer les enseignements pour la suite et les actions qui découleront de vos réponses <b>début octobre</b>, dans le cadre du bilan des 1 an du premier plan de sobriété.<br/><br/>—<br/><br/><b>🤓 Envie d’aller plus loin ?</b><br/>Vous pouvez notamment :<br/><ul><li>Explorer les <a href="https://www.ecologie.gouv.fr/sites/default/files/dp-plan-sobriete.pdf">Plans de sobriété</a></li><li><a href="https://www.monecowatt.fr/application-mobile-ecowatt/">Télécharger l’application EcoWatt de RTE</a> pour savoir à quel moment réduire votre consommation et éviter les coupures</li><li><a href="https://librairie.ademe.fr/actualites/10-gestes-pour-economiser-lenergie-n8">Découvrir les 10 gestes de sobriété recommandés par l’ADEME</a></li></ul></body>',
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac120002',
+    '2023-06-01',
+    'f29c5d6f-9838-4c57-a7ec-0612145bb0c8',
+    1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac122000',
+    '2023-06-01',
+    '996436ca-ee69-11ed-a05b-0242ac120003',
+    1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac121111',
+    '2023-06-01',
+    'f8776dd0-ee69-11ed-a05b-0242ac120003',
+    1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac122222',
+    '2023-06-01',
+    '40c04882-ee6a-11ed-a05b-0242ac120003',
+    1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac155555',
+    '2023-06-01',
+    '1731a370-ee6b-11ed-a05b-0242ac120003',
+    1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac166666',
+    '2023-06-01',
+    '5c5f5460-ee6b-11ed-a05b-0242ac120003',
+    1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac177777',
+    '2023-06-01',
+    '96e8341c-ee6b-11ed-a05b-0242ac120003',
+    -1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac188888',
+    '2023-06-01',
+    'd09f2788-ee6b-11ed-a05b-0242ac120003',
+    -1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac199999',
+    '2023-06-01',
+    '1cde43fe-ee6c-11ed-a05b-0242ac120003',
+    -1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac110100',
+    '2023-06-01',
+    '59028e08-ee6c-11ed-a05b-0242ac120003',
+    -1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    '31f90d5e-175d-11ee-be56-0242ac122200',
+    '2023-06-01',
+    '8171c50e-ee6a-11ed-a05b-0242ac120003',
+    -1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    'fafb0440-175e-11ee-be56-0242ac120002',
+    '2023-06-01',
+    'eb6a2c9f-9631-47e0-9db5-5b5cde782569',
+    -1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id) VALUES (
+    'f3ee80b4-175e-11ee-be56-0242ac120002',
+    '2023-06-01',
+    '07ecaab0-b6d7-4e67-b313-96f0d2950296',
+    -1,
+    'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
+) ON CONFLICT DO NOTHING;
