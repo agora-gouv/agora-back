@@ -6,7 +6,7 @@ import java.time.Clock
 
 @Configuration
 @Suppress("unused")
-class GlobalConfig {
+class ClockConfig {
 
     @Bean
     fun getClock(): Clock {
