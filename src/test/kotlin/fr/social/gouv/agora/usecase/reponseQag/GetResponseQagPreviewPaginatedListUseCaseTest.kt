@@ -74,9 +74,9 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
 
 
     @Test
-    fun `getResponseQagPreviewPaginatedList - when have less than 20 results and pageNumber is 1 - should return ordered responseQagPreviews and maxPageNumber 1`() {
+    fun `getResponseQagPreviewPaginatedList - when have less than 20 results and pageNumber is 1 - should return ordered responseQagPreviews with most recent responseDate and maxPageNumber 1`() {
         // Given
-        val listResponseQag = (0 until 10).map { index -> mockResponseQag(index) }
+        val listResponseQag = (10 downTo 1).map { index -> mockResponseQag(index) }
         given(responseQagRepository.getAllResponseQag()).willReturn(listResponseQag.map { it.responseQag })
 
         // When
@@ -102,10 +102,11 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
     }
 
     @Test
-    fun `getResponseQagPreviewPaginatedList - when have more than 20 results and pageNumber is 1 - should return ordered responseQagPreviews limited to 20`() {
+    fun `getResponseQagPreviewPaginatedList - when have more than 20 results and pageNumber is 1 - should return ordered responseQagPreviews with most recent responseDate limited to 20`() {
         // Given
-        val listResponseQagFirstPage = (0 until 20).map { index -> mockResponseQag(index) }
-        val listResponseQagOtherPage = (20 until 50).map { index -> mockResponseQag(index) }
+        val listResponseQagFirstPage = (20 downTo 1).map { index -> mockResponseQag(index) }
+        val listResponseQagOtherPage = (21 until 50).map { index -> mockResponseQag(index) }
+        listResponseQagOtherPage.forEach { given(it.responseQag.responseDate).willReturn(Date(0)) }
 
         given(responseQagRepository.getAllResponseQag()).willReturn(listResponseQagFirstPage.map { it.responseQag } + listResponseQagOtherPage.map { it.responseQag })
 
@@ -134,10 +135,10 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
     }
 
     @Test
-    fun `getResponseQagPreviewPaginatedList - when has not enough to fill page 2 entirely and pageNumber is 2 - should return ordered responseQagPreviews starting from 20th index and limited to 20 items or less`() {
+    fun `getResponseQagPreviewPaginatedList - when has not enough to fill page 2 entirely and pageNumber is 2 - should return ordered responseQagPreviews with most recent responsedate starting from 20th index and limited to 20 items or less`() {
         // Given
-        val listResponseQagFirstPage = (0 until 20).map { index -> mockResponseQag(index) }
-        val listResponseQagSecondPage = (20 until 30).map { index -> mockResponseQag(index) }
+        val listResponseQagFirstPage = (35 downTo 16).map { index -> mockResponseQag(index) }
+        val listResponseQagSecondPage = (10 downTo 1).map { index -> mockResponseQag(index) }
 
         given(responseQagRepository.getAllResponseQag()).willReturn(listResponseQagFirstPage.map { it.responseQag } + listResponseQagSecondPage.map { it.responseQag })
 
@@ -167,7 +168,10 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
     }
 
     private fun mockResponseQag(index: Int): MockResult {
-        val responseQag = mock(ResponseQag::class.java).also { given(it.qagId).willReturn("qagId$index") }
+        val responseQag = mock(ResponseQag::class.java).also {
+            given(it.qagId).willReturn("qagId$index")
+            given(it.responseDate).willReturn(Date(index.toLong()))
+        }
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.thematiqueId).willReturn("thematiqueId$index")
         }

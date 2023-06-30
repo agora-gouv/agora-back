@@ -21,7 +21,7 @@ class GetResponseQagPreviewPaginatedListUseCase(
 
     fun getResponseQagPreviewPaginatedList(pageNumber: Int): ResponseQagPaginatedList? {
         if (pageNumber <= 0) return null
-        val listResponseQag = responseQagRepository.getAllResponseQag()
+        val listResponseQag = responseQagRepository.getAllResponseQag().sortedByDescending { it.responseDate }
 
         val minIndex = (pageNumber - 1) * MAX_PREVIEW_LIST_SIZE
         if (minIndex > listResponseQag.size) return null
@@ -37,20 +37,19 @@ class GetResponseQagPreviewPaginatedListUseCase(
     }
 
     private fun getResponseQagPreviewList(listResponseQag: List<ResponseQag>): List<ResponseQagPreview> {
-        return listResponseQag.sortedByDescending { it.responseDate }
-            .mapNotNull { responseQag ->
-                qagRepository.getQagInfo(responseQag.qagId)
-                    ?.let { qagInfo ->
-                        thematiqueRepository.getThematique(qagInfo.thematiqueId)
-                            ?.let { thematique ->
-                                mapper.toResponseQagPreview(
-                                    responseQag = responseQag,
-                                    qagInfo = qagInfo,
-                                    thematique = thematique,
-                                )
-                            }
-                    }
-            }
+        return listResponseQag.mapNotNull { responseQag ->
+            qagRepository.getQagInfo(responseQag.qagId)
+                ?.let { qagInfo ->
+                    thematiqueRepository.getThematique(qagInfo.thematiqueId)
+                        ?.let { thematique ->
+                            mapper.toResponseQagPreview(
+                                responseQag = responseQag,
+                                qagInfo = qagInfo,
+                                thematique = thematique,
+                            )
+                        }
+                }
+        }
     }
 }
 
