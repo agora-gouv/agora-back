@@ -83,8 +83,7 @@ class GetConsultationResultsWithDemographicInfoUseCase(
         consultationResponseList: List<ReponseConsultation>,
         demographicData: Map<String, Profile?>,
     ): ChoiceResultWithDemographicInfo {
-        val questionResponses = consultationResponseList.filter { it.questionId == question.id }
-        val choixResponses = questionResponses.filter { it.choiceId == choix.id }
+        val choixResponses = consultationResponseList.filter { it.questionId == question.id && it.choiceId == choix.id }
 
         return ChoiceResultWithDemographicInfo(
             choixPossible = choix,
@@ -96,7 +95,7 @@ class GetConsultationResultsWithDemographicInfoUseCase(
                 demographicData = demographicData.filter { (userId, _) ->
                     choixResponses.any { choixResponse -> choixResponse.userId == userId }
                 },
-                participantCount = questionResponses.map { it.participationId }.toSet().size,
+                participantCount = choixResponses.size,
             ),
         )
     }
