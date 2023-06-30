@@ -18,6 +18,8 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
     @Bean
     fun authenticatedFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf().disable()
+            .cors()
+            .and()
             .exceptionHandling().authenticationEntryPoint(AgoraAuthenticationEntryPoint())
             .and()
             .securityMatcher("/**")
