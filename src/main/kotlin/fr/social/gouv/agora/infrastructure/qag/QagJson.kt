@@ -16,7 +16,7 @@ data class QagJson(
     @JsonProperty("description")
     val description: String,
     @JsonProperty("date")
-    val date: Date,
+    val date: String,
     @JsonProperty("username")
     val username: String,
     @JsonProperty("canShare")
