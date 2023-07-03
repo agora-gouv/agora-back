@@ -17,23 +17,23 @@ class GetConsultationFinishedPaginatedListUseCase(
     private val mapper: ConsultationPreviewFinishedMapper,
 ) {
     companion object {
-        private const val MAX_PREVIEW_LIST_SIZE = 20
+        private const val MAX_PAGE_LIST_SIZE = 20
     }
 
     fun getConsultationFinishedPaginatedList(pageNumber: Int): ConsultationFinishedPaginatedList? {
         if (pageNumber <= 0) return null
         val consultationFinishedList = consultationPreviewFinishedRepository.getConsultationFinishedList()
 
-        val minIndex = (pageNumber - 1) * MAX_PREVIEW_LIST_SIZE
+        val minIndex = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (minIndex > consultationFinishedList.size) return null
-        val maxIndex = Integer.min(pageNumber * MAX_PREVIEW_LIST_SIZE, consultationFinishedList.size)
+        val maxIndex = Integer.min(pageNumber * MAX_PAGE_LIST_SIZE, consultationFinishedList.size)
 
         val consultationFinishedPaginatedList = consultationFinishedList
             .subList(fromIndex = minIndex, toIndex = maxIndex)
 
         return ConsultationFinishedPaginatedList(
             consultationFinishedList = getConsultationFinishedPreviewList(consultationFinishedPaginatedList),
-            maxPageNumber = ceil(consultationFinishedList.size.toDouble() / MAX_PREVIEW_LIST_SIZE.toDouble()).toInt(),
+            maxPageNumber = ceil(consultationFinishedList.size.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
         )
     }
 
