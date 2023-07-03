@@ -21,6 +21,8 @@ data class QuestionUniqueChoiceJson(
     val id: String,
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("popupDescription")
+    val popupDescription: String?,
     @JsonProperty("order")
     val order: Int,
     @JsonProperty("questionProgress")
@@ -36,6 +38,8 @@ data class QuestionMultipleChoicesJson(
     val id: String,
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("popupDescription")
+    val popupDescription: String?,
     @JsonProperty("order")
     val order: Int,
     @JsonProperty("questionProgress")
@@ -53,6 +57,8 @@ data class QuestionOpenedJson(
     val id: String,
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("popupDescription")
+    val popupDescription: String?,
     @JsonProperty("order")
     val order: Int,
     @JsonProperty("questionProgress")
@@ -66,6 +72,8 @@ data class QuestionChapterJson(
     val id: String,
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("popupDescription")
+    val popupDescription: String?,
     @JsonProperty("order")
     val order: Int,
     @JsonProperty("description")
@@ -79,6 +87,8 @@ data class QuestionConditionalJson(
     val id: String,
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("popupDescription")
+    val popupDescription: String?,
     @JsonProperty("order")
     val order: Int,
     @JsonProperty("questionProgress")

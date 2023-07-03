@@ -54,6 +54,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
     ) = QuestionUniqueChoice(
         id = dto.id.toString(),
         title = dto.title,
+        popupDescription = dto.popupDescription,
         order = dto.ordre,
         consultationId = dto.consultationId.toString(),
         choixPossibleList = choixPossibleDtoList.map(choixPossibleMapper::toDefault),
@@ -67,6 +68,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
     ) = QuestionMultipleChoices(
         id = dto.id.toString(),
         title = dto.title,
+        popupDescription = dto.popupDescription,
         order = dto.ordre,
         consultationId = dto.consultationId.toString(),
         nextQuestionId = nextQuestionId?.toString(),
@@ -77,6 +79,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
     private fun buildQuestionOpen(dto: QuestionDTO, nextQuestionId: UUID?) = QuestionOpen(
         id = dto.id.toString(),
         title = dto.title,
+        popupDescription = dto.popupDescription,
         order = dto.ordre,
         consultationId = dto.consultationId.toString(),
         nextQuestionId = nextQuestionId?.toString(),
@@ -85,6 +88,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
     private fun buildChapter(dto: QuestionDTO, nextQuestionId: UUID?) = QuestionChapter(
         id = dto.id.toString(),
         title = dto.title,
+        popupDescription = dto.popupDescription,
         order = dto.ordre,
         consultationId = dto.consultationId.toString(),
         nextQuestionId = nextQuestionId?.toString(),
@@ -98,6 +102,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
     ) = QuestionConditional(
         id = dto.id.toString(),
         title = dto.title,
+        popupDescription = dto.popupDescription,
         order = dto.ordre,
         consultationId = dto.consultationId.toString(),
         choixPossibleList = choixPossibleDtoList.mapNotNull(choixPossibleMapper::toConditional),

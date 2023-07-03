@@ -39,8 +39,10 @@ class QuestionJsonMapper {
         chapterList: List<QuestionChapter>,
         questionsNumber: Int,
     ) = questionUniqueList.map { domain ->
-        QuestionUniqueChoiceJson(id = domain.id,
+        QuestionUniqueChoiceJson(
+            id = domain.id,
             title = domain.title,
+            popupDescription = domain.popupDescription,
             order = domain.order,
             questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
             nextQuestionId = domain.nextQuestionId,
@@ -63,6 +65,7 @@ class QuestionJsonMapper {
         QuestionMultipleChoicesJson(
             id = domain.id,
             title = domain.title,
+            popupDescription = domain.popupDescription,
             order = domain.order,
             questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
             maxChoices = domain.maxChoices,
@@ -86,6 +89,7 @@ class QuestionJsonMapper {
         QuestionOpenedJson(
             id = domain.id,
             title = domain.title,
+            popupDescription = domain.popupDescription,
             order = domain.order,
             questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
             nextQuestionId = domain.nextQuestionId,
@@ -96,6 +100,7 @@ class QuestionJsonMapper {
         QuestionChapterJson(
             id = domain.id,
             title = domain.title,
+            popupDescription = domain.popupDescription,
             order = domain.order,
             description = domain.description,
             nextQuestionId = domain.nextQuestionId,
@@ -107,8 +112,10 @@ class QuestionJsonMapper {
         chapterList: List<QuestionChapter>,
         questionsNumber: Int,
     ) = questionUniqueList.map { domain ->
-        QuestionConditionalJson(id = domain.id,
+        QuestionConditionalJson(
+            id = domain.id,
             title = domain.title,
+            popupDescription = domain.popupDescription,
             order = domain.order,
             questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
             possibleChoices = domain.choixPossibleList.map { choixPossible ->

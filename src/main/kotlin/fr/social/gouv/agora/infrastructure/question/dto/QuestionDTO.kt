@@ -13,6 +13,8 @@ data class QuestionDTO(
     val id: UUID,
     @Column(columnDefinition = "TEXT")
     val title: String,
+    @Column(columnDefinition = "TEXT")
+    val popupDescription: String?,
     val ordre: Int,
     @Column(columnDefinition = "TEXT")
     val type: String,
@@ -35,6 +37,6 @@ data class QuestionDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , title = $title , ordre = $ordre , type = $type, description = $description, maxChoices = $maxChoices, nextQuestionId = $nextQuestionId, consultationId = $consultationId)"
+        return this::class.simpleName + "(id = $id , title = $title , popupDescription = $popupDescription , ordre = $ordre , type = $type, description = $description, maxChoices = $maxChoices, nextQuestionId = $nextQuestionId, consultationId = $consultationId)"
     }
 }

@@ -296,9 +296,10 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'e271ed7a-ef05-11ed-a05b-0242ac120003',
     'Avez-vous une voiture ?',
+    null,
     1,
     'unique',
     null,
@@ -327,9 +328,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'e271ed7a-ef05-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '48d3c502-ef06-11ed-a05b-0242ac120003',
     'Dans quel cadre utilisez-vous principalement votre voiture ?',
+    null,
     2,
     'unique',
     null,
@@ -372,9 +374,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '48d3c502-ef06-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'e52c5868-ef08-11ed-a05b-0242ac120003',
     'Avez-vous déjà fait du covoiturage ? Que ce soit en tant que conducteur ou passager.',
+    null,
     3,
     'unique',
     null,
@@ -403,9 +406,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'e52c5868-ef08-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '867b767a-0905-11ee-be56-0242ac120002',
     'Êtes-vous prêt à covoiturer en tant que …',
+    null,
     4,
     'unique',
     null,
@@ -448,9 +452,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '867b767a-0905-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120015',
     'Quelle est votre principale difficulté pour recourir au covoiturage ? (conducteur et/ou passager)',
+    null,
     5,
     'open',
     null,
@@ -458,9 +463,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '4c85adfe-0906-11ee-be56-0242ac120002',
     'A quelle fréquence pourriez-vous recourir au covoiturage ?',
+    null,
     6,
     'unique',
     null,
@@ -503,9 +509,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '4c85adfe-0906-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'cea510c2-0906-11ee-be56-0242ac120002',
     'Pour quel usage principalement ?',
+    null,
     7,
     'unique',
     null,
@@ -555,9 +562,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'cea510c2-0906-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '91c3411c-ef0a-11ed-a05b-0242ac120003',
     'Parmi les mesures proposées, quelle est la ou les deux mesures qui vous convaincrai(en)t le plus pour recourir au covoiturage ?',
+    null,
     8,
     'multiple',
     null,
@@ -635,9 +643,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '91c3411c-ef0a-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'a3ae519c-ef09-11ed-a05b-0242ac120003',
     'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
+    null,
     9,
     'chapter',
     '<body>👉Les <b>infrastructures</b> pour favoriser le covoiturage se développent partout en France : voies réservées sur routes et autoroutes, lignes de covoiturage (arrêts d’auto-stop organisé le long d’un axe routier) ou encore aires de covoiturage clairement identifiées pour prendre ou déposer des passagers.</body>',
@@ -645,9 +654,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '9197bab0-0909-11ee-be56-0242ac120002',
     'Connaissez-vous des infrastructures dédiées au covoiturage proche de vous ?',
+    null,
     10,
     'unique',
     null,
@@ -676,9 +686,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '9197bab0-0909-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'f2aa628a-0909-11ee-be56-0242ac120002',
     'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
+    null,
     11,
     'chapter',
     '<body>👉 Les <b>voies dédiées au covoiturage sur routes et autoroutes</b> pour limiter la pollution consistent à réserver ces voies aux seuls véhicules avec 2 personnes minimum à bord.</body>',
@@ -686,9 +697,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '580bd3c0-090a-11ee-be56-0242ac120002',
     'Seriez-vous prêt à accepter ce traitement différencié ?',
+    null,
     12,
     'unique',
     null,
@@ -717,9 +729,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '580bd3c0-090a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '8bdfcbde-090a-11ee-be56-0242ac120002',
     'Nous allons vous présenter des solutions qui existent pour favoriser le covoiturage et recueillir votre avis.',
+    null,
     13,
     'chapter',
     '<body>👉Des <b>incitations financières</b> à la réalisation de trajets en covoiturage existent : une prime gouvernementale offre 100€ aux nouveaux conducteurs qui effectuent 10 premiers trajets en covoiturage depuis le 1er janvier 2023, les employeurs peuvent verser une aide mobilité jusqu’à 800€ par an aux salariés qui covoiturent pour se rendre au travail, certaines mairies ou régions permettent aux passagers de covoiturer gratuitement sur le territoire et/ou subventionnent les conducteurs.</body>',
@@ -727,9 +740,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'd6cba992-090a-11ee-be56-0242ac120002',
     'Connaissez-vous ces incitations ?',
+    null,
     14,
     'unique',
     null,
@@ -751,9 +765,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd6cba992-090a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '1f0d4940-090b-11ee-be56-0242ac120002',
     'Avez-vous déjà bénéficié d’incitations financières au covoiturage ?',
+    null,
     15,
     'unique',
     null,
@@ -782,9 +797,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '1f0d4940-090b-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120020',
     'Avez-vous d’autres idées pour encourager le covoiturage en France ?',
+    null,
     16,
     'open',
     null,
@@ -812,9 +828,10 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '30671310-ee62-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'e65beea0-0926-11ee-be56-0242ac120002',
     'Suivez-vous l’actualité politique ?',
+    null,
     1,
     'unique',
     null,
@@ -850,9 +867,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
      'e65beea0-0926-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'abe8c6b0-0928-11ee-be56-0242ac120002',
     'Avez-vous l’impression que les décisions politiques ont un impact sur votre quotidien ?',
+    null,
     2,
     'unique',
     null,
@@ -888,9 +906,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
      'abe8c6b0-0928-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '2c154084-0929-11ee-be56-0242ac120002',
     'Pour vous, le renouveau démocratique passe d’abord par… ?',
+    null,
     3,
     'multiple',
     null,
@@ -926,9 +945,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
      '2c154084-0929-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '7763aeda-092a-11ee-be56-0242ac120002',
     'Avez-vous des idées ou propositions pour renouveler la démocratie en France ?',
+    null,
     4,
     'open',
     null,
@@ -936,9 +956,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'dab3dc58-092a-11ee-be56-0242ac120002',
     'Avez-vous déjà participé à une consultation citoyenne ? (en ligne ou en présentiel)',
+    null,
     5,
     'unique',
     null,
@@ -967,9 +988,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'dab3dc58-092a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '40b7d25c-092b-11ee-be56-0242ac120002',
     'Pour vous, recueillir plus souvent l’avis des citoyens pendant la préparation d’une réforme est :',
+    null,
     6,
     'unique',
     null,
@@ -1005,9 +1027,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '40b7d25c-092b-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'd4df6396-092b-11ee-be56-0242ac120002',
     'Pensez-vous que cela ait un impact sur la décision politique ?',
+    null,
     7,
     'unique',
     null,
@@ -1043,9 +1066,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd4df6396-092b-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'b9e813c0-092c-11ee-be56-0242ac120002',
     'Pouvoir s’exprimer sur les grands projets et réformes du Gouvernement via une application dédiée comme celle que vous venez de télécharger ; est-ce une bonne idée selon vous ?',
+    null,
     8,
     'unique',
     null,
@@ -1074,9 +1098,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'b9e813c0-092c-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '4343c204-092d-11ee-be56-0242ac120002',
     'Sur quels sujets aimeriez-vous être consultés en priorité ?',
+    null,
     9,
     'multiple',
     null,
@@ -1245,9 +1270,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '4343c204-092d-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'b7c7eccc-092d-11ee-be56-0242ac120002',
     'Sur cette application, le Gouvernement prend l’engagement de répondre chaque semaine à une question posée par les citoyens (celle qui obtient le plus de votes) ; est-ce une bonne idée ?',
+    null,
     10,
     'unique',
     null,
@@ -1276,9 +1302,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'b7c7eccc-092d-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '5563aeda-092a-11ee-be56-0242ac120002',
     'Qu’attendez-vous en priorité des réponses que feront les ministres à ces questions ?',
+    null,
     11,
     'open',
     null,
@@ -1286,9 +1313,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '6363aeda-092a-11ee-be56-0242ac120002',
     'Pourquoi avez-vous téléchargé cette appli et à quoi, selon vous, doit-elle principalement servir ? C’est la dernière question de cette consultation : partagez-nous toutes vos idées !',
+    null,
     12,
     'open',
     null,
@@ -1316,9 +1344,10 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     'bb051bf2-644b-47b6-9488-7759fa727dc0'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'ccc9eb30-0b5c-11ee-be56-0242ac120002',
     'Avez-vous le sentiment que votre vie quotidienne a déjà changé à cause du réchauffement climatique ?',
+    null,
     1,
     'unique',
     null,
@@ -1354,9 +1383,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'ccc9eb30-0b5c-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'df7524a6-0b5d-11ee-be56-0242ac120002',
     'A quelles conséquences du réchauffement climatique avez-vous déjà été confronté ?',
+    null,
     2,
     'multiple',
     null,
@@ -1427,9 +1457,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'df7524a6-0b5d-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '97a30002-0b5e-11ee-be56-0242ac120002',
     'Selon vous, que faudrait-il changer, en priorité, dans votre quartier pour limiter les conséquences du réchauffement climatique dans votre quotidien ?',
+    null,
     3,
     'open',
     null,
@@ -1437,9 +1468,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '22e736a4-0b5e-11ee-be56-0242ac122222',
     'En cas d’évènement climatique extrême, et si les usages des moyens de transports devaient être hiérarchisés, êtes-vous prêt à réduire votre liberté de déplacement afin de privilégier l’approvisionnement des magasins et des hôpitaux ?',
+    null,
     4,
     'unique',
     null,
@@ -1468,9 +1500,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '22e736a4-0b5e-11ee-be56-0242ac122222'
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '8cc590cc-0b5f-11ee-be56-0242ac120002',
     'Selon vous, il faudrait :',
+    null,
     5,
     'unique',
     null,
@@ -1499,9 +1532,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '8cc590cc-0b5f-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'f2e736a4-0b5e-11ee-be56-0242ac120002',
     'Pensez-vous que, à l’avenir, les conditions climatiques (chaleur, risque d’inondation, etc.) seront un élément déterminant pour choisir votre lieu de vie ?',
+    null,
     6,
     'unique',
     null,
@@ -1530,9 +1564,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'f2e736a4-0b5e-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'cac40a48-0b5f-11ee-be56-0242ac120002',
     'Selon vous, il faudrait plutôt :',
+    null,
     7,
     'unique',
     null,
@@ -1561,9 +1596,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'cac40a48-0b5f-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '15973d9c-0b60-11ee-be56-0242ac120002',
     'Selon vous, il faudrait plutôt :',
+    null,
     8,
     'multiple',
     null,
@@ -1606,9 +1642,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '15973d9c-0b60-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '871f4716-0b60-11ee-be56-0242ac120002',
     'Seriez-vous prêt à travailler systématiquement en horaires décalés (commencer très tôt le matin ou finir très tard le soir, en évitant les pics de chaleur de la mi-journée) en cas de vagues de chaleur ?',
+    null,
     9,
     'unique',
     null,
@@ -1644,9 +1681,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '871f4716-0b60-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'db22171c-0b60-11ee-be56-0242ac120002',
     'Faut-il adapter le rythme des vacances scolaires aux évolutions du climat ?',
+    null,
     10,
     'unique',
     null,
@@ -1682,9 +1720,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'db22171c-0b60-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '4289e362-0b61-11ee-be56-0242ac120002',
     'Seriez-vous d’accord pour que la forêt que nous connaissons, qui souffre du réchauffement climatique, change de visage avec des essences d’arbre plus adaptées au changement climatique ?',
+    null,
     11,
     'unique',
     null,
@@ -1720,9 +1759,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '4289e362-0b61-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'c0cf651c-0b61-11ee-be56-0242ac120002',
     'Pensez-vous que certaines infrastructures et activités critiques doivent être préparées à un scénario encore plus pessimiste que celui des 4 degrés de réchauffement climatique en France ?',
+    null,
     12,
     'unique',
     null,
@@ -1771,9 +1811,10 @@ INSERT INTO consultations(id, title, end_date, cover_url, question_count, estima
     '5e6bed94-015e-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '34d997e4-0c4c-11ee-be56-0242ac120002',
     'Pour vous, la “sobriété énergétique”, c’est …',
+    null,
     1,
     'open',
     null,
@@ -1781,9 +1822,10 @@ INSERT INTO questions(id, title, ordre, type, description, max_choices, consulta
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '641d7656-0c4c-11ee-be56-0242ac120002',
     'Si je m’engage pour la sobriété énergétique, c’est en priorité pour :',
+    null,
     2,
     'unique',
     null,
@@ -1819,9 +1861,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '641d7656-0c4c-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'd7201d84-0c4c-11ee-be56-0242ac120002',
     'Réduire sa consommation d’énergie, dans une démarche de sobriété, c’est :',
+    null,
     3,
     'unique',
     null,
@@ -1857,9 +1900,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd7201d84-0c4c-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '97950b6a-0c4d-11ee-be56-0242ac120002',
     'Pour baisser la consommation de mon logement, en priorité, je suis prêt à :',
+    null,
     4,
     'multiple',
     null,
@@ -1902,9 +1946,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '97950b6a-0c4d-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '5072cd84-0c4e-11ee-be56-0242ac120002',
     'Pour baisser ma facture de carburant, je suis prêt, en priorité, à :',
+    null,
     5,
     'multiple',
     null,
@@ -1954,9 +1999,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '5072cd84-0c4e-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '098d1f68-0c4f-11ee-be56-0242ac120002',
     'Pour réduire mes usages numériques, en priorité, je suis prêt à :',
+    null,
     6,
     'multiple',
     null,
@@ -1999,9 +2045,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     '098d1f68-0c4f-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'a60aaf9a-0c4f-11ee-be56-0242ac120002',
     'Quels sont les principaux obstacles qui vous empêchent de passer à un véhicule moins polluant ?',
+    null,
     7,
     'multiple',
     null,
@@ -2058,9 +2105,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'a60aaf9a-0c4f-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'd7201d84-0c4c-11ee-be56-0242ac122222',
     'Selon moi, la mesure la plus efficace pour réduire ma consommation d’énergie dans la durée, c’est :',
+    null,
     8,
     'unique',
     null,
@@ -2103,9 +2151,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'd7201d84-0c4c-11ee-be56-0242ac122222'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'fb56a610-0c50-11ee-be56-0242ac120002',
     'La méthode qui me paraît la plus adaptée pour réduire ma consommation d’énergie, c’est :',
+    null,
     9,
     'multiple',
     null,
@@ -2148,9 +2197,10 @@ INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
     'fb56a610-0c50-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO questions(id, title, ordre, type, description, max_choices, consultation_id) VALUES (
+INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '8488ee98-0c51-11ee-be56-0242ac120002',
     'Pour poursuivre les efforts qui ont permis à la France de réduire de 12% sa consommation d’énergie, quelle nouvelle mesure recommanderiez-vous ?',
+    null,
     10,
     'open',
     null,
