@@ -24,8 +24,7 @@ interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID>
     @Query(
         value = """SELECT * FROM consultations 
             WHERE CURRENT_DATE >= end_date
-            ORDER BY end_date ASC
-            LIMIT 10""",
+            ORDER BY end_date ASC""",
         nativeQuery = true
     )
     fun getConsultationFinishedList(): List<ConsultationDTO>
