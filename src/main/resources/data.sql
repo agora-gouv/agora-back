@@ -802,7 +802,7 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
 INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     '98a8ba56-0923-11ee-be56-0242ac120002',
     'Participation citoyenne : une appli, vos idées',
-    '2023-07-01',
+    '2023-07-12',
     'https://betagouv.github.io/agora-content/education.png',
     '12 questions',
     '10 minutes',
