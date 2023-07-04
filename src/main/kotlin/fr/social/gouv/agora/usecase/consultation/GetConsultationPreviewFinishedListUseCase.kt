@@ -13,6 +13,9 @@ class GetConsultationPreviewFinishedListUseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val mapper: ConsultationPreviewFinishedMapper,
 ) {
+    companion object {
+        private const val MAX_CONSULTATION_FINISHED_LIST_SIZE = 10
+    }
 
     fun getConsultationPreviewFinishedList(): List<ConsultationPreviewFinished> {
         return consultationPreviewFinishedRepository.getConsultationFinishedList()
@@ -29,7 +32,7 @@ class GetConsultationPreviewFinishedListUseCase(
                             }
                     }
 
-            }
+            }.take(MAX_CONSULTATION_FINISHED_LIST_SIZE)
     }
 
 }
