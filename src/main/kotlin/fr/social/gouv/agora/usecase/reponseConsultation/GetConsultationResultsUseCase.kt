@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.usecase.reponseConsultation
 
 import fr.social.gouv.agora.domain.*
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.NOT_FOUND_UUID_STRING
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.social.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
@@ -23,7 +24,6 @@ class GetConsultationResultsUseCase(
             questionRepository.getConsultationQuestionList(consultationId).takeUnless { it.isEmpty() } ?: return null
         val consultationResponseList = getConsultationResponseRepository.getConsultationResponses(consultationId)
 
-
         return buildResults(
             consultationInfo = consultationInfo,
             consultationUpdate = consultationUpdate,
@@ -32,21 +32,57 @@ class GetConsultationResultsUseCase(
         )
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun buildResults(
         consultationInfo: ConsultationInfo,
         consultationUpdate: ConsultationUpdate,
         questionList: List<Question>,
-        consultationResponseList: List<ReponseConsultation>
+        consultationResponseList: List<ReponseConsultation>,
     ): ConsultationResult {
         val filteredQuestionList =
             questionList.filterIsInstance<QuestionWithChoices>().filter { it.choixPossibleList.isNotEmpty() }
+        val questionListWithNoResponseChoice = filteredQuestionList.map { questionWithChoices ->
+            val ordre = questionWithChoices.choixPossibleList.size + 1
+            val modifiedChoicesList =
+                questionWithChoices.choixPossibleList as List<ChoixPossibleDefault> + createNoResponseChoice(
+                    ordre,
+                    questionWithChoices.id
+                )
+            when (questionWithChoices) {
+                is QuestionUniqueChoice -> QuestionUniqueChoice(
+                    id = questionWithChoices.id,
+                    title = questionWithChoices.title,
+                    popupDescription = questionWithChoices.popupDescription,
+                    order = ordre,
+                    nextQuestionId = questionWithChoices.nextQuestionId,
+                    consultationId = questionWithChoices.consultationId,
+                    choixPossibleList = modifiedChoicesList,
+                )
+
+                is QuestionMultipleChoices -> QuestionMultipleChoices(
+                    id = questionWithChoices.id,
+                    title = questionWithChoices.title,
+                    popupDescription = questionWithChoices.popupDescription,
+                    order = ordre,
+                    nextQuestionId = questionWithChoices.nextQuestionId,
+                    consultationId = questionWithChoices.consultationId,
+                    choixPossibleList = modifiedChoicesList,
+                    maxChoices = questionWithChoices.maxChoices
+                )
+
+                else -> {
+                    throw IllegalArgumentException("Unknown question type: ${questionWithChoices.javaClass.simpleName}")
+                }
+            }
+        }
+
         val participantCount = consultationResponseList.map { it.participationId }.toSet().size
 
         return ConsultationResult(
             consultation = consultationInfo,
             lastUpdate = consultationUpdate,
             participantCount = participantCount,
-            results = filteredQuestionList.map { question ->
+            results = questionListWithNoResponseChoice.map { question ->
                 buildQuestionResults(
                     question = question,
                     participantCount = participantCount,
@@ -59,7 +95,7 @@ class GetConsultationResultsUseCase(
     private fun buildQuestionResults(
         question: QuestionWithChoices,
         participantCount: Int,
-        consultationResponseList: List<ReponseConsultation>
+        consultationResponseList: List<ReponseConsultation>,
     ) = QuestionResult(
         question = question,
         responses = question.choixPossibleList.map { choix ->
@@ -88,4 +124,10 @@ class GetConsultationResultsUseCase(
         )
     }
 
+    private fun createNoResponseChoice(ordre: Int, questionId: String) = ChoixPossibleDefault(
+        id = NOT_FOUND_UUID_STRING,
+        label = "Pas de réponse",
+        ordre = ordre,
+        questionId = questionId,
+    )
 }
