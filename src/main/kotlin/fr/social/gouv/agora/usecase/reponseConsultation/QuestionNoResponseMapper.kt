@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component
 class QuestionNoResponseMapper {
 
     fun toQuestionNoResponse(questionWithChoices: QuestionWithChoices): QuestionWithChoices {
-        val ordre = questionWithChoices.choixPossibleList.size + 1
 
         return when (questionWithChoices) {
             is QuestionUniqueChoice -> QuestionUniqueChoice(
@@ -19,8 +18,8 @@ class QuestionNoResponseMapper {
                 nextQuestionId = questionWithChoices.nextQuestionId,
                 consultationId = questionWithChoices.consultationId,
                 choixPossibleList = questionWithChoices.choixPossibleList + createNoResponseChoice(
-                    ordre,
-                    questionWithChoices.id
+                    ordre = questionWithChoices.choixPossibleList.size + 1,
+                    questionId = questionWithChoices.id
                 ),
             )
 
@@ -32,8 +31,8 @@ class QuestionNoResponseMapper {
                 nextQuestionId = questionWithChoices.nextQuestionId,
                 consultationId = questionWithChoices.consultationId,
                 choixPossibleList = questionWithChoices.choixPossibleList + createNoResponseChoice(
-                    ordre,
-                    questionWithChoices.id
+                    ordre = questionWithChoices.choixPossibleList.size + 1,
+                    questionId = questionWithChoices.id
                 ),
                 maxChoices = questionWithChoices.maxChoices
             )
