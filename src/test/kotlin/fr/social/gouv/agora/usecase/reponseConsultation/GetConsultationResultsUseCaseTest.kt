@@ -39,6 +39,9 @@ internal class GetConsultationResultsUseCaseTest {
     @MockBean
     private lateinit var consultationUpdateRepository: ConsultationUpdateRepository
 
+    @MockBean
+    private lateinit var mapper: QuestionNoResponseMapper
+
     companion object {
         @JvmStatic
         fun getConsultationResultsParameters() = arrayOf(
@@ -199,6 +202,7 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationUpdateRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
         then(getConsultationResponseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
     }
 
     @Test
@@ -216,6 +220,7 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).shouldHaveNoInteractions()
         then(getConsultationResponseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
     }
 
     @Test
@@ -234,6 +239,7 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
         then(getConsultationResponseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
     }
 
     @Nested
@@ -273,6 +279,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+            then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
@@ -283,6 +290,7 @@ internal class GetConsultationResultsUseCaseTest {
                 given(it.choixPossibleList).willReturn(listOf(choixPossible))
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
+            given(mapper.toQuestionNoResponse(question)).willReturn(question)
 
             // When
             val result = useCase.getConsultationResults(consultationId = "consultationId")
@@ -310,6 +318,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+            then(mapper).should(only()).toQuestionNoResponse(question)
         }
 
         @Test
@@ -336,6 +345,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+            then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
@@ -346,6 +356,7 @@ internal class GetConsultationResultsUseCaseTest {
                 given(it.choixPossibleList).willReturn(listOf(choixPossible))
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
+            given(mapper.toQuestionNoResponse(question)).willReturn(question)
 
             // When
             val result = useCase.getConsultationResults(consultationId = "consultationId")
@@ -373,6 +384,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+            then(mapper).should(only()).toQuestionNoResponse(question)
         }
 
         @Test
@@ -397,6 +409,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+            then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
@@ -421,6 +434,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+            then(mapper).shouldHaveNoInteractions()
         }
 
     }
@@ -456,6 +470,7 @@ internal class GetConsultationResultsUseCaseTest {
             }
             given(getConsultationResponseRepository.getConsultationResponses("consultationId"))
                 .willReturn(listOf(reponseConsultation))
+            given(mapper.toQuestionNoResponse(question)).willReturn(question)
 
             // When
             val result = useCase.getConsultationResults(consultationId = "consultationId")
@@ -483,6 +498,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+            then(mapper).should(only()).toQuestionNoResponse(question)
         }
 
         @Test
@@ -507,6 +523,7 @@ internal class GetConsultationResultsUseCaseTest {
             }
             given(getConsultationResponseRepository.getConsultationResponses("consultationId"))
                 .willReturn(listOf(reponseConsultation))
+            given(mapper.toQuestionNoResponse(question)).willReturn(question)
 
             // When
             val result = useCase.getConsultationResults(consultationId = "consultationId")
@@ -538,6 +555,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
             then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+            then(mapper).should(only()).toQuestionNoResponse(question)
         }
     }
 
@@ -581,6 +599,9 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationUpdateRepository).should(only()).getConsultationUpdate("consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList("consultationId")
         then(getConsultationResponseRepository).should(only()).getConsultationResponses("consultationId")
+        testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
+            then(mapper).should().toQuestionNoResponse(it.question)
+        }
     }
 
     private fun buildTestData(testInput: InputData): TestData {
@@ -612,11 +633,12 @@ internal class GetConsultationResultsUseCaseTest {
             )
         }.takeIf { it.isNotEmpty() }
 
+        given(mapper.toQuestionNoResponse(question)).willReturn(question)
         return TestData(question, reponseConsultationList, expectedQuestionResultList)
     }
 
     private data class TestData(
-        val question: Question,
+        val question: QuestionWithChoices,
         val reponseConsultationList: List<ReponseConsultation>,
         val expectedQuestionResultList: List<ChoiceResult>?,
     )
