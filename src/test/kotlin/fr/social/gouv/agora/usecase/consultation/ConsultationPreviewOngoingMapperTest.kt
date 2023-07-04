@@ -51,46 +51,52 @@ internal class ConsultationPreviewOngoingMapperTest {
         fun toConsultationPreviewOngoingCases() = arrayOf(
             input(
                 whenTestDescription = "consultationEndDate is more than 15 days away in the future from today",
-                serverDate = LocalDate.of(1998, Month.JULY, 12),
-                consultationEndDate = LocalDate.of(2012, Month.DECEMBER, 21),
+                serverDate = LocalDateTime.of(1998, Month.JULY, 12, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2012, Month.DECEMBER, 21, 16, 45, 0),
                 expectedHighlightLabel = null,
             ),
             input(
                 whenTestDescription = "consultationEndDate is 15 days in the future from today",
-                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
-                consultationEndDate = LocalDate.of(2000, Month.JANUARY, 16),
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 16, 16, 45, 0),
                 expectedHighlightLabel = "Plus que 15 jours !",
             ),
             input(
                 whenTestDescription = "consultationEndDate is 1 days from today",
-                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
-                consultationEndDate = LocalDate.of(2000, Month.JANUARY, 2),
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 2, 16, 45, 0),
+                expectedHighlightLabel = "Plus que 1 jour !",
+            ),
+            input(
+                whenTestDescription = "consultationEndDate is today before hour",
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 1, 16, 45, 0),
                 expectedHighlightLabel = "Dernier jour !",
             ),
             input(
-                whenTestDescription = "consultationEndDate is today",
-                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
-                consultationEndDate = LocalDate.of(2020, Month.JANUARY, 1),
+                whenTestDescription = "consultationEndDate is today at same hour",
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 16, 45, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 1, 16, 45, 0),
                 expectedHighlightLabel = null,
             ),
             input(
                 whenTestDescription = "consultationEndDate is in the near past",
-                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
-                consultationEndDate = LocalDate.of(1999, Month.DECEMBER, 25),
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(1999, Month.DECEMBER, 25, 16, 45, 0),
                 expectedHighlightLabel = null,
             ),
             input(
                 whenTestDescription = "consultationEndDate is very far away in the past",
-                serverDate = LocalDate.of(2000, Month.JANUARY, 1),
-                consultationEndDate = LocalDate.of(1989, Month.JANUARY, 1),
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(1989, Month.JANUARY, 1, 16, 45, 0),
                 expectedHighlightLabel = null,
             ),
         )
 
         private fun input(
             whenTestDescription: String,
-            serverDate: LocalDate,
-            consultationEndDate: LocalDate,
+            serverDate: LocalDateTime,
+            consultationEndDate: LocalDateTime,
             expectedHighlightLabel: String?,
         ) = arrayOf(whenTestDescription, serverDate, consultationEndDate, expectedHighlightLabel)
 
@@ -100,8 +106,8 @@ internal class ConsultationPreviewOngoingMapperTest {
     @MethodSource("toConsultationPreviewOngoingCases")
     fun `toConsultationPreviewOngoing - should return expected`(
         whenTestDescription: String,
-        serverDate: LocalDate,
-        consultationEndDate: LocalDate,
+        serverDate: LocalDateTime,
+        consultationEndDate: LocalDateTime,
         expectedHighlightLabel: String?,
     ) {
         // Given
