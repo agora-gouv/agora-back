@@ -286,7 +286,7 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
 INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     '6d85522a-ee71-11ed-a05b-0242ac120003',
     'Covoiturage, roulons ensemble',
-    '2023-07-04',
+    '2023-07-04 23:59:59.999',
     'https://betagouv.github.io/agora-content/covoiturage.png',
     '12 questions',
     '5 minutes',
@@ -818,7 +818,7 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
 INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     '98a8ba56-0923-11ee-be56-0242ac120002',
     'Participation citoyenne : une appli, vos idées',
-    '2023-07-12',
+    '2023-07-12 23:59:59.999',
     'https://betagouv.github.io/agora-content/education.png',
     '12 questions',
     '10 minutes',
@@ -1334,7 +1334,7 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
 INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     'c342e83e-0b5a-11ee-be56-0242ac120002',
     'Vivre mieux en 2050 : comment s’adapter au changement climatique ?',
-    '2023-09-15',
+    '2023-09-15 23:59:59.999',
     'https://betagouv.github.io/agora-content/climate.jpeg',
     '11 questions',
     '10 minutes',
@@ -1801,7 +1801,7 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
 INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     'ee3dd5c2-0c49-11ee-be56-0242ac120002',
     'Comment agir durablement en faveur de la sobriété énergétique ?',
-    '2023-09-30',
+    '2023-09-30 23:59:59.999',
     'https://betagouv.github.io/agora-content/energie.jpg',
     '10 questions',
     '7 minutes',

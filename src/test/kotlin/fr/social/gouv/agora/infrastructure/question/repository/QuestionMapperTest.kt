@@ -31,6 +31,7 @@ internal class QuestionMapperTest {
     private val questionDTO = QuestionDTO(
         id = questionUUID,
         title = "title",
+        popupDescription = "popupDescription",
         ordre = 1,
         type = "unknown",
         description = null,
@@ -47,6 +48,7 @@ internal class QuestionMapperTest {
         private val expectedQuestion = QuestionUniqueChoice(
             id = questionUUID.toString(),
             title = "title",
+            popupDescription = "popupDescription",
             order = 1,
             nextQuestionId = null,
             consultationId = consultationUUID.toString(),
@@ -135,6 +137,7 @@ internal class QuestionMapperTest {
         private val expectedQuestion = QuestionMultipleChoices(
             id = questionUUID.toString(),
             title = "title",
+            popupDescription = "popupDescription",
             order = 1,
             nextQuestionId = null,
             consultationId = consultationUUID.toString(),
@@ -245,6 +248,7 @@ internal class QuestionMapperTest {
         private val expectedQuestion = QuestionOpen(
             id = questionUUID.toString(),
             title = "title",
+            popupDescription = "popupDescription",
             order = 1,
             nextQuestionId = null,
             consultationId = consultationUUID.toString(),
@@ -314,6 +318,7 @@ internal class QuestionMapperTest {
         private val expectedQuestion = QuestionChapter(
             id = questionUUID.toString(),
             title = "title",
+            popupDescription = "popupDescription",
             order = 1,
             nextQuestionId = null,
             consultationId = consultationUUID.toString(),
@@ -384,6 +389,7 @@ internal class QuestionMapperTest {
         private val expectedQuestion = QuestionConditional(
             id = questionUUID.toString(),
             title = "title",
+            popupDescription = "popupDescription",
             order = 1,
             nextQuestionId = null,
             consultationId = consultationUUID.toString(),

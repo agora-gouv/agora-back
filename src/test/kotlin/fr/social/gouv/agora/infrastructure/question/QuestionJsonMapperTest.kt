@@ -48,6 +48,7 @@ class QuestionJsonMapperTest {
     private val questionUniqueChoice = QuestionUniqueChoice(
         id = "questionUniqueChoiceId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         consultationId = "consultationId",
         nextQuestionId = "nextQuestionId",
@@ -57,6 +58,7 @@ class QuestionJsonMapperTest {
     private val expectedQuestionUniqueChoiceJson = QuestionUniqueChoiceJson(
         id = "questionUniqueChoiceId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         questionProgress = "Question 1/1",
         nextQuestionId = "nextQuestionId",
@@ -66,6 +68,7 @@ class QuestionJsonMapperTest {
     private val questionChoixMultiple = QuestionMultipleChoices(
         id = "questionMultipleChoicesId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         consultationId = "consultationId",
         nextQuestionId = "nextQuestionId",
@@ -76,6 +79,7 @@ class QuestionJsonMapperTest {
     private val expectedQuestionMultipleChoiceJson = QuestionMultipleChoicesJson(
         id = "questionMultipleChoicesId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         questionProgress = "Question 1/1",
         maxChoices = 2,
@@ -86,6 +90,7 @@ class QuestionJsonMapperTest {
     private val questionChapter = QuestionChapter(
         id = "questionChapterId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         consultationId = "consultationId",
         nextQuestionId = "nextQuestionId",
@@ -95,6 +100,7 @@ class QuestionJsonMapperTest {
     private val expectedQuestionChapterJson = QuestionChapterJson(
         id = "questionChapterId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         description = "description",
         nextQuestionId = "nextQuestionId",
@@ -103,6 +109,7 @@ class QuestionJsonMapperTest {
     private val questionOpen = QuestionOpen(
         id = "questionOpenId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         consultationId = "consultationId",
         nextQuestionId = "nextQuestionId",
@@ -111,6 +118,7 @@ class QuestionJsonMapperTest {
     private val expectedQuestionOpenJson = QuestionOpenedJson(
         id = "questionOpenId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         questionProgress = "Question 1/1",
         nextQuestionId = "nextQuestionId"
@@ -119,6 +127,7 @@ class QuestionJsonMapperTest {
     private val questionConditional = QuestionConditional(
         id = "questionConditionalId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         consultationId = "consultationId",
         nextQuestionId = "nextQuestionId",
@@ -128,6 +137,7 @@ class QuestionJsonMapperTest {
     private val expectedQuestionConditionalJson = QuestionConditionalJson(
         id = "questionConditionalId",
         title = "title",
+        popupDescription = "popupDescription",
         order = 1,
         questionProgress = "Question 1/1",
         possibleChoices = listOf(expectedChoixPossibleConditionalJson),
