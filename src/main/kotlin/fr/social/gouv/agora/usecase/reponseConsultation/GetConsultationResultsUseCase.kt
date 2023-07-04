@@ -14,6 +14,7 @@ class GetConsultationResultsUseCase(
     private val questionRepository: QuestionRepository,
     private val getConsultationResponseRepository: GetConsultationResponseRepository,
     private val consultationUpdateRepository: ConsultationUpdateRepository,
+    private val mapper: QuestionNoResponseMapper,
 ) {
 
     fun getConsultationResults(consultationId: String): ConsultationResult? {
@@ -22,7 +23,6 @@ class GetConsultationResultsUseCase(
         val questionList =
             questionRepository.getConsultationQuestionList(consultationId).takeUnless { it.isEmpty() } ?: return null
         val consultationResponseList = getConsultationResponseRepository.getConsultationResponses(consultationId)
-
 
         return buildResults(
             consultationInfo = consultationInfo,
@@ -36,10 +36,12 @@ class GetConsultationResultsUseCase(
         consultationInfo: ConsultationInfo,
         consultationUpdate: ConsultationUpdate,
         questionList: List<Question>,
-        consultationResponseList: List<ReponseConsultation>
+        consultationResponseList: List<ReponseConsultation>,
     ): ConsultationResult {
         val filteredQuestionList =
             questionList.filterIsInstance<QuestionWithChoices>().filter { it.choixPossibleList.isNotEmpty() }
+                .map { questionWithChoices -> mapper.toQuestionNoResponse(questionWithChoices) }
+
         val participantCount = consultationResponseList.map { it.participationId }.toSet().size
 
         return ConsultationResult(
@@ -59,7 +61,7 @@ class GetConsultationResultsUseCase(
     private fun buildQuestionResults(
         question: QuestionWithChoices,
         participantCount: Int,
-        consultationResponseList: List<ReponseConsultation>
+        consultationResponseList: List<ReponseConsultation>,
     ) = QuestionResult(
         question = question,
         responses = question.choixPossibleList.map { choix ->
@@ -87,5 +89,4 @@ class GetConsultationResultsUseCase(
             ratio = (choixCount.toDouble() / participantCount).takeUnless { it.isNaN() } ?: 0.0,
         )
     }
-
 }
