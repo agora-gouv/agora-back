@@ -7,33 +7,34 @@ import org.springframework.stereotype.Component
 @Component
 class QuestionNoResponseMapper {
 
-    @Suppress("UNCHECKED_CAST")
     fun toQuestionNoResponse(questionWithChoices: QuestionWithChoices): QuestionWithChoices {
         val ordre = questionWithChoices.choixPossibleList.size + 1
-        val modifiedChoicesList =
-            questionWithChoices.choixPossibleList as List<ChoixPossibleDefault> + createNoResponseChoice(
-                ordre,
-                questionWithChoices.id
-            )
+
         return when (questionWithChoices) {
             is QuestionUniqueChoice -> QuestionUniqueChoice(
                 id = questionWithChoices.id,
                 title = questionWithChoices.title,
                 popupDescription = questionWithChoices.popupDescription,
-                order = ordre,
+                order = questionWithChoices.order,
                 nextQuestionId = questionWithChoices.nextQuestionId,
                 consultationId = questionWithChoices.consultationId,
-                choixPossibleList = modifiedChoicesList,
+                choixPossibleList = questionWithChoices.choixPossibleList + createNoResponseChoice(
+                    ordre,
+                    questionWithChoices.id
+                ),
             )
 
             is QuestionMultipleChoices -> QuestionMultipleChoices(
                 id = questionWithChoices.id,
                 title = questionWithChoices.title,
                 popupDescription = questionWithChoices.popupDescription,
-                order = ordre,
+                order = questionWithChoices.order,
                 nextQuestionId = questionWithChoices.nextQuestionId,
                 consultationId = questionWithChoices.consultationId,
-                choixPossibleList = modifiedChoicesList,
+                choixPossibleList = questionWithChoices.choixPossibleList + createNoResponseChoice(
+                    ordre,
+                    questionWithChoices.id
+                ),
                 maxChoices = questionWithChoices.maxChoices
             )
 
