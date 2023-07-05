@@ -4,7 +4,6 @@ import fr.social.gouv.agora.domain.UserInfo
 import fr.social.gouv.agora.infrastructure.login.dto.UserDTO
 import fr.social.gouv.agora.infrastructure.login.repository.LoginCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.login.repository.UserRepository
-import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -15,7 +14,7 @@ class UserRepositoryImpl(
     private val mapper: UserInfoMapper,
 ) : UserRepository {
 
-    override fun getAllUser(): List<UserInfo> {
+    override fun getAllUsers(): List<UserInfo> {
         return getAllUserDTO().map(mapper::toDomain)
     }
 
@@ -55,10 +54,6 @@ class UserRepositoryImpl(
         val savedUserDTO = databaseRepository.save(userDTO)
         cacheRepository.insertUser(savedUserDTO)
         return mapper.toDomain(savedUserDTO)
-    }
-
-    override fun getAllusers(): List<UserInfo> {
-        TODO("Not yet implemented")
     }
 
     private fun updateUserIfRequired(userDTO: UserDTO, fcmToken: String): UserDTO? {

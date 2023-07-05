@@ -6,5 +6,5 @@ interface UserRepository {
     fun getUserById(userId: String): UserInfo?
     fun updateUserFcmToken(userId: String, fcmToken: String): UserInfo?
     fun generateUser(fcmToken: String): UserInfo
-    fun getAllusers(): List<UserInfo>
+    fun getAllUsers(): List<UserInfo>
 }
