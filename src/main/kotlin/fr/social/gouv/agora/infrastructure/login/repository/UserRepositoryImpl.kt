@@ -71,6 +71,10 @@ class UserRepositoryImpl(
         return mapper.toDomain(savedUserDTO)
     }
 
+    override fun getAllusers(): List<UserInfo> {
+        TODO("Not yet implemented")
+    }
+
     private fun updateUserIfRequired(userDTO: UserDTO, fcmToken: String): UserDTO? {
         return if (userDTO.fcmToken != fcmToken) {
             val updatedUserDTO = mapper.updateDto(dto = userDTO, fcmToken = fcmToken)
