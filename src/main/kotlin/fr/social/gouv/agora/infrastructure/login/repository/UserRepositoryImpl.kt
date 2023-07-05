@@ -30,17 +30,14 @@ class UserRepositoryImpl(
     }
 
     override fun updateUserFcmToken(userId: String, fcmToken: String): UserInfo? {
-
         return try {
             val userUUID = UUID.fromString(userId)
             val userDTO = findUserDTO(userUUID)
             if (userDTO != null) {
-                val updatedDTO = updateUserIfRequired(userDTO, fcmToken)
-                val usedUserDTO = updatedDTO ?: userDTO
-                if (updatedDTO != null) {
-                    cacheRepository.updateUser(usedUserDTO)
-                }
-                mapper.toDomain(usedUserDTO)
+                val updatedUserDTO = mapper.updateDto(dto = userDTO, fcmToken = fcmToken)
+                val savedUserDTO = databaseRepository.save(updatedUserDTO)
+                cacheRepository.updateUser(savedUserDTO)
+                mapper.toDomain(savedUserDTO)
             } else {
                 null
             }
@@ -54,15 +51,6 @@ class UserRepositoryImpl(
         val savedUserDTO = databaseRepository.save(userDTO)
         cacheRepository.insertUser(savedUserDTO)
         return mapper.toDomain(savedUserDTO)
-    }
-
-    private fun updateUserIfRequired(userDTO: UserDTO, fcmToken: String): UserDTO? {
-        return if (userDTO.fcmToken != fcmToken) {
-            val updatedUserDTO = mapper.updateDto(dto = userDTO, fcmToken = fcmToken)
-            databaseRepository.save(updatedUserDTO)
-            cacheRepository.insertUser(updatedUserDTO)
-            updatedUserDTO
-        } else null
     }
 
     @Suppress("UNCHECKED_CAST")
