@@ -14,7 +14,7 @@ class GetConsultationPreviewFinishedListUseCase(
     private val mapper: ConsultationPreviewFinishedMapper,
 ) {
     companion object {
-        private const val MAX_CONSULTATION_FINISHED_LIST_SIZE = 10
+        private const val MAX_CONSULTATION_FINISHED_LIST_SIZE = 5
     }
 
     fun getConsultationPreviewFinishedList(): List<ConsultationPreviewFinished> {

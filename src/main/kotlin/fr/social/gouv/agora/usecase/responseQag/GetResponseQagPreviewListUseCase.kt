@@ -13,7 +13,7 @@ class GetResponseQagPreviewListUseCase(
     private val responseQagRepository: ResponseQagRepository,
 ) {
     companion object {
-        private const val MAX_PREVIEW_LIST_SIZE = 10
+        private const val MAX_PREVIEW_LIST_SIZE = 5
     }
 
     fun getResponseQagPreviewList(): List<ResponseQagPreview> {
