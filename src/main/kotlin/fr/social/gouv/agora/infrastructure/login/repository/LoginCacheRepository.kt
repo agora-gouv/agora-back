@@ -1,7 +1,6 @@
 package fr.social.gouv.agora.infrastructure.login.repository
 
 import fr.social.gouv.agora.infrastructure.login.dto.UserDTO
-import fr.social.gouv.agora.infrastructure.utils.UuidUtils
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -11,46 +10,50 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
 
     companion object {
         private const val USER_CACHE_NAME = "userCache"
+        private const val ALL_USER_CACHE_KEY = "userCacheList"
     }
 
     sealed class CacheResult {
-        data class CachedUser(val userDTO: UserDTO) : CacheResult()
-        object CachedUserNotFound : CacheResult()
+        data class CachedUserList(val allUserDTO: List<UserDTO>) : CacheResult()
         object CacheNotInitialized : CacheResult()
     }
 
-    fun getUserById(userId: UUID): CacheResult {
-        return try {
-            val cachedUserDTO = getUserCache()?.get(userId.toString(), UserDTO::class.java)
-            when (cachedUserDTO?.id?.toString()) {
-                null -> CacheResult.CacheNotInitialized
-                UuidUtils.NOT_FOUND_UUID_STRING -> CacheResult.CachedUserNotFound
-                else -> CacheResult.CachedUser(cachedUserDTO)
-            }
-        } catch (e: IllegalStateException) {
-            CacheResult.CacheNotInitialized
+    fun initializeCache(allUserDTO: List<UserDTO>) {
+        getUserCache()?.put(ALL_USER_CACHE_KEY, allUserDTO)
+    }
+
+    fun getAllUserList(): CacheResult {
+        return when (val allUserDTO = getAllUserDTOFromCache()) {
+            null -> CacheResult.CacheNotInitialized
+            else -> CacheResult.CachedUserList(allUserDTO)
         }
     }
 
     fun insertUser(userDTO: UserDTO) {
-        getUserCache()?.put(userDTO.id, userDTO)
+        getAllUserDTOFromCache()?.let { allUserDTO ->
+            initializeCache(allUserDTO + userDTO)
+        } ?: throw IllegalStateException("User cache has not been initialized")
     }
 
-    fun insertUserNotFound(userId: UUID) {
-        getUserCache()?.put(userId.toString(), createUserNotFound())
+    fun updateUser(userDTO: UserDTO) {
+        getAllUserDTOFromCache()?.let { allUserDTO ->
+            initializeCache(replaceUpdatedDTO(allUserDTO = allUserDTO, updatedUserDTO = userDTO))
+        } ?: throw IllegalStateException("User cache has not been initialized")
     }
-
     private fun getUserCache() = cacheManager.getCache(USER_CACHE_NAME)
 
-    private fun createUserNotFound(): UserDTO {
-        return UserDTO(
-            id = UuidUtils.NOT_FOUND_UUID,
-            password = "",
-            fcmToken = "",
-            createdDate = Date(0),
-            authorizationLevel = 0,
-            isBanned = 0,
-        )
+    @Suppress("UNCHECKED_CAST")
+    private fun getAllUserDTOFromCache(): List<UserDTO>? {
+        return try {
+            getUserCache()?.get(ALL_USER_CACHE_KEY, List::class.java) as? List<UserDTO>
+        } catch (e: IllegalStateException) {
+            null
+        }
+    }
+
+    private fun replaceUpdatedDTO(allUserDTO: List<UserDTO>, updatedUserDTO: UserDTO) = allUserDTO.map { userDTO ->
+        if (userDTO.id == updatedUserDTO.id) updatedUserDTO
+        else userDTO
     }
 
 }
