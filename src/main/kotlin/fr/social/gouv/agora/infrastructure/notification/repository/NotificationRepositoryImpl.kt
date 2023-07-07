@@ -1,8 +1,7 @@
 package fr.social.gouv.agora.infrastructure.notification.repository
 
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.Message
-import com.google.firebase.messaging.Notification
+import com.google.firebase.messaging.*
+import fr.social.gouv.agora.usecase.notification.repository.NewConsultationNotificationRequest
 import fr.social.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.social.gouv.agora.usecase.notification.repository.NotificationRequest
 import fr.social.gouv.agora.usecase.notification.repository.NotificationResult
@@ -37,6 +36,27 @@ class NotificationRepositoryImpl : NotificationRepository {
             )
         } catch (e: IllegalArgumentException) {
             NotificationResult.FAILURE
+        }
+    }
+
+    override fun sendNewConsultationNotification(request: NewConsultationNotificationRequest): Int? {
+        val message = MulticastMessage.builder()
+            .setNotification(
+                Notification.builder()
+                    .setTitle(request.title)
+                    .setBody(request.description)
+                    .build()
+            )
+            .putData("type", request.type)
+            .putData("consultationId", request.consultationId)
+            .addAllTokens(request.fcmTokenList)
+            .build()
+
+        return try {
+            val response = FirebaseMessaging.getInstance().sendMulticast(message)
+            response.successCount
+        } catch (e: FirebaseMessagingException) {
+            null
         }
     }
 
