@@ -32,6 +32,58 @@ internal class UserRepositoryImplTest {
     private lateinit var mapper: UserInfoMapper
 
     @Nested
+    inner class GetAllQagInfoTestCases {
+
+        @Test
+        fun `getAllUsers - when cache is not initialized - should initialize cache with database then return mapped results`() {
+            // Given
+            given(cacheRepository.getAllUserList()).willReturn(CacheResult.CacheNotInitialized)
+            val userDTO = mock(UserDTO::class.java)
+            given(databaseRepository.findAll()).willReturn(listOf(userDTO))
+
+            val userInfo = mock(UserInfo::class.java)
+            given(mapper.toDomain(userDTO)).willReturn(userInfo)
+
+            // When
+            val result = repository.getAllUsers()
+
+            // Then
+            assertThat(result).isEqualTo(listOf(userInfo))
+            inOrder(cacheRepository, databaseRepository, mapper).also {
+                then(cacheRepository).should(it).getAllUserList()
+                then(databaseRepository).should(it).findAll()
+                then(cacheRepository).should(it).initializeCache(listOf(userDTO))
+                then(mapper).should(it).toDomain(userDTO)
+                it.verifyNoMoreInteractions()
+            }
+        }
+
+        @Test
+        fun `getAllUsers - when cache is initialized - should return mapped result`() {
+            // Given
+            val userDTO = mock(UserDTO::class.java)
+            val allUserDTO = listOf(userDTO)
+            given(cacheRepository.getAllUserList()).willReturn(CacheResult.CachedUserList(allUserDTO))
+
+            val userInfo = mock(UserInfo::class.java)
+            given(mapper.toDomain(userDTO)).willReturn(userInfo)
+
+            // When
+            val result = repository.getAllUsers()
+
+            // Then
+            assertThat(result).isEqualTo(listOf(userInfo))
+            inOrder(cacheRepository, databaseRepository, mapper).also {
+                then(cacheRepository).should(it).getAllUserList()
+                then(mapper).should(it).toDomain(userDTO)
+                it.verifyNoMoreInteractions()
+            }
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
+
+    }
+
+    @Nested
     inner class GetUserByIdCases {
 
         private val userId = UUID.randomUUID()
@@ -49,30 +101,33 @@ internal class UserRepositoryImplTest {
         }
 
         @Test
-        fun `getUserById - when CacheNotInitialized & database returns null - should insert not found to cache then return null`() {
+        fun `getUserById - when CacheNotInitialized & database and has no result - should initialize cache with database then return null`() {
             // Given
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CacheNotInitialized)
-            given(databaseRepository.getUserById(userId = userId)).willReturn(null)
+            given(cacheRepository.getAllUserList()).willReturn(CacheResult.CacheNotInitialized)
+            given(databaseRepository.findAll()).willReturn(emptyList())
 
             // When
             val result = repository.getUserById(userId = userId.toString())
 
             // Then
             assertThat(result).isEqualTo(null)
-            then(cacheRepository).should().getUserById(userId = userId)
-            then(cacheRepository).should().insertUserNotFound(userId = userId)
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(databaseRepository).should(only()).getUserById(userId)
+            inOrder(cacheRepository, databaseRepository).also {
+                then(cacheRepository).should(it).getAllUserList()
+                then(databaseRepository).should(it).findAll()
+                then(cacheRepository).should(it).initializeCache(emptyList())
+                it.verifyNoMoreInteractions()
+            }
             then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
-        fun `getUserById - when CacheNotInitialized & database returns dto - should insert dto to cache then return mapped dto`() {
+        fun `getUserById - when cache is initialized and has result - should return mapped result`() {
             // Given
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CacheNotInitialized)
-
-            val userDTO = mock(UserDTO::class.java)
-            given(databaseRepository.getUserById(userId)).willReturn(userDTO)
+            val userDTO = mock(UserDTO::class.java).also {
+                given(it.id).willReturn(userId)
+            }
+            val allUserDTO = listOf(userDTO)
+            given(cacheRepository.getAllUserList()).willReturn(CacheResult.CachedUserList(allUserDTO))
 
             val userInfo = mock(UserInfo::class.java)
             given(mapper.toDomain(userDTO)).willReturn(userInfo)
@@ -82,45 +137,12 @@ internal class UserRepositoryImplTest {
 
             // Then
             assertThat(result).isEqualTo(userInfo)
-            then(cacheRepository).should().getUserById(userId = userId)
-            then(cacheRepository).should().insertUser(userDTO)
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(databaseRepository).should(only()).getUserById(userId = userId)
-            then(mapper).should(only()).toDomain(userDTO)
-        }
-
-        @Test
-        fun `getUserById - when CachedUserNotFound - should return null`() {
-            // Given
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CachedUserNotFound)
-
-            // When
-            val result = repository.getUserById(userId = userId.toString())
-
-            // Then
-            assertThat(result).isEqualTo(null)
-            then(cacheRepository).should(only()).getUserById(userId = userId)
+            inOrder(cacheRepository, databaseRepository, mapper).also {
+                then(cacheRepository).should(it).getAllUserList()
+                then(mapper).should(it).toDomain(userDTO)
+                it.verifyNoMoreInteractions()
+            }
             then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `getUserById - when CachedUser - should return mapped dto`() {
-            // Given
-            val userDTO = mock(UserDTO::class.java)
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CachedUser(userDTO))
-
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(userDTO)).willReturn(userInfo)
-
-            // When
-            val result = repository.getUserById(userId = userId.toString())
-
-            // Then
-            assertThat(result).isEqualTo(userInfo)
-            then(cacheRepository).should(only()).getUserById(userId = userId)
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).should(only()).toDomain(userDTO)
         }
     }
 
@@ -142,143 +164,59 @@ internal class UserRepositoryImplTest {
         }
 
         @Test
-        fun `updateUserFcmToken - when CacheNotInitialized & database returns null - should insert not found to cache then return null`() {
+        fun `updateUserFcmToken - when cache is not initialized and has no result - should return null`() {
             // Given
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CacheNotInitialized)
-            given(databaseRepository.getUserById(userId = userId)).willReturn(null)
+            given(cacheRepository.getAllUserList()).willReturn(CacheResult.CacheNotInitialized)
+            given(databaseRepository.findAll()).willReturn(emptyList())
 
             // When
-            val result = repository.updateUserFcmToken(userId = userId.toString(), fcmToken = "fcmToken")
+            val result = repository.updateUserFcmToken(
+                userId = userId.toString(),
+                fcmToken = "fcmToken"
+            )
 
             // Then
             assertThat(result).isEqualTo(null)
-            then(cacheRepository).should().getUserById(userId = userId)
-            then(cacheRepository).should().insertUserNotFound(userId = userId)
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(databaseRepository).should(only()).getUserById(userId)
+            inOrder(cacheRepository, databaseRepository).also {
+                then(cacheRepository).should(it).getAllUserList()
+                then(databaseRepository).should(it).findAll()
+                then(cacheRepository).should(it).initializeCache(emptyList())
+                it.verifyNoMoreInteractions()
+            }
             then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
-        fun `updateUserFcmToken - when CacheNotInitialized, database returns dto and fcmToken are the same - should insert dto to cache then return mapped dto`() {
+        fun `updateUserFcmToken - when cache returns DTO - should return updatedUser`() {
             // Given
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CacheNotInitialized)
-
             val userDTO = mock(UserDTO::class.java).also {
-                given(it.fcmToken).willReturn("fcmToken")
+                given(it.id).willReturn(userId)
             }
-            given(databaseRepository.getUserById(userId)).willReturn(userDTO)
-
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(userDTO)).willReturn(userInfo)
-
-            // When
-            val result = repository.updateUserFcmToken(userId = userId.toString(), fcmToken = "fcmToken")
-
-            // Then
-            assertThat(result).isEqualTo(userInfo)
-            then(cacheRepository).should().getUserById(userId = userId)
-            then(cacheRepository).should().insertUser(userDTO)
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(databaseRepository).should(only()).getUserById(userId = userId)
-            then(mapper).should(only()).toDomain(userDTO)
-        }
-
-        @Test
-        fun `updateUserFcmToken - when CacheNotInitialized, database returns dto and fcmToken are different - should insert updated dto to cache and database then return mapped dto`() {
-            // Given
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CacheNotInitialized)
-
-            val userDTO = mock(UserDTO::class.java).also {
-                given(it.fcmToken).willReturn("oldFcmToken")
-            }
-            given(databaseRepository.getUserById(userId)).willReturn(userDTO)
+            given(cacheRepository.getAllUserList()).willReturn(CacheResult.CachedUserList(listOf(userDTO)))
 
             val updatedUserDTO = mock(UserDTO::class.java)
-            given(mapper.updateDto(dto = userDTO, fcmToken = "fcmToken")).willReturn(updatedUserDTO)
+            given(mapper.updateDto(dto = userDTO, fcmToken = "fcmToken"))
+                .willReturn(updatedUserDTO)
+
+            val savedUserDTO = mock(UserDTO::class.java)
+            given(databaseRepository.save(updatedUserDTO)).willReturn(savedUserDTO)
 
             val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(updatedUserDTO)).willReturn(userInfo)
-
+            given(mapper.toDomain(savedUserDTO)).willReturn(userInfo)
             // When
-            val result = repository.updateUserFcmToken(userId = userId.toString(), fcmToken = "fcmToken")
+            val result = repository.updateUserFcmToken(
+                userId = userId.toString(),
+                fcmToken = "fcmToken",
+            )
 
             // Then
             assertThat(result).isEqualTo(userInfo)
-            then(cacheRepository).should().getUserById(userId = userId)
-            then(cacheRepository).should().insertUser(updatedUserDTO)
+            then(databaseRepository).should(only()).save(updatedUserDTO)
+            then(cacheRepository).should(times(1)).getAllUserList()
+            then(cacheRepository).should(times(1)).updateUser(userDTO = savedUserDTO)
             then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(databaseRepository).should().getUserById(userId = userId)
-            then(databaseRepository).should().save(updatedUserDTO)
-            then(databaseRepository).shouldHaveNoMoreInteractions()
-            then(mapper).should().updateDto(dto = userDTO, fcmToken = "fcmToken")
-            then(mapper).should().toDomain(updatedUserDTO)
-            then(mapper).shouldHaveNoMoreInteractions()
-        }
-
-        @Test
-        fun `updateUserFcmToken - when CachedUserNotFound - should return null`() {
-            // Given
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CachedUserNotFound)
-
-            // When
-            val result = repository.updateUserFcmToken(userId = userId.toString(), fcmToken = "fcmToken")
-
-            // Then
-            assertThat(result).isEqualTo(null)
-            then(cacheRepository).should(only()).getUserById(userId = userId)
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `updateUserFcmToken - when CachedUser & fcmToken are the same - should return mapped dto`() {
-            // Given
-            val userDTO = mock(UserDTO::class.java).also {
-                given(it.fcmToken).willReturn("fcmToken")
-            }
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CachedUser(userDTO))
-
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(userDTO)).willReturn(userInfo)
-
-            // When
-            val result = repository.updateUserFcmToken(userId = userId.toString(), fcmToken = "fcmToken")
-
-            // Then
-            assertThat(result).isEqualTo(userInfo)
-            then(cacheRepository).should(only()).getUserById(userId = userId)
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).should(only()).toDomain(userDTO)
-        }
-
-        @Test
-        fun `updateUserFcmToken - when CachedUser & fcmToken are different - should insert updated dto to cache and database then return mapped dto`() {
-            // Given
-            val userDTO = mock(UserDTO::class.java).also {
-                given(it.fcmToken).willReturn("oldFcmToken")
-            }
-            given(cacheRepository.getUserById(userId = userId)).willReturn(CacheResult.CachedUser(userDTO))
-
-            val updatedUserDTO = mock(UserDTO::class.java)
-            given(mapper.updateDto(dto = userDTO, fcmToken = "fcmToken")).willReturn(updatedUserDTO)
-
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(updatedUserDTO)).willReturn(userInfo)
-
-            // When
-            val result = repository.updateUserFcmToken(userId = userId.toString(), fcmToken = "fcmToken")
-
-            // Then
-            assertThat(result).isEqualTo(userInfo)
-            then(cacheRepository).should().getUserById(userId = userId)
-            then(cacheRepository).should().insertUser(updatedUserDTO)
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(databaseRepository).should().save(updatedUserDTO)
-            then(databaseRepository).shouldHaveNoMoreInteractions()
-            then(mapper).should().updateDto(dto = userDTO, fcmToken = "fcmToken")
-            then(mapper).should().toDomain(updatedUserDTO)
-            then(mapper).shouldHaveNoMoreInteractions()
+            then(mapper).should(times(1)).updateDto(dto = userDTO, fcmToken = "fcmToken")
+            then(mapper).should(times(1)).toDomain(dto = savedUserDTO)
         }
     }
 
@@ -307,5 +245,5 @@ internal class UserRepositoryImplTest {
             inOrder.verifyNoMoreInteractions()
         }
     }
-
 }
+
