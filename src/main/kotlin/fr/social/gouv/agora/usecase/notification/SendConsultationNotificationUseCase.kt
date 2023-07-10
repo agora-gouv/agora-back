@@ -17,7 +17,7 @@ class SendConsultationNotificationUseCase(
         consultationId: String,
     ): Pair<Int, Int>? {
         return notificationRepository.sendNewConsultationNotification(
-            request = NewConsultationNotificationRequest(
+            request = ConsultationNotificationRequest(
                 title = title,
                 description = description,
                 fcmTokenList = userRepository.getAllUsers().map { userInfo -> userInfo.fcmToken },
@@ -32,7 +32,7 @@ class SendConsultationNotificationUseCase(
         consultationId: String,
     ): Pair<Int, Int>? {
         return notificationRepository.sendNewConsultationNotification(
-            request = NewConsultationNotificationRequest(
+            request = ConsultationNotificationRequest(
                 title = title,
                 description = description,
                 fcmTokenList = userRepository.getAllUsers()

@@ -40,7 +40,7 @@ class NotificationRepositoryImpl : NotificationRepository {
         }
     }
 
-    override fun sendNewConsultationNotification(request: NewConsultationNotificationRequest): Pair<Int, Int>? {
+    override fun sendNewConsultationNotification(request: ConsultationNotificationRequest): Pair<Int, Int>? {
         return try {
             val message = createMultiMessage(request = request, type = CONSULTATION_DETAILS_NOTIFICATION_TYPE)
             val response = FirebaseMessaging.getInstance().sendMulticast(message)
@@ -50,7 +50,7 @@ class NotificationRepositoryImpl : NotificationRepository {
         }
     }
 
-    override fun sendConsultationUpdateNotification(request: NewConsultationNotificationRequest): Pair<Int, Int>? {
+    override fun sendConsultationUpdateNotification(request: ConsultationNotificationRequest): Pair<Int, Int>? {
         return try {
             val message = createMultiMessage(request = request, type = CONSULTATION_RESULTS_NOTIFICATION_TYPE)
             val response = FirebaseMessaging.getInstance().sendMulticast(message)
@@ -71,7 +71,7 @@ class NotificationRepositoryImpl : NotificationRepository {
             .setToken(request.fcmToken)
     }
 
-    private fun createMultiMessage(request: NewConsultationNotificationRequest, type: String): MulticastMessage {
+    private fun createMultiMessage(request: ConsultationNotificationRequest, type: String): MulticastMessage {
         return MulticastMessage.builder()
             .setNotification(
                 Notification.builder()

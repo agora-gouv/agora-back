@@ -3,8 +3,8 @@ package fr.social.gouv.agora.usecase.notification.repository
 interface NotificationRepository {
     fun sendNotificationMessage(request: NotificationRequest): NotificationResult
     fun sendQagDetailsNotification(request: NotificationRequest, qagId: String): NotificationResult
-    fun sendNewConsultationNotification(request: NewConsultationNotificationRequest): Pair<Int, Int>?
-    fun sendConsultationUpdateNotification(request: NewConsultationNotificationRequest): Pair<Int, Int>?
+    fun sendNewConsultationNotification(request: ConsultationNotificationRequest): Pair<Int, Int>?
+    fun sendConsultationUpdateNotification(request: ConsultationNotificationRequest): Pair<Int, Int>?
 }
 
 data class NotificationRequest(
@@ -13,7 +13,7 @@ data class NotificationRequest(
     val description: String,
 )
 
-data class NewConsultationNotificationRequest(
+data class ConsultationNotificationRequest(
     val title: String,
     val description: String,
     val fcmTokenList: List<String>,
