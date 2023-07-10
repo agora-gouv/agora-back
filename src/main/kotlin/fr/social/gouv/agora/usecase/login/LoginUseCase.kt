@@ -13,10 +13,8 @@ class LoginUseCase(private val userRepository: UserRepository) {
     }
 
     fun login(loginTokenData: LoginTokenData, fcmToken: String): UserInfo? {
-        return userRepository.getUserById(loginTokenData.userId)?.let { userInfo ->
-            if (userInfo.fcmToken != fcmToken) {
-                userRepository.updateUserFcmToken(userId = loginTokenData.userId, fcmToken = fcmToken)
-            } else userInfo
+        return userRepository.getUserById(loginTokenData.userId)?.let {
+            userRepository.updateUser(userId = loginTokenData.userId, fcmToken = fcmToken)
         }
     }
 

@@ -37,36 +37,13 @@ internal class LoginUseCaseTest {
     }
 
     @Test
-    fun `login - when repository returns user and fcmToken are the same - should return user`() {
+    fun `login - when repository returns user - should return updated user`() {
         // Given
-        val userInfo = mock(UserInfo::class.java).also {
-            given(it.fcmToken).willReturn("fcmToken")
-        }
-        given(repository.getUserById(userId = "userId")).willReturn(userInfo)
-
-        // When
-        val result = useCase.login(
-            loginTokenData = LoginTokenData(
-                userId = "userId",
-            ),
-            fcmToken = "fcmToken",
-        )
-
-        // Then
-        assertThat(result).isEqualTo(userInfo)
-        then(repository).should(only()).getUserById(userId = "userId")
-    }
-
-    @Test
-    fun `login - when repository returns user and fcmToken are the different - should updateFcmToken then return user`() {
-        // Given
-        val userInfo = mock(UserInfo::class.java).also {
-            given(it.fcmToken).willReturn("oldFcmToken")
-        }
+        val userInfo = mock(UserInfo::class.java)
         given(repository.getUserById(userId = "userId")).willReturn(userInfo)
 
         val updatedUserInfo = mock(UserInfo::class.java)
-        given(repository.updateUserFcmToken(userId = "userId", fcmToken = "fcmToken")).willReturn(updatedUserInfo)
+        given(repository.updateUser(userId = "userId", fcmToken = "fcmToken")).willReturn(updatedUserInfo)
 
         // When
         val result = useCase.login(
@@ -79,7 +56,7 @@ internal class LoginUseCaseTest {
         // Then
         assertThat(result).isEqualTo(updatedUserInfo)
         then(repository).should().getUserById(userId = "userId")
-        then(repository).should().updateUserFcmToken(userId = "userId", fcmToken = "fcmToken")
+        then(repository).should().updateUser(userId = "userId", fcmToken = "fcmToken")
         then(repository).shouldHaveNoMoreInteractions()
     }
 }

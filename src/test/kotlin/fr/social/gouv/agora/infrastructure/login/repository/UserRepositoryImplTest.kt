@@ -147,14 +147,14 @@ internal class UserRepositoryImplTest {
     }
 
     @Nested
-    inner class UpdateUserFcmTokenCases {
+    inner class UpdateUserCases {
 
         private val userId = UUID.randomUUID()
 
         @Test
-        fun `updateUserFcmToken - when invalid user UUID - should return null without doing anything`() {
+        fun `updateUser - when invalid user UUID - should return null without doing anything`() {
             // When
-            val result = repository.updateUserFcmToken(userId = "invalid userId", fcmToken = "fcmToken")
+            val result = repository.updateUser(userId = "invalid userId", fcmToken = "fcmToken")
 
             // Then
             assertThat(result).isEqualTo(null)
@@ -164,13 +164,13 @@ internal class UserRepositoryImplTest {
         }
 
         @Test
-        fun `updateUserFcmToken - when cache is not initialized and has no result - should return null`() {
+        fun `updateUser - when cache is not initialized and has no result - should return null`() {
             // Given
             given(cacheRepository.getAllUserList()).willReturn(CacheResult.CacheNotInitialized)
             given(databaseRepository.findAll()).willReturn(emptyList())
 
             // When
-            val result = repository.updateUserFcmToken(
+            val result = repository.updateUser(
                 userId = userId.toString(),
                 fcmToken = "fcmToken"
             )
@@ -187,7 +187,7 @@ internal class UserRepositoryImplTest {
         }
 
         @Test
-        fun `updateUserFcmToken - when cache returns DTO - should return updatedUser`() {
+        fun `updateUser - when cache returns DTO - should return updatedUser`() {
             // Given
             val userDTO = mock(UserDTO::class.java).also {
                 given(it.id).willReturn(userId)
@@ -204,7 +204,7 @@ internal class UserRepositoryImplTest {
             val userInfo = mock(UserInfo::class.java)
             given(mapper.toDomain(savedUserDTO)).willReturn(userInfo)
             // When
-            val result = repository.updateUserFcmToken(
+            val result = repository.updateUser(
                 userId = userId.toString(),
                 fcmToken = "fcmToken",
             )

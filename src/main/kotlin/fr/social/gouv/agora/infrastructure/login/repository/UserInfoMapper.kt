@@ -41,11 +41,12 @@ class UserInfoMapper {
             createdDate = Date(),
             authorizationLevel = DEFAULT_AUTHORIZATION_LEVEL,
             isBanned = IS_BANNED_FALSE_VALUE,
+            lastConnectionDate = Date(),
         )
     }
 
     fun updateDto(dto: UserDTO, fcmToken: String): UserDTO {
-        return dto.copy(fcmToken = fcmToken)
+        return dto.copy(fcmToken = fcmToken, lastConnectionDate = Date())
     }
 
 }

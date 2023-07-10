@@ -29,7 +29,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override fun updateUserFcmToken(userId: String, fcmToken: String): UserInfo? {
+    override fun updateUser(userId: String, fcmToken: String): UserInfo? {
         return try {
             val userUUID = UUID.fromString(userId)
             val userDTO = findUserDTO(userUUID)
