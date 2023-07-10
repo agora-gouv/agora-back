@@ -41,25 +41,20 @@ class NotificationRepositoryImpl : NotificationRepository {
     }
 
     override fun sendNewConsultationNotification(request: NewConsultationNotificationRequest): Pair<Int, Int>? {
-        val requestType = when (request.type) {
-            Type.CONSULTATION_DETAILS_NOTIFICATION_TYPE -> CONSULTATION_DETAILS_NOTIFICATION_TYPE
-            Type.CONSULTATION_RESULTS_NOTIFICATION_TYPE -> CONSULTATION_RESULTS_NOTIFICATION_TYPE
-        }
         return try {
-            val message = MulticastMessage.builder()
-                .setNotification(
-                    Notification.builder()
-                        .setTitle(request.title)
-                        .setBody(request.description)
-                        .build()
-                )
-                .putData(NOTIFICATION_TYPE_KEY, requestType)
-                .putData(CONSULTATION_DETAILS_ID_KEY, request.consultationId)
-                .addAllTokens(request.fcmTokenList)
-                .build()
-
+            val message = createMultiMessage(request = request, type = CONSULTATION_DETAILS_NOTIFICATION_TYPE)
             val response = FirebaseMessaging.getInstance().sendMulticast(message)
-            Pair(response.successCount, response.failureCount)
+            Pair(response.successCount, request.fcmTokenList.size)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override fun sendConsultationUpdateNotification(request: NewConsultationNotificationRequest): Pair<Int, Int>? {
+        return try {
+            val message = createMultiMessage(request = request, type = CONSULTATION_RESULTS_NOTIFICATION_TYPE)
+            val response = FirebaseMessaging.getInstance().sendMulticast(message)
+            Pair(response.successCount, request.fcmTokenList.size)
         } catch (e: Exception) {
             null
         }
@@ -74,6 +69,20 @@ class NotificationRepositoryImpl : NotificationRepository {
                     .build()
             )
             .setToken(request.fcmToken)
+    }
+
+    private fun createMultiMessage(request: NewConsultationNotificationRequest, type: String): MulticastMessage {
+        return MulticastMessage.builder()
+            .setNotification(
+                Notification.builder()
+                    .setTitle(request.title)
+                    .setBody(request.description)
+                    .build()
+            )
+            .putData(NOTIFICATION_TYPE_KEY, type)
+            .putData(CONSULTATION_DETAILS_ID_KEY, request.consultationId)
+            .addAllTokens(request.fcmTokenList)
+            .build()
     }
 
     private fun sendNotification(notificationMessage: Message): NotificationResult {
