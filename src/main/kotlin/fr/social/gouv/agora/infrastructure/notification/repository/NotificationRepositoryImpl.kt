@@ -1,10 +1,7 @@
 package fr.social.gouv.agora.infrastructure.notification.repository
 
 import com.google.firebase.messaging.*
-import fr.social.gouv.agora.usecase.notification.repository.NewConsultationNotificationRequest
-import fr.social.gouv.agora.usecase.notification.repository.NotificationRepository
-import fr.social.gouv.agora.usecase.notification.repository.NotificationRequest
-import fr.social.gouv.agora.usecase.notification.repository.NotificationResult
+import fr.social.gouv.agora.usecase.notification.repository.*
 import org.springframework.stereotype.Component
 
 @Component
@@ -14,8 +11,12 @@ class NotificationRepositoryImpl : NotificationRepository {
     companion object {
         private const val NOTIFICATION_TYPE_KEY = "type"
 
-        private const val QAG_DETAILS_NOTIFICATION_TYPE = "qagDetails"
         private const val QAG_DETAILS_ID_KEY = "qagId"
+        private const val CONSULTATION_DETAILS_ID_KEY = "consultationId"
+
+        private const val QAG_DETAILS_NOTIFICATION_TYPE = "qagDetails"
+        private const val CONSULTATION_DETAILS_NOTIFICATION_TYPE = "consultationDetails"
+        private const val CONSULTATION_RESULTS_NOTIFICATION_TYPE = "consultationResults"
     }
 
     override fun sendNotificationMessage(request: NotificationRequest): NotificationResult {
@@ -39,23 +40,27 @@ class NotificationRepositoryImpl : NotificationRepository {
         }
     }
 
-    override fun sendNewConsultationNotification(request: NewConsultationNotificationRequest): Int? {
-        val message = MulticastMessage.builder()
-            .setNotification(
-                Notification.builder()
-                    .setTitle(request.title)
-                    .setBody(request.description)
-                    .build()
-            )
-            .putData("type", request.type)
-            .putData("consultationId", request.consultationId)
-            .addAllTokens(request.fcmTokenList)
-            .build()
-
+    override fun sendNewConsultationNotification(request: NewConsultationNotificationRequest): Pair<Int, Int>? {
+        val requestType = when (request.type) {
+            Type.CONSULTATION_DETAILS_NOTIFICATION_TYPE -> CONSULTATION_DETAILS_NOTIFICATION_TYPE
+            Type.CONSULTATION_RESULTS_NOTIFICATION_TYPE -> CONSULTATION_RESULTS_NOTIFICATION_TYPE
+        }
         return try {
+            val message = MulticastMessage.builder()
+                .setNotification(
+                    Notification.builder()
+                        .setTitle(request.title)
+                        .setBody(request.description)
+                        .build()
+                )
+                .putData(NOTIFICATION_TYPE_KEY, requestType)
+                .putData(CONSULTATION_DETAILS_ID_KEY, request.consultationId)
+                .addAllTokens(request.fcmTokenList)
+                .build()
+
             val response = FirebaseMessaging.getInstance().sendMulticast(message)
-            response.successCount
-        } catch (e: FirebaseMessagingException) {
+            Pair(response.successCount, response.failureCount)
+        } catch (e: Exception) {
             null
         }
     }

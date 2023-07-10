@@ -16,14 +16,18 @@ class NewConsultationNotificationController(
         @RequestParam("type") type: String,
         @PathVariable("consultationId") consultationId: String,
     ): ResponseEntity<*> {
-        val successResponseNumber = sendNewConsultationNotificationUseCase.sendNewConsultationNotification(
+        val responseResult = sendNewConsultationNotificationUseCase.sendNewConsultationNotification(
             title = title,
             description = description,
             type = type,
             consultationId = consultationId
         )
-        return when (successResponseNumber) {
+        return when (responseResult) {
             null -> ResponseEntity.badRequest().body("Erreur d'envoi de la notification")
-            else -> ResponseEntity.ok().body("Notification envoyée avec succès à : $successResponseNumber")
+            else -> ResponseEntity.ok()
+                .body(
+                    "Notification envoyée avec succès à : ${responseResult.first} utilisateurs et échec d'envoi à : ${responseResult.second} utilisateurs"
+                )
         }
-    }}
+    }
+}

@@ -61,5 +61,5 @@ class UserRepositoryImpl(
         }
     }
 
-    private fun findUserDTO(userUUID: UUID?) = getAllUserDTO().find { userDTO -> userDTO.id == userUUID }
+    private fun findUserDTO(userUUID: UUID) = getAllUserDTO().find { userDTO -> userDTO.id == userUUID }
 }
