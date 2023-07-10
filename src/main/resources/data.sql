@@ -815,6 +815,42 @@ INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES 
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET description = EXCLUDED.description;
 
+INSERT INTO consultation_updates(id, step, description, consultation_id, explanations_title, video_title, video_intro, video_url, video_width, video_height, video_transcription, conclusion_title, conclusion_description) VALUES (
+    '9e828256-cca9-4078-bf1b-c4b958d61aa4',
+    2,
+    '<body>[Message fictif à des fins de test] Le Ministre a reçu l’ensemble de vos réponses à la consultation sur le covoiturage, dont l’objectif était d’évaluer et d’améliorer le plan national covoiturage.<br/>Outre les résultats des questions fermées (que vous pouvez voir dans la page Résultats), voici ce qui ressort des questions ouvertes.</body>',
+    '6d85522a-ee71-11ed-a05b-0242ac120003',
+    'Analyse des résultats',
+    'Un mot de la part de l’équipe',
+    '',
+    'https://betagouv.github.io/agora-content/AgoraMerciVideo.mp4',
+    1920,
+    1080,
+    'Merci pour votre participation ! La team AGORA. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    'En résumé …',
+    '<body><p>Grâce à la consultation, le Ministre a notamment constaté :<ul><li>- Que les incitations étaient peu connues</li><li>- Que certaines difficultés pouvaient être levées.</li></ul></p><p>Il a donc décidé de :<ul><li>- **Lancer une campagne de communication** sur les incitations</li><li>- Demander aux collectivités de **faire de nouvelles infrastructures** plus adaptées.</li></ul></p><p>Nous vous tiendrons au courant dans l’application quand ces mesures seront mises en places.</body></p>'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO explanations(id, title, intro, image_url, description, consultation_updates_id, toggleable) VALUES (
+    '22d629f4-892e-436d-9221-dab4d5f61710',
+    'Les difficultés que vous rencontrez pour recourir au covoiturage',
+    '<body>Vous rencontrez 3 principales difficultés :<ul><li>- La difficulté A</li><li>- La difficulté B</li><li>- La difficulté C</li></ul></body>',
+    'https://betagouv.github.io/agora-content/covoiturage_tags.png',
+    '',
+    '9e828256-cca9-4078-bf1b-c4b958d61aa4',
+    'true'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO explanations(id, title, intro, image_url, description, consultation_updates_id, toggleable) VALUES (
+    'a1d91697-e707-4b73-96b6-bf7fabc476e6',
+    'Vos idées pour améliorer le covoiturage',
+    '<body>Vous avez beaucoup d’idées pour améliorer le covoiturage ! :<ul><li>- L’idée A</li><li>- L’idée B</li><li>- L’idée C</li></ul></body>',
+    'https://betagouv.github.io/agora-content/covoiturage_graphe.png',
+    '<body>Comme vous pouvez le constater sur le graphique, <b>l’idée B</b> a reçue beaucoup de voix sur la fin de la consultation.</body>',
+    '9e828256-cca9-4078-bf1b-c4b958d61aa4',
+    'true'
+) ON CONFLICT DO NOTHING;
+
 INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     '98a8ba56-0923-11ee-be56-0242ac120002',
     'Participation citoyenne : une appli, vos idées',
