@@ -4,7 +4,7 @@ import fr.social.gouv.agora.domain.UserInfo
 
 interface UserRepository {
     fun getUserById(userId: String): UserInfo?
-    fun updateUserFcmToken(userId: String, fcmToken: String): UserInfo?
+    fun updateUser(userId: String, fcmToken: String): UserInfo?
     fun generateUser(fcmToken: String): UserInfo
     fun getAllUsers(): List<UserInfo>
 }

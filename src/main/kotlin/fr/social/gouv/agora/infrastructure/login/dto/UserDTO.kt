@@ -18,6 +18,7 @@ data class UserDTO(
     val authorizationLevel: Int,
     @Column(columnDefinition = "SMALLINT")
     val isBanned: Int,
+    val lastConnectionDate: Date,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -31,6 +32,6 @@ data class UserDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , password = $password , fcmToken = $fcmToken , createdDate = $createdDate , authorizationLevel = $authorizationLevel , isBanned = $isBanned )"
+        return this::class.simpleName + "(id = $id , password = $password , fcmToken = $fcmToken , createdDate = $createdDate , authorizationLevel = $authorizationLevel , isBanned = $isBanned , lastConnectionDate = $lastConnectionDate)"
     }
 }
