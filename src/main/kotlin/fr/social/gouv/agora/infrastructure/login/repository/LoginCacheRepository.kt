@@ -40,12 +40,13 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
             initializeCache(replaceUpdatedDTO(allUserDTO = allUserDTO, updatedUserDTO = userDTO))
         } ?: throw IllegalStateException("User cache has not been initialized")
     }
+
     private fun getUserCache() = cacheManager.getCache(USER_CACHE_NAME)
 
     @Suppress("UNCHECKED_CAST")
     private fun getAllUserDTOFromCache(): List<UserDTO>? {
         return try {
-            getUserCache()?.get(ALL_USER_CACHE_KEY, List::class.java) as? List<UserDTO>
+            getUserCache()?.get(ALL_USER_CACHE_KEY, List::class.java) as? List<UserDTO> ?: emptyList()
         } catch (e: IllegalStateException) {
             null
         }
