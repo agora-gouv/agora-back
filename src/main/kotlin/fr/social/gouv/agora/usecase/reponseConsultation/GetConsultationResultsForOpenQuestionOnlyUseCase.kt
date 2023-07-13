@@ -32,8 +32,7 @@ class GetConsultationResultsForOpenQuestionOnlyUseCase(
         questionList: List<Question>,
         consultationResponseList: List<ReponseConsultation>,
     ): ConsultationResultOpenQuestionOnly {
-        val filteredQuestionList =
-            questionList.filterIsInstance<QuestionOpen>()
+        val filteredQuestionList = questionList.filterIsInstance<QuestionOpen>()
         val participantCount = consultationResponseList.map { it.participationId }.toSet().size
         return ConsultationResultOpenQuestionOnly(
             consultation = consultationInfo,

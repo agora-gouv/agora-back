@@ -12,7 +12,3 @@ data class QuestionOpenResult(
     val question: QuestionOpen,
     val responses: List<String>,
 )
-
-
-
-
