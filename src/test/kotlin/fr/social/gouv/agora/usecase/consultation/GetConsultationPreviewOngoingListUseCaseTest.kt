@@ -34,7 +34,6 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
     @MockBean
     private lateinit var mapper: ConsultationPreviewOngoingMapper
 
-
     @Test
     fun `getConsultationPreviewOngoingList - when has empty consultation - should return emptyList`() {
         // Given
