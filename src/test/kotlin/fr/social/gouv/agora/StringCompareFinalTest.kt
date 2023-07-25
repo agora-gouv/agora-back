@@ -6,6 +6,8 @@ import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.nd4j.linalg.api.ndarray.INDArray
+import org.nd4j.linalg.factory.Nd4j
+import org.nd4j.linalg.ops.transforms.Transforms
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.io.BufferedReader
@@ -15,7 +17,8 @@ import java.util.zip.GZIPInputStream
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-class StringCompare3 {
+class StringCompareFinalTest {
+
     @Test
 
     fun `test two strings`() {
@@ -25,9 +28,10 @@ class StringCompare3 {
         val batchSize = 1000
 
         val sentence1 = "bonjour vous vous appelez comment"
-        val sentence2 = "quel est ton nom"
-
-        val sumTokens = (sentenceToTokens(sentence1, tokenizerFactory) + sentenceToTokens(sentence2, tokenizerFactory)).distinct()
+        val sentence2 = "bonjour vous vous appelez sara"
+        val sentence1Tokens = sentenceToTokens(sentence1, tokenizerFactory)
+        val sentence2Tokens = sentenceToTokens(sentence2, tokenizerFactory)
+        val sumTokens = (sentence1Tokens + sentence2Tokens).distinct()
 
         val tokenVectorsMapList = mutableListOf<Map<String, INDArray>>()
 
@@ -56,12 +60,9 @@ class StringCompare3 {
                 processBatch(lines, fileCounter++, sumTokens, tokenVectorsMapList)
             }
         }
-
-        for (tokenVectorMap in tokenVectorsMapList) {
-            for ((token, vector) in tokenVectorMap) {
-                println("Token: $token, Vector: $vector")
-            }
-        }
+        val sentence1Vector = tokensToVector(sentence1Tokens, tokenVectorsMapList)
+        val sentence2Vector = tokensToVector(sentence2Tokens, tokenVectorsMapList)
+        println("similarité entre les deux phrases est: ${cosineSimilarity(sentence1Vector, sentence2Vector)}")
     }
 
     private fun sentenceToTokens(sentence: String, tokenizerFactory: TokenizerFactory): List<String> {
@@ -88,5 +89,31 @@ class StringCompare3 {
                 tokenVectorsMapList.add(tokenVectorMap)
             }
         }
+    }
+
+    private fun tokensToVector(
+        sentenceTokens: List<String>,
+        tokenVectorsMapList: MutableList<Map<String, INDArray>>,
+    ): INDArray {
+        val firstVectorMap = tokenVectorsMapList.first()
+        val wordVectorSize = firstVectorMap.values.first().size(0)
+        val sumVector = Nd4j.create(wordVectorSize)
+
+        for (word in sentenceTokens) {
+            for (tokenVectorMap in tokenVectorsMapList) {
+                for ((token, vector) in tokenVectorMap) {
+                    if (word == token) {
+                        sumVector.addi(vector)
+                    }
+                }
+            }
+        }
+
+        sumVector.divi(sentenceTokens.size.toDouble())
+        return Transforms.unitVec(sumVector)
+    }
+
+    private fun cosineSimilarity(vector1: INDArray, vector2: INDArray): Double {
+        return Transforms.cosineSim(vector1, vector2) * 100
     }
 }

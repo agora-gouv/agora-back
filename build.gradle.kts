@@ -35,6 +35,8 @@ dependencies {
 	implementation("org.deeplearning4j:deeplearning4j-nlp:1.0.0-M2.1")
 	implementation("org.nd4j:nd4j-native:1.0.0-M2.1:macosx-arm64")
 	implementation("org.nd4j:nd4j-native-platform:1.0.0-M2.1")
+	implementation ("edu.stanford.nlp:stanford-corenlp:4.2.2")
+	implementation ("edu.stanford.nlp:stanford-corenlp:4.2.2:models-french")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
