@@ -29,7 +29,7 @@ class FindSimilarQagUseCase(
     companion object {
         private const val MODEL_PATH_FILE = "cc.fr.300.vec.gz"
         private const val BATCH_SIZE = 1000
-        private const val MIN_SCORE = 60
+        private const val MIN_SCORE = 75
     }
 
     fun findSimilarQag(question: String, userId: String): List<QagModerating> {
