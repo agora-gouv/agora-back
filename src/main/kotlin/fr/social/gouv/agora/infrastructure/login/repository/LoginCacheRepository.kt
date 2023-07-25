@@ -46,7 +46,7 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
     @Suppress("UNCHECKED_CAST")
     private fun getAllUserDTOFromCache(): List<UserDTO>? {
         return try {
-            getUserCache()?.get(ALL_USER_CACHE_KEY, List::class.java) as? List<UserDTO> ?: emptyList()
+            getUserCache()?.get(ALL_USER_CACHE_KEY, List::class.java) as? List<UserDTO>
         } catch (e: IllegalStateException) {
             null
         }
