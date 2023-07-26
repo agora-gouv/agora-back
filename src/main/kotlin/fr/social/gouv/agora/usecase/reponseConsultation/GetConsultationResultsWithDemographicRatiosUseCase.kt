@@ -14,6 +14,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
     private val questionRepository: QuestionRepository,
     private val getConsultationResponseRepository: GetConsultationResponseRepository,
     private val profileRepository: ProfileRepository,
+    private val mapper: QuestionNoResponseMapper,
 ) {
 
     fun getConsultationResults(consultationId: String): ConsultationResultWithDemographicInfo? {
@@ -39,8 +40,9 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
         consultationResponseList: List<ReponseConsultation>,
         demographicData: Map<String, Profile?>,
     ): ConsultationResultWithDemographicInfo {
-        val filteredQuestionList =
-            questionList.filterIsInstance<QuestionWithChoices>().filter { it.choixPossibleList.isNotEmpty() }
+        val filteredQuestionList = questionList.filterIsInstance<QuestionWithChoices>()
+            .filter { it.choixPossibleList.isNotEmpty() }
+            .map { questionWithChoices -> mapper.toQuestionNoResponse(questionWithChoices) }
         val participantCount = consultationResponseList.map { it.participationId }.toSet().size
 
         return ConsultationResultWithDemographicInfo(

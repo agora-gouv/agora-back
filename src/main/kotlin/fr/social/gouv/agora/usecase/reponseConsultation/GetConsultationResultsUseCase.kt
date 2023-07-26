@@ -38,10 +38,9 @@ class GetConsultationResultsUseCase(
         questionList: List<Question>,
         consultationResponseList: List<ReponseConsultation>,
     ): ConsultationResult {
-        val filteredQuestionList =
-            questionList.filterIsInstance<QuestionWithChoices>().filter { it.choixPossibleList.isNotEmpty() }
-                .map { questionWithChoices -> mapper.toQuestionNoResponse(questionWithChoices) }
-
+        val filteredQuestionList = questionList.filterIsInstance<QuestionWithChoices>()
+            .filter { it.choixPossibleList.isNotEmpty() }
+            .map { questionWithChoices -> mapper.toQuestionNoResponse(questionWithChoices) }
         val participantCount = consultationResponseList.map { it.participationId }.toSet().size
 
         return ConsultationResult(
