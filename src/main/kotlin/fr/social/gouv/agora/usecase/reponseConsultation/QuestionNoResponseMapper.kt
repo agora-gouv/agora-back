@@ -67,6 +67,7 @@ class QuestionNoResponseMapper {
         label = "Pas de réponse",
         ordre = ordre,
         questionId = questionId,
+        hasOpenTextField = false,
     )
 
     private fun createNotApplicableResponseChoice(ordre: Int, questionId: String) = ChoixPossibleDefault(
@@ -74,6 +75,7 @@ class QuestionNoResponseMapper {
         label = "Non applicable",
         ordre = ordre,
         questionId = questionId,
+        hasOpenTextField = false,
     )
 
     private fun createNotApplicableResponseConditionalChoice(ordre: Int, questionId: String) =
@@ -84,6 +86,7 @@ class QuestionNoResponseMapper {
                 ordre = it.ordre,
                 questionId = it.questionId,
                 nextQuestionId = NOT_FOUND_UUID_STRING,
+                hasOpenTextField = it.hasOpenTextField,
             )
         }
 }

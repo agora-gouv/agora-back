@@ -307,25 +307,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'f5dd076e-ef05-11ed-a05b-0242ac120003',
     'Oui',
     1,
-    'e271ed7a-ef05-11ed-a05b-0242ac120003'
+    'e271ed7a-ef05-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '0fd15904-ef06-11ed-a05b-0242ac120003',
     'Non',
     2,
-    'e271ed7a-ef05-11ed-a05b-0242ac120003'
+    'e271ed7a-ef05-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '0fd15944-ef06-11ed-a05b-0242ac120003',
     'Je ne souhaite pas répondre',
     3,
-    'e271ed7a-ef05-11ed-a05b-0242ac120003'
+    'e271ed7a-ef05-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -339,39 +342,44 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120003',
     'Déplacement quotidien domicile-travail',
     1,
-    '48d3c502-ef06-11ed-a05b-0242ac120003'
+    '48d3c502-ef06-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120010',
     'Déplacement quotidien hors domicile-travail (ex : école / courses)',
     2,
-    '48d3c502-ef06-11ed-a05b-0242ac120003'
+    '48d3c502-ef06-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120011',
     'Déplacement pour motif professionnel (hors du lieu habituel de travail)',
     3,
-    '48d3c502-ef06-11ed-a05b-0242ac120003'
+    '48d3c502-ef06-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120012',
     'Déplacement occasionnel (loisir et vacances)',
     4,
-    '48d3c502-ef06-11ed-a05b-0242ac120003'
+    '48d3c502-ef06-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '84f7f70e-ef08-11ed-a05b-0242ac120013',
     'Je ne suis pas concerné(e)',
     5,
-    '48d3c502-ef06-11ed-a05b-0242ac120003'
+    '48d3c502-ef06-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -385,25 +393,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '1b52a816-ef09-11ed-a05b-0242ac120003',
     'Oui',
     1,
-    'e52c5868-ef08-11ed-a05b-0242ac120003'
+    'e52c5868-ef08-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '1b52a816-ef09-11ed-a05b-0242ac120002',
     'Non',
     2,
-    'e52c5868-ef08-11ed-a05b-0242ac120003'
+    'e52c5868-ef08-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '1b52a816-ef09-12ed-a05b-0242ac120002',
     'Je ne souhaite pas répondre',
     3,
-    'e52c5868-ef08-11ed-a05b-0242ac120003'
+    'e52c5868-ef08-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -417,39 +428,44 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9c3eba80-0905-11ee-be56-0242ac120002',
     'Conducteur',
     1,
-    '867b767a-0905-11ee-be56-0242ac120002'
+    '867b767a-0905-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a3e959f2-0905-11ee-be56-0242ac120002',
     'Passager',
     2,
-    '867b767a-0905-11ee-be56-0242ac120002'
+    '867b767a-0905-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ab7d336e-0905-11ee-be56-0242ac120002',
     'Les deux',
     3,
-    '867b767a-0905-11ee-be56-0242ac120002'
+    '867b767a-0905-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ab7d136e-0905-11ee-be56-0242ac120002',
     'Aucun',
     4,
-    '867b767a-0905-11ee-be56-0242ac120002'
+    '867b767a-0905-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac7d336e-0905-11ee-be56-0242ac120002',
     'Je ne sais pas',
     5,
-    '867b767a-0905-11ee-be56-0242ac120002'
+    '867b767a-0905-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -474,39 +490,44 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5f30b336-0906-11ee-be56-0242ac120002',
     'Tous les jours',
     1,
-    '4c85adfe-0906-11ee-be56-0242ac120002'
+    '4c85adfe-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5f30b336-0906-11ee-be56-0242ac120001',
     'Plusieurs fois par semaine',
     2,
-    '4c85adfe-0906-11ee-be56-0242ac120002'
+    '4c85adfe-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5f30b336-0906-11ee-be56-0242ac120003',
     'Plusieurs fois par mois',
     3,
-    '4c85adfe-0906-11ee-be56-0242ac120002'
+    '4c85adfe-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5f30b336-0906-10ee-be56-0242ac120003',
     'De manière occasionnelle',
     4,
-    '4c85adfe-0906-11ee-be56-0242ac120002'
+    '4c85adfe-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5f30b336-0906-18ee-be56-0242ac120003',
     'Je ne suis pas concerné(e)',
     5,
-    '4c85adfe-0906-11ee-be56-0242ac120002'
+    '4c85adfe-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -520,46 +541,52 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '6ed88358-0907-11ee-be56-0242ac120002',
     'Déplacement quotidien domicile-travail',
     1,
-    'cea510c2-0906-11ee-be56-0242ac120002'
+    'cea510c2-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '6ed88358-0907-11ee-be56-0242ac120010',
     'Déplacement quotidien école / courses',
     2,
-    'cea510c2-0906-11ee-be56-0242ac120002'
+    'cea510c2-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '6ed88358-0907-11ee-be56-0242ac120005',
     'Déplacement pour motif professionnel (hors du lieu habituel de travail)',
     3,
-    'cea510c2-0906-11ee-be56-0242ac120002'
+    'cea510c2-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '6ed88358-0907-11ee-be56-0242ac120033',
     'Déplacement occasionnel (loisir et vacances)',
     4,
-    'cea510c2-0906-11ee-be56-0242ac120002'
+    'cea510c2-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '6ed88358-0907-11ee-be56-0242ac120011',
     'Aucun',
     5,
-    'cea510c2-0906-11ee-be56-0242ac120002'
+    'cea510c2-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '6ed00358-0907-11ee-be56-0242ac120011',
     'Je ne sais pas',
     6,
-    'cea510c2-0906-11ee-be56-0242ac120002'
+    'cea510c2-0906-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -573,74 +600,84 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120003',
     'Des places de stationnement au départ et à l’arrivée',
     1,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120010',
     'Des voies sur les routes ou les autoroutes réservées au covoiturage',
     2,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120011',
     'Une incitation financière pour le conducteur',
     3,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120012',
     'Une incitation financière pour le passager',
     4,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac120013',
     'Une plateforme unique de mise en relation sur mon territoire',
     5,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24c428-ef0a-11ed-a05b-0242ac120013',
     'Des arrêts d’autostop organisé le long d’un axe routier (ligne de covoiturage)',
     6,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-11ed-a05b-0242ac127713',
     'Un accompagnement et de l’information sur le fonctionnement et les aides au covoiturage',
     7,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-88ed-a05b-0242ac120013',
     'L’intégration du covoiturage dans une offre plus large de transports (horaires et points de contacts proches des transports en commun)',
     8,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-88ed-a05b-0002ac120013',
     'Aucun',
     9,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ac24b428-ef0a-88ed-a10b-0242ac120013',
     'Je ne sais pas',
     10,
-    '91c3411c-ef0a-11ed-a05b-0242ac120003'
+    '91c3411c-ef0a-11ed-a05b-0242ac120003',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -665,25 +702,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9f724178-0909-11ee-be56-0242ac120002',
     'Oui',
     1,
-    '9197bab0-0909-11ee-be56-0242ac120002'
+    '9197bab0-0909-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9f724178-0909-11ee-be56-0242ac120000',
     'Non',
     2,
-    '9197bab0-0909-11ee-be56-0242ac120002'
+    '9197bab0-0909-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9f724178-0909-11ee-be56-0242ac120011',
     'Je ne sais pas',
     3,
-    '9197bab0-0909-11ee-be56-0242ac120002'
+    '9197bab0-0909-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -708,25 +748,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '66bab292-090a-11ee-be56-0242ac121111',
     'Oui',
     1,
-    '580bd3c0-090a-11ee-be56-0242ac120002'
+    '580bd3c0-090a-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '66bab292-090a-11ee-be56-0242ac120002',
     'Non',
     2,
-    '580bd3c0-090a-11ee-be56-0242ac120002'
+    '580bd3c0-090a-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '66bab292-090a-11ee-be56-0242ac122222',
     'Je ne sais pas',
     3,
-    '580bd3c0-090a-11ee-be56-0242ac120002'
+    '580bd3c0-090a-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -751,18 +794,20 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'e615de2c-090a-11ee-be56-0242ac120002',
     'Oui',
     1,
-    'd6cba992-090a-11ee-be56-0242ac120002'
+    'd6cba992-090a-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'e615de2c-090a-11ee-be56-0242ac120003',
     'Non',
     2,
-    'd6cba992-090a-11ee-be56-0242ac120002'
+    'd6cba992-090a-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -776,25 +821,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '6d85522a-ee71-11ed-a05b-0242ac120003'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5453e924-090b-11ee-be56-0242ac120002',
     'Oui',
     1,
-    '1f0d4940-090b-11ee-be56-0242ac120002'
+    '1f0d4940-090b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5453e924-090b-11ee-be56-0242ac120001',
     'Non',
     2,
-    '1f0d4940-090b-11ee-be56-0242ac120002'
+    '1f0d4940-090b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5453e924-090b-11ee-be56-0242ac120010',
     'Je ne sais pas',
     3,
-    '1f0d4940-090b-11ee-be56-0242ac120002'
+    '1f0d4940-090b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -875,32 +923,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '092557b4-0927-11ee-be56-0242ac120002',
     'Au quotidien',
     1,
-    'e65beea0-0926-11ee-be56-0242ac120002'
+    'e65beea0-0926-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '092557b4-0927-11ee-be56-0242ac120001',
     'De temps en temps',
     2,
-    'e65beea0-0926-11ee-be56-0242ac120002'
+    'e65beea0-0926-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '092557b4-0927-11ee-be56-0242ac120003',
     'Uniquement avant une élection',
     3,
-    'e65beea0-0926-11ee-be56-0242ac120002'
+    'e65beea0-0926-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
      '092557b4-0927-11ee-be56-0242ac120010',
      'Jamais',
      4,
-     'e65beea0-0926-11ee-be56-0242ac120002'
+     'e65beea0-0926-11ee-be56-0242ac120002',
+     0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -914,32 +966,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'c2ad3e1c-0928-11ee-be56-0242ac120002',
     'Oui, plutôt en bien',
     1,
-    'abe8c6b0-0928-11ee-be56-0242ac120002'
+    'abe8c6b0-0928-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'c2ad3e1c-0928-11ee-be56-0242ac120011',
     'Oui, plutôt en mal',
     2,
-    'abe8c6b0-0928-11ee-be56-0242ac120002'
+    'abe8c6b0-0928-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'c2ad3e1c-0928-11ee-be56-0242ac120012',
     'Non',
     3,
-    'abe8c6b0-0928-11ee-be56-0242ac120002'
+    'abe8c6b0-0928-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
      'c2ad3e1c-0928-11ee-be56-0242ac121002',
      'Je ne sais pas',
      4,
-     'abe8c6b0-0928-11ee-be56-0242ac120002'
+     'abe8c6b0-0928-11ee-be56-0242ac120002',
+     0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -953,32 +1009,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
      '43f979ae-0929-11ee-be56-0242ac120002',
      'Un changement de pratiques politiques et/ou de profils des élus',
      1,
-     '2c154084-0929-11ee-be56-0242ac120002'
+     '2c154084-0929-11ee-be56-0242ac120002',
+     0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
      '43f979ae-0929-11ee-be56-0242ac120102',
      'Davantage de participation des citoyens aux décisions politiques',
      2,
-     '2c154084-0929-11ee-be56-0242ac120002'
+     '2c154084-0929-11ee-be56-0242ac120002',
+     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
      '43f979ae-0929-11ee-be56-0242ac121002',
      'Une réforme de nos institutions',
      3,
-     '2c154084-0929-11ee-be56-0242ac120002'
+     '2c154084-0929-11ee-be56-0242ac120002',
+     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
      '43f979ae-0929-11ee-be56-0242ac121102',
      'Autre',
      4,
-     '2c154084-0929-11ee-be56-0242ac120002'
+     '2c154084-0929-11ee-be56-0242ac120002',
+     0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1003,25 +1063,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '0b7b992a-092b-11ee-be56-0242ac120002',
     'Oui',
     1,
-    'dab3dc58-092a-11ee-be56-0242ac120002'
+    'dab3dc58-092a-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '0b7b992a-092b-11ee-be56-0242ac120001',
     'Non',
     2,
-    'dab3dc58-092a-11ee-be56-0242ac120002'
+    'dab3dc58-092a-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '0b7b992a-092b-11ee-be56-0242ac120202',
     'Je ne sais pas ce que c’est',
     3,
-    'dab3dc58-092a-11ee-be56-0242ac120002'
+    'dab3dc58-092a-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1035,32 +1098,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5a0071ec-092b-11ee-be56-0242ac120002',
     'Inutile',
     1,
-    '40b7d25c-092b-11ee-be56-0242ac120002'
+    '40b7d25c-092b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5a0071ec-092b-11ee-be56-0242ac120001',
     'Utile, mais non prioritaire',
     2,
-    '40b7d25c-092b-11ee-be56-0242ac120002'
+    '40b7d25c-092b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5a0071ec-092b-11ee-be56-0242ac120000',
     'Utile et prioritaire',
     3,
-    '40b7d25c-092b-11ee-be56-0242ac120002'
+    '40b7d25c-092b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5a0071ec-092b-11ee-be56-0242ac110000',
     'Je ne sais pas',
     4,
-    '40b7d25c-092b-11ee-be56-0242ac120002'
+    '40b7d25c-092b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1074,32 +1141,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ea68bafa-092b-11ee-be56-0242ac120002',
     'Le plus souvent',
     1,
-    'd4df6396-092b-11ee-be56-0242ac120002'
+    'd4df6396-092b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ea68bafa-092b-11ee-be56-0242ac120001',
     'Parfois',
     2,
-    'd4df6396-092b-11ee-be56-0242ac120002'
+    'd4df6396-092b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ea68bafa-092b-11ee-be56-0242ac120000',
     'Jamais',
     3,
-    'd4df6396-092b-11ee-be56-0242ac120002'
+    'd4df6396-092b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ea68bafa-092b-11ee-be56-0242ac120102',
     'Je ne sais pas',
     4,
-    'd4df6396-092b-11ee-be56-0242ac120002'
+    'd4df6396-092b-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1113,25 +1184,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'd97f36a0-092c-11ee-be56-0242ac120002',
     'Oui',
     1,
-    'b9e813c0-092c-11ee-be56-0242ac120002'
+    'b9e813c0-092c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'd97f36a0-092c-11ee-be56-0242ac120001',
     'Non',
     2,
-    'b9e813c0-092c-11ee-be56-0242ac120002'
+    'b9e813c0-092c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'd97f36a0-092c-11ee-be56-0242ac120003',
     'Je ne sais pas',
     3,
-    'b9e813c0-092c-11ee-be56-0242ac120002'
+    'b9e813c0-092c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1145,165 +1219,188 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0932-11ee-be56-0242ac120002',
     'Agriculture & alimentation',
     1,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0932-11ee-be56-0242ac121002',
     'Autonomie',
     2,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0932-11ee-be56-0242ac120302',
     'Culture',
     3,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0932-11ee-be56-0242ac120402',
     'Démocratie',
     4,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0932-11ee-be56-0242ac120502',
     'Economie',
     5,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0832-11ee-be56-0242ac120002',
     'Education & jeunesse',
     6,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0732-11ee-be56-0242ac120002',
     'Egalité',
     7,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0232-11ee-be56-0242ac120002',
     'Energie',
     8,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0032-11ee-be56-0242ac120002',
     'Enfance',
     9,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d61-0932-11ee-be56-0242ac120002',
     'Etudes sup. & recherche',
     10,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d62-0932-11ee-be56-0242ac120002',
     'Europe & international',
     11,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d63-0932-11ee-be56-0242ac120002',
     'Handicap',
     12,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d65-0932-11ee-be56-0242ac120002',
     'Justice',
     13,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d68-0932-11ee-be56-0242ac120002',
     'Logement',
     14,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8000-0932-11ee-be56-0242ac120002',
     'Outre-mer',
     15,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '1f3a8d60-0932-11ee-be56-0242ac120002',
     'Santé',
     16,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '0f3a8d60-0932-11ee-be56-0242ac120002',
     'Sécurité & défense',
     17,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '3f3a8d60-0932-11ee-be56-0242ac120002',
     'Services publics',
     18,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f1a8d60-0932-11ee-be56-0242ac120002',
     'Solidarités',
     19,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f2a8d60-0932-11ee-be56-0242ac120002',
     'Sport',
     20,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f8a8d60-0932-11ee-be56-0242ac120002',
     'Transition écologique',
     21,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f9a8d60-0932-11ee-be56-0242ac120002',
     'Transports',
     22,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2f3a8d60-0992-11ee-be56-0242ac120002',
     'Travail',
     23,
-    '4343c204-092d-11ee-be56-0242ac120002'
+    '4343c204-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1317,25 +1414,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     '98a8ba56-0923-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'f130db54-092d-11ee-be56-0242ac120002',
     'Oui',
     1,
-    'b7c7eccc-092d-11ee-be56-0242ac120002'
+    'b7c7eccc-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'f130db54-092d-11ee-be56-0242ac120001',
     'Non',
     2,
-    'b7c7eccc-092d-11ee-be56-0242ac120002'
+    'b7c7eccc-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'f130db54-092d-11ee-be56-0242ac120202',
     'Je ne sais pas',
     3,
-    'b7c7eccc-092d-11ee-be56-0242ac120002'
+    'b7c7eccc-092d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1391,32 +1491,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '4358eb48-0b5d-11ee-be56-0242ac120002',
     'Oui, beaucoup',
     1,
-    'ccc9eb30-0b5c-11ee-be56-0242ac120002'
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '4358eb48-0b5d-11ee-be56-0242ac120001',
     'Oui, un peu',
     2,
-    'ccc9eb30-0b5c-11ee-be56-0242ac120002'
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '4358eb48-0b5d-11ee-be56-0242ac120003',
     'Non, pas vraiment',
     3,
-    'ccc9eb30-0b5c-11ee-be56-0242ac120002'
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '4358eb48-0b5d-11ee-be56-0242ac120004',
     'Pas du tout',
     4,
-    'ccc9eb30-0b5c-11ee-be56-0242ac120002'
+    'ccc9eb30-0b5c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1430,67 +1534,76 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET max_choices = EXCLUDED.max_choices;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120002',
     'Canicule',
     1,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120001',
     'Restriction d’eau',
     2,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120030',
     'Sécheresse des sols',
     3,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120006',
     'Incendie',
     4,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120010',
     'Inondation',
     5,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120020',
     'Montée du niveau de la mer',
     6,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120022',
     'Recul de l’enneigement',
     7,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-11ee-be56-0242ac120032',
     'Autre',
     8,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'ffc3fcfa-0b5d-eeee-be56-0242ac120032',
     'Aucune',
     9,
-    'df7524a6-0b5d-11ee-be56-0242ac120002'
+    'df7524a6-0b5d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1515,25 +1628,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a9cf0d70-0b5e-11ee-be56-0242ac120002',
     'Oui',
     1,
-    '22e736a4-0b5e-11ee-be56-0242ac122222'
+    '22e736a4-0b5e-11ee-be56-0242ac122222',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a9cf0d70-0b5e-11ee-be56-0242ac120022',
     'Non',
     2,
-    '22e736a4-0b5e-11ee-be56-0242ac122222'
+    '22e736a4-0b5e-11ee-be56-0242ac122222',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a9cf0d70-0b5e-11ee-be56-0242ac120222',
     'Je ne sais pas',
     3,
-    '22e736a4-0b5e-11ee-be56-0242ac122222'
+    '22e736a4-0b5e-11ee-be56-0242ac122222',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1547,25 +1663,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9aecb9dc-0b5f-11ee-be56-0242ac120002',
     'Accepter que certains trajets soient plus longs ou ralentis',
     1,
-    '8cc590cc-0b5f-11ee-be56-0242ac120002'
+    '8cc590cc-0b5f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9aecb9dc-0b5f-11ee-be56-0242ac120022',
     'Maintenir un service de transport maximal en pariant sur l’innovation technologique, quitte à consentir à un coût du transport plus élevé',
     2,
-    '8cc590cc-0b5f-11ee-be56-0242ac120002'
+    '8cc590cc-0b5f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9aecb9dc-0b5f-11ee-be56-0242ac120222',
     'Je ne sais pas',
     3,
-    '8cc590cc-0b5f-11ee-be56-0242ac120002'
+    '8cc590cc-0b5f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1579,25 +1698,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '129af8aa-0b5f-11ee-be56-0242ac120002',
     'Oui',
     1,
-    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+    'f2e736a4-0b5e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '129af8aa-0b5f-11ee-be56-0242ac120022',
     'Non',
     2,
-    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+    'f2e736a4-0b5e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '129af8aa-0b5f-11ee-be56-0242ac122222',
     'Je ne sais pas',
     3,
-    'f2e736a4-0b5e-11ee-be56-0242ac120002'
+    'f2e736a4-0b5e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1611,25 +1733,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, ordre = EXCLUDED.ordre;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'd8672e00-0b5f-11ee-be56-0242ac120002',
     'Protéger les logements situés en bord du littoral contre la hausse du niveau de la mer',
     1,
-    'cac40a48-0b5f-11ee-be56-0242ac120002'
+    'cac40a48-0b5f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'd8672e00-0b5f-11ee-be56-0242ac120022',
     'Accepter que certains logements soient détruits au fur et à mesure de la hausse du niveau de la mer, le cas échéant en prévoyant des solutions de logement alternative',
     2,
-    'cac40a48-0b5f-11ee-be56-0242ac120002'
+    'cac40a48-0b5f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'd8672e00-0b5f-11ee-be56-0242ac120222',
     'Je ne sais pas',
     3,
-    'cac40a48-0b5f-11ee-be56-0242ac120002'
+    'cac40a48-0b5f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1643,39 +1768,44 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, ordre = EXCLUDED.ordre, type = EXCLUDED.type, max_choices = EXCLUDED.max_choices;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2ba34d4c-0b60-11ee-be56-0242ac120002',
     'Privilégier le télétravail quand c’est possible',
     1,
-    '15973d9c-0b60-11ee-be56-0242ac120002'
+    '15973d9c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2ba34d4c-0b60-11ee-be56-0242ac120022',
     'Adapter l’environnement de travail pour tous quel que soit le prix',
     2,
-    '15973d9c-0b60-11ee-be56-0242ac120002'
+    '15973d9c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2ba34d4c-0b60-11ee-be56-0242ac120222',
     'Adapter l’environnement de travail uniquement pour ceux qui ne peuvent pas télétravailler',
     3,
-    '15973d9c-0b60-11ee-be56-0242ac120002'
+    '15973d9c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2ba34d4c-0b60-11ee-be56-0242ac122222',
     'Les deux : télétravail et adaptation, peu importe le prix',
     4,
-    '15973d9c-0b60-11ee-be56-0242ac120002'
+    '15973d9c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '129af8aa-0b5f-11ee-be56-0242ac120222',
     'Je ne sais pas',
     5,
-    '15973d9c-0b60-11ee-be56-0242ac120002'
+    '15973d9c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label, ordre = EXCLUDED.ordre, question_id = EXCLUDED.question_id;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1689,32 +1819,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, ordre = EXCLUDED.ordre;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9e880816-0b60-11ee-be56-0242ac120002',
     'Oui, tout à fait',
     1,
-    '871f4716-0b60-11ee-be56-0242ac120002'
+    '871f4716-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9e880816-0b60-11ee-be56-0242ac120022',
     'Oui, plutôt',
     2,
-    '871f4716-0b60-11ee-be56-0242ac120002'
+    '871f4716-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9e880816-0b60-11ee-be56-0242ac120012',
     'Non',
     3,
-    '871f4716-0b60-11ee-be56-0242ac120002'
+    '871f4716-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '9e880816-0b60-11ee-be56-0242ac120202',
     'Je ne sais pas',
     4,
-    '871f4716-0b60-11ee-be56-0242ac120002'
+    '871f4716-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1728,32 +1862,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '1532370c-0b61-11ee-be56-0242ac120002',
     'Oui, tout à fait',
     1,
-    'db22171c-0b60-11ee-be56-0242ac120002'
+    'db22171c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '1632370c-0b61-11ee-be56-0242ac120002',
     'Oui, plutôt',
     2,
-    'db22171c-0b60-11ee-be56-0242ac120002'
+    'db22171c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2532370c-0b61-11ee-be56-0242ac120002',
     'Non',
     3,
-    'db22171c-0b60-11ee-be56-0242ac120002'
+    'db22171c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '5532370c-0b61-11ee-be56-0242ac120002',
     'Je ne sais pas',
     4,
-    'db22171c-0b60-11ee-be56-0242ac120002'
+    'db22171c-0b60-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1767,32 +1905,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '8bdf40ac-0b61-11ee-be56-0242ac120002',
     'Oui, tout à fait',
     1,
-    '4289e362-0b61-11ee-be56-0242ac120002'
+    '4289e362-0b61-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '8bdf40ac-0b61-11ee-be56-0242ac120022',
     'Oui, plutôt',
     2,
-    '4289e362-0b61-11ee-be56-0242ac120002'
+    '4289e362-0b61-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '8bdf40ac-0b61-11ee-be56-0242ac120222',
     'Non',
     3,
-    '4289e362-0b61-11ee-be56-0242ac120002'
+    '4289e362-0b61-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '8bdf40ac-0b61-11ee-be56-0242ac122222',
     'Je ne sais pas',
     4,
-    '4289e362-0b61-11ee-be56-0242ac120002'
+    '4289e362-0b61-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1806,25 +1948,28 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'c342e83e-0b5a-11ee-be56-0242ac120002'
 ) ON CONFLICT (id) DO UPDATE SET ordre = EXCLUDED.ordre, type = EXCLUDED.type;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'de636562-0e89-11ee-be56-0242ac120002',
     'Oui',
     1,
-    'c0cf651c-0b61-11ee-be56-0242ac120002'
+    'c0cf651c-0b61-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'de636562-0e89-11ee-be56-0242ac120222',
     'Non',
     2,
-    'c0cf651c-0b61-11ee-be56-0242ac120002'
+    'c0cf651c-0b61-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'de636562-0e89-11ee-be56-0242ac122202',
     'Je ne sais pas',
     3,
-    'c0cf651c-0b61-11ee-be56-0242ac120002'
+    'c0cf651c-0b61-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
@@ -1869,32 +2014,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '89e36102-0c4c-11ee-be56-0242ac120002',
     'Le climat',
     1,
-    '641d7656-0c4c-11ee-be56-0242ac120002'
+    '641d7656-0c4c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '89e36102-0c4c-11ee-be56-0242ac120022',
     'Mon pouvoir d’achat',
     2,
-    '641d7656-0c4c-11ee-be56-0242ac120002'
+    '641d7656-0c4c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '89e36102-0c4c-11ee-be56-0242ac120202',
     'Mon confort de vie',
     3,
-    '641d7656-0c4c-11ee-be56-0242ac120002'
+    '641d7656-0c4c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '89e36102-0c4c-11ee-be56-0242ac120222',
     'Autre / Je ne souhaite pas m’engager',
     4,
-    '641d7656-0c4c-11ee-be56-0242ac120002'
+    '641d7656-0c4c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1908,32 +2057,36 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2fab57de-0c4d-11ee-be56-0242ac120002',
     'Une opportunité',
     1,
-    'd7201d84-0c4c-11ee-be56-0242ac120002'
+    'd7201d84-0c4c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2fab57de-0c4d-11ee-be56-0242ac120022',
     'Une contrainte',
     2,
-    'd7201d84-0c4c-11ee-be56-0242ac120002'
+    'd7201d84-0c4c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2fab57de-0c4d-11ee-be56-0242ac120202',
     'Les deux',
     3,
-    'd7201d84-0c4c-11ee-be56-0242ac120002'
+    'd7201d84-0c4c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '2fab57de-0c4d-11ee-be56-0242ac120222',
     'Je ne sais pas',
     4,
-    'd7201d84-0c4c-11ee-be56-0242ac120002'
+    'd7201d84-0c4c-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1947,39 +2100,44 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'c78d732a-0c4d-11ee-be56-0242ac120002',
     'Respecter les consignes de température (19° de chauffage ; 26° de climatisation)',
     1,
-    '97950b6a-0c4d-11ee-be56-0242ac120002'
+    '97950b6a-0c4d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'c78d732a-0c4d-11ee-be56-0242ac120022',
     'Entretenir ma chaudière (baisse de l’ordre de 10 à 15%)',
     2,
-    '97950b6a-0c4d-11ee-be56-0242ac120002'
+    '97950b6a-0c4d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'c78d732a-0c4d-11ee-be56-0242ac120202',
     'M’équiper de thermostats (avec un gain potentiel de 5 à 10%)',
     3,
-    '97950b6a-0c4d-11ee-be56-0242ac120002'
+    '97950b6a-0c4d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'c78d732a-0c4d-11ee-be56-0242ac122002',
     'Donner consigne à mon syndic ou à mon fournisseur d’énergie de piloter, pour moi, ma chaudière selon les indications que je lui donne',
     4,
-    '97950b6a-0c4d-11ee-be56-0242ac120002'
+    '97950b6a-0c4d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'c78d732a-0c4d-11ee-be56-0242ac122202',
     'Ces solutions ne me conviennent pas ou ne sont pas accessibles',
     5,
-    '97950b6a-0c4d-11ee-be56-0242ac120002'
+    '97950b6a-0c4d-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -1993,46 +2151,52 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '68d63c80-0c4e-11ee-be56-0242ac120002',
     'Lever le pied à bord de mon véhicule, par exemple en roulant à 110 km/h sur autoroute (économies de 20% sur le carburant et les émissions de CO2)',
     1,
-    '5072cd84-0c4e-11ee-be56-0242ac120002'
+    '5072cd84-0c4e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '68d63c80-0c4e-11ee-be56-0242ac120202',
     'Pratiquer le covoiturage via une application ou avec mes proches',
     2,
-    '5072cd84-0c4e-11ee-be56-0242ac120002'
+    '5072cd84-0c4e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '68d63c80-0c4e-11ee-be56-0242ac122002',
     'Adapter ma conduite pour limiter ma consommation (par exemple : si je conduis un véhicule à boîte de vitesse manuelle, j’évite les surrégimes occasionnant une surconsommation de carburant pouvant aller jusqu’à 20 %)',
     3,
-    '5072cd84-0c4e-11ee-be56-0242ac120002'
+    '5072cd84-0c4e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '68d63c80-0c4e-11ee-be56-0242ac120022',
     'Passer au vélo ou à la marche pour les petits trajets',
     4,
-    '5072cd84-0c4e-11ee-be56-0242ac120002'
+    '5072cd84-0c4e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '68d63c80-0c4e-11ee-be56-0242ac122202',
     'Choisir les transports en commun dès lors qu’ils correspondent à mes horaires et à mon trajet',
     5,
-    '5072cd84-0c4e-11ee-be56-0242ac120002'
+    '5072cd84-0c4e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '68d63c80-0c4e-11ee-be56-0242ac122222',
     'Ces solutions ne me conviennent pas ou ne sont pas accessibles',
     6,
-    '5072cd84-0c4e-11ee-be56-0242ac120002'
+    '5072cd84-0c4e-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -2046,39 +2210,44 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '3b50381e-0c4f-11ee-be56-0242ac120002',
     'Eteindre mes appareils en veille',
     1,
-    '098d1f68-0c4f-11ee-be56-0242ac120002'
+    '098d1f68-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '3b50381e-0c4f-11ee-be56-0242ac120022',
     'Acheter des appareils reconditionnés',
     2,
-    '098d1f68-0c4f-11ee-be56-0242ac120002'
+    '098d1f68-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '3b50381e-0c4f-11ee-be56-0242ac122202',
     'Faire attention à mes petits usages les plus énergivores comme le non-archivage des mails',
     3,
-    '098d1f68-0c4f-11ee-be56-0242ac120002'
+    '098d1f68-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '3b50381e-0c4f-11ee-be56-0242ac122002',
     'Diminuer ma consommation de vidéos en streaming (réduire la qualité ou télécharger la vidéo consomme moins d’énergie)',
     4,
-    '098d1f68-0c4f-11ee-be56-0242ac120002'
+    '098d1f68-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '3b50381e-0c4f-11ee-be56-0242ac122222',
     'Ces solutions ne me conviennent pas',
     5,
-    '098d1f68-0c4f-11ee-be56-0242ac120002'
+    '098d1f68-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -2092,53 +2261,60 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'da2256b6-0c4f-11ee-be56-0242ac120002',
     'Je ne connais pas les aides financières auxquelles j’ai le droit',
     1,
-    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'da2256b6-0c4f-11ee-be56-0242ac120202',
     'Je connais les aides financières mais elles ne me permettent pas d’acquérir le véhicule que je souhaite',
     2,
-    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'da2256b6-0c4f-11ee-be56-0242ac120022',
     'Je ne sais pas quel véhicule choisir, les réglementations changent tout le temps',
     3,
-    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'da2256b6-0c4f-11ee-be56-0242ac120222',
     'Même avec les aides, je n’aurais pas le prêt de mon banquier dont j’ai besoin pour avancer l’argent',
     4,
-    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'da2256b6-0c4f-11ee-be56-0242ac122002',
     'L’absence d’infrastructures, comme les bornes de recharge, près de chez moi',
     5,
-    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'da2256b6-0c4f-11ee-be56-0242ac122202',
     'Je ne souhaite pas passer à un véhicule moins polluant',
     6,
-    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'da2256b6-004f-111e-be56-0242ac122202',
     'Je ne suis pas concerné(e)',
     7,
-    'a60aaf9a-0c4f-11ee-be56-0242ac120002'
+    'a60aaf9a-0c4f-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -2152,39 +2328,44 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a6c83168-0c50-11ee-be56-0242ac120002',
     'Réduire l’usage de véhicules polluants',
     1,
-    'd7201d84-0c4c-11ee-be56-0242ac122222'
+    'd7201d84-0c4c-11ee-be56-0242ac122222',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a6c83168-0c50-11ee-be56-0242ac120022',
     'Rénover et isoler les logements',
     2,
-    'd7201d84-0c4c-11ee-be56-0242ac122222'
+    'd7201d84-0c4c-11ee-be56-0242ac122222',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a6c83168-0c50-11ee-be56-0242ac120222',
     'Limiter la pollution lumineuse (éclairage, publicité…)',
     3,
-    'd7201d84-0c4c-11ee-be56-0242ac122222'
+    'd7201d84-0c4c-11ee-be56-0242ac122222',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a6c83168-0c50-11ee-be56-0242ac122002',
     'Allonger la durée de vie des appareils numériques',
     4,
-    'd7201d84-0c4c-11ee-be56-0242ac122222'
+    'd7201d84-0c4c-11ee-be56-0242ac122222',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     'a6c83168-0c50-11ee-be56-0300ac122002',
     'Je ne sais pas',
     5,
-    'd7201d84-0c4c-11ee-be56-0242ac122222'
+    'd7201d84-0c4c-11ee-be56-0242ac122222',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -2198,39 +2379,44 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'ee3dd5c2-0c49-11ee-be56-0242ac120002'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '21f260b6-0c51-11ee-be56-0242ac120002',
     'L’incitation : plus de primes pour les comportements vertueux',
     1,
-    'fb56a610-0c50-11ee-be56-0242ac120002'
+    'fb56a610-0c50-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '21f260b6-0c51-11ee-be56-0242ac120022',
     'La contrainte : plus de sanctions pour les comportements les moins vertueux',
     2,
-    'fb56a610-0c50-11ee-be56-0242ac120002'
+    'fb56a610-0c50-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '21f260b6-0c51-11ee-be56-0242ac120202',
     'Les règles : plus de normes pour encadrer les usages',
     3,
-    'fb56a610-0c50-11ee-be56-0242ac120002'
+    'fb56a610-0c50-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '21f260b6-0c51-11ee-be56-0242ac122002',
     'L’accompagnement : plus de pédagogie et de sensibilisation',
     4,
-    'fb56a610-0c50-11ee-be56-0242ac120002'
+    'fb56a610-0c50-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, has_open_text_field) VALUES (
     '21f260b6-0c51-1111-be56-0242ac122222',
     'Je ne sais pas',
     5,
-    'fb56a610-0c50-11ee-be56-0242ac120002'
+    'fb56a610-0c50-11ee-be56-0242ac120002',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
