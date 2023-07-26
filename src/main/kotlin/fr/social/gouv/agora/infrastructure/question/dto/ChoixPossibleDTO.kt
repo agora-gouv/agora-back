@@ -3,7 +3,7 @@ package fr.social.gouv.agora.infrastructure.question.dto
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import java.io.Serializable
-import java.util.*
+import java.util.UUID
 
 @Entity(name = "choixpossible")
 data class ChoixPossibleDTO(
