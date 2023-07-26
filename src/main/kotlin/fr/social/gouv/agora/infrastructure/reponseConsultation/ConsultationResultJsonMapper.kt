@@ -12,7 +12,7 @@ class ConsultationResultJsonMapper {
             title = domain.consultation.title,
             participantCount = domain.participantCount,
             resultsUniqueChoice = domain.results.filter { result ->
-                result.question is QuestionUniqueChoice
+                result.question is QuestionUniqueChoice || result.question is QuestionConditional
             }.map(::toQuestionResultJson),
             resultsMultipleChoice = domain.results.filter { result ->
                 result.question is QuestionMultipleChoices
