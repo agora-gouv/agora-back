@@ -52,6 +52,7 @@ class QuestionJsonMapper {
                     label = choixPossible.label,
                     order = choixPossible.ordre,
                     nextQuestionId = null,
+                    hasOpenTextField = choixPossible.hasOpenTextField,
                 )
             }
         )
@@ -76,6 +77,7 @@ class QuestionJsonMapper {
                     label = choixPossible.label,
                     order = choixPossible.ordre,
                     nextQuestionId = null,
+                    hasOpenTextField = choixPossible.hasOpenTextField,
                 )
             }
         )
@@ -124,6 +126,7 @@ class QuestionJsonMapper {
                     label = choixPossible.label,
                     order = choixPossible.ordre,
                     nextQuestionId = choixPossible.nextQuestionId,
+                    hasOpenTextField = choixPossible.hasOpenTextField,
                 )
             }
         )
