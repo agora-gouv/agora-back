@@ -15,6 +15,7 @@ class GetConsultationPreviewAnsweredListUseCase(
     fun getConsultationPreviewAnsweredList(userId: String): List<ConsultationPreviewAnswered> {
         return consultationPreviewAnsweredRepository.getConsultationAnsweredList(userId = userId)
             .mapNotNull { consultationPreviewAnsweredInfo ->
+
                 thematiqueRepository.getThematique(consultationPreviewAnsweredInfo.thematiqueId)
                     ?.let { thematique ->
                         consultationUpdateRepository.getConsultationUpdate(consultationPreviewAnsweredInfo.id)?.status?.let {
