@@ -18,16 +18,24 @@ class GetConsultationPreviewOngoingListUseCase(
             .mapNotNull { consultationPreviewOngoingInfo ->
                 thematiqueRepository.getThematique(thematiqueId = consultationPreviewOngoingInfo.thematiqueId)
                     ?.let { thematique ->
-                        mapper.toConsultationPreviewOngoing(
-                            consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
-                            thematique = thematique,
-                            hasAnswered = consultationResponseRepository.hasAnsweredConsultation(
-                                consultationId = consultationPreviewOngoingInfo.id,
-                                userId = userId,
-                            ),
+                        val hasAnswered = consultationResponseRepository.hasAnsweredConsultation(
+                                    consultationId = consultationPreviewOngoingInfo.id,
+                                    userId = userId,
                         )
+                        if (hasAnswered) {
+                            null
+                        } else {
+                            mapper.toConsultationPreviewOngoing(
+                                consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
+                                thematique = thematique,
+                                hasAnswered = hasAnswered,
+
+                                )
+
+                        }
                     }
             }
     }
-
 }
+
+
