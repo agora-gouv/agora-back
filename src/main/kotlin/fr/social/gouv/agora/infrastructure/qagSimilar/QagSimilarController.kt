@@ -2,13 +2,12 @@ package fr.social.gouv.agora.infrastructure.qagSimilar
 
 import fr.social.gouv.agora.infrastructure.qag.QagModeratingJsonMapper
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
-import fr.social.gouv.agora.usecase.qag.FindSimilarQagUseCase
+import fr.social.gouv.agora.usecase.qagSimilar.FindSimilarQagUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-
 
 @RestController
 @Suppress("unused")
@@ -22,8 +21,8 @@ class QagSimilarController(
         @RequestHeader("Authorization") authorizationHeader: String,
         @RequestParam("title") title: String,
     ): ResponseEntity<*> {
-        val qagResult = findSimilarQagUseCase.findSimilarQag(
-            question = title,
+        val qagResult = findSimilarQagUseCase.findSimilarQags(
+            writingQag = title,
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )
         return if (qagResult.isEmpty())
@@ -37,13 +36,14 @@ class QagSimilarController(
         @RequestHeader("Authorization") authorizationHeader: String,
         @RequestParam("title") title: String,
     ): ResponseEntity<*> {
-        val qagResult = findSimilarQagUseCase.findSimilarQag(
-            question = title,
+        val qagResult = findSimilarQagUseCase.findSimilarQags(
+            writingQag = title,
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )
         return if (qagResult.isEmpty())
-            ResponseEntity.ok().body("")
+            ResponseEntity.ok().body(Unit)
         else
             ResponseEntity.ok().body(mapper.toJson(qagResult))
     }
+
 }

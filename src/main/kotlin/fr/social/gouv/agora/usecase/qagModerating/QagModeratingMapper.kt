@@ -21,4 +21,15 @@ class QagModeratingMapper {
         )
     }
 
+    fun toQagModerating(qag: QagInfoWithSupportAndThematique, userId: String): QagModerating {
+        return toQagModerating(
+            qagInfo = qag.qagInfo,
+            thematique = qag.thematique,
+            supportQag = SupportQag(
+                supportCount = qag.supportQagInfoList.size,
+                isSupportedByUser = qag.supportQagInfoList.any { supportQagInfo -> supportQagInfo.userId == userId }
+            )
+        )
+    }
+
 }
