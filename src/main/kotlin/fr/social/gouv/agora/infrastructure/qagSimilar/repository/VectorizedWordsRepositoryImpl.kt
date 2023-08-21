@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.infrastructure.qagSimilar.repository
 
-import fr.social.gouv.agora.infrastructure.qagSimilar.repository.VectorizedWordsCacheRepository.CacheResult
+import fr.social.gouv.agora.infrastructure.qagSimilar.repository.VectorizedWordsCacheRepository.CacheResult.*
 import fr.social.gouv.agora.usecase.qagSimilar.repository.VectorizedWordsRepository
 import org.nd4j.linalg.api.ndarray.INDArray
 import org.springframework.stereotype.Component
@@ -12,23 +12,31 @@ class VectorizedWordsRepositoryImpl(
 ) : VectorizedWordsRepository {
 
     override fun getWordVectors(words: List<String>): Map<String, INDArray?> {
-        val cachedWordVectors = when (val cacheResult = cacheRepository.getWordVectors()) {
-            CacheResult.CacheNotInitialized -> emptyMap()
-            is CacheResult.CachedWordVectorMap -> cacheResult.wordVectorMap
+        val cachedWordVectors = cacheRepository.getWordVectors(words)
+
+        val knownCachedWordVectors = cachedWordVectors
+            .filterValues { cacheResult -> cacheResult is CachedWordVector || cacheResult is WordWithoutVector }
+            .map { (word, cacheResult) ->
+                when (cacheResult) {
+                    is CachedWordVector -> word to cacheResult.wordVector
+                    WordWithoutVector -> word to null
+                    CacheNotInitialized -> throw IllegalStateException("Cannot map CacheNotInitialized vectors")
+                }
+            }.toMap()
+
+        if (knownCachedWordVectors.size == words.size) {
+            return knownCachedWordVectors
         }
 
-        val filteredWordVectors = cachedWordVectors.filter { (word, _) -> words.contains(word) }
-        val missingWordVectors = words.filterNot { word -> cachedWordVectors.contains(word) }
-        if (missingWordVectors.isEmpty()) {
-            return filteredWordVectors
-        }
-
+        val missingWordVectors = words.filter { word -> !knownCachedWordVectors.containsKey(word) }
         val wordVectorsFromFile = fileRepository.getWordVectors(missingWordVectors)
-        val stillMissingWordVectors = missingWordVectors.filterNot { word -> wordVectorsFromFile.containsKey(word) }
-        val newWordVectors = filteredWordVectors + wordVectorsFromFile + stillMissingWordVectors.associateWith { null }
-        cacheRepository.addWordVectors(newWordVectors)
+        val stillMissingWordVectors = words.filter { word ->
+            !knownCachedWordVectors.containsKey(word) && !wordVectorsFromFile.containsKey(word)
+        }
+        val addToCacheVectors = wordVectorsFromFile + stillMissingWordVectors.associateWith { null }
+        cacheRepository.insertWordVectors(addToCacheVectors)
 
-        return newWordVectors
+        return knownCachedWordVectors + addToCacheVectors
     }
 
 }

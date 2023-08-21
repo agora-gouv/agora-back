@@ -35,13 +35,14 @@ class VectorizedWordsFileRepository(private val resolver: VectorizedWordFileReso
     private fun getVectorsFromArchive(archiveName: String, words: List<String>): Map<String, INDArray?> {
         val wordVectorMap = mutableMapOf<String, INDArray?>()
         unzipIfRequired(archiveName).forEach { wordVectorFile ->
-            println("Read wordVector file ${wordVectorFile.name}")
             val word2Vec = WordVectorSerializer.readWord2VecModel(wordVectorFile)
 
             val wordVectors = words.map { word ->
                 word to word2Vec.getWordVectorMatrix(word)
             }.filter { it.second != null }
-            wordVectorMap.putAll(wordVectors)
+            if (wordVectors.isNotEmpty()) {
+                wordVectorMap.putAll(wordVectors)
+            }
 
             if (wordVectorMap.size == words.size) {
                 return wordVectorMap
@@ -59,7 +60,7 @@ class VectorizedWordsFileRepository(private val resolver: VectorizedWordFileReso
             unzip(archiveDirectory)
         }
 
-        return archiveDirectory.listFiles()?.toList() ?: emptyList()
+        return archiveDirectory.listFiles()?.sorted()?.toList() ?: emptyList()
     }
 
     private fun unzip(archiveDirectory: File) {

@@ -25,17 +25,11 @@ internal class VectorizedWordsRepositoryImplTest {
     private lateinit var fileRepository: VectorizedWordsFileRepository
 
     @Test
-    fun `getWordVectors - when has all words in cache - should return filtered map from cache`() {
+    fun `getWordVectors - when has all words in cache - should return map from cache`() {
         // Given
         val totoVector = mock(INDArray::class.java)
-        val coucouVector = mock(INDArray::class.java)
-        given(cacheRepository.getWordVectors()).willReturn(
-            CacheResult.CachedWordVectorMap(
-                mapOf(
-                    "toto" to totoVector,
-                    "coucou" to coucouVector,
-                )
-            )
+        given(cacheRepository.getWordVectors(listOf("toto"))).willReturn(
+            mapOf("toto" to CacheResult.CachedWordVector(totoVector))
         )
 
         // When
@@ -45,7 +39,7 @@ internal class VectorizedWordsRepositoryImplTest {
         assertThat(result).isEqualTo(
             mapOf("toto" to totoVector)
         )
-        then(cacheRepository).should(only()).getWordVectors()
+        then(cacheRepository).should(only()).getWordVectors(listOf("toto"))
         then(fileRepository).shouldHaveNoInteractions()
     }
 
@@ -53,7 +47,7 @@ internal class VectorizedWordsRepositoryImplTest {
     fun `getWordVectors - when has missing words in cache - should search in file, insert them in cache then return map`() {
         // Given
         val totoVector = mock(INDArray::class.java)
-        given(cacheRepository.getWordVectors()).willReturn(CacheResult.CacheNotInitialized)
+        given(cacheRepository.getWordVectors(listOf("toto"))).willReturn(mapOf("toto" to CacheResult.CacheNotInitialized))
         given(fileRepository.getWordVectors(listOf("toto"))).willReturn(mapOf("toto" to totoVector))
 
         // When
@@ -63,19 +57,23 @@ internal class VectorizedWordsRepositoryImplTest {
         assertThat(result).isEqualTo(
             mapOf("toto" to totoVector)
         )
-        then(cacheRepository).should().getWordVectors()
-        then(cacheRepository).should().addWordVectors(mapOf("toto" to totoVector))
+        then(cacheRepository).should().getWordVectors(listOf("toto"))
+        then(cacheRepository).should().insertWordVectors(mapOf("toto" to totoVector))
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(fileRepository).should(only()).getWordVectors(listOf("toto"))
     }
 
     @Test
-    fun `getWordVectors - when has missing words in cache & file - should add null to cache then return map`() {
+    fun `getWordVectors - when has missing words in cache & file - should insert null to cache then return map`() {
         // Given
-        val titiVector = mock(INDArray::class.java)
         val totoVector = mock(INDArray::class.java)
-        given(cacheRepository.getWordVectors()).willReturn(CacheResult.CachedWordVectorMap(mapOf("titi" to titiVector)))
-        given(fileRepository.getWordVectors(listOf("toto", "tata"))).willReturn(mapOf("toto" to totoVector))
+        given(cacheRepository.getWordVectors(listOf("toto", "titi", "tata"))).willReturn(
+            mapOf(
+                "toto" to CacheResult.CachedWordVector(totoVector)
+            )
+        )
+        val titiVector = mock(INDArray::class.java)
+        given(fileRepository.getWordVectors(listOf("titi", "tata"))).willReturn(mapOf("titi" to titiVector))
 
         // When
         val result = repository.getWordVectors(listOf("toto", "titi", "tata"))
@@ -88,16 +86,15 @@ internal class VectorizedWordsRepositoryImplTest {
                 "tata" to null,
             )
         )
-        then(cacheRepository).should().getWordVectors()
-        then(cacheRepository).should().addWordVectors(
+        then(cacheRepository).should().getWordVectors(listOf("toto", "titi", "tata"))
+        then(cacheRepository).should().insertWordVectors(
             mapOf(
-                "toto" to totoVector,
                 "titi" to titiVector,
                 "tata" to null,
             )
         )
         then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(fileRepository).should(only()).getWordVectors(listOf("toto", "tata"))
+        then(fileRepository).should(only()).getWordVectors(listOf("titi", "tata"))
     }
 
 }

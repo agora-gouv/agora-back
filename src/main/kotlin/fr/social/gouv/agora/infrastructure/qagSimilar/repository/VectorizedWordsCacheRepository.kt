@@ -1,6 +1,8 @@
 package fr.social.gouv.agora.infrastructure.qagSimilar.repository
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.nd4j.linalg.api.ndarray.INDArray
+import org.nd4j.linalg.cpu.nativecpu.NDArray
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 
@@ -9,35 +11,69 @@ class VectorizedWordsCacheRepository(private val cacheManager: CacheManager) {
 
     companion object {
         private const val WORD_VECTORS_CACHE_NAME = "wordVectorsCache"
-        private const val WORD_VECTORS_CACHE_KEY = "wordVectorsCacheKey"
+        private val NO_WORD_VECTOR = VectorizedWord(data = FloatArray(0), shape = IntArray(0))
     }
 
     sealed class CacheResult {
-        data class CachedWordVectorMap(val wordVectorMap: Map<String, INDArray?>) : CacheResult()
+        data class CachedWordVector(val wordVector: INDArray) : CacheResult()
+        object WordWithoutVector : CacheResult()
         object CacheNotInitialized : CacheResult()
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun getWordVectors(): CacheResult {
-        val wordVectorMap = try {
-            getCache()?.get(WORD_VECTORS_CACHE_KEY, List::class.java) as? Map<String, INDArray?>
-        } catch (e: IllegalStateException) {
-            null
-        }
-        return when (wordVectorMap) {
-            null -> CacheResult.CacheNotInitialized
-            else -> CacheResult.CachedWordVectorMap(wordVectorMap)
+    fun getWordVectors(words: List<String>): Map<String, CacheResult> {
+        return words.associateWith { word ->
+            when (val vectorString = getCache()?.get(word, VectorizedWord::class.java)) {
+                null -> CacheResult.CacheNotInitialized
+                NO_WORD_VECTOR -> CacheResult.WordWithoutVector
+                else -> CacheResult.CachedWordVector(cacheToVector(vectorString))
+            }
         }
     }
 
-    fun addWordVectors(wordVectorMap: Map<String, INDArray?>) {
-        val cachedWordVectors = when (val cacheResult = getWordVectors()) {
-            CacheResult.CacheNotInitialized -> emptyMap()
-            is CacheResult.CachedWordVectorMap -> cacheResult.wordVectorMap
+    fun insertWordVectors(wordVectorMap: Map<String, INDArray?>) {
+        wordVectorMap.forEach { (word, vector) ->
+            getCache()?.put(word, vectorToCache(vector))
         }
-        getCache()?.put(WORD_VECTORS_CACHE_KEY, cachedWordVectors + wordVectorMap)
     }
 
     private fun getCache() = cacheManager.getCache(WORD_VECTORS_CACHE_NAME)
 
+    private fun vectorToCache(vector: INDArray?) = vector?.let {
+        VectorizedWord(
+            data = vector.toFloatVector(),
+            shape = vector.shape().map { it.toInt() }.toIntArray(),
+        )
+    } ?: NO_WORD_VECTOR
+
+    private fun cacheToVector(vectorizedWord: VectorizedWord) =
+        NDArray(
+            vectorizedWord.data,
+            vectorizedWord.shape,
+        )
+}
+
+data class VectorizedWord(
+    @JsonProperty("data")
+    val data: FloatArray,
+    @JsonProperty("shape")
+    val shape: IntArray,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as VectorizedWord
+
+        if (!data.contentEquals(other.data)) return false
+        if (!shape.contentEquals(other.shape)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = data.contentHashCode()
+        result = 31 * result + shape.contentHashCode()
+        return result
+    }
 }
