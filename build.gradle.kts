@@ -37,6 +37,7 @@ dependencies {
 	implementation("org.nd4j:nd4j-native-platform:1.0.0-M2.1")
 	implementation ("edu.stanford.nlp:stanford-corenlp:4.2.2")
 	implementation ("edu.stanford.nlp:stanford-corenlp:4.2.2:models-french")
+	implementation ("org.codehaus.plexus:plexus-archiver:4.8.0")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
