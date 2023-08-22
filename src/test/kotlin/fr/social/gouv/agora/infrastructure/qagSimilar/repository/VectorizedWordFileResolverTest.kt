@@ -18,9 +18,9 @@ internal class VectorizedWordFileResolverTest {
         @JvmStatic
         fun findWordArchiveFileTestCases() = arrayOf(
             input(word = "toto", expectedArchiveFilePointer = "t"),
-            input(word = "àlain_terrieur", expectedArchiveFilePointer = "à"),
-            input(word = "æternuer", expectedArchiveFilePointer = "æ"),
-            input(word = "øméga3", expectedArchiveFilePointer = "ø"),
+            input(word = "àlain_terrieur", expectedArchiveFilePointer = "specials"),
+            input(word = "æternuer", expectedArchiveFilePointer = "specials"),
+            input(word = "øméga3", expectedArchiveFilePointer = "specials"),
             input(word = "2", expectedArchiveFilePointer = "2"),
             input(word = "¾journée", expectedArchiveFilePointer = "specials"),
             input(word = "³mousquetaires", expectedArchiveFilePointer = "specials"),

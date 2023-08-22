@@ -1,12 +1,11 @@
 package fr.social.gouv.agora.infrastructure.qagSimilar.repository
 
+import org.codehaus.plexus.archiver.ArchiverException
 import org.codehaus.plexus.archiver.tar.TarGZipUnArchiver
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer
 import org.nd4j.linalg.api.ndarray.INDArray
 import org.springframework.stereotype.Repository
 import java.io.File
-import java.net.URLDecoder
-import java.nio.charset.Charset
 
 
 @Repository
@@ -16,10 +15,11 @@ class VectorizedWordsFileRepository(private val resolver: VectorizedWordFileReso
         private const val ZIP_FILE_PREFIX = "wordVectorFiles"
         private const val ZIP_FILE_SUFFIX = ".gz"
 
+        private const val ZIPPED_WORD_VECTOR_DIRECTORY = "/tmp/wordVectorFiles/"
         private const val UNZIPPED_WORD_VECTOR_DIRECTORY = "/tmp/$ZIP_FILE_PREFIX/"
     }
 
-    fun getWordVectors(words: List<String>): Map<String, INDArray?> {
+    fun getWordVectors(words: List<String>): Map<String, VectorResult> {
         val archivesToWords = words.map { word -> resolver.findWordArchiveName(word) to word }
             .groupBy { it.first }
             .mapValues { (_, words) ->
@@ -32,27 +32,25 @@ class VectorizedWordsFileRepository(private val resolver: VectorizedWordFileReso
         }
     }
 
-    private fun getVectorsFromArchive(archiveName: String, words: List<String>): Map<String, INDArray?> {
-        val wordVectorMap = mutableMapOf<String, INDArray?>()
-        unzipIfRequired(archiveName).forEach { wordVectorFile ->
-            val word2Vec = WordVectorSerializer.readWord2VecModel(wordVectorFile)
-
-            val wordVectors = words.map { word ->
-                word to word2Vec.getWordVectorMatrix(word)
-            }.filter { it.second != null }
-            if (wordVectors.isNotEmpty()) {
-                wordVectorMap.putAll(wordVectors)
+    private fun getVectorsFromArchive(archiveName: String, words: List<String>): Map<String, VectorResult> {
+        try {
+            val wordVectorMap = mutableMapOf<String, VectorResult>()
+            unzipIfRequired(archiveName).forEach { wordVectorFile ->
+                val wordsFromVectorFile = searchWordsInVectorFile(wordVectorFile, words)
+                wordVectorMap.putAll(wordsFromVectorFile)
+                if (wordVectorMap.size == words.size) {
+                    return wordVectorMap
+                }
             }
 
-            if (wordVectorMap.size == words.size) {
-                return wordVectorMap
-            }
+            val missingWordVectors = words.filterNot { word -> wordVectorMap.containsKey(word) }
+            return wordVectorMap + missingWordVectors.map { word -> word to VectorResult.VectorFound(vector = null) }
+        } catch (e: ArchiverException) {
+            return words.associateWith { VectorResult.VectorError }
         }
-
-        val missingWordVectors = words.filterNot { word -> wordVectorMap.containsKey(word) }
-        return wordVectorMap + missingWordVectors.map { word -> word to null }
     }
 
+    @Throws(ArchiverException::class)
     private fun unzipIfRequired(archiveName: String): List<File> {
         val archiveDirectory = File(UNZIPPED_WORD_VECTOR_DIRECTORY + archiveName)
         if (!archiveDirectory.exists()) {
@@ -63,18 +61,29 @@ class VectorizedWordsFileRepository(private val resolver: VectorizedWordFileReso
         return archiveDirectory.listFiles()?.sorted()?.toList() ?: emptyList()
     }
 
+    @Throws(ArchiverException::class)
     private fun unzip(archiveDirectory: File) {
-        val zippedFileName = ZIP_FILE_PREFIX + "/" + archiveDirectory.name + ZIP_FILE_SUFFIX
-        val zippedFile = File(
-            URLDecoder.decode(
-                this.javaClass.classLoader.getResource(zippedFileName)?.file,
-                Charset.defaultCharset()
-            )
-        )
+        val zippedFile = File(ZIPPED_WORD_VECTOR_DIRECTORY + archiveDirectory.name + ZIP_FILE_SUFFIX)
 
         val gzipUnArchiver = TarGZipUnArchiver()
         gzipUnArchiver.sourceFile = zippedFile
         gzipUnArchiver.destDirectory = archiveDirectory.parentFile
         gzipUnArchiver.extract()
     }
+
+    private fun searchWordsInVectorFile(
+        wordVectorFile: File,
+        words: List<String>,
+    ): Map<String, VectorResult> {
+        val word2Vec = WordVectorSerializer.readWord2VecModel(wordVectorFile)
+        return words
+            .map { word -> word to word2Vec.getWordVectorMatrix(word) }
+            .filter { (_, vector) -> vector != null }
+            .associate { (word, vector) -> word to VectorResult.VectorFound(vector) }
+    }
+}
+
+sealed class VectorResult {
+    data class VectorFound(val vector: INDArray?) : VectorResult()
+    object VectorError : VectorResult()
 }
