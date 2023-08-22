@@ -4,10 +4,10 @@ import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFac
 import org.springframework.stereotype.Component
 
 @Component
-class SentenceToWordsGenerator {
+class SentenceToWordsGenerator(private val sentenceNormalizer: SentenceNormalizer) {
 
     fun sentenceToWords(sentence: String): List<String> {
-        return DefaultTokenizerFactory().create(sentence).tokens
+        return DefaultTokenizerFactory().create(sentenceNormalizer.preProcess(sentence)).tokens
     }
 
 }
