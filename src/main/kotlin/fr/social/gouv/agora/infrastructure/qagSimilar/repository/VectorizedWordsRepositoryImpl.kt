@@ -33,8 +33,18 @@ class VectorizedWordsRepositoryImpl(
         val stillMissingWordVectors = words.filter { word ->
             !knownCachedWordVectors.containsKey(word) && !wordVectorsFromFile.containsKey(word)
         }
-        val addToCacheVectors = wordVectorsFromFile + stillMissingWordVectors.associateWith { null }
-        cacheRepository.insertWordVectors(addToCacheVectors)
+
+        val addToCacheVectors = wordVectorsFromFile
+            .filterValues { vectorResult -> vectorResult is VectorResult.VectorFound }
+            .map { (word, vectorResult) ->
+                word to when (vectorResult) {
+                    is VectorResult.VectorFound -> vectorResult.vector
+                    VectorResult.VectorError -> throw Exception("Cannot map VectorError to a vector")
+                }
+            }.toMap() + stillMissingWordVectors.associateWith { null }
+        if (addToCacheVectors.isNotEmpty()) {
+            cacheRepository.insertWordVectors(addToCacheVectors)
+        }
 
         return knownCachedWordVectors + addToCacheVectors
     }

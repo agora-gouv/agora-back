@@ -35,8 +35,8 @@ dependencies {
 	implementation("org.deeplearning4j:deeplearning4j-nlp:1.0.0-M2.1")
 	implementation("org.nd4j:nd4j-native:1.0.0-M2.1:macosx-arm64")
 	implementation("org.nd4j:nd4j-native-platform:1.0.0-M2.1")
-	implementation ("edu.stanford.nlp:stanford-corenlp:4.2.2")
-	implementation ("edu.stanford.nlp:stanford-corenlp:4.2.2:models-french")
+	implementation ("edu.stanford.nlp:stanford-corenlp:4.5.4")
+	implementation ("edu.stanford.nlp:stanford-corenlp:4.5.4:models-french")
 	implementation ("org.codehaus.plexus:plexus-archiver:4.8.0")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
@@ -54,4 +54,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.getByName<Jar>("bootJar") {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

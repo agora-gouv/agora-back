@@ -32,7 +32,6 @@ class FindSimilarQagUseCase(
         val words = (writingQagWords + qagToWords.values.flatten()).distinct()
         val wordVectors = vectorizedWordsRepository.getWordVectors(words)
 
-        println("Compare similarity, writing : $writingQag")
         return qags
             .asSequence()
             .map { qag ->
@@ -42,7 +41,6 @@ class FindSimilarQagUseCase(
                     writingQagWordVectors = wordVectors.filterKeys { word -> writingQagWords.contains(word) }
                         .values.filterNotNull().toList(),
                 )
-
                 mapper.toQagModerating(qag = qag, userId = userId) to similarityScore
             }
             .filter { (_, similarityScore) -> similarityScore >= MIN_SIMILARITY_SCORE }

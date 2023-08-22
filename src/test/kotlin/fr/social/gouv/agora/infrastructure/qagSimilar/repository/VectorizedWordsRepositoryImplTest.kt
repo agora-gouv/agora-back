@@ -44,11 +44,12 @@ internal class VectorizedWordsRepositoryImplTest {
     }
 
     @Test
-    fun `getWordVectors - when has missing words in cache - should search in file, insert them in cache then return map`() {
+    fun `getWordVectors - when has missing words in cache and found in file - should insert them in cache then return map`() {
         // Given
         val totoVector = mock(INDArray::class.java)
         given(cacheRepository.getWordVectors(listOf("toto"))).willReturn(mapOf("toto" to CacheResult.CacheNotInitialized))
-        given(fileRepository.getWordVectors(listOf("toto"))).willReturn(mapOf("toto" to totoVector))
+        given(fileRepository.getWordVectors(listOf("toto")))
+            .willReturn(mapOf("toto" to VectorResult.VectorFound(totoVector)))
 
         // When
         val result = repository.getWordVectors(listOf("toto"))
@@ -64,6 +65,21 @@ internal class VectorizedWordsRepositoryImplTest {
     }
 
     @Test
+    fun `getWordVectors - when has missing words in cache and error in file - should not insert them in cache then return map`() {
+        // Given
+        given(cacheRepository.getWordVectors(listOf("toto"))).willReturn(mapOf("toto" to CacheResult.CacheNotInitialized))
+        given(fileRepository.getWordVectors(listOf("toto"))).willReturn(mapOf("toto" to VectorResult.VectorError))
+
+        // When
+        val result = repository.getWordVectors(listOf("toto"))
+
+        // Then
+        assertThat(result).isEqualTo(emptyMap<String, INDArray?>())
+        then(cacheRepository).should(only()).getWordVectors(listOf("toto"))
+        then(fileRepository).should(only()).getWordVectors(listOf("toto"))
+    }
+
+    @Test
     fun `getWordVectors - when has missing words in cache & file - should insert null to cache then return map`() {
         // Given
         val totoVector = mock(INDArray::class.java)
@@ -73,7 +89,8 @@ internal class VectorizedWordsRepositoryImplTest {
             )
         )
         val titiVector = mock(INDArray::class.java)
-        given(fileRepository.getWordVectors(listOf("titi", "tata"))).willReturn(mapOf("titi" to titiVector))
+        given(fileRepository.getWordVectors(listOf("titi", "tata")))
+            .willReturn(mapOf("titi" to VectorResult.VectorFound(titiVector)))
 
         // When
         val result = repository.getWordVectors(listOf("toto", "titi", "tata"))
