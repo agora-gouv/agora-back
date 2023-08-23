@@ -118,7 +118,6 @@ internal class ConsultationPreviewOngoingMapperTest {
         val result = mapper.toConsultationPreviewOngoing(
             consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
             thematique = thematique,
-            //hasAnswered = hasAnswered,
         )
 
         // Then
