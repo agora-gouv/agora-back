@@ -24,7 +24,7 @@ class ConsultationPreviewJsonMapper(private val thematiqueJsonMapper: Thematique
                     endDate = domain.endDate.toString(),
                     thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
                     highlightLabel = domain.highlightLabel,
-                    hasAnswered = domain.hasAnswered,
+                    //hasAnswered = domain.hasAnswered,
                 )
             },
             finishedList = domainFinishedList.map { domain ->
@@ -47,6 +47,7 @@ class ConsultationPreviewJsonMapper(private val thematiqueJsonMapper: Thematique
             }
         )
     }
+
 
     private fun statusToJson(step: ConsultationStatus) = when (step) {
         COLLECTING_DATA -> 1
