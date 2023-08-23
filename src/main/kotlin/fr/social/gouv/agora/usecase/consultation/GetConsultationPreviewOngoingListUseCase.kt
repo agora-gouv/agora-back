@@ -28,7 +28,7 @@ class GetConsultationPreviewOngoingListUseCase(
                             mapper.toConsultationPreviewOngoing(
                                 consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
                                 thematique = thematique,
-                                hasAnswered = hasAnswered,
+                                //hasAnswered = hasAnswered,
 
                                 )
 

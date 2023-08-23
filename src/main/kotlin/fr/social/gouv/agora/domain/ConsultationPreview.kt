@@ -16,7 +16,6 @@ data class ConsultationPreviewOngoing(
     override val thematique: Thematique,
     val endDate: Date,
     val highlightLabel: String?,
-    val hasAnswered: Boolean,
 ) : ConsultationPreview()
 
 data class ConsultationPreviewFinished(

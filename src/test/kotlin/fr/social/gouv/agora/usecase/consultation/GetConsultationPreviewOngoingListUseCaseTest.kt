@@ -34,6 +34,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
     @MockBean
     private lateinit var mapper: ConsultationPreviewOngoingMapper
 
+
     @Test
     fun `getConsultationPreviewOngoingList - when has empty consultation - should return emptyList`() {
         // Given
@@ -96,7 +97,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
             mapper.toConsultationPreviewOngoing(
                 consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
                 thematique = thematique,
-                hasAnswered = false,
+                //hasAnswered = false,
             )
         ).willReturn(consultationPreviewOngoing)
 
@@ -112,7 +113,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         then(mapper).should(only()).toConsultationPreviewOngoing(
             consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
             thematique = thematique,
-            hasAnswered = false,
+            //hasAnswered = false,
         )
     }
 
