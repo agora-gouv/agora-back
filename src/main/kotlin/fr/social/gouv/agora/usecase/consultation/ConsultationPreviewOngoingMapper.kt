@@ -20,7 +20,7 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
     fun toConsultationPreviewOngoing(
         consultationPreviewOngoingInfo: ConsultationPreviewOngoingInfo,
         thematique: Thematique,
-        hasAnswered: Boolean,
+
     ): ConsultationPreviewOngoing {
 
 
@@ -31,9 +31,10 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
             thematique = thematique,
             endDate = consultationPreviewOngoingInfo.endDate,
             highlightLabel = buildHighlightLabel(consultationPreviewOngoingInfo.endDate),
-            hasAnswered = hasAnswered,
         )
     }
+
+
 
     fun buildHighlightLabel(endDate: Date): String? {
         val dateNow = LocalDateTime.now(clock)
@@ -49,5 +50,8 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
             }
         } else null
     }
+
+
+
 
 }

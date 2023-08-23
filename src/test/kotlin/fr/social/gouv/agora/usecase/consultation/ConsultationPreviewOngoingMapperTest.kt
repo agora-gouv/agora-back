@@ -39,10 +39,9 @@ internal class ConsultationPreviewOngoingMapperTest {
         id = "consultationId",
         title = "title",
         coverUrl = "coverUrl",
+        thematique = thematique,
         endDate = Date(1),
         highlightLabel = null,
-        thematique = thematique,
-        hasAnswered = hasAnswered,
     )
 
     companion object {
@@ -119,7 +118,7 @@ internal class ConsultationPreviewOngoingMapperTest {
         val result = mapper.toConsultationPreviewOngoing(
             consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
             thematique = thematique,
-            hasAnswered = hasAnswered,
+            //hasAnswered = hasAnswered,
         )
 
         // Then
