@@ -97,7 +97,6 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
             mapper.toConsultationPreviewOngoing(
                 consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
                 thematique = thematique,
-                //hasAnswered = false,
             )
         ).willReturn(consultationPreviewOngoing)
 
@@ -113,7 +112,6 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         then(mapper).should(only()).toConsultationPreviewOngoing(
             consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
             thematique = thematique,
-            //hasAnswered = false,
         )
     }
 
