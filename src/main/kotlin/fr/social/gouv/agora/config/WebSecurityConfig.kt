@@ -27,6 +27,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .requestMatchers("/admin/**").hasAuthority(UserAuthorizationJWT.ADMIN_APIS.authority)
             .requestMatchers("/moderate/**").hasAuthority(UserAuthorizationJWT.MODERATE_QAG.authority)
             .requestMatchers("/signup", "/login").permitAll()
+            .requestMatchers("/moderatus/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
