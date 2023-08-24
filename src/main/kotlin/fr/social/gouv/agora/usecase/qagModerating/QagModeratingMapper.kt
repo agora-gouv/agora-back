@@ -3,6 +3,7 @@ package fr.social.gouv.agora.usecase.qagModerating
 import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.domain.Thematique
+import fr.social.gouv.agora.usecase.qag.QagInfoWithSupportAndThematique
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import org.springframework.stereotype.Component
 

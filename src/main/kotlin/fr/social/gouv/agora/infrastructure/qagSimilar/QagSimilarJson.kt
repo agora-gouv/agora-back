@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.infrastructure.qagSimilar
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.social.gouv.agora.infrastructure.qag.QagModeratingJson
+import fr.social.gouv.agora.infrastructure.qagModerating.QagModeratingJson
 import java.util.*
 
 data class QagSimilarJson(

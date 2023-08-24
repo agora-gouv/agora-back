@@ -2,7 +2,7 @@ package fr.social.gouv.agora.usecase.qagSimilar
 
 import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.usecase.qag.GetQagWithSupportAndThematiqueUseCase
-import fr.social.gouv.agora.usecase.qag.QagModeratingMapper
+import fr.social.gouv.agora.usecase.qagModerating.QagModeratingMapper
 import fr.social.gouv.agora.usecase.qagSimilar.repository.VectorizedWordsRepository
 import org.springframework.stereotype.Service
 

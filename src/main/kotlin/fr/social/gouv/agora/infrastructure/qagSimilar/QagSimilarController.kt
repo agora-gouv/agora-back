@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.infrastructure.qagSimilar
 
-import fr.social.gouv.agora.infrastructure.qag.QagModeratingJsonMapper
+import fr.social.gouv.agora.infrastructure.qagModerating.QagModeratingJsonMapper
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qagSimilar.FindSimilarQagUseCase
 import org.springframework.http.ResponseEntity

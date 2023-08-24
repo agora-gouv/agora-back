@@ -31,7 +31,9 @@ dependencies {
 	implementation("redis.clients:jedis")
 	implementation("com.google.firebase:firebase-admin:9.1.1")
 	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20220608.1")
-	implementation("org.deeplearning4j:deeplearning4j-core:1.0.0-M2.1")
+	implementation("org.deeplearning4j:deeplearning4j-core:1.0.0-M2.1") {
+		exclude(group = "org.datavec", module = "datavec-data-image")
+	}
 	implementation("org.deeplearning4j:deeplearning4j-nlp:1.0.0-M2.1")
 	implementation("org.nd4j:nd4j-native:1.0.0-M2.1:macosx-arm64")
 	implementation("org.nd4j:nd4j-native-platform:1.0.0-M2.1")
