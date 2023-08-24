@@ -28,6 +28,7 @@ class QuestionJsonMapperTest {
         id = "choixPossibleId",
         label = "label",
         order = 1,
+        hasOpenTextField = false,
         nextQuestionId = null,
     )
 
@@ -44,6 +45,7 @@ class QuestionJsonMapperTest {
         id = "choixPossibleId",
         label = "label",
         order = 1,
+        hasOpenTextField = false,
         nextQuestionId = "nextQuestionId",
     )
 
