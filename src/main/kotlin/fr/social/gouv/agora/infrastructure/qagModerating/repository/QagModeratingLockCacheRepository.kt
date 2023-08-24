@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.infrastructure.qag.repository
+package fr.social.gouv.agora.infrastructure.qagModerating.repository
 
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager

@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.usecase.qag
+package fr.social.gouv.agora.usecase.qagModerating
 
 import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.domain.QagStatus
@@ -6,7 +6,7 @@ import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.infrastructure.utils.CollectionUtils.mapNotNullWhile
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.social.gouv.agora.usecase.qag.repository.QagModeratingLockRepository
+import fr.social.gouv.agora.usecase.qagModerating.repository.QagModeratingLockRepository
 import fr.social.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.social.gouv.agora.usecase.thematique.repository.ThematiqueRepository
