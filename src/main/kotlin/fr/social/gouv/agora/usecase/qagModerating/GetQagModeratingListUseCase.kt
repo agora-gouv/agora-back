@@ -29,6 +29,7 @@ class GetQagModeratingListUseCase(
     fun getQagModeratingList(userId: String): List<QagModerating> {
         val thematiqueMap = mutableMapOf<String, Thematique?>()
 
+        // TODO 260: do not return locked QaG for Moderatus
         return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
             .filter { qagInfo ->
@@ -38,7 +39,7 @@ class GetQagModeratingListUseCase(
             .sortedBy { qagInfo -> qagInfo.date }
             .mapNotNullWhile(
                 transformMethod = { qagInfo -> toQagModerating(qagInfo, userId, thematiqueMap) },
-                loopWhileCondition = { qagPreviewList -> qagPreviewList.size < MAX_MODERATING_LIST_SIZE },
+                loopWhileCondition = { qagModeratingList -> qagModeratingList.size < MAX_MODERATING_LIST_SIZE },
             ).onEach { qagModerating ->
                 qagModeratingLockRepository.setQagLocked(
                     qagId = qagModerating.id,
