@@ -1,7 +1,8 @@
-package fr.social.gouv.agora.infrastructure.qag
+package fr.social.gouv.agora.infrastructure.qagModerating
 
 import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 

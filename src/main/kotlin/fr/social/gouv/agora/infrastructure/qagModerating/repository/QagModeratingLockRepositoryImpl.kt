@@ -1,10 +1,11 @@
-package fr.social.gouv.agora.infrastructure.qag.repository
+package fr.social.gouv.agora.infrastructure.qagModerating.repository
 
-import fr.social.gouv.agora.usecase.qag.repository.QagModeratingLockRepository
+import fr.social.gouv.agora.usecase.qagModerating.repository.QagModeratingLockRepository
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
+@Suppress("unused")
 class QagModeratingLockRepositoryImpl(
     private val cacheRepository: QagModeratingLockCacheRepository,
 ) : QagModeratingLockRepository {
