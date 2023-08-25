@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.usecase.qagModerating
+package fr.social.gouv.agora.usecase.moderatus
 
 import fr.social.gouv.agora.domain.ModeratusQag
 import fr.social.gouv.agora.domain.QagStatus

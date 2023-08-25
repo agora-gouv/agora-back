@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.usecase.login
+package fr.social.gouv.agora.usecase.moderatus
 
 import fr.social.gouv.agora.infrastructure.login.DecodeResult
 import fr.social.gouv.agora.infrastructure.login.LoginTokenGenerator
