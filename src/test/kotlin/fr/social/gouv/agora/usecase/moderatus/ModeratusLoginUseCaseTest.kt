@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.usecase.login
+package fr.social.gouv.agora.usecase.moderatus
 
 import fr.social.gouv.agora.domain.LoginTokenData
 import fr.social.gouv.agora.domain.UserInfo
@@ -6,10 +6,10 @@ import fr.social.gouv.agora.infrastructure.login.DecodeResult
 import fr.social.gouv.agora.infrastructure.login.LoginTokenGenerator
 import fr.social.gouv.agora.usecase.login.repository.UserRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -31,7 +31,8 @@ internal class ModeratusLoginUseCaseTest {
     @Test
     fun `login - when decode is failure - should return false`() {
         // Given
-        given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken")).willReturn(DecodeResult.Failure)
+        given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
+            .willReturn(DecodeResult.Failure)
         given(userRepository.getUserById(userId = "userId")).willReturn(null)
 
         // When
