@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.usecase.moderatus
 
 import fr.social.gouv.agora.domain.LoginTokenData
+import fr.social.gouv.agora.domain.UserAuthorization
 import fr.social.gouv.agora.domain.UserInfo
 import fr.social.gouv.agora.infrastructure.login.DecodeResult
 import fr.social.gouv.agora.infrastructure.login.LoginTokenGenerator
@@ -57,12 +58,32 @@ internal class ModeratusLoginUseCaseTest {
     }
 
     @Test
-    fun `login - when decode success and has response from userRepository - should return true`() {
+    fun `login - when decode success and has response from userRepository but no authorization MODERATE_QAG - should return false`() {
         // Given
         given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
             .willReturn(DecodeResult.Success(loginTokenData = LoginTokenData(userId = "userId")))
 
-        val userInfo = mock(UserInfo::class.java)
+        val userInfo = mock(UserInfo::class.java).also {
+            given(it.authorizationList).willReturn(emptyList())
+        }
+        given(userRepository.getUserById(userId = "userId")).willReturn(userInfo)
+
+        // When
+        val result = useCase.login(loginToken = "loginToken")
+
+        // Then
+        assertThat(result).isFalse
+    }
+
+    @Test
+    fun `login - when decode success and has response from userRepository and has authorization MODERATE_QAG - should return true`() {
+        // Given
+        given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
+            .willReturn(DecodeResult.Success(loginTokenData = LoginTokenData(userId = "userId")))
+
+        val userInfo = mock(UserInfo::class.java).also {
+            given(it.authorizationList).willReturn(listOf(UserAuthorization.MODERATE_QAG))
+        }
         given(userRepository.getUserById(userId = "userId")).willReturn(userInfo)
 
         // When
