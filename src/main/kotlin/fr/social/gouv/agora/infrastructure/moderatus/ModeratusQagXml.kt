@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.moderatus
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 
@@ -8,6 +9,7 @@ data class ModeratusQagListXml(
     @field:JacksonXmlProperty(localName = "nb_content")
     val qagToModerateCount: Int,
     @field:JacksonXmlProperty(localName = "msg")
+    @JacksonXmlElementWrapper(useWrapping = false)
     val qagsToModerate: List<ModeratusQagXml>,
 )
 
