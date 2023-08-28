@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.usecase.qag
+package fr.social.gouv.agora.usecase.qagModerating
 
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagInsertingUpdates

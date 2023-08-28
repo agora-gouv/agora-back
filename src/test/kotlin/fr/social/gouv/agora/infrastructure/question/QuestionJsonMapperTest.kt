@@ -21,12 +21,14 @@ class QuestionJsonMapperTest {
         label = "label",
         ordre = 1,
         questionId = "questionId",
+        hasOpenTextField = false,
     )
 
     private val expectedChoixPossibleDefaultJson = ChoixPossibleJson(
         id = "choixPossibleId",
         label = "label",
         order = 1,
+        hasOpenTextField = false,
         nextQuestionId = null,
     )
 
@@ -36,12 +38,14 @@ class QuestionJsonMapperTest {
         ordre = 1,
         questionId = "questionId",
         nextQuestionId = "nextQuestionId",
+        hasOpenTextField = false,
     )
 
     private val expectedChoixPossibleConditionalJson = ChoixPossibleJson(
         id = "choixPossibleId",
         label = "label",
         order = 1,
+        hasOpenTextField = false,
         nextQuestionId = "nextQuestionId",
     )
 

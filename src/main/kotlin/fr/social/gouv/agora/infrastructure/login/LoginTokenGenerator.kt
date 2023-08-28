@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fr.social.gouv.agora.domain.LoginTokenData
+import org.springframework.stereotype.Component
 import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
-object LoginTokenGenerator {
+@Component
+class LoginTokenGenerator {
 
     fun buildLoginToken(loginTokenData: LoginTokenData): BuildResult {
         return try {

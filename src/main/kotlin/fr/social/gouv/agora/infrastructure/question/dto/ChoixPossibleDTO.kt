@@ -18,6 +18,8 @@ data class ChoixPossibleDTO(
     val questionId: UUID,
     @JoinTable(joinColumns = [JoinColumn(name = "id_question", table = "questions", referencedColumnName = "id")])
     val nextQuestionId: UUID?,
+    @Column(columnDefinition = "SMALLINT")
+    val hasOpenTextField: Int,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -31,6 +33,6 @@ data class ChoixPossibleDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id, label = $label, ordre = $ordre, questionId = $questionId, nextQuestionId = $nextQuestionId)"
+        return this::class.simpleName + "(id = $id, label = $label, ordre = $ordre, questionId = $questionId, nextQuestionId = $nextQuestionId, hasOpenTextField = $hasOpenTextField)"
     }
 }

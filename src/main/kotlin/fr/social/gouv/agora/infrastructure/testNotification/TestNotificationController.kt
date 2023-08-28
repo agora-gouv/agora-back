@@ -27,6 +27,7 @@ class TestNotificationController(
         @RequestParam("type") type: String?,
         @RequestParam("qagId") qagId: String?,
         @RequestParam("consultationId") consultationId: String?,
+        @RequestParam("step") step: String?,
     ): ResponseEntity<*> {
         val usedUserId =
             userId.takeUnless { it.isNullOrBlank() } ?: JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
@@ -44,6 +45,7 @@ class TestNotificationController(
                 .setToken(userInfo.fcmToken)
             type.takeUnless { it.isNullOrBlank() }.let { messageBuilder.putData("type", type) }
             qagId.takeUnless { it.isNullOrBlank() }.let { messageBuilder.putData("qagId", qagId) }
+            step.takeUnless { it.isNullOrBlank() }.let { messageBuilder.putData("step", step) }
             consultationId.takeUnless { it.isNullOrBlank() }
                 .let { messageBuilder.putData("consultationId", consultationId) }
 

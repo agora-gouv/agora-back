@@ -1,4 +1,4 @@
-package fr.social.gouv.agora.usecase.qag.repository
+package fr.social.gouv.agora.usecase.qagModerating.repository
 
 interface QagModeratingLockRepository {
     fun getUserIdForQagLocked(qagId: String): String?

@@ -5,6 +5,7 @@ sealed class ChoixPossible {
     abstract val label: String
     abstract val ordre: Int
     abstract val questionId: String
+    abstract val hasOpenTextField: Boolean
 }
 
 data class ChoixPossibleDefault(
@@ -12,6 +13,7 @@ data class ChoixPossibleDefault(
     override val label: String,
     override val ordre: Int,
     override val questionId: String,
+    override val hasOpenTextField: Boolean,
 ) : ChoixPossible()
 
 data class ChoixPossibleConditional(
@@ -19,5 +21,6 @@ data class ChoixPossibleConditional(
     override val label: String,
     override val ordre: Int,
     override val questionId: String,
+    override val hasOpenTextField: Boolean,
     val nextQuestionId: String,
 ) : ChoixPossible()

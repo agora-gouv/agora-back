@@ -105,6 +105,8 @@ data class ChoixPossibleJson(
     val label: String,
     @JsonProperty("order")
     val order: Int,
+    @JsonProperty("hasOpenTextField")
+    val hasOpenTextField: Boolean,
     @JsonProperty("nextQuestionId")
     val nextQuestionId: String?,
 )

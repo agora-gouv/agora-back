@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @Suppress("unused")
 class LoginController(
     private val appVersionControlUseCase: AppVersionControlUseCase,
+    private val loginTokenGenerator: LoginTokenGenerator,
     private val loginUseCase: LoginUseCase,
     private val loginInfoJsonMapper: LoginInfoJsonMapper,
     private val featureFlagsUseCase: FeatureFlagsUseCase,
@@ -36,7 +37,7 @@ class LoginController(
             INVALID_APP -> ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
             UPDATE_REQUIRED -> ResponseEntity.status(HttpServletResponse.SC_PRECONDITION_FAILED)
                 .body(Unit)
-            AUTHORIZED -> when (val loginTokenResult = LoginTokenGenerator.decodeLoginToken(loginToken)) {
+            AUTHORIZED -> when (val loginTokenResult = loginTokenGenerator.decodeLoginToken(loginToken)) {
                 DecodeResult.Failure -> ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
                 is DecodeResult.Success -> loginUseCase.login(
                     loginTokenData = loginTokenResult.loginTokenData,
