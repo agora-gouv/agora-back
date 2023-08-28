@@ -8,4 +8,5 @@ data class ModeratusQag(
     val description: String,
     val date: Date,
     val username: String,
+    val userId: String,
 )
