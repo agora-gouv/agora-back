@@ -14,6 +14,7 @@ class ModeratusQagMapper {
             description = qagInfo.description,
             date = qagInfo.date,
             username = qagInfo.username,
+            userId = qagInfo.userId,
         )
     }
 
