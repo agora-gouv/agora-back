@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.infrastructure.utils.CollectionUtils.mapNotNullWhile
+import fr.social.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qagModerating.repository.QagModeratingLockRepository
@@ -19,6 +20,7 @@ class GetQagModeratingListUseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val supportRepository: GetSupportQagRepository,
     private val qagModeratingLockRepository: QagModeratingLockRepository,
+    private val moderatusQagLockRepository: ModeratusQagLockRepository,
     private val mapper: QagModeratingMapper,
 ) {
 
@@ -28,10 +30,11 @@ class GetQagModeratingListUseCase(
 
     fun getQagModeratingList(userId: String): List<QagModerating> {
         val thematiqueMap = mutableMapOf<String, Thematique?>()
+        val moderatusLockedQagIds = moderatusQagLockRepository.getLockedQagIds()
 
-        // TODO 260: do not return locked QaG for Moderatus
         return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
+            .filter { qagInfo -> !moderatusLockedQagIds.contains(qagInfo.id) }
             .filter { qagInfo ->
                 val lockingUserId = qagModeratingLockRepository.getUserIdForQagLocked(qagInfo.id)
                 lockingUserId == null || lockingUserId == userId
@@ -50,8 +53,11 @@ class GetQagModeratingListUseCase(
 
     fun getModeratingQagCount(): Int {
         val allResponseQag = responseQagRepository.getAllResponseQag()
+        val moderatusLockedQagIds = moderatusQagLockRepository.getLockedQagIds()
+
         return qagInfoRepository.getAllQagInfo()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }
+            .filter { qagInfo -> !moderatusLockedQagIds.contains(qagInfo.id) }
             .filterNot { qagInfo -> allResponseQag.any { responseQag -> responseQag.qagId == qagInfo.id } }
             .count()
     }

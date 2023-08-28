@@ -11,7 +11,7 @@ import java.util.*
 
 @RestController
 @Suppress("unused")
-class ModeratusQagController(
+class ModeratusGetQagController(
     private val moderatusLoginUseCase: ModeratusLoginUseCase,
     private val moderatusQagListUseCase: GetModeratusQagListUseCase,
     private val mapper: ModeratusQagListXmlMapper,
