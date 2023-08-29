@@ -4,6 +4,7 @@ import fr.social.gouv.agora.usecase.moderatus.repository.ModeratusQagLockReposit
 import org.springframework.stereotype.Component
 
 @Component
+@Suppress("unused")
 class ModeratusQagLockRepositoryImpl(
     private val cacheRepository: ModeratusQagLockCacheRepository
 ) : ModeratusQagLockRepository {
