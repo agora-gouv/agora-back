@@ -28,7 +28,7 @@ class ModeratusLockQagController(
     ): ResponseEntity<*> {
         if (!moderatusLoginUseCase.login(loginToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ModeratusQagListErrorXml(errorMessage = "Password invalide: aucun compte associé ou utilisateur non autorisé"))
+                .body(ModeratusQagLockErrorXml(errorMessage = "Password invalide: aucun compte associé ou utilisateur non autorisé"))
         }
 
         return ResponseEntity.ok(
