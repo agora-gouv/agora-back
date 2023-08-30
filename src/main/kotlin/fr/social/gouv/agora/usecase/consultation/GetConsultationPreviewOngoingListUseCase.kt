@@ -19,8 +19,8 @@ class GetConsultationPreviewOngoingListUseCase(
                 thematiqueRepository.getThematique(thematiqueId = consultationPreviewOngoingInfo.thematiqueId)
                     ?.let { thematique ->
                         val hasAnswered = consultationResponseRepository.hasAnsweredConsultation(
-                                    consultationId = consultationPreviewOngoingInfo.id,
-                                    userId = userId,
+                            consultationId = consultationPreviewOngoingInfo.id,
+                            userId = userId,
                         )
                         if (hasAnswered) {
                             null
@@ -28,8 +28,7 @@ class GetConsultationPreviewOngoingListUseCase(
                             mapper.toConsultationPreviewOngoing(
                                 consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
                                 thematique = thematique,
-                                )
-
+                            )
                         }
                     }
             }
