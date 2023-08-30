@@ -21,3 +21,9 @@ data class ModeratusQagLockResultXml(
     @field:JacksonXmlProperty(localName = "comment", isAttribute = true)
     val comment: String?,
 )
+
+@JacksonXmlRootElement(localName = "contents")
+data class ModeratusQagLockErrorXml(
+    @field:JacksonXmlProperty(localName = "error")
+    val errorMessage: String,
+)
