@@ -25,6 +25,8 @@ data class ConsultationOngoingJson(
     val thematique: ThematiqueNoIdJson,
     @JsonProperty("highlightLabel")
     val highlightLabel: String?,
+    @JsonProperty("hasAnswered")
+    val hasAnswered: Boolean = false,
 )
 
 data class ConsultationFinishedJson(
