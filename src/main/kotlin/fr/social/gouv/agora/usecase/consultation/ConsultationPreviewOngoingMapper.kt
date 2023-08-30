@@ -20,10 +20,7 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
     fun toConsultationPreviewOngoing(
         consultationPreviewOngoingInfo: ConsultationPreviewOngoingInfo,
         thematique: Thematique,
-
-        ): ConsultationPreviewOngoing {
-
-
+    ): ConsultationPreviewOngoing {
         return ConsultationPreviewOngoing(
             id = consultationPreviewOngoingInfo.id,
             title = consultationPreviewOngoingInfo.title,
@@ -49,6 +46,5 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
             }
         } else null
     }
-
 
 }

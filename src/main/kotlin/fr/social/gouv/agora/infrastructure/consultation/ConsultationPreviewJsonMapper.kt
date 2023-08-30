@@ -47,7 +47,6 @@ class ConsultationPreviewJsonMapper(private val thematiqueJsonMapper: Thematique
         )
     }
 
-
     private fun statusToJson(step: ConsultationStatus) = when (step) {
         COLLECTING_DATA -> 1
         POLITICAL_COMMITMENT -> 2
