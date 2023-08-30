@@ -39,12 +39,14 @@ class QuestionJsonMapper {
         chapterList: List<QuestionChapter>,
         questionsNumber: Int,
     ) = questionUniqueList.map { domain ->
+        val (questionProgress, progressDescription) = buildQuestionProgress(domain.order, chapterList, questionsNumber)
         QuestionUniqueChoiceJson(
             id = domain.id,
             title = domain.title,
             popupDescription = domain.popupDescription,
             order = domain.order,
-            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            questionProgress = questionProgress,
+            questionProgressDescription = progressDescription,
             nextQuestionId = domain.nextQuestionId,
             possibleChoices = domain.choixPossibleList.map { choixPossible ->
                 ChoixPossibleJson(
@@ -63,12 +65,14 @@ class QuestionJsonMapper {
         chapterList: List<QuestionChapter>,
         questionsNumber: Int,
     ) = questionMultipleList.map { domain ->
+        val (questionProgress, progressDescription) = buildQuestionProgress(domain.order, chapterList, questionsNumber)
         QuestionMultipleChoicesJson(
             id = domain.id,
             title = domain.title,
             popupDescription = domain.popupDescription,
             order = domain.order,
-            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            questionProgress = questionProgress,
+            questionProgressDescription = progressDescription,
             maxChoices = domain.maxChoices,
             nextQuestionId = domain.nextQuestionId,
             possibleChoices = domain.choixPossibleList.map { choixPossible ->
@@ -88,12 +92,14 @@ class QuestionJsonMapper {
         chapterList: List<QuestionChapter>,
         questionsNumber: Int,
     ) = questionOpenList.map { domain ->
+        val (questionProgress, progressDescription) = buildQuestionProgress(domain.order, chapterList, questionsNumber)
         QuestionOpenedJson(
             id = domain.id,
             title = domain.title,
             popupDescription = domain.popupDescription,
             order = domain.order,
-            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            questionProgress = questionProgress,
+            questionProgressDescription = progressDescription,
             nextQuestionId = domain.nextQuestionId,
         )
     }
@@ -114,12 +120,14 @@ class QuestionJsonMapper {
         chapterList: List<QuestionChapter>,
         questionsNumber: Int,
     ) = questionUniqueList.map { domain ->
+        val (questionProgress, progressDescription) = buildQuestionProgress(domain.order, chapterList, questionsNumber)
         QuestionConditionalJson(
             id = domain.id,
             title = domain.title,
             popupDescription = domain.popupDescription,
             order = domain.order,
-            questionProgress = buildQuestionProgress(domain.order, chapterList, questionsNumber),
+            questionProgress = questionProgress,
+            questionProgressDescription = progressDescription,
             possibleChoices = domain.choixPossibleList.map { choixPossible ->
                 ChoixPossibleJson(
                     id = choixPossible.id,
@@ -136,6 +144,11 @@ class QuestionJsonMapper {
         order: Int, chapterList: List<QuestionChapter>
     ) = (order - chapterList.count { chapter -> chapter.order < order })
 
-    private fun buildQuestionProgress(order: Int, chapterList: List<QuestionChapter>, questionsNumber: Int) =
-        "Question " + calculateProgress(order, chapterList) + "/" + questionsNumber
+    private fun buildQuestionProgress(order: Int, chapterList: List<QuestionChapter>, questionsNumber: Int): Pair<String, String> {
+        val progress = calculateProgress(order, chapterList)
+        val questionProgress = "Question $progress/$questionsNumber"
+        val contentDescription = "Question $progress sur $questionsNumber"
+        return questionProgress to contentDescription
+    }
+
 }
