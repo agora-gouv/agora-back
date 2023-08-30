@@ -65,6 +65,7 @@ class QuestionJsonMapperTest {
         popupDescription = "popupDescription",
         order = 1,
         questionProgress = "Question 1/1",
+        questionProgressDescription = "Question 1 sur 1",
         nextQuestionId = "nextQuestionId",
         possibleChoices = listOf(expectedChoixPossibleDefaultJson),
     )
@@ -86,6 +87,7 @@ class QuestionJsonMapperTest {
         popupDescription = "popupDescription",
         order = 1,
         questionProgress = "Question 1/1",
+        questionProgressDescription = "Question 1 sur 1",
         maxChoices = 2,
         nextQuestionId = "nextQuestionId",
         possibleChoices = listOf(expectedChoixPossibleDefaultJson),
@@ -125,6 +127,7 @@ class QuestionJsonMapperTest {
         popupDescription = "popupDescription",
         order = 1,
         questionProgress = "Question 1/1",
+        questionProgressDescription = "Question 1 sur 1",
         nextQuestionId = "nextQuestionId"
     )
 
@@ -144,6 +147,7 @@ class QuestionJsonMapperTest {
         popupDescription = "popupDescription",
         order = 1,
         questionProgress = "Question 1/1",
+        questionProgressDescription = "Question 1 sur 1",
         possibleChoices = listOf(expectedChoixPossibleConditionalJson),
     )
 

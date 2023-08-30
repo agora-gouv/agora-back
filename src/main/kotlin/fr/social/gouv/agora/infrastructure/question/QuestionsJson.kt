@@ -27,6 +27,8 @@ data class QuestionUniqueChoiceJson(
     val order: Int,
     @JsonProperty("questionProgress")
     val questionProgress: String,
+    @JsonProperty("questionProgressA11y")
+    val questionProgressDescription: String,
     @JsonProperty("nextQuestionId")
     val nextQuestionId: String?,
     @JsonProperty("possibleChoices")
@@ -44,6 +46,8 @@ data class QuestionMultipleChoicesJson(
     val order: Int,
     @JsonProperty("questionProgress")
     val questionProgress: String,
+    @JsonProperty("questionProgressA11y")
+    val questionProgressDescription: String,
     @JsonProperty("maxChoices")
     val maxChoices: Int,
     @JsonProperty("nextQuestionId")
@@ -63,6 +67,8 @@ data class QuestionOpenedJson(
     val order: Int,
     @JsonProperty("questionProgress")
     val questionProgress: String,
+    @JsonProperty("questionProgressA11y")
+    val questionProgressDescription: String,
     @JsonProperty("nextQuestionId")
     val nextQuestionId: String?,
 )
@@ -93,6 +99,8 @@ data class QuestionConditionalJson(
     val order: Int,
     @JsonProperty("questionProgress")
     val questionProgress: String,
+    @JsonProperty("questionProgressA11y")
+    val questionProgressDescription: String,
     @JsonProperty("possibleChoices")
     val possibleChoices: List<ChoixPossibleJson>,
 )
