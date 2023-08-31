@@ -13,15 +13,22 @@ class ModeratusLoginUseCase(
     private val userRepository: UserRepository,
 ) {
 
-    fun login(loginToken: String): Boolean {
+    fun login(loginToken: String): ModeratusLoginResult {
         return when (val decodeResult = loginTokenGenerator.decodeLoginToken(loginToken)) {
-            DecodeResult.Failure -> false
-            is DecodeResult.Success -> userRepository.getUserById(decodeResult.loginTokenData.userId)
-                ?.let(::canModerateQag) ?: false
+            DecodeResult.Failure -> ModeratusLoginResult.Failure
+            is DecodeResult.Success -> userRepository
+                .getUserById(decodeResult.loginTokenData.userId)
+                ?.takeIf { userInfo -> canModerateQag(userInfo) }
+                ?.let { userInfo -> ModeratusLoginResult.Success(userInfo.userId) }
+                ?: ModeratusLoginResult.Failure
         }
     }
 
     private fun canModerateQag(userInfo: UserInfo) = userInfo.authorizationList.contains(UserAuthorization.MODERATE_QAG)
 
+}
 
+sealed class ModeratusLoginResult {
+    object Failure : ModeratusLoginResult()
+    data class Success(val userId: String) : ModeratusLoginResult()
 }

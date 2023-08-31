@@ -30,7 +30,7 @@ internal class ModeratusLoginUseCaseTest {
     private lateinit var userRepository: UserRepository
 
     @Test
-    fun `login - when decode is failure - should return false`() {
+    fun `login - when decode is failure - should return Failure`() {
         // Given
         given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
             .willReturn(DecodeResult.Failure)
@@ -40,11 +40,11 @@ internal class ModeratusLoginUseCaseTest {
         val result = useCase.login(loginToken = "loginToken")
 
         // Then
-        assertThat(result).isFalse
+        assertThat(result).isEqualTo(ModeratusLoginResult.Failure)
     }
 
     @Test
-    fun `login - when decode success but userRepository returns null - should return false`() {
+    fun `login - when decode success but userRepository returns null - should return Failure`() {
         // Given
         given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
             .willReturn(DecodeResult.Success(loginTokenData = LoginTokenData(userId = "userId")))
@@ -54,11 +54,11 @@ internal class ModeratusLoginUseCaseTest {
         val result = useCase.login(loginToken = "loginToken")
 
         // Then
-        assertThat(result).isFalse
+        assertThat(result).isEqualTo(ModeratusLoginResult.Failure)
     }
 
     @Test
-    fun `login - when decode success and has response from userRepository but no authorization MODERATE_QAG - should return false`() {
+    fun `login - when decode success and has response from userRepository but no authorization MODERATE_QAG - should return Failure`() {
         // Given
         given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
             .willReturn(DecodeResult.Success(loginTokenData = LoginTokenData(userId = "userId")))
@@ -72,17 +72,18 @@ internal class ModeratusLoginUseCaseTest {
         val result = useCase.login(loginToken = "loginToken")
 
         // Then
-        assertThat(result).isFalse
+        assertThat(result).isEqualTo(ModeratusLoginResult.Failure)
     }
 
     @Test
-    fun `login - when decode success and has response from userRepository and has authorization MODERATE_QAG - should return true`() {
+    fun `login - when decode success and has response from userRepository and has authorization MODERATE_QAG - should return Success with userId`() {
         // Given
         given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
             .willReturn(DecodeResult.Success(loginTokenData = LoginTokenData(userId = "userId")))
 
         val userInfo = mock(UserInfo::class.java).also {
             given(it.authorizationList).willReturn(listOf(UserAuthorization.MODERATE_QAG))
+            given(it.userId).willReturn("userId")
         }
         given(userRepository.getUserById(userId = "userId")).willReturn(userInfo)
 
@@ -90,7 +91,7 @@ internal class ModeratusLoginUseCaseTest {
         val result = useCase.login(loginToken = "loginToken")
 
         // Then
-        assertThat(result).isTrue
+        assertThat(result).isEqualTo(ModeratusLoginResult.Success(userId = "userId"))
     }
 
 }

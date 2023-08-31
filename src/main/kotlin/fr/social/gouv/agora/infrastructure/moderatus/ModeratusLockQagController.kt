@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.moderatus
 
 import fr.social.gouv.agora.usecase.moderatus.LockModeratusQagListUseCase
+import fr.social.gouv.agora.usecase.moderatus.ModeratusLoginResult
 import fr.social.gouv.agora.usecase.moderatus.ModeratusLoginUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -26,7 +27,7 @@ class ModeratusLockQagController(
         @RequestParam("mediaType") mediaType: String,
         @RequestParam("content_id") lockedQagIds: String,
     ): ResponseEntity<*> {
-        if (!moderatusLoginUseCase.login(loginToken)) {
+        if (moderatusLoginUseCase.login(loginToken) == ModeratusLoginResult.Failure) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ModeratusQagLockErrorXml(errorMessage = "Password invalide: aucun compte associé ou utilisateur non autorisé"))
         }
