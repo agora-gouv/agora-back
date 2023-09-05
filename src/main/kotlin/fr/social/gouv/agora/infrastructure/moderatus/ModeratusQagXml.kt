@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.moderatus
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
@@ -20,10 +21,13 @@ data class ModeratusQagXml(
     val postDate: String,
     @field:JacksonXmlProperty(localName = "user_id")
     val userId: String,
+    @JacksonXmlCData
     @field:JacksonXmlProperty(localName = "pseudo")
     val username: String,
+    @JacksonXmlCData
     @field:JacksonXmlProperty(localName = "title")
     val title: String,
+    @JacksonXmlCData
     @field:JacksonXmlProperty(localName = "body")
     val description: String,
     @field:JacksonXmlProperty(localName = "message_type")
