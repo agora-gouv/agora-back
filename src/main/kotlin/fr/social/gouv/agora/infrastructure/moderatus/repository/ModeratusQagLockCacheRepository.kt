@@ -24,6 +24,10 @@ class ModeratusQagLockCacheRepository(private val cacheManager: CacheManager) {
         getCache()?.put(LOCKED_QAG_IDS_KEY, (getLockedQagIds() + lockedQagIds).distinct())
     }
 
+    fun removeLockedQagId(qagId: String) {
+        getCache()?.put(LOCKED_QAG_IDS_KEY, getLockedQagIds().filter { it != qagId })
+    }
+
     private fun getCache() = cacheManager.getCache(MODERATUS_QAG_LOCK_CACHE_NAME)
 
 }

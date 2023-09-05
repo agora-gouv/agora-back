@@ -3,6 +3,7 @@ package fr.social.gouv.agora.usecase.moderatus
 import fr.social.gouv.agora.domain.ModeratusQagModerateResult
 import fr.social.gouv.agora.domain.QagInsertingUpdates
 import fr.social.gouv.agora.domain.QagStatus
+import fr.social.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
 import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -15,6 +16,7 @@ class ModerateModeratusQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val sendNotificationdUseCase: SendNotificationQagModeratedUseCase,
     private val qagUpdatesRepository: QagUpdatesRepository,
+    private val moderatusQagLockRepository: ModeratusQagLockRepository,
 ) {
 
     companion object {
@@ -56,10 +58,13 @@ class ModerateModeratusQagUseCase(
 
     private fun notifyUpdateIfRequired(qagInfo: QagInfo, isAccepted: Boolean) {
         when (qagInfo.status) {
-            QagStatus.OPEN -> if (isAccepted) {
-                sendNotificationdUseCase.sendNotificationQagAccepted(qagInfo.id)
-            } else {
-                sendNotificationdUseCase.sendNotificationQagRejected(qagInfo.id)
+            QagStatus.OPEN -> {
+                if (isAccepted) {
+                    sendNotificationdUseCase.sendNotificationQagAccepted(qagInfo.id)
+                } else {
+                    sendNotificationdUseCase.sendNotificationQagRejected(qagInfo.id)
+                }
+                moderatusQagLockRepository.removeLockedQagId(qagInfo.id)
             }
             QagStatus.MODERATED_ACCEPTED -> if (!isAccepted) {
                 sendNotificationdUseCase.sendNotificationQagRejected(qagInfo.id)

@@ -3,6 +3,7 @@ package fr.social.gouv.agora.usecase.moderatus
 import fr.social.gouv.agora.domain.ModeratusQagModerateResult
 import fr.social.gouv.agora.domain.QagInsertingUpdates
 import fr.social.gouv.agora.domain.QagStatus
+import fr.social.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
 import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -34,6 +35,9 @@ internal class ModerateModeratusQagUseCaseTest {
     @MockBean
     private lateinit var qagUpdatesRepository: QagUpdatesRepository
 
+    @MockBean
+    private lateinit var moderatusQagLockRepository: ModeratusQagLockRepository
+
     @Test
     fun `moderateQag - when QaG not found - should return NOT_FOUND`() {
         // Given
@@ -47,6 +51,7 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
         then(sendNotificationdUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
+        then(moderatusQagLockRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -65,6 +70,7 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
         then(sendNotificationdUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
+        then(moderatusQagLockRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -83,6 +89,7 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
         then(sendNotificationdUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
+        then(moderatusQagLockRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -106,10 +113,11 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationdUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
+        then(moderatusQagLockRepository).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `moderateQag - when QaG found, status is OPEN and isAccepted - should update status to MODERATED_ACCEPTED, send accepted notification, insert QaG update then return result from update`() {
+    fun `moderateQag - when QaG found, status is OPEN and isAccepted - should update status to MODERATED_ACCEPTED, send accepted notification, insert QaG update, remove from locked then return result from update`() {
         // Given
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.status).willReturn(QagStatus.OPEN)
@@ -135,10 +143,11 @@ internal class ModerateModeratusQagUseCaseTest {
                 userId = "userId",
             )
         )
+        then(moderatusQagLockRepository).should(only()).removeLockedQagId(qagId = "qagId")
     }
 
     @Test
-    fun `moderateQag - when QaG found, status is OPEN and not isAccepted - should update status to MODERATED_REJECTED, send rejected notification, insert QaG update then return result from update`() {
+    fun `moderateQag - when QaG found, status is OPEN and not isAccepted - should update status to MODERATED_REJECTED, send rejected notification, insert QaG update, remove from locked then return result from update`() {
         // Given
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.status).willReturn(QagStatus.OPEN)
@@ -164,6 +173,7 @@ internal class ModerateModeratusQagUseCaseTest {
                 userId = "userId",
             )
         )
+        then(moderatusQagLockRepository).should(only()).removeLockedQagId(qagId = "qagId")
     }
 
     @Test
@@ -189,6 +199,7 @@ internal class ModerateModeratusQagUseCaseTest {
                 userId = "userId",
             )
         )
+        then(moderatusQagLockRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -218,6 +229,7 @@ internal class ModerateModeratusQagUseCaseTest {
                 userId = "userId",
             )
         )
+        then(moderatusQagLockRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -243,6 +255,7 @@ internal class ModerateModeratusQagUseCaseTest {
                 userId = "userId",
             )
         )
+        then(moderatusQagLockRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -272,6 +285,7 @@ internal class ModerateModeratusQagUseCaseTest {
                 userId = "userId",
             )
         )
+        then(moderatusQagLockRepository).shouldHaveNoInteractions()
     }
 
 }

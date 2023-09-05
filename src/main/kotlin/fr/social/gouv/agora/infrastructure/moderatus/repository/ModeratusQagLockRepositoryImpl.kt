@@ -17,4 +17,8 @@ class ModeratusQagLockRepositoryImpl(
         cacheRepository.addLockedIds(lockedQagIds)
     }
 
+    override fun removeLockedQagId(qagId: String) {
+        cacheRepository.removeLockedQagId(qagId)
+    }
+
 }
