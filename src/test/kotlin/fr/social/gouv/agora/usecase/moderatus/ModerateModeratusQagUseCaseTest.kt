@@ -90,6 +90,7 @@ internal class ModerateModeratusQagUseCaseTest {
         // Given
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.status).willReturn(QagStatus.MODERATED_ACCEPTED)
+            given(it.id).willReturn("qagId")
         }
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
@@ -108,10 +109,11 @@ internal class ModerateModeratusQagUseCaseTest {
     }
 
     @Test
-    fun `moderateQag - when QaG found, status is valid and isAccepted - should update status to ACCEPTED_MODERATED, send accepted notification, insert QaG update then return result from update`() {
+    fun `moderateQag - when QaG found, status is OPEN and isAccepted - should update status to MODERATED_ACCEPTED, send accepted notification, insert QaG update then return result from update`() {
         // Given
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.status).willReturn(QagStatus.OPEN)
+            given(it.id).willReturn("qagId")
         }
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED))
@@ -126,6 +128,143 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationdUseCase).should(only()).sendNotificationQagAccepted(qagId = "qagId")
+        then(qagUpdatesRepository).should(only()).insertQagUpdates(
+            QagInsertingUpdates(
+                qagId = "qagId",
+                newQagStatus = QagStatus.MODERATED_ACCEPTED,
+                userId = "userId",
+            )
+        )
+    }
+
+    @Test
+    fun `moderateQag - when QaG found, status is OPEN and not isAccepted - should update status to MODERATED_REJECTED, send rejected notification, insert QaG update then return result from update`() {
+        // Given
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.status).willReturn(QagStatus.OPEN)
+            given(it.id).willReturn("qagId")
+        }
+        given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
+        given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
+            .willReturn(QagUpdateResult.SUCCESS)
+
+        // When
+        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
+        then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
+        then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(sendNotificationdUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
+        then(qagUpdatesRepository).should(only()).insertQagUpdates(
+            QagInsertingUpdates(
+                qagId = "qagId",
+                newQagStatus = QagStatus.MODERATED_REJECTED,
+                userId = "userId",
+            )
+        )
+    }
+
+    @Test
+    fun `moderateQag - when QaG found, status is MODERATED_ACCEPTED and isAccepted - should only insert QaG update then return result from update`() {
+        // Given
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.status).willReturn(QagStatus.MODERATED_ACCEPTED)
+            given(it.id).willReturn("qagId")
+        }
+        given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
+
+        // When
+        val result = useCase.moderateQag(qagId = "qagId", isAccepted = true, userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
+        then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
+        then(sendNotificationdUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).should(only()).insertQagUpdates(
+            QagInsertingUpdates(
+                qagId = "qagId",
+                newQagStatus = QagStatus.MODERATED_ACCEPTED,
+                userId = "userId",
+            )
+        )
+    }
+
+    @Test
+    fun `moderateQag - when QaG found, status is MODERATED_ACCEPTED and not isAccepted - should update status to MODERATED_REJECTED, send rejected notification, insert QaG update then return result from update`() {
+        // Given
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.status).willReturn(QagStatus.MODERATED_ACCEPTED)
+            given(it.id).willReturn("qagId")
+        }
+        given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
+        given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
+            .willReturn(QagUpdateResult.SUCCESS)
+
+        // When
+        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
+        then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
+        then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(sendNotificationdUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
+        then(qagUpdatesRepository).should(only()).insertQagUpdates(
+            QagInsertingUpdates(
+                qagId = "qagId",
+                newQagStatus = QagStatus.MODERATED_REJECTED,
+                userId = "userId",
+            )
+        )
+    }
+
+    @Test
+    fun `moderateQag - when QaG found, status is MODERATED_REJECTED and not isAccepted - should only insert QaG update then return result from update`() {
+        // Given
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.status).willReturn(QagStatus.MODERATED_REJECTED)
+            given(it.id).willReturn("qagId")
+        }
+        given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
+
+        // When
+        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
+        then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
+        then(sendNotificationdUseCase).shouldHaveNoInteractions()
+        then(qagUpdatesRepository).should(only()).insertQagUpdates(
+            QagInsertingUpdates(
+                qagId = "qagId",
+                newQagStatus = QagStatus.MODERATED_REJECTED,
+                userId = "userId",
+            )
+        )
+    }
+
+    @Test
+    fun `moderateQag - when QaG found, status is MODERATED_REJECTED and isAccepted - should update status to MODERATED_REJECTED, send acceptedAfterReject notification, insert QaG update then return result from update`() {
+        // Given
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.status).willReturn(QagStatus.MODERATED_REJECTED)
+            given(it.id).willReturn("qagId")
+        }
+        given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
+        given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED))
+            .willReturn(QagUpdateResult.SUCCESS)
+
+        // When
+        val result = useCase.moderateQag(qagId = "qagId", isAccepted = true, userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
+        then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
+        then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED)
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(sendNotificationdUseCase).should(only()).sendNotificationQagAcceptedAfterReject(qagId = "qagId")
         then(qagUpdatesRepository).should(only()).insertQagUpdates(
             QagInsertingUpdates(
                 qagId = "qagId",

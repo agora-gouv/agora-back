@@ -17,24 +17,36 @@ class SendNotificationQagModeratedUseCase(
 ) {
 
     fun sendNotificationQagRejected(qagId: String): NotificationResult {
-        return getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
-            notificationRepository.sendNotificationMessage(
-                request = NotificationRequest(
-                    fcmToken = fcmToken,
-                    title = notificationMessageRepository.getQagRejectedTitle(),
-                    description = notificationMessageRepository.getQagRejectedMessage(),
-                )
-            )
-        } ?: NotificationResult.FAILURE
+        return sendNotification(
+            qagId = qagId,
+            title = notificationMessageRepository.getQagRejectedTitle(),
+            description = notificationMessageRepository.getQagRejectedMessage(),
+        )
     }
 
     fun sendNotificationQagAccepted(qagId: String): NotificationResult {
+        return sendNotification(
+            qagId = qagId,
+            title = notificationMessageRepository.getQagAcceptedTitle(),
+            description = notificationMessageRepository.getQagAcceptedMessage(),
+        )
+    }
+
+    fun sendNotificationQagAcceptedAfterReject(qagId: String): NotificationResult {
+        return sendNotification(
+            qagId = qagId,
+            title = notificationMessageRepository.getQagAcceptedAfterRejectTitle(),
+            description = notificationMessageRepository.getQagAcceptedAfterRejectTitle(),
+        )
+    }
+
+    private fun sendNotification(qagId: String, title: String, description: String): NotificationResult {
         return getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
             notificationRepository.sendQagDetailsNotification(
                 request = NotificationRequest(
                     fcmToken = fcmToken,
-                    title = notificationMessageRepository.getQagAcceptedTitle(),
-                    description = notificationMessageRepository.getQagAcceptedMessage(),
+                    title = title,
+                    description = description,
                 ),
                 qagId = qagId,
             )

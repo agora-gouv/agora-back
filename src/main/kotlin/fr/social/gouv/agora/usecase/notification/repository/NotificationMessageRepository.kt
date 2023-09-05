@@ -5,5 +5,7 @@ interface NotificationMessageRepository {
     fun getQagRejectedMessage(): String
     fun getQagAcceptedTitle(): String
     fun getQagAcceptedMessage(): String
+    fun getQagAcceptedAfterRejectTitle(): String
+    fun getQagAcceptedAfterRejectMessage(): String
 }
 

@@ -16,9 +16,10 @@ class ModeratusQagListXmlMapper(private val contentSanitizer: ContentSanitizer) 
     }
 
     fun toXml(qags: List<ModeratusQag>): ModeratusQagListXml {
+        val filteredQagToModerateList = qags.mapNotNull(::toXml)
         return ModeratusQagListXml(
-            qagToModerateCount = qags.size,
-            qagsToModerate = qags.mapNotNull(::toXml)
+            qagToModerateCount = filteredQagToModerateList.size,
+            qagsToModerate = filteredQagToModerateList,
         )
     }
 
