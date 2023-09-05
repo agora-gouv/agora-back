@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.usecase.qagModerating
 
-import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagInsertingUpdates
+import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
@@ -41,7 +41,9 @@ class PutQagModeratingUseCase(
                     QagInsertingUpdates(
                         qagId = qagId,
                         newQagStatus = toQagStatus(qagModeratingStatus),
-                        userId = userId
+                        userId = userId,
+                        reason = null,
+                        shouldDelete = false,
                     )
                 )
                 if (qagModeratingStatus) {

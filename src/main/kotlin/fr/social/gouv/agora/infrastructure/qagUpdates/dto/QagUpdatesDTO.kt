@@ -16,6 +16,8 @@ data class QagUpdatesDTO(
     val userId: UUID,
     val status: Int,
     val moderatedDate: Date,
+    val reason: String?,
+    val shouldDeleteFlag: Int,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -29,7 +31,6 @@ data class QagUpdatesDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + """(id = $id , qagId = $qagId , userId = $userId , status = $status , 
-            moderatedDate = $moderatedDate)"""
+        return this::class.simpleName + "(id = $id , qagId = $qagId , userId = $userId , status = $status , moderatedDate = $moderatedDate , reason = $reason , shouldDeleteFlag = $shouldDeleteFlag )"
     }
 }
