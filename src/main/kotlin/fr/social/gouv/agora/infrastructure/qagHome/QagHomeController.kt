@@ -21,10 +21,10 @@ class QagHomeController(
     private val qagHomeJsonMapper: QagHomeJsonMapper,
 ) {
     @GetMapping("/qags")
-    fun getQagHome(
+    fun getQagPreviews(
         @RequestHeader("Authorization") authorizationHeader: String,
         @RequestParam("thematiqueId") thematiqueId: String?,
-    ): ResponseEntity<QagHomeJson> {
+    ): ResponseEntity<QagPreviewsJson> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val qagSelectedForResponseList = getQagSelectedForResponseUseCase.getQagSelectedForResponseList(userId = userId)
         val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
@@ -33,16 +33,31 @@ class QagHomeController(
             thematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() },
         )
 
-        return ResponseEntity.ok()
-            .body(
-                qagHomeJsonMapper.toJson(
-                    qagSelectedForResponseList = qagSelectedForResponseList,
-                    responseQagList = responseQagPreviewList,
-                    qagPopularList = qagPreviewList.popularPreviewList,
-                    qagLatestList = qagPreviewList.latestPreviewList,
-                    qagSupportedList = qagPreviewList.supportedPreviewList,
-                    qagErrorText = getQagErrorTextUseCase.getGetQagErrorText(userId),
-                )
+        return ResponseEntity.ok().body(
+            qagHomeJsonMapper.toJson(
+                qagSelectedForResponseList = qagSelectedForResponseList,
+                responseQagList = responseQagPreviewList,
+                qagPopularList = qagPreviewList.popularPreviewList,
+                qagLatestList = qagPreviewList.latestPreviewList,
+                qagSupportedList = qagPreviewList.supportedPreviewList,
+                qagErrorText = getQagErrorTextUseCase.getGetQagErrorText(userId),
             )
+        )
+    }
+
+    @GetMapping("/qag_responses")
+    fun getQagResponses(
+        @RequestHeader("Authorization") authorizationHeader: String,
+    ): ResponseEntity<QagResponsesJson> {
+        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val qagSelectedForResponseList = getQagSelectedForResponseUseCase.getQagSelectedForResponseList(userId = userId)
+        val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
+
+        return ResponseEntity.ok().body(
+            qagHomeJsonMapper.toResponsesJson(
+                qagSelectedForResponseList = qagSelectedForResponseList,
+                responseQagList = responseQagPreviewList,
+            )
+        )
     }
 }

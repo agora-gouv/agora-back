@@ -6,7 +6,7 @@ import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class QagHomeJson(
+data class QagPreviewsJson(
     @JsonProperty("incomingResponses")
     val incomingResponses: List<IncomingResponseQagPreviewJson>,
     @JsonProperty("responses")
@@ -15,6 +15,13 @@ data class QagHomeJson(
     val qagList: QagListJson,
     @JsonProperty("askQagErrorText")
     val askQagErrorText: String?,
+)
+
+data class QagResponsesJson(
+    @JsonProperty("incomingResponses")
+    val incomingResponses: List<IncomingResponseQagPreviewJson>,
+    @JsonProperty("responses")
+    val responsesList: List<ResponseQagPreviewJson>,
 )
 
 data class IncomingResponseQagPreviewJson(
