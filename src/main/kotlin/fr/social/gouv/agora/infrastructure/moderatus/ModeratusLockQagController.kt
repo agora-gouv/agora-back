@@ -27,21 +27,22 @@ class ModeratusLockQagController(
         @RequestParam("mediaType") mediaType: String,
         @RequestParam("content_id") lockedQagIds: String,
     ): ResponseEntity<*> {
+        val lockedQagIdList = lockedQagIds
+            .split(LOCKED_QAG_IDS_SEPARATOR)
+            .filter { lockedQagId -> lockedQagId.isNotBlank() }
+            .map { lockedQagId -> lockedQagId.trim() }
+
         if (moderatusLoginUseCase.login(loginToken) == ModeratusLoginResult.Failure) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ModeratusQagLockErrorXml(errorMessage = "Password invalide: aucun compte associé ou utilisateur non autorisé"))
+                .body(
+                    mapper.toErrorXml(
+                        lockedQagIds = lockedQagIdList,
+                        errorMessage = "Password invalide",
+                    )
+                )
         }
 
-        return ResponseEntity.ok(
-            mapper.toXml(
-                lockModeratusQagListUseCase.lockQagIds(
-                    lockedQagIds
-                        .split(LOCKED_QAG_IDS_SEPARATOR)
-                        .filter { lockedQagId -> lockedQagId.isNotBlank() }
-                        .map { lockedQagId -> lockedQagId.trim() }
-                )
-            )
-        )
+        return ResponseEntity.ok(mapper.toXml(lockModeratusQagListUseCase.lockQagIds(lockedQagIdList)))
     }
 
 }

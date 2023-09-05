@@ -13,6 +13,18 @@ class ModeratusQagLockResultXmlMapper {
         )
     }
 
+    fun toErrorXml(lockedQagIds: List<String>, errorMessage: String): ModeratusQagLockResultsXml {
+        return ModeratusQagLockResultsXml(
+            lockedQagIds.map { lockedQagId ->
+                ModeratusQagLockResultXml(
+                    qagId = lockedQagId,
+                    result = "ERROR",
+                    comment = errorMessage,
+                )
+            }
+        )
+    }
+
     private fun toXml(result: ModeratusQagLockResult): ModeratusQagLockResultXml {
         return ModeratusQagLockResultXml(
             qagId = result.qagId,
