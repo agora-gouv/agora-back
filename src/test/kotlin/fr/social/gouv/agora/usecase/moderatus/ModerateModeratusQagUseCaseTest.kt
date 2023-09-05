@@ -38,17 +38,33 @@ internal class ModerateModeratusQagUseCaseTest {
     @MockBean
     private lateinit var moderatusQagLockRepository: ModeratusQagLockRepository
 
+    private val moderateQagOptions = ModerateQagOptions(
+        qagId = "qagId",
+        userId = "userId",
+        isAccepted = true,
+        reason = null,
+        shouldDelete = false,
+    )
+
+    private val expectedInsertingUpdates = QagInsertingUpdates(
+        qagId = "qagId",
+        newQagStatus = QagStatus.MODERATED_ACCEPTED,
+        userId = "userId",
+        reason = null,
+        shouldDelete = false,
+    )
+
     @Test
     fun `moderateQag - when QaG not found - should return NOT_FOUND`() {
         // Given
-        given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(null)
+        given(qagInfoRepository.getQagInfo(qagId = "notFoundQagId")).willReturn(null)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+        val result = useCase.moderateQag(moderateQagOptions.copy(qagId = "notFoundQagId"))
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.NOT_FOUND)
-        then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
+        then(qagInfoRepository).should(only()).getQagInfo(qagId = "notFoundQagId")
         then(sendNotificationdUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
         then(moderatusQagLockRepository).shouldHaveNoInteractions()
@@ -63,7 +79,7 @@ internal class ModerateModeratusQagUseCaseTest {
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+        val result = useCase.moderateQag(moderateQagOptions.copy(qagId = "qagId"))
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.NOT_FOUND)
@@ -82,7 +98,7 @@ internal class ModerateModeratusQagUseCaseTest {
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+        val result = useCase.moderateQag(moderateQagOptions.copy(qagId = "qagId"))
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.NOT_FOUND)
@@ -104,7 +120,12 @@ internal class ModerateModeratusQagUseCaseTest {
             .willReturn(QagUpdateResult.FAILURE)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+        val result = useCase.moderateQag(
+            moderateQagOptions.copy(
+                qagId = "qagId",
+                isAccepted = false,
+            )
+        )
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.FAILURE)
@@ -117,7 +138,7 @@ internal class ModerateModeratusQagUseCaseTest {
     }
 
     @Test
-    fun `moderateQag - when QaG found, status is OPEN and isAccepted - should update status to MODERATED_ACCEPTED, send accepted notification, insert QaG update, remove from locked then return result from update`() {
+    fun `moderateQag - when QaG found, status is OPEN and isAccepted - should update status to MODERATED_ACCEPTED, send accepted notification, insert QaG update with data from options, remove from locked then return result from update`() {
         // Given
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.status).willReturn(QagStatus.OPEN)
@@ -128,7 +149,15 @@ internal class ModerateModeratusQagUseCaseTest {
             .willReturn(QagUpdateResult.SUCCESS)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = true, userId = "userId")
+        val result = useCase.moderateQag(
+            moderateQagOptions.copy(
+                qagId = "qagId",
+                isAccepted = true,
+                userId = "userId",
+                reason = "reason",
+                shouldDelete = true,
+            )
+        )
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
@@ -137,10 +166,12 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationdUseCase).should(only()).sendNotificationQagAccepted(qagId = "qagId")
         then(qagUpdatesRepository).should(only()).insertQagUpdates(
-            QagInsertingUpdates(
+            expectedInsertingUpdates.copy(
                 qagId = "qagId",
                 newQagStatus = QagStatus.MODERATED_ACCEPTED,
                 userId = "userId",
+                reason = "reason",
+                shouldDelete = true,
             )
         )
         then(moderatusQagLockRepository).should(only()).removeLockedQagId(qagId = "qagId")
@@ -158,7 +189,12 @@ internal class ModerateModeratusQagUseCaseTest {
             .willReturn(QagUpdateResult.SUCCESS)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+        val result = useCase.moderateQag(
+            moderateQagOptions.copy(
+                qagId = "qagId",
+                isAccepted = false,
+            )
+        )
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
@@ -167,10 +203,9 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationdUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
         then(qagUpdatesRepository).should(only()).insertQagUpdates(
-            QagInsertingUpdates(
+            expectedInsertingUpdates.copy(
                 qagId = "qagId",
                 newQagStatus = QagStatus.MODERATED_REJECTED,
-                userId = "userId",
             )
         )
         then(moderatusQagLockRepository).should(only()).removeLockedQagId(qagId = "qagId")
@@ -186,17 +221,21 @@ internal class ModerateModeratusQagUseCaseTest {
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = true, userId = "userId")
+        val result = useCase.moderateQag(
+            moderateQagOptions.copy(
+                qagId = "qagId",
+                isAccepted = true,
+            )
+        )
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
         then(sendNotificationdUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).should(only()).insertQagUpdates(
-            QagInsertingUpdates(
+            expectedInsertingUpdates.copy(
                 qagId = "qagId",
                 newQagStatus = QagStatus.MODERATED_ACCEPTED,
-                userId = "userId",
             )
         )
         then(moderatusQagLockRepository).shouldHaveNoInteractions()
@@ -214,7 +253,12 @@ internal class ModerateModeratusQagUseCaseTest {
             .willReturn(QagUpdateResult.SUCCESS)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+        val result = useCase.moderateQag(
+            moderateQagOptions.copy(
+                qagId = "qagId",
+                isAccepted = false,
+            )
+        )
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
@@ -223,10 +267,9 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationdUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
         then(qagUpdatesRepository).should(only()).insertQagUpdates(
-            QagInsertingUpdates(
+            expectedInsertingUpdates.copy(
                 qagId = "qagId",
                 newQagStatus = QagStatus.MODERATED_REJECTED,
-                userId = "userId",
             )
         )
         then(moderatusQagLockRepository).shouldHaveNoInteractions()
@@ -242,17 +285,21 @@ internal class ModerateModeratusQagUseCaseTest {
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = false, userId = "userId")
+        val result = useCase.moderateQag(
+            moderateQagOptions.copy(
+                qagId = "qagId",
+                isAccepted = false,
+            )
+        )
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
         then(sendNotificationdUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).should(only()).insertQagUpdates(
-            QagInsertingUpdates(
+            expectedInsertingUpdates.copy(
                 qagId = "qagId",
                 newQagStatus = QagStatus.MODERATED_REJECTED,
-                userId = "userId",
             )
         )
         then(moderatusQagLockRepository).shouldHaveNoInteractions()
@@ -270,7 +317,12 @@ internal class ModerateModeratusQagUseCaseTest {
             .willReturn(QagUpdateResult.SUCCESS)
 
         // When
-        val result = useCase.moderateQag(qagId = "qagId", isAccepted = true, userId = "userId")
+        val result = useCase.moderateQag(
+            moderateQagOptions.copy(
+                qagId = "qagId",
+                isAccepted = true,
+            )
+        )
 
         // Then
         assertThat(result).isEqualTo(ModeratusQagModerateResult.SUCCESS)
@@ -279,10 +331,9 @@ internal class ModerateModeratusQagUseCaseTest {
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(sendNotificationdUseCase).should(only()).sendNotificationQagAcceptedAfterReject(qagId = "qagId")
         then(qagUpdatesRepository).should(only()).insertQagUpdates(
-            QagInsertingUpdates(
+            expectedInsertingUpdates.copy(
                 qagId = "qagId",
                 newQagStatus = QagStatus.MODERATED_ACCEPTED,
-                userId = "userId",
             )
         )
         then(moderatusQagLockRepository).shouldHaveNoInteractions()

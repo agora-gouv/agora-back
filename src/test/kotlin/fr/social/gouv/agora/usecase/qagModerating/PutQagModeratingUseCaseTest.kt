@@ -91,7 +91,9 @@ internal class PutQagModeratingUseCaseTest {
                 QagInsertingUpdates(
                     qagId = "qagId",
                     newQagStatus = QagStatus.MODERATED_ACCEPTED,
-                    userId = "userId"
+                    userId = "userId",
+                    reason = null,
+                    shouldDelete = false,
                 )
             )
     }
@@ -142,7 +144,9 @@ internal class PutQagModeratingUseCaseTest {
                 QagInsertingUpdates(
                     qagId = "qagId",
                     newQagStatus = QagStatus.MODERATED_REJECTED,
-                    userId = "userId"
+                    userId = "userId",
+                    reason = null,
+                    shouldDelete = false,
                 )
             )
     }
@@ -168,4 +172,5 @@ internal class PutQagModeratingUseCaseTest {
         then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
+
 }

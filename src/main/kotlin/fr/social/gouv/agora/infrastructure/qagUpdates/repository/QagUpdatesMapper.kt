@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.infrastructure.qagUpdates.repository
 
-import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagInsertingUpdates
+import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagUpdates
 import fr.social.gouv.agora.infrastructure.qagUpdates.dto.QagUpdatesDTO
 import org.springframework.stereotype.Component
@@ -16,6 +16,9 @@ class QagUpdatesMapper {
         private const val STATUS_MODERATED_REJECTED = -1
         private const val STATUS_MODERATED_ACCEPTED = 1
         private const val STATUS_SELECTED_FOR_RESPONSE = 7
+
+        private const val SHOULD_DELETE_TRUE = 1
+        private const val SHOULD_DELETE_FALSE = 0
     }
 
     fun toDto(domain: QagInsertingUpdates): QagUpdatesDTO? {
@@ -27,6 +30,8 @@ class QagUpdatesMapper {
                 status = if (domain.newQagStatus == QagStatus.MODERATED_ACCEPTED) STATUS_MODERATED_ACCEPTED
                 else STATUS_MODERATED_REJECTED,
                 moderatedDate = Date(),
+                reason = domain.reason,
+                shouldDeleteFlag = if (domain.shouldDelete) SHOULD_DELETE_TRUE else SHOULD_DELETE_FALSE,
             )
         } catch (e: IllegalArgumentException) {
             null

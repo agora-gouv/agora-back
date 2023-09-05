@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class ModeratusModerateQagController(
     private val moderatusLoginUseCase: ModeratusLoginUseCase,
     private val moderateQagUseCase: ModerateModeratusQagUseCase,
+    private val optionsMapper: ModerateQagOptionsMapper,
     private val mapper: ModeratusQagModerateResultPageXmlMapper,
 ) {
 
@@ -23,6 +24,8 @@ class ModeratusModerateQagController(
         @RequestParam("mediaType") mediaType: String,
         @RequestParam("content_id") qagId: String,
         @RequestParam("status") status: String,
+        @RequestParam("motif") reason: String?,
+        @RequestParam("kill") shouldDeleteFlag: Int?,
     ): ResponseEntity<*> {
         val userId = when (val loginResult = moderatusLoginUseCase.login(loginToken)) {
             is ModeratusLoginResult.Success -> loginResult.userId
@@ -30,15 +33,21 @@ class ModeratusModerateQagController(
                 .body(mapper.toErrorXml(errorMessage = "Password invalide: aucun compte associé ou utilisateur non autorisé"))
         }
 
-        val isAccepted = when (status) {
-            "OK" -> true
-            "NOK" -> false
-            else -> return ResponseEntity.badRequest().body(mapper.toErrorXml(errorMessage = "Status invalide"))
+        val moderateQagOptions = when (val result = optionsMapper.toModerateQagOptions(
+            qagId = qagId,
+            userId = userId,
+            status = status,
+            reason = reason,
+            shouldDeleteFlag = shouldDeleteFlag,
+        )) {
+            is ModerateQagOptionsMapper.Result.Success -> result.options
+            is ModerateQagOptionsMapper.Result.Error -> return ResponseEntity.badRequest()
+                .body(mapper.toErrorXml(errorMessage = result.errorMessage))
         }
 
         return ResponseEntity.ok(
             mapper.toXml(
-                result = moderateQagUseCase.moderateQag(qagId = qagId, isAccepted = isAccepted, userId = userId),
+                result = moderateQagUseCase.moderateQag(moderateQagOptions),
                 errorMessage = "Error lors de la modification en base de données",
             )
         )
