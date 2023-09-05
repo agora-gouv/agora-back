@@ -27,15 +27,15 @@ class ModerateModeratusQagUseCase(
         )
     }
 
-    fun moderateQag(qagId: String, isAccepted: Boolean, userId: String): ModeratusQagModerateResult {
-        return qagInfoRepository.getQagInfo(qagId)
+    fun moderateQag(moderateQagOptions: ModerateQagOptions): ModeratusQagModerateResult {
+        return qagInfoRepository.getQagInfo(moderateQagOptions.qagId)
             ?.takeIf { qagInfo -> VALID_QAG_STATUS_FOR_MODERATION.contains(qagInfo.status) }
-            ?.let { qagInfo -> changeQagStatus(qagInfo = qagInfo, isAccepted = isAccepted, userId = userId) }
+            ?.let { qagInfo -> changeQagStatus(qagInfo = qagInfo, moderateQagOptions = moderateQagOptions) }
             ?: ModeratusQagModerateResult.NOT_FOUND
     }
 
-    private fun changeQagStatus(qagInfo: QagInfo, isAccepted: Boolean, userId: String): ModeratusQagModerateResult {
-        val newQagStatus = when (isAccepted) {
+    private fun changeQagStatus(qagInfo: QagInfo, moderateQagOptions: ModerateQagOptions): ModeratusQagModerateResult {
+        val newQagStatus = when (moderateQagOptions.isAccepted) {
             true -> QagStatus.MODERATED_ACCEPTED
             false -> QagStatus.MODERATED_REJECTED
         }
@@ -46,9 +46,15 @@ class ModerateModeratusQagUseCase(
 
         return when (updateQagStatus) {
             QagUpdateResult.SUCCESS -> {
-                notifyUpdateIfRequired(qagInfo = qagInfo, isAccepted = isAccepted)
+                notifyUpdateIfRequired(qagInfo = qagInfo, isAccepted = moderateQagOptions.isAccepted)
                 qagUpdatesRepository.insertQagUpdates(
-                    QagInsertingUpdates(qagId = qagInfo.id, newQagStatus = newQagStatus, userId = userId)
+                    QagInsertingUpdates(
+                        qagId = qagInfo.id,
+                        newQagStatus = newQagStatus,
+                        userId = moderateQagOptions.userId,
+                        reason = moderateQagOptions.reason,
+                        shouldDelete = moderateQagOptions.shouldDelete,
+                    )
                 )
                 ModeratusQagModerateResult.SUCCESS
             }
@@ -77,3 +83,11 @@ class ModerateModeratusQagUseCase(
     }
 
 }
+
+data class ModerateQagOptions(
+    val qagId: String,
+    val userId: String,
+    val isAccepted: Boolean,
+    val reason: String?,
+    val shouldDelete: Boolean,
+)
