@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
-class QagController(
+class QagDetailsController(
     private val getQagUseCase: GetQagUseCase,
     private val insertQagUseCase: InsertQagUseCase,
     private val getAskQagStatusUseCase: GetAskQagStatusUseCase,

@@ -12,6 +12,7 @@ class QagHomeJsonMapper(
     private val qagMapper: QagJsonMapper,
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
 ) {
+
     fun toJson(
         qagSelectedForResponseList: List<QagSelectedForResponse>,
         responseQagList: List<ResponseQagPreview>,
@@ -19,8 +20,25 @@ class QagHomeJsonMapper(
         qagLatestList: List<QagPreview>,
         qagSupportedList: List<QagPreview>,
         qagErrorText: String?,
-    ): QagHomeJson {
-        return QagHomeJson(
+    ): QagPreviewsJson {
+        val responsesJson = toResponsesJson(qagSelectedForResponseList, responseQagList)
+        return QagPreviewsJson(
+            incomingResponses = responsesJson.incomingResponses,
+            responsesList = responsesJson.responsesList,
+            qagList = QagListJson(
+                popular = qagPopularList.map { qag -> qagToJson(qag) },
+                latest = qagLatestList.map { qag -> qagToJson(qag) },
+                supporting = qagSupportedList.map { qag -> qagToJson(qag) },
+            ),
+            askQagErrorText = qagErrorText,
+        )
+    }
+
+    fun toResponsesJson(
+        qagSelectedForResponseList: List<QagSelectedForResponse>,
+        responseQagList: List<ResponseQagPreview>,
+    ): QagResponsesJson {
+        return QagResponsesJson(
             incomingResponses = qagSelectedForResponseList.map { qagSelectedForResponse ->
                 IncomingResponseQagPreviewJson(
                     qagId = qagSelectedForResponse.id,
@@ -39,12 +57,6 @@ class QagHomeJsonMapper(
                     responseDate = responseQag.responseDate.toString(),
                 )
             },
-            qagList = QagListJson(
-                popular = qagPopularList.map { qag -> qagToJson(qag) },
-                latest = qagLatestList.map { qag -> qagToJson(qag) },
-                supporting = qagSupportedList.map { qag -> qagToJson(qag) },
-            ),
-            askQagErrorText = qagErrorText,
         )
     }
 
@@ -58,4 +70,5 @@ class QagHomeJsonMapper(
             support = qagMapper.toJson(qagPreview.support)
         )
     }
+
 }
