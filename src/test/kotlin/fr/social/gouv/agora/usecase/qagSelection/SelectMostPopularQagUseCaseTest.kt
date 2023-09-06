@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.usecase.qagSelection
 
-import fr.social.gouv.agora.domain.FeatureFlags
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQagInfo
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
@@ -43,25 +43,19 @@ internal class SelectMostPopularQagUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        val featureFlags = mock(FeatureFlags::class.java).also {
-            given(it.isQagSelectEnabled).willReturn(true)
-        }
-        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(true)
     }
 
     @Test
     fun `putMostPopularQagInSelectedStatus - when feature is disabled - should do nothing`() {
         // Given
-        val featureFlags = mock(FeatureFlags::class.java).also {
-            given(it.isQagSelectEnabled).willReturn(false)
-        }
-        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(false)
 
         // When
         useCase.putMostPopularQagInSelectedStatus()
 
         // Then
-        then(featureFlagsRepository).should(only()).getFeatureFlags()
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
         then(filterGenerator).shouldHaveNoInteractions()
         then(qagListUseCase).shouldHaveNoInteractions()
         then(qagInfoRepository).shouldHaveNoMoreInteractions()

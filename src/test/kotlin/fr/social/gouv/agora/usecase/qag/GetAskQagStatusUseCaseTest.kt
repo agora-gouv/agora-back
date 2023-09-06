@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.TestUtils
-import fr.social.gouv.agora.domain.FeatureFlags
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
@@ -108,10 +108,7 @@ internal class GetAskQagStatusUseCaseTest {
     @Test
     fun `getAskQagStatus - when feature disabled - should return DISABLED`() {
         // Given
-        val featureFlags = mock(FeatureFlags::class.java).also {
-            given(it.isAskQuestionEnabled).willReturn(false)
-        }
-        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(false)
 
         // When
         val result = useCase.getAskQagStatus(userId)
@@ -124,10 +121,7 @@ internal class GetAskQagStatusUseCaseTest {
     @Test
     fun `getAskQagStatus - when feature enabled and user didn't have Qag - should return ENABLED`() {
         // Given
-        val featureFlags = mock(FeatureFlags::class.java).also {
-            given(it.isAskQuestionEnabled).willReturn(true)
-        }
-        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(true)
         given(qagInfoRepository.getAllQagInfo()).willReturn(emptyList())
 
         // When
@@ -152,10 +146,7 @@ internal class GetAskQagStatusUseCaseTest {
             clock = TestUtils.getFixedClock(serverDate),
         )
 
-        val featureFlags = mock(FeatureFlags::class.java).also {
-            given(it.isAskQuestionEnabled).willReturn(true)
-        }
-        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(true)
 
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.date).willReturn(qagPostDate.toDate())

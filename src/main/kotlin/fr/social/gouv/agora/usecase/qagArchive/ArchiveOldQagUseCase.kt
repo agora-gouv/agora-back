@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.qagArchive
 
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
@@ -23,7 +24,7 @@ class ArchiveOldQagUseCase(
     }
 
     fun archiveOldQag(): ArchiveQagListResult {
-        if (featureFlagsRepository.getFeatureFlags().isQagArchiveEnabled.not()) return ArchiveQagListResult.FAILURE
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive).not()) return ArchiveQagListResult.FAILURE
 
         val archivingStartTime = LocalDateTime.now(clock).minusDays(DAYS_BEFORE_ARCHIVING_QAG.toLong()).toDate()
         val qagModeratedIdList = qagInfoRepository.getAllQagInfo()

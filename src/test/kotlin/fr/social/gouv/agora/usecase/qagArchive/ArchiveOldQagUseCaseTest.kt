@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.usecase.qagArchive
 
 import fr.social.gouv.agora.TestUtils
-import fr.social.gouv.agora.domain.FeatureFlags
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagUpdates
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
@@ -46,26 +46,20 @@ internal class ArchiveOldQagUseCaseTest {
             clock = TestUtils.getFixedClock(LocalDateTime.of(2023, Month.JUNE, 22, 14, 0, 0)),
         )
 
-        val featureFlags = mock(FeatureFlags::class.java).also {
-            given(it.isQagArchiveEnabled).willReturn(true)
-        }
-        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(true)
     }
 
     @Test
     fun `archiveOldQag - when feature disabled - should do nothing and return FAILURE`() {
         // Given
-        val featureFlags = mock(FeatureFlags::class.java).also {
-            given(it.isQagArchiveEnabled).willReturn(false)
-        }
-        given(featureFlagsRepository.getFeatureFlags()).willReturn(featureFlags)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(false)
 
         // When
         val result = useCase.archiveOldQag()
 
         // Then
         assertThat(result).isEqualTo(ArchiveQagListResult.FAILURE)
-        then(featureFlagsRepository).should(only()).getFeatureFlags()
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
         then(qagInfoRepository).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
     }

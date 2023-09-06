@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.qag
 
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -16,7 +17,7 @@ class GetAskQagStatusUseCase(
     private val clock: Clock,
 ) {
     fun getAskQagStatus(userId: String): AskQagStatus {
-        return if (!featureFlagsRepository.getFeatureFlags().isAskQuestionEnabled) {
+        return if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)) {
             AskQagStatus.FEATURE_DISABLED
         } else {
             val latestQagByUser =
