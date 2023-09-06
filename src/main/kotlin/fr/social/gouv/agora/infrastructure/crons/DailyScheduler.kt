@@ -10,7 +10,9 @@ class DailyScheduler(private val consultationCacheClearUseCase: ConsultationCach
 
     @Scheduled(cron = "0 0 0 * * *")
     fun deleteConsultationCaches() {
+        println("🧹 Clearing consultation caches...")
         consultationCacheClearUseCase.clearConsultationCaches()
+        println("🧹 Clearing consultation caches... finished !")
     }
 
 }

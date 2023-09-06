@@ -14,7 +14,8 @@ class AgoraAuthenticationEntryPoint : AuthenticationEntryPoint {
         response: HttpServletResponse,
         authException: AuthenticationException,
     ) {
-        println("AgoraAuthenticationEntryPoint - Use unauthorized token: ${request.getHeader("Authorization")}")
+        println("Authentication exception: $authException")
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized")
     }
+
 }

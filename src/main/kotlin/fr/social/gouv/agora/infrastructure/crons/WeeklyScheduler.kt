@@ -14,7 +14,9 @@ class WeeklyScheduler(
 
     @Scheduled(cron = "0 0 14 * * WED")
     fun selectMostPopularQagAndArchiveOldQag() {
+        println("📆 Performing weekly tasks...")
         selectMostPopularQagUseCase.putMostPopularQagInSelectedStatus()
         archiveOldQagUseCase.archiveOldQag()
+        println("📆 Performing weekly tasks... finished !")
     }
 }
