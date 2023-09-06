@@ -2447,7 +2447,7 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8',
     1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    '',
+    null,
     0
 ) ON CONFLICT DO NOTHING;
 
@@ -2457,7 +2457,7 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     '996436ca-ee69-11ed-a05b-0242ac120003',
     1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    'hors sujet',
+    null,
     0
 ) ON CONFLICT DO NOTHING;
 
@@ -2468,7 +2468,7 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
     null,
-    1
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, should_delete_flag) VALUES (
@@ -2487,7 +2487,7 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     '1731a370-ee6b-11ed-a05b-0242ac120003',
     1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    'hors sujet',
+    null,
     0
 ) ON CONFLICT DO NOTHING;
 
@@ -2507,8 +2507,8 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     '96e8341c-ee6b-11ed-a05b-0242ac120003',
     -1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    'langage vulgaire',
-    1
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, should_delete_flag) VALUES (
@@ -2517,7 +2517,7 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     'd09f2788-ee6b-11ed-a05b-0242ac120003',
     -1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    'hors sujet',
+    null,
     0
 ) ON CONFLICT DO NOTHING;
 
@@ -2537,7 +2537,7 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     '59028e08-ee6c-11ed-a05b-0242ac120003',
     -1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    'hors sujet',
+    null,
     0
 ) ON CONFLICT DO NOTHING;
 
@@ -2548,7 +2548,7 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     -1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
     null,
-    1
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, should_delete_flag) VALUES (
@@ -2557,8 +2557,8 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     'eb6a2c9f-9631-47e0-9db5-5b5cde782569',
     -1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    'langage vulgaire',
-    1
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, should_delete_flag) VALUES (
@@ -2567,6 +2567,6 @@ INSERT INTO qag_updates(id, moderated_date, qag_id, status, user_id, reason, sho
     '07ecaab0-b6d7-4e67-b313-96f0d2950296',
     -1,
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45',
-    'propos racistes',
-    1
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
