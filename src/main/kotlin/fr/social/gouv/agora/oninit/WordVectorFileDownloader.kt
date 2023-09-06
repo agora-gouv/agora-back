@@ -23,16 +23,25 @@ class WordVectorFileDownloader : InitializingBean {
     }
 
     override fun afterPropertiesSet() {
+        println("📚 Downloading word vector archives...")
+        createWordVectorDirectoryIfRequired()
         (WORD_VECTOR_FILE_INDEXED_CHARACTERS.map { it.toString() } + WORD_VECTOR_FILE_SPECIAL_CHARACTERS).forEach { filePointer ->
             downloadWordVectorArchiveIfRequired(WORD_VECTOR_FILE_PREFIX + filePointer + WORD_VECTOR_FILE_SUFFIX)
         }
-        println("Word vector archives download finished !")
+        println("📚 Downloading word vector archives... finished !")
+    }
+
+    private fun createWordVectorDirectoryIfRequired() {
+        val wordVectorDirectory = File(DOWNLOAD_DESTINATION_PATH)
+        if (!wordVectorDirectory.exists()) {
+            wordVectorDirectory.mkdirs()
+        }
     }
 
     private fun downloadWordVectorArchiveIfRequired(archiveName: String) {
         val targetFile = File(DOWNLOAD_DESTINATION_PATH + archiveName)
         if (!targetFile.exists()) {
-            println("Downloading word vector archive $archiveName...")
+            println("📚 Downloading word vector archive $archiveName...")
             URL(BASE_DOWNLOAD_URL + archiveName).openStream().use { downloadStream ->
                 Files.copy(downloadStream, Paths.get(DOWNLOAD_DESTINATION_PATH + archiveName))
             }
