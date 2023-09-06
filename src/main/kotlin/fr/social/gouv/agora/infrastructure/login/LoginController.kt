@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.login
 
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.usecase.appVersionControl.AppVersionControlUseCase
 import fr.social.gouv.agora.usecase.appVersionControl.AppVersionStatus.*
 import fr.social.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
@@ -29,7 +30,7 @@ class LoginController(
         @RequestHeader("platform") platform: String,
         @RequestBody loginToken: String,
     ): ResponseEntity<*> {
-        if (!featureFlagsUseCase.getFeatureFlags().isLoginEnabled) {
+        if (!featureFlagsUseCase.isFeatureEnabled(AgoraFeature.Login)) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
         }
 

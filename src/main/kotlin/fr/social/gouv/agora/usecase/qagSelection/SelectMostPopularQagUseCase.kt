@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.qagSelection
 
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.GetQagWithSupportAndThematiqueUseCase
@@ -16,7 +17,7 @@ class SelectMostPopularQagUseCase(
 ) {
 
     fun putMostPopularQagInSelectedStatus() {
-        if (featureFlagsRepository.getFeatureFlags().isQagSelectEnabled.not()) return
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect).not()) return
 
         qagListUseCase.getQagWithSupportAndThematique(qagFilters = filterGenerator.generateFilter())
             .takeIf { it.isNotEmpty() }
