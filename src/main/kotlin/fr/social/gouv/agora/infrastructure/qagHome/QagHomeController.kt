@@ -45,7 +45,7 @@ class QagHomeController(
         )
     }
 
-    @GetMapping("/qag_responses")
+    @GetMapping("/qags/responses")
     fun getQagResponses(
         @RequestHeader("Authorization") authorizationHeader: String,
     ): ResponseEntity<QagResponsesJson> {
