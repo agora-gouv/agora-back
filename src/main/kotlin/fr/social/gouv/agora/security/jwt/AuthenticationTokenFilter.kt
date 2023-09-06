@@ -26,13 +26,14 @@ class AuthenticationTokenFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
+        println("📲 API ${request.method} ${request.servletPath} | UserAgent: ${request.getHeader("User-Agent")}")
         extractJwt(request)?.let { jwtToken ->
             try {
                 if (JwtTokenUtils.isCorrectSignatureAndTokenNotExpired(jwtToken)) {
                     loginWithUserId(JwtTokenUtils.extractUserId(jwtToken))
                 }
             } catch (e: JwtException) {
-                println("AuthenticationTokenFilter - JWT exception: $e")
+                println("JwtException: $e")
             }
         }
 
