@@ -26,8 +26,6 @@ class QagHomeController(
         @RequestParam("thematiqueId") thematiqueId: String?,
     ): ResponseEntity<QagPreviewsJson> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        val qagSelectedForResponseList = getQagSelectedForResponseUseCase.getQagSelectedForResponseList(userId = userId)
-        val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
         val qagPreviewList = getQagPreviewListUseCase.getQagPreviewList(
             userId = userId,
             thematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() },
@@ -35,8 +33,6 @@ class QagHomeController(
 
         return ResponseEntity.ok().body(
             qagHomeJsonMapper.toJson(
-                qagSelectedForResponseList = qagSelectedForResponseList,
-                responseQagList = responseQagPreviewList,
                 qagPopularList = qagPreviewList.popularPreviewList,
                 qagLatestList = qagPreviewList.latestPreviewList,
                 qagSupportedList = qagPreviewList.supportedPreviewList,

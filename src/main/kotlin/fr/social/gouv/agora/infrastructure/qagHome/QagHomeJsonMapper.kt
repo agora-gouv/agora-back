@@ -14,17 +14,12 @@ class QagHomeJsonMapper(
 ) {
 
     fun toJson(
-        qagSelectedForResponseList: List<QagSelectedForResponse>,
-        responseQagList: List<ResponseQagPreview>,
         qagPopularList: List<QagPreview>,
         qagLatestList: List<QagPreview>,
         qagSupportedList: List<QagPreview>,
         qagErrorText: String?,
     ): QagPreviewsJson {
-        val responsesJson = toResponsesJson(qagSelectedForResponseList, responseQagList)
         return QagPreviewsJson(
-            incomingResponses = responsesJson.incomingResponses,
-            responsesList = responsesJson.responsesList,
             qagList = QagListJson(
                 popular = qagPopularList.map { qag -> qagToJson(qag) },
                 latest = qagLatestList.map { qag -> qagToJson(qag) },
