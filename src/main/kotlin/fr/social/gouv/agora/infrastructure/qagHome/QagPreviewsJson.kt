@@ -7,10 +7,6 @@ import fr.social.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class QagPreviewsJson(
-    @JsonProperty("incomingResponses")
-    val incomingResponses: List<IncomingResponseQagPreviewJson>,
-    @JsonProperty("responses")
-    val responsesList: List<ResponseQagPreviewJson>,
     @JsonProperty("qags")
     val qagList: QagListJson,
     @JsonProperty("askQagErrorText")
