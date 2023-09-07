@@ -1,5 +1,7 @@
 package fr.social.gouv.agora.oninit
 
+import org.codehaus.plexus.archiver.ArchiverException
+import org.codehaus.plexus.archiver.tar.TarGZipUnArchiver
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Component
 import java.io.File
@@ -45,7 +47,30 @@ class WordVectorFileDownloader : InitializingBean {
             URL(BASE_DOWNLOAD_URL + archiveName).openStream().use { downloadStream ->
                 Files.copy(downloadStream, Paths.get(DOWNLOAD_DESTINATION_PATH + archiveName))
             }
+            println("📚 Extracting word vector archive $archiveName...")
+            unzipIfRequired(archiveName)
         }
+    }
+
+    @Throws(ArchiverException::class)
+    private fun unzipIfRequired(archiveName: String): List<File> {
+        val archiveDirectory = File(DOWNLOAD_DESTINATION_PATH + archiveName)
+        if (!archiveDirectory.exists()) {
+            archiveDirectory.mkdirs()
+            unzip(archiveDirectory)
+        }
+
+        return archiveDirectory.listFiles()?.sorted()?.toList() ?: emptyList()
+    }
+
+    @Throws(ArchiverException::class)
+    private fun unzip(archiveDirectory: File) {
+        val zippedFile = File(DOWNLOAD_DESTINATION_PATH + archiveDirectory.name + WORD_VECTOR_FILE_SUFFIX)
+
+        val gzipUnArchiver = TarGZipUnArchiver()
+        gzipUnArchiver.sourceFile = zippedFile
+        gzipUnArchiver.destDirectory = archiveDirectory.parentFile
+        gzipUnArchiver.extract()
     }
 
 }
