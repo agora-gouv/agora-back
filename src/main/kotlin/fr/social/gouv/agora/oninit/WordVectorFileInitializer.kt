@@ -1,6 +1,8 @@
 package fr.social.gouv.agora.oninit
 
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.domain.QagStatus
+import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qagSimilar.SentenceToWordsGenerator
 import fr.social.gouv.agora.usecase.qagSimilar.repository.VectorizedWordsRepository
@@ -16,6 +18,7 @@ import java.nio.file.Paths
 @Component
 @Suppress("unused")
 class WordVectorFileInitializer(
+    private val featureFlagsRepository: FeatureFlagsRepository,
     private val qagInfoRepository: QagInfoRepository,
     private val sentenceToWordsGenerator: SentenceToWordsGenerator,
     private val vectorizedWordsRepository: VectorizedWordsRepository,
@@ -33,11 +36,13 @@ class WordVectorFileInitializer(
     }
 
     override fun afterPropertiesSet() {
-        println("📚 Downloading word vector archives...")
-        downloadAndExtractWordVectors()
-        println("📚 Initializing current QaG words vector cache...")
-        initializeCurrentQagWordsCache()
-        println("📚 Word vectors initialization finished !")
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.SimilarQag)) {
+            println("📚 Downloading word vector archives...")
+            downloadAndExtractWordVectors()
+            println("📚 Initializing current QaG words vector cache...")
+            initializeCurrentQagWordsCache()
+            println("📚 Word vectors initialization finished !")
+        }
     }
 
     private fun downloadAndExtractWordVectors() {
