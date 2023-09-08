@@ -14,6 +14,7 @@ import java.io.File
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.concurrent.CompletableFuture
 
 @Component
 @Suppress("unused")
@@ -38,10 +39,13 @@ class WordVectorFileInitializer(
     override fun afterPropertiesSet() {
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.SimilarQag)) {
             println("📚 Downloading word vector archives...")
-            downloadAndExtractWordVectors()
-            println("📚 Initializing current QaG words vector cache...")
-            initializeCurrentQagWordsCache()
-            println("📚 Word vectors initialization finished !")
+            CompletableFuture.supplyAsync {
+                downloadAndExtractWordVectors()
+                println("📚 Initializing current QaG words vector cache...")
+                initializeCurrentQagWordsCache()
+            }.thenAccept {
+                println("📚 Word vectors initialization finished !")
+            }
         }
     }
 
