@@ -6,7 +6,7 @@ data class Consultation(
     val id: String,
     val title: String,
     val coverUrl: String,
-    val startDate: Date?,
+    val startDate: Date,
     val endDate: Date,
     val questionCount: String,
     val estimatedTime: String,

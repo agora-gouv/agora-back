@@ -13,7 +13,7 @@ data class ConsultationDTO(
     val id: UUID,
     @Column(columnDefinition = "TEXT")
     val title: String,
-    val startDate: Date?,
+    val startDate: Date,
     val endDate: Date,
     @Column(columnDefinition = "TEXT")
     val coverUrl: String,

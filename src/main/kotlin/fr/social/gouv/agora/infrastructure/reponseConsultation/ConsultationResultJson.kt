@@ -15,6 +15,8 @@ data class ConsultationResultJson(
     val resultsMultipleChoice: List<QuestionResultJson>,
     @JsonProperty("etEnsuite")
     val lastUpdate: ConsultationUpdatesJson,
+    @JsonProperty("presentation")
+    val presentation: PresentationJson,
 )
 
 data class QuestionResultJson(
@@ -81,4 +83,15 @@ data class ConclusionJson(
     val title: String,
     @JsonProperty("description")
     val description: String,
+)
+
+data class PresentationJson(
+    @JsonProperty("startDate")
+    val startDate: String,
+    @JsonProperty("endDate")
+    val endDate: String,
+    @JsonProperty("description")
+    val description: String,
+    @JsonProperty("tipsDescription")
+    val tipsDescription: String,
 )
