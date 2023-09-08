@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.qagModerating
 import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
+import fr.social.gouv.agora.infrastructure.qagSimilar.QagSimilarJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
@@ -13,6 +14,21 @@ class QagModeratingJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMa
         return QagModeratingHomeJson(
             totalNumber = totalNumberQagModerating,
             qagsToModerate = qagModeratingList.map { qagModerating ->
+                QagModeratingJson(
+                    id = qagModerating.id,
+                    thematique = thematiqueJsonMapper.toNoIdJson(qagModerating.thematique),
+                    title = qagModerating.title,
+                    description = qagModerating.description,
+                    date = qagModerating.date.toString(),
+                    username = qagModerating.username,
+                    support = toJson(qagModerating.support),
+                )
+            })
+    }
+
+    fun toJson(qagModeratingList: List<QagModerating>): QagSimilarJson {
+        return QagSimilarJson(
+            similarQags = qagModeratingList.map { qagModerating ->
                 QagModeratingJson(
                     id = qagModerating.id,
                     thematique = thematiqueJsonMapper.toNoIdJson(qagModerating.thematique),
