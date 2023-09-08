@@ -26,7 +26,7 @@ class WordVectorFileInitializer(
         private const val DOWNLOAD_DESTINATION_PATH = "/tmp/wordVectorFiles/"
 
         private const val WORD_VECTOR_FILE_PREFIX = "wordVectors_"
-        private const val WORD_VECTOR_FILE_SUFFIX = ".gz"
+        private const val WORD_VECTOR_ZIPPED_FILE_SUFFIX = ".gz"
         private const val WORD_VECTOR_FILE_INDEXED_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789"
 
         private const val WORD_VECTOR_FILE_SPECIAL_CHARACTERS = "specials"
@@ -47,40 +47,40 @@ class WordVectorFileInitializer(
         }
 
         (WORD_VECTOR_FILE_INDEXED_CHARACTERS.map { it.toString() } + WORD_VECTOR_FILE_SPECIAL_CHARACTERS).forEach { filePointer ->
-            downloadWordVectorArchiveIfRequired(WORD_VECTOR_FILE_PREFIX + filePointer + WORD_VECTOR_FILE_SUFFIX)
+            val archiveName = WORD_VECTOR_FILE_PREFIX + filePointer
+            downloadWordVectorArchiveIfRequired(archiveName)
         }
     }
 
     private fun downloadWordVectorArchiveIfRequired(archiveName: String) {
-        val targetFile = File(DOWNLOAD_DESTINATION_PATH + archiveName)
-        if (!targetFile.exists()) {
+        val extractedFile = getExtractedFile(archiveName)
+        if (!extractedFile.exists()) {
             println("📚 Downloading word vector archive $archiveName...")
-            URL(BASE_DOWNLOAD_URL + archiveName).openStream().use { downloadStream ->
-                Files.copy(downloadStream, Paths.get(DOWNLOAD_DESTINATION_PATH + archiveName))
+            val zippedFile = getZippedFile(archiveName)
+            URL(BASE_DOWNLOAD_URL + archiveName + WORD_VECTOR_ZIPPED_FILE_SUFFIX).openStream().use { downloadStream ->
+                Files.copy(downloadStream, Paths.get(zippedFile.absolutePath))
             }
             println("📚 Extracting word vector archive $archiveName...")
-            unzipIfRequired(archiveName)
+            unzipIfRequired(zippedFile, extractedFile)
+            zippedFile.delete()
         }
     }
 
     @Throws(ArchiverException::class)
-    private fun unzipIfRequired(archiveName: String): List<File> {
-        val archiveDirectory = File(DOWNLOAD_DESTINATION_PATH + archiveName)
-        if (!archiveDirectory.exists()) {
-            archiveDirectory.mkdirs()
-            unzip(archiveDirectory)
+    private fun unzipIfRequired(zippedFile: File, extractedFile: File): List<File> {
+        if (!extractedFile.exists()) {
+            extractedFile.mkdirs()
+            unzip(zippedFile, extractedFile)
         }
 
-        return archiveDirectory.listFiles()?.sorted()?.toList() ?: emptyList()
+        return extractedFile.listFiles()?.sorted()?.toList() ?: emptyList()
     }
 
     @Throws(ArchiverException::class)
-    private fun unzip(archiveDirectory: File) {
-        val zippedFile = File(DOWNLOAD_DESTINATION_PATH + archiveDirectory.name + WORD_VECTOR_FILE_SUFFIX)
-
+    private fun unzip(zippedFile: File, extractedFile: File) {
         val gzipUnArchiver = TarGZipUnArchiver()
         gzipUnArchiver.sourceFile = zippedFile
-        gzipUnArchiver.destDirectory = archiveDirectory.parentFile
+        gzipUnArchiver.destDirectory = extractedFile.parentFile
         gzipUnArchiver.extract()
     }
 
@@ -93,5 +93,9 @@ class WordVectorFileInitializer(
         println("📚 Retrieving vectors for words... : $currentQagWords")
         vectorizedWordsRepository.getWordVectors(currentQagWords)
     }
+
+    private fun getExtractedFile(archiveName: String) = File(DOWNLOAD_DESTINATION_PATH + archiveName)
+    private fun getZippedFile(archiveName: String) =
+        File(getExtractedFile(archiveName).absolutePath + WORD_VECTOR_ZIPPED_FILE_SUFFIX)
 
 }
