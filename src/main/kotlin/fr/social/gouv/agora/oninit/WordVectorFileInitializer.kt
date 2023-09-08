@@ -1,5 +1,9 @@
 package fr.social.gouv.agora.oninit
 
+import fr.social.gouv.agora.domain.QagStatus
+import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.social.gouv.agora.usecase.qagSimilar.SentenceToWordsGenerator
+import fr.social.gouv.agora.usecase.qagSimilar.repository.VectorizedWordsRepository
 import org.codehaus.plexus.archiver.ArchiverException
 import org.codehaus.plexus.archiver.tar.TarGZipUnArchiver
 import org.springframework.beans.factory.InitializingBean
@@ -11,7 +15,11 @@ import java.nio.file.Paths
 
 @Component
 @Suppress("unused")
-class WordVectorFileDownloader : InitializingBean {
+class WordVectorFileInitializer(
+    private val qagInfoRepository: QagInfoRepository,
+    private val sentenceToWordsGenerator: SentenceToWordsGenerator,
+    private val vectorizedWordsRepository: VectorizedWordsRepository,
+) : InitializingBean {
 
     companion object {
         private const val BASE_DOWNLOAD_URL = "https://betagouv.github.io/agora-content/wordVectorFiles/"
@@ -26,17 +34,20 @@ class WordVectorFileDownloader : InitializingBean {
 
     override fun afterPropertiesSet() {
         println("📚 Downloading word vector archives...")
-        createWordVectorDirectoryIfRequired()
-        (WORD_VECTOR_FILE_INDEXED_CHARACTERS.map { it.toString() } + WORD_VECTOR_FILE_SPECIAL_CHARACTERS).forEach { filePointer ->
-            downloadWordVectorArchiveIfRequired(WORD_VECTOR_FILE_PREFIX + filePointer + WORD_VECTOR_FILE_SUFFIX)
-        }
-        println("📚 Downloading word vector archives... finished !")
+        downloadAndExtractWordVectors()
+        println("📚 Initializing current QaG words vector cache...")
+        initializeCurrentQagWordsCache()
+        println("📚 Word vectors initialization finished !")
     }
 
-    private fun createWordVectorDirectoryIfRequired() {
+    private fun downloadAndExtractWordVectors() {
         val wordVectorDirectory = File(DOWNLOAD_DESTINATION_PATH)
         if (!wordVectorDirectory.exists()) {
             wordVectorDirectory.mkdirs()
+        }
+
+        (WORD_VECTOR_FILE_INDEXED_CHARACTERS.map { it.toString() } + WORD_VECTOR_FILE_SPECIAL_CHARACTERS).forEach { filePointer ->
+            downloadWordVectorArchiveIfRequired(WORD_VECTOR_FILE_PREFIX + filePointer + WORD_VECTOR_FILE_SUFFIX)
         }
     }
 
@@ -71,6 +82,16 @@ class WordVectorFileDownloader : InitializingBean {
         gzipUnArchiver.sourceFile = zippedFile
         gzipUnArchiver.destDirectory = archiveDirectory.parentFile
         gzipUnArchiver.extract()
+    }
+
+    private fun initializeCurrentQagWordsCache() {
+        val currentQagWords = qagInfoRepository
+            .getAllQagInfo()
+            .filter { qagInfo -> qagInfo.status == QagStatus.MODERATED_ACCEPTED }
+            .flatMap { qagInfo -> sentenceToWordsGenerator.sentenceToWords(qagInfo.title) }
+            .distinct()
+        println("📚 Retrieving vectors for words... : $currentQagWords")
+        vectorizedWordsRepository.getWordVectors(currentQagWords)
     }
 
 }
