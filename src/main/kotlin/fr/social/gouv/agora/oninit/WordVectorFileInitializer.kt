@@ -101,6 +101,7 @@ class WordVectorFileInitializer(
             .distinct()
         println("📚 Retrieving vectors for words... : $currentQagWords")
         vectorizedWordsRepository.getWordVectors(currentQagWords)
+        println("📚 Retrieving vectors finished !")
     }
 
     private fun getExtractedFile(archiveName: String) = File(DOWNLOAD_DESTINATION_PATH + archiveName)
