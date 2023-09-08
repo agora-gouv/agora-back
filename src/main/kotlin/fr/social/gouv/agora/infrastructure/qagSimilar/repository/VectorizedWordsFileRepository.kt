@@ -27,6 +27,7 @@ class VectorizedWordsFileRepository(private val resolver: VectorizedWordFileReso
     }
 
     private fun getVectorsFromArchive(archiveName: String, words: List<String>): Map<String, VectorResult> {
+        println("📚 Looking in $archiveName for words= $words")
         val wordVectorMap = mutableMapOf<String, VectorResult>()
         getArchiveFiles(archiveName)?.forEach { wordVectorFile ->
             val wordsFromVectorFile = searchWordsInVectorFile(wordVectorFile, words)
@@ -57,7 +58,10 @@ class VectorizedWordsFileRepository(private val resolver: VectorizedWordFileReso
         return words
             .map { word -> word to word2Vec.getWordVectorMatrix(word) }
             .filter { (_, vector) -> vector != null }
-            .associate { (word, vector) -> word to VectorResult.VectorFound(vector) }
+            .associate { (word, vector) ->
+                println("📚 Word vector found : $word")
+                word to VectorResult.VectorFound(vector)
+            }
     }
 }
 
