@@ -38,7 +38,7 @@ dependencies {
         exclude(group = "org.bytedeco", module = "fmpeg-platform")
     }
     implementation("org.deeplearning4j:deeplearning4j-nlp:1.0.0-M2.1")
-    implementation("org.nd4j:nd4j-native:1.0.0-M2.1:macosx-arm64")
+    implementation("org.nd4j:nd4j-native:1.0.0-M2.1:linux-x86_64")
     implementation("org.nd4j:nd4j-native-platform:1.0.0-M2.1")
     implementation("edu.stanford.nlp:stanford-corenlp:4.5.4")
     implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models-french")
