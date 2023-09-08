@@ -28,6 +28,12 @@ class ConsultationResultJsonMapper {
                 explanations = domain.lastUpdate.explanations?.map(::toExplanationJson),
                 video = domain.lastUpdate.video?.let { video -> toVideoJson(video) },
                 conclusion = domain.lastUpdate.conclusion?.let { conclusion -> toConclusionJson(conclusion) },
+            ),
+            presentation = PresentationJson(
+                startDate = domain.consultation.startDate.toString(),
+                endDate = domain.consultation.endDate.toString(),
+                description = domain.consultation.description,
+                tipsDescription = domain.consultation.tipsDescription,
             )
         )
     }
