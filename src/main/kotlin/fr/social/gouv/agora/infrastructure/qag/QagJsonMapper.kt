@@ -65,6 +65,8 @@ class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
                 authorDescription = response.authorDescription,
                 responseDate = response.responseDate.toString(),
                 videoUrl = response.videoUrl,
+                videoWidth = response.videoWidth,
+                videoHeight = response.videoHeight,
                 transcription = StringUtils.unescapeLineBreaks(response.transcription),
                 feedbackStatus = qag.feedback?.isExist ?: false,
             )
