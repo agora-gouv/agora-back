@@ -162,16 +162,18 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     'bacc967d-cb6c-4b43-b64d-71fbcf1f0a45'
 ) ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, status = EXCLUDED.status;
 
-INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, transcription, qag_id) VALUES (
+INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, video_width, video_height, transcription, qag_id) VALUES (
     '38990baf-b0ed-4db0-99a5-7ec01790720e',
     'Olivier Véran',
     'https://betagouv.github.io/agora-content/QaG-OlivierVeran.png',
     'Ministre délégué auprès de la Première ministre, chargé du Renouveau démocratique, porte-parole du Gouvernement',
     '2023-06-05',
     'https://betagouv.github.io/agora-content/AgoraQagResponse.mp4',
+    1080,
+    1920,
     'Bonjour,\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8'
-) ON CONFLICT (id) DO UPDATE SET video_url = EXCLUDED.video_url;
+) ON CONFLICT (id) DO UPDATE SET video_url = EXCLUDED.video_url, video_width = EXCLUDED.video_width, video_height = EXCLUDED.video_height;
 
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id, user_id) VALUES (
     '996436ca-ee69-11ed-a05b-0242ac120003',
