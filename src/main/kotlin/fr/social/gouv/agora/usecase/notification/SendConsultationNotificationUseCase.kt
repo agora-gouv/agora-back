@@ -1,7 +1,8 @@
 package fr.social.gouv.agora.usecase.notification
 
 import fr.social.gouv.agora.usecase.login.repository.UserRepository
-import fr.social.gouv.agora.usecase.notification.repository.*
+import fr.social.gouv.agora.usecase.notification.repository.ConsultationNotificationRequest
+import fr.social.gouv.agora.usecase.notification.repository.NotificationSendingRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import org.springframework.stereotype.Service
 
@@ -9,14 +10,14 @@ import org.springframework.stereotype.Service
 class SendConsultationNotificationUseCase(
     private val userRepository: UserRepository,
     private val getConsultationResponseRepository: GetConsultationResponseRepository,
-    private val notificationRepository: NotificationRepository,
+    private val notificationSendingRepository: NotificationSendingRepository,
 ) {
     fun sendNewConsultationNotification(
         title: String,
         description: String,
         consultationId: String,
     ): Pair<Int, Int>? {
-        return notificationRepository.sendNewConsultationNotification(
+        return notificationSendingRepository.sendNewConsultationNotification(
             request = ConsultationNotificationRequest(
                 title = title,
                 description = description,
@@ -31,7 +32,7 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): Pair<Int, Int>? {
-        return notificationRepository.sendNewConsultationNotification(
+        return notificationSendingRepository.sendConsultationUpdateNotification(
             request = ConsultationNotificationRequest(
                 title = title,
                 description = description,

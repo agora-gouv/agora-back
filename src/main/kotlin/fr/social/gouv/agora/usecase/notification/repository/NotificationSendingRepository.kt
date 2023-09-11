@@ -1,6 +1,6 @@
 package fr.social.gouv.agora.usecase.notification.repository
 
-interface NotificationRepository {
+interface NotificationSendingRepository {
     fun sendNotificationMessage(request: NotificationRequest): NotificationResult
     fun sendQagDetailsNotification(request: NotificationRequest, qagId: String): NotificationResult
     fun sendNewConsultationNotification(request: ConsultationNotificationRequest): Pair<Int, Int>?

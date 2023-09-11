@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
-class NotificationRepositoryImpl : NotificationRepository {
+class NotificationSendingRepositoryImpl : NotificationSendingRepository {
 
     companion object {
         private const val NOTIFICATION_TYPE_KEY = "type"
