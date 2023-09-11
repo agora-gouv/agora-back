@@ -15,7 +15,7 @@ class ResponseQagMapper {
             authorDescription = dto.authorDescription,
             responseDate = dto.responseDate,
             videoUrl = dto.videoUrl,
-            videoWidth = dto.videoHeight,
+            videoWidth = dto.videoWidth,
             videoHeight = dto.videoHeight,
             transcription = dto.transcription,
             qagId = dto.qagId.toString(),
