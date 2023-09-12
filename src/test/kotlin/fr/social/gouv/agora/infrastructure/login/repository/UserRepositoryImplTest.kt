@@ -211,12 +211,58 @@ internal class UserRepositoryImplTest {
 
             // Then
             assertThat(result).isEqualTo(userInfo)
-            then(databaseRepository).should(only()).save(updatedUserDTO)
-            then(cacheRepository).should(times(1)).getAllUserList()
-            then(cacheRepository).should(times(1)).updateUser(userDTO = savedUserDTO)
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(mapper).should(times(1)).updateDto(dto = userDTO, fcmToken = "fcmToken")
-            then(mapper).should(times(1)).toDomain(dto = savedUserDTO)
+            inOrder(cacheRepository, databaseRepository, mapper).also {
+                then(cacheRepository).should(it).getAllUserList()
+                then(mapper).should(it).updateDto(dto = userDTO, fcmToken = "fcmToken")
+                then(databaseRepository).should(it).save(updatedUserDTO)
+                then(cacheRepository).should(it).updateUser(userDTO = savedUserDTO)
+                then(mapper).should(it).toDomain(dto = savedUserDTO)
+                it.verifyNoMoreInteractions()
+            }
+        }
+
+        @Test
+        fun `updateUser - when cache returns DTO but update cache causes exception - should initialize cache then return updatedUser`() {
+            // Given
+            val userDTO = mock(UserDTO::class.java).also {
+                given(it.id).willReturn(userId)
+            }
+            given(cacheRepository.getAllUserList()).willReturn(CacheResult.CachedUserList(listOf(userDTO)))
+
+            val updatedUserDTO = mock(UserDTO::class.java)
+            given(mapper.updateDto(dto = userDTO, fcmToken = "fcmToken"))
+                .willReturn(updatedUserDTO)
+
+            val savedUserDTO = mock(UserDTO::class.java).also {
+                given(it.id).willReturn(userId)
+            }
+            given(databaseRepository.save(updatedUserDTO)).willReturn(savedUserDTO)
+
+            val userInfo = mock(UserInfo::class.java)
+            given(mapper.toDomain(savedUserDTO)).willReturn(userInfo)
+
+            given(cacheRepository.updateUser(savedUserDTO)).willThrow(IllegalStateException::class.java)
+            val storedUserDTO = mock(UserDTO::class.java)
+            given(databaseRepository.findAll()).willReturn(listOf(storedUserDTO))
+
+            // When
+            val result = repository.updateUser(
+                userId = userId.toString(),
+                fcmToken = "fcmToken",
+            )
+
+            // Then
+            assertThat(result).isEqualTo(userInfo)
+            inOrder(cacheRepository, databaseRepository, mapper).also {
+                then(cacheRepository).should(it).getAllUserList()
+                then(mapper).should(it).updateDto(dto = userDTO, fcmToken = "fcmToken")
+                then(databaseRepository).should(it).save(updatedUserDTO)
+                then(cacheRepository).should(it).updateUser(userDTO = savedUserDTO)
+                then(databaseRepository).should(it).findAll()
+                then(cacheRepository).should(it).initializeCache(listOf(storedUserDTO))
+                then(mapper).should(it).toDomain(dto = savedUserDTO)
+                it.verifyNoMoreInteractions()
+            }
         }
     }
 
@@ -241,6 +287,38 @@ internal class UserRepositoryImplTest {
             then(mapper).should(inOrder).generateDto(fcmToken = "fcmToken")
             then(databaseRepository).should(inOrder).save(userDTO)
             then(cacheRepository).should(inOrder).insertUser(savedUserDTO)
+            then(mapper).should(inOrder).toDomain(savedUserDTO)
+            inOrder.verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `generateUser - when add to cache causes exception - should generate dto and insert it in database and initialize cache then return saved dto`() {
+        // Given
+        val userDTO = mock(UserDTO::class.java)
+        given(mapper.generateDto(fcmToken = "fcmToken")).willReturn(userDTO)
+
+        val savedUserDTO = mock(UserDTO::class.java)
+        given(databaseRepository.save(userDTO)).willReturn(savedUserDTO)
+
+        val userInfo = mock(UserInfo::class.java)
+        given(mapper.toDomain(savedUserDTO)).willReturn(userInfo)
+
+        given(cacheRepository.insertUser(savedUserDTO)).willThrow(IllegalStateException::class.java)
+        val storedUserDTO = mock(UserDTO::class.java)
+        given(databaseRepository.findAll()).willReturn(listOf(storedUserDTO))
+
+        // When
+        val result = repository.generateUser(fcmToken = "fcmToken")
+
+        // Then
+        assertThat(result).isEqualTo(userInfo)
+        inOrder(cacheRepository, databaseRepository, mapper).also { inOrder ->
+            then(mapper).should(inOrder).generateDto(fcmToken = "fcmToken")
+            then(databaseRepository).should(inOrder).save(userDTO)
+            then(cacheRepository).should(inOrder).insertUser(savedUserDTO)
+            then(databaseRepository).should(inOrder).findAll()
+            then(cacheRepository).should(inOrder).initializeCache(listOf(storedUserDTO))
             then(mapper).should(inOrder).toDomain(savedUserDTO)
             inOrder.verifyNoMoreInteractions()
         }
