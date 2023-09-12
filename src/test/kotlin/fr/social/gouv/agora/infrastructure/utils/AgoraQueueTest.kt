@@ -29,7 +29,7 @@ internal class AgoraQueueTest {
     fun `executeTask - when has no tasks - should return result from onTaskExecuted`() {
         // When
         val result = queue.executeTask(
-            taskType = TaskType.AddSupportRequest(userId = "userId"),
+            taskType = TaskType.AddSupport(userId = "userId"),
             onTaskExecuted = {
                 delay(200)
                 true
@@ -42,12 +42,12 @@ internal class AgoraQueueTest {
     }
 
     @Test
-    suspend fun `executeTask - when has task with same types - should return result from onTaskExecuted then from onTaskRejected`() {
+    suspend fun `executeTask - when has identical tasks - should return result from onTaskExecuted then from onTaskRejected`() {
         withContext(Dispatchers.IO) {
             // Given
             val firstResultFuture = CompletableFuture.supplyAsync {
                 queue.executeTask(
-                    taskType = TaskType.AddSupportRequest(userId = "userId"),
+                    taskType = TaskType.AddSupport(userId = "userId"),
                     onTaskExecuted = {
                         delay(200)
                         true
@@ -57,7 +57,7 @@ internal class AgoraQueueTest {
             }
             val secondResultFuture = CompletableFuture.supplyAsync {
                 queue.executeTask(
-                    taskType = TaskType.AddSupportRequest(userId = "userId"),
+                    taskType = TaskType.AddSupport(userId = "userId"),
                     onTaskExecuted = {
                         delay(200)
                         true
@@ -77,12 +77,12 @@ internal class AgoraQueueTest {
     }
 
     @Test
-    suspend fun `executeTask - when has task with different types - should return result from onTaskExecuted then from onTaskExecuted`() {
+    suspend fun `executeTask - when has different tasks - should return result from onTaskExecuted then from onTaskExecuted`() {
         withContext(Dispatchers.IO) {
             // Given
             val firstResultFuture = CompletableFuture.supplyAsync {
                 queue.executeTask(
-                    taskType = TaskType.AddSupportRequest(userId = "userId1"),
+                    taskType = TaskType.AddSupport(userId = "userId1"),
                     onTaskExecuted = {
                         delay(200)
                         true
@@ -92,7 +92,7 @@ internal class AgoraQueueTest {
             }
             val secondResultFuture = CompletableFuture.supplyAsync {
                 queue.executeTask(
-                    taskType = TaskType.AddSupportRequest(userId = "userId2"),
+                    taskType = TaskType.RemoveSupport(userId = "userId2"),
                     onTaskExecuted = {
                         delay(200)
                         true

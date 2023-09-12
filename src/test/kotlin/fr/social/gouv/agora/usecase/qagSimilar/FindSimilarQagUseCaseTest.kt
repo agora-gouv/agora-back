@@ -4,8 +4,8 @@ import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.usecase.qag.GetQagWithSupportAndThematiqueUseCase
 import fr.social.gouv.agora.usecase.qag.QagFilters
 import fr.social.gouv.agora.usecase.qag.QagInfoWithSupportAndThematique
-import fr.social.gouv.agora.usecase.qag.QagModeratingMapper
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
+import fr.social.gouv.agora.usecase.qagModerating.QagModeratingMapper
 import fr.social.gouv.agora.usecase.qagSimilar.repository.VectorizedWordsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*

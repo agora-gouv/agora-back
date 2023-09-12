@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
-
 class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,
     private val askForDemographicInfoUseCase: AskForDemographicInfoUseCase,

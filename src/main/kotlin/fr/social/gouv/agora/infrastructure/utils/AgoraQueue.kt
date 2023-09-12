@@ -8,7 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class AgoraQueue {
 
     sealed class TaskType {
-        data class AddSupportRequest(val userId: String) : TaskType()
+        data class AddSupport(val userId: String) : TaskType()
+        data class RemoveSupport(val userId: String) : TaskType()
     }
 
     private val queue = ConcurrentLinkedQueue<TaskType>()
