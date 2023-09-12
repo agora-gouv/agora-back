@@ -29,12 +29,14 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
+    @Throws(IllegalStateException::class)
     fun insertSupportQag(supportQagDTO: SupportQagDTO) {
         getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
             initializeCache(allSupportQagDTO + supportQagDTO)
         } ?: throw IllegalStateException("SupportQag cache has not been initialized")
     }
 
+    @Throws(IllegalStateException::class)
     fun deleteSupportQag(qagId: UUID, userId: UUID) {
         getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
             val userSupportQagDTO = allSupportQagDTO
