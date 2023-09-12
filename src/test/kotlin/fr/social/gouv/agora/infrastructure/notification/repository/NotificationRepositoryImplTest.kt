@@ -1,10 +1,10 @@
 package fr.social.gouv.agora.infrastructure.notification.repository
 
 import fr.social.gouv.agora.domain.Notification
+import fr.social.gouv.agora.domain.NotificationInserting
 import fr.social.gouv.agora.infrastructure.notification.dto.NotificationDTO
 import fr.social.gouv.agora.infrastructure.notification.repository.NotificationCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.notification.repository.NotificationInsertionResult
-import fr.social.gouv.agora.usecase.qag.repository.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -94,7 +94,7 @@ internal class NotificationRepositoryImplTest {
         @Test
         fun `insertNotification - when mapper returns null - should return FAILURE`() {
             // Given
-            val notification = mock(Notification::class.java)
+            val notification = mock(NotificationInserting::class.java)
             given(mapper.toDto(notification)).willReturn(null)
 
             // When
@@ -109,7 +109,7 @@ internal class NotificationRepositoryImplTest {
         @Test
         fun `insertNotification - when mapper returns DTO - should return SUCCESS`() {
             // Given
-            val notification = mock(Notification::class.java)
+            val notification = mock(NotificationInserting::class.java)
             val notificationDTO = mock(NotificationDTO::class.java)
             given(mapper.toDto(notification)).willReturn(notificationDTO)
 
@@ -126,6 +126,36 @@ internal class NotificationRepositoryImplTest {
             assertThat(result).isEqualTo(NotificationInsertionResult.SUCCESS)
             then(databaseRepository).should(only()).save(notificationDTO)
             then(cacheRepository).should(only()).insertNotification(notificationDTO = savedNotificationDTO)
+        }
+
+        @Test
+        fun `insertNotification - when mapper returns DTO but insert causes exception - should initialize cache with all notifications + new one then return SUCCESS`() {
+            // Given
+            val notification = mock(NotificationInserting::class.java)
+            val notificationDTO = mock(NotificationDTO::class.java)
+            given(mapper.toDto(notification)).willReturn(notificationDTO)
+
+            val savedNotificationId = UUID.randomUUID()
+            val savedNotificationDTO = mock(NotificationDTO::class.java).also {
+                given(it.id).willReturn(savedNotificationId)
+            }
+            given(databaseRepository.save(notificationDTO)).willReturn(savedNotificationDTO)
+
+            given(cacheRepository.insertNotification(savedNotificationDTO)).willThrow(IllegalStateException::class.java)
+            val storedNotificationDTO = mock(NotificationDTO::class.java)
+            given(databaseRepository.findAll()).willReturn(listOf(storedNotificationDTO))
+
+            // When
+            val result = repository.insertNotification(notification)
+
+            // Then
+            assertThat(result).isEqualTo(NotificationInsertionResult.SUCCESS)
+            then(databaseRepository).should().save(notificationDTO)
+            then(databaseRepository).should().findAll()
+            then(databaseRepository).shouldHaveNoMoreInteractions()
+            then(cacheRepository).should().insertNotification(savedNotificationDTO)
+            then(cacheRepository).should().initializeCache(listOf(storedNotificationDTO, savedNotificationDTO))
+            then(cacheRepository).shouldHaveNoMoreInteractions()
         }
     }
 

@@ -1,10 +1,9 @@
 package fr.social.gouv.agora.usecase.notification
 
+import fr.social.gouv.agora.domain.NotificationInserting
+import fr.social.gouv.agora.domain.NotificationType
 import fr.social.gouv.agora.usecase.login.repository.UserRepository
-import fr.social.gouv.agora.usecase.notification.repository.NotificationMessageRepository
-import fr.social.gouv.agora.usecase.notification.repository.NotificationRequest
-import fr.social.gouv.agora.usecase.notification.repository.NotificationResult
-import fr.social.gouv.agora.usecase.notification.repository.NotificationSendingRepository
+import fr.social.gouv.agora.usecase.notification.repository.*
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 
@@ -14,6 +13,7 @@ class SendNotificationQagModeratedUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val notificationSendingRepository: NotificationSendingRepository,
     private val notificationMessageRepository: NotificationMessageRepository,
+    private val notificationRepository: NotificationRepository,
 ) {
 
     fun sendNotificationQagRejected(qagId: String): NotificationResult {
@@ -41,7 +41,8 @@ class SendNotificationQagModeratedUseCase(
     }
 
     private fun sendNotification(qagId: String, title: String, description: String): NotificationResult {
-        return getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
+
+        val sendingNotificationResult = getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
             notificationSendingRepository.sendQagDetailsNotification(
                 request = NotificationRequest(
                     fcmToken = fcmToken,
@@ -51,6 +52,19 @@ class SendNotificationQagModeratedUseCase(
                 qagId = qagId,
             )
         } ?: NotificationResult.FAILURE
+        when (sendingNotificationResult) {
+            NotificationResult.SUCCESS -> qagInfoRepository.getQagInfo(qagId = qagId)?.userId?.let {
+                notificationRepository.insertNotification(
+                    NotificationInserting(
+                        title = title,
+                        type = NotificationType.QAG,
+                        userId = it
+                    )
+                )
+            }
+            else -> {} //do nothing
+        }
+        return sendingNotificationResult
     }
 
     private fun getQagAuthorFcmToken(qagId: String): String? {

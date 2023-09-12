@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.notification.repository
 
 import fr.social.gouv.agora.domain.Notification
+import fr.social.gouv.agora.domain.NotificationInserting
 import fr.social.gouv.agora.infrastructure.notification.dto.NotificationDTO
 import fr.social.gouv.agora.infrastructure.notification.repository.NotificationCacheRepository.CacheResult
 import fr.social.gouv.agora.usecase.notification.repository.NotificationInsertionResult
@@ -19,10 +20,15 @@ class NotificationRepositoryImpl(
         return getAllNotificationDTO().map(mapper::toDomain)
     }
 
-    override fun insertNotification(notification: Notification): NotificationInsertionResult {
+    override fun insertNotification(notification: NotificationInserting): NotificationInsertionResult {
         return mapper.toDto(notification)?.let { notificationDTO ->
             val savedNotificationDTO = databaseRepository.save(notificationDTO)
-            cacheRepository.insertNotification(notificationDTO = savedNotificationDTO)
+            try {
+                cacheRepository.insertNotification(notificationDTO = savedNotificationDTO)
+            } catch (e: IllegalStateException) {
+                val allNotificationDTO = databaseRepository.findAll()
+                cacheRepository.initializeCache(allNotificationDTO + savedNotificationDTO)
+            }
             NotificationInsertionResult.SUCCESS
         } ?: NotificationInsertionResult.FAILURE
     }

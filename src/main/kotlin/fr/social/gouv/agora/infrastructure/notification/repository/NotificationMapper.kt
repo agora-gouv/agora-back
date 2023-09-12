@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.notification.repository
 
 import fr.social.gouv.agora.domain.Notification
+import fr.social.gouv.agora.domain.NotificationInserting
 import fr.social.gouv.agora.domain.NotificationType
 import fr.social.gouv.agora.infrastructure.notification.dto.NotificationDTO
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
@@ -30,7 +31,7 @@ class NotificationMapper {
         )
     }
 
-    fun toDto(domain: Notification): NotificationDTO? {
+    fun toDto(domain: NotificationInserting): NotificationDTO? {
         return try {
             NotificationDTO(
                 id = UuidUtils.NOT_FOUND_UUID,

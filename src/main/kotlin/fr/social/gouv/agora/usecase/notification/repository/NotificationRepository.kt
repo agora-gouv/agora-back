@@ -1,10 +1,11 @@
 package fr.social.gouv.agora.usecase.notification.repository
 
 import fr.social.gouv.agora.domain.Notification
+import fr.social.gouv.agora.domain.NotificationInserting
 
 interface NotificationRepository {
     fun getAllNotification(): List<Notification>
-    fun insertNotification(notification: Notification): NotificationInsertionResult
+    fun insertNotification(notification: NotificationInserting): NotificationInsertionResult
     fun getUserNotificationList(userId: String): List<Notification>
 }
 

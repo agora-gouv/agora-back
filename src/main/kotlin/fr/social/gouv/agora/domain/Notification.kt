@@ -9,6 +9,12 @@ data class Notification(
     val userId: String,
 )
 
+data class NotificationInserting(
+    val title: String,
+    val type: NotificationType,
+    val userId: String,
+)
+
 enum class NotificationType {
     CONSULTATION,
     QAG,
