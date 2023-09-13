@@ -28,18 +28,21 @@ class QagInfoCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
+    @Throws(IllegalStateException::class)
     fun insertQag(qagDTO: QagDTO) {
         getAllQagDTOFromCache()?.let { allQagDTO ->
             initializeCache(allQagDTO + qagDTO)
         } ?: throw IllegalStateException("Qag cache has not been initialized")
     }
 
+    @Throws(IllegalStateException::class)
     fun updateQag(updatedQagDTO: QagDTO) {
         getAllQagDTOFromCache()?.let { allQagDTO ->
             initializeCache(replaceUpdatedDTO(allQagDTO = allQagDTO, updatedQagDTO = updatedQagDTO))
         } ?: throw IllegalStateException("Qag cache has not been initialized")
     }
 
+    @Throws(IllegalStateException::class)
     fun deleteQagList(qagUUIDList: List<UUID>) {
         getAllQagDTOFromCache()?.let { allQagDTO ->
             initializeCache(deleteListDTO(allQagDTO = allQagDTO, qagUUIDList = qagUUIDList))

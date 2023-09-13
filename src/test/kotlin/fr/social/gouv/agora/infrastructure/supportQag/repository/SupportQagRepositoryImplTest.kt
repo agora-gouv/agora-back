@@ -70,6 +70,36 @@ internal class SupportQagRepositoryImplTest {
     }
 
     @Test
+    fun `insertSupportQag - when mapper returns DTO but insert causes exception - should initialize cache then return SUCCESS`() {
+        // Given
+        given(mapper.toDto(supportQagInserting)).willReturn(supportQagDTO)
+
+        val qagId = UUID.randomUUID()
+        val userId = UUID.randomUUID()
+        val savedSupportQagDTO = mock(SupportQagDTO::class.java).also {
+            given(it.qagId).willReturn(qagId)
+            given(it.userId).willReturn(userId)
+        }
+        given(databaseRepository.save(supportQagDTO)).willReturn(savedSupportQagDTO)
+
+        given(cacheRepository.insertSupportQag(savedSupportQagDTO)).willThrow(IllegalStateException::class.java)
+        val storedSupportQagDTO = mock(SupportQagDTO::class.java)
+        given(databaseRepository.getAllSupportQagList()).willReturn(listOf(storedSupportQagDTO))
+
+        // When
+        val result = repository.insertSupportQag(supportQagInserting)
+
+        // Then
+        assertThat(result).isEqualTo(SupportQagResult.SUCCESS)
+        then(databaseRepository).should().save(supportQagDTO)
+        then(databaseRepository).should().getAllSupportQagList()
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(cacheRepository).should().insertSupportQag(savedSupportQagDTO)
+        then(cacheRepository).should().initializeCache(listOf(storedSupportQagDTO))
+        then(cacheRepository).shouldHaveNoMoreInteractions()
+    }
+
+    @Test
     fun `deleteSupportQag - when invalid UUID for qagID - should return FAILURE`() {
         // When
         val result = repository.deleteSupportQag(
@@ -102,7 +132,7 @@ internal class SupportQagRepositoryImplTest {
     }
 
     @Test
-    fun `deleteSupportQag - when valid UUID for qagID AND exists in Database should return SUCCESS`() {
+    fun `deleteSupportQag - when valid UUID for qagID AND exists in Database - should return SUCCESS`() {
         // Given
         val qagId = UUID.randomUUID()
         val userId = UUID.randomUUID()
@@ -119,6 +149,35 @@ internal class SupportQagRepositoryImplTest {
         assertThat(result).isEqualTo(SupportQagResult.SUCCESS)
         then(databaseRepository).should(only()).deleteSupportQag(userId = userId, qagId = qagId)
         then(cacheRepository).should(only()).deleteSupportQag(qagId = qagId, userId = userId)
+    }
+
+    @Test
+    fun `deleteSupportQag - when valid UUID for qagID AND exists in Database but delete fails - should initialize cache then return SUCCESS`() {
+        // Given
+        val qagId = UUID.randomUUID()
+        val userId = UUID.randomUUID()
+        val supportQagDeletingValidUUID = SupportQagDeleting(
+            qagId = qagId.toString(),
+            userId = userId.toString(),
+        )
+        given(databaseRepository.deleteSupportQag(userId = userId, qagId = qagId)).willReturn(1)
+
+        given(cacheRepository.deleteSupportQag(qagId = qagId, userId = userId))
+            .willThrow(IllegalStateException::class.java)
+        val storedSupportQagDTO = mock(SupportQagDTO::class.java)
+        given(databaseRepository.getAllSupportQagList()).willReturn(listOf(storedSupportQagDTO))
+
+        // When
+        val result = repository.deleteSupportQag(supportQagDeletingValidUUID)
+
+        // Then
+        assertThat(result).isEqualTo(SupportQagResult.SUCCESS)
+        then(databaseRepository).should().deleteSupportQag(userId = userId, qagId = qagId)
+        then(databaseRepository).should().getAllSupportQagList()
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(cacheRepository).should().deleteSupportQag(qagId = qagId, userId = userId)
+        then(cacheRepository).should().initializeCache(listOf(storedSupportQagDTO))
+        then(cacheRepository).shouldHaveNoMoreInteractions()
     }
 
     @Test

@@ -185,6 +185,36 @@ internal class QagInfoRepositoryImplTest {
             then(databaseRepository).should(only()).save(qagDTO)
             then(cacheRepository).should(only()).insertQag(qagDTO = savedQagDTO)
         }
+
+        @Test
+        fun `insertQagInfo - when mapper returns DTO but insert to cache causes exception - should initialize cache with added qag then return SUCCESS`() {
+            // Given
+            val qagInserting = mock(QagInserting::class.java)
+            val qagDTO = mock(QagDTO::class.java)
+            given(mapper.toDto(qagInserting)).willReturn(qagDTO)
+
+            val savedQagId = UUID.randomUUID()
+            val savedQagDTO = mock(QagDTO::class.java).also {
+                given(it.id).willReturn(savedQagId)
+            }
+            given(databaseRepository.save(qagDTO)).willReturn(savedQagDTO)
+
+            given(cacheRepository.insertQag(savedQagDTO)).willThrow(IllegalStateException::class.java)
+            val storedQagDTO = mock(QagDTO::class.java)
+            given(databaseRepository.getAllQagList()).willReturn(listOf(storedQagDTO))
+
+            // When
+            val result = repository.insertQagInfo(qagInserting)
+
+            // Then
+            assertThat(result).isEqualTo(QagInsertionResult.Success(qagId = savedQagId))
+            then(databaseRepository).should().save(qagDTO)
+            then(databaseRepository).should().getAllQagList()
+            then(databaseRepository).shouldHaveNoMoreInteractions()
+            then(cacheRepository).should().insertQag(qagDTO = savedQagDTO)
+            then(cacheRepository).should().initializeCache(listOf(storedQagDTO))
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+        }
     }
 
     @Nested
@@ -249,8 +279,46 @@ internal class QagInfoRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
             then(databaseRepository).should(only()).save(updatedQagDTO)
-            then(cacheRepository).should(times(1)).getAllQagList()
-            then(cacheRepository).should(times(1)).updateQag(updatedQagDTO = savedQagDTO)
+            then(cacheRepository).should().getAllQagList()
+            then(cacheRepository).should().updateQag(updatedQagDTO = savedQagDTO)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+            then(mapper).should(only()).updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
+        }
+
+        @Test
+        fun `updateQagStatus - when cache returns DTO but update causes exception - should initialize cache then return SUCCESS`() {
+            // Given
+            val qagUUID = UUID.randomUUID()
+            val qagDTO = mock(QagDTO::class.java).also {
+                given(it.id).willReturn(qagUUID)
+            }
+            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
+
+            val updatedQagDTO = mock(QagDTO::class.java)
+            given(mapper.updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED))
+                .willReturn(updatedQagDTO)
+
+            val savedQagDTO = mock(QagDTO::class.java)
+            given(databaseRepository.save(updatedQagDTO)).willReturn(savedQagDTO)
+
+            given(cacheRepository.updateQag(savedQagDTO)).willThrow(IllegalStateException::class.java)
+            val storedQagDTO = mock(QagDTO::class.java)
+            given(databaseRepository.getAllQagList()).willReturn(listOf(storedQagDTO))
+
+            // When
+            val result = repository.updateQagStatus(
+                qagId = qagUUID.toString(),
+                newQagStatus = QagStatus.MODERATED_ACCEPTED,
+            )
+
+            // Then
+            assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
+            then(databaseRepository).should().save(updatedQagDTO)
+            then(databaseRepository).should().getAllQagList()
+            then(databaseRepository).shouldHaveNoMoreInteractions()
+            then(cacheRepository).should().getAllQagList()
+            then(cacheRepository).should().updateQag(updatedQagDTO = savedQagDTO)
+            then(cacheRepository).should().initializeCache(listOf(storedQagDTO))
             then(cacheRepository).shouldHaveNoMoreInteractions()
             then(mapper).should(only()).updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
         }
@@ -327,6 +395,18 @@ internal class QagInfoRepositoryImplTest {
 
         @Test
         fun `deleteQagList - when valid UUID - should return SUCCESS`() {
+            val qagId = UUID.randomUUID()
+            val result = repository.deleteQagListFromCache(listOf(qagId.toString()))
+
+            //Then
+            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
+            then(cacheRepository).should(only()).deleteQagList(listOf(qagId))
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(mapper).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `deleteQagList - when valid UUID but delete causes exception - should return SUCCESS`() {
             val qagId = UUID.randomUUID()
             val result = repository.deleteQagListFromCache(listOf(qagId.toString()))
 
