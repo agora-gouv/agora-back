@@ -11,9 +11,15 @@ import java.util.*
 interface ConsultationUpdateDatabaseRepository : CrudRepository<ConsultationUpdateDTO, UUID> {
 
     @Query(
-        value = "SELECT * FROM consultation_updates WHERE consultation_id = :consultationId ORDER BY step DESC LIMIT 1",
+        value = "SELECT * FROM consultation_updates WHERE consultation_id = :consultationId AND step = 1 LIMIT 1",
         nativeQuery = true
     )
-    fun getLastConsultationUpdate(@Param("consultationId") consultationId: UUID): ConsultationUpdateDTO?
+    fun getOngoingConsultationUpdate(@Param("consultationId") consultationId: UUID): ConsultationUpdateDTO?
+
+    @Query(
+        value = "SELECT * FROM consultation_updates WHERE consultation_id = :consultationId AND step > 1 ORDER BY step DESC LIMIT 1",
+        nativeQuery = true
+    )
+    fun getFinishedConsultationUpdate(@Param("consultationId") consultationId: UUID): ConsultationUpdateDTO?
 
 }
