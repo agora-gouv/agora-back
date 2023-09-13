@@ -1,6 +1,6 @@
-package fr.social.gouv.agora.infrastructure.utils
+package fr.social.gouv.agora.infrastructure.supportQag
 
-import fr.social.gouv.agora.infrastructure.utils.AgoraQueue.TaskType
+import fr.social.gouv.agora.infrastructure.supportQag.SupportQagQueue.TaskType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -16,13 +16,13 @@ import java.util.concurrent.CompletableFuture
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-internal class AgoraQueueTest {
+internal class SupportQagQueueTest {
 
-    private lateinit var queue: AgoraQueue
+    private lateinit var queue: SupportQagQueue
 
     @BeforeEach
     fun setUp() {
-        queue = AgoraQueue()
+        queue = SupportQagQueue()
     }
 
     @Test

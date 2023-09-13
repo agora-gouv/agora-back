@@ -1,16 +1,10 @@
 package fr.social.gouv.agora.infrastructure.utils
 
 import kotlinx.coroutines.runBlocking
-import org.springframework.stereotype.Component
+import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-@Component
-class AgoraQueue {
-
-    sealed class TaskType {
-        data class AddSupport(val userId: String) : TaskType()
-        data class RemoveSupport(val userId: String) : TaskType()
-    }
+abstract class AgoraQueue<TaskType> {
 
     private val queue = ConcurrentLinkedQueue<TaskType>()
 
@@ -30,8 +24,10 @@ class AgoraQueue {
         }
     }
 
+    abstract fun shouldAddTask(queuedTasks: Queue<TaskType>, newTask: TaskType): Boolean
+
     private fun addToQueue(taskType: TaskType): Boolean {
-        val shouldAddToQueue = !queue.contains(taskType)
+        val shouldAddToQueue = shouldAddTask(queue, taskType)
         if (shouldAddToQueue) {
             queue.add(taskType)
         }
