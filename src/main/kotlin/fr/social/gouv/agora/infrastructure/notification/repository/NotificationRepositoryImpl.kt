@@ -1,99 +1,55 @@
 package fr.social.gouv.agora.infrastructure.notification.repository
 
-import com.google.firebase.messaging.*
-import fr.social.gouv.agora.usecase.notification.repository.*
+import fr.social.gouv.agora.domain.Notification
+import fr.social.gouv.agora.domain.NotificationInserting
+import fr.social.gouv.agora.infrastructure.notification.dto.NotificationDTO
+import fr.social.gouv.agora.infrastructure.notification.repository.NotificationCacheRepository.CacheResult
+import fr.social.gouv.agora.usecase.notification.repository.NotificationInsertionResult
+import fr.social.gouv.agora.usecase.notification.repository.NotificationRepository
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
-@Suppress("unused")
-class NotificationRepositoryImpl : NotificationRepository {
+class NotificationRepositoryImpl(
+    private val databaseRepository: NotificationDatabaseRepository,
+    private val cacheRepository: NotificationCacheRepository,
+    private val mapper: NotificationMapper,
+) : NotificationRepository {
 
-    companion object {
-        private const val NOTIFICATION_TYPE_KEY = "type"
-
-        private const val QAG_DETAILS_ID_KEY = "qagId"
-        private const val CONSULTATION_DETAILS_ID_KEY = "consultationId"
-
-        private const val QAG_DETAILS_NOTIFICATION_TYPE = "qagDetails"
-        private const val CONSULTATION_DETAILS_NOTIFICATION_TYPE = "consultationDetails"
-        private const val CONSULTATION_RESULTS_NOTIFICATION_TYPE = "consultationResults"
+    override fun insertNotification(notification: NotificationInserting): NotificationInsertionResult {
+        return mapper.toDto(notification)?.let { notificationDTO ->
+            val savedNotificationDTO = databaseRepository.save(notificationDTO)
+            try {
+                cacheRepository.insertNotification(notificationDTO = savedNotificationDTO)
+            } catch (e: IllegalStateException) {
+                getAllNotifactionFromDatabaseAndInitializeCache()
+            }
+            NotificationInsertionResult.SUCCESS
+        } ?: NotificationInsertionResult.FAILURE
     }
 
-    override fun sendNotificationMessage(request: NotificationRequest): NotificationResult {
+    override fun getUserNotificationList(userId: String): List<Notification> {
         return try {
-            sendNotification(notificationMessage = createBaseMessage(request).build())
+            val userUUID = UUID.fromString(userId)
+            getAllNotificationDTO()
+                .filter { notificationDTO -> notificationDTO.userId == userUUID }
+                .map(mapper::toDomain)
         } catch (e: IllegalArgumentException) {
-            NotificationResult.FAILURE
+            emptyList()
         }
     }
 
-    override fun sendQagDetailsNotification(request: NotificationRequest, qagId: String): NotificationResult {
-        return try {
-            sendNotification(
-                notificationMessage = createBaseMessage(request)
-                    .putData(NOTIFICATION_TYPE_KEY, QAG_DETAILS_NOTIFICATION_TYPE)
-                    .putData(QAG_DETAILS_ID_KEY, qagId)
-                    .build()
-            )
-        } catch (e: IllegalArgumentException) {
-            NotificationResult.FAILURE
+    private fun getAllNotificationDTO() = when (val cacheResult = cacheRepository.getAllNotificationList()) {
+        is CacheResult.CachedNotificationList -> cacheResult.allNotificationDTO
+        CacheResult.CacheNotInitialized -> getAllNotifactionFromDatabaseAndInitializeCache()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getAllNotifactionFromDatabaseAndInitializeCache() =
+        databaseRepository.findAll().also { allNotificationDTO ->
+            cacheRepository.initializeCache(allNotificationDTO as List<NotificationDTO>)
         }
-    }
-
-    override fun sendNewConsultationNotification(request: ConsultationNotificationRequest): Pair<Int, Int>? {
-        return try {
-            val message = createMultiMessage(request = request, type = CONSULTATION_DETAILS_NOTIFICATION_TYPE)
-            val response = FirebaseMessaging.getInstance().sendMulticast(message)
-            Pair(response.successCount, request.fcmTokenList.size)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    override fun sendConsultationUpdateNotification(request: ConsultationNotificationRequest): Pair<Int, Int>? {
-        return try {
-            val message = createMultiMessage(request = request, type = CONSULTATION_RESULTS_NOTIFICATION_TYPE)
-            val response = FirebaseMessaging.getInstance().sendMulticast(message)
-            Pair(response.successCount, request.fcmTokenList.size)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun createBaseMessage(request: NotificationRequest): Message.Builder {
-        return Message.builder()
-            .setNotification(
-                Notification.builder()
-                    .setTitle(request.title)
-                    .setBody(request.description)
-                    .build()
-            )
-            .setToken(request.fcmToken)
-    }
-
-    private fun createMultiMessage(request: ConsultationNotificationRequest, type: String): MulticastMessage {
-        return MulticastMessage.builder()
-            .setNotification(
-                Notification.builder()
-                    .setTitle(request.title)
-                    .setBody(request.description)
-                    .build()
-            )
-            .putData(NOTIFICATION_TYPE_KEY, type)
-            .putData(CONSULTATION_DETAILS_ID_KEY, request.consultationId)
-            .addAllTokens(request.fcmTokenList)
-            .build()
-    }
-
-    private fun sendNotification(notificationMessage: Message): NotificationResult {
-        return try {
-            val response = FirebaseMessaging.getInstance().send(notificationMessage)
-            if (response.isNullOrEmpty())
-                NotificationResult.FAILURE
-            else NotificationResult.SUCCESS
-        } catch (e: Exception) {
-            NotificationResult.FAILURE
-        }
-    }
-
 }
+
+
+
