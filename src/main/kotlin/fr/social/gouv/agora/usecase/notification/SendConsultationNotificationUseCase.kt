@@ -21,7 +21,8 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): Pair<Int, Int>? {
-        for (userInfo in userRepository.getAllUsers())
+        val userList = userRepository.getAllUsers()
+        for (userInfo in userList)
             notificationRepository.insertNotification(
                 notification = NotificationInserting(
                     title = title,
@@ -33,7 +34,7 @@ class SendConsultationNotificationUseCase(
             request = ConsultationNotificationRequest(
                 title = title,
                 description = description,
-                fcmTokenList = userRepository.getAllUsers().map { userInfo -> userInfo.fcmToken },
+                fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
                 consultationId = consultationId,
             )
         )

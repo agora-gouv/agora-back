@@ -16,18 +16,13 @@ class NotificationRepositoryImpl(
     private val mapper: NotificationMapper,
 ) : NotificationRepository {
 
-    override fun getAllNotification(): List<Notification> {
-        return getAllNotificationDTO().map(mapper::toDomain)
-    }
-
     override fun insertNotification(notification: NotificationInserting): NotificationInsertionResult {
         return mapper.toDto(notification)?.let { notificationDTO ->
             val savedNotificationDTO = databaseRepository.save(notificationDTO)
             try {
                 cacheRepository.insertNotification(notificationDTO = savedNotificationDTO)
             } catch (e: IllegalStateException) {
-                val allNotificationDTO = databaseRepository.findAll()
-                cacheRepository.initializeCache(allNotificationDTO + savedNotificationDTO)
+                getAllNotifactionFromDatabaseAndInitializeCache()
             }
             NotificationInsertionResult.SUCCESS
         } ?: NotificationInsertionResult.FAILURE
@@ -44,13 +39,16 @@ class NotificationRepositoryImpl(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun getAllNotificationDTO() = when (val cacheResult = cacheRepository.getAllNotificationList()) {
         is CacheResult.CachedNotificationList -> cacheResult.allNotificationDTO
-        CacheResult.CacheNotInitialized -> databaseRepository.findAll().also { allNotificationDTO ->
+        CacheResult.CacheNotInitialized -> getAllNotifactionFromDatabaseAndInitializeCache()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getAllNotifactionFromDatabaseAndInitializeCache() =
+        databaseRepository.findAll().also { allNotificationDTO ->
             cacheRepository.initializeCache(allNotificationDTO as List<NotificationDTO>)
         }
-    }
 }
 
 

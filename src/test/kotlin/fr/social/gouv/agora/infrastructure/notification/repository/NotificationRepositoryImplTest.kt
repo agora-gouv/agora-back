@@ -34,62 +34,6 @@ internal class NotificationRepositoryImplTest {
     private lateinit var mapper: NotificationMapper
 
     @Nested
-    inner class GetAllNotificationTestCases {
-
-        @Test
-        fun `getAllNotification - when cache is not initialized - should initialize cache with database then return mapped results`() {
-            // Given
-            given(cacheRepository.getAllNotificationList()).willReturn(CacheResult.CacheNotInitialized)
-            val notificationDTO = mock(NotificationDTO::class.java)
-            given(databaseRepository.findAll()).willReturn(listOf(notificationDTO))
-
-            val notification = mock(Notification::class.java)
-            given(mapper.toDomain(notificationDTO)).willReturn(notification)
-
-            // When
-            val result = repository.getAllNotification()
-
-            // Then
-            assertThat(result).isEqualTo(listOf(notification))
-            inOrder(cacheRepository, databaseRepository, mapper).also {
-                then(cacheRepository).should(it).getAllNotificationList()
-                then(databaseRepository).should(it).findAll()
-                then(cacheRepository).should(it).initializeCache(listOf(notificationDTO))
-                then(mapper).should(it).toDomain(notificationDTO)
-                it.verifyNoMoreInteractions()
-            }
-        }
-
-        @Test
-        fun `getAllNotification - when cache is initialized - should return mapped result`() {
-            // Given
-            val notificationDTO = mock(NotificationDTO::class.java)
-            val allNotificationDTO = listOf(notificationDTO)
-            given(cacheRepository.getAllNotificationList()).willReturn(
-                CacheResult.CachedNotificationList(
-                    allNotificationDTO
-                )
-            )
-
-            val notification = mock(Notification::class.java)
-            given(mapper.toDomain(notificationDTO)).willReturn(notification)
-
-            // When
-            val result = repository.getAllNotification()
-
-            // Then
-            assertThat(result).isEqualTo(listOf(notification))
-            inOrder(cacheRepository, databaseRepository, mapper).also {
-                then(cacheRepository).should(it).getAllNotificationList()
-                then(mapper).should(it).toDomain(notificationDTO)
-                it.verifyNoMoreInteractions()
-            }
-            then(databaseRepository).shouldHaveNoInteractions()
-        }
-
-    }
-
-    @Nested
     inner class InsertNotificationTestCases {
         @Test
         fun `insertNotification - when mapper returns null - should return FAILURE`() {
@@ -129,7 +73,7 @@ internal class NotificationRepositoryImplTest {
         }
 
         @Test
-        fun `insertNotification - when mapper returns DTO but insert causes exception - should initialize cache with all notifications + new one then return SUCCESS`() {
+        fun `insertNotification - when mapper returns DTO but insert causes exception - should initialize cache with added notification then return SUCCESS`() {
             // Given
             val notification = mock(NotificationInserting::class.java)
             val notificationDTO = mock(NotificationDTO::class.java)
@@ -154,7 +98,7 @@ internal class NotificationRepositoryImplTest {
             then(databaseRepository).should().findAll()
             then(databaseRepository).shouldHaveNoMoreInteractions()
             then(cacheRepository).should().insertNotification(savedNotificationDTO)
-            then(cacheRepository).should().initializeCache(listOf(storedNotificationDTO, savedNotificationDTO))
+            then(cacheRepository).should().initializeCache(listOf(storedNotificationDTO))
             then(cacheRepository).shouldHaveNoMoreInteractions()
         }
     }

@@ -41,8 +41,8 @@ class SendNotificationQagModeratedUseCase(
     }
 
     private fun sendNotification(qagId: String, title: String, description: String): NotificationResult {
-
-        val sendingNotificationResult = getQagAuthorFcmToken(qagId = qagId)?.let { fcmToken ->
+        val (userId, fcmToken) = getQagAuthorFcmToken(qagId = qagId)
+        val sendingNotificationResult = fcmToken?.let {
             notificationSendingRepository.sendQagDetailsNotification(
                 request = NotificationRequest(
                     fcmToken = fcmToken,
@@ -52,25 +52,22 @@ class SendNotificationQagModeratedUseCase(
                 qagId = qagId,
             )
         } ?: NotificationResult.FAILURE
-        when (sendingNotificationResult) {
-            NotificationResult.SUCCESS -> qagInfoRepository.getQagInfo(qagId = qagId)?.userId?.let {
-                notificationRepository.insertNotification(
-                    NotificationInserting(
-                        title = title,
-                        type = NotificationType.QAG,
-                        userId = it
-                    )
+        userId?.let {
+            notificationRepository.insertNotification(
+                NotificationInserting(
+                    title = title,
+                    type = NotificationType.QAG,
+                    userId = userId
                 )
-            }
-            else -> {} //do nothing
+            )
         }
         return sendingNotificationResult
     }
 
-    private fun getQagAuthorFcmToken(qagId: String): String? {
-        return qagInfoRepository.getQagInfo(qagId = qagId)?.userId?.let { userId ->
-            userRepository.getUserById(userId = userId)?.fcmToken
-        }
+    private fun getQagAuthorFcmToken(qagId: String): Pair<String?, String?> {
+        val userId = qagInfoRepository.getQagInfo(qagId = qagId)?.userId
+        val fcmToken = userId?.let { userRepository.getUserById(userId = userId)?.fcmToken }
+        return Pair(userId, fcmToken)
     }
 }
 
