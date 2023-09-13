@@ -2,8 +2,7 @@ package fr.social.gouv.agora.infrastructure.supportQag
 
 import fr.social.gouv.agora.domain.SupportQagDeleting
 import fr.social.gouv.agora.domain.SupportQagInserting
-import fr.social.gouv.agora.infrastructure.utils.AgoraQueue
-import fr.social.gouv.agora.infrastructure.utils.AgoraQueue.TaskType
+import fr.social.gouv.agora.infrastructure.supportQag.SupportQagQueue.TaskType
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.supportQag.DeleteSupportQagUseCase
 import fr.social.gouv.agora.usecase.supportQag.InsertSupportQagUseCase
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 class SupportQagController(
     private val insertSupportQagUseCase: InsertSupportQagUseCase,
     private val deleteSupportQagUseCase: DeleteSupportQagUseCase,
-    private val queue: AgoraQueue,
+    private val queue: SupportQagQueue,
 ) {
     @PostMapping("/qags/{qagId}/support")
     fun insertSupportQag(
