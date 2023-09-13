@@ -3,7 +3,6 @@ package fr.social.gouv.agora.infrastructure.notification
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class NotificationPaginatedJson(
     @JsonProperty("hasMoreNotifications")
     val hasMoreNotifications: Boolean,

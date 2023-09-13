@@ -11,7 +11,7 @@ class NotificationPaginatedUseCase(
 ) {
 
     companion object {
-        private const val MAX_PAGE_LIST_SIZE = 5
+        private const val MAX_PAGE_LIST_SIZE = 20
     }
 
     fun getNotificationPaginated(userId: String, pageNumber: Int): NotificationListAndHasMoreNotificationsFlag? {
