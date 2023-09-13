@@ -32,7 +32,11 @@ class QagInfoRepositoryImpl(
     override fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult {
         return mapper.toDto(qagInserting)?.let { qagDTO ->
             val savedQagDTO = databaseRepository.save(qagDTO)
-            cacheRepository.insertQag(qagDTO = savedQagDTO)
+            try {
+                cacheRepository.insertQag(qagDTO = savedQagDTO)
+            } catch (e: IllegalStateException) {
+                getAllQagFromDatabaseAndInitializeCache()
+            }
             QagInsertionResult.Success(qagId = savedQagDTO.id)
         } ?: QagInsertionResult.Failure
     }
@@ -43,7 +47,11 @@ class QagInfoRepositoryImpl(
             findQagDTO(qagUUID)?.let { qagDTO ->
                 val updatedQagDTO = mapper.updateQagStatus(dto = qagDTO, qagStatus = newQagStatus)
                 val savedQagDTO = databaseRepository.save(updatedQagDTO)
-                cacheRepository.updateQag(updatedQagDTO = savedQagDTO)
+                try {
+                    cacheRepository.updateQag(updatedQagDTO = savedQagDTO)
+                } catch (e: IllegalStateException) {
+                    getAllQagFromDatabaseAndInitializeCache()
+                }
                 QagUpdateResult.SUCCESS
             } ?: QagUpdateResult.FAILURE
         } catch (e: IllegalArgumentException) {
@@ -70,14 +78,19 @@ class QagInfoRepositoryImpl(
             QagDeleteResult.SUCCESS
         } catch (e: IllegalArgumentException) {
             QagDeleteResult.FAILURE
+        } catch (e: IllegalStateException) {
+            QagDeleteResult.SUCCESS
         }
     }
 
     private fun getAllQagDTO() = when (val cacheResult = cacheRepository.getAllQagList()) {
         is CacheResult.CachedQagList -> cacheResult.allQagDTO
-        CacheResult.CacheNotInitialized -> databaseRepository.getAllQagList().also { allQagDTO ->
-            cacheRepository.initializeCache(allQagDTO)
-        }
+        CacheResult.CacheNotInitialized -> getAllQagFromDatabaseAndInitializeCache()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getAllQagFromDatabaseAndInitializeCache() = databaseRepository.getAllQagList().also { allQagDTO ->
+        cacheRepository.initializeCache(allQagDTO)
     }
 
     private fun findQagDTO(qagUUID: UUID?) = getAllQagDTO().find { qagDTO -> qagDTO.id == qagUUID }
