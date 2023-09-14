@@ -74,8 +74,12 @@ class QagPaginatedUseCase(
         if (minIndex > qagList.size) return null
         val maxIndex = min(pageNumber * MAX_PAGE_LIST_SIZE, qagList.size)
 
-        val qags = qagList
-            .sortedByDescending { qag -> sortByDescendingSelector.invoke(qag) }
+        val userQagList =
+            qagList.filter { qag -> qag.qagInfo.userId == userId }.sortedByDescending { qag -> qag.qagInfo.date }
+
+        val otherQagList = qagList.filter { qag -> qag.qagInfo.userId != userId }
+
+        val qags = (userQagList + otherQagList.sortedByDescending { qag -> sortByDescendingSelector.invoke(qag) })
             .subList(fromIndex = minIndex, toIndex = maxIndex)
             .map { qag -> mapper.toPreview(qag = qag, userId = userId) }
 

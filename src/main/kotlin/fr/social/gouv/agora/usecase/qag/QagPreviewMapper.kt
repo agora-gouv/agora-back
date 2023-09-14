@@ -18,6 +18,7 @@ class QagPreviewMapper {
             username = qagInfo.username,
             date = qagInfo.date,
             support = supportQag,
+            isAuthor = false,
         )
     }
 
@@ -37,6 +38,7 @@ class QagPreviewMapper {
                 supportCount = supportQagInfoList.size,
                 isSupportedByUser = supportQagInfoList.find { supportQagInfo -> supportQagInfo.userId == userId } != null
             ),
+            isAuthor = false,
         )
     }
 
@@ -51,6 +53,7 @@ class QagPreviewMapper {
                 supportCount = qag.supportQagInfoList.size,
                 isSupportedByUser = qag.supportQagInfoList.find { supportQagInfo -> supportQagInfo.userId == userId } != null
             ),
+            isAuthor = qag.qagInfo.userId==userId,
         )
     }
 

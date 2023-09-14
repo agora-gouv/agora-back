@@ -9,4 +9,5 @@ data class QagPreview(
     val username: String,
     val date: Date,
     val support: SupportQag,
+    val isAuthor: Boolean,
 )
