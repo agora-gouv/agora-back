@@ -30,10 +30,12 @@ class GetQagPreviewListUseCase(
         val otherQagList = allQags.filter { qag -> qag.qagInfo.userId != userId }
 
         return QagPreviewList(
-            popularPreviewList = (userQagList + otherQagList.sortedByDescending { qag -> qag.supportQagInfoList.size })
+            popularPreviewList = allQags
+                .sortedByDescending { qag -> qag.supportQagInfoList.size }
                 .take(MAX_PREVIEW_LIST_SIZE)
                 .map { qag -> mapper.toPreview(qag, userId) },
-            latestPreviewList = (userQagList + otherQagList.sortedByDescending { qag -> qag.qagInfo.date })
+            latestPreviewList = allQags
+                .sortedByDescending { qag -> qag.qagInfo.date }
                 .take(MAX_PREVIEW_LIST_SIZE)
                 .map { qag -> mapper.toPreview(qag, userId) },
             supportedPreviewList = (userQagList + otherQagList.filter { qag ->

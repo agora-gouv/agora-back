@@ -56,7 +56,9 @@ class QagPaginatedUseCase(
                 thematiqueId = thematiqueId,
             ),
             sortByDescendingSelector = { qag ->
-                qag.supportQagInfoList.find { supportQagInfo -> supportQagInfo.userId == userId }?.supportDate
+                val isAuthorQag = qag.qagInfo.userId == userId
+                if (isAuthorQag) qag.qagInfo.date
+                else qag.supportQagInfoList.find { supportQagInfo -> supportQagInfo.userId == userId }?.supportDate
             },
         )
     }
@@ -74,12 +76,8 @@ class QagPaginatedUseCase(
         if (minIndex > qagList.size) return null
         val maxIndex = min(pageNumber * MAX_PAGE_LIST_SIZE, qagList.size)
 
-        val userQagList =
-            qagList.filter { qag -> qag.qagInfo.userId == userId }.sortedByDescending { qag -> qag.qagInfo.date }
-
-        val otherQagList = qagList.filter { qag -> qag.qagInfo.userId != userId }
-
-        val qags = (userQagList + otherQagList.sortedByDescending { qag -> sortByDescendingSelector.invoke(qag) })
+        val qags = qagList
+            .sortedByDescending { qag -> sortByDescendingSelector.invoke(qag) }
             .subList(fromIndex = minIndex, toIndex = maxIndex)
             .map { qag -> mapper.toPreview(qag = qag, userId = userId) }
 
@@ -88,7 +86,6 @@ class QagPaginatedUseCase(
             maxPageCount = ceil(qagList.size.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
         )
     }
-
 }
 
 data class QagsAndMaxPageCount(
