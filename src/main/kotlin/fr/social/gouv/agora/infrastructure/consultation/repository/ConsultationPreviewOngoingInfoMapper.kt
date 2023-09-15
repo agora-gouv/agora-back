@@ -10,7 +10,8 @@ class ConsultationPreviewOngoingInfoMapper {
         id = dto.id.toString(),
         title = dto.title,
         coverUrl = dto.coverUrl,
-        endDate = dto.endDate,
         thematiqueId = dto.thematiqueId.toString(),
+        startDate = dto.startDate,
+        endDate = dto.endDate,
     )
 }
