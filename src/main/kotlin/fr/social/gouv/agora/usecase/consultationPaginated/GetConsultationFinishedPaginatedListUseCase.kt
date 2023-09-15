@@ -45,7 +45,7 @@ class GetConsultationFinishedPaginatedListUseCase(
                         consultationPreviewFinishedInfo.id
                     )?.let { consultationUpdate ->
                         mapper.toConsultationPreviewFinished(
-                            consultationPreviewFinishedInfo = consultationPreviewFinishedInfo,
+                            consultationPreviewInfo = consultationPreviewFinishedInfo,
                             consultationUpdate = consultationUpdate,
                             thematique = thematique,
                         )

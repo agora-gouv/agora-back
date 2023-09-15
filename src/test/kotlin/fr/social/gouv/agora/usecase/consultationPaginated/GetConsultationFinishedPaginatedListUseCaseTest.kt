@@ -96,7 +96,7 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
             then(thematiqueRepository).should().getThematique(it.consultationPreviewFinishedInfo.thematiqueId)
             then(mapper).should()
                 .toConsultationPreviewFinished(
-                    consultationPreviewFinishedInfo = it.consultationPreviewFinishedInfo,
+                    consultationPreviewInfo = it.consultationPreviewFinishedInfo,
                     consultationUpdate = it.consultationUpdate,
                     thematique = it.thematique
                 )
@@ -136,7 +136,7 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
             then(thematiqueRepository).should().getThematique(it.consultationPreviewFinishedInfo.thematiqueId)
             then(mapper).should()
                 .toConsultationPreviewFinished(
-                    consultationPreviewFinishedInfo = it.consultationPreviewFinishedInfo,
+                    consultationPreviewInfo = it.consultationPreviewFinishedInfo,
                     consultationUpdate = it.consultationUpdate,
                     thematique = it.thematique
                 )
@@ -176,7 +176,7 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
             then(thematiqueRepository).should().getThematique(it.consultationPreviewFinishedInfo.thematiqueId)
             then(mapper).should()
                 .toConsultationPreviewFinished(
-                    consultationPreviewFinishedInfo = it.consultationPreviewFinishedInfo,
+                    consultationPreviewInfo = it.consultationPreviewFinishedInfo,
                     consultationUpdate = it.consultationUpdate,
                     thematique = it.thematique
                 )
@@ -198,7 +198,7 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
         val consultationPreviewFinished = mock(ConsultationPreviewFinished::class.java)
         given(
             mapper.toConsultationPreviewFinished(
-                consultationPreviewFinishedInfo = consultationPreviewFinishedInfo,
+                consultationPreviewInfo = consultationPreviewFinishedInfo,
                 consultationUpdate = consultationUpdate,
                 thematique = thematique,
             )
