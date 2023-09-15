@@ -29,11 +29,11 @@ internal class ConsultationPreviewOngoingMapperTest {
         title = "title",
         coverUrl = "coverUrl",
         thematiqueId = "thematiqueId",
+        startDate = Date(0),
         endDate = Date(1),
     )
 
     private val thematique = mock(Thematique::class.java)
-    private val hasAnswered = true
 
     private val expectedConsultationPreviewOngoing = ConsultationPreviewOngoing(
         id = "consultationId",

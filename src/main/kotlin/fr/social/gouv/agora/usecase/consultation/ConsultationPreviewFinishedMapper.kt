@@ -1,7 +1,7 @@
 package fr.social.gouv.agora.usecase.consultation
 
 import fr.social.gouv.agora.domain.ConsultationPreviewFinished
-import fr.social.gouv.agora.domain.ConsultationPreviewFinishedInfo
+import fr.social.gouv.agora.domain.ConsultationPreviewInfo
 import fr.social.gouv.agora.domain.ConsultationUpdate
 import fr.social.gouv.agora.domain.Thematique
 import org.springframework.stereotype.Component
@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component
 class ConsultationPreviewFinishedMapper {
 
     fun toConsultationPreviewFinished(
-        consultationPreviewFinishedInfo: ConsultationPreviewFinishedInfo,
+        consultationPreviewInfo: ConsultationPreviewInfo,
         consultationUpdate: ConsultationUpdate,
         thematique: Thematique,
     ): ConsultationPreviewFinished {
         return ConsultationPreviewFinished(
-            id = consultationPreviewFinishedInfo.id,
-            title = consultationPreviewFinishedInfo.title,
-            coverUrl = consultationPreviewFinishedInfo.coverUrl,
+            id = consultationPreviewInfo.id,
+            title = consultationPreviewInfo.title,
+            coverUrl = consultationPreviewInfo.coverUrl,
             thematique = thematique,
             step = consultationUpdate.status,
         )

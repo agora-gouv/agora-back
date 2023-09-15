@@ -49,6 +49,8 @@ internal class ConsultationPreviewAnsweredRepositoryImplTest {
         title = "domain-title",
         coverUrl = "domain-cover-url",
         thematiqueId = "5678",
+        startDate = Date(0),
+        endDate = Date(1),
     )
 
     private val userId = UUID.fromString("c6655dd2-ee48-11ed-a05b-0242ac120003")

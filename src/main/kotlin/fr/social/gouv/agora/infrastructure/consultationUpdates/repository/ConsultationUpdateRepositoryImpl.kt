@@ -10,26 +10,44 @@ import java.util.*
 
 @Component
 class ConsultationUpdateRepositoryImpl(
-    private val consultationUpdateDatabaseRepository: ConsultationUpdateDatabaseRepository,
-    private val consultationUpdatesCacheRepository: ConsultationUpdatesCacheRepository,
-    private val explanationCacheRepository: ExplanationCacheRepository,
+    private val updateDatabaseRepository: ConsultationUpdateDatabaseRepository,
+    private val updatesCacheRepository: ConsultationUpdateCacheRepository,
     private val explanationDatabaseRepository: ExplanationDatabaseRepository,
+    private val explanationCacheRepository: ExplanationCacheRepository,
     private val mapper: ConsultationUpdateMapper,
 ) : ConsultationUpdateRepository {
 
-    override fun getConsultationUpdate(consultationId: String): ConsultationUpdate? {
+    override fun getOngoingConsultationUpdate(consultationId: String): ConsultationUpdate? {
+        return getConsultationUpdate(
+            consultationId = consultationId,
+            getFromCacheMethod = ConsultationUpdateCacheRepository::getOngoingConsultationUpdate,
+            insertCacheMethod = ConsultationUpdateCacheRepository::insertOngoingConsultationUpdate,
+            getFromDatabaseMethod = ConsultationUpdateDatabaseRepository::getOngoingConsultationUpdate,
+        )
+    }
+
+    override fun getFinishedConsultationUpdate(consultationId: String): ConsultationUpdate? {
+        return getConsultationUpdate(
+            consultationId = consultationId,
+            getFromCacheMethod = ConsultationUpdateCacheRepository::getFinishedConsultationUpdate,
+            insertCacheMethod = ConsultationUpdateCacheRepository::insertFinishedConsultationUpdate,
+            getFromDatabaseMethod = ConsultationUpdateDatabaseRepository::getFinishedConsultationUpdate,
+        )
+    }
+
+    private fun getConsultationUpdate(
+        consultationId: String,
+        getFromCacheMethod: ConsultationUpdateCacheRepository.(UUID) -> ConsultationUpdateCacheRepository.CacheResult,
+        insertCacheMethod: ConsultationUpdateCacheRepository.(UUID, ConsultationUpdateDTO) -> Unit,
+        getFromDatabaseMethod: ConsultationUpdateDatabaseRepository.(UUID) -> ConsultationUpdateDTO?,
+    ): ConsultationUpdate? {
         return try {
-            val consultationUUID = UUID.fromString(consultationId)
-            val cacheResult = consultationUpdatesCacheRepository.getConsultationUpdate(consultationUUID)
-
-            when (cacheResult) {
-                ConsultationUpdatesCacheRepository.CacheResult.CacheNotInitialized -> getConsultationUpdateFromDatabase(
-                    consultationUUID
-                )
-
-                ConsultationUpdatesCacheRepository.CacheResult.CachedConsultationUpdateNotFound -> null
-                is ConsultationUpdatesCacheRepository.CacheResult.CachedConsultationUpdate -> cacheResult.consultationUpdateDTO
-            }?.let { consultationUpdateDTO ->
+            getConsultationUpdateDTO(
+                consultationUUID = UUID.fromString(consultationId),
+                getFromCacheMethod = getFromCacheMethod,
+                insertCacheMethod = insertCacheMethod,
+                getFromDatabaseMethod = getFromDatabaseMethod,
+            )?.let { consultationUpdateDTO ->
                 val explanationList = getExplanations(consultationUpdateDTO.id)
                 mapper.toDomain(consultationUpdateDTO, explanationList)
             }
@@ -38,29 +56,36 @@ class ConsultationUpdateRepositoryImpl(
         }
     }
 
-    private fun getConsultationUpdateFromDatabase(consultationUUID: UUID): ConsultationUpdateDTO? {
-        val consultationUpdateDTO = consultationUpdateDatabaseRepository.getLastConsultationUpdate(consultationUUID)
-        val putDto = consultationUpdateDTO ?: createConsultationUpdateNotFound()
-        consultationUpdatesCacheRepository.insertConsultationUpdate(consultationUUID, putDto)
-        return consultationUpdateDTO
+    private fun getConsultationUpdateDTO(
+        consultationUUID: UUID,
+        getFromCacheMethod: ConsultationUpdateCacheRepository.(UUID) -> ConsultationUpdateCacheRepository.CacheResult,
+        insertCacheMethod: ConsultationUpdateCacheRepository.(UUID, ConsultationUpdateDTO) -> Unit,
+        getFromDatabaseMethod: ConsultationUpdateDatabaseRepository.(UUID) -> ConsultationUpdateDTO?,
+    ): ConsultationUpdateDTO? {
+        return when (val cacheResult = updatesCacheRepository.getFromCacheMethod(consultationUUID)) {
+            is ConsultationUpdateCacheRepository.CacheResult.CachedConsultationUpdate -> cacheResult.consultationUpdateDTO
+            ConsultationUpdateCacheRepository.CacheResult.CachedConsultationUpdateNotFound -> null
+            ConsultationUpdateCacheRepository.CacheResult.CacheNotInitialized -> {
+                val consultationUpdateDTO = updateDatabaseRepository.getFromDatabaseMethod(consultationUUID)
+                updatesCacheRepository.insertCacheMethod(
+                    consultationUUID,
+                    consultationUpdateDTO ?: createConsultationUpdateNotFound()
+                )
+                consultationUpdateDTO
+            }
+        }
     }
 
     private fun getExplanations(consultationUpdateUUId: UUID): List<ExplanationDTO> {
         return when (val cacheResult = explanationCacheRepository.getExplanationList(consultationUpdateUUId)) {
-            ExplanationCacheRepository.CacheResult.CacheNotInitialized -> getExplanationsFromDatabase(
-                consultationUpdateUUId
-            )
-
             is ExplanationCacheRepository.CacheResult.CachedExplanationList -> cacheResult.explanationDTOList
+            ExplanationCacheRepository.CacheResult.CacheNotInitialized -> {
+                val explanationDTOList = explanationDatabaseRepository.getExplanationList(consultationUpdateUUId)
+                explanationCacheRepository.insertExplanationList(consultationUpdateUUId, explanationDTOList)
+                return explanationDTOList
+            }
         }
     }
-
-    private fun getExplanationsFromDatabase(consultationUpdateUUId: UUID): List<ExplanationDTO> {
-        val explanationDTOList = explanationDatabaseRepository.getExplanationList(consultationUpdateUUId)
-        explanationCacheRepository.insertExplanationList(consultationUpdateUUId, explanationDTOList)
-        return explanationDTOList
-    }
-
 
     private fun createConsultationUpdateNotFound() = ConsultationUpdateDTO(
         id = NOT_FOUND_UUID,
@@ -79,4 +104,3 @@ class ConsultationUpdateRepositoryImpl(
     )
 
 }
-
