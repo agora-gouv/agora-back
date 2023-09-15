@@ -420,11 +420,11 @@ internal class QagPaginatedUseCaseTest {
                 )
             ).willReturn(qagFilters)
 
-            val (userQag1, userQagPreview1) = mockQag(postDate = Date(7000000))
-            val (userQag2, userQagPreview2) = mockQag(postDate = Date(8000000))
-            val (qagDate6, qagPreviewDate6) = mockQag(supportDate = Date(6000000), authorUserId = "userId1")
-            val (qagDate42, qagPreviewDate42) = mockQag(supportDate = Date(42000000), authorUserId = "userId2")
-            val (qagDate11, qagPreviewDate11) = mockQag(supportDate = Date(11000000), authorUserId = "userId3")
+            val (userQag1, userQagPreview1) = mockQag(postDate = Date(1))
+            val (userQag2, userQagPreview2) = mockQag(postDate = Date(9))
+            val (qagDate6, qagPreviewDate6) = mockQag(supportDate = Date(6), authorUserId = "userId1")
+            val (qagDate42, qagPreviewDate42) = mockQag(supportDate = Date(42), authorUserId = "userId2")
+            val (qagDate11, qagPreviewDate11) = mockQag(supportDate = Date(11), authorUserId = "userId3")
 
             given(getQagListUseCase.getQagWithSupportAndThematique(qagFilters = qagFilters))
                 .willReturn(listOf(userQag1, userQag2, qagDate6, qagDate42, qagDate11))

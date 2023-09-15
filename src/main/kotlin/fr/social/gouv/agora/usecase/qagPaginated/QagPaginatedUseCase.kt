@@ -49,27 +49,6 @@ class QagPaginatedUseCase(
     }
 
     fun getSupportedQagPaginated(userId: String, pageNumber: Int, thematiqueId: String?): QagsAndMaxPageCount? {
-
-        val comparator = Comparator<QagInfoWithSupportAndThematique> { qag1, qag2 ->
-            val userId1 = qag1.qagInfo.userId
-            val userId2 = qag2.qagInfo.userId
-
-            when {
-                userId1 == userId && userId2 == userId -> qag1.qagInfo.date.compareTo(qag2.qagInfo.date) * -1
-                userId1 == userId && userId2 != userId -> -1
-                userId1 != userId && userId2 == userId -> 1
-                else -> {
-                    val supportDate1 = qag1.supportQagInfoList.find { it.userId == userId }?.supportDate
-                    val supportDate2 = qag2.supportQagInfoList.find { it.userId == userId }?.supportDate
-                    if (supportDate1 != null && supportDate2 != null) {
-                        supportDate1.compareTo(supportDate2) * -1
-                    } else {
-                        0
-                    }
-                }
-            }
-        }
-
         return getQagPaginated(
             userId = userId,
             pageNumber = pageNumber,
@@ -78,7 +57,24 @@ class QagPaginatedUseCase(
                 pageNumber = pageNumber,
                 thematiqueId = thematiqueId,
             ),
-            comparator = comparator
+            comparator = { qag1, qag2 ->
+                val userId1 = qag1.qagInfo.userId
+                val userId2 = qag2.qagInfo.userId
+                when {
+                    userId1 == userId && userId2 == userId -> qag2.qagInfo.date.compareTo(qag1.qagInfo.date)
+                    userId1 == userId && userId2 != userId -> -1
+                    userId1 != userId && userId2 == userId -> 1
+                    else -> {
+                        val supportDate1 = qag1.supportQagInfoList.find { it.userId == userId }?.supportDate
+                        val supportDate2 = qag2.supportQagInfoList.find { it.userId == userId }?.supportDate
+                        if (supportDate1 != null && supportDate2 != null) {
+                            supportDate2.compareTo(supportDate1)
+                        } else {
+                            0
+                        }
+                    }
+                }
+            }
         )
     }
 
