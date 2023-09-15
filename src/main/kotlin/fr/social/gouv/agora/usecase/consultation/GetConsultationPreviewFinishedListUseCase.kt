@@ -20,7 +20,7 @@ class GetConsultationPreviewFinishedListUseCase(
     fun getConsultationPreviewFinishedList(): List<ConsultationPreviewFinished> {
         return consultationPreviewFinishedRepository.getConsultationFinishedList()
             .mapNotNull { consultationInfo ->
-                consultationUpdateRepository.getConsultationUpdate(consultationId = consultationInfo.id)
+                consultationUpdateRepository.getFinishedConsultationUpdate(consultationId = consultationInfo.id)
                     ?.let { consultationUpdate ->
                         thematiqueRepository.getThematique(thematiqueId = consultationInfo.thematiqueId)
                             ?.let { thematique ->
