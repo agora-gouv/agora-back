@@ -112,7 +112,7 @@ internal class GetQagPreviewListUseCaseTest {
     }
 
     @Test
-    fun `getQagPreviewList - when getQagListUseCase returns qags - should return supportedPreviewList with supportedQag only with posted qag sorted by postDate`() {
+    fun `getQagPreviewList - when getQagListUseCase returns qags - should return posted qags sorted by postDate followed by supportedQag sorted by supportDate desc`() {
         // Given
         val qagFilters = mock(QagFilters::class.java)
         given(filterGenerator.getPreviewQagFilters(userId = "userId", thematiqueId = "thematiqueId"))
