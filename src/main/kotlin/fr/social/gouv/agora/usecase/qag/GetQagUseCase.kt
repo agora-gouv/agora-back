@@ -29,6 +29,7 @@ class GetQagUseCase(
                         date = qagInfo.date,
                         status = qagInfo.status,
                         username = qagInfo.username,
+                        userId = qagInfo.userId,
                         support = supportQag,
                         response = responseQagRepository.getResponseQag(qagId = qagId),
                         feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = userId)
