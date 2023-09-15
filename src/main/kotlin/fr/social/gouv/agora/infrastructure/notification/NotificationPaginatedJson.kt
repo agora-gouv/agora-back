@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.infrastructure.notification
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class NotificationPaginatedJson(

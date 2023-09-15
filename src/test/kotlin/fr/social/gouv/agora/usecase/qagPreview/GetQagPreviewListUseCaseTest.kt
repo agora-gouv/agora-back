@@ -112,18 +112,20 @@ internal class GetQagPreviewListUseCaseTest {
     }
 
     @Test
-    fun `getQagPreviewList - when getQagListUseCase returns qags - should return supportedPreviewList with supportedQag only sorted by supportDate desc`() {
+    fun `getQagPreviewList - when getQagListUseCase returns qags - should return posted qags sorted by postDate followed by supportedQag sorted by supportDate desc`() {
         // Given
         val qagFilters = mock(QagFilters::class.java)
         given(filterGenerator.getPreviewQagFilters(userId = "userId", thematiqueId = "thematiqueId"))
             .willReturn(qagFilters)
 
-        val (qagDate6, qagPreviewDate6) = mockQag(userSupportDate = Date(6))
-        val (qagDate42, qagPreviewDate42) = mockQag(userSupportDate = Date(42))
-        val (qagDate11, qagPreviewDate11) = mockQag(userSupportDate = Date(11))
-        val (unsupportedQag, _) = mockQag(userSupportDate = null)
+        val (userQag1, userQagPreview1) = mockQag(postDate = Date(7), authorUserId = "userId")
+        val (userQag2, userQagPreview2) = mockQag(postDate = Date(8), authorUserId = "userId")
+        val (qagDate6, qagPreviewDate6) = mockQag(userSupportDate = Date(6), authorUserId = "userId1")
+        val (qagDate42, qagPreviewDate42) = mockQag(userSupportDate = Date(42), authorUserId = "userId2")
+        val (qagDate11, qagPreviewDate11) = mockQag(userSupportDate = Date(11), authorUserId = "userId3")
+        val (unsupportedQag, _) = mockQag(userSupportDate = null, authorUserId = "unknown")
         given(getQagListUseCase.getQagWithSupportAndThematique(qagFilters)).willReturn(
-            listOf(qagDate6, qagDate42, qagDate11, unsupportedQag)
+            listOf(userQag1, userQag2, qagDate6, qagDate42, qagDate11, unsupportedQag)
         )
 
         // When
@@ -131,9 +133,11 @@ internal class GetQagPreviewListUseCaseTest {
 
         // Then
         assertThat(result.supportedPreviewList).isEqualTo(
-            listOf(qagPreviewDate42, qagPreviewDate11, qagPreviewDate6)
+            listOf(userQagPreview2, userQagPreview1, qagPreviewDate42, qagPreviewDate11, qagPreviewDate6)
         )
         then(filterGenerator).should(only()).getPreviewQagFilters(userId = "userId", thematiqueId = "thematiqueId")
+        then(mapper).should(atLeastOnce()).toPreview(qag = userQag1, userId = "userId")
+        then(mapper).should(atLeastOnce()).toPreview(qag = userQag2, userId = "userId")
         then(mapper).should(atLeastOnce()).toPreview(qag = qagDate42, userId = "userId")
         then(mapper).should(atLeastOnce()).toPreview(qag = qagDate11, userId = "userId")
         then(mapper).should(atLeastOnce()).toPreview(qag = qagDate6, userId = "userId")
@@ -165,6 +169,8 @@ internal class GetQagPreviewListUseCaseTest {
         supportCount: Int = 1,
         postDate: Date = Date(0),
         userSupportDate: Date? = null,
+        authorUserId: String = "userId",
+        supportUserId: String = "userId",
     ): Pair<QagInfoWithSupportAndThematique, QagPreview> {
         val totalSupportCount = supportCount - if (userSupportDate == null) 0 else 1
         val supportQagInfoList = (0 until totalSupportCount).map { index ->
@@ -173,14 +179,14 @@ internal class GetQagPreviewListUseCaseTest {
             }
         } + userSupportDate?.let { supportDate ->
             mock(SupportQagInfo::class.java).also {
-                given(it.userId).willReturn("userId")
+                given(it.userId).willReturn(supportUserId)
                 given(it.supportDate).willReturn(supportDate)
             }
         }
 
-
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.date).willReturn(postDate)
+            given(it.userId).willReturn(authorUserId)
         }
         val qag = mock(QagInfoWithSupportAndThematique::class.java).also {
             given(it.supportQagInfoList).willReturn(supportQagInfoList.filterNotNull())
@@ -188,7 +194,7 @@ internal class GetQagPreviewListUseCaseTest {
         }
 
         val qagPreview = mock(QagPreview::class.java)
-        given(mapper.toPreview(qag = qag, userId = "userId")).willReturn(qagPreview)
+        given(mapper.toPreview(qag = qag, userId = supportUserId)).willReturn(qagPreview)
 
         return qag to qagPreview
     }

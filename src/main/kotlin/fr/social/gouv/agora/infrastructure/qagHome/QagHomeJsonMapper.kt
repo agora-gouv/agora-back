@@ -62,7 +62,8 @@ class QagHomeJsonMapper(
             title = qagPreview.title,
             username = qagPreview.username,
             date = qagPreview.date.toString(),
-            support = qagMapper.toJson(qagPreview.support)
+            support = qagMapper.toJson(qagPreview.support),
+            isAuthor = qagPreview.isAuthor
         )
     }
 

@@ -68,5 +68,7 @@ data class QagPreviewJson(
     val date: String,
     @JsonProperty("support")
     val support: SupportQagJson,
+    @JsonProperty("isAuthor")
+    val isAuthor: Boolean,
 )
 

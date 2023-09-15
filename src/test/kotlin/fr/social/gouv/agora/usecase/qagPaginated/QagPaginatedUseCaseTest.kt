@@ -420,11 +420,14 @@ internal class QagPaginatedUseCaseTest {
                 )
             ).willReturn(qagFilters)
 
-            val (qagDate6, qagPreviewDate6) = mockQag(supportDate = Date(6))
-            val (qagDate42, qagPreviewDate42) = mockQag(supportDate = Date(42))
-            val (qagDate11, qagPreviewDate11) = mockQag(supportDate = Date(11))
+            val (userQag1, userQagPreview1) = mockQag(postDate = Date(1))
+            val (userQag2, userQagPreview2) = mockQag(postDate = Date(9))
+            val (qagDate6, qagPreviewDate6) = mockQag(supportDate = Date(6), authorUserId = "userId1")
+            val (qagDate42, qagPreviewDate42) = mockQag(supportDate = Date(42), authorUserId = "userId2")
+            val (qagDate11, qagPreviewDate11) = mockQag(supportDate = Date(11), authorUserId = "userId3")
+
             given(getQagListUseCase.getQagWithSupportAndThematique(qagFilters = qagFilters))
-                .willReturn(listOf(qagDate6, qagDate42, qagDate11))
+                .willReturn(listOf(userQag1, userQag2, qagDate6, qagDate42, qagDate11))
 
             // When
             val result = useCase.getSupportedQagPaginated(
@@ -436,13 +439,21 @@ internal class QagPaginatedUseCaseTest {
             // Then
             assertThat(result).isEqualTo(
                 QagsAndMaxPageCount(
-                    qags = listOf(qagPreviewDate42, qagPreviewDate11, qagPreviewDate6),
+                    qags = listOf(
+                        userQagPreview2,
+                        userQagPreview1,
+                        qagPreviewDate42,
+                        qagPreviewDate11,
+                        qagPreviewDate6
+                    ),
                     maxPageCount = 1,
                 )
             )
             then(filterGenerator).should(only())
                 .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
+            then(mapper).should().toPreview(qag = userQag2, userId = userId)
+            then(mapper).should().toPreview(qag = userQag1, userId = userId)
             then(mapper).should().toPreview(qag = qagDate42, userId = userId)
             then(mapper).should().toPreview(qag = qagDate11, userId = userId)
             then(mapper).should().toPreview(qag = qagDate6, userId = userId)
@@ -529,21 +540,30 @@ internal class QagPaginatedUseCaseTest {
             then(mapper).shouldHaveNoMoreInteractions()
         }
 
-        private fun mockQag(supportDate: Date): Pair<QagInfoWithSupportAndThematique, QagPreview> {
+        private fun mockQag(
+            supportDate: Date = Date(0),
+            postDate: Date = Date(0),
+            authorUserId: String = "userId",
+            supportUserId: String = "userId",
+        ): Pair<QagInfoWithSupportAndThematique, QagPreview> {
             val supportQagInfo = mock(SupportQagInfo::class.java).also {
                 given(it.supportDate).willReturn(supportDate)
-                given(it.userId).willReturn(userId)
+                given(it.userId).willReturn(supportUserId)
+            }
+
+            val qagInfo = mock(QagInfo::class.java).also {
+                given(it.date).willReturn(postDate)
+                given(it.userId).willReturn(authorUserId)
             }
             val qag = mock(QagInfoWithSupportAndThematique::class.java).also {
                 given(it.supportQagInfoList).willReturn(listOf(supportQagInfo))
+                given(it.qagInfo).willReturn(qagInfo)
             }
 
             val qagPreview = mock(QagPreview::class.java)
-            given(mapper.toPreview(qag = qag, userId = userId)).willReturn(qagPreview)
+            given(mapper.toPreview(qag = qag, userId = supportUserId)).willReturn(qagPreview)
 
             return qag to qagPreview
         }
-
     }
-
 }
