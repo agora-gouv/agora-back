@@ -24,10 +24,14 @@ class GetQagPreviewListUseCase(
                 thematiqueId = thematiqueId,
             )
         )
-        val userQagList =
-            allQags.filter { qag -> qag.qagInfo.userId == userId }.sortedByDescending { qag -> qag.qagInfo.date }
+        val userQagList = allQags
+            .filter { qag -> qag.qagInfo.userId == userId }
+            .sortedByDescending { qag -> qag.qagInfo.date }
 
-        val otherQagList = allQags.filter { qag -> qag.qagInfo.userId != userId }
+        val otherQagList = allQags
+            .filter { qag -> qag.qagInfo.userId != userId }
+            .filter { qag -> getSupportFromUser(qag = qag, userId = userId) != null }
+            .sortedByDescending { qag -> getSupportFromUser(qag = qag, userId = userId)?.supportDate }
 
         return QagPreviewList(
             popularPreviewList = allQags
@@ -38,12 +42,7 @@ class GetQagPreviewListUseCase(
                 .sortedByDescending { qag -> qag.qagInfo.date }
                 .take(MAX_PREVIEW_LIST_SIZE)
                 .map { qag -> mapper.toPreview(qag, userId) },
-            supportedPreviewList = (userQagList + otherQagList.filter { qag ->
-                getSupportFromUser(
-                    qag = qag,
-                    userId = userId
-                ) != null
-            }.sortedByDescending { qag -> getSupportFromUser(qag = qag, userId = userId)?.supportDate })
+            supportedPreviewList = (userQagList + otherQagList)
                 .take(MAX_PREVIEW_LIST_SIZE)
                 .map { qag -> mapper.toPreview(qag, userId) },
         )
