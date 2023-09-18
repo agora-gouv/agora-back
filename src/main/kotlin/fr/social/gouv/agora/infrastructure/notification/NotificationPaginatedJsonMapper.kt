@@ -22,7 +22,7 @@ class NotificationPaginatedJsonMapper {
 
     private fun toJson(domain: Notification): NotificationJson {
         return NotificationJson(
-            title = domain.title,
+            title = domain.title + " " + domain.description,
             type = when (domain.type) {
                 NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
                 NotificationType.QAG -> QAG_NOTIFICATION_TYPE

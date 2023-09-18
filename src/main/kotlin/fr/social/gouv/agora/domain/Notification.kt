@@ -4,6 +4,7 @@ import java.util.*
 
 data class Notification(
     val title: String,
+    val description: String,
     val type: NotificationType,
     val date: Date,
     val userId: String,
@@ -11,6 +12,7 @@ data class Notification(
 
 data class NotificationInserting(
     val title: String,
+    val description: String,
     val type: NotificationType,
     val userId: String,
 )

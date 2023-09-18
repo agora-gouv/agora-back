@@ -56,6 +56,7 @@ class SendNotificationQagModeratedUseCase(
             notificationRepository.insertNotification(
                 NotificationInserting(
                     title = title,
+                    description = description,
                     type = NotificationType.QAG,
                     userId = userId
                 )

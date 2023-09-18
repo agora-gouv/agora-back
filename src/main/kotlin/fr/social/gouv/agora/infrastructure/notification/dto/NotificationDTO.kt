@@ -13,6 +13,8 @@ data class NotificationDTO(
     @Column(columnDefinition = "TEXT")
     val title: String,
     @Column(columnDefinition = "TEXT")
+    val description: String,
+    @Column(columnDefinition = "TEXT")
     val type: String,
     val date: Date,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
@@ -30,6 +32,6 @@ data class NotificationDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + """(id = $id , title = $title , date = $date , userId = $userId)"""
+        return this::class.simpleName + """(id = $id , title = $title , description = $description , date = $date , userId = $userId)"""
     }
 }
