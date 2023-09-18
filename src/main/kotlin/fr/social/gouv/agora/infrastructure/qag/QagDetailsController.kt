@@ -18,12 +18,13 @@ class QagDetailsController(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable qagId: String,
     ): ResponseEntity<*> {
+        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val qagResult = getQagUseCase.getQag(
             qagId = qagId,
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+            userId = userId,
         )
         return when (qagResult) {
-            is QagResult.Success -> ResponseEntity.ok(mapper.toJson(qagResult.qag))
+            is QagResult.Success -> ResponseEntity.ok(mapper.toJson(qagResult.qag, userId = userId))
             QagResult.QagRejectedStatus -> ResponseEntity.status(HttpStatus.LOCKED).body(Unit)
             QagResult.QagNotFound -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Unit)
         }

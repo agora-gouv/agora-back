@@ -23,8 +23,12 @@ data class QagJson(
     val canShare: Boolean,
     @JsonProperty("canSupport")
     val canSupport: Boolean,
+    @JsonProperty("canDelete")
+    val canDelete: Boolean,
     @JsonProperty("support")
     val support: SupportQagJson?,
+    @JsonProperty("isAuthor")
+    val isAuthor: Boolean,
     @JsonProperty("response")
     val response: ResponseQagJson?,
 )
