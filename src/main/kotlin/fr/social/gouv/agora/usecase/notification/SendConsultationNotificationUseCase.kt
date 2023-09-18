@@ -26,6 +26,7 @@ class SendConsultationNotificationUseCase(
             notificationRepository.insertNotification(
                 notification = NotificationInserting(
                     title = title,
+                    description = description,
                     type = NotificationType.CONSULTATION,
                     userId = userInfo.userId
                 )
@@ -56,6 +57,7 @@ class SendConsultationNotificationUseCase(
             notificationRepository.insertNotification(
                 notification = NotificationInserting(
                     title = title,
+                    description = description,
                     type = NotificationType.CONSULTATION,
                     userId = userInfo.userId
                 )

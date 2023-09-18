@@ -21,6 +21,7 @@ class NotificationMapper {
     fun toDomain(dto: NotificationDTO): Notification {
         return Notification(
             title = dto.title,
+            description = dto.description,
             type = when (dto.type) {
                 QAG_NOTIFICATION_TYPE -> NotificationType.QAG
                 CONSULTATION_NOTIFICATION_TYPE -> NotificationType.CONSULTATION
@@ -36,6 +37,7 @@ class NotificationMapper {
             NotificationDTO(
                 id = UuidUtils.NOT_FOUND_UUID,
                 title = domain.title,
+                description = domain.description,
                 type = when (domain.type) {
                     NotificationType.QAG -> QAG_NOTIFICATION_TYPE
                     NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
