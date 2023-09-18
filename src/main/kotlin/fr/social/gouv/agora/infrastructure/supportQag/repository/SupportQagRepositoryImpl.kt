@@ -46,6 +46,25 @@ class SupportQagRepositoryImpl(
         }
     }
 
+    override fun deleteSupportListByQagId(qagId: String): SupportQagResult {
+        return try {
+            val qagUUID = UUID.fromString(qagId)
+            val resultDelete = databaseRepository.deleteSupportListByQagId(qagId = qagUUID)
+            if (resultDelete <= 0)
+                SupportQagResult.FAILURE
+            else {
+                try {
+                    cacheRepository.deleteSupportListByQagId(qagId = qagUUID)
+                } catch (e: IllegalStateException) {
+                    initializeCache()
+                }
+                SupportQagResult.SUCCESS
+            }
+        } catch (e: IllegalArgumentException) {
+            SupportQagResult.FAILURE
+        }
+    }
+
     private fun initializeCache() {
         cacheRepository.initializeCache(databaseRepository.getAllSupportQagList())
     }
