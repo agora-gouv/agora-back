@@ -165,15 +165,15 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
 INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, video_width, video_height, transcription, qag_id) VALUES (
     '38990baf-b0ed-4db0-99a5-7ec01790720e',
     'Olivier Véran',
-    'https://betagouv.github.io/agora-content/QaG-OlivierVeran.png',
+    'https://content.agora.incubateur.net/QaG-OlivierVeran.png',
     'Ministre délégué auprès de la Première ministre, chargé du Renouveau démocratique, porte-parole du Gouvernement',
     '2023-06-05',
-    'https://betagouv.github.io/agora-content/AgoraQagResponse.mp4',
+    'https://content.agora.incubateur.net/AgoraQagResponse.mp4',
     1080,
     1920,
     'Bonjour,\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8'
-) ON CONFLICT (id) DO UPDATE SET video_url = EXCLUDED.video_url, video_width = EXCLUDED.video_width, video_height = EXCLUDED.video_height;
+) ON CONFLICT (id) DO UPDATE SET author_portrait_url = EXCLUDED.author_portrait_url, video_url = EXCLUDED.video_url, video_width = EXCLUDED.video_width, video_height = EXCLUDED.video_height;
 
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id, user_id) VALUES (
     '996436ca-ee69-11ed-a05b-0242ac120003',
@@ -290,14 +290,14 @@ INSERT INTO consultations(id, title, start_date, end_date, cover_url, question_c
     'Covoiturage, roulons ensemble',
     '2023-05-04 23:59:59.999',
     '2023-11-05 23:59:59.999',
-    'https://betagouv.github.io/agora-content/covoiturage.png',
+    'https://content.agora.incubateur.net/covoiturage.png',
     '12 questions',
     '5 minutes',
     10000,
     '<body>Le Gouvernement a lancé un plan national pour faciliter le covoiturage au quotidien : son objet est de tripler le nombre de trajets en covoiturage du quotidien d’ici 2027 pour atteindre les 3 millions de trajet réalisés par jour.<br/><br/>Le covoiturage est un enjeu majeur pour :<br/><br/><ul><li><b>L’amélioration de la qualité de l’air et la baisse des gaz à effet de serre</b>. Le partage d’une voiture divise par 2 les émissions de son trajet. Si l’objectif est atteint, 4.5 millions de tonnes de CO2 par an peuvent être économisées (environ 1% des émissions françaises).</li><li><b>Le pouvoir d’achat</b>. Un covoiturage quotidien pour se rendre sur son lieu de travail à 30 km permet une économie de près de 2000 euros chaque année.</li><li><b>Se déplacer plus librement.</b> Le covoiturage, c’est un moyen de  se déplacer plus facilement là où il n’y a pas de transports en commun mais aussi pour ceux qui n’ont pas de voiture ou ne peuvent pas conduire.</li></ul><p><br/><a href="https://www.ecologie.gouv.fr/covoiturage">Sources </a>(https://www.ecologie.gouv.fr/covoiturage)</p></body>',
     '<body>🗣 Consultation proposée par le <b>Ministère des Transports</b><br/><br/>🎯<b> Objectif</b> : évaluer et améliorer le plan national covoiturage <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     '0f644115-08f3-46ff-b776-51f19c65fdd1'
-) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
+) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url, title = EXCLUDED.title, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'e271ed7a-ef05-11ed-a05b-0242ac120003',
@@ -874,47 +874,47 @@ INSERT INTO consultation_updates(id, step, description, consultation_id, explana
     'Analyse des résultats',
     'Un mot de la part de l’équipe',
     '',
-    'https://betagouv.github.io/agora-content/AgoraMerciVideo.mp4',
+    'https://content.agora.incubateur.net/AgoraMerciVideo.mp4',
     1920,
     1080,
     'Merci pour votre participation ! La team AGORA. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     'En résumé …',
     '<body><p>Grâce à la consultation, le Ministre a notamment constaté :<ul><li>- Que les incitations étaient peu connues</li><li>- Que certaines difficultés pouvaient être levées.</li></ul></p><p>Il a donc décidé de :<ul><li>- **Lancer une campagne de communication** sur les incitations</li><li>- Demander aux collectivités de **faire de nouvelles infrastructures** plus adaptées.</li></ul></p><p>Nous vous tiendrons au courant dans l’application quand ces mesures seront mises en places.</body></p>'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET video_url = EXCLUDED.video_url;
 
 INSERT INTO explanations(id, title, intro, image_url, description, consultation_updates_id, toggleable) VALUES (
     '22d629f4-892e-436d-9221-dab4d5f61710',
     'Les difficultés que vous rencontrez pour recourir au covoiturage',
     '<body>Vous rencontrez 3 principales difficultés :<ul><li>- La difficulté A</li><li>- La difficulté B</li><li>- La difficulté C</li></ul></body>',
-    'https://betagouv.github.io/agora-content/covoiturage_tags.png',
+    'https://content.agora.incubateur.net/covoiturage_tags.png',
     '',
     '9e828256-cca9-4078-bf1b-c4b958d61aa4',
     'true'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET image_url = EXCLUDED.image_url;
 
 INSERT INTO explanations(id, title, intro, image_url, description, consultation_updates_id, toggleable) VALUES (
     'a1d91697-e707-4b73-96b6-bf7fabc476e6',
     'Vos idées pour améliorer le covoiturage',
     '<body>Vous avez beaucoup d’idées pour améliorer le covoiturage ! :<ul><li>- L’idée A</li><li>- L’idée B</li><li>- L’idée C</li></ul></body>',
-    'https://betagouv.github.io/agora-content/covoiturage_graphe.png',
+    'https://content.agora.incubateur.net/covoiturage_graphe.png',
     '<body>Comme vous pouvez le constater sur le graphique, <b>l’idée B</b> a reçue beaucoup de voix sur la fin de la consultation.</body>',
     '9e828256-cca9-4078-bf1b-c4b958d61aa4',
     'true'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET image_url = EXCLUDED.image_url;
 
 INSERT INTO consultations(id, title, start_date, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     '98a8ba56-0923-11ee-be56-0242ac120002',
     'Participation citoyenne : une appli, vos idées',
     '2023-05-12 23:59:59.999',
     '2023-11-12 23:59:59.999',
-    'https://betagouv.github.io/agora-content/education.png',
+    'https://content.agora.incubateur.net/education.png',
     '12 questions',
     '10 minutes',
     10000,
     '<body>En France, comme dans de nombreuses démocraties, l’abstention augmente, élection après élection. De nombreux citoyens ne font pas confiance aux responsables politiques, aux élus ou encore à l’Etat pour améliorer leur quotidien.<br/><br/>Pour tenter de rétablir ce lien de confiance, le Gouvernement compte, depuis juillet 2022, un ministre délégué auprès de la Première ministre chargé du <b>renouveau démocratique</b>, Olivier Véran.<br/><br/>Son rôle consiste notamment à <b>développer les démarches de participation citoyenne</b>, pour permettre à chaque citoyen de mieux contribuer à la décision politique.<br/><br/>Cette appli mobile, que vous venez de télécharger, s’inscrit dans cet objectif. Elle est complémentaire de démarches dites « délibératives » en présentiel, comme par exemple, la Convention citoyenne sur la fin de vie ou la concertation nationale sur le mix énergétique.<br/><br/>Avec cette consultation, donnez-nous votre avis pour nous aider à aller plus loin !</body>',
     '<body>🗣 Consultation proposée par le <b>Ministre du Renouveau Démocratique</b><br/><br/>🎯<b> Objectif</b> : améliorer et co-construire cette application avec les citoyens ; développer la participation citoyenne et faire reculer l’abstention à partir de vos idées <br/><br/>🚀<b>Axe gouvernemental</b> : Renforcer l’ordre républicain et encourager l’engagement</body>',
     '30671310-ee62-11ed-a05b-0242ac120003'
-) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
+) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url, title = EXCLUDED.title, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'e65beea0-0926-11ee-be56-0242ac120002',
@@ -1476,14 +1476,14 @@ INSERT INTO consultations(id, title, start_date, end_date, cover_url, question_c
     'Vivre mieux en 2050 : comment s’adapter au changement climatique ?',
     '2023-07-15 23:59:59.999',
     '2023-10-22 23:59:59.999',
-    'https://betagouv.github.io/agora-content/climate.jpeg',
+    'https://content.agora.incubateur.net/climate.jpeg',
     '11 questions',
     '10 minutes',
     10000,
     '<body>Comment s’assurer de vivre mieux, ensemble, dans la France de 2050 ? Atténuation et adaptation sont les deux volets indispensables et complémentaires de la politique climatique.<br/><ul><li><b>Atténuation </b>: agir sur les causes du changement climatique pour en limiter l’ampleur, comme réduire les émissions de gaz à effet de serre ou augmenter les puits de gaz à effet de serre (sols, forêts, produits bois, zones humides…).</li><br/><br/><li><b>Adaptation </b>: anticiper et limiter les conséquences du changement climatique sur les populations, les activités humaines et la nature, en intervenant, par exemple, sur l’urbanisation.</li></ul><p><br/>L’<b>Accord de Paris</b> fixe l’objectif de rester bien <b>en-dessous de 2 degrés de réchauffement mondial</b> par rapport à l’ère pré-industrielle et de poursuivre les efforts pour ne pas dépasser 1.5 degrés. Cependant nous ne sommes collectivement pas sur la bonne trajectoire : les émissions mondiales de gaz à effet de serre continuent d’augmenter, certes bien moins vite que dans le passé, alors qu’il faudrait qu’elles baissent rapidement et fortement pour freiner le changement climatique.<br/><br/>Si l’atteinte des objectifs de l’Accord de Paris reste notre priorité et notre combat, les engagements pris par les Etats lors des COP climat et les politiques en place nous conduisent <b>vers un réchauffement mondial de l’ordre de 3°C, correspondant à +4°C en France.</b><br/><br/>Nous devons nous préparer, concrètement, aux effets inévitables du changement climatique sur notre territoire et sur nos vies. Cette consultation vise à fournir un premier aperçu des conséquences du réchauffement climatique et des choix d’adaptation qu’il induit.</p></body>',
     '<body>🗣 Consultation proposée par le <b>Ministère de la Transition écologique et de la Cohésion des territoires</b><br/><br/>🎯<b> Objectif</b> : adapter la France aux conséquences du réchauffement climatique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique</body>',
     'bb051bf2-644b-47b6-9488-7759fa727dc0'
-) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
+) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url, title = EXCLUDED.title, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     'ccc9eb30-0b5c-11ee-be56-0242ac120002',
@@ -1989,14 +1989,14 @@ INSERT INTO consultations(id, title, start_date, end_date, cover_url, question_c
     'Comment agir durablement en faveur de la sobriété énergétique ?',
     '2023-07-30 23:59:59.999',
     '2023-10-29 23:59:59.999',
-    'https://betagouv.github.io/agora-content/energie.jpg',
+    'https://content.agora.incubateur.net/energie.jpg',
     '10 questions',
     '7 minutes',
     10000,
     '<body>En octobre dernier, un <a href= "https://www.ecologie.gouv.fr/sites/default/files/dp-plan-sobriete.pdf">premier plan de sobriété</a> a été présenté par la Première ministre, Elisabeth Borne, et la ministre de la Transition énergétique, Agnès Pannier-Runacher. Ce plan a permis à la France de <b> réduire sa consommation d’énergie de plus de 10%.</b> <br/><br/>Le 20 juin, l’<b>acte 2 du plan de sobriété</b> a été présenté avec en priorité des mesures pour l’été, sur le numérique et sur le carburant. En octobre 2023, un bilan de la première année d’application du plan de sobriété devra être dressé et des mesures devront être prises afin d’ancrer la sobriété dans la durée.<br/><br/>Car la sobriété énergétique, ce n’était pas seulement pour passer l’hiver dernier, c’est une <b>mesure climatique de long-terme </b>: si nous voulons atteindre la neutralité carbone, nous devrons réduire notre consommation d’énergie de 40% d’ici 2050. L’objectif est donc d’<b>associer les citoyens en faveur de la sobriété dans la durée.</b></body>',
     '<body>🗣 Consultation proposée par le <b>Ministère de la Transition énergétique</b><br/><br/>🎯<b> Objectif</b> : trouver des solutions pour agir durablement en faveur de la transition énergétique <br/><br/>🚀<b>Axe gouvernemental</b> : Planifier et accélérer la transition écologique et énergétique</body>',
     '5e6bed94-015e-11ee-be56-0242ac120002'
-) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
+) ON CONFLICT (id) DO UPDATE SET cover_url = EXCLUDED.cover_url, title = EXCLUDED.title, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, question_count = EXCLUDED.question_count, participant_count_goal = EXCLUDED.participant_count_goal, description = EXCLUDED.description, tips_description = EXCLUDED.tips_description;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
     '34d997e4-0c4c-11ee-be56-0242ac120002',
