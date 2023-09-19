@@ -26,7 +26,7 @@ class WordVectorFileInitializer(
 ) : InitializingBean {
 
     companion object {
-        private const val BASE_DOWNLOAD_URL = "https://betagouv.github.io/agora-content/wordVectorFiles/"
+        private val BASE_DOWNLOAD_URL = "https://${System.getenv("CONTENT_BASE_URL")}/wordVectorFiles/"
         private const val DOWNLOAD_DESTINATION_PATH = "/tmp/wordVectorFiles/"
 
         private const val WORD_VECTOR_FILE_PREFIX = "wordVectors_"
