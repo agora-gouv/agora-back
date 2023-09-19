@@ -18,5 +18,11 @@ class WeeklyScheduler(
         selectMostPopularQagUseCase.putMostPopularQagInSelectedStatus()
         archiveOldQagUseCase.archiveOldQag()
         println("📆 Performing weekly tasks... finished !")
+
+        // TODOs
+        // - Remove username from QaGs even when status is SELECTED_FOR_RESPONSE
+        // - Remove supports from archived QaGs
+        // - Remove support link to userId when SELECTED_FOR_RESPONSE
+        // - Remove feedback link to userId ?
     }
 }
