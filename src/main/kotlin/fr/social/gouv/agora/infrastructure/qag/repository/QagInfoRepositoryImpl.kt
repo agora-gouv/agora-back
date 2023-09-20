@@ -83,12 +83,30 @@ class QagInfoRepositoryImpl(
         }
     }
 
+    override fun deleteQag(qagId: String): QagDeleteResult {
+        return try {
+            val qagUUID = UUID.fromString(qagId)
+            val resultDelete = databaseRepository.deleteQagById(qagUUID)
+            if (resultDelete <= 0)
+                QagDeleteResult.FAILURE
+            else {
+                try {
+                    cacheRepository.deleteQagList(listOf(qagUUID))
+                } catch (e: IllegalStateException) {
+                    getAllQagFromDatabaseAndInitializeCache()
+                }
+                QagDeleteResult.SUCCESS
+            }
+        } catch (e: IllegalArgumentException) {
+            QagDeleteResult.FAILURE
+        }
+    }
+
     private fun getAllQagDTO() = when (val cacheResult = cacheRepository.getAllQagList()) {
         is CacheResult.CachedQagList -> cacheResult.allQagDTO
         CacheResult.CacheNotInitialized -> getAllQagFromDatabaseAndInitializeCache()
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun getAllQagFromDatabaseAndInitializeCache() = databaseRepository.getAllQagList().also { allQagDTO ->
         cacheRepository.initializeCache(allQagDTO)
     }

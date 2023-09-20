@@ -48,6 +48,16 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
         } ?: throw IllegalStateException("SupportQag cache has not been initialized")
     }
 
+    @Throws(IllegalStateException::class)
+    fun deleteSupportListByQagId(qagId: UUID) {
+        getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
+            val filteredSupportQagDTO = allSupportQagDTO.filterNot { supportQagDTO -> supportQagDTO.qagId == qagId }
+            if (filteredSupportQagDTO.size < allSupportQagDTO.size) {
+                initializeCache(filteredSupportQagDTO)
+            }
+        } ?: throw IllegalStateException("SupportQag cache has not been initialized")
+    }
+
     private fun getCache() = cacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
 
     @Suppress("UNCHECKED_CAST")

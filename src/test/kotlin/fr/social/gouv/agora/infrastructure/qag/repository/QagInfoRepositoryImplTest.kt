@@ -417,4 +417,74 @@ internal class QagInfoRepositoryImplTest {
             then(mapper).shouldHaveNoInteractions()
         }
     }
+
+    @Nested
+    inner class DeleteQagTestCases {
+        @Test
+        fun `deleteQag - when invalid UUID for qagID - should return FAILURE`() {
+            // When
+            val result = repository.deleteQag(
+                qagId = "invalid qagId UUID",
+            )
+
+            // Then
+            assertThat(result).isEqualTo(QagDeleteResult.FAILURE)
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(cacheRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `deleteQag - when valid UUID for qagID AND exists in Database - should return SUCCESS`() {
+            // Given
+            val qagId = UUID.randomUUID()
+            given(databaseRepository.deleteQagById(qagId = qagId)).willReturn(1)
+
+            // When
+            val result = repository.deleteQag(qagId = qagId.toString())
+
+            // Then
+            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
+            then(databaseRepository).should(only()).deleteQagById(qagId = qagId)
+            then(cacheRepository).should(only()).deleteQagList(qagUUIDList = listOf(qagId))
+        }
+
+        @Test
+        fun `deleteQag - when valid UUID for qagID AND exists in Database but delete fails in cache - should initialize cache then return SUCCESS`() {
+            // Given
+            val qagId = UUID.randomUUID()
+            given(databaseRepository.deleteQagById(qagId = qagId)).willReturn(1)
+
+            given(cacheRepository.deleteQagList(qagUUIDList = listOf(qagId)))
+                .willThrow(IllegalStateException::class.java)
+            val storedQagDTO = mock(QagDTO::class.java)
+            given(databaseRepository.getAllQagList()).willReturn(listOf(storedQagDTO))
+
+            // When
+            val result = repository.deleteQag(qagId = qagId.toString())
+
+            // Then
+            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
+            then(databaseRepository).should().deleteQagById(qagId = qagId)
+            then(databaseRepository).should().getAllQagList()
+            then(databaseRepository).shouldHaveNoMoreInteractions()
+            then(cacheRepository).should().deleteQagList(qagUUIDList = listOf(qagId))
+            then(cacheRepository).should().initializeCache(listOf(storedQagDTO))
+            then(cacheRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `deleteQag - when valid UUID for qagID AND NOT exist in Database should return FAILURE`() {
+            // Given
+            val qagId = UUID.randomUUID()
+            given(databaseRepository.deleteQagById(qagId = qagId)).willReturn(0)
+
+            // When
+            val result = repository.deleteQag(qagId = qagId.toString())
+
+            // Then
+            assertThat(result).isEqualTo(QagDeleteResult.FAILURE)
+            then(databaseRepository).should(only()).deleteQagById(qagId = qagId)
+            then(cacheRepository).shouldHaveNoInteractions()
+        }
+    }
 }

@@ -11,6 +11,7 @@ interface QagInfoRepository {
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun archiveQag(qagId: String): QagArchiveResult
     fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult
+    fun deleteQag(qagId: String): QagDeleteResult
 }
 
 sealed class QagInsertionResult {
