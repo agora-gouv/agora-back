@@ -28,7 +28,7 @@ class LoginController(
         @RequestHeader("versionName") versionName: String?,
         @RequestHeader("versionCode") versionCode: String,
         @RequestHeader("platform") platform: String,
-        @RequestBody loginToken: String,
+        @RequestBody loginRequest: LoginRequestJson,
     ): ResponseEntity<*> {
         if (!featureFlagsUseCase.isFeatureEnabled(AgoraFeature.Login)) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
@@ -38,7 +38,7 @@ class LoginController(
             INVALID_APP -> ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
             UPDATE_REQUIRED -> ResponseEntity.status(HttpServletResponse.SC_PRECONDITION_FAILED)
                 .body(Unit)
-            AUTHORIZED -> when (val loginTokenResult = loginTokenGenerator.decodeLoginToken(loginToken)) {
+            AUTHORIZED -> when (val loginTokenResult = loginTokenGenerator.decodeLoginToken(loginRequest.loginToken)) {
                 DecodeResult.Failure -> ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
                 is DecodeResult.Success -> loginUseCase.login(
                     loginTokenData = loginTokenResult.loginTokenData,
