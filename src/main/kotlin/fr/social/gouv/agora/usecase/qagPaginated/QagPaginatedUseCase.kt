@@ -29,7 +29,7 @@ class QagPaginatedUseCase(
                 pageNumber = pageNumber,
                 thematiqueId = thematiqueId,
             ),
-            sortByDescendingSelector = { qag -> qag.supportQagInfoList.size },
+            comparator = { qag1, qag2 -> qag2.supportQagInfoList.size.compareTo(qag1.supportQagInfoList.size) },
         )
     }
 
@@ -42,7 +42,9 @@ class QagPaginatedUseCase(
                 pageNumber = pageNumber,
                 thematiqueId = thematiqueId,
             ),
-            sortByDescendingSelector = { qag -> qag.qagInfo.date },
+            comparator = { qag1, qag2 ->
+                qag2.qagInfo.date.compareTo(qag1.qagInfo.date)
+            }
         )
     }
 
@@ -55,17 +57,32 @@ class QagPaginatedUseCase(
                 pageNumber = pageNumber,
                 thematiqueId = thematiqueId,
             ),
-            sortByDescendingSelector = { qag ->
-                qag.supportQagInfoList.find { supportQagInfo -> supportQagInfo.userId == userId }?.supportDate
-            },
+            comparator = { qag1, qag2 ->
+                val userId1 = qag1.qagInfo.userId
+                val userId2 = qag2.qagInfo.userId
+                when {
+                    userId1 == userId && userId2 == userId -> qag2.qagInfo.date.compareTo(qag1.qagInfo.date)
+                    userId1 == userId && userId2 != userId -> -1
+                    userId1 != userId && userId2 == userId -> 1
+                    else -> {
+                        val supportDate1 = qag1.supportQagInfoList.find { it.userId == userId }?.supportDate
+                        val supportDate2 = qag2.supportQagInfoList.find { it.userId == userId }?.supportDate
+                        if (supportDate1 != null && supportDate2 != null) {
+                            supportDate2.compareTo(supportDate1)
+                        } else {
+                            0
+                        }
+                    }
+                }
+            }
         )
     }
 
-    private fun <R : Comparable<R>> getQagPaginated(
+    private fun getQagPaginated(
         userId: String,
         pageNumber: Int,
         qagFilters: QagFilters,
-        sortByDescendingSelector: (QagInfoWithSupportAndThematique) -> R?,
+        comparator: Comparator<QagInfoWithSupportAndThematique>,
     ): QagsAndMaxPageCount? {
         if (pageNumber <= 0) return null
         val qagList = getQagListUseCase.getQagWithSupportAndThematique(qagFilters = qagFilters)
@@ -75,7 +92,7 @@ class QagPaginatedUseCase(
         val maxIndex = min(pageNumber * MAX_PAGE_LIST_SIZE, qagList.size)
 
         val qags = qagList
-            .sortedByDescending { qag -> sortByDescendingSelector.invoke(qag) }
+            .sortedWith(comparator)
             .subList(fromIndex = minIndex, toIndex = maxIndex)
             .map { qag -> mapper.toPreview(qag = qag, userId = userId) }
 
@@ -84,7 +101,6 @@ class QagPaginatedUseCase(
             maxPageCount = ceil(qagList.size.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
         )
     }
-
 }
 
 data class QagsAndMaxPageCount(

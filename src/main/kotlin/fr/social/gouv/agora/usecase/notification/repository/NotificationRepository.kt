@@ -1,25 +1,13 @@
 package fr.social.gouv.agora.usecase.notification.repository
 
+import fr.social.gouv.agora.domain.Notification
+import fr.social.gouv.agora.domain.NotificationInserting
+
 interface NotificationRepository {
-    fun sendNotificationMessage(request: NotificationRequest): NotificationResult
-    fun sendQagDetailsNotification(request: NotificationRequest, qagId: String): NotificationResult
-    fun sendNewConsultationNotification(request: ConsultationNotificationRequest): Pair<Int, Int>?
-    fun sendConsultationUpdateNotification(request: ConsultationNotificationRequest): Pair<Int, Int>?
+    fun insertNotification(notification: NotificationInserting): NotificationInsertionResult
+    fun getUserNotificationList(userId: String): List<Notification>
 }
 
-data class NotificationRequest(
-    val fcmToken: String,
-    val title: String,
-    val description: String,
-)
-
-data class ConsultationNotificationRequest(
-    val title: String,
-    val description: String,
-    val fcmTokenList: List<String>,
-    val consultationId: String,
-)
-
-enum class NotificationResult {
+enum class NotificationInsertionResult {
     SUCCESS, FAILURE
 }

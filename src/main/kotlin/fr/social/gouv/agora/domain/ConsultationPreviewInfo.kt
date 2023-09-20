@@ -7,6 +7,8 @@ sealed class ConsultationPreviewInfo {
     abstract val title: String
     abstract val coverUrl: String
     abstract val thematiqueId: String
+    abstract val startDate: Date
+    abstract val endDate: Date
 }
 
 data class ConsultationPreviewOngoingInfo(
@@ -14,7 +16,8 @@ data class ConsultationPreviewOngoingInfo(
     override val title: String,
     override val coverUrl: String,
     override val thematiqueId: String,
-    val endDate: Date,
+    override val startDate: Date,
+    override val endDate: Date,
 ) : ConsultationPreviewInfo()
 
 data class ConsultationPreviewFinishedInfo(
@@ -22,6 +25,8 @@ data class ConsultationPreviewFinishedInfo(
     override val title: String,
     override val coverUrl: String,
     override val thematiqueId: String,
+    override val startDate: Date,
+    override val endDate: Date,
 ) : ConsultationPreviewInfo()
 
 data class ConsultationPreviewAnsweredInfo(
@@ -29,4 +34,6 @@ data class ConsultationPreviewAnsweredInfo(
     override val title: String,
     override val coverUrl: String,
     override val thematiqueId: String,
+    override val startDate: Date,
+    override val endDate: Date,
 ) : ConsultationPreviewInfo()

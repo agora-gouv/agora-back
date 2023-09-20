@@ -17,7 +17,11 @@ class SupportQagRepositoryImpl(
     override fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
         return mapper.toDto(supportQagInserting)?.let { supportQagDTO ->
             val savedSupportQagDTO = databaseRepository.save(supportQagDTO)
-            cacheRepository.insertSupportQag(supportQagDTO = savedSupportQagDTO)
+            try {
+                cacheRepository.insertSupportQag(supportQagDTO = savedSupportQagDTO)
+            } catch (e: IllegalStateException) {
+                initializeCache()
+            }
             SupportQagResult.SUCCESS
         } ?: SupportQagResult.FAILURE
     }
@@ -30,11 +34,38 @@ class SupportQagRepositoryImpl(
             if (resultDelete <= 0)
                 SupportQagResult.FAILURE
             else {
-                cacheRepository.deleteSupportQag(qagId = qagId, userId = userId)
+                try {
+                    cacheRepository.deleteSupportQag(qagId = qagId, userId = userId)
+                } catch (e: IllegalStateException) {
+                    initializeCache()
+                }
                 SupportQagResult.SUCCESS
             }
         } catch (e: IllegalArgumentException) {
             SupportQagResult.FAILURE
         }
+    }
+
+    override fun deleteSupportListByQagId(qagId: String): SupportQagResult {
+        return try {
+            val qagUUID = UUID.fromString(qagId)
+            val resultDelete = databaseRepository.deleteSupportListByQagId(qagId = qagUUID)
+            if (resultDelete <= 0)
+                SupportQagResult.FAILURE
+            else {
+                try {
+                    cacheRepository.deleteSupportListByQagId(qagId = qagUUID)
+                } catch (e: IllegalStateException) {
+                    initializeCache()
+                }
+                SupportQagResult.SUCCESS
+            }
+        } catch (e: IllegalArgumentException) {
+            SupportQagResult.FAILURE
+        }
+    }
+
+    private fun initializeCache() {
+        cacheRepository.initializeCache(databaseRepository.getAllSupportQagList())
     }
 }

@@ -48,8 +48,9 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
         id = "1234",
         title = "domain-title",
         coverUrl = "domain-cover-url",
-        endDate = Date(1),
         thematiqueId = "5678",
+        startDate = Date(0),
+        endDate = Date(1),
     )
 
     @Test

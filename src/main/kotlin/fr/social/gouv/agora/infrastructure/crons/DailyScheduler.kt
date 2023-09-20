@@ -13,6 +13,11 @@ class DailyScheduler(private val consultationCacheClearUseCase: ConsultationCach
         println("🧹 Clearing consultation caches...")
         consultationCacheClearUseCase.clearConsultationCaches()
         println("🧹 Clearing consultation caches... finished !")
+
+        // TODOs
+        // - Consultation responses aggregation when finished
+        // - Save consultations answered by users but remove link to responses
+        // - Delete everything related to a user when last connection date is over 2 years (except QaG if status is SELECTED_FOR_RESPONSE)
     }
 
 }

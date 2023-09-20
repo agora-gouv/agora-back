@@ -29,12 +29,14 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
+    @Throws(IllegalStateException::class)
     fun insertUser(userDTO: UserDTO) {
         getAllUserDTOFromCache()?.let { allUserDTO ->
             initializeCache(allUserDTO + userDTO)
         } ?: throw IllegalStateException("User cache has not been initialized")
     }
 
+    @Throws(IllegalStateException::class)
     fun updateUser(userDTO: UserDTO) {
         getAllUserDTOFromCache()?.let { allUserDTO ->
             initializeCache(replaceUpdatedDTO(allUserDTO = allUserDTO, updatedUserDTO = userDTO))

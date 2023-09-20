@@ -13,7 +13,7 @@ import java.util.*
 @Component
 class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
 
-    fun toJson(qag: Qag): QagJson {
+    fun toJson(qag: Qag, userId: String): QagJson {
         return QagJson(
             id = qag.id,
             thematique = thematiqueJsonMapper.toNoIdJson(qag.thematique),
@@ -23,7 +23,9 @@ class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
             username = qag.username,
             canShare = qag.status == QagStatus.MODERATED_ACCEPTED || qag.status == QagStatus.SELECTED_FOR_RESPONSE,
             canSupport = qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED,
+            canDelete = qag.userId == userId,
             support = buildSupportQagJson(qag),
+            isAuthor = qag.userId == userId,
             response = buildResponseQagJson(qag),
         )
     }

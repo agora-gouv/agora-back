@@ -41,11 +41,11 @@ class GetConsultationFinishedPaginatedListUseCase(
         return consultationFinishedList.mapNotNull { consultationPreviewFinishedInfo ->
             thematiqueRepository.getThematique(consultationPreviewFinishedInfo.thematiqueId)
                 ?.let { thematique ->
-                    consultationUpdateRepository.getConsultationUpdate(
+                    consultationUpdateRepository.getFinishedConsultationUpdate(
                         consultationPreviewFinishedInfo.id
                     )?.let { consultationUpdate ->
                         mapper.toConsultationPreviewFinished(
-                            consultationPreviewFinishedInfo = consultationPreviewFinishedInfo,
+                            consultationPreviewInfo = consultationPreviewFinishedInfo,
                             consultationUpdate = consultationUpdate,
                             thematique = thematique,
                         )

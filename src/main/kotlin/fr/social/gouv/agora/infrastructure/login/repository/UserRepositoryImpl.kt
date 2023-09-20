@@ -29,6 +29,7 @@ class UserRepositoryImpl(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun updateUser(userId: String, fcmToken: String): UserInfo? {
         return try {
             val userUUID = UUID.fromString(userId)
@@ -36,7 +37,11 @@ class UserRepositoryImpl(
             if (userDTO != null) {
                 val updatedUserDTO = mapper.updateDto(dto = userDTO, fcmToken = fcmToken)
                 val savedUserDTO = databaseRepository.save(updatedUserDTO)
-                cacheRepository.updateUser(savedUserDTO)
+                try {
+                    cacheRepository.updateUser(savedUserDTO)
+                } catch (e: IllegalStateException) {
+                    getAllUserFromDatabaseAndInitializeCache()
+                }
                 mapper.toDomain(savedUserDTO)
             } else {
                 null
@@ -46,19 +51,26 @@ class UserRepositoryImpl(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun generateUser(fcmToken: String): UserInfo {
         val userDTO = mapper.generateDto(fcmToken = fcmToken)
         val savedUserDTO = databaseRepository.save(userDTO)
-        cacheRepository.insertUser(savedUserDTO)
+        try {
+            cacheRepository.insertUser(savedUserDTO)
+        } catch (e: IllegalStateException) {
+            getAllUserFromDatabaseAndInitializeCache()
+        }
         return mapper.toDomain(savedUserDTO)
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun getAllUserDTO() = when (val cacheResult = cacheRepository.getAllUserList()) {
         is CacheResult.CachedUserList -> cacheResult.allUserDTO
-        CacheResult.CacheNotInitialized -> databaseRepository.findAll().also { allUserDTO ->
-            cacheRepository.initializeCache(allUserDTO as List<UserDTO>)
-        }
+        CacheResult.CacheNotInitialized -> getAllUserFromDatabaseAndInitializeCache()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getAllUserFromDatabaseAndInitializeCache() = databaseRepository.findAll().also { allUserDTO ->
+        cacheRepository.initializeCache(allUserDTO as List<UserDTO>)
     }
 
     private fun findUserDTO(userUUID: UUID) = getAllUserDTO().find { userDTO -> userDTO.id == userUUID }

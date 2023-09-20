@@ -11,5 +11,7 @@ class ConsultationPreviewAnsweredInfoMapper {
         title = dto.title,
         coverUrl = dto.coverUrl,
         thematiqueId = dto.thematiqueId.toString(),
+        startDate = dto.startDate,
+        endDate = dto.endDate,
     )
 }

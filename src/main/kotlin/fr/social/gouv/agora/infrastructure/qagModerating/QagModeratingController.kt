@@ -1,7 +1,6 @@
 package fr.social.gouv.agora.infrastructure.qagModerating
 
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
-import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
 import fr.social.gouv.agora.usecase.qagModerating.GetQagModeratingListUseCase
 import fr.social.gouv.agora.usecase.qagModerating.ModeratingQagResult
 import fr.social.gouv.agora.usecase.qagModerating.PutQagModeratingUseCase
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*
 class QagModeratingController(
     private val getQagModeratingListUseCase: GetQagModeratingListUseCase,
     private val putQagModeratingUseCase: PutQagModeratingUseCase,
-    private val sendNotificationQagModeratedUseCase: SendNotificationQagModeratedUseCase,
     private val mapper: QagModeratingJsonMapper,
 ) {
 

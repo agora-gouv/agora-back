@@ -18,7 +18,7 @@ class TestNotificationController(
     private val loginUseCase: LoginUseCase,
 ) {
 
-    @GetMapping("/moderate/testNotification")
+    @GetMapping("/admin/testNotification")
     fun testNotification(
         @RequestHeader("Authorization") authorizationHeader: String,
         @RequestParam("userId") userId: String?,

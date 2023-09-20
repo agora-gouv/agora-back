@@ -27,7 +27,8 @@ class QagPaginatedJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMap
             support = SupportQagJson(
                 supportCount = domain.support.supportCount,
                 isSupportedByUser = domain.support.isSupportedByUser,
-            )
+            ),
+            isAuthor = domain.isAuthor
         )
     }
 
