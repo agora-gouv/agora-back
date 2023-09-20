@@ -17,9 +17,8 @@ class DeleteQagController(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable qagId: String,
     ): ResponseEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val qagDeleteResult = deleteQagUseCase.deleteQagById(
-            userId = userId,
+            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
             qagId = qagId,
         )
         return when (qagDeleteResult) {
