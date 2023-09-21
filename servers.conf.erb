@@ -3,7 +3,7 @@ server {
     listen <%= ENV['PORT'] %>;
 
     location / {
-        proxy_pass localhost:<%= ENV['AGORA_PORT'] %>;
+        proxy_pass http://localhost:<%= ENV['AGORA_PORT'] %>;
         proxy_redirect default;
     }
 }
