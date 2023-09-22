@@ -31,18 +31,6 @@ dependencies {
     implementation("redis.clients:jedis")
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20220608.1")
-    implementation("org.deeplearning4j:deeplearning4j-core:1.0.0-M2.1") {
-        exclude(group = "org.bytedeco", module = "opencv")
-        exclude(group = "org.bytedeco", module = "opencv-platform")
-        exclude(group = "org.bytedeco", module = "ffmpeg")
-        exclude(group = "org.bytedeco", module = "fmpeg-platform")
-    }
-    implementation("org.deeplearning4j:deeplearning4j-nlp:1.0.0-M2.1")
-    implementation("org.nd4j:nd4j-native:1.0.0-M2.1:${System.getenv("ND4J_ARCHITECTURE")}")
-    implementation("org.nd4j:nd4j-native-platform:1.0.0-M2.1")
-    implementation("edu.stanford.nlp:stanford-corenlp:4.5.4")
-    implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models-french")
-    implementation("org.codehaus.plexus:plexus-archiver:4.8.0")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
