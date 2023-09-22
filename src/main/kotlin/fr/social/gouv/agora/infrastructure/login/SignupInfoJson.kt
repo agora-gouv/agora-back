@@ -10,5 +10,5 @@ data class SignupInfoJson(
     @JsonProperty("loginToken")
     val loginToken: String,
     @JsonProperty("isModerator")
-    val isModerator: Boolean,
+    val isModerator: Boolean = false,
 )
