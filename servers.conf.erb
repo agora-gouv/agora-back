@@ -2,10 +2,14 @@ server {
     server_name localhost;
     listen <%= ENV['PORT'] %>;
 
+    proxy_pass http://localhost:<%= ENV['AGORA_PORT'] %>;
+    proxy_redirect default;
+
     location / {
         <%= ENV['NGINX_API_ACCESS_RULES'] %>
+    }
 
-        proxy_pass http://localhost:<%= ENV['AGORA_PORT'] %>;
-        proxy_redirect default;
+    location /moderatus {
+        <%= ENV['NGINX_MODERATUS_API_ACCESS_RULES'] %>
     }
 }
