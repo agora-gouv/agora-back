@@ -6,5 +6,5 @@ data class LoginInfoJson(
     @JsonProperty("jwtToken")
     val jwtToken: String,
     @JsonProperty("isModerator")
-    val isModerator: Boolean,
+    val isModerator: Boolean = false,
 )
