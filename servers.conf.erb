@@ -4,10 +4,10 @@ server {
 
     proxy_redirect default;
 
-    location /moderatus {
-        proxy_pass http://localhost:<%= ENV['AGORA_PORT'] %>;
-        <%= ENV['NGINX_MODERATUS_API_ACCESS_RULES'] %>
-    }
+  #  location /moderatus {
+  #      proxy_pass http://localhost:<%= ENV['AGORA_PORT'] %>;
+  #      <%= ENV['NGINX_MODERATUS_API_ACCESS_RULES'] %>
+  #  }
 
     location / {
         proxy_pass http://localhost:<%= ENV['AGORA_PORT'] %>;
