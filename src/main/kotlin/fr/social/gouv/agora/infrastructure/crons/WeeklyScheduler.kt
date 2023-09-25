@@ -12,7 +12,7 @@ class WeeklyScheduler(
     private val archiveOldQagUseCase: ArchiveOldQagUseCase,
 ) {
 
-    @Scheduled(cron = "0 0 14 * * WED")
+    @Scheduled(cron = "0 0 14 * * TUE")
     fun selectMostPopularQagAndArchiveOldQag() {
         println("📆 Performing weekly tasks...")
         selectMostPopularQagUseCase.putMostPopularQagInSelectedStatus()
