@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 : "${APP?Need to set APP}"
 
 if  [[ $APP != *-pr* ]] ;
