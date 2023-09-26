@@ -6,7 +6,6 @@ then
     echo "Not a PR"
     exit 1
 fi
-
 if [[ ! -v STAGING_DATABASE_URL ]]; then
     echo "STAGING_DATABASE_URL is not set"
     exit 1
