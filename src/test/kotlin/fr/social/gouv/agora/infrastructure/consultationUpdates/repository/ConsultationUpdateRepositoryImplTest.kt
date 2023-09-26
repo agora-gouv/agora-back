@@ -57,6 +57,7 @@ internal class ConsultationUpdateRepositoryImplTest {
     )
 
     private val consultationUpdate = ConsultationUpdate(
+        consultationId = "consultationId",
         status = ConsultationStatus.COLLECTING_DATA,
         description = "domain-description",
         explanationsTitle = null,

@@ -29,6 +29,31 @@ class GetConsultationResponseRepositoryImpl(
         }
     }
 
+    override fun hasAnsweredConsultations(consultationIds: List<String>, userId: String): Map<String, Boolean> {
+        // TODO tests
+        val userUUID = try {
+            UUID.fromString(userId)
+        } catch (e: IllegalArgumentException) {
+            return emptyMap()
+        }
+
+        val consultationUUIDs = consultationIds.mapNotNull { consultationId ->
+            try {
+                UUID.fromString(consultationId)
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+        }
+
+        val answeredConsultationList =
+            databaseRepository.getAnsweredConsultations(consultationUUIDs, userUUID).map { consultationUUID ->
+                consultationUUID.toString()
+            }
+        return consultationIds.associateWith { consultationId ->
+            answeredConsultationList.contains(consultationId)
+        }
+    }
+
     private fun getConsultationResponseDTOList(consultationId: String): List<ReponseConsultationDTO> {
         return try {
             val consultationUUID = UUID.fromString(consultationId)

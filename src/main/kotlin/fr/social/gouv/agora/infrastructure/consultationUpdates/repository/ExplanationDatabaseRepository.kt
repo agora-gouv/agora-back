@@ -11,6 +11,12 @@ import java.util.*
 interface ExplanationDatabaseRepository : CrudRepository<ExplanationDTO, UUID> {
 
     @Query(
+        value = "SELECT * FROM explanations WHERE consultation_updates_id IN :consultationUpdatesIDs",
+        nativeQuery = true
+    )
+    fun getExplanationUpdates(@Param("consultationUpdatesIDs") consultationUpdatesIDs: List<UUID>): List<ExplanationDTO>
+
+    @Query(
         value = "SELECT * FROM explanations WHERE consultation_updates_id = :consultationUpdatesUUId",
         nativeQuery = true
     )
