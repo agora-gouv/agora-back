@@ -13,6 +13,7 @@ class ConsultationUpdateMapper(private val explanationMapper: ExplanationMapper)
 
     fun toDomain(dto: ConsultationUpdateDTO, explanationDTOList: List<ExplanationDTO>): ConsultationUpdate {
         return ConsultationUpdate(
+            consultationId = dto.consultationId.toString(),
             status = when (dto.step) {
                 1 -> ConsultationStatus.COLLECTING_DATA
                 2 -> ConsultationStatus.POLITICAL_COMMITMENT
@@ -27,8 +28,8 @@ class ConsultationUpdateMapper(private val explanationMapper: ExplanationMapper)
                     title = dto.videoTitle ?: "",
                     intro = dto.videoIntro ?: "",
                     url = dto.videoUrl,
-                    width = dto.videoWidth?: 0,
-                    height = dto.videoHeight?: 0,
+                    width = dto.videoWidth ?: 0,
+                    height = dto.videoHeight ?: 0,
                     transcription = dto.videoTranscription ?: "",
                 )
             },

@@ -17,6 +17,29 @@ class ConsultationUpdateRepositoryImpl(
     private val mapper: ConsultationUpdateMapper,
 ) : ConsultationUpdateRepository {
 
+    override fun getConsultationUpdates(consultationIDs: List<String>): List<ConsultationUpdate> {
+        // TODO tests
+        val consultationUUIDs = consultationIDs.mapNotNull { consultationId ->
+            try {
+                UUID.fromString(consultationId)
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+        }
+
+        val consultationUpdateDTOList = updateDatabaseRepository.getConsultationUpdates(consultationUUIDs)
+        val consultationUpdateUUIDs = consultationUpdateDTOList.map { updateDTO -> updateDTO.id }
+        val explanationDTOMap = explanationDatabaseRepository.getExplanationUpdates(consultationUpdateUUIDs)
+            .groupBy { explanationDTO -> explanationDTO.consultationUpdatesId }
+
+        return consultationUpdateDTOList.map { consultationUpdateDTO ->
+            mapper.toDomain(
+                dto = consultationUpdateDTO,
+                explanationDTOList = explanationDTOMap[consultationUpdateDTO.id] ?: emptyList(),
+            )
+        }
+    }
+
     override fun getOngoingConsultationUpdate(consultationId: String): ConsultationUpdate? {
         return getConsultationUpdate(
             consultationId = consultationId,
