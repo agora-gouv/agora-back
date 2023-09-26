@@ -42,16 +42,17 @@ class ConsultationInfoRepositoryImpl(
     private fun getCache() = cacheManager.getCache(CONSULTATION_CACHE_NAME)
 
     private fun getConsultationFromCache(uuid: UUID): CacheResult {
-        val cachedDto = try {
-            getCache()?.get(uuid.toString(), ConsultationDTO::class.java)
-        } catch (e: IllegalStateException) {
-            null
-        }
-        return when (cachedDto?.id?.toString()) {
-            null -> CacheResult.CacheNotInitialized
-            CONSULTATION_NOT_FOUND_ID -> CacheResult.CachedConsultationNotFound
-            else -> CacheResult.CachedConsultation(cachedDto)
-        }
+        return CacheResult.CacheNotInitialized
+//        val cachedDto = try {
+//            getCache()?.get(uuid.toString(), ConsultationDTO::class.java)
+//        } catch (e: IllegalStateException) {
+//            null
+//        }
+//        return when (cachedDto?.id?.toString()) {
+//            null -> CacheResult.CacheNotInitialized
+//            CONSULTATION_NOT_FOUND_ID -> CacheResult.CachedConsultationNotFound
+//            else -> CacheResult.CachedConsultation(cachedDto)
+//        }
     }
 
     private fun getConsultationFromDatabase(uuid: UUID): ConsultationDTO? {

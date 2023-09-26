@@ -19,15 +19,16 @@ class ConsultationFinishedCacheRepository(private val cacheManager: CacheManager
 
     @Suppress("UNCHECKED_CAST")
     fun getConsultationFinishedList(): CacheResult {
-        val consultationFinishedList = try {
-            getCache()?.get(CONSULTATION_FINISHED_CACHE_KEY, List::class.java) as? List<ConsultationDTO>
-        } catch (e: IllegalStateException) {
-            null
-        }
-        return when (consultationFinishedList) {
-            null -> CacheResult.CacheNotInitialized
-            else -> CacheResult.CachedConsultationFinishedList(consultationFinishedList)
-        }
+        return CacheResult.CacheNotInitialized
+//        val consultationFinishedList = try {
+//            getCache()?.get(CONSULTATION_FINISHED_CACHE_KEY, List::class.java) as? List<ConsultationDTO>
+//        } catch (e: IllegalStateException) {
+//            null
+//        }
+//        return when (consultationFinishedList) {
+//            null -> CacheResult.CacheNotInitialized
+//            else -> CacheResult.CachedConsultationFinishedList(consultationFinishedList)
+//        }
     }
 
     fun insertConsultationFinishedList(consultationOngoingListDTO: List<ConsultationDTO>?) {

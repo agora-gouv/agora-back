@@ -20,15 +20,16 @@ class ConsultationAnsweredCacheRepository(private val cacheManager: CacheManager
 
     @Suppress("UNCHECKED_CAST")
     fun getConsultationAnsweredList(userId: UUID): CacheResult {
-        val consultationAnsweredList = try {
-            getCache()?.get(userId.toString(), List::class.java) as? List<ConsultationDTO>
-        } catch (e: IllegalStateException) {
-            null
-        }
-        return when (consultationAnsweredList) {
-            null -> CacheResult.CacheNotInitialized
-            else -> CacheResult.CachedConsultationAnsweredList(consultationAnsweredList)
-        }
+        return CacheResult.CacheNotInitialized
+//        val consultationAnsweredList = try {
+//            getCache()?.get(userId.toString(), List::class.java) as? List<ConsultationDTO>
+//        } catch (e: IllegalStateException) {
+//            null
+//        }
+//        return when (consultationAnsweredList) {
+//            null -> CacheResult.CacheNotInitialized
+//            else -> CacheResult.CachedConsultationAnsweredList(consultationAnsweredList)
+//        }
     }
 
     fun insertConsultationAnsweredList(userId: UUID, consultationAnsweredListDTO: List<ConsultationDTO>?) {

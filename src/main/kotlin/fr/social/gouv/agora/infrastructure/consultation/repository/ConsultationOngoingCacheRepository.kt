@@ -18,15 +18,16 @@ class ConsultationOngoingCacheRepository(private val cacheManager: CacheManager)
 
     @Suppress("UNCHECKED_CAST")
     fun getConsultationOngoingList(): CacheResult {
-        val consultationOngoingList = try {
-            getCache()?.get(CONSULTATION_ONGOING_CACHE_KEY, List::class.java) as? List<ConsultationDTO>
-        } catch (e: IllegalStateException) {
-            null
-        }
-        return when (consultationOngoingList) {
-            null -> CacheResult.CacheNotInitialized
-            else -> CacheResult.CachedConsultationOngoingList(consultationOngoingList)
-        }
+        return CacheResult.CacheNotInitialized
+//        val consultationOngoingList = try {
+//            getCache()?.get(CONSULTATION_ONGOING_CACHE_KEY, List::class.java) as? List<ConsultationDTO>
+//        } catch (e: IllegalStateException) {
+//            null
+//        }
+//        return when (consultationOngoingList) {
+//            null -> CacheResult.CacheNotInitialized
+//            else -> CacheResult.CachedConsultationOngoingList(consultationOngoingList)
+//        }
     }
 
     fun insertConsultationOngoingList(consultationOngoingListDTO: List<ConsultationDTO>?) {
