@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.QuestionWithChoices
 import fr.social.gouv.agora.domain.ReponseConsultationInserting
 import fr.social.gouv.agora.infrastructure.utils.UuidUtils
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
@@ -17,6 +18,7 @@ class InsertReponseConsultationUseCase(
     private val consultationResponseRepository: GetConsultationResponseRepository,
     private val questionRepository: QuestionRepository,
     private val insertConsultationResponseParametersMapper: InsertConsultationResponseParametersMapper,
+    private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
 ) {
 
     fun insertReponseConsultation(
@@ -34,6 +36,8 @@ class InsertReponseConsultationUseCase(
         )
 
         consultationPreviewAnsweredRepository.deleteConsultationAnsweredListFromCache(userId)
+        consultationPreviewPageRepository.evictConsultationPreviewOngoingList(userId)
+        consultationPreviewPageRepository.evictConsultationPreviewAnsweredList(userId)
         return insertReponseConsultationRepository.insertConsultationResponses(
             insertParameters = insertConsultationResponseParametersMapper.toInsertParameters(
                 consultationId = consultationId,

@@ -10,6 +10,9 @@ import java.util.*
 @Repository
 interface ConsultationUpdateDatabaseRepository : CrudRepository<ConsultationUpdateDTO, UUID> {
 
+    @Query(value = "SELECT * FROM consultation_updates WHERE consultation_id IN :consultationIDs", nativeQuery = true)
+    fun getConsultationUpdates(@Param("consultationIDs") consultationIDs: List<UUID>): List<ConsultationUpdateDTO>
+
     @Query(
         value = "SELECT * FROM consultation_updates WHERE consultation_id = :consultationId AND step = 1 LIMIT 1",
         nativeQuery = true
