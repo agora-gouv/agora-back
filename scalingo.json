@@ -1,6 +1,6 @@
 {
     "name": "agora-back",
     "scripts": {
-      "postdeploy": "bash bin/init_review_database.sh"
+      "first-deploy": "bash bin/init_review_database.sh"
     }
 }
