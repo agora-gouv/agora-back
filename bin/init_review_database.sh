@@ -1,10 +1,14 @@
 #!/bin/sh
 : "${APP?Need to set APP}"
-: "${STAGING_DATABASE_URL?Need to set STAGING_DATABASE_URL}"
 
 if  [[ $APP != *-pr* ]] ;
 then
     echo "Not a PR"
+    exit 1
+fi
+
+if [[ ! -v STAGING_DATABASE_URL ]]; then
+    echo "STAGING_DATABASE_URL is not set"
     exit 1
 fi
 
