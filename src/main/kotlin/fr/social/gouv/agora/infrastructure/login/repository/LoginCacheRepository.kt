@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.login.repository
 
 import fr.social.gouv.agora.infrastructure.login.dto.UserDTO
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -10,53 +11,47 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
 
     companion object {
         private const val USER_CACHE_NAME = "userCache"
-        private const val ALL_USER_CACHE_KEY = "userCacheList"
     }
 
     sealed class CacheResult {
-        data class CachedUserList(val allUserDTO: List<UserDTO>) : CacheResult()
+        data class CachedUser(val userDTO: UserDTO) : CacheResult()
+        object CacheUserNotFound : CacheResult()
         object CacheNotInitialized : CacheResult()
     }
 
-    fun initializeCache(allUserDTO: List<UserDTO>) {
-        getUserCache()?.put(ALL_USER_CACHE_KEY, allUserDTO)
-    }
-
-    fun getAllUserList(): CacheResult {
-        return when (val allUserDTO = getAllUserDTOFromCache()) {
+    fun getUser(userUUID: UUID): CacheResult {
+        val userDTO = getCache()?.get(userUUID.toString(), UserDTO::class.java)
+        return when (userDTO?.id) {
             null -> CacheResult.CacheNotInitialized
-            else -> CacheResult.CachedUserList(allUserDTO)
+            UuidUtils.NOT_FOUND_UUID -> CacheResult.CacheUserNotFound
+            else -> CacheResult.CachedUser(userDTO)
         }
     }
 
-    @Throws(IllegalStateException::class)
     fun insertUser(userDTO: UserDTO) {
-        getAllUserDTOFromCache()?.let { allUserDTO ->
-            initializeCache(allUserDTO + userDTO)
-        } ?: throw IllegalStateException("User cache has not been initialized")
+        getCache()?.put(userDTO.id.toString(), userDTO)
     }
 
-    @Throws(IllegalStateException::class)
     fun updateUser(userDTO: UserDTO) {
-        getAllUserDTOFromCache()?.let { allUserDTO ->
-            initializeCache(replaceUpdatedDTO(allUserDTO = allUserDTO, updatedUserDTO = userDTO))
-        } ?: throw IllegalStateException("User cache has not been initialized")
+        insertUser(userDTO)
     }
 
-    private fun getUserCache() = cacheManager.getCache(USER_CACHE_NAME)
-
-    @Suppress("UNCHECKED_CAST")
-    private fun getAllUserDTOFromCache(): List<UserDTO>? {
-        return try {
-            getUserCache()?.get(ALL_USER_CACHE_KEY, List::class.java) as? List<UserDTO>
-        } catch (e: IllegalStateException) {
-            null
-        }
+    fun insertUserNotFound(userUUID: UUID) {
+        getCache()?.put(userUUID.toString(), createNotFoundUser())
     }
 
-    private fun replaceUpdatedDTO(allUserDTO: List<UserDTO>, updatedUserDTO: UserDTO) = allUserDTO.map { userDTO ->
-        if (userDTO.id == updatedUserDTO.id) updatedUserDTO
-        else userDTO
+    private fun getCache() = cacheManager.getCache(USER_CACHE_NAME)
+
+    private fun createNotFoundUser(): UserDTO {
+        return UserDTO(
+            id = UuidUtils.NOT_FOUND_UUID,
+            password = "",
+            fcmToken = "",
+            createdDate = Date(0),
+            authorizationLevel = 0,
+            isBanned = 0,
+            lastConnectionDate = Date(0),
+        )
     }
 
 }
