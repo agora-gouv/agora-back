@@ -7,8 +7,10 @@ import fr.social.gouv.agora.usecase.qag.QagFilters
 import fr.social.gouv.agora.usecase.qag.QagInfoWithSupportAndThematique
 import fr.social.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -32,7 +34,18 @@ internal class GetQagPreviewListUseCaseTest {
     private lateinit var filterGenerator: QagPreviewFilterGenerator
 
     @MockBean
+    @Suppress("unused")
+    private lateinit var previewPageRepository: QagPreviewPageRepository
+
+    @MockBean
     private lateinit var mapper: QagPreviewMapper
+
+    @BeforeEach
+    fun setUp() {
+        given(previewPageRepository.getQagPopularList(anyString())).willReturn(null)
+        given(previewPageRepository.getQagLatestList(anyString())).willReturn(null)
+        given(previewPageRepository.getQagSupportedList(anyString(), anyString())).willReturn(null)
+    }
 
     @Test
     fun `getQagPreviewList - when getQagListUseCase returns emptyList - should return 3x emptyList`() {

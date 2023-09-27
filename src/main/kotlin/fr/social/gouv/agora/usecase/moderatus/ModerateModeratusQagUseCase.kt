@@ -8,6 +8,7 @@ import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUse
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
 import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.springframework.stereotype.Service
 
@@ -17,6 +18,7 @@ class ModerateModeratusQagUseCase(
     private val sendNotificationdUseCase: SendNotificationQagModeratedUseCase,
     private val qagUpdatesRepository: QagUpdatesRepository,
     private val moderatusQagLockRepository: ModeratusQagLockRepository,
+    private val previewPageRepository: QagPreviewPageRepository,
 ) {
 
     companion object {
@@ -67,6 +69,8 @@ class ModerateModeratusQagUseCase(
             QagStatus.OPEN -> {
                 if (isAccepted) {
                     sendNotificationdUseCase.sendNotificationQagAccepted(qagInfo.id)
+                    previewPageRepository.getQagLatestList(thematiqueId = null)
+                    previewPageRepository.getQagLatestList(thematiqueId = qagInfo.thematiqueId)
                 } else {
                     sendNotificationdUseCase.sendNotificationQagRejected(qagInfo.id)
                 }
