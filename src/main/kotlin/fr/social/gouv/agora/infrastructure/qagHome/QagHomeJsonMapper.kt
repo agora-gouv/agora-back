@@ -55,7 +55,7 @@ class QagHomeJsonMapper(
                     authorPortraitUrl = responseQag.authorPortraitUrl,
                     responseDate = responseQag.responseDate.toInstant()
                     .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"),
+                    .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")),
                 )
             },
         )
@@ -69,7 +69,7 @@ class QagHomeJsonMapper(
             username = qagPreview.username,
             date = qagPreview.toInstant()
             .atZone(ZoneId.systemDefault())
-            .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"),
+            .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")),
             support = qagMapper.toJson(qagPreview.support),
             isAuthor = qagPreview.isAuthor
         )
