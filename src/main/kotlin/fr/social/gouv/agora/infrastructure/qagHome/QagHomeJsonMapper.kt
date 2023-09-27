@@ -7,12 +7,16 @@ import fr.social.gouv.agora.infrastructure.qag.QagJsonMapper
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Date
+
 @Component
 class QagHomeJsonMapper(
     private val qagMapper: QagJsonMapper,
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
 ) {
-
     fun toJson(
         qagPopularList: List<QagPreview>,
         qagLatestList: List<QagPreview>,
@@ -49,7 +53,9 @@ class QagHomeJsonMapper(
                     title = responseQag.title,
                     author = responseQag.author,
                     authorPortraitUrl = responseQag.authorPortraitUrl,
-                    responseDate = responseQag.responseDate.toString(),
+                    responseDate = responseQag.responseDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"),
                 )
             },
         )
@@ -61,7 +67,9 @@ class QagHomeJsonMapper(
             thematique = thematiqueJsonMapper.toNoIdJson(qagPreview.thematique),
             title = qagPreview.title,
             username = qagPreview.username,
-            date = qagPreview.date.toString(),
+            date = qagPreview.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"),
             support = qagMapper.toJson(qagPreview.support),
             isAuthor = qagPreview.isAuthor
         )
