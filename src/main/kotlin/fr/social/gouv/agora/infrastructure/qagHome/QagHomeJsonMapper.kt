@@ -67,7 +67,7 @@ class QagHomeJsonMapper(
             thematique = thematiqueJsonMapper.toNoIdJson(qagPreview.thematique),
             title = qagPreview.title,
             username = qagPreview.username,
-            date = qagPreview.toInstant()
+            date = qagPreview.date.toInstant()
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")),
             support = qagMapper.toJson(qagPreview.support),
