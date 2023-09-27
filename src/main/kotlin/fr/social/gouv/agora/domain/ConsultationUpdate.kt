@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.domain
 
 data class ConsultationUpdate(
+    val consultationId: String,
     val status: ConsultationStatus,
     val description: String,
     val explanationsTitle: String?,

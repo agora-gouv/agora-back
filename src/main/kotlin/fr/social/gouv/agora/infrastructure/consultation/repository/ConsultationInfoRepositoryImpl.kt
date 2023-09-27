@@ -22,6 +22,11 @@ class ConsultationInfoRepositoryImpl(
         private const val CONSULTATION_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
+    override fun getConsultations(): List<ConsultationInfo> {
+        // TODO tests
+        return databaseRepository.getConsultations().map(consultationInfoMapper::toDomain)
+    }
+
     override fun getConsultation(consultationId: String): ConsultationInfo? {
         return try {
             val uuid = UUID.fromString(consultationId)
