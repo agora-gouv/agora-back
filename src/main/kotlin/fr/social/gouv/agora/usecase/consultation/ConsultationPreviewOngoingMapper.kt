@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.social.gouv.agora.domain.ConsultationPreviewOngoingInfo
 import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.LocalDateTime
@@ -31,6 +32,19 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
         )
     }
 
+    fun toConsultationPreviewOngoing(
+        consultationInfo: ConsultationInfo,
+        thematique: Thematique,
+    ): ConsultationPreviewOngoing {
+        return ConsultationPreviewOngoing(
+            id = consultationInfo.id,
+            title = consultationInfo.title,
+            coverUrl = consultationInfo.coverUrl,
+            thematique = thematique,
+            endDate = consultationInfo.endDate,
+            highlightLabel = buildHighlightLabel(consultationInfo.endDate),
+        )
+    }
 
     fun buildHighlightLabel(endDate: Date): String? {
         val dateNow = LocalDateTime.now(clock)

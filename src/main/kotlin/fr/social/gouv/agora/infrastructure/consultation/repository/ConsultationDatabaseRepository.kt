@@ -9,6 +9,11 @@ import java.util.*
 
 @Repository
 interface ConsultationDatabaseRepository : CrudRepository<ConsultationDTO, UUID> {
+
+    // TODO: optimize query when consultations table will grow bigger
+    @Query(value = "SELECT * FROM consultations", nativeQuery = true)
+    fun getConsultations(): List<ConsultationDTO>
+
     @Query(value = "SELECT * FROM consultations WHERE id = :consultationId LIMIT 1", nativeQuery = true)
     fun getConsultation(@Param("consultationId") consultationId: UUID): ConsultationDTO?
 
