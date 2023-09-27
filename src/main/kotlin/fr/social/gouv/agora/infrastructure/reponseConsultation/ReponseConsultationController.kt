@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation
 
 import fr.social.gouv.agora.infrastructure.reponseConsultation.InsertResponseConsultationQueue.TaskType
+import fr.social.gouv.agora.infrastructure.reponseConsultation.repository.ConsultationResponseResultJsonCacheRepository
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
 import fr.social.gouv.agora.usecase.reponseConsultation.InsertReponseConsultationUseCase
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*
 class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,
     private val askForDemographicInfoUseCase: AskForDemographicInfoUseCase,
+    private val cacheRepository: ConsultationResponseResultJsonCacheRepository,
     private val jsonMapper: ReponseConsultationJsonMapper,
     private val queue: InsertResponseConsultationQueue,
 ) {
@@ -35,6 +37,7 @@ class ReponseConsultationController(
                 when (statusInsertion) {
                     InsertResult.INSERT_SUCCESS -> {
                         val askDemographicInfo = askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
+                        cacheRepository.evictConsultationResults(consultationId)
                         ResponseEntity.ok()
                             .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
                     }
