@@ -38,7 +38,7 @@ class ModeratusModerateQagController(
             userId = userId,
             status = status,
             reason = reason,
-            shouldDeleteFlag = shouldDeleteFlag?.toInt() ?: 0,
+            shouldDeleteFlag = shouldDeleteFlag?.toIntOrNull() ?: 0,
         )) {
             is ModerateQagOptionsMapper.Result.Success -> result.options
             is ModerateQagOptionsMapper.Result.Error -> return ResponseEntity.badRequest()
