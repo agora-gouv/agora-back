@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 
-import fr.social.gouv.agora.infrastructure.reponseConsultation.ConsultationResultJson
+import com.fasterxml.jackson.databind.ObjectMapper
+import fr.social.gouv.agora.infrastructure.reponseConsultation.*
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
@@ -15,6 +16,7 @@ interface ConsultationResponseResultJsonCacheRepository {
 @Suppress("unused")
 class ConsultationResponseResultJsonRepositoryImpl(
     @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager,
+    private val objectMapper: ObjectMapper,
 ) : ConsultationResponseResultJsonCacheRepository {
 
     companion object {
@@ -22,11 +24,12 @@ class ConsultationResponseResultJsonRepositoryImpl(
     }
 
     override fun getConsultationResults(consultationId: String): ConsultationResultJson? {
-        return getCache()?.get(consultationId, ConsultationResultJson::class.java)
+        return getCache()?.get(consultationId, String::class.java)
+            ?.let { objectMapper.readValue(it, ConsultationResultJson::class.java) }
     }
 
     override fun insertConsultationResults(consultationId: String, results: ConsultationResultJson) {
-        getCache()?.put(consultationId, results)
+        getCache()?.put(consultationId, objectMapper.writeValueAsString(results))
     }
 
     override fun evictConsultationResults(consultationId: String) {
@@ -34,5 +37,4 @@ class ConsultationResponseResultJsonRepositoryImpl(
     }
 
     private fun getCache() = cacheManager.getCache(CONSULTATION_RESPONSE_RESULT_JSON_CACHE_NAME)
-
 }
