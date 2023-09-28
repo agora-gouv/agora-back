@@ -1,11 +1,12 @@
 package fr.social.gouv.agora.infrastructure.reponseConsultation
 
 import fr.social.gouv.agora.domain.*
+import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
 
 @Component
-class ConsultationResultJsonMapper {
+class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
 
     fun toJson(domain: ConsultationResult): ConsultationResultJson {
         return ConsultationResultJson(
@@ -30,8 +31,8 @@ class ConsultationResultJsonMapper {
                 conclusion = domain.lastUpdate.conclusion?.let { conclusion -> toConclusionJson(conclusion) },
             ),
             presentation = PresentationJson(
-                startDate = domain.consultation.startDate.toString(),
-                endDate = domain.consultation.endDate.toString(),
+                startDate = dateMapper.toFormattedDate(domain.consultation.startDate),
+                endDate = dateMapper.toFormattedDate(domain.consultation.endDate),
                 description = domain.consultation.description,
                 tipsDescription = domain.consultation.tipsDescription,
             )

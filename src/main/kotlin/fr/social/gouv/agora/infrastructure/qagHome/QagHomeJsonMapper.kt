@@ -3,19 +3,16 @@ package fr.social.gouv.agora.infrastructure.qagHome
 import fr.social.gouv.agora.domain.QagPreview
 import fr.social.gouv.agora.domain.QagSelectedForResponse
 import fr.social.gouv.agora.domain.ResponseQagPreview
+import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.social.gouv.agora.infrastructure.qag.QagJsonMapper
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
-
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Date
 
 @Component
 class QagHomeJsonMapper(
     private val qagMapper: QagJsonMapper,
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
+    private val dateMapper: DateMapper,
 ) {
     fun toJson(
         qagPopularList: List<QagPreview>,
@@ -53,9 +50,7 @@ class QagHomeJsonMapper(
                     title = responseQag.title,
                     author = responseQag.author,
                     authorPortraitUrl = responseQag.authorPortraitUrl,
-                    responseDate = responseQag.responseDate.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")),
+                    responseDate = dateMapper.toFormattedDate(responseQag.responseDate),
                 )
             },
         )
@@ -67,9 +62,7 @@ class QagHomeJsonMapper(
             thematique = thematiqueJsonMapper.toNoIdJson(qagPreview.thematique),
             title = qagPreview.title,
             username = qagPreview.username,
-            date = qagPreview.date.toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")),
+            date = dateMapper.toFormattedDate(qagPreview.date),
             support = qagMapper.toJson(qagPreview.support),
             isAuthor = qagPreview.isAuthor
         )
