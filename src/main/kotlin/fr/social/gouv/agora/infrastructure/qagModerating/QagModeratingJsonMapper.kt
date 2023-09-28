@@ -2,13 +2,17 @@ package fr.social.gouv.agora.infrastructure.qagModerating
 
 import fr.social.gouv.agora.domain.QagModerating
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.social.gouv.agora.infrastructure.qagSimilar.QagSimilarJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
-class QagModeratingJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
+class QagModeratingJsonMapper(
+    private val thematiqueJsonMapper: ThematiqueJsonMapper,
+    private val dateMapper: DateMapper,
+) {
 
     fun toJson(qagModeratingList: List<QagModerating>, totalNumberQagModerating: Int): QagModeratingHomeJson {
         return QagModeratingHomeJson(
@@ -19,7 +23,7 @@ class QagModeratingJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMa
                     thematique = thematiqueJsonMapper.toNoIdJson(qagModerating.thematique),
                     title = qagModerating.title,
                     description = qagModerating.description,
-                    date = qagModerating.date.toString(),
+                    date = dateMapper.toFormattedDate(qagModerating.date),
                     username = qagModerating.username,
                     support = toJson(qagModerating.support),
                 )
@@ -34,7 +38,7 @@ class QagModeratingJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMa
                     thematique = thematiqueJsonMapper.toNoIdJson(qagModerating.thematique),
                     title = qagModerating.title,
                     description = qagModerating.description,
-                    date = qagModerating.date.toString(),
+                    date = dateMapper.toFormattedDate(qagModerating.date),
                     username = qagModerating.username,
                     support = toJson(qagModerating.support),
                 )

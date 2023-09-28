@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.Qag
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.social.gouv.agora.infrastructure.utils.StringUtils
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
@@ -11,7 +12,10 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
+class QagJsonMapper(
+    private val thematiqueJsonMapper: ThematiqueJsonMapper,
+    private val dateMapper: DateMapper,
+) {
 
     fun toJson(qag: Qag, userId: String): QagJson {
         return QagJson(
@@ -19,7 +23,7 @@ class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
             thematique = thematiqueJsonMapper.toNoIdJson(qag.thematique),
             title = qag.title,
             description = qag.description,
-            date = qag.date.toString(),
+            date = dateMapper.toFormattedDate(qag.date),
             username = qag.username,
             canShare = qag.status == QagStatus.MODERATED_ACCEPTED || qag.status == QagStatus.SELECTED_FOR_RESPONSE,
             canSupport = qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED,
@@ -65,7 +69,7 @@ class QagJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
             ResponseQagJson(
                 author = response.author,
                 authorDescription = response.authorDescription,
-                responseDate = response.responseDate.toString(),
+                responseDate = dateMapper.toFormattedDate(response.responseDate),
                 videoUrl = response.videoUrl,
                 videoWidth = response.videoWidth,
                 videoHeight = response.videoHeight,
