@@ -44,99 +44,56 @@ internal class InsertQagUseCaseTest {
         userId = "userId",
     )
 
+    private val sanitizedQagInserting = QagInserting(
+        thematiqueId = "thematiqueId",
+        title = "sanitizedTitle",
+        description = "sanitizedDescription",
+        date = Date(0),
+        status = QagStatus.ARCHIVED,
+        username = "sanitizedUsername",
+        userId = "userId",
+    )
+
     @BeforeEach
     fun setUp() {
-        given(contentSanitizer.isContentSaint("title", 200)).willReturn(true)
-        given(contentSanitizer.isContentSaint("description", 400)).willReturn(true)
-        given(contentSanitizer.isContentSaint("username", 50)).willReturn(true)
-    }
-
-    @Test
-    fun `insertQag - when title is not saint - should return failure`() {
-        // Given
-        given(contentSanitizer.isContentSaint("title", 200)).willReturn(false)
-
-        // When
-        val result = useCase.insertQag(qagInserting)
-
-        // Then
-        assertThat(result).isEqualTo(QagInsertionResult.Failure)
-        then(contentSanitizer).should(only()).isContentSaint("title", 200)
-        then(qagInfoRepository).shouldHaveNoInteractions()
-        then(supportQagRepository).shouldHaveNoInteractions()
-    }
-
-    @Test
-    fun `insertQag - when description is not saint - should return failure`() {
-        // Given
-        given(contentSanitizer.isContentSaint("title", 200)).willReturn(true)
-        given(contentSanitizer.isContentSaint("description", 400)).willReturn(false)
-
-        // When
-        val result = useCase.insertQag(qagInserting)
-
-        // Then
-        assertThat(result).isEqualTo(QagInsertionResult.Failure)
-        then(contentSanitizer).should().isContentSaint("title", 200)
-        then(contentSanitizer).should().isContentSaint("description", 400)
-        then(contentSanitizer).shouldHaveNoMoreInteractions()
-        then(qagInfoRepository).shouldHaveNoInteractions()
-        then(supportQagRepository).shouldHaveNoInteractions()
-    }
-
-    @Test
-    fun `insertQag - when username is not saint - should return failure`() {
-        // Given
-        given(contentSanitizer.isContentSaint("title", 200)).willReturn(true)
-        given(contentSanitizer.isContentSaint("description", 400)).willReturn(true)
-        given(contentSanitizer.isContentSaint("username", 50)).willReturn(false)
-
-        // When
-        val result = useCase.insertQag(qagInserting)
-
-        // Then
-        assertThat(result).isEqualTo(QagInsertionResult.Failure)
-        then(contentSanitizer).should().isContentSaint("title", 200)
-        then(contentSanitizer).should().isContentSaint("description", 400)
-        then(contentSanitizer).should().isContentSaint("username", 50)
-        then(contentSanitizer).shouldHaveNoMoreInteractions()
-        then(qagInfoRepository).shouldHaveNoInteractions()
-        then(supportQagRepository).shouldHaveNoInteractions()
+        given(contentSanitizer.sanitize("title", 200)).willReturn("sanitizedTitle")
+        given(contentSanitizer.sanitize("description", 400)).willReturn("sanitizedDescription")
+        given(contentSanitizer.sanitize("username", 50)).willReturn("sanitizedUsername")
     }
 
     @Test
     fun `insertQag - when insert failed - should return failure`() {
         // Given
-        given(qagInfoRepository.insertQagInfo(qagInserting)).willReturn(QagInsertionResult.Failure)
+        given(qagInfoRepository.insertQagInfo(sanitizedQagInserting)).willReturn(QagInsertionResult.Failure)
 
         // When
         val result = useCase.insertQag(qagInserting)
 
         // Then
         assertThat(result).isEqualTo(QagInsertionResult.Failure)
-        then(contentSanitizer).should().isContentSaint("title", 200)
-        then(contentSanitizer).should().isContentSaint("description", 400)
-        then(contentSanitizer).should().isContentSaint("username", 50)
+        then(contentSanitizer).should().sanitize("title", 200)
+        then(contentSanitizer).should().sanitize("description", 400)
+        then(contentSanitizer).should().sanitize("username", 50)
         then(contentSanitizer).shouldHaveNoMoreInteractions()
-        then(qagInfoRepository).should(only()).insertQagInfo(qagInserting)
+        then(qagInfoRepository).should(only()).insertQagInfo(sanitizedQagInserting)
     }
 
     @Test
     fun `insertQag - when insert success - should add support then return success`() {
         // Given
         val qagId = UUID.randomUUID()
-        given(qagInfoRepository.insertQagInfo(qagInserting)).willReturn(QagInsertionResult.Success(qagId = qagId))
+        given(qagInfoRepository.insertQagInfo(sanitizedQagInserting)).willReturn(QagInsertionResult.Success(qagId = qagId))
 
         // When
         val result = useCase.insertQag(qagInserting)
 
         // Then
         assertThat(result).isEqualTo(QagInsertionResult.Success(qagId = qagId))
-        then(contentSanitizer).should().isContentSaint("title", 200)
-        then(contentSanitizer).should().isContentSaint("description", 400)
-        then(contentSanitizer).should().isContentSaint("username", 50)
+        then(contentSanitizer).should().sanitize("title", 200)
+        then(contentSanitizer).should().sanitize("description", 400)
+        then(contentSanitizer).should().sanitize("username", 50)
         then(contentSanitizer).shouldHaveNoMoreInteractions()
-        then(qagInfoRepository).should(only()).insertQagInfo(qagInserting)
+        then(qagInfoRepository).should(only()).insertQagInfo(sanitizedQagInserting)
         then(supportQagRepository).should(only()).insertSupportQag(
             SupportQagInserting(
                 qagId = qagId.toString(),
