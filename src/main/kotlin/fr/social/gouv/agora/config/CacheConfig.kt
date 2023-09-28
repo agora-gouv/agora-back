@@ -55,6 +55,7 @@ class CacheConfig {
                     GenericJackson2JsonRedisSerializer()
                 )
             )
+            .entryTtl(Duration.ofHours(1L))
         return RedisCacheManager.builder(factory).cacheDefaults(redisCacheConfiguration).build()
     }
 

@@ -1,10 +1,13 @@
 package fr.social.gouv.agora.infrastructure.moderatus.repository
 
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 
 @Repository
-class ModeratusQagLockCacheRepository(private val cacheManager: CacheManager) {
+class ModeratusQagLockCacheRepository(
+    @Qualifier("eternalCacheManager") private val cacheManager: CacheManager,
+) {
 
     companion object {
         private const val MODERATUS_QAG_LOCK_CACHE_NAME = "ModeratusQagLockCache"
