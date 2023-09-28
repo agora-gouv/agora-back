@@ -5,18 +5,15 @@ import fr.social.gouv.agora.domain.ConsultationPreviewFinished
 import fr.social.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.social.gouv.agora.domain.ConsultationStatus
 import fr.social.gouv.agora.domain.ConsultationStatus.*
+import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
-import fr.social.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 @Component
-class ConsultationPreviewJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
-
-    companion object {
-        private val DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.FRANCE)
-    }
+class ConsultationPreviewJsonMapper(
+    private val thematiqueJsonMapper: ThematiqueJsonMapper,
+    private val dateMapper: DateMapper,
+) {
 
     fun toJson(
         domainOngoingList: List<ConsultationPreviewOngoing>,
@@ -29,7 +26,7 @@ class ConsultationPreviewJsonMapper(private val thematiqueJsonMapper: Thematique
                     id = domain.id,
                     title = domain.title,
                     coverUrl = domain.coverUrl,
-                    endDate = DATE_FORMATTER.format(domain.endDate.toLocalDateTime()),
+                    endDate = dateMapper.toFormattedDate(domain.endDate),
                     thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
                     highlightLabel = domain.highlightLabel,
                 )

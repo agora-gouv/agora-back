@@ -2,11 +2,12 @@ package fr.social.gouv.agora.infrastructure.notification
 
 import fr.social.gouv.agora.domain.Notification
 import fr.social.gouv.agora.domain.NotificationType
+import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.social.gouv.agora.usecase.notification.NotificationListAndHasMoreNotificationsFlag
 import org.springframework.stereotype.Component
 
 @Component
-class NotificationPaginatedJsonMapper {
+class NotificationPaginatedJsonMapper(private val dateMapper: DateMapper) {
 
     companion object {
         private const val QAG_NOTIFICATION_TYPE = "Questions citoyennes"
@@ -27,7 +28,7 @@ class NotificationPaginatedJsonMapper {
                 NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
                 NotificationType.QAG -> QAG_NOTIFICATION_TYPE
             },
-            date = domain.date.toString(),
+            date = dateMapper.toFormattedDate(domain.date),
         )
     }
 
