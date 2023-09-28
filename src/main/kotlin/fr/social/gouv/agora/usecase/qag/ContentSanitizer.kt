@@ -12,8 +12,4 @@ class ContentSanitizer {
         return HtmlUtils.htmlUnescape(policyFactory.sanitize(content).take(maxLength))
     }
 
-    fun isContentSaint(content: String, maxLength: Int): Boolean {
-        return content == sanitize(content = content, maxLength = maxLength)
-    }
-
 }
