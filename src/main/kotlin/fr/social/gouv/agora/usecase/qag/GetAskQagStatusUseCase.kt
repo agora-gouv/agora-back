@@ -20,8 +20,8 @@ class GetAskQagStatusUseCase(
         return if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)) {
             AskQagStatus.FEATURE_DISABLED
         } else {
-            val latestQagByUser =
-                qagInfoRepository.getAllQagInfo().filter { qagInfo -> qagInfo.userId == userId }.maxByOrNull { it.date }
+            val latestQagByUser = qagInfoRepository.getUserQagInfoList(userId = userId, thematiqueId = null)
+                .maxByOrNull { it.date }
             when {
                 latestQagByUser == null -> AskQagStatus.ENABLED
                 isDateWithinTheWeek(latestQagByUser.date) -> AskQagStatus.WEEKLY_LIMIT_REACHED

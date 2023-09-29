@@ -2,9 +2,10 @@ package fr.social.gouv.agora.usecase.supportQag
 
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQagInserting
+import fr.social.gouv.agora.usecase.qag.QagWithSupportCount
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagResult
@@ -15,7 +16,7 @@ class InsertSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val previewPageRepository: QagPreviewPageRepository,
+    private val previewPageRepository: QagPreviewPageCacheRepository,
 ) {
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
         if (getSupportQagRepository.getSupportQag(
@@ -46,17 +47,50 @@ class InsertSupportQagUseCase(
     }
 
     private fun updateCache(qagInfo: QagInfo, userId: String) {
-        val popularQagsNoThematique = previewPageRepository.getQagPopularList(thematiqueId = null)
-        if (popularQagsNoThematique?.any { it.qagInfo.id == qagInfo.id } == true) {
-            previewPageRepository.evictQagPopularList(thematiqueId = null)
+        previewPageRepository.getQagPopularList(thematiqueId = null)?.let { qagList ->
+            buildIncrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
+                previewPageRepository.initQagPopularList(thematiqueId = null, qagList = updatedQagList)
+            }
         }
 
-        val popularQagsWithThematique = previewPageRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)
-        if (popularQagsWithThematique?.any { it.qagInfo.id == qagInfo.id } == true) {
-            previewPageRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId)
+        previewPageRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)?.let { qagList ->
+            buildIncrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
+                previewPageRepository.initQagPopularList(thematiqueId = qagInfo.thematiqueId, qagList = updatedQagList)
+            }
         }
 
-        previewPageRepository.evictQagSupportedList(userId = userId, thematiqueId = null)
-        previewPageRepository.evictQagSupportedList(userId = userId, thematiqueId = qagInfo.thematiqueId)
+        previewPageRepository.getQagSupportedList(userId = userId, thematiqueId = null)?.let { qagList ->
+            buildIncrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
+                previewPageRepository.initQagSupportedList(
+                    userId = userId,
+                    thematiqueId = null,
+                    qagList = updatedQagList,
+                )
+            }
+        }
+
+        previewPageRepository.getQagSupportedList(userId = userId, thematiqueId = qagInfo.thematiqueId)
+            ?.let { qagList ->
+                buildIncrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
+                    previewPageRepository.initQagSupportedList(
+                        userId = userId,
+                        thematiqueId = qagInfo.thematiqueId,
+                        qagList = updatedQagList,
+                    )
+                }
+            }
+    }
+
+    private fun buildIncrementSupportCountIfPresent(
+        qagInfo: QagInfo,
+        qagList: List<QagWithSupportCount>,
+    ): List<QagWithSupportCount>? {
+        return if (qagList.any { it.qagInfo.id == qagInfo.id }) {
+            qagList.map { qag ->
+                if (qag.qagInfo.id == qagInfo.id) {
+                    qag.copy(supportCount = qag.supportCount + 1)
+                } else qag
+            }
+        } else null
     }
 }

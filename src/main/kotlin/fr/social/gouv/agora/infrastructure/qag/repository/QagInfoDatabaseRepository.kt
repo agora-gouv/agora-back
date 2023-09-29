@@ -15,6 +15,32 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Query(value = "SELECT * FROM qags WHERE status <> 2", nativeQuery = true)
     fun getAllQagList(): List<QagDTO>
 
+    @Query(value = "SELECT * FROM qags WHERE status = 0 SORT BY post_date ASC", nativeQuery = true)
+    fun getQagToModerateList(): List<QagDTO>
+
+    @Query(value = "SELECT * FROM qags WHERE status = 1 SORT BY post_date DESC", nativeQuery = true)
+    fun getDisplayedQagList(): List<QagDTO>
+
+    @Query(
+        value = "SELECT * FROM qags WHERE status = 1 AND thematique_id = :thematiqueId SORT BY post_date DESC",
+        nativeQuery = true,
+    )
+    fun getDisplayedQagList(@Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
+
+    @Query(value = "SELECT * FROM qags WHERE status = 0 AND user_id = :userId", nativeQuery = true)
+    fun getUserQagList(@Param("userId") userId: UUID): List<QagDTO>
+
+    @Query(
+        value = "SELECT * FROM qags WHERE status = 0 AND user_id = :userId AND thematique_id = :thematiqueId",
+        nativeQuery = true,
+    )
+    fun getUserQagList(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE qags SET status = 2 WHERE id IN :qagIDs", nativeQuery = true)
+    fun archiveQagList(@Param("qagIDs") qagIDs: List<UUID>)
+
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM qags WHERE id = :qagId", nativeQuery = true)

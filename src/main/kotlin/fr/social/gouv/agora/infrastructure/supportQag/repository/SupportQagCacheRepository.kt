@@ -1,12 +1,16 @@
 package fr.social.gouv.agora.infrastructure.supportQag.repository
 
 import fr.social.gouv.agora.infrastructure.supportQag.dto.SupportQagDTO
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class SupportQagCacheRepository(private val cacheManager: CacheManager) {
+class SupportQagCacheRepository(
+    private val cacheManager: CacheManager,
+    @Qualifier("shortTermCacheManager") private val shortTermCacheManager: CacheManager,
+) {
 
     companion object {
         const val SUPPORT_QAG_CACHE_NAME = "SupportQagCache"
@@ -58,7 +62,36 @@ class SupportQagCacheRepository(private val cacheManager: CacheManager) {
         } ?: throw IllegalStateException("SupportQag cache has not been initialized")
     }
 
+    @Suppress("UNCHECKED_CAST")
+    fun getUserSupportedQagIds(userId: UUID): List<String>? {
+        return try {
+            getShortTermCache()?.get(userId.toString(), List::class.java) as? List<String>
+        } catch (e: IllegalStateException) {
+            null
+        }
+    }
+
+    fun initUserSupportedQagIds(userId: UUID, userSupportedQagIds: List<String>) {
+        getShortTermCache()?.put(userId.toString(), userSupportedQagIds)
+    }
+
+    fun addSupportedQagIds(userId: UUID, qagId: String) {
+        getUserSupportedQagIds(userId)?.let { userSupportedQagIds ->
+            initUserSupportedQagIds(userId, userSupportedQagIds + qagId)
+        }
+    }
+
+    fun removeSupportedQagIds(userId: UUID, qagId: String) {
+        getUserSupportedQagIds(userId)?.let { userSupportedQagIds ->
+            val filteredQagIds = userSupportedQagIds.filter { supportedQagId -> supportedQagId != qagId }
+            if (filteredQagIds.size < userSupportedQagIds.size) {
+                initUserSupportedQagIds(userId, filteredQagIds)
+            }
+        }
+    }
+
     private fun getCache() = cacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
+    private fun getShortTermCache() = shortTermCacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
 
     @Suppress("UNCHECKED_CAST")
     private fun getAllSupportQagDTOFromCache(): List<SupportQagDTO>? {

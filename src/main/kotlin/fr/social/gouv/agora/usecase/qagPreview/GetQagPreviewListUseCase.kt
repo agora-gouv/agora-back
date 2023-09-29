@@ -4,14 +4,15 @@ import fr.social.gouv.agora.domain.QagPreview
 import fr.social.gouv.agora.usecase.qag.GetQagWithSupportAndThematiqueUseCase
 import fr.social.gouv.agora.usecase.qag.QagInfoWithSupportAndThematique
 import fr.social.gouv.agora.usecase.qag.QagPreviewMapper
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageLegacyRepository
 import org.springframework.stereotype.Service
 
 @Service
+@Deprecated("Should use QagPreviewListUseCaseV2 instead")
 class GetQagPreviewListUseCase(
     private val getQagListUseCase: GetQagWithSupportAndThematiqueUseCase,
     private val filterGenerator: QagPreviewFilterGenerator,
-    private val previewPageRepository: QagPreviewPageRepository,
+    private val previewPageRepository: QagPreviewPageLegacyRepository,
     private val mapper: QagPreviewMapper,
 ) {
 

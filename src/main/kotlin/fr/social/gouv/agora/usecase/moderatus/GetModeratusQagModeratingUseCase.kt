@@ -25,6 +25,7 @@ class GetModeratusQagListUseCase(
     fun getQagModeratingList(): List<ModeratusQag> {
         val moderatusLockedQagIds = moderatusQagLockRepository.getLockedQagIds()
 
+        // TODO: rework
         return qagInfoRepository.getAllQagInfo()
             .asSequence()
             .filter { qagInfo -> qagInfo.status == QagStatus.OPEN }

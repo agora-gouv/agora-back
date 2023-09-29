@@ -225,7 +225,7 @@ internal class QagInfoRepositoryImplTest {
             val result = repository.updateQagStatus(qagId = "invalid UUID", newQagStatus = QagStatus.MODERATED_ACCEPTED)
 
             // Then
-            assertThat(result).isEqualTo(QagUpdateResult.FAILURE)
+            assertThat(result).isEqualTo(QagUpdateResult.Failure)
             then(cacheRepository).shouldHaveNoInteractions()
             then(databaseRepository).shouldHaveNoInteractions()
             then(mapper).shouldHaveNoInteractions()
@@ -244,7 +244,7 @@ internal class QagInfoRepositoryImplTest {
             )
 
             // Then
-            assertThat(result).isEqualTo(QagUpdateResult.FAILURE)
+            assertThat(result).isEqualTo(QagUpdateResult.Failure)
             inOrder(cacheRepository, databaseRepository).also {
                 then(cacheRepository).should(it).getAllQagList()
                 then(databaseRepository).should(it).getAllQagList()
@@ -270,6 +270,9 @@ internal class QagInfoRepositoryImplTest {
             val savedQagDTO = mock(QagDTO::class.java)
             given(databaseRepository.save(updatedQagDTO)).willReturn(savedQagDTO)
 
+            val qagInfo = mock(QagInfo::class.java)
+            given(mapper.toDomain(savedQagDTO)).willReturn(qagInfo)
+
             // When
             val result = repository.updateQagStatus(
                 qagId = qagUUID.toString(),
@@ -277,12 +280,14 @@ internal class QagInfoRepositoryImplTest {
             )
 
             // Then
-            assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
+            assertThat(result).isEqualTo(QagUpdateResult.Success(qagInfo))
             then(databaseRepository).should(only()).save(updatedQagDTO)
             then(cacheRepository).should().getAllQagList()
             then(cacheRepository).should().updateQag(updatedQagDTO = savedQagDTO)
             then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(mapper).should(only()).updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
+            then(mapper).should().updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
+            then(mapper).should().toDomain(dto = savedQagDTO)
+            then(mapper).shouldHaveNoMoreInteractions()
         }
 
         @Test
@@ -305,6 +310,9 @@ internal class QagInfoRepositoryImplTest {
             val storedQagDTO = mock(QagDTO::class.java)
             given(databaseRepository.getAllQagList()).willReturn(listOf(storedQagDTO))
 
+            val qagInfo = mock(QagInfo::class.java)
+            given(mapper.toDomain(savedQagDTO)).willReturn(qagInfo)
+
             // When
             val result = repository.updateQagStatus(
                 qagId = qagUUID.toString(),
@@ -312,7 +320,7 @@ internal class QagInfoRepositoryImplTest {
             )
 
             // Then
-            assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
+            assertThat(result).isEqualTo(QagUpdateResult.Success(qagInfo))
             then(databaseRepository).should().save(updatedQagDTO)
             then(databaseRepository).should().getAllQagList()
             then(databaseRepository).shouldHaveNoMoreInteractions()
@@ -320,7 +328,9 @@ internal class QagInfoRepositoryImplTest {
             then(cacheRepository).should().updateQag(updatedQagDTO = savedQagDTO)
             then(cacheRepository).should().initializeCache(listOf(storedQagDTO))
             then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(mapper).should(only()).updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
+            then(mapper).should().updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
+            then(mapper).should().toDomain(dto = savedQagDTO)
+            then(mapper).shouldHaveNoMoreInteractions()
         }
     }
 
@@ -364,6 +374,51 @@ internal class QagInfoRepositoryImplTest {
         then(databaseRepository).should().anonymizeRejectedQagsBeforeDate(resetDate)
         then(databaseRepository).shouldHaveNoMoreInteractions()
         then(cacheRepository).should(only()).clear()
+    }
+
+    @Nested
+    inner class ArchiveQagsTestCases {
+        @Test
+        fun `archiveQags - when has only invalid UUID - should return FAILURE`() {
+            // When
+            val result = repository.archiveQags(qagIds = listOf("Invalid QaG UUID"))
+
+            // Then
+            assertThat(result).isEqualTo(QagArchiveResult.FAILURE)
+            then(cacheRepository).shouldHaveNoInteractions()
+            then(databaseRepository).shouldHaveNoInteractions()
+            then(mapper).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `archiveQags - when has only valid UUID - should update database then return SUCCESS`() {
+            // Given
+            val qagId = UUID.randomUUID()
+
+            // When
+            val result = repository.archiveQags(qagIds = listOf(qagId.toString()))
+
+            // Then
+            assertThat(result).isEqualTo(QagArchiveResult.SUCCESS)
+            then(cacheRepository).shouldHaveNoInteractions()
+            then(databaseRepository).should(only()).archiveQagList(listOf(qagId))
+            then(mapper).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `archiveQags - when has some valid UUID - should update database with valid UUID only then return SUCCESS`() {
+            // Given
+            val qagId = UUID.randomUUID()
+
+            // When
+            val result = repository.archiveQags(qagIds = listOf(qagId.toString(), "Invalid QaG UUID"))
+
+            // Then
+            assertThat(result).isEqualTo(QagArchiveResult.SUCCESS)
+            then(cacheRepository).shouldHaveNoInteractions()
+            then(databaseRepository).should(only()).archiveQagList(listOf(qagId))
+            then(mapper).shouldHaveNoInteractions()
+        }
     }
 
     @Nested

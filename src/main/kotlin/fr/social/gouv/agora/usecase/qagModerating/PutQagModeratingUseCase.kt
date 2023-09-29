@@ -35,8 +35,8 @@ class PutQagModeratingUseCase(
             newQagStatus = toQagStatus(qagModeratingStatus),
         )
         return when (updateQagStatus) {
-            QagUpdateResult.FAILURE -> ModeratingQagResult.FAILURE
-            QagUpdateResult.SUCCESS -> {
+            QagUpdateResult.Failure -> ModeratingQagResult.FAILURE
+            is QagUpdateResult.Success -> {
                 qagUpdatesRepository.insertQagUpdates(
                     QagInsertingUpdates(
                         qagId = qagId,

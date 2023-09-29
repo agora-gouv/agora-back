@@ -8,17 +8,17 @@ import fr.social.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageCacheRepository
 import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.springframework.stereotype.Service
 
 @Service
 class ModerateModeratusQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
-    private val sendNotificationdUseCase: SendQagNotificationUseCase,
+    private val sendNotificationUseCase: SendQagNotificationUseCase,
     private val qagUpdatesRepository: QagUpdatesRepository,
     private val moderatusQagLockRepository: ModeratusQagLockRepository,
-    private val previewPageRepository: QagPreviewPageRepository,
+    private val previewPageRepository: QagPreviewPageCacheRepository,
 ) {
 
     companion object {
@@ -45,10 +45,10 @@ class ModerateModeratusQagUseCase(
 
         val updateQagStatus = if (qagInfo.status != newQagStatus) {
             qagInfoRepository.updateQagStatus(qagId = qagInfo.id, newQagStatus = newQagStatus)
-        } else QagUpdateResult.SUCCESS
+        } else QagUpdateResult.Success(qagInfo)
 
         return when (updateQagStatus) {
-            QagUpdateResult.SUCCESS -> {
+            is QagUpdateResult.Success -> {
                 notifyUpdateIfRequired(qagInfo = qagInfo, isAccepted = moderateQagOptions.isAccepted)
                 qagUpdatesRepository.insertQagUpdates(
                     QagInsertingUpdates(
@@ -61,7 +61,7 @@ class ModerateModeratusQagUseCase(
                 )
                 ModeratusQagModerateResult.SUCCESS
             }
-            QagUpdateResult.FAILURE -> ModeratusQagModerateResult.FAILURE
+            QagUpdateResult.Failure -> ModeratusQagModerateResult.FAILURE
         }
     }
 
@@ -69,7 +69,7 @@ class ModerateModeratusQagUseCase(
         when (qagInfo.status) {
             QagStatus.OPEN -> {
                 if (isAccepted) {
-                    sendNotificationdUseCase.sendNotificationQagAccepted(qagInfo.id)
+                    sendNotificationUseCase.sendNotificationQagAccepted(qagInfo.id)
                     val popularQagsNoThematique = previewPageRepository.getQagPopularList(thematiqueId = null)
                     if (popularQagsNoThematique != null && popularQagsNoThematique.size < MAX_PREVIEW_LIST_SIZE) {
                         previewPageRepository.evictQagPopularList(thematiqueId = null)
@@ -81,18 +81,29 @@ class ModerateModeratusQagUseCase(
                     }
                     previewPageRepository.evictQagLatestList(thematiqueId = null)
                     previewPageRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
-                    previewPageRepository.getQagLatestList(thematiqueId = null)
-                    previewPageRepository.getQagLatestList(thematiqueId = qagInfo.thematiqueId)
                 } else {
-                    sendNotificationdUseCase.sendNotificationQagRejected(qagInfo.id)
+                    sendNotificationUseCase.sendNotificationQagRejected(qagInfo.id)
                 }
                 moderatusQagLockRepository.removeLockedQagId(qagInfo.id)
             }
             QagStatus.MODERATED_ACCEPTED -> if (!isAccepted) {
-                sendNotificationdUseCase.sendNotificationQagRejected(qagInfo.id)
+                sendNotificationUseCase.sendNotificationQagRejected(qagInfo.id)
+                previewPageRepository.evictQagLatestList(thematiqueId = null)
+                previewPageRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
             }
             QagStatus.MODERATED_REJECTED -> if (isAccepted) {
-                sendNotificationdUseCase.sendNotificationQagAcceptedAfterReject(qagInfo.id)
+                sendNotificationUseCase.sendNotificationQagAcceptedAfterReject(qagInfo.id)
+                val popularQagsNoThematique = previewPageRepository.getQagPopularList(thematiqueId = null)
+                if (popularQagsNoThematique != null && popularQagsNoThematique.size < MAX_PREVIEW_LIST_SIZE) {
+                    previewPageRepository.evictQagPopularList(thematiqueId = null)
+                }
+                val popularQagsWithThematique =
+                    previewPageRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)
+                if (popularQagsWithThematique != null && popularQagsWithThematique.size < MAX_PREVIEW_LIST_SIZE) {
+                    previewPageRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId)
+                }
+                previewPageRepository.evictQagLatestList(thematiqueId = null)
+                previewPageRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
             }
             QagStatus.ARCHIVED, QagStatus.SELECTED_FOR_RESPONSE -> throw IllegalStateException("Can not moderate qag with status ${qagInfo.status}")
         }

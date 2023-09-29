@@ -75,7 +75,7 @@ internal class PutQagModeratingUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED))
-            .willReturn(QagUpdateResult.SUCCESS)
+            .willReturn(mock(QagUpdateResult.Success::class.java))
 
         // When
         val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
@@ -106,7 +106,7 @@ internal class PutQagModeratingUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED))
-            .willReturn(QagUpdateResult.FAILURE)
+            .willReturn(QagUpdateResult.Failure)
 
         // When
         val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = true, userId = "userId")
@@ -128,7 +128,7 @@ internal class PutQagModeratingUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
-            .willReturn(QagUpdateResult.SUCCESS)
+            .willReturn(mock(QagUpdateResult.Success::class.java))
 
         // When
         val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false, userId = "userId")
@@ -159,7 +159,7 @@ internal class PutQagModeratingUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo("qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
-            .willReturn(QagUpdateResult.FAILURE)
+            .willReturn(QagUpdateResult.Failure)
 
         // When
         val result = useCase.putModeratingQagStatus(qagId = "qagId", qagModeratingStatus = false, userId = "userId")

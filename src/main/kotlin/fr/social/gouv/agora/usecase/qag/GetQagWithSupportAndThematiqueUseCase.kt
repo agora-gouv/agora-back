@@ -10,6 +10,7 @@ import fr.social.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 
 @Service
+@Deprecated("TO DELETE")
 class GetQagWithSupportAndThematiqueUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val responseQagRepository: ResponseQagRepository,

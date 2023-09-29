@@ -2,7 +2,8 @@ package fr.social.gouv.agora.usecase.qagPreview.repository
 
 import fr.social.gouv.agora.usecase.qag.QagInfoWithSupportAndThematique
 
-interface QagPreviewPageRepository {
+@Deprecated("Should not be used anymore")
+interface QagPreviewPageLegacyRepository {
 
     fun getQagPopularList(thematiqueId: String?): List<QagInfoWithSupportAndThematique>?
     fun insertQagPopularList(thematiqueId: String?, qagList: List<QagInfoWithSupportAndThematique>)

@@ -2,17 +2,17 @@ package fr.social.gouv.agora.infrastructure.qagPreview.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.social.gouv.agora.usecase.qag.QagInfoWithSupportAndThematique
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageLegacyRepository
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
-class QagPreviewPageRepositoryImpl(
+class QagPreviewPageLegacyRepositoryImpl(
     @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager,
     private val objectMapper: ObjectMapper,
-) : QagPreviewPageRepository {
+) : QagPreviewPageLegacyRepository {
 
     companion object {
         private const val QAG_PREVIEW_PAGE_CACHE_NAME = "qagPreviewPage"

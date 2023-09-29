@@ -2,7 +2,7 @@ package fr.social.gouv.agora.infrastructure.qagHome
 
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagErrorTextUseCase
-import fr.social.gouv.agora.usecase.qagPreview.GetQagPreviewListUseCase
+import fr.social.gouv.agora.usecase.qagPreview.QagPreviewListUseCaseV2
 import fr.social.gouv.agora.usecase.qagSelection.GetQagSelectedForResponseUseCase
 import fr.social.gouv.agora.usecase.responseQag.GetResponseQagPreviewListUseCase
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class QagHomeController(
     private val getQagSelectedForResponseUseCase: GetQagSelectedForResponseUseCase,
     private val getResponseQagPreviewListUseCase: GetResponseQagPreviewListUseCase,
-    private val getQagPreviewListUseCase: GetQagPreviewListUseCase,
+    private val getQagPreviewListUseCase: QagPreviewListUseCaseV2,
     private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
     private val qagHomeJsonMapper: QagHomeJsonMapper,
 ) {

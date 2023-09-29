@@ -19,6 +19,29 @@ class QagInfoRepositoryImpl(
         return getAllQagDTO().map(mapper::toDomain)
     }
 
+    override fun getQagInfoToModerateList(): List<QagInfo> {
+        // TODO add cache & tests
+        return databaseRepository.getQagToModerateList().map(mapper::toDomain)
+    }
+
+    override fun getDisplayedQagInfoList(thematiqueId: String?): List<QagInfo> {
+        // TODO add tests
+        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+            databaseRepository.getDisplayedQagList(thematiqueId = thematiqueUUID)
+        } ?: databaseRepository.getDisplayedQagList()
+        return qagList.map(mapper::toDomain)
+    }
+
+    override fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo> {
+        // TODO add cache & tests
+        return userId.toUuidOrNull()?.let { userUUID ->
+            val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+                databaseRepository.getUserQagList(userId = userUUID, thematiqueId = thematiqueUUID)
+            } ?: databaseRepository.getUserQagList(userId = userUUID)
+            qagList.map(mapper::toDomain)
+        } ?: emptyList()
+    }
+
     override fun getQagInfo(qagId: String): QagInfo? {
         return try {
             val qagUUID = UUID.fromString(qagId)
@@ -53,10 +76,10 @@ class QagInfoRepositoryImpl(
                 } catch (e: IllegalStateException) {
                     getAllQagFromDatabaseAndInitializeCache()
                 }
-                QagUpdateResult.SUCCESS
-            } ?: QagUpdateResult.FAILURE
+                QagUpdateResult.Success(mapper.toDomain(savedQagDTO))
+            } ?: QagUpdateResult.Failure
         } catch (e: IllegalArgumentException) {
-            QagUpdateResult.FAILURE
+            QagUpdateResult.Failure
         }
     }
 
@@ -72,6 +95,16 @@ class QagInfoRepositoryImpl(
         databaseRepository.archiveQagsBeforeDate(resetDate)
         databaseRepository.anonymizeRejectedQagsBeforeDate(resetDate)
         cacheRepository.clear()
+    }
+
+    override fun archiveQags(qagIds: List<String>): QagArchiveResult {
+        return qagIds
+            .mapNotNull { qagId -> qagId.toUuidOrNull() }
+            .takeIf { it.isNotEmpty() }
+            ?.let { qagUUIDs ->
+                databaseRepository.archiveQagList(qagUUIDs)
+                QagArchiveResult.SUCCESS
+            } ?: QagArchiveResult.FAILURE
     }
 
     override fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult {

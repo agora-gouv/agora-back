@@ -8,7 +8,7 @@ import fr.social.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageCacheRepository
 import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -41,7 +41,7 @@ internal class ModerateModeratusQagUseCaseTest {
 
     @MockBean
     @Suppress("unused")
-    private lateinit var previewPageRepository: QagPreviewPageRepository
+    private lateinit var previewPageRepository: QagPreviewPageCacheRepository
 
     private val moderateQagOptions = ModerateQagOptions(
         qagId = "qagId",
@@ -122,7 +122,7 @@ internal class ModerateModeratusQagUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
-            .willReturn(QagUpdateResult.FAILURE)
+            .willReturn(QagUpdateResult.Failure)
 
         // When
         val result = useCase.moderateQag(
@@ -151,7 +151,7 @@ internal class ModerateModeratusQagUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED))
-            .willReturn(QagUpdateResult.SUCCESS)
+            .willReturn(mock(QagUpdateResult.Success::class.java))
 
         // When
         val result = useCase.moderateQag(
@@ -191,7 +191,7 @@ internal class ModerateModeratusQagUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
-            .willReturn(QagUpdateResult.SUCCESS)
+            .willReturn(mock(QagUpdateResult.Success::class.java))
 
         // When
         val result = useCase.moderateQag(
@@ -255,7 +255,7 @@ internal class ModerateModeratusQagUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED))
-            .willReturn(QagUpdateResult.SUCCESS)
+            .willReturn(mock(QagUpdateResult.Success::class.java))
 
         // When
         val result = useCase.moderateQag(
@@ -319,7 +319,7 @@ internal class ModerateModeratusQagUseCaseTest {
         }
         given(qagInfoRepository.getQagInfo(qagId = "qagId")).willReturn(qagInfo)
         given(qagInfoRepository.updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED))
-            .willReturn(QagUpdateResult.SUCCESS)
+            .willReturn(mock(QagUpdateResult.Success::class.java))
 
         // When
         val result = useCase.moderateQag(
