@@ -1,44 +1,48 @@
 package fr.social.gouv.agora.infrastructure.profile.repository
 
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.social.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.util.*
 
 @Component
+@Suppress("unused")
 class DemographicInfoAskDateRepositoryImpl(
     private val cacheRepository: DemographicInfoAskDateCacheRepository,
+    private val databaseRepository: DemographicInfoAskDateDatabaseRepository,
+    private val mapper: DemographicInfoAskDateMapper,
 ) : DemographicInfoAskDateRepository {
 
     override fun getDate(userId: String): LocalDate? {
-        return try {
-            cacheRepository.getDate(UUID.fromString(userId))
-        } catch (e: IllegalArgumentException) {
-            null
+        return userId.toUuidOrNull()?.let { userUUID ->
+            cacheRepository.getDate(userUUID) ?: getDateFromDatabase(userUUID)
         }
     }
 
     override fun insertDate(userId: String) {
-        try {
-            cacheRepository.insertDate(UUID.fromString(userId))
-        } catch (e: IllegalArgumentException) {
-            //do nothing
-        }
-    }
-
-    override fun updateDate(userId: String) {
-        try {
-            cacheRepository.updateDate(UUID.fromString(userId))
-        } catch (e: IllegalArgumentException) {
-            //do nothing
-        }
+        userId.toUuidOrNull()
+            ?.let { userUUID -> mapper.toDto(userUUID) }
+            ?.let { demographicInfoAskDateDTO ->
+                val savedDemographicInfoAskDateDTO = databaseRepository.save(demographicInfoAskDateDTO)
+                cacheRepository.insertDate(
+                    savedDemographicInfoAskDateDTO.userId,
+                    mapper.toDate(savedDemographicInfoAskDateDTO),
+                )
+            }
     }
 
     override fun deleteDate(userId: String) {
-        try {
-            cacheRepository.deleteDate(UUID.fromString(userId))
-        } catch (e: IllegalArgumentException) {
-            //do nothing
+        userId.toUuidOrNull()?.let { userUUID ->
+            cacheRepository.deleteDate(userUUID)
+            databaseRepository.deleteAskDate(userUUID)
         }
     }
+
+    private fun getDateFromDatabase(userUUID: UUID): LocalDate? {
+        return databaseRepository.getAskDate(userUUID)?.let { demographicInfoAskDateDTO ->
+            mapper.toDate(demographicInfoAskDateDTO)
+        }?.also { askDate -> cacheRepository.insertDate(userUUID, askDate) }
+    }
+
 }

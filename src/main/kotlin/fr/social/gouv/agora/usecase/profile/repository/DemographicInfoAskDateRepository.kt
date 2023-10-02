@@ -5,6 +5,5 @@ import java.time.LocalDate
 interface DemographicInfoAskDateRepository {
     fun getDate(userId: String): LocalDate?
     fun insertDate(userId: String)
-    fun updateDate(userId: String)
     fun deleteDate(userId: String)
 }

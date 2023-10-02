@@ -28,7 +28,7 @@ class AskForDemographicInfoUseCase(
                 true
             }
             ASK_DEMOGRAPHIC_INFO_DELAY_FINISHED -> {
-                demographicInfoAskDateRepository.updateDate(userId)
+                demographicInfoAskDateRepository.insertDate(userId)
                 true
             }
             ASK_DEMOGRAPHIC_INFO_DELAY_UNFINISHED -> false
