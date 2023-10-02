@@ -1,34 +1,30 @@
 package fr.social.gouv.agora.infrastructure.profile.repository
 
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
-import org.springframework.cache.set
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.util.*
 
 @Repository
 class DemographicInfoAskDateCacheRepository(
-    private val cacheManager: CacheManager,
+    @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager,
     private val dateMapper: DateMapper,
 ) {
     companion object {
-        private const val DEMOGRAPHIC_INFO_ASK_DATE_CACHE_NAME = "demoInfoAskDateCache"
+        private const val DEMOGRAPHIC_INFO_ASK_DATE_CACHE_NAME = "demographicInfoAskDate"
     }
 
-    fun getDate(userUUID: UUID): LocalDate? {
+    fun getDate(userId: UUID): LocalDate? {
         return try {
-            getCache()?.get(userUUID.toString(), String::class.java)?.let { dateMapper.toLocalDate(it) }
+            getCache()?.get(userId.toString(), String::class.java)?.let { dateMapper.toLocalDate(it) }
         } catch (e: IllegalStateException) {
             null
         }
     }
 
-    fun insertDate(userUUID: UUID) {
-        getCache()?.put(userUUID.toString(), LocalDate.now().toString())
-    }
-
-    fun updateDate(userUUID: UUID) {
-        getCache()?.set(userUUID.toString(), LocalDate.now().toString())
+    fun insertDate(userId: UUID, askDate: LocalDate) {
+        getCache()?.put(userId.toString(), askDate.toString())
     }
 
     fun deleteDate(userId: UUID) {
