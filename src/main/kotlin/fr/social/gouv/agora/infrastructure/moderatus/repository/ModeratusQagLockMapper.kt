@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.infrastructure.moderatus.repository
 
 import fr.social.gouv.agora.infrastructure.moderatus.dto.ModeratusQagLockDTO
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -12,14 +13,12 @@ class ModeratusQagLockMapper {
     }
 
     fun toDto(qagId: String): ModeratusQagLockDTO? {
-        return try {
+        return qagId.toUuidOrNull()?.let { qagUUID ->
             ModeratusQagLockDTO(
                 id = UUID.randomUUID(),
                 lockDate = Date(),
-                qagId = UUID.fromString(qagId),
+                qagId = qagUUID,
             )
-        } catch (e: IllegalArgumentException) {
-            null
         }
     }
 
