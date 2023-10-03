@@ -4,8 +4,7 @@ import fr.social.gouv.agora.domain.Notification
 import fr.social.gouv.agora.domain.NotificationInserting
 
 interface NotificationRepository {
-    // TODO : batch insertion
-    fun insertNotification(notification: NotificationInserting): NotificationInsertionResult
+    fun insertNotifications(notification: NotificationInserting): NotificationInsertionResult
     fun getUserNotificationList(userId: String): List<Notification>
 }
 

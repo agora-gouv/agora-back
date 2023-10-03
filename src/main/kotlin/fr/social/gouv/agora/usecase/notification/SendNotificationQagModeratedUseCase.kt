@@ -53,12 +53,12 @@ class SendNotificationQagModeratedUseCase(
             )
         } ?: NotificationResult.FAILURE
         userId?.let {
-            notificationRepository.insertNotification(
+            notificationRepository.insertNotifications(
                 NotificationInserting(
                     title = title,
                     description = description,
                     type = NotificationType.QAG,
-                    userId = userId
+                    userIds = listOf(userId),
                 )
             )
         }

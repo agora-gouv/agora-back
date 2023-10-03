@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 import fr.social.gouv.agora.domain.ReponseConsultation
 import fr.social.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.social.gouv.agora.infrastructure.reponseConsultation.repository.ReponseConsultationCacheRepository.CacheResult
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -30,28 +31,25 @@ class GetConsultationResponseRepositoryImpl(
     }
 
     override fun hasAnsweredConsultations(consultationIds: List<String>, userId: String): Map<String, Boolean> {
-        // TODO tests
-        val userUUID = try {
-            UUID.fromString(userId)
-        } catch (e: IllegalArgumentException) {
-            return emptyMap()
-        }
+        return userId.toUuidOrNull()?.let { userUUID ->
+            consultationIds
+                .mapNotNull { consultationId -> consultationId.toUuidOrNull() }
+                .takeIf { it.isNotEmpty() }
+                ?.let { consultationUUIDs ->
+                    val answeredConsultationList = databaseRepository.getAnsweredConsultations(
+                        consultationIDs = consultationUUIDs,
+                        userId = userUUID,
+                    ).map { consultationUUID -> consultationUUID.toString() }
 
-        val consultationUUIDs = consultationIds.mapNotNull { consultationId ->
-            try {
-                UUID.fromString(consultationId)
-            } catch (e: IllegalArgumentException) {
-                null
-            }
-        }
+                    consultationIds.associateWith { consultationId -> answeredConsultationList.contains(consultationId) }
+                }
+        } ?: emptyMap()
+    }
 
-        val answeredConsultationList =
-            databaseRepository.getAnsweredConsultations(consultationUUIDs, userUUID).map { consultationUUID ->
-                consultationUUID.toString()
-            }
-        return consultationIds.associateWith { consultationId ->
-            answeredConsultationList.contains(consultationId)
-        }
+    override fun getUsersAnsweredConsultation(consultationId: String): List<String> {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            databaseRepository.getUsersAnsweredConsultation(consultationUUID).map { it.toString() }
+        } ?: emptyList()
     }
 
     private fun getConsultationResponseDTOList(consultationId: String): List<ReponseConsultationDTO> {
