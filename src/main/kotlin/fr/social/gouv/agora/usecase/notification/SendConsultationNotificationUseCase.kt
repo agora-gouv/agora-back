@@ -22,20 +22,20 @@ class SendConsultationNotificationUseCase(
         consultationId: String,
     ) {
         val userList = userRepository.getAllUsers()
-        notificationRepository.insertNotifications(
-            NotificationInserting(
-                title = title,
-                description = description,
-                type = NotificationType.CONSULTATION,
-                userIds = userList.map { userInfo -> userInfo.userId },
-            )
-        )
         notificationSendingRepository.sendNewConsultationNotification(
             request = ConsultationNotificationRequest(
                 title = title,
                 description = description,
                 fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
                 consultationId = consultationId,
+            )
+        )
+        notificationRepository.insertNotifications(
+            NotificationInserting(
+                title = title,
+                description = description,
+                type = NotificationType.CONSULTATION,
+                userIds = userList.map { userInfo -> userInfo.userId },
             )
         )
     }
@@ -50,20 +50,20 @@ class SendConsultationNotificationUseCase(
         val userList = userRepository.getAllUsers()
             .filter { userInfo -> userAnsweredConsultationIds.contains(userInfo.userId) }
 
-        notificationRepository.insertNotifications(
-            NotificationInserting(
-                title = title,
-                description = description,
-                type = NotificationType.CONSULTATION,
-                userIds = userList.map { userInfo -> userInfo.userId },
-            )
-        )
         notificationSendingRepository.sendConsultationUpdateNotification(
             request = ConsultationNotificationRequest(
                 title = title,
                 description = description,
                 fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
                 consultationId = consultationId,
+            )
+        )
+        notificationRepository.insertNotifications(
+            NotificationInserting(
+                title = title,
+                description = description,
+                type = NotificationType.CONSULTATION,
+                userIds = userList.map { userInfo -> userInfo.userId },
             )
         )
     }
