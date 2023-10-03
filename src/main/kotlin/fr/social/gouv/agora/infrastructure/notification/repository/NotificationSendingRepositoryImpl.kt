@@ -24,7 +24,7 @@ class NotificationSendingRepositoryImpl(
         private const val CONSULTATION_DETAILS_NOTIFICATION_TYPE = "consultationDetails"
         private const val CONSULTATION_RESULTS_NOTIFICATION_TYPE = "consultationResults"
 
-        private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 1000
+        private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 500
     }
 
     override fun sendNotificationMessage(request: NotificationRequest): NotificationResult {
