@@ -25,4 +25,10 @@ interface ReponseConsultationDatabaseRepository : CrudRepository<ReponseConsulta
         @Param("userId") userId: UUID
     ): List<UUID>
 
+    @Query(
+        value = "SELECT DISTINCT user_id from reponses_consultation WHERE consultation_id = :consultationId",
+        nativeQuery = true
+    )
+    fun getUsersAnsweredConsultation(@Param("consultationId") consultationId: UUID): List<UUID>
+
 }
