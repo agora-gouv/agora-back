@@ -20,7 +20,7 @@ class SendConsultationNotificationUseCase(
         title: String,
         description: String,
         consultationId: String,
-    ): Pair<Int, Int>? {
+    ) {
         val userList = userRepository.getAllUsers()
         for (userInfo in userList)
             notificationRepository.insertNotification(
@@ -31,7 +31,7 @@ class SendConsultationNotificationUseCase(
                     userId = userInfo.userId
                 )
             )
-        return notificationSendingRepository.sendNewConsultationNotification(
+        notificationSendingRepository.sendNewConsultationNotification(
             request = ConsultationNotificationRequest(
                 title = title,
                 description = description,
@@ -45,7 +45,7 @@ class SendConsultationNotificationUseCase(
         title: String,
         description: String,
         consultationId: String,
-    ): Pair<Int, Int>? {
+    ) {
         val userList = userRepository.getAllUsers()
             .filter { userInfo ->
                 getConsultationResponseRepository.hasAnsweredConsultation(
@@ -62,7 +62,7 @@ class SendConsultationNotificationUseCase(
                     userId = userInfo.userId
                 )
             )
-        return notificationSendingRepository.sendConsultationUpdateNotification(
+        notificationSendingRepository.sendConsultationUpdateNotification(
             request = ConsultationNotificationRequest(
                 title = title,
                 description = description,
