@@ -2,7 +2,7 @@ package fr.social.gouv.agora.usecase.qagModerating
 
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagInsertingUpdates
-import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
+import fr.social.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
@@ -32,7 +32,7 @@ internal class PutQagModeratingUseCaseTest {
     private lateinit var qagUpdatesRepository: QagUpdatesRepository
 
     @MockBean
-    private lateinit var sendNotificationQagModeratedUseCase: SendNotificationQagModeratedUseCase
+    private lateinit var sendQagNotificationUseCase: SendQagNotificationUseCase
 
     @Test
     fun `putModeratingQagStatus - when qag is not found - should return FAILURE`() {
@@ -45,7 +45,7 @@ internal class PutQagModeratingUseCaseTest {
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
-        then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(sendQagNotificationUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 
@@ -63,7 +63,7 @@ internal class PutQagModeratingUseCaseTest {
         // Then
         assertThat(result).isEqualTo(ModeratingQagResult.FAILURE)
         then(qagInfoRepository).should(only()).getQagInfo(qagId = "qagId")
-        then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(sendQagNotificationUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 
@@ -85,7 +85,7 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagAccepted(qagId = "qagId")
+        then(sendQagNotificationUseCase).should(only()).sendNotificationQagAccepted(qagId = "qagId")
         then(qagUpdatesRepository).should(only())
             .insertQagUpdates(
                 QagInsertingUpdates(
@@ -116,7 +116,7 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_ACCEPTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(sendQagNotificationUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 
@@ -138,7 +138,7 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(sendNotificationQagModeratedUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
+        then(sendQagNotificationUseCase).should(only()).sendNotificationQagRejected(qagId = "qagId")
         then(qagUpdatesRepository).should(only())
             .insertQagUpdates(
                 QagInsertingUpdates(
@@ -169,7 +169,7 @@ internal class PutQagModeratingUseCaseTest {
         then(qagInfoRepository).should().getQagInfo(qagId = "qagId")
         then(qagInfoRepository).should().updateQagStatus(qagId = "qagId", newQagStatus = QagStatus.MODERATED_REJECTED)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(sendNotificationQagModeratedUseCase).shouldHaveNoInteractions()
+        then(sendQagNotificationUseCase).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
     }
 

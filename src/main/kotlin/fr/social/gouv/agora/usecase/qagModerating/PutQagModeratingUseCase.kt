@@ -2,7 +2,7 @@ package fr.social.gouv.agora.usecase.qagModerating
 
 import fr.social.gouv.agora.domain.QagInsertingUpdates
 import fr.social.gouv.agora.domain.QagStatus
-import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
+import fr.social.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
 import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class PutQagModeratingUseCase(
     private val qagInfoRepository: QagInfoRepository,
-    private val sendNotificationQagModeratedUseCase: SendNotificationQagModeratedUseCase,
+    private val sendQagNotificationUseCase: SendQagNotificationUseCase,
     private val qagUpdatesRepository: QagUpdatesRepository,
 ) {
     fun putModeratingQagStatus(qagId: String, qagModeratingStatus: Boolean, userId: String): ModeratingQagResult {
@@ -47,9 +47,9 @@ class PutQagModeratingUseCase(
                     )
                 )
                 if (qagModeratingStatus) {
-                    sendNotificationQagModeratedUseCase.sendNotificationQagAccepted(qagId = qagId)
+                    sendQagNotificationUseCase.sendNotificationQagAccepted(qagId = qagId)
                 } else {
-                    sendNotificationQagModeratedUseCase.sendNotificationQagRejected(qagId = qagId)
+                    sendQagNotificationUseCase.sendNotificationQagRejected(qagId = qagId)
                 }
                 ModeratingQagResult.SUCCESS
             }
