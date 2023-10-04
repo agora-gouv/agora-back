@@ -4,7 +4,7 @@ import fr.social.gouv.agora.domain.ModeratusQagModerateResult
 import fr.social.gouv.agora.domain.QagInsertingUpdates
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
-import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
+import fr.social.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 @Service
 class ModerateModeratusQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
-    private val sendNotificationdUseCase: SendNotificationQagModeratedUseCase,
+    private val sendNotificationdUseCase: SendQagNotificationUseCase,
     private val qagUpdatesRepository: QagUpdatesRepository,
     private val moderatusQagLockRepository: ModeratusQagLockRepository,
     private val previewPageRepository: QagPreviewPageRepository,
