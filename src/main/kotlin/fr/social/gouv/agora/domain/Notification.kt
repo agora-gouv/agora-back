@@ -14,7 +14,7 @@ data class NotificationInserting(
     val title: String,
     val description: String,
     val type: NotificationType,
-    val userId: String,
+    val userIds: List<String>,
 )
 
 enum class NotificationType {

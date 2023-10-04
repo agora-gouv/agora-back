@@ -15,18 +15,12 @@ class ConsultationNotificationController(
         @RequestParam("description") description: String,
         @PathVariable("consultationId") consultationId: String,
     ): ResponseEntity<*> {
-        val responseResult = sendConsultationNotificationUseCase.sendNewConsultationNotification(
+        sendConsultationNotificationUseCase.sendNewConsultationNotification(
             title = title,
             description = description,
-            consultationId = consultationId
+            consultationId = consultationId,
         )
-        return when (responseResult) {
-            null -> ResponseEntity.badRequest().body("Erreur d'envoi de la notification")
-            else -> ResponseEntity.ok()
-                .body(
-                    "Notification envoyée avec succès à : ${responseResult.first} / ${responseResult.second} utilisateurs"
-                )
-        }
+        return ResponseEntity.ok().body(Unit)
     }
 
     @GetMapping("/admin/notifyConsultationUpdate/{consultationId}")
@@ -35,17 +29,11 @@ class ConsultationNotificationController(
         @RequestParam("description") description: String,
         @PathVariable("consultationId") consultationId: String,
     ): ResponseEntity<*> {
-        val responseResult = sendConsultationNotificationUseCase.sendConsultationUpdateNotification(
+        sendConsultationNotificationUseCase.sendConsultationUpdateNotification(
             title = title,
             description = description,
             consultationId = consultationId
         )
-        return when (responseResult) {
-            null -> ResponseEntity.badRequest().body("Erreur d'envoi de la notification")
-            else -> ResponseEntity.ok()
-                .body(
-                    "Notification envoyée avec succès à : ${responseResult.first} / ${responseResult.second} utilisateurs"
-                )
-        }
+        return ResponseEntity.ok().body(Unit)
     }
 }

@@ -28,11 +28,10 @@ class NotificationCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
-    @Throws(IllegalStateException::class)
-    fun insertNotification(notificationDTO: NotificationDTO) {
+    fun insertNotification(notificationDTOList: List<NotificationDTO>) {
         getAllNotificationDTOFromCache()?.let { allNotificationDTO ->
-            initializeCache(allNotificationDTO + notificationDTO)
-        } ?: throw IllegalStateException("Notification cache has not been initialized")
+            initializeCache(allNotificationDTO + notificationDTOList)
+        }
     }
 
     private fun getCache() = cacheManager.getCache(NOTIFICATION_CACHE_NAME)

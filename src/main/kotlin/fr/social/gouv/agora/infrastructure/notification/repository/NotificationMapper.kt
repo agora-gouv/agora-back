@@ -4,10 +4,9 @@ import fr.social.gouv.agora.domain.Notification
 import fr.social.gouv.agora.domain.NotificationInserting
 import fr.social.gouv.agora.domain.NotificationType
 import fr.social.gouv.agora.infrastructure.notification.dto.NotificationDTO
-import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.social.gouv.agora.infrastructure.utils.UuidUtils
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import org.springframework.stereotype.Component
-import java.time.LocalDate
 import java.util.*
 
 @Component
@@ -32,21 +31,22 @@ class NotificationMapper {
         )
     }
 
-    fun toDto(domain: NotificationInserting): NotificationDTO? {
-        return try {
-            NotificationDTO(
-                id = UuidUtils.NOT_FOUND_UUID,
-                title = domain.title,
-                description = domain.description,
-                type = when (domain.type) {
-                    NotificationType.QAG -> QAG_NOTIFICATION_TYPE
-                    NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
-                },
-                date = LocalDate.now().toDate(),
-                userId = UUID.fromString(domain.userId),
-            )
-        } catch (e: IllegalArgumentException) {
-            null
+    fun toDto(domain: NotificationInserting): List<NotificationDTO> {
+        val nowDate = Date()
+        return domain.userIds.mapNotNull { userId ->
+            userId.toUuidOrNull()?.let { userUUID ->
+                NotificationDTO(
+                    id = UuidUtils.NOT_FOUND_UUID,
+                    title = domain.title,
+                    description = domain.description,
+                    type = when (domain.type) {
+                        NotificationType.QAG -> QAG_NOTIFICATION_TYPE
+                        NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
+                    },
+                    date = nowDate,
+                    userId = userUUID,
+                )
+            }
         }
     }
 }
