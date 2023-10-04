@@ -8,13 +8,33 @@ import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 
 @Service
-class SendNotificationQagModeratedUseCase(
+class SendQagNotificationUseCase(
     private val userRepository: UserRepository,
     private val qagInfoRepository: QagInfoRepository,
     private val notificationSendingRepository: NotificationSendingRepository,
     private val notificationMessageRepository: NotificationMessageRepository,
     private val notificationRepository: NotificationRepository,
 ) {
+
+    fun sendNotificationQagUpdate(title: String, description: String, qagId: String) {
+        val userList = userRepository.getAllUsers()
+        notificationSendingRepository.sendQagDetailsMultiNotification(
+            request = MultiNotificationRequest.QagMultiNotificationRequest(
+                title = title,
+                description = description,
+                fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
+                qagId = qagId,
+            )
+        )
+        notificationRepository.insertNotifications(
+            NotificationInserting(
+                title = title,
+                description = description,
+                type = NotificationType.QAG,
+                userIds = userList.map { userInfo -> userInfo.userId },
+            )
+        )
+    }
 
     fun sendNotificationQagRejected(qagId: String): NotificationResult {
         return sendNotification(
@@ -40,16 +60,17 @@ class SendNotificationQagModeratedUseCase(
         )
     }
 
+
     private fun sendNotification(qagId: String, title: String, description: String): NotificationResult {
         val (userId, fcmToken) = getQagAuthorFcmToken(qagId = qagId)
         val sendingNotificationResult = fcmToken?.let {
             notificationSendingRepository.sendQagDetailsNotification(
-                request = NotificationRequest(
-                    fcmToken = fcmToken,
+                request = QagNotificationRequest(
                     title = title,
                     description = description,
+                    fcmToken = fcmToken,
+                    qagId = qagId,
                 ),
-                qagId = qagId,
             )
         } ?: NotificationResult.FAILURE
         userId?.let {

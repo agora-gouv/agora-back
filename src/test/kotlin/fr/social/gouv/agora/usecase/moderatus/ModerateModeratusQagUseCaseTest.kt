@@ -4,7 +4,7 @@ import fr.social.gouv.agora.domain.ModeratusQagModerateResult
 import fr.social.gouv.agora.domain.QagInsertingUpdates
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
-import fr.social.gouv.agora.usecase.notification.SendNotificationQagModeratedUseCase
+import fr.social.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
@@ -31,7 +31,7 @@ internal class ModerateModeratusQagUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @MockBean
-    private lateinit var sendNotificationdUseCase: SendNotificationQagModeratedUseCase
+    private lateinit var sendNotificationdUseCase: SendQagNotificationUseCase
 
     @MockBean
     private lateinit var qagUpdatesRepository: QagUpdatesRepository

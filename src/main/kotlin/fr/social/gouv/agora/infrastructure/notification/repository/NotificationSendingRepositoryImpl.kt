@@ -2,6 +2,8 @@ package fr.social.gouv.agora.infrastructure.notification.repository
 
 import com.google.firebase.messaging.*
 import fr.social.gouv.agora.usecase.notification.repository.*
+import fr.social.gouv.agora.usecase.notification.repository.MultiNotificationRequest.ConsultationMultiNotificationRequest
+import fr.social.gouv.agora.usecase.notification.repository.MultiNotificationRequest.QagMultiNotificationRequest
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.stereotype.Component
 import java.time.*
@@ -27,21 +29,12 @@ class NotificationSendingRepositoryImpl(
         private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 500
     }
 
-    override fun sendNotificationMessage(request: NotificationRequest): NotificationResult {
-        return try {
-            sendNotification(notificationMessage = createBaseMessage(request).build())
-        } catch (e: IllegalArgumentException) {
-            println("⚠️ Send notification error: ${e.message}")
-            NotificationResult.FAILURE
-        }
-    }
-
-    override fun sendQagDetailsNotification(request: NotificationRequest, qagId: String): NotificationResult {
+    override fun sendQagDetailsNotification(request: QagNotificationRequest): NotificationResult {
         return try {
             sendNotification(
                 notificationMessage = createBaseMessage(request)
                     .putData(NOTIFICATION_TYPE_KEY, QAG_DETAILS_NOTIFICATION_TYPE)
-                    .putData(QAG_DETAILS_ID_KEY, qagId)
+                    .putData(QAG_DETAILS_ID_KEY, request.qagId)
                     .build()
             )
         } catch (e: IllegalArgumentException) {
@@ -50,21 +43,28 @@ class NotificationSendingRepositoryImpl(
         }
     }
 
-    override fun sendNewConsultationNotification(request: ConsultationNotificationRequest) {
+    override fun sendQagDetailsMultiNotification(request: QagMultiNotificationRequest) {
+        println("📩 Sending multi-notification: ${request.title}")
+        sendMultiNotifications(
+            createMultiMessage(request = request, type = QAG_DETAILS_NOTIFICATION_TYPE)
+        )
+    }
+
+    override fun sendNewConsultationMultiNotification(request: ConsultationMultiNotificationRequest) {
         println("📩 Sending multi-notification: ${request.title}")
         sendMultiNotifications(
             createMultiMessage(request = request, type = CONSULTATION_DETAILS_NOTIFICATION_TYPE)
         )
     }
 
-    override fun sendConsultationUpdateNotification(request: ConsultationNotificationRequest) {
+    override fun sendConsultationUpdateMultiNotification(request: ConsultationMultiNotificationRequest) {
         println("📩 Sending multi-notification: ${request.title}")
         sendMultiNotifications(
             createMultiMessage(request = request, type = CONSULTATION_RESULTS_NOTIFICATION_TYPE)
         )
     }
 
-    private fun createBaseMessage(request: NotificationRequest): Message.Builder {
+    private fun createBaseMessage(request: QagNotificationRequest): Message.Builder {
         return Message.builder()
             .setNotification(
                 Notification.builder()
@@ -75,7 +75,7 @@ class NotificationSendingRepositoryImpl(
             .setToken(request.fcmToken)
     }
 
-    private fun createMultiMessage(request: ConsultationNotificationRequest, type: String): List<MulticastMessage> {
+    private fun createMultiMessage(request: MultiNotificationRequest, type: String): List<MulticastMessage> {
         val chunkedFcmTokenList = request
             .fcmTokenList
             .filter { it.isNotBlank() }
@@ -83,7 +83,7 @@ class NotificationSendingRepositoryImpl(
             .chunked(MAX_SIMULTANEOUS_NOTIFICATIONS)
         return chunkedFcmTokenList.mapIndexedNotNull() { index, fcmTokenSubList ->
             try {
-                MulticastMessage.builder()
+                val messageBuilder = MulticastMessage.builder()
                     .setNotification(
                         Notification.builder()
                             .setTitle(request.title)
@@ -91,9 +91,19 @@ class NotificationSendingRepositoryImpl(
                             .build()
                     )
                     .putData(NOTIFICATION_TYPE_KEY, type)
-                    .putData(CONSULTATION_DETAILS_ID_KEY, request.consultationId)
                     .addAllTokens(fcmTokenSubList)
-                    .build()
+
+                when (request) {
+                    is ConsultationMultiNotificationRequest -> messageBuilder.putData(
+                        CONSULTATION_DETAILS_ID_KEY,
+                        request.consultationId,
+                    )
+                    is QagMultiNotificationRequest -> messageBuilder.putData(
+                        QAG_DETAILS_ID_KEY,
+                        request.qagId,
+                    )
+                }
+                messageBuilder.build()
             } catch (e: IllegalArgumentException) {
                 println("⚠️ Build multi-notification error on batch n°${index + 1}/${chunkedFcmTokenList.size}: ${e.message}")
                 null
