@@ -24,7 +24,7 @@ class InsertReponseConsultationUseCase(
     private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
 ) {
     companion object {
-        private const val AUTRE_QUESTION_MAX_LENGTH = 200
+        private const val OTHER_QUESTION_MAX_LENGTH = 200
         private const val OPEN_QUESTION_MAX_LENGTH = 400
     }
 
@@ -34,7 +34,7 @@ class InsertReponseConsultationUseCase(
         consultationResponses: List<ReponseConsultationInserting>,
     ): InsertResult {
         if (consultationResponseRepository.hasAnsweredConsultation(consultationId = consultationId, userId = userId)) {
-            println("⚠️ User already answer the consultation")
+            println("⚠️ Insert response consultation error: user has already answered this consultation")
             return InsertResult.INSERT_FAILURE
         }
 
@@ -54,7 +54,7 @@ class InsertReponseConsultationUseCase(
             consultationResponses = sanitizeConsultationResponse(filledConsultationResponses, consultationId),
         )
         if (responseInsertResult == InsertResult.INSERT_FAILURE)
-            println("⚠️ Insert Response consultation error")
+            println("⚠️ Insert response consultation error")
         return responseInsertResult
     }
 
@@ -83,7 +83,7 @@ class InsertReponseConsultationUseCase(
             val lenghtSanitizedContent =
                 when (question) {
                     is QuestionOpen -> OPEN_QUESTION_MAX_LENGTH
-                    else -> AUTRE_QUESTION_MAX_LENGTH
+                    else -> OTHER_QUESTION_MAX_LENGTH
                 }
             sanitizedResponsesList.add(
                 ReponseConsultationInserting(
