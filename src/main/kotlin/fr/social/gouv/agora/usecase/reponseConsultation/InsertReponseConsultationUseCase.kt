@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.reponseConsultation
 
+import fr.social.gouv.agora.domain.Question
 import fr.social.gouv.agora.domain.QuestionOpen
 import fr.social.gouv.agora.domain.QuestionWithChoices
 import fr.social.gouv.agora.domain.ReponseConsultationInserting
@@ -37,10 +38,11 @@ class InsertReponseConsultationUseCase(
             println("⚠️ Insert response consultation error: user has already answered this consultation")
             return InsertResult.INSERT_FAILURE
         }
+        val questionList = questionRepository.getConsultationQuestionList(consultationId)
 
         val filledConsultationResponses = addMissingResponseIfQuestionWithChoices(
-            consultationId = consultationId,
             consultationResponses = consultationResponses,
+            questionList = questionList,
         )
         consultationPreviewAnsweredRepository.deleteConsultationAnsweredListFromCache(userId)
         consultationPreviewPageRepository.evictConsultationPreviewOngoingList(userId)
@@ -51,7 +53,7 @@ class InsertReponseConsultationUseCase(
                 consultationId = consultationId,
                 userId = userId,
             ),
-            consultationResponses = sanitizeConsultationResponse(filledConsultationResponses, consultationId),
+            consultationResponses = sanitizeConsultationResponse(filledConsultationResponses, questionList),
         )
         if (responseInsertResult == InsertResult.INSERT_FAILURE)
             println("⚠️ Insert response consultation error")
@@ -59,9 +61,9 @@ class InsertReponseConsultationUseCase(
     }
 
     private fun addMissingResponseIfQuestionWithChoices(
-        consultationId: String,
         consultationResponses: List<ReponseConsultationInserting>,
-    ) = questionRepository.getConsultationQuestionList(consultationId).mapNotNull { question ->
+        questionList: List<Question>,
+    ) = questionList.mapNotNull { question ->
         consultationResponses.find { consultationResponse -> consultationResponse.questionId == question.id }
             ?: question.takeIf { it is QuestionWithChoices }?.let { createNotApplicableResponse(question.id) }
     }
@@ -74,10 +76,8 @@ class InsertReponseConsultationUseCase(
 
     private fun sanitizeConsultationResponse(
         consultationResponses: List<ReponseConsultationInserting>,
-        consultationId: String,
+        questionList: List<Question>,
     ): List<ReponseConsultationInserting> {
-        val questionList = questionRepository.getConsultationQuestionList(consultationId)
-
         return consultationResponses.map { response ->
             val lengthSanitizedContent = when (questionList.find { it.id == response.questionId }) {
                 is QuestionOpen -> OPEN_QUESTION_MAX_LENGTH

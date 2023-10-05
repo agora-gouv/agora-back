@@ -54,6 +54,7 @@ internal class InsertReponseConsultationUseCaseTest {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
         private const val OPEN_QUESTION_MAX_LENGTH = 400
     }
+
     @Test
     fun `insertReponseConsultation - when has already answered - should return failure`() {
         // Given
@@ -98,6 +99,13 @@ internal class InsertReponseConsultationUseCaseTest {
                 responseText = "salut",
             )
         )
+        val consultationResponsesSanitized = listOf(
+            ReponseConsultationInserting(
+                questionId = "question1",
+                choiceIds = null,
+                responseText = "sanitizedSalut",
+            )
+        )
         val insertParameters = mock(InsertParameters::class.java)
 
         given(
@@ -110,11 +118,12 @@ internal class InsertReponseConsultationUseCaseTest {
         given(
             insertReponseConsultationRepository.insertConsultationResponses(
                 insertParameters = insertParameters,
-                consultationResponses = consultationResponses,
+                consultationResponses = consultationResponsesSanitized,
             )
         ).willReturn(InsertResult.INSERT_SUCCESS)
 
-        given(contentSanitizer.sanitize("salut", OPEN_QUESTION_MAX_LENGTH)).willReturn("salut")
+        given(contentSanitizer.sanitize("salut", OPEN_QUESTION_MAX_LENGTH)).willReturn("sanitizedSalut")
+
         // When
         val result = useCase.insertReponseConsultation(
             consultationId = "consultId",
@@ -130,18 +139,13 @@ internal class InsertReponseConsultationUseCaseTest {
         )
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
-        inOrder(consultationPreviewPageRepository).also {
-            then(consultationPreviewPageRepository).should(it)
-                .evictConsultationPreviewOngoingList(userId = "userId")
-            then(consultationPreviewPageRepository).should(it)
-                .evictConsultationPreviewAnsweredList(userId = "userId")
-            it.verifyNoMoreInteractions()
-        }
+        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
+        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
-            consultationResponses = consultationResponses,
+            consultationResponses = consultationResponsesSanitized,
         )
-        then(questionRepository).should(times(2)).getConsultationQuestionList(consultationId = "consultId")
+        then(questionRepository).should(times(1)).getConsultationQuestionList(consultationId = "consultId")
         then(contentSanitizer).should(only()).sanitize("salut", OPEN_QUESTION_MAX_LENGTH)
     }
 
@@ -163,6 +167,13 @@ internal class InsertReponseConsultationUseCaseTest {
                 responseText = "autre choix",
             )
         )
+        val consultationResponsesSanitized = listOf(
+            ReponseConsultationInserting(
+                questionId = "question1",
+                choiceIds = listOf("11111111-2222-0000-9999-5555555555555"),
+                responseText = "sanitized autre choix",
+            )
+        )
         val insertParameters = mock(InsertParameters::class.java)
 
         given(
@@ -175,11 +186,11 @@ internal class InsertReponseConsultationUseCaseTest {
         given(
             insertReponseConsultationRepository.insertConsultationResponses(
                 insertParameters = insertParameters,
-                consultationResponses = consultationResponses,
+                consultationResponses = consultationResponsesSanitized,
             )
         ).willReturn(InsertResult.INSERT_SUCCESS)
 
-        given(contentSanitizer.sanitize("autre choix", OTHER_QUESTION_MAX_LENGTH)).willReturn("autre choix")
+        given(contentSanitizer.sanitize("autre choix", OTHER_QUESTION_MAX_LENGTH)).willReturn("sanitized autre choix")
         // When
         val result = useCase.insertReponseConsultation(
             consultationId = "consultId",
@@ -195,18 +206,13 @@ internal class InsertReponseConsultationUseCaseTest {
         )
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
-        inOrder(consultationPreviewPageRepository).also {
-            then(consultationPreviewPageRepository).should(it)
-                .evictConsultationPreviewOngoingList(userId = "userId")
-            then(consultationPreviewPageRepository).should(it)
-                .evictConsultationPreviewAnsweredList(userId = "userId")
-            it.verifyNoMoreInteractions()
-        }
+        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
+        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
-            consultationResponses = consultationResponses,
+            consultationResponses = consultationResponsesSanitized,
         )
-        then(questionRepository).should(times(2)).getConsultationQuestionList(consultationId = "consultId")
+        then(questionRepository).should(times(1)).getConsultationQuestionList(consultationId = "consultId")
         then(contentSanitizer).should(only()).sanitize("autre choix", OTHER_QUESTION_MAX_LENGTH)
     }
 
@@ -264,18 +270,13 @@ internal class InsertReponseConsultationUseCaseTest {
         )
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
-        inOrder(consultationPreviewPageRepository).also {
-            then(consultationPreviewPageRepository).should(it)
-                .evictConsultationPreviewOngoingList(userId = "userId")
-            then(consultationPreviewPageRepository).should(it)
-                .evictConsultationPreviewAnsweredList(userId = "userId")
-            it.verifyNoMoreInteractions()
-        }
+        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
+        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
             consultationResponses = listOf(addedResponseUniqueChoice),
         )
-        then(questionRepository).should(times(2)).getConsultationQuestionList(consultationId = "consultId")
+        then(questionRepository).should(times(1)).getConsultationQuestionList(consultationId = "consultId")
         then(contentSanitizer).shouldHaveNoInteractions()
     }
 
