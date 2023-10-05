@@ -42,10 +42,10 @@ class InsertReponseConsultationUseCase(
             consultationId = consultationId,
             consultationResponses = consultationResponses,
         )
-
         consultationPreviewAnsweredRepository.deleteConsultationAnsweredListFromCache(userId)
         consultationPreviewPageRepository.evictConsultationPreviewOngoingList(userId)
         consultationPreviewPageRepository.evictConsultationPreviewAnsweredList(userId)
+
         val responseInsertResult = insertReponseConsultationRepository.insertConsultationResponses(
             insertParameters = insertConsultationResponseParametersMapper.toInsertParameters(
                 consultationId = consultationId,
@@ -76,23 +76,22 @@ class InsertReponseConsultationUseCase(
         consultationResponses: List<ReponseConsultationInserting>,
         consultationId: String,
     ): List<ReponseConsultationInserting> {
-        val sanitizedResponsesList = mutableListOf<ReponseConsultationInserting>()
-        for (reponse in consultationResponses) {
-            val question = questionRepository.getConsultationQuestionList(consultationId)
-                .find { question -> reponse.questionId == question.id }
-            val lenghtSanitizedContent =
-                when (question) {
-                    is QuestionOpen -> OPEN_QUESTION_MAX_LENGTH
-                    else -> OTHER_QUESTION_MAX_LENGTH
-                }
-            sanitizedResponsesList.add(
+        val questionList = questionRepository.getConsultationQuestionList(consultationId)
+
+        return consultationResponses.map { response ->
+            val lengthSanitizedContent = when (questionList.find { it.id == response.questionId }) {
+                is QuestionOpen -> OPEN_QUESTION_MAX_LENGTH
+                else -> OTHER_QUESTION_MAX_LENGTH
+            }
+            if (response.responseText.isNotEmpty()) {
                 ReponseConsultationInserting(
-                    questionId = reponse.questionId,
-                    choiceIds = reponse.choiceIds,
-                    responseText = contentSanitizer.sanitize(reponse.responseText, lenghtSanitizedContent)
+                    questionId = response.questionId,
+                    choiceIds = response.choiceIds,
+                    responseText = contentSanitizer.sanitize(response.responseText, lengthSanitizedContent)
                 )
-            )
+            } else {
+                response.copy()
+            }
         }
-        return sanitizedResponsesList
     }
 }
