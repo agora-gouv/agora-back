@@ -84,13 +84,9 @@ class InsertReponseConsultationUseCase(
                 else -> OTHER_QUESTION_MAX_LENGTH
             }
             if (response.responseText.isNotEmpty()) {
-                ReponseConsultationInserting(
-                    questionId = response.questionId,
-                    choiceIds = response.choiceIds,
-                    responseText = contentSanitizer.sanitize(response.responseText, lengthSanitizedContent)
-                )
+                response.copy(responseText = contentSanitizer.sanitize(response.responseText, lengthSanitizedContent))
             } else {
-                response.copy()
+                response
             }
         }
     }
