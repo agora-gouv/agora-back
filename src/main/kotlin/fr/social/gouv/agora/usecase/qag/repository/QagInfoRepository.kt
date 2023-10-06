@@ -11,15 +11,12 @@ interface QagInfoRepository {
     fun getDisplayedQagInfoList(thematiqueId: String?): List<QagInfo>
     fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo>
 
-    // TODO: solo request
     fun getQagInfo(qagId: String): QagInfo?
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun selectQagForResponse(qagId: String): QagUpdateResult
     fun archiveOldQags(resetDate: Date)
 
-    @Deprecated("Remove")
-    fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult
     fun deleteQag(qagId: String): QagDeleteResult
 }
 

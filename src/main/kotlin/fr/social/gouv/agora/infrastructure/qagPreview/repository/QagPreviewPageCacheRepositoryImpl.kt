@@ -56,6 +56,10 @@ class QagPreviewPageCacheRepositoryImpl(
         getCache()?.evict("$SUPPORTED_PREFIX_KEY$userId")
     }
 
+    override fun clear() {
+        getCache()?.clear()
+    }
+
     private fun getCache() = cacheManager.getCache(QAG_PREVIEW_PAGE_CACHE_NAME)
 
     @Suppress("UNCHECKED_CAST")

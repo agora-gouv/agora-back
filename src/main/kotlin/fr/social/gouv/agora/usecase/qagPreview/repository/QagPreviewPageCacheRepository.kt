@@ -16,4 +16,6 @@ interface QagPreviewPageCacheRepository {
     fun initQagSupportedList(userId: String, thematiqueId: String?, qagList: List<QagWithSupportCount>)
     fun evictQagSupportedList(userId: String, thematiqueId: String?)
 
+    fun clear()
+
 }

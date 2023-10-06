@@ -97,27 +97,6 @@ class QagInfoRepositoryImpl(
         cacheRepository.clear()
     }
 
-    override fun archiveQags(qagIds: List<String>): QagArchiveResult {
-        return qagIds
-            .mapNotNull { qagId -> qagId.toUuidOrNull() }
-            .takeIf { it.isNotEmpty() }
-            ?.let { qagUUIDs ->
-                databaseRepository.archiveQagList(qagUUIDs)
-                QagArchiveResult.SUCCESS
-            } ?: QagArchiveResult.FAILURE
-    }
-
-    override fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult {
-        return try {
-            cacheRepository.deleteQagList(qagIdList.map { qagId -> UUID.fromString(qagId) })
-            QagDeleteResult.SUCCESS
-        } catch (e: IllegalArgumentException) {
-            QagDeleteResult.FAILURE
-        } catch (e: IllegalStateException) {
-            QagDeleteResult.SUCCESS
-        }
-    }
-
     override fun deleteQag(qagId: String): QagDeleteResult {
         return try {
             val qagUUID = UUID.fromString(qagId)

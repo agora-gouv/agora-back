@@ -422,44 +422,6 @@ internal class QagInfoRepositoryImplTest {
     }
 
     @Nested
-    inner class DeleteQagListTestCases {
-        @Test
-        fun `deleteQagList - when invalid UUID - should return FAILURE`() {
-            val result = repository.deleteQagListFromCache(listOf("qagId"))
-
-            //Then
-            assertThat(result).isEqualTo(QagDeleteResult.FAILURE)
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `deleteQagList - when valid UUID - should return SUCCESS`() {
-            val qagId = UUID.randomUUID()
-            val result = repository.deleteQagListFromCache(listOf(qagId.toString()))
-
-            //Then
-            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
-            then(cacheRepository).should(only()).deleteQagList(listOf(qagId))
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `deleteQagList - when valid UUID but delete causes exception - should return SUCCESS`() {
-            val qagId = UUID.randomUUID()
-            val result = repository.deleteQagListFromCache(listOf(qagId.toString()))
-
-            //Then
-            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
-            then(cacheRepository).should(only()).deleteQagList(listOf(qagId))
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-    }
-
-    @Nested
     inner class DeleteQagTestCases {
         @Test
         fun `deleteQag - when invalid UUID for qagID - should return FAILURE`() {
