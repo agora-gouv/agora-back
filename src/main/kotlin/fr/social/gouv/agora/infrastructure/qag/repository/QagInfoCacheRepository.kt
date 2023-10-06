@@ -49,6 +49,8 @@ class QagInfoCacheRepository(private val cacheManager: CacheManager) {
         } ?: throw IllegalStateException("Qag cache has not been initialized")
     }
 
+    fun clear() = getCache()?.clear()
+
     private fun getCache() = cacheManager.getCache(QAG_CACHE_NAME)
 
     @Suppress("UNCHECKED_CAST")

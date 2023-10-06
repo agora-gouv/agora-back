@@ -59,17 +59,10 @@ class QagInfoRepositoryImpl(
         }
     }
 
-    override fun archiveQag(qagId: String): QagArchiveResult {
-        return try {
-            val qagUUID = UUID.fromString(qagId)
-            findQagDTO(qagUUID)?.let { qagDTO ->
-                val archivedQagDTO = mapper.archiveQag(dto = qagDTO)
-                databaseRepository.save(archivedQagDTO)
-                QagArchiveResult.SUCCESS
-            } ?: QagArchiveResult.FAILURE
-        } catch (e: IllegalArgumentException) {
-            QagArchiveResult.FAILURE
-        }
+    override fun archiveOldQags(resetDate: Date) {
+        databaseRepository.archiveQagsBeforeDate(resetDate)
+        databaseRepository.anonymizeRejectedQagsBeforeDate(resetDate)
+        cacheRepository.clear()
     }
 
     override fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult {

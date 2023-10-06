@@ -324,60 +324,19 @@ internal class QagInfoRepositoryImplTest {
         }
     }
 
-    @Nested
-    inner class ArchiveQagTestCases {
-        @Test
-        fun `archiveQag - when invalid UUID - should return FAILURE`() {
-            // When
-            val result = repository.archiveQag(qagId = "invalid UUID")
+    @Test
+    fun `archiveOldQags - should call database archive and anonymize then clear cache`() {
+        // Given
+        val resetDate = mock(Date::class.java)
 
-            // Then
-            assertThat(result).isEqualTo(QagArchiveResult.FAILURE)
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
+        // When
+        repository.archiveOldQags(resetDate)
 
-        @Test
-        fun `archiveQag - when cache is not initialized and has no result - should return FAILURE`() {
-            // Given
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CacheNotInitialized)
-            given(databaseRepository.getAllQagList()).willReturn(emptyList())
-
-            // When
-            val result = repository.archiveQag(qagId = UUID.randomUUID().toString())
-
-            // Then
-            assertThat(result).isEqualTo(QagArchiveResult.FAILURE)
-            inOrder(cacheRepository, databaseRepository).also {
-                then(cacheRepository).should(it).getAllQagList()
-                then(databaseRepository).should(it).getAllQagList()
-                then(cacheRepository).should(it).initializeCache(emptyList())
-                it.verifyNoMoreInteractions()
-            }
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `archiveQag - when cache returns DTO - should return SUCCESS`() {
-            // Given
-            val qagUUID = UUID.randomUUID()
-            val qagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(qagUUID)
-            }
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
-            val archivedQagDTO = mock(QagDTO::class.java)
-            given(mapper.archiveQag(dto = qagDTO)).willReturn(archivedQagDTO)
-
-            // When
-            val result = repository.archiveQag(qagId = qagUUID.toString())
-
-            // Then
-            assertThat(result).isEqualTo(QagArchiveResult.SUCCESS)
-            then(databaseRepository).should(only()).save(archivedQagDTO)
-            then(cacheRepository).should(only()).getAllQagList()
-            then(mapper).should(only()).archiveQag(dto = qagDTO)
-        }
+        // Then
+        then(databaseRepository).should().archiveQagsBeforeDate(resetDate)
+        then(databaseRepository).should().anonymizeRejectedQagsBeforeDate(resetDate)
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(cacheRepository).should(only()).clear()
     }
 
     @Nested

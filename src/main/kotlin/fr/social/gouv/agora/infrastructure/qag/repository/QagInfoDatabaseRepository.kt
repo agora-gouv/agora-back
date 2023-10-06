@@ -19,4 +19,32 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Transactional
     @Query(value = "DELETE FROM qags WHERE id = :qagId", nativeQuery = true)
     fun deleteQagById(@Param("qagId") qagId: UUID): Int
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """UPDATE qags 
+            SET status = 2, username = '', user_id = '00000000-0000-0000-0000-000000000000' 
+            WHERE status = 1
+            AND id IN (
+                SELECT qag_id FROM qag_updates 
+                WHERE status = 1 
+                AND moderated_date < :resetDate 
+            )""", nativeQuery = true
+    )
+    fun archiveQagsBeforeDate(@Param("resetDate") date: Date)
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """UPDATE qags 
+            SET username = '', user_id = '00000000-0000-0000-0000-000000000000' 
+            WHERE status = -1 
+            AND id IN (
+                SELECT qag_id FROM qag_updates 
+                WHERE status = -1
+                AND moderated_date < :resetDate
+            )""", nativeQuery = true
+    )
+    fun anonymizeRejectedQagsBeforeDate(@Param("resetDate") date: Date)
 }
