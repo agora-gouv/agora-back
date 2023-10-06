@@ -8,24 +8,29 @@ import java.util.*
 
 @Repository
 class SupportQagCacheRepository(
+    @Deprecated("should use shortTermCacheManager")
     private val cacheManager: CacheManager,
     @Qualifier("shortTermCacheManager") private val shortTermCacheManager: CacheManager,
 ) {
 
     companion object {
         const val SUPPORT_QAG_CACHE_NAME = "SupportQagCache"
+        @Deprecated("")
         const val ALL_SUPPORT_QAG_CACHE_KEY = "supportQagList"
     }
 
+    @Deprecated("")
     sealed class CacheResult {
         data class CachedSupportQagList(val allSupportQagDTO: List<SupportQagDTO>) : CacheResult()
         object CacheNotInitialized : CacheResult()
     }
 
+    @Deprecated("")
     fun initializeCache(allSupportQagDTO: List<SupportQagDTO>) {
         getCache()?.put(ALL_SUPPORT_QAG_CACHE_KEY, allSupportQagDTO)
     }
 
+    @Deprecated("")
     fun getAllSupportQagList(): CacheResult {
         return when (val allSupportQagDTO = getAllSupportQagDTOFromCache()) {
             null -> CacheResult.CacheNotInitialized
@@ -33,6 +38,7 @@ class SupportQagCacheRepository(
         }
     }
 
+    @Deprecated("")
     @Throws(IllegalStateException::class)
     fun insertSupportQag(supportQagDTO: SupportQagDTO) {
         getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
@@ -40,8 +46,9 @@ class SupportQagCacheRepository(
         } ?: throw IllegalStateException("SupportQag cache has not been initialized")
     }
 
+    @Deprecated("")
     @Throws(IllegalStateException::class)
-    fun deleteSupportQag(qagId: UUID, userId: UUID) {
+    fun deleteSupportQag(userId: UUID, qagId: UUID) {
         getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
             val userSupportQagDTO = allSupportQagDTO
                 .find { supportQagDTO -> supportQagDTO.qagId == qagId && supportQagDTO.userId == userId }
@@ -52,6 +59,7 @@ class SupportQagCacheRepository(
         } ?: throw IllegalStateException("SupportQag cache has not been initialized")
     }
 
+    @Deprecated("")
     @Throws(IllegalStateException::class)
     fun deleteSupportListByQagId(qagId: UUID) {
         getAllSupportQagDTOFromCache()?.let { allSupportQagDTO ->
@@ -90,9 +98,11 @@ class SupportQagCacheRepository(
         }
     }
 
+    @Deprecated("")
     private fun getCache() = cacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
     private fun getShortTermCache() = shortTermCacheManager.getCache(SUPPORT_QAG_CACHE_NAME)
 
+    @Deprecated("")
     @Suppress("UNCHECKED_CAST")
     private fun getAllSupportQagDTOFromCache(): List<SupportQagDTO>? {
         return try {

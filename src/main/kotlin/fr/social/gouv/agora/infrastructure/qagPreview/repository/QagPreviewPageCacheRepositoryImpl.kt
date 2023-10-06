@@ -28,6 +28,14 @@ class QagPreviewPageCacheRepositoryImpl(
         initQagList("$POPULAR_PREFIX_KEY/$thematiqueId", qagList)
     }
 
+    override fun incrementQagPopularSupportCount(thematiqueId: String?, qagId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun decrementQagPopularSupportCount(thematiqueId: String?, qagId: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun evictQagPopularList(thematiqueId: String?) {
         getCache()?.evict("$POPULAR_PREFIX_KEY/$thematiqueId")
     }
@@ -36,6 +44,14 @@ class QagPreviewPageCacheRepositoryImpl(
 
     override fun initQagLatestList(thematiqueId: String?, qagList: List<QagWithSupportCount>) {
         initQagList("$LATEST_PREFIX_KEY/$thematiqueId", qagList)
+    }
+
+    override fun incrementQagLatestSupportCount(thematiqueId: String?, qagId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun decrementQagLatestSupportCount(thematiqueId: String?, qagId: String) {
+        TODO("Not yet implemented")
     }
 
     override fun evictQagLatestList(thematiqueId: String?) {
@@ -50,6 +66,14 @@ class QagPreviewPageCacheRepositoryImpl(
         qagList: List<QagWithSupportCount>,
     ) {
         initQagList("$SUPPORTED_PREFIX_KEY$userId", qagList)
+    }
+
+    override fun incrementSupportedSupportCount(userId: String, thematiqueId: String?, qagId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun decrementSupportedSupportCount(userId: String, thematiqueId: String?, qagId: String) {
+        TODO("Not yet implemented")
     }
 
     override fun evictQagSupportedList(userId: String, thematiqueId: String?) {
