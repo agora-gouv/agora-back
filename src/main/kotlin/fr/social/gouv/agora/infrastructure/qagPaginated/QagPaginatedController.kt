@@ -19,11 +19,13 @@ class QagPaginatedController(
         @PathVariable pageNumber: String,
         @RequestParam("filterType") filterType: String?,
         @RequestParam("thematiqueId") thematiqueId: String?,
+        @RequestParam("keywords") keywords: String?,
     ): ResponseEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val usedFilterType = filterType.takeUnless { it.isNullOrBlank() }
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedPageNumber = pageNumber.toIntOrNull()
+        val keywords = keywords.takeUnless { it.isNullOrBlank() }
 
         return usedPageNumber?.let { pageNumberInt ->
             when (usedFilterType) {
@@ -31,16 +33,19 @@ class QagPaginatedController(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
+                    keywords = keywords,
                 )
                 "latest" -> qagPaginatedUseCase.getLatestQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
+                    keywords = keywords,
                 )
                 "supporting" -> qagPaginatedUseCase.getSupportedQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
+                    keywords = keywords,
                 )
                 else -> null
             }?.let { qagsAndMaxPageCount ->
