@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoCacheRepository.CacheResult
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.social.gouv.agora.usecase.qag.repository.*
 import org.springframework.stereotype.Component
 import java.util.*
@@ -59,17 +60,18 @@ class QagInfoRepositoryImpl(
         }
     }
 
-    override fun archiveQag(qagId: String): QagArchiveResult {
-        return try {
-            val qagUUID = UUID.fromString(qagId)
-            findQagDTO(qagUUID)?.let { qagDTO ->
-                val archivedQagDTO = mapper.archiveQag(dto = qagDTO)
-                databaseRepository.save(archivedQagDTO)
-                QagArchiveResult.SUCCESS
-            } ?: QagArchiveResult.FAILURE
-        } catch (e: IllegalArgumentException) {
-            QagArchiveResult.FAILURE
-        }
+    override fun selectQagForResponse(qagId: String): QagUpdateResult {
+        return qagId.toUuidOrNull()?.let { qagUUID ->
+            databaseRepository.selectQagForResponse(qagUUID)
+            cacheRepository.deleteQagList(listOf(qagUUID))
+            QagUpdateResult.SUCCESS
+        } ?: QagUpdateResult.FAILURE
+    }
+
+    override fun archiveOldQags(resetDate: Date) {
+        databaseRepository.archiveQagsBeforeDate(resetDate)
+        databaseRepository.anonymizeRejectedQagsBeforeDate(resetDate)
+        cacheRepository.clear()
     }
 
     override fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult {

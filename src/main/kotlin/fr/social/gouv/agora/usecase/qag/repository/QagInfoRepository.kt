@@ -9,7 +9,8 @@ interface QagInfoRepository {
     fun getQagInfo(qagId: String): QagInfo?
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
-    fun archiveQag(qagId: String): QagArchiveResult
+    fun selectQagForResponse(qagId: String): QagUpdateResult
+    fun archiveOldQags(resetDate: Date)
     fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult
     fun deleteQag(qagId: String): QagDeleteResult
 }
@@ -20,10 +21,6 @@ sealed class QagInsertionResult {
 }
 
 enum class QagUpdateResult {
-    SUCCESS, FAILURE
-}
-
-enum class QagArchiveResult {
     SUCCESS, FAILURE
 }
 
