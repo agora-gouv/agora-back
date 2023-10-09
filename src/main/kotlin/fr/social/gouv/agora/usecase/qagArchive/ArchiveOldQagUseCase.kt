@@ -19,8 +19,11 @@ class ArchiveOldQagUseCase(
     fun archiveOldQag(): ArchiveQagListResult {
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive).not()) return ArchiveQagListResult.FAILURE
 
+        println("📜️ Archiving old QaGs...")
         val tuesdayThisWeek = LocalDateTime.now(clock).with(DayOfWeek.TUESDAY).withHour(14).withMinute(0).withSecond(0)
         qagInfoRepository.archiveOldQags(tuesdayThisWeek.toDate())
+        println("📜️ Archiving old QaGs finished !")
+
         return ArchiveQagListResult.SUCCESS
     }
 }

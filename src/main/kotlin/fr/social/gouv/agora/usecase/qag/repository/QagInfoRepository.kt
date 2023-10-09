@@ -9,6 +9,7 @@ interface QagInfoRepository {
     fun getQagInfo(qagId: String): QagInfo?
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
+    fun selectQagForResponse(qagId: String): QagUpdateResult
     fun archiveOldQags(resetDate: Date)
     fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult
     fun deleteQag(qagId: String): QagDeleteResult

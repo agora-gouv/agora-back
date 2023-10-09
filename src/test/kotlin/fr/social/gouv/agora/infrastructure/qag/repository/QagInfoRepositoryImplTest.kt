@@ -325,6 +325,33 @@ internal class QagInfoRepositoryImplTest {
     }
 
     @Test
+    fun `selectQagForResponse - when invalid qag UUID - should return Failure`() {
+        // When
+        val result = repository.selectQagForResponse(qagId = "Invalid QaG UUID")
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.FAILURE)
+        then(cacheRepository).shouldHaveNoInteractions()
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `selectQagForResponse - when valid qag UUID - should return call database, delete from cache then return Success`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+
+        // When
+        val result = repository.selectQagForResponse(qagId = qagUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
+        then(cacheRepository).should(only()).deleteQagList(listOf(qagUUID))
+        then(databaseRepository).should(only()).selectQagForResponse(qagId = qagUUID)
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
     fun `archiveOldQags - should call database archive and anonymize then clear cache`() {
         // Given
         val resetDate = mock(Date::class.java)

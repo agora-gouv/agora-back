@@ -3,6 +3,7 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoCacheRepository.CacheResult
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.social.gouv.agora.usecase.qag.repository.*
 import org.springframework.stereotype.Component
 import java.util.*
@@ -57,6 +58,14 @@ class QagInfoRepositoryImpl(
         } catch (e: IllegalArgumentException) {
             QagUpdateResult.FAILURE
         }
+    }
+
+    override fun selectQagForResponse(qagId: String): QagUpdateResult {
+        return qagId.toUuidOrNull()?.let { qagUUID ->
+            databaseRepository.selectQagForResponse(qagUUID)
+            cacheRepository.deleteQagList(listOf(qagUUID))
+            QagUpdateResult.SUCCESS
+        } ?: QagUpdateResult.FAILURE
     }
 
     override fun archiveOldQags(resetDate: Date) {

@@ -24,6 +24,16 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Transactional
     @Query(
         value = """UPDATE qags 
+        SET status = 7, user_id = '00000000-0000-0000-0000-000000000000'
+        WHERE id = :qagId
+        """, nativeQuery = true
+    )
+    fun selectQagForResponse(@Param("qagId") qagId: UUID)
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """UPDATE qags 
             SET status = 2, username = '', user_id = '00000000-0000-0000-0000-000000000000' 
             WHERE status = 1
             AND id IN (

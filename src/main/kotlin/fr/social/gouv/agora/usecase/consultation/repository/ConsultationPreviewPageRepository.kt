@@ -16,4 +16,6 @@ interface ConsultationPreviewPageRepository {
     fun getConsultationPreviewAnsweredList(userId: String): List<ConsultationPreviewAnswered>?
     fun insertConsultationPreviewAnsweredList(userId: String, answeredList: List<ConsultationPreviewAnswered>)
     fun evictConsultationPreviewAnsweredList(userId: String)
+
+    fun clear()
 }
