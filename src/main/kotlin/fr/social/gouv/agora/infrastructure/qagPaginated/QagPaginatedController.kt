@@ -25,7 +25,7 @@ class QagPaginatedController(
         val usedFilterType = filterType.takeUnless { it.isNullOrBlank() }
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedPageNumber = pageNumber.toIntOrNull()
-        val keywords = keywords.takeUnless { it.isNullOrBlank() }
+        val filtredKeywords = keywords.takeUnless { it.isNullOrBlank() }?.take(75)
 
         return usedPageNumber?.let { pageNumberInt ->
             when (usedFilterType) {
@@ -33,19 +33,19 @@ class QagPaginatedController(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
-                    keywords = keywords,
+                    keywords = filtredKeywords,
                 )
                 "latest" -> qagPaginatedUseCase.getLatestQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
-                    keywords = keywords,
+                    keywords = filtredKeywords,
                 )
                 "supporting" -> qagPaginatedUseCase.getSupportedQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
-                    keywords = keywords,
+                    keywords = filtredKeywords,
                 )
                 else -> null
             }?.let { qagsAndMaxPageCount ->
