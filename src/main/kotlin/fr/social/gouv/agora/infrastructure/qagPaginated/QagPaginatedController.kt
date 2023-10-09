@@ -12,6 +12,9 @@ class QagPaginatedController(
     private val qagPaginatedUseCase: QagPaginatedUseCase,
     private val qagPaginatedJsonMapper: QagPaginatedJsonMapper,
 ) {
+    companion object {
+        private const val MAX_CHARACTER_SIZE = 75
+    }
 
     @GetMapping("/qags/page/{pageNumber}")
     fun getQagDetails(
@@ -25,7 +28,7 @@ class QagPaginatedController(
         val usedFilterType = filterType.takeUnless { it.isNullOrBlank() }
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedPageNumber = pageNumber.toIntOrNull()
-        val filtredKeywords = keywords.takeUnless { it.isNullOrBlank() }?.take(75)
+        val filtredKeywords = keywords.takeUnless { it.isNullOrBlank() }?.take(MAX_CHARACTER_SIZE)
 
         return usedPageNumber?.let { pageNumberInt ->
             when (usedFilterType) {
@@ -35,18 +38,21 @@ class QagPaginatedController(
                     thematiqueId = usedThematiqueId,
                     keywords = filtredKeywords,
                 )
+
                 "latest" -> qagPaginatedUseCase.getLatestQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
                     keywords = filtredKeywords,
                 )
+
                 "supporting" -> qagPaginatedUseCase.getSupportedQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
                     keywords = filtredKeywords,
                 )
+
                 else -> null
             }?.let { qagsAndMaxPageCount ->
                 ResponseEntity.ok(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
