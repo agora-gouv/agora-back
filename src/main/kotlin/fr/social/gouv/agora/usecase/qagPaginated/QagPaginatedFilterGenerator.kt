@@ -10,7 +10,7 @@ import java.util.*
 @Component
 class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreezeRepository) {
 
-    fun getPaginatedQagFilters(userId: String, pageNumber: Int, thematiqueId: String?): QagFilters {
+    fun getPaginatedQagFilters(userId: String, pageNumber: Int, thematiqueId: String?, keywords: String?): QagFilters {
         val qagDateFreeze = if (pageNumber == 1) {
             dateFreezeRepository.initQagDateFreeze(userId = userId, thematiqueId = thematiqueId)
         } else {
@@ -18,7 +18,11 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
         }
 
         return QagFilters(
-            filterQagInfo = getPaginatedQagInfoFilter(thematiqueId = thematiqueId, qagDateFreeze = qagDateFreeze),
+            filterQagInfo = getPaginatedQagInfoFilter(
+                thematiqueId = thematiqueId,
+                qagDateFreeze = qagDateFreeze,
+                keywords = keywords
+            ),
             filterSupportQagInfo = { supportQagInfo -> supportQagInfo.supportDate.before(qagDateFreeze) },
             filterQagWithSupportList = { qagInfoWithSupport ->
                 qagInfoWithSupport.qagInfo.status == QagStatus.MODERATED_ACCEPTED
@@ -28,7 +32,12 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
         )
     }
 
-    fun getSupportedPaginatedQagFilters(userId: String, pageNumber: Int, thematiqueId: String?): QagFilters {
+    fun getSupportedPaginatedQagFilters(
+        userId: String,
+        pageNumber: Int,
+        thematiqueId: String?,
+        keywords: String?,
+    ): QagFilters {
         val qagDateFreeze = if (pageNumber == 1) {
             dateFreezeRepository.initQagDateFreeze(userId = userId, thematiqueId = thematiqueId)
         } else {
@@ -36,7 +45,11 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
         }
 
         return QagFilters(
-            filterQagInfo = getPaginatedQagInfoFilter(thematiqueId = thematiqueId, qagDateFreeze = qagDateFreeze),
+            filterQagInfo = getPaginatedQagInfoFilter(
+                thematiqueId = thematiqueId,
+                qagDateFreeze = qagDateFreeze,
+                keywords = keywords
+            ),
             filterSupportQagInfo = { supportQagInfo -> supportQagInfo.supportDate.before(qagDateFreeze) },
             filterQagWithSupportList = { qagInfoWithSupport ->
                 qagInfoWithSupport.supportQagList.any { it.userId == userId }
@@ -48,11 +61,17 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
     private fun getPaginatedQagInfoFilter(
         thematiqueId: String?,
         qagDateFreeze: Date,
+        keywords: String?,
     ): (QagInfo) -> Boolean {
         return { qagInfo ->
             (thematiqueId == null || qagInfo.thematiqueId == thematiqueId)
                     && (qagInfo.status == QagStatus.OPEN || qagInfo.status == QagStatus.MODERATED_ACCEPTED)
                     && qagInfo.date.before(qagDateFreeze)
+                    && (keywords == null || hasKeywords(title = qagInfo.title, keywords = keywords))
         }
+    }
+
+    private fun hasKeywords(title: String, keywords: String): Boolean {
+        return keywords.lowercase().split(" ").all { title.lowercase().contains(it) }
     }
 }
