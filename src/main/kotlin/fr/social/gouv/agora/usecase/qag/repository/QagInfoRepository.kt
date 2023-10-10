@@ -5,23 +5,19 @@ import fr.social.gouv.agora.domain.QagStatus
 import java.util.*
 
 interface QagInfoRepository {
-    @Deprecated("TO DELETE")
-    fun getAllQagInfo(): List<QagInfo>
     fun getQagInfoToModerateList(): List<QagInfo>
     fun getDisplayedQagInfoList(thematiqueId: String?): List<QagInfo>
     fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo>
-
     fun getQagInfo(qagId: String): QagInfo?
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun selectQagForResponse(qagId: String): QagUpdateResult
     fun archiveOldQags(resetDate: Date)
-
     fun deleteQag(qagId: String): QagDeleteResult
 }
 
 sealed class QagInsertionResult {
-    data class Success(val qagId: UUID) : QagInsertionResult()
+    data class Success(val qagInfo: QagInfo) : QagInsertionResult()
     object Failure : QagInsertionResult()
 }
 
@@ -30,6 +26,7 @@ sealed class QagUpdateResult {
     object Failure : QagUpdateResult()
 }
 
-enum class QagDeleteResult {
-    SUCCESS, FAILURE
+sealed class QagDeleteResult {
+    data class Success(val deletedQagInfo: QagInfo) : QagDeleteResult()
+    object Failure : QagDeleteResult()
 }

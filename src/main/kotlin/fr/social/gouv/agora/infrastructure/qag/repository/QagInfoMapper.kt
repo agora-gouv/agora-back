@@ -56,16 +56,14 @@ class QagInfoMapper {
         }
     }
 
-    fun updateQagStatus(dto: QagDTO, qagStatus: QagStatus): QagDTO {
-        return dto.copy(
-            status = when (qagStatus) {
-                QagStatus.OPEN -> STATUS_OPEN
-                QagStatus.ARCHIVED -> STATUS_ARCHIVED
-                QagStatus.MODERATED_ACCEPTED -> STATUS_MODERATED_ACCEPTED
-                QagStatus.MODERATED_REJECTED -> STATUS_MODERATED_REJECTED
-                QagStatus.SELECTED_FOR_RESPONSE -> STATUS_SELECTED_FOR_RESPONSE
-            }
-        )
+    fun toIntStatus(qagStatus: QagStatus): Int {
+        return when (qagStatus) {
+            QagStatus.OPEN -> STATUS_OPEN
+            QagStatus.ARCHIVED -> STATUS_ARCHIVED
+            QagStatus.MODERATED_ACCEPTED -> STATUS_MODERATED_ACCEPTED
+            QagStatus.MODERATED_REJECTED -> STATUS_MODERATED_REJECTED
+            QagStatus.SELECTED_FOR_RESPONSE -> STATUS_SELECTED_FOR_RESPONSE
+        }
     }
 
 }

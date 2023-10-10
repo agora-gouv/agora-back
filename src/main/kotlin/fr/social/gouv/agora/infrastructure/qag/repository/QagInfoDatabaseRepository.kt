@@ -12,9 +12,6 @@ import java.util.*
 @Repository
 interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
 
-    @Query(value = "SELECT * FROM qags WHERE status <> 2", nativeQuery = true)
-    fun getAllQagList(): List<QagDTO>
-
     @Query(value = "SELECT * FROM qags WHERE status = 0 SORT BY post_date ASC", nativeQuery = true)
     fun getQagToModerateList(): List<QagDTO>
 
@@ -36,15 +33,18 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     )
     fun getUserQagList(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
 
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE qags SET status = 2 WHERE id IN :qagIDs", nativeQuery = true)
-    fun archiveQagList(@Param("qagIDs") qagIDs: List<UUID>)
+    @Query(value = "SELECT * from qags WHERE id = :qagId", nativeQuery = true)
+    fun getQagById(@Param("qagId") qagId: UUID): QagDTO?
 
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM qags WHERE id = :qagId", nativeQuery = true)
     fun deleteQagById(@Param("qagId") qagId: UUID): Int
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE qags SET status = :newStatus WHERE id = :qagId", nativeQuery = true)
+    fun updateQagStatus(@Param("qagId") qagId: UUID, @Param("newStatus") newStatus: Int): Int
 
     @Modifying
     @Transactional
@@ -54,7 +54,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
         WHERE id = :qagId
         """, nativeQuery = true
     )
-    fun selectQagForResponse(@Param("qagId") qagId: UUID)
+    fun selectQagForResponse(@Param("qagId") qagId: UUID): Int
 
     @Modifying
     @Transactional
