@@ -14,6 +14,7 @@ class GetQagSelectedForResponseUseCase(
     fun getQagSelectedForResponseList(userId: String): List<QagSelectedForResponse> {
         return getQagListUseCase
             .getQagWithSupportAndThematique(filterGenerator.getFilter())
+            .sortedByDescending { qag -> qag.qagInfo.date }
             .map { qag -> mapper.toQagSelectedForResponse(qag = qag, userId = userId) }
     }
 
