@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.SupportQagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Service
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service
 class InsertQagUseCase(
     private val contentSanitizer: ContentSanitizer,
     private val qagInfoRepository: QagInfoRepository,
+    private val qagPreviewPageRepository: QagPreviewPageRepository,
     private val supportQagRepository: SupportQagRepository,
 ) {
 
@@ -34,6 +36,11 @@ class InsertQagUseCase(
                     qagId = qagInsertionResult.qagId.toString(),
                     userId = qagInserting.userId,
                 )
+            )
+            qagPreviewPageRepository.evictQagSupportedList(userId = qagInserting.userId, thematiqueId = null)
+            qagPreviewPageRepository.evictQagSupportedList(
+                userId = qagInserting.userId,
+                thematiqueId = qagInserting.thematiqueId,
             )
         } else {
             println("⚠️ Insert QaG error")
