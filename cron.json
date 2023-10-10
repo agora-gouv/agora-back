@@ -2,9 +2,6 @@
   "jobs": [
     {
       "command": "0 0 * * * java $JAVA_OPTS -jar build/libs/agora-back-0.0.1.jar --run-custom-command=dailyTasks"
-    },
-    {
-      "command": "15 10 * * TUE java $JAVA_OPTS -jar build/libs/agora-back-0.0.1.jar --run-custom-command=weeklyTasks"
     }
   ]
 }
