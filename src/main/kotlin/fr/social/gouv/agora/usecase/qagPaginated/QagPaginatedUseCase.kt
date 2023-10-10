@@ -20,7 +20,7 @@ class QagPaginatedUseCase(
         private const val MAX_PAGE_LIST_SIZE = 20
     }
 
-    fun getPopularQagPaginated(userId: String, pageNumber: Int, thematiqueId: String?): QagsAndMaxPageCount? {
+    fun getPopularQagPaginated(userId: String, pageNumber: Int, thematiqueId: String?, keywords: String?): QagsAndMaxPageCount? {
         return getQagPaginated(
             userId = userId,
             pageNumber = pageNumber,
@@ -28,12 +28,13 @@ class QagPaginatedUseCase(
                 userId = userId,
                 pageNumber = pageNumber,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             ),
             comparator = { qag1, qag2 -> qag2.supportQagInfoList.size.compareTo(qag1.supportQagInfoList.size) },
         )
     }
 
-    fun getLatestQagPaginated(userId: String, pageNumber: Int, thematiqueId: String?): QagsAndMaxPageCount? {
+    fun getLatestQagPaginated(userId: String, pageNumber: Int, thematiqueId: String?, keywords: String?): QagsAndMaxPageCount? {
         return getQagPaginated(
             userId = userId,
             pageNumber = pageNumber,
@@ -41,6 +42,7 @@ class QagPaginatedUseCase(
                 userId = userId,
                 pageNumber = pageNumber,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             ),
             comparator = { qag1, qag2 ->
                 qag2.qagInfo.date.compareTo(qag1.qagInfo.date)
@@ -48,7 +50,7 @@ class QagPaginatedUseCase(
         )
     }
 
-    fun getSupportedQagPaginated(userId: String, pageNumber: Int, thematiqueId: String?): QagsAndMaxPageCount? {
+    fun getSupportedQagPaginated(userId: String, pageNumber: Int, thematiqueId: String?, keywords: String?): QagsAndMaxPageCount? {
         return getQagPaginated(
             userId = userId,
             pageNumber = pageNumber,
@@ -56,6 +58,7 @@ class QagPaginatedUseCase(
                 userId = userId,
                 pageNumber = pageNumber,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             ),
             comparator = { qag1, qag2 ->
                 val userId1 = qag1.qagInfo.userId

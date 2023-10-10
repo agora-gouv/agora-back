@@ -37,6 +37,7 @@ internal class QagPaginatedUseCaseTest {
 
     private val userId = "userId"
     private val thematiqueId = "thematiqueId"
+    private val keywords = "keywords"
     private val qagFilters = mock(QagFilters::class.java)
 
     @Nested
@@ -49,6 +50,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 0,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -60,7 +62,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getPopularQagPaginated - when pageNumber is higher than maxPageNumber - should return null`() {
             // Given
-            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId))
+            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId, keywords = keywords))
                 .willReturn(qagFilters)
             val qagList = (0 until 21).map { mock(QagInfoWithSupportAndThematique::class.java) }
             given(getQagListUseCase.getQagWithSupportAndThematique(qagFilters = qagFilters)).willReturn(qagList)
@@ -70,12 +72,13 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 3,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
             assertThat(result).isEqualTo(null)
             then(filterGenerator).should(only())
-                .getPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId)
+                .getPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             then(mapper).shouldHaveNoInteractions()
         }
@@ -83,7 +86,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getPopularQagPaginated - when have less than 20 results and pageNumber is 1 - should return ordered qags with highest supportCount and maxPageNumber 1`() {
             // Given
-            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId))
+            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords))
                 .willReturn(qagFilters)
 
             val (qag6Supports, qagPreview6Supports) = mockQag(supportCount = 6)
@@ -97,6 +100,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 1,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -107,7 +111,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId)
+                .getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             then(mapper).should().toPreview(qag = qag42Supports, userId = userId)
             then(mapper).should().toPreview(qag = qag11Supports, userId = userId)
@@ -118,7 +122,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getPopularQagPaginated - when have more than 20 results and pageNumber is 1 - should return ordered qags with highest supportCount limited to 20`() {
             // Given
-            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId))
+            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords))
                 .willReturn(qagFilters)
 
             val firstPageQags = (20 downTo 1).map { index -> mockQag(supportCount = index) }
@@ -131,6 +135,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 1,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -142,7 +147,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId)
+                .getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             firstPageQags.map { (qag, _) ->
                 then(mapper).should().toPreview(qag = qag, userId = userId)
@@ -153,7 +158,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getPopularQagPaginated - when has not enough to fill page 2 entirely and pageNumber is 2 - should return ordered qags with highest supportCount starting from 20th index and limited to 20 items or less`() {
             // Given
-            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId))
+            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId, keywords = keywords))
                 .willReturn(qagFilters)
 
             val firstPageQags = (35 downTo 16).map { index -> mockQag(supportCount = index) }
@@ -166,6 +171,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 2,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -178,7 +184,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId)
+                .getPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             secondPageQags.map { (qag, _) ->
                 then(mapper).should().toPreview(qag = qag, userId = userId)
@@ -210,6 +216,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 0,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -221,7 +228,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getLatestQagPaginated - when pageNumber is higher than maxPageNumber - should return null`() {
             // Given
-            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId))
+            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId, keywords = keywords))
                 .willReturn(qagFilters)
             val qagList = (0 until 21).map { mock(QagInfoWithSupportAndThematique::class.java) }
             given(getQagListUseCase.getQagWithSupportAndThematique(qagFilters = qagFilters)).willReturn(qagList)
@@ -231,12 +238,13 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 3,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
             assertThat(result).isEqualTo(null)
             then(filterGenerator).should(only())
-                .getPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId)
+                .getPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             then(mapper).shouldHaveNoInteractions()
         }
@@ -244,7 +252,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getLatestQagPaginated - when have less than 20 results and pageNumber is 1 - should return ordered qags with most recent postDate with maxPageNumber 1`() {
             // Given
-            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId))
+            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords))
                 .willReturn(qagFilters)
 
             val (qagDate6, qagPreviewDate6) = mockQag(postDate = Date(6))
@@ -258,6 +266,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 1,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -268,7 +277,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId)
+                .getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             then(mapper).should().toPreview(qag = qagDate42, userId = userId)
             then(mapper).should().toPreview(qag = qagDate11, userId = userId)
@@ -279,7 +288,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getLatestQagPaginated - when have more than 20 results and pageNumber is 1 - should return ordered qags with most recent postDate limited to 20`() {
             // Given
-            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId))
+            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords))
                 .willReturn(qagFilters)
 
             val firstPageQags = (20 downTo 1).map { index -> mockQag(postDate = Date(index.toLong())) }
@@ -292,6 +301,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 1,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -303,7 +313,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId)
+                .getPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             firstPageQags.map { (qag, _) ->
                 then(mapper).should().toPreview(qag = qag, userId = userId)
@@ -314,7 +324,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getLatestQagPaginated - when has not enough to fill page 2 entirely and pageNumber is 2 - should return ordered qags with most recent postDate starting from 20th index and limited to 20 items or less`() {
             // Given
-            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId))
+            given(filterGenerator.getPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId, keywords = keywords))
                 .willReturn(qagFilters)
 
             val firstPageQags = (35 downTo 16).map { index -> mockQag(postDate = Date(index.toLong())) }
@@ -327,6 +337,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 2,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -339,7 +350,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId)
+                .getPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             secondPageQags.map { (qag, _) ->
                 then(mapper).should().toPreview(qag = qag, userId = userId)
@@ -373,6 +384,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 0,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -388,7 +400,8 @@ internal class QagPaginatedUseCaseTest {
                 filterGenerator.getSupportedPaginatedQagFilters(
                     userId = userId,
                     pageNumber = 3,
-                    thematiqueId = thematiqueId
+                    thematiqueId = thematiqueId,
+                    keywords = keywords,
                 )
             ).willReturn(qagFilters)
             val qagList = (0 until 21).map { mock(QagInfoWithSupportAndThematique::class.java) }
@@ -399,12 +412,13 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 3,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
             assertThat(result).isEqualTo(null)
             then(filterGenerator).should(only())
-                .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId)
+                .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 3, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             then(mapper).shouldHaveNoInteractions()
         }
@@ -416,7 +430,8 @@ internal class QagPaginatedUseCaseTest {
                 filterGenerator.getSupportedPaginatedQagFilters(
                     userId = userId,
                     pageNumber = 1,
-                    thematiqueId = thematiqueId
+                    thematiqueId = thematiqueId,
+                    keywords = keywords,
                 )
             ).willReturn(qagFilters)
 
@@ -434,6 +449,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 1,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -450,7 +466,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId)
+                .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             then(mapper).should().toPreview(qag = userQag2, userId = userId)
             then(mapper).should().toPreview(qag = userQag1, userId = userId)
@@ -467,7 +483,8 @@ internal class QagPaginatedUseCaseTest {
                 filterGenerator.getSupportedPaginatedQagFilters(
                     userId = userId,
                     pageNumber = 1,
-                    thematiqueId = thematiqueId
+                    thematiqueId = thematiqueId,
+                    keywords = keywords,
                 )
             ).willReturn(qagFilters)
 
@@ -481,6 +498,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 1,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -492,7 +510,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId)
+                .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 1, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             firstPageQags.map { (qag, _) ->
                 then(mapper).should().toPreview(qag = qag, userId = userId)
@@ -507,7 +525,8 @@ internal class QagPaginatedUseCaseTest {
                 filterGenerator.getSupportedPaginatedQagFilters(
                     userId = userId,
                     pageNumber = 2,
-                    thematiqueId = thematiqueId
+                    thematiqueId = thematiqueId,
+                    keywords = keywords,
                 )
             ).willReturn(qagFilters)
 
@@ -521,6 +540,7 @@ internal class QagPaginatedUseCaseTest {
                 userId = userId,
                 pageNumber = 2,
                 thematiqueId = thematiqueId,
+                keywords = keywords,
             )
 
             // Then
@@ -532,7 +552,7 @@ internal class QagPaginatedUseCaseTest {
                 )
             )
             then(filterGenerator).should(only())
-                .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId)
+                .getSupportedPaginatedQagFilters(userId = userId, pageNumber = 2, thematiqueId = thematiqueId, keywords = keywords)
             then(getQagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters = qagFilters)
             secondPageQags.map { (qag, _) ->
                 then(mapper).should().toPreview(qag = qag, userId = userId)

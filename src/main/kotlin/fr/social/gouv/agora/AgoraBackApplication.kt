@@ -12,6 +12,7 @@ class AgoraBackApplication
 
 fun main(args: Array<String>) {
     FirebaseWrapper.initFirebase()
+    AgoraCustomCommandHelper.storeCustomCommand(args)
     runApplication<AgoraBackApplication>(*args)
 }
 

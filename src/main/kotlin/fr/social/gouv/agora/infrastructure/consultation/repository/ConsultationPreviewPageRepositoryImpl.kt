@@ -79,5 +79,9 @@ class ConsultationPreviewPageRepositoryImpl(
         getCache()?.evict("$ANSWERED_CACHE_PREFIX$userId")
     }
 
+    override fun clear() {
+        getCache()?.clear()
+    }
+
     private fun getCache() = cacheManager.getCache(CONSULTATION_PREVIEW_PAGE_CACHE_NAME)
 }

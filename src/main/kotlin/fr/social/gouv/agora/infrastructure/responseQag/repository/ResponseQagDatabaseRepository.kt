@@ -9,7 +9,7 @@ import java.util.*
 @Repository
 interface ResponseQagDatabaseRepository : CrudRepository<ResponseQagDTO, UUID> {
 
-    @Query(value = "SELECT * FROM responses_qag", nativeQuery = true)
+    @Query(value = "SELECT * FROM responses_qag ORDER BY response_date DESC", nativeQuery = true)
     fun getAllResponseQagList(): List<ResponseQagDTO>
 
 }
