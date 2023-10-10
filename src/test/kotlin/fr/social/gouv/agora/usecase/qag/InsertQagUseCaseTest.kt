@@ -5,6 +5,7 @@ import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -30,6 +31,9 @@ internal class InsertQagUseCaseTest {
 
     @MockBean
     private lateinit var qagInfoRepository: QagInfoRepository
+
+    @MockBean
+    private lateinit var qagPreviewPageRepository: QagPreviewPageRepository
 
     @MockBean
     private lateinit var supportQagRepository: SupportQagRepository
@@ -76,6 +80,7 @@ internal class InsertQagUseCaseTest {
         then(contentSanitizer).should().sanitize("username", 50)
         then(contentSanitizer).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).insertQagInfo(sanitizedQagInserting)
+        then(qagPreviewPageRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -100,6 +105,9 @@ internal class InsertQagUseCaseTest {
                 userId = "userId",
             )
         )
+        then(qagPreviewPageRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = null)
+        then(qagPreviewPageRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = "thematiqueId")
+        then(qagPreviewPageRepository).shouldHaveNoMoreInteractions()
     }
 
 }
