@@ -31,31 +31,26 @@ internal class UserRepositoryImplTest {
     @MockBean
     private lateinit var mapper: UserInfoMapper
 
-    @Nested
-    inner class GetAllQagInfoTestCases {
+    @Test
+    fun `getAllUsers - should call database and return mapped results`() {
+        // Given
+        val userDTO = mock(UserDTO::class.java)
+        given(databaseRepository.findAll()).willReturn(listOf(userDTO))
 
-        @Test
-        fun `getAllUsers - should call database and return mapped results`() {
-            // Given
-            val userDTO = mock(UserDTO::class.java)
-            given(databaseRepository.findAll()).willReturn(listOf(userDTO))
+        val userInfo = mock(UserInfo::class.java)
+        given(mapper.toDomain(userDTO)).willReturn(userInfo)
 
-            val userInfo = mock(UserInfo::class.java)
-            given(mapper.toDomain(userDTO)).willReturn(userInfo)
+        // When
+        val result = repository.getAllUsers()
 
-            // When
-            val result = repository.getAllUsers()
-
-            // Then
-            assertThat(result).isEqualTo(listOf(userInfo))
-            inOrder(databaseRepository, mapper).also {
-                then(databaseRepository).should(it).findAll()
-                then(mapper).should(it).toDomain(userDTO)
-                it.verifyNoMoreInteractions()
-            }
-            then(cacheRepository).shouldHaveNoInteractions()
+        // Then
+        assertThat(result).isEqualTo(listOf(userInfo))
+        inOrder(databaseRepository, mapper).also {
+            then(databaseRepository).should(it).findAll()
+            then(mapper).should(it).toDomain(userDTO)
+            it.verifyNoMoreInteractions()
         }
-
+        then(cacheRepository).shouldHaveNoInteractions()
     }
 
     @Nested

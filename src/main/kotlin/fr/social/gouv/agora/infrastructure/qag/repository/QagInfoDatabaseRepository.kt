@@ -12,7 +12,11 @@ import java.util.*
 @Repository
 interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
 
-    @Query(value = "SELECT * FROM qags WHERE status = 0 SORT BY post_date ASC", nativeQuery = true)
+    @Query(value = """SELECT * FROM qags 
+        WHERE status = 0 
+        AND id NOT IN (SELECT qag_id FROM moderatus_locked_qags)
+        SORT BY post_date ASC
+        LIMIT 100""", nativeQuery = true)
     fun getQagToModerateList(): List<QagDTO>
 
     @Query(value = "SELECT * FROM qags WHERE status = 1 SORT BY post_date DESC", nativeQuery = true)
