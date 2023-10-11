@@ -1,17 +1,15 @@
-package fr.social.gouv.agora.domain
+package fr.social.gouv.agora.usecase.qag.repository
 
+import fr.social.gouv.agora.domain.QagStatus
 import java.util.*
 
-data class Qag(
+data class QagInfoWithSupportCount(
     val id: String,
-    val thematique: Thematique,
+    val thematiqueId: String,
     val title: String,
     val description: String,
     val date: Date,
     val status: QagStatus,
     val username: String,
     val userId: String,
-    val support: SupportQag,
-    val response: ResponseQag?,
-    val feedback: FeedbackQagStatus?,
 )

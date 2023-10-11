@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class FeedbackQagRepositoryImpl(
     private val databaseRepository: FeedbackQagDatabaseRepository,
     private val mapper: FeedbackQagMapper,
-    private val feedbackQagCacheRepository: FeedbackQagCacheRepository,
+    private val feedbackQagCacheLegacyRepository: FeedbackQagCacheLegacyRepository,
 ) : FeedbackQagRepository {
 
     companion object {
@@ -21,7 +21,7 @@ class FeedbackQagRepositoryImpl(
             mapper.toDto(feedbackQag)?.let { feedbackQagDTO ->
                 if (!databaseRepository.existsById(feedbackQagDTO.id)) {
                     databaseRepository.save(feedbackQagDTO)
-                    feedbackQagCacheRepository.insertFeedbackQag(
+                    feedbackQagCacheLegacyRepository.insertFeedbackQag(
                         feedbackQagDTO.qagId,
                         feedbackQagDTO.userId,
                         feedbackQagDTO

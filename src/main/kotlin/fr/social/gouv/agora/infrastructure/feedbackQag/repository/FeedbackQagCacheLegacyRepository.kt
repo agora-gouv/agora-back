@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class FeedbackQagCacheRepository(private val cacheManager: CacheManager) {
+class FeedbackQagCacheLegacyRepository(private val cacheManager: CacheManager) {
     companion object {
         private const val FEEDBACK_QAG_CACHE_NAME = "feedbackQagCache"
     }

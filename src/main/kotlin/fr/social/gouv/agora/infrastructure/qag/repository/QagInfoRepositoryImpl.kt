@@ -24,6 +24,18 @@ class QagInfoRepositoryImpl(
         return qagList.map(mapper::toDomain)
     }
 
+    override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPopularQagsPaginated(
+        thematiqueId: String?,
+        maxDate: Date,
+        pageNumber: Int
+    ): List<QagInfoWithSupportCount> {
+        TODO("Not yet implemented")
+    }
+
     override fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo> {
         return userId.toUuidOrNull()?.let { userUUID ->
             val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
@@ -41,6 +53,10 @@ class QagInfoRepositoryImpl(
         }
     }
 
+    override fun getQagInfo(qagIds: List<String>): List<QagInfo> {
+        TODO("Not yet implemented")
+    }
+
     override fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult {
         return mapper.toDto(qagInserting)?.let { qagDTO ->
             val savedQagDTO = databaseRepository.save(qagDTO)
@@ -54,7 +70,7 @@ class QagInfoRepositoryImpl(
                 qagId = qagUUID,
                 newStatus = mapper.toIntStatus(newQagStatus),
             )
-            if (updatedQagsCount <= 0) QagUpdateResult.Failure
+            if (updatedQagsCount <= 0) return QagUpdateResult.Failure
             when (val qagDTO = databaseRepository.getQagById(qagUUID)) {
                 null -> QagUpdateResult.Failure
                 else -> QagUpdateResult.Success(mapper.toDomain(qagDTO))
@@ -65,7 +81,7 @@ class QagInfoRepositoryImpl(
     override fun selectQagForResponse(qagId: String): QagUpdateResult {
         return qagId.toUuidOrNull()?.let { qagUUID ->
             val updatedQagsCount = databaseRepository.selectQagForResponse(qagUUID)
-            if (updatedQagsCount <= 0) QagUpdateResult.Failure
+            if (updatedQagsCount <= 0) return QagUpdateResult.Failure
             when (val qagDTO = databaseRepository.getQagById(qagUUID)) {
                 null -> QagUpdateResult.Failure
                 else -> QagUpdateResult.Success(mapper.toDomain(qagDTO))
@@ -82,8 +98,8 @@ class QagInfoRepositoryImpl(
         return qagId.toUuidOrNull()?.let { qagUUID ->
             databaseRepository.getQagById(qagUUID)?.let { qagDTO ->
                 val resultDelete = databaseRepository.deleteQagById(qagUUID)
-                if (resultDelete <= 0) QagDeleteResult.Failure
-                else QagDeleteResult.Success(deletedQagInfo = mapper.toDomain(qagDTO))
+                if (resultDelete <= 0) return QagDeleteResult.Failure
+                QagDeleteResult.Success(deletedQagInfo = mapper.toDomain(qagDTO))
             } ?: QagDeleteResult.Failure
         } ?: QagDeleteResult.Failure
     }

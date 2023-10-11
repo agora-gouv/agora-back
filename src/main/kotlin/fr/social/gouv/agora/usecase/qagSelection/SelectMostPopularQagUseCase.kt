@@ -31,7 +31,7 @@ class SelectMostPopularQagUseCase(
                 }
 
                 println("🗳️ Most popular QaG, with ${selectedQag.supportQagInfoList.size} supports is : ${selectedQag.qagInfo.title}")
-                if (qagInfoRepository.selectQagForResponse(qagId = selectedQag.qagInfo.id) == QagUpdateResult.FAILURE) {
+                if (qagInfoRepository.selectQagForResponse(qagId = selectedQag.qagInfo.id) == QagUpdateResult.Failure) {
                     println("⚠️️ Select popular QaG error")
                 }
             }

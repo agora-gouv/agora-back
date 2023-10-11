@@ -7,8 +7,11 @@ import java.util.*
 interface QagInfoRepository {
     fun getQagInfoToModerateList(): List<QagInfo>
     fun getDisplayedQagInfoList(thematiqueId: String?): List<QagInfo>
+    fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount>
+    fun getPopularQagsPaginated(thematiqueId: String?, maxDate: Date, pageNumber: Int): List<QagInfoWithSupportCount>
     fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo>
     fun getQagInfo(qagId: String): QagInfo?
+    fun getQagInfo(qagIds: List<String>): List<QagInfo>
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun selectQagForResponse(qagId: String): QagUpdateResult

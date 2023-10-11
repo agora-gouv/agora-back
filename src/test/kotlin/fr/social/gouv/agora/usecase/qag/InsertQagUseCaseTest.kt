@@ -3,9 +3,10 @@ package fr.social.gouv.agora.usecase.qag
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQagInserting
+import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageRepository
+import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -33,7 +34,7 @@ internal class InsertQagUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @MockBean
-    private lateinit var qagPreviewPageRepository: QagPreviewPageRepository
+    private lateinit var qagPreviewPageRepository: QagPreviewPageCacheRepository
 
     @MockBean
     private lateinit var supportQagRepository: SupportQagRepository
@@ -86,14 +87,16 @@ internal class InsertQagUseCaseTest {
     @Test
     fun `insertQag - when insert success - should add support then return success`() {
         // Given
-        val qagId = UUID.randomUUID()
-        given(qagInfoRepository.insertQagInfo(sanitizedQagInserting)).willReturn(QagInsertionResult.Success(qagId = qagId))
+        val qagInfo = mock(QagInfo::class.java).also {
+            given(it.id).willReturn("qagId")
+        }
+        given(qagInfoRepository.insertQagInfo(sanitizedQagInserting)).willReturn(QagInsertionResult.Success(qagInfo = qagInfo))
 
         // When
         val result = useCase.insertQag(qagInserting)
 
         // Then
-        assertThat(result).isEqualTo(QagInsertionResult.Success(qagId = qagId))
+        assertThat(result).isEqualTo(QagInsertionResult.Success(qagInfo = qagInfo))
         then(contentSanitizer).should().sanitize("title", 200)
         then(contentSanitizer).should().sanitize("description", 400)
         then(contentSanitizer).should().sanitize("username", 50)
@@ -101,7 +104,7 @@ internal class InsertQagUseCaseTest {
         then(qagInfoRepository).should(only()).insertQagInfo(sanitizedQagInserting)
         then(supportQagRepository).should(only()).insertSupportQag(
             SupportQagInserting(
-                qagId = qagId.toString(),
+                qagId = "qagId",
                 userId = "userId",
             )
         )

@@ -19,13 +19,15 @@ class GetQagWithSupportAndThematiqueUseCase(
 ) {
 
     fun getQagWithSupportAndThematique(qagFilters: QagFilters): List<QagInfoWithSupportAndThematique> {
-        return qagInfoRepository.getAllQagInfo()
-            .filter { qagInfo -> qagFilters.filterQagInfo.invoke(qagInfo) }
-            .takeUnless { allQagInfo -> allQagInfo.isEmpty() }
-            ?.removeQagWithResponses()
-            ?.retrieveSupportQag(qagFilters)
-            ?.retrieveThematique()
-            ?: emptyList()
+        // TODO delete
+        return emptyList()
+//        return qagInfoRepository.getAllQagInfo()
+//            .filter { qagInfo -> qagFilters.filterQagInfo.invoke(qagInfo) }
+//            .takeUnless { allQagInfo -> allQagInfo.isEmpty() }
+//            ?.removeQagWithResponses()
+//            ?.retrieveSupportQag(qagFilters)
+//            ?.retrieveThematique()
+//            ?: emptyList()
     }
 
     private fun List<QagInfo>.removeQagWithResponses(): List<QagInfo> {

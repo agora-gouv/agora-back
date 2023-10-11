@@ -26,7 +26,7 @@ internal class FeedbackQagRepositoryImplTest {
     private lateinit var mapper: FeedbackQagMapper
 
     @MockBean
-    private lateinit var feedbackQagCacheRepository: FeedbackQagCacheRepository
+    private lateinit var feedbackQagCacheLegacyRepository: FeedbackQagCacheLegacyRepository
 
     private val feedbackQag = FeedbackQagInserting(
         qagId = "1f066238-e29b-11ed-b5ea-0242ac120002",
@@ -52,7 +52,7 @@ internal class FeedbackQagRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(FeedbackQagResult.FAILURE)
         then(databaseRepository).shouldHaveNoInteractions()
-        then(feedbackQagCacheRepository).shouldHaveNoInteractions()
+        then(feedbackQagCacheLegacyRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -67,7 +67,7 @@ internal class FeedbackQagRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(FeedbackQagResult.SUCCESS)
         then(databaseRepository).should(times(1)).save(feedbackQagDTO)
-        then(feedbackQagCacheRepository).should(only())
+        then(feedbackQagCacheLegacyRepository).should(only())
             .insertFeedbackQag(feedbackQagDTO.qagId, feedbackQagDTO.userId, feedbackQagDTO)
     }
 
@@ -92,7 +92,7 @@ internal class FeedbackQagRepositoryImplTest {
             then(databaseRepository).should(it).save(feedbackQagDTO2)
             it.verifyNoMoreInteractions()
         }
-        then(feedbackQagCacheRepository).should(only())
+        then(feedbackQagCacheLegacyRepository).should(only())
             .insertFeedbackQag(feedbackQagDTO2.qagId, feedbackQagDTO2.userId, feedbackQagDTO2)
     }
 
@@ -112,6 +112,6 @@ internal class FeedbackQagRepositoryImplTest {
             then(databaseRepository).should(it, times(3)).existsById(feedbackQagDTO.id)
             it.verifyNoMoreInteractions()
         }
-        then(feedbackQagCacheRepository).shouldHaveNoInteractions()
+        then(feedbackQagCacheLegacyRepository).shouldHaveNoInteractions()
     }
 }

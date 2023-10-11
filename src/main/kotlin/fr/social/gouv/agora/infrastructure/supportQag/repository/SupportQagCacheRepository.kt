@@ -15,6 +15,7 @@ class SupportQagCacheRepository(
 
     companion object {
         const val SUPPORT_QAG_CACHE_NAME = "SupportQagCache"
+
         @Deprecated("")
         const val ALL_SUPPORT_QAG_CACHE_KEY = "supportQagList"
     }
@@ -71,25 +72,25 @@ class SupportQagCacheRepository(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun getUserSupportedQagIds(userId: UUID): List<String>? {
+    fun getUserSupportedQagIds(userId: String): List<String>? {
         return try {
-            getShortTermCache()?.get(userId.toString(), List::class.java) as? List<String>
+            getShortTermCache()?.get(userId, List::class.java) as? List<String>
         } catch (e: IllegalStateException) {
             null
         }
     }
 
-    fun initUserSupportedQagIds(userId: UUID, userSupportedQagIds: List<String>) {
-        getShortTermCache()?.put(userId.toString(), userSupportedQagIds)
+    fun initUserSupportedQagIds(userId: String, userSupportedQagIds: List<String>) {
+        getShortTermCache()?.put(userId, userSupportedQagIds)
     }
 
-    fun addSupportedQagIds(userId: UUID, qagId: String) {
+    fun addSupportedQagIds(userId: String, qagId: String) {
         getUserSupportedQagIds(userId)?.let { userSupportedQagIds ->
             initUserSupportedQagIds(userId, userSupportedQagIds + qagId)
         }
     }
 
-    fun removeSupportedQagIds(userId: UUID, qagId: String) {
+    fun removeSupportedQagIds(userId: String, qagId: String) {
         getUserSupportedQagIds(userId)?.let { userSupportedQagIds ->
             val filteredQagIds = userSupportedQagIds.filter { supportedQagId -> supportedQagId != qagId }
             if (filteredQagIds.size < userSupportedQagIds.size) {

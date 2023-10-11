@@ -12,3 +12,8 @@ data class FeedbackQag(
     val isHelpful: Boolean,
 )
 
+data class FeedbackResults(
+    val positiveRatio: Int,
+    val negativeRatio: Int,
+    val count: Int,
+)
