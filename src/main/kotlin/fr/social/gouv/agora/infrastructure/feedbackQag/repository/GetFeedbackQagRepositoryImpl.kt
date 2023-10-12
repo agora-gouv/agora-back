@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.feedbackQag.repository
 
+import fr.social.gouv.agora.domain.FeedbackQagInserting
 import fr.social.gouv.agora.domain.FeedbackQagStatus
 import fr.social.gouv.agora.infrastructure.feedbackQag.dto.FeedbackQagDTO
 import fr.social.gouv.agora.infrastructure.feedbackQag.repository.FeedbackQagCacheRepository.CacheResult
@@ -11,6 +12,7 @@ import java.util.*
 class GetFeedbackQagRepositoryImpl(
     private val databaseRepository: FeedbackQagDatabaseRepository,
     private val feedbackQagCacheRepository: FeedbackQagCacheRepository,
+    private val mapper: FeedbackQagMapper,
 ) : GetFeedbackQagRepository {
 
     override fun getFeedbackQagStatus(qagId: String, userId: String): FeedbackQagStatus? {
@@ -29,6 +31,15 @@ class GetFeedbackQagRepositoryImpl(
             FeedbackQagStatus(isExist = (feedbackQagDto != null))
         } catch (e: IllegalArgumentException) {
             null
+        }
+    }
+
+    override fun getFeedbackQagList(qagId: String): List<FeedbackQagInserting> {
+        return try {
+            val qagUUID = UUID.fromString(qagId)
+            databaseRepository.getFeedbackQagList(qagUUID).map(mapper::toDomain)
+        } catch (e: IllegalArgumentException) {
+            emptyList()
         }
     }
 

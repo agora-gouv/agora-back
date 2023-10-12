@@ -66,6 +66,10 @@ class QagJsonMapper(
 
     private fun buildResponseQagJson(qag: Qag): ResponseQagJson? {
         return qag.response?.let { response ->
+            val feedbackList = qag.feedbackResults
+            val positiveFeedbackList = feedbackList.filter { it.isHelpful }
+            val positiveRatio = positiveFeedbackList.size * 100 / feedbackList.size
+            val negativeRatio = 100 - positiveRatio
             ResponseQagJson(
                 author = response.author,
                 authorDescription = response.authorDescription,
@@ -75,6 +79,11 @@ class QagJsonMapper(
                 videoHeight = response.videoHeight,
                 transcription = StringUtils.unescapeLineBreaks(response.transcription),
                 feedbackStatus = qag.feedback?.isExist ?: false,
+                feedbackResults = FeedbackResultsJson(
+                    positiveRatio = positiveRatio,
+                    negativeRatio = negativeRatio,
+                    count = feedbackList.size,
+                )
             )
         }
     }

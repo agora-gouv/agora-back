@@ -26,4 +26,12 @@ class FeedbackQagMapper {
             null
         }
     }
+
+    fun toDomain(dto: FeedbackQagDTO): FeedbackQagInserting {
+        return FeedbackQagInserting(
+            userId = dto.userId.toString(),
+            qagId = dto.qagId.toString(),
+            isHelpful = dto.isHelpful == IS_HELPFUL_TRUE_VALUE,
+        )
+    }
 }

@@ -57,4 +57,15 @@ data class ResponseQagJson(
     val transcription: String,
     @JsonProperty("feedbackStatus")
     val feedbackStatus: Boolean,
+    @JsonProperty("feedbackResults")
+    val feedbackResults: FeedbackResultsJson,
+)
+
+data class FeedbackResultsJson(
+    @JsonProperty("positiveRatio")
+    val positiveRatio: Int,
+    @JsonProperty("negativeRatio")
+    val negativeRatio: Int,
+    @JsonProperty("count")
+    val count: Int,
 )

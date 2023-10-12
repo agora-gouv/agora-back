@@ -14,4 +14,10 @@ interface FeedbackQagDatabaseRepository : CrudRepository<FeedbackQagDTO, UUID> {
         nativeQuery = true
     )
     fun getFeedbackQag(@Param("qagId") qagId: UUID, @Param("userId") userId: UUID): FeedbackQagDTO?
+
+    @Query(
+        value = "SELECT * FROM feedbacks_qag WHERE qag_id = :qagId",
+        nativeQuery = true
+    )
+    fun getFeedbackQagList(@Param("qagId") qagId: UUID): List<FeedbackQagDTO>
 }

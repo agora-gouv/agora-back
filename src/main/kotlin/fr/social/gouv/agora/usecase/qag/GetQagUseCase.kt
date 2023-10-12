@@ -32,7 +32,8 @@ class GetQagUseCase(
                         userId = qagInfo.userId,
                         support = supportQag,
                         response = responseQagRepository.getResponseQag(qagId = qagId),
-                        feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = userId)
+                        feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = userId),
+                        feedbackResults = getFeedbackQagRepository.getFeedbackQagList(qagId = qagId),
                     )
                 }
             }
