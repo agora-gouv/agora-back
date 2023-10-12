@@ -13,7 +13,7 @@ object JwtTokenUtils {
     private val JWT_TOKEN_VALIDITY = TimeUnit.DAYS.toMillis(1)
     private const val JWT_PREFIX = "Bearer "
 
-    private val SHORT_JWT_TOKEN_VALIDITY = TimeUnit.MINUTES.toMillis(2)
+    private val SHORT_JWT_TOKEN_VALIDITY = TimeUnit.SECONDS.toSeconds(15)
     private const val SHORT_JWT_TOKEN_USER_ID = "b6953c78-dec3-4fa6-8d9f-18dd44271874"
 
     fun generateToken(userId: String, claims: Map<String, Any> = emptyMap()): String {
