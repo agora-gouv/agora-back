@@ -10,6 +10,7 @@ import java.util.*
 @Component
 class QagInfoRepositoryImpl(
     private val databaseRepository: QagInfoDatabaseRepository,
+    private val supportCountDatabaseRepository: QagInfoWithSupportCountDatabaseRepository,
     private val mapper: QagInfoMapper,
 ) : QagInfoRepository {
 
@@ -25,7 +26,10 @@ class QagInfoRepositoryImpl(
     }
 
     override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
-        TODO("Not yet implemented")
+        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+            supportCountDatabaseRepository.getPopularQags(thematiqueId = thematiqueUUID)
+        } ?: supportCountDatabaseRepository.getPopularQags()
+        return qagList.map(mapper::toDomain)
     }
 
     override fun getPopularQagsPaginated(

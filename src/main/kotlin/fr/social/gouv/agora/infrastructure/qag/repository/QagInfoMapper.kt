@@ -3,8 +3,10 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
+import fr.social.gouv.agora.infrastructure.qag.dto.QagWithSupportCountDTO
 import fr.social.gouv.agora.infrastructure.utils.UuidUtils
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
+import fr.social.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -26,16 +28,23 @@ class QagInfoMapper {
             title = dto.title,
             description = dto.description,
             date = dto.postDate,
-            status = when (dto.status) {
-                STATUS_OPEN -> QagStatus.OPEN
-                STATUS_ARCHIVED -> QagStatus.ARCHIVED
-                STATUS_MODERATED_ACCEPTED -> QagStatus.MODERATED_ACCEPTED
-                STATUS_MODERATED_REJECTED -> QagStatus.MODERATED_REJECTED
-                STATUS_SELECTED_FOR_RESPONSE -> QagStatus.SELECTED_FOR_RESPONSE
-                else -> throw IllegalArgumentException("Invalid QaG status : ${dto.status}")
-            },
+            status = toQagStatus(dto.status),
             username = dto.username,
             userId = dto.userId.toString(),
+        )
+    }
+
+    fun toDomain(dto: QagWithSupportCountDTO): QagInfoWithSupportCount {
+        return QagInfoWithSupportCount(
+            id = dto.id.toString(),
+            thematiqueId = dto.thematiqueId.toString(),
+            title = dto.title,
+            description = dto.description,
+            date = dto.postDate,
+            status = toQagStatus(dto.status),
+            username = dto.username,
+            userId = dto.userId.toString(),
+            supportCount = dto.supportCount,
         )
     }
 
@@ -54,6 +63,15 @@ class QagInfoMapper {
         } catch (e: IllegalArgumentException) {
             null
         }
+    }
+
+    private fun toQagStatus(status: Int) = when (status) {
+        STATUS_OPEN -> QagStatus.OPEN
+        STATUS_ARCHIVED -> QagStatus.ARCHIVED
+        STATUS_MODERATED_ACCEPTED -> QagStatus.MODERATED_ACCEPTED
+        STATUS_MODERATED_REJECTED -> QagStatus.MODERATED_REJECTED
+        STATUS_SELECTED_FOR_RESPONSE -> QagStatus.SELECTED_FOR_RESPONSE
+        else -> throw IllegalArgumentException("Invalid QaG status : $status")
     }
 
     fun toIntStatus(qagStatus: QagStatus): Int {

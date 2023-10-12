@@ -12,4 +12,5 @@ data class QagInfoWithSupportCount(
     val status: QagStatus,
     val username: String,
     val userId: String,
+    val supportCount: Int,
 )
