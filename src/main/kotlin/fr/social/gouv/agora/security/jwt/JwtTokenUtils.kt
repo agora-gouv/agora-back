@@ -13,26 +13,23 @@ object JwtTokenUtils {
     private val JWT_TOKEN_VALIDITY = TimeUnit.DAYS.toMillis(1)
     private const val JWT_PREFIX = "Bearer "
 
-    private val SHORT_JWT_TOKEN_VALIDITY = TimeUnit.SECONDS.toSeconds(15)
+    private val SHORT_JWT_TOKEN_VALIDITY = TimeUnit.SECONDS.toMillis(15)
     private const val SHORT_JWT_TOKEN_USER_ID = "b6953c78-dec3-4fa6-8d9f-18dd44271874"
 
-    fun generateToken(userId: String, claims: Map<String, Any> = emptyMap()): String {
-        if (userId == SHORT_JWT_TOKEN_USER_ID) {
-            return Jwts.builder()
-                .setSubject(userId)
-                .setIssuedAt(Date())
-                .setExpiration(Date(System.currentTimeMillis() + SHORT_JWT_TOKEN_VALIDITY))
-                .addClaims(claims)
-                .signWith(getKey())
-                .compact()
+    fun generateToken(userId: String, claims: Map<String, Any> = emptyMap()): Pair<String, Long> {
+        val expirationDate = if (userId == SHORT_JWT_TOKEN_USER_ID) {
+            Date(System.currentTimeMillis() + SHORT_JWT_TOKEN_VALIDITY)
+        } else {
+            Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY)
         }
+
         return Jwts.builder()
             .setSubject(userId)
             .setIssuedAt(Date())
-            .setExpiration(Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+            .setExpiration(expirationDate)
             .addClaims(claims)
             .signWith(getKey())
-            .compact()
+            .compact() to expirationDate.toInstant().toEpochMilli()
     }
 
     fun extractUserId(jwtToken: String): String {
