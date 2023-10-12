@@ -8,8 +8,10 @@ import org.springframework.stereotype.Component
 class LoginInfoJsonMapper {
 
     fun toJson(domain: UserInfo): LoginInfoJson {
+        val (jwtToken, expirationEpochMilli) = JwtTokenUtils.generateToken(userId = domain.userId)
         return LoginInfoJson(
-            jwtToken = JwtTokenUtils.generateToken(userId = domain.userId),
+            jwtToken = jwtToken,
+            jwtExpirationEpochMilli = expirationEpochMilli,
             isModerator = false,
         )
     }
