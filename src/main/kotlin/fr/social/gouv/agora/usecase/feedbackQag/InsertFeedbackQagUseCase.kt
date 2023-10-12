@@ -12,10 +12,8 @@ class InsertFeedbackQagUseCase(
     private val getFeedbackQagRepository: GetFeedbackQagRepository,
 ) {
     fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagResult {
-        return if (getFeedbackQagRepository.getFeedbackQagStatus(
-                qagId = feedbackQagInserting.qagId,
-                userId = feedbackQagInserting.userId,
-            )?.isExist == true
+        return if (getFeedbackQagRepository.getFeedbackQagList(qagId = feedbackQagInserting.qagId)
+                .count { feedbackQag -> feedbackQag.userId == feedbackQagInserting.userId } > 0
         )
             FeedbackQagResult.FAILURE
         else

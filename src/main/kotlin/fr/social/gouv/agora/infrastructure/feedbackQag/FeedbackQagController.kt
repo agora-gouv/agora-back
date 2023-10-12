@@ -33,7 +33,7 @@ class FeedbackQagController(
                 )
                 if (insertResult == FeedbackQagResult.SUCCESS) {
                     ResponseEntity.ok().body("")
-                } else ResponseEntity.status(400).body("")
+                } else ResponseEntity.badRequest().body("")
             },
             onTaskRejected = { ResponseEntity.badRequest().body(Unit) }
         )
