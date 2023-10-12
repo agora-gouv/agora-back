@@ -6,7 +6,7 @@ import fr.social.gouv.agora.domain.SupportQagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -34,7 +34,7 @@ internal class InsertQagUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @MockBean
-    private lateinit var qagPreviewPageRepository: QagPreviewPageCacheRepository
+    private lateinit var qagPreviewPageRepository: QagWithSupportCountCacheRepository
 
     @MockBean
     private lateinit var supportQagRepository: SupportQagRepository

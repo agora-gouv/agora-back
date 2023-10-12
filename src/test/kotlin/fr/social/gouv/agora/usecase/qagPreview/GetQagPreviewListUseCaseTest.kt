@@ -7,7 +7,7 @@ import fr.social.gouv.agora.usecase.qag.QagFilters
 import fr.social.gouv.agora.usecase.qag.QagInfoWithSupportAndThematique
 import fr.social.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -35,7 +35,7 @@ internal class GetQagPreviewListUseCaseTest {
 
     @MockBean
     @Suppress("unused")
-    private lateinit var previewPageRepository: QagPreviewPageCacheRepository
+    private lateinit var previewPageRepository: QagWithSupportCountCacheRepository
 
     @MockBean
     private lateinit var mapper: QagPreviewMapper

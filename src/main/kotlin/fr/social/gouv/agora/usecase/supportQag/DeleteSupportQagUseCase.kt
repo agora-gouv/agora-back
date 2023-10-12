@@ -5,7 +5,7 @@ import fr.social.gouv.agora.domain.SupportQagDeleting
 import fr.social.gouv.agora.usecase.qag.QagWithSupportCount
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.social.gouv.agora.usecase.qagPreview.repository.QagPreviewPageCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagResult
@@ -16,7 +16,7 @@ class DeleteSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val previewPageRepository: QagPreviewPageCacheRepository,
+    private val previewPageRepository: QagWithSupportCountCacheRepository,
 ) {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
         if (getSupportQagRepository.getSupportQag(

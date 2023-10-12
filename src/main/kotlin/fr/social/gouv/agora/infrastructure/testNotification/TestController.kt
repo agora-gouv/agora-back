@@ -1,6 +1,5 @@
 package fr.social.gouv.agora.infrastructure.testNotification
 
-import fr.social.gouv.agora.usecase.login.LoginUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

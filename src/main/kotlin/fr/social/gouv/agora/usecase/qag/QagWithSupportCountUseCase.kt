@@ -1,42 +1,52 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.Thematique
-import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
+import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
 import fr.social.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 
 @Service
 class QagWithSupportCountUseCase(
     private val qagInfoRepository: QagInfoRepository,
-    private val supportQagRepository: GetSupportQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
+    private val cacheRepository: QagWithSupportCountCacheRepository,
 ) {
 
-    fun getDisplayedQagList(thematiqueId: String?): List<QagWithSupportCount> {
-        val qagInfoList = qagInfoRepository.getDisplayedQagInfoList(thematiqueId = thematiqueId)
-        val supportCounts = supportQagRepository.getQagSupportCounts(qagInfoList.map { it.id })
+    fun getPopularQags(thematiqueId: String?): List<QagWithSupportCount> {
+        return cacheRepository.getQagPopularList(thematiqueId = thematiqueId)
+            ?: qagInfoRepository.getPopularQags(thematiqueId = thematiqueId)
+                .also { cacheRepository.initQagPopularList(thematiqueId = thematiqueId) }
+                .mapQags()
+    }
+
+    fun getLatestQags(thematiqueId: String?): List<QagWithSupportCount> {
+        return cacheRepository.getQagLatestList(thematiqueId = thematiqueId)
+            ?: qagInfoRepository.getLatestQags(thematiqueId = thematiqueId)
+                .also { cacheRepository.initQagLatestList(thematiqueId = thematiqueId) }
+                .mapQags()
+    }
+
+    fun getSupportedQags(userId: String, thematiqueId: String?): List<QagWithSupportCount> {
+
+    }
+
+    private fun List<QagInfoWithSupportCount>.mapQags(): List<QagWithSupportCount> {
         val thematiqueList = thematiqueRepository.getThematiqueList()
-
-        return qagInfoList.mapNotNull { qagInfo ->
-            val supportCount = supportCounts[qagInfo.id]
-            val thematique = thematiqueList.find { thematique -> thematique.id == qagInfo.thematiqueId }
-
-            if (supportCount != null && thematique != null) {
+        return this.mapNotNull { qagInfo ->
+            thematiqueList.find { thematique -> thematique.id == qagInfo.thematiqueId }?.let { thematique ->
                 QagWithSupportCount(
                     qagInfo = qagInfo,
-                    supportCount = supportCount,
                     thematique = thematique,
                 )
-            } else null
+            }
         }
     }
 
 }
 
 data class QagWithSupportCount(
-    val qagInfo: QagInfo,
-    val supportCount: Int,
+    val qagInfo: QagInfoWithSupportCount,
     val thematique: Thematique,
 )

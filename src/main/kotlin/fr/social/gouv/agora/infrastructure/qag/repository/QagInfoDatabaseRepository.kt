@@ -20,66 +20,55 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
         LIMIT 100""", nativeQuery = true)
     fun getQagToModerateList(): List<QagDTO>
 
-    @Query(value = "SELECT * FROM qags WHERE status = 1 SORT BY post_date DESC", nativeQuery = true)
-    fun getDisplayedQagList(): List<QagDTO>
-
     @Query(
-        value = "SELECT * FROM qags WHERE status = 1 AND thematique_id = :thematiqueId SORT BY post_date DESC",
-        nativeQuery = true,
-    )
-    fun getDisplayedQagList(@Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
-
-    @Query(
-        value = """SELECT qags.id as id, title, description, post_date, status, username, thematique_id, qags.user_id as user_id, count(*) as support_count
-            FROM qags JOIN supports_qag 
+        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
+            FROM qags LEFT JOIN supports_qag 
             ON qags.id = supports_qag.qag_id 
             WHERE qags.status = 1
             GROUP BY (qags.id)
-            ORDER BY support_count DESC
+            ORDER BY supportCount DESC
             LIMIT 10
         """, nativeQuery = true
     )
     fun getPopularQags(): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id as id, title, description, post_date, status, username, thematique_id, qags.user_id as user_id, count(*) as support_count
-            FROM qags JOIN supports_qag 
+        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
+            FROM qags LEFT JOIN supports_qag 
             ON qags.id = supports_qag.qag_id 
             WHERE qags.status = 1
             AND thematique_id = :thematiqueId
             GROUP BY (qags.id)
-            ORDER BY support_count DESC
+            ORDER BY supportCount DESC
             LIMIT 10
         """, nativeQuery = true
     )
     fun getPopularQags(@Param("thematiqueId") thematiqueId: UUID): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id, title, description, post_date, status, username, thematique_id, qags.user_id, count(*) as support_count
-            FROM qags JOIN supports_qag 
+        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
+            FROM qags LEFT JOIN supports_qag 
             ON qags.id = supports_qag.qag_id 
             WHERE qags.status = 1
-            OR (qags.status = 0 AND qags.user_id = :userId)
             GROUP BY (qags.id)
-            ORDER BY post_date DESC
+            ORDER BY postDate DESC
             LIMIT 10
         """, nativeQuery = true
     )
-    fun getLatestQags(@Param("userId") userId: UUID): List<QagWithSupportCountDTO>
+    fun getLatestQags(): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id, title, description, post_date, status, username, thematique_id, qags.user_id, count(*) as support_count
-            FROM qags JOIN supports_qag 
+        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
+            FROM qags LEFT JOIN supports_qag 
             ON qags.id = supports_qag.qag_id 
             WHERE qags.status = 1
-            OR (qags.status = 0 AND qags.user_id = :userId)
             AND thematique_id = :thematiqueId
             GROUP BY (qags.id)
-            ORDER BY post_date DESC
+            ORDER BY postDate DESC
             LIMIT 10
         """, nativeQuery = true
     )
-    fun getLatestQags(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): List<QagWithSupportCountDTO>
+    fun getLatestQags(@Param("thematiqueId") thematiqueId: UUID): List<QagWithSupportCountDTO>
 
     @Query(value = "SELECT * FROM qags WHERE status = 0 AND user_id = :userId", nativeQuery = true)
     fun getUserQagList(@Param("userId") userId: UUID): List<QagDTO>

@@ -10,7 +10,6 @@ import java.util.*
 @Component
 class QagInfoRepositoryImpl(
     private val databaseRepository: QagInfoDatabaseRepository,
-    private val supportCountDatabaseRepository: QagInfoWithSupportCountDatabaseRepository,
     private val mapper: QagInfoMapper,
 ) : QagInfoRepository {
 
@@ -18,21 +17,29 @@ class QagInfoRepositoryImpl(
         return databaseRepository.getQagToModerateList().map(mapper::toDomain)
     }
 
-    override fun getDisplayedQagInfoList(thematiqueId: String?): List<QagInfo> {
-        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-            databaseRepository.getDisplayedQagList(thematiqueId = thematiqueUUID)
-        } ?: databaseRepository.getDisplayedQagList()
-        return qagList.map(mapper::toDomain)
-    }
-
     override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
         val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-            supportCountDatabaseRepository.getPopularQags(thematiqueId = thematiqueUUID)
-        } ?: supportCountDatabaseRepository.getPopularQags()
+            databaseRepository.getPopularQags(thematiqueId = thematiqueUUID)
+        } ?: databaseRepository.getPopularQags()
         return qagList.map(mapper::toDomain)
     }
 
     override fun getPopularQagsPaginated(
+        thematiqueId: String?,
+        maxDate: Date,
+        pageNumber: Int
+    ): List<QagInfoWithSupportCount> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLatestQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
+        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+            databaseRepository.getLatestQags(thematiqueId = thematiqueUUID)
+        } ?: databaseRepository.getLatestQags()
+        return qagList.map(mapper::toDomain)
+    }
+
+    override fun getLatestQagsPaginated(
         thematiqueId: String?,
         maxDate: Date,
         pageNumber: Int
