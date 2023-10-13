@@ -87,11 +87,7 @@ internal class QagJsonMapperTest {
         videoHeight = 100,
         transcription = "transcription",
         feedbackStatus = false,
-        feedbackResults = FeedbackResultsJson(
-            positiveRatio = 0,
-            negativeRatio = 0,
-            count = 0,
-        )
+        feedbackResults = null,
     )
 
     @Test
@@ -130,7 +126,13 @@ internal class QagJsonMapperTest {
                         picto = "picto",
                     )
                 ),
-                response = expectedQagJsonResponseQag.copy(responseDate = dateMapper.toFormattedDate(Date(0))),
+                response = expectedQagJsonResponseQag.copy(
+                    responseDate = dateMapper.toFormattedDate(Date(0)), feedbackResults = FeedbackResultsJson(
+                        positiveRatio = 0,
+                        negativeRatio = 0,
+                        count = 0,
+                    )
+                ),
             )
         )
     }
@@ -153,7 +155,6 @@ internal class QagJsonMapperTest {
                 ),
                 response = expectedQagJsonResponseQag.copy(
                     responseDate = dateMapper.toFormattedDate(Date(0)),
-                    feedbackResults = null
                 ),
             )
         )
@@ -186,6 +187,37 @@ internal class QagJsonMapperTest {
                 response = expectedQagJsonResponseQag.copy(
                     responseDate = dateMapper.toFormattedDate(Date(0)),
                     feedbackResults = FeedbackResultsJson(positiveRatio = 25, negativeRatio = 75, count = 4)
+                ),
+            )
+        )
+    }
+
+    @Test
+    fun `toJson - when response exist and feedbackResults is not null - should return QagJson with percentage Int`() {
+        val qagToTest = qagToMap.copy(
+            response = responseQagToMap,
+            feedbackResults = listOf(
+                FeedbackQag(qagId = "qagId", userId = "userId", isHelpful = false),
+                FeedbackQag(qagId = "qagId", userId = "userId", isHelpful = true),
+                FeedbackQag(qagId = "qagId", userId = "userId", isHelpful = true),
+            )
+        )
+        val result = mapper.toJson(qag = qagToTest, userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(
+            expectedQagJson.copy(
+                date = dateMapper.toFormattedDate(Date(0)),
+                thematique = thematiqueJsonMapper.toNoIdJson(
+                    Thematique(
+                        id = "thematiqueId",
+                        label = "label",
+                        picto = "picto",
+                    )
+                ),
+                response = expectedQagJsonResponseQag.copy(
+                    responseDate = dateMapper.toFormattedDate(Date(0)),
+                    feedbackResults = FeedbackResultsJson(positiveRatio = 67, negativeRatio = 33, count = 3)
                 ),
             )
         )
