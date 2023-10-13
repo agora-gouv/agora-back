@@ -13,7 +13,7 @@ class InsertFeedbackQagUseCase(
 ) {
     fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagResult {
         return if (getFeedbackQagRepository.getFeedbackQagList(qagId = feedbackQagInserting.qagId)
-                .count { feedbackQag -> feedbackQag.userId == feedbackQagInserting.userId } > 0
+                .any { feedbackQag -> feedbackQag.userId == feedbackQagInserting.userId }
         )
             FeedbackQagResult.FAILURE
         else

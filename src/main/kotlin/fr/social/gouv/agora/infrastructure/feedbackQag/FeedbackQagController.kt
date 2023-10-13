@@ -35,7 +35,7 @@ class FeedbackQagController(
                     ResponseEntity.ok().body("")
                 } else ResponseEntity.badRequest().body("")
             },
-            onTaskRejected = { ResponseEntity.badRequest().body(Unit) }
+            onTaskRejected = { ResponseEntity.badRequest().body("") }
         )
     }
 }

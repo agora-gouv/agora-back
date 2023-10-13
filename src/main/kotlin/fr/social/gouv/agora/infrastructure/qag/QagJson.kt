@@ -58,7 +58,7 @@ data class ResponseQagJson(
     @JsonProperty("feedbackStatus")
     val feedbackStatus: Boolean,
     @JsonProperty("feedbackResults")
-    val feedbackResults: FeedbackResultsJson,
+    val feedbackResults: FeedbackResultsJson?,
 )
 
 data class FeedbackResultsJson(

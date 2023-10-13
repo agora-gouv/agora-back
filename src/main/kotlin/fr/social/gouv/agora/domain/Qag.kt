@@ -14,5 +14,5 @@ data class Qag(
     val support: SupportQag,
     val response: ResponseQag?,
     val feedback: Boolean,
-    val feedbackResults: List<FeedbackQag>,
+    val feedbackResults: List<FeedbackQag>?,
 )
