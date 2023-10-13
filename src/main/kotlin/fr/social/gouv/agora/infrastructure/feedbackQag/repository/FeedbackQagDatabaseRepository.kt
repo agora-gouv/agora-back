@@ -10,8 +10,8 @@ import java.util.*
 @Repository
 interface FeedbackQagDatabaseRepository : CrudRepository<FeedbackQagDTO, UUID> {
     @Query(
-        value = "SELECT * FROM feedbacks_qag WHERE qag_id = :qagId AND user_id = :userId LIMIT 1",
+        value = "SELECT * FROM feedbacks_qag WHERE qag_id = :qagId",
         nativeQuery = true
     )
-    fun getFeedbackQag(@Param("qagId") qagId: UUID, @Param("userId") userId: UUID): FeedbackQagDTO?
+    fun getFeedbackQagList(@Param("qagId") qagId: UUID): List<FeedbackQagDTO>
 }

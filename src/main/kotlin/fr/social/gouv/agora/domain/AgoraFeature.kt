@@ -7,4 +7,5 @@ enum class AgoraFeature {
     QagSelect,
     QagArchive,
     SimilarQag,
+    FeedbackResponseQag,
 }

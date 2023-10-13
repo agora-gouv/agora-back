@@ -28,6 +28,7 @@ class FeatureFlagsRepositoryImpl(private val cacheManager: CacheManager) : Featu
         AgoraFeature.QagSelect -> "IS_QAG_SELECT_ENABLED"
         AgoraFeature.QagArchive -> "IS_QAG_ARCHIVE_ENABLED"
         AgoraFeature.SimilarQag -> "IS_SIMILAR_QAG_ENABLED"
+        AgoraFeature.FeedbackResponseQag -> "IS_FEEDBACK_ON_RESPONSE_QAG_ENABLED"
     }
 
     private fun getCache() = cacheManager.getCache(FEATURE_FLAGS_CACHE_NAME)

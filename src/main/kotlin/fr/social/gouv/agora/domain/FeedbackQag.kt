@@ -6,6 +6,9 @@ data class FeedbackQagInserting(
     val isHelpful: Boolean,
 )
 
-data class FeedbackQagStatus(
-    val isExist: Boolean,
+data class FeedbackQag(
+    val qagId: String,
+    val userId: String,
+    val isHelpful: Boolean,
 )
+

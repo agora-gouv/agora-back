@@ -13,5 +13,6 @@ data class Qag(
     val userId: String,
     val support: SupportQag,
     val response: ResponseQag?,
-    val feedback: FeedbackQagStatus?,
+    val feedback: Boolean,
+    val feedbackResults: List<FeedbackQag>?,
 )
