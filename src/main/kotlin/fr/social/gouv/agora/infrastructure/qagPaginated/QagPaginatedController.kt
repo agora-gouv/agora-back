@@ -30,10 +30,9 @@ class QagPaginatedController(
         val usedFilterType = filterType.takeUnless { it.isNullOrBlank() }
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedPageNumber = pageNumber.toIntOrNull()
-        val filteredKeywords = URLDecoder.decode(
-            keywords.takeUnless { it.isNullOrBlank() }?.take(MAX_CHARACTER_SIZE),
-            StandardCharsets.UTF_8.toString()
-        )
+        val filteredKeywords =
+            keywords.takeUnless { it.isNullOrBlank() }?.let { URLDecoder.decode(it, StandardCharsets.UTF_8.toString()) }
+                ?.take(MAX_CHARACTER_SIZE)
 
         return usedPageNumber?.let { pageNumberInt ->
             when (usedFilterType) {
