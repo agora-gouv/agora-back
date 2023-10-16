@@ -16,7 +16,9 @@ class SendQagNotificationUseCase(
     private val notificationRepository: NotificationRepository,
 ) {
 
-    fun sendNotificationQagUpdate(title: String, description: String, qagId: String) {
+    fun sendNotificationQagUpdate(title: String, description: String, qagId: String): NotificationResult {
+        if (qagInfoRepository.getQagInfo(qagId) == null) return NotificationResult.FAILURE
+
         val userList = userRepository.getAllUsers()
         notificationSendingRepository.sendQagDetailsMultiNotification(
             request = MultiNotificationRequest.QagMultiNotificationRequest(
@@ -34,6 +36,8 @@ class SendQagNotificationUseCase(
                 userIds = userList.map { userInfo -> userInfo.userId },
             )
         )
+
+        return NotificationResult.SUCCESS
     }
 
     fun sendNotificationQagRejected(qagId: String): NotificationResult {
@@ -62,6 +66,8 @@ class SendQagNotificationUseCase(
 
 
     private fun sendNotification(qagId: String, title: String, description: String): NotificationResult {
+        if (qagInfoRepository.getQagInfo(qagId) == null) return NotificationResult.FAILURE
+
         val (userId, fcmToken) = getQagAuthorFcmToken(qagId = qagId)
         val sendingNotificationResult = fcmToken?.let {
             notificationSendingRepository.sendQagDetailsNotification(
@@ -92,4 +98,3 @@ class SendQagNotificationUseCase(
         return Pair(userId, fcmToken)
     }
 }
-
