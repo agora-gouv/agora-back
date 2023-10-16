@@ -5,6 +5,8 @@ import fr.social.gouv.agora.usecase.qagPaginated.QagPaginatedUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @RestController
 @Suppress("unused")
@@ -28,7 +30,10 @@ class QagPaginatedController(
         val usedFilterType = filterType.takeUnless { it.isNullOrBlank() }
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedPageNumber = pageNumber.toIntOrNull()
-        val filteredKeywords = keywords.takeUnless { it.isNullOrBlank() }?.take(MAX_CHARACTER_SIZE)
+        val filteredKeywords = URLDecoder.decode(
+            keywords.takeUnless { it.isNullOrBlank() }?.take(MAX_CHARACTER_SIZE),
+            StandardCharsets.UTF_8.toString()
+        )
 
         return usedPageNumber?.let { pageNumberInt ->
             when (usedFilterType) {
