@@ -73,4 +73,19 @@ class CacheConfig {
             .entryTtl(Duration.ofMinutes(5))
         return RedisCacheManager.builder(factory).cacheDefaults(redisCacheConfiguration).build()
     }
+
+    @Bean
+    @Qualifier("eternalCacheManager")
+    fun eternalCacheManager(factory: RedisConnectionFactory): CacheManager {
+        val config = RedisCacheConfiguration.defaultCacheConfig()
+        val redisCacheConfiguration = config
+            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    GenericJackson2JsonRedisSerializer()
+                )
+            )
+        return RedisCacheManager.builder(factory).cacheDefaults(redisCacheConfiguration).build()
+    }
+
 }
