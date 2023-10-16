@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.usecase.qagPaginated
 
 import fr.social.gouv.agora.domain.QagStatus
+import fr.social.gouv.agora.infrastructure.utils.StringUtils
 import fr.social.gouv.agora.usecase.qag.QagFilters
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qagPaginated.repository.QagDateFreezeRepository
@@ -21,7 +22,7 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
             filterQagInfo = getPaginatedQagInfoFilter(
                 thematiqueId = thematiqueId,
                 qagDateFreeze = qagDateFreeze,
-                keywords = keywords
+                keywords = keywords,
             ),
             filterSupportQagInfo = { supportQagInfo -> supportQagInfo.supportDate.before(qagDateFreeze) },
             filterQagWithSupportList = { qagInfoWithSupport ->
@@ -63,15 +64,16 @@ class QagPaginatedFilterGenerator(private val dateFreezeRepository: QagDateFreez
         qagDateFreeze: Date,
         keywords: String?,
     ): (QagInfo) -> Boolean {
+        val keywordList = keywords?.let { StringUtils.replaceDiacritics(it.lowercase()).split(" ") } ?: emptyList()
         return { qagInfo ->
             (thematiqueId == null || qagInfo.thematiqueId == thematiqueId)
                     && (qagInfo.status == QagStatus.OPEN || qagInfo.status == QagStatus.MODERATED_ACCEPTED)
                     && qagInfo.date.before(qagDateFreeze)
-                    && (keywords == null || hasKeywords(title = qagInfo.title, keywords = keywords))
+                    && (hasKeywords(title = qagInfo.title, keywords = keywordList))
         }
     }
 
-    private fun hasKeywords(title: String, keywords: String): Boolean {
-        return keywords.lowercase().split(" ").all { title.lowercase().contains(it) }
+    private fun hasKeywords(title: String, keywords: List<String>): Boolean {
+        return keywords.all { StringUtils.replaceDiacritics(title.lowercase()).contains(it) }
     }
 }
