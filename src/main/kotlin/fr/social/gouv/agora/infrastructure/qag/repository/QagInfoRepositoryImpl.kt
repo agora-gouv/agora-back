@@ -47,6 +47,15 @@ class QagInfoRepositoryImpl(
         TODO("Not yet implemented")
     }
 
+    override fun getSupportedQags(userId: String, thematiqueId: String?): List<QagInfoWithSupportCount> {
+        val qagList = userId.toUuidOrNull()?.let { userUUID ->
+            thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+                databaseRepository.getSupportedQags(userId = userUUID, thematiqueId = thematiqueUUID)
+            } ?: databaseRepository.getSupportedQags(userId = userUUID)
+        } ?: emptyList()
+        return qagList.map(mapper::toDomain)
+    }
+
     override fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo> {
         return userId.toUuidOrNull()?.let { userUUID ->
             val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->

@@ -30,7 +30,7 @@ class QagPreviewMapper {
             username = qag.qagInfo.username,
             date = qag.qagInfo.date,
             support = SupportQag(
-                supportCount = qag.supportCount,
+                supportCount = qag.qagInfo.supportCount,
                 isSupportedByUser = supportedQagIds.any { supportedQagId -> supportedQagId == qag.qagInfo.id }
             ),
             isAuthor = qag.qagInfo.userId == userId,

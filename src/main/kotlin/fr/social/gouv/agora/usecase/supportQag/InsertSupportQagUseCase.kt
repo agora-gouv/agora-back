@@ -16,7 +16,7 @@ class InsertSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val previewPageRepository: QagWithSupportCountCacheRepository,
+    private val qagWithSupportCountCacheRepository: QagWithSupportCountCacheRepository,
 ) {
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
         if (getSupportQagRepository.getSupportQag(
@@ -47,50 +47,26 @@ class InsertSupportQagUseCase(
     }
 
     private fun updateCache(qagInfo: QagInfo, userId: String) {
-        previewPageRepository.getQagPopularList(thematiqueId = null)?.let { qagList ->
-            buildIncrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
-                previewPageRepository.initQagPopularList(thematiqueId = null, qagList = updatedQagList)
-            }
-        }
-
-        previewPageRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)?.let { qagList ->
-            buildIncrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
-                previewPageRepository.initQagPopularList(thematiqueId = qagInfo.thematiqueId, qagList = updatedQagList)
-            }
-        }
-
-        previewPageRepository.getQagSupportedList(userId = userId, thematiqueId = null)?.let { qagList ->
-            buildIncrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
-                previewPageRepository.initQagSupportedList(
-                    userId = userId,
-                    thematiqueId = null,
-                    qagList = updatedQagList,
-                )
-            }
-        }
-
-        previewPageRepository.getQagSupportedList(userId = userId, thematiqueId = qagInfo.thematiqueId)
-            ?.let { qagList ->
-                buildIncrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
-                    previewPageRepository.initQagSupportedList(
-                        userId = userId,
-                        thematiqueId = qagInfo.thematiqueId,
-                        qagList = updatedQagList,
-                    )
-                }
-            }
+        qagWithSupportCountCacheRepository.incrementQagPopularSupportCount(thematiqueId = null, qagId = qagInfo.id)
+        qagWithSupportCountCacheRepository.incrementQagPopularSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            qagId = qagInfo.id,
+        )
+        qagWithSupportCountCacheRepository.incrementQagLatestSupportCount(thematiqueId = null, qagId = qagInfo.id)
+        qagWithSupportCountCacheRepository.incrementQagLatestSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            qagId = qagInfo.id,
+        )
+        qagWithSupportCountCacheRepository.incrementSupportedSupportCount(
+            thematiqueId = null,
+            qagId = qagInfo.id,
+            userId = userId,
+        )
+        qagWithSupportCountCacheRepository.incrementSupportedSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            qagId = qagInfo.id,
+            userId = userId,
+        )
     }
 
-    private fun buildIncrementSupportCountIfPresent(
-        qagInfo: QagInfo,
-        qagList: List<QagWithSupportCount>,
-    ): List<QagWithSupportCount>? {
-        return if (qagList.any { it.qagInfo.id == qagInfo.id }) {
-            qagList.map { qag ->
-                if (qag.qagInfo.id == qagInfo.id) {
-                    qag.copy(supportCount = qag.supportCount + 1)
-                } else qag
-            }
-        } else null
-    }
 }

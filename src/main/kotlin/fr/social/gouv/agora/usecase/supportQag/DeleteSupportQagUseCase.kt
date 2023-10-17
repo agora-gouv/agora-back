@@ -2,7 +2,6 @@ package fr.social.gouv.agora.usecase.supportQag
 
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQagDeleting
-import fr.social.gouv.agora.usecase.qag.QagWithSupportCount
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
@@ -16,7 +15,7 @@ class DeleteSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val previewPageRepository: QagWithSupportCountCacheRepository,
+    private val qagWithSupportCountCacheRepository: QagWithSupportCountCacheRepository,
 ) {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
         if (getSupportQagRepository.getSupportQag(
@@ -47,50 +46,26 @@ class DeleteSupportQagUseCase(
     }
 
     private fun updateCache(qagInfo: QagInfo, userId: String) {
-        previewPageRepository.getQagPopularList(thematiqueId = null)?.let { qagList ->
-            buildDecrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
-                previewPageRepository.initQagPopularList(thematiqueId = null, qagList = updatedQagList)
-            }
-        }
-
-        previewPageRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)?.let { qagList ->
-            buildDecrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
-                previewPageRepository.initQagPopularList(thematiqueId = qagInfo.thematiqueId, qagList = updatedQagList)
-            }
-        }
-
-        previewPageRepository.getQagSupportedList(userId = userId, thematiqueId = null)?.let { qagList ->
-            buildDecrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
-                previewPageRepository.initQagSupportedList(
-                    userId = userId,
-                    thematiqueId = null,
-                    qagList = updatedQagList,
-                )
-            }
-        }
-
-        previewPageRepository.getQagSupportedList(userId = userId, thematiqueId = qagInfo.thematiqueId)
-            ?.let { qagList ->
-                buildDecrementSupportCountIfPresent(qagInfo, qagList)?.let { updatedQagList ->
-                    previewPageRepository.initQagSupportedList(
-                        userId = userId,
-                        thematiqueId = qagInfo.thematiqueId,
-                        qagList = updatedQagList,
-                    )
-                }
-            }
+        qagWithSupportCountCacheRepository.decrementQagPopularSupportCount(thematiqueId = null, qagId = qagInfo.id)
+        qagWithSupportCountCacheRepository.decrementQagPopularSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            qagId = qagInfo.id,
+        )
+        qagWithSupportCountCacheRepository.decrementQagLatestSupportCount(thematiqueId = null, qagId = qagInfo.id)
+        qagWithSupportCountCacheRepository.decrementQagLatestSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            qagId = qagInfo.id,
+        )
+        qagWithSupportCountCacheRepository.decrementSupportedSupportCount(
+            thematiqueId = null,
+            qagId = qagInfo.id,
+            userId = userId,
+        )
+        qagWithSupportCountCacheRepository.decrementSupportedSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            qagId = qagInfo.id,
+            userId = userId,
+        )
     }
 
-    private fun buildDecrementSupportCountIfPresent(
-        qagInfo: QagInfo,
-        qagList: List<QagWithSupportCount>,
-    ): List<QagWithSupportCount>? {
-        return if (qagList.any { it.qagInfo.id == qagInfo.id }) {
-            qagList.map { qag ->
-                if (qag.qagInfo.id == qagInfo.id) {
-                    qag.copy(supportCount = qag.supportCount - 1)
-                } else qag
-            }
-        } else null
-    }
 }
