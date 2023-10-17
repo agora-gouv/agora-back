@@ -27,6 +27,7 @@ class ModerateModeratusQagUseCase(
             QagStatus.MODERATED_ACCEPTED,
             QagStatus.MODERATED_REJECTED,
         )
+        private const val MAX_PREVIEW_LIST_SIZE = 10
     }
 
     fun moderateQag(moderateQagOptions: ModerateQagOptions): ModeratusQagModerateResult {
@@ -69,6 +70,17 @@ class ModerateModeratusQagUseCase(
             QagStatus.OPEN -> {
                 if (isAccepted) {
                     sendNotificationdUseCase.sendNotificationQagAccepted(qagInfo.id)
+                    val popularQagsNoThematique = previewPageRepository.getQagPopularList(thematiqueId = null)
+                    if (popularQagsNoThematique != null && popularQagsNoThematique.size < MAX_PREVIEW_LIST_SIZE) {
+                        previewPageRepository.evictQagPopularList(thematiqueId = null)
+                    }
+                    val popularQagsWithThematique =
+                        previewPageRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)
+                    if (popularQagsWithThematique != null && popularQagsWithThematique.size < MAX_PREVIEW_LIST_SIZE) {
+                        previewPageRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId)
+                    }
+                    previewPageRepository.evictQagLatestList(thematiqueId = null)
+                    previewPageRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
                     previewPageRepository.getQagLatestList(thematiqueId = null)
                     previewPageRepository.getQagLatestList(thematiqueId = qagInfo.thematiqueId)
                 } else {
