@@ -2,12 +2,15 @@ package fr.social.gouv.agora.infrastructure.featureFlags.repository
 
 import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
-class FeatureFlagsRepositoryImpl(private val cacheManager: CacheManager) : FeatureFlagsRepository {
+class FeatureFlagsRepositoryImpl(
+    @Qualifier("eternalCacheManager") private val cacheManager: CacheManager,
+) : FeatureFlagsRepository {
 
     companion object {
         private const val FEATURE_FLAGS_CACHE_NAME = "featureFlags"
@@ -28,6 +31,7 @@ class FeatureFlagsRepositoryImpl(private val cacheManager: CacheManager) : Featu
         AgoraFeature.QagSelect -> "IS_QAG_SELECT_ENABLED"
         AgoraFeature.QagArchive -> "IS_QAG_ARCHIVE_ENABLED"
         AgoraFeature.SimilarQag -> "IS_SIMILAR_QAG_ENABLED"
+        AgoraFeature.FeedbackResponseQag -> "IS_FEEDBACK_ON_RESPONSE_QAG_ENABLED"
     }
 
     private fun getCache() = cacheManager.getCache(FEATURE_FLAGS_CACHE_NAME)

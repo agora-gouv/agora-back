@@ -10,6 +10,7 @@ import fr.social.gouv.agora.infrastructure.utils.StringUtils
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.springframework.stereotype.Component
 import java.util.*
+import kotlin.math.roundToInt
 
 @Component
 class QagJsonMapper(
@@ -74,7 +75,21 @@ class QagJsonMapper(
                 videoWidth = response.videoWidth,
                 videoHeight = response.videoHeight,
                 transcription = StringUtils.unescapeLineBreaks(response.transcription),
-                feedbackStatus = qag.feedback?.isExist ?: false,
+                feedbackStatus = qag.feedback,
+                feedbackResults = qag.feedbackResults?.let { feedbackResults ->
+                    val (positiveRatio, negativeRatio) = if (feedbackResults.isEmpty()) 0 to 0
+                    else {
+                        val positiveRatio =
+                            (feedbackResults.count { feedbackQag -> feedbackQag.isHelpful } * 100.0 / feedbackResults.size).roundToInt()
+                        val negativeRatio = 100 - positiveRatio
+                        positiveRatio to negativeRatio
+                    }
+                    FeedbackResultsJson(
+                        positiveRatio = positiveRatio,
+                        negativeRatio = negativeRatio,
+                        count = feedbackResults.size,
+                    )
+                }
             )
         }
     }

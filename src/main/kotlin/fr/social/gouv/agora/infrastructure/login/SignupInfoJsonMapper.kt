@@ -17,12 +17,16 @@ class SignupInfoJsonMapper(private val loginTokenGenerator: LoginTokenGenerator)
 
         return when (loginTokenResult) {
             BuildResult.Failure -> null
-            is BuildResult.Success -> SignupInfoJson(
-                userId = domain.userId,
-                jwtToken = JwtTokenUtils.generateToken(userId = domain.userId),
-                loginToken = loginTokenResult.loginToken,
-                isModerator = false,
-            )
+            is BuildResult.Success -> {
+                val (jwtToken, expirationEpochMilli) = JwtTokenUtils.generateToken(userId = domain.userId)
+                SignupInfoJson(
+                    userId = domain.userId,
+                    jwtToken = jwtToken,
+                    jwtExpirationEpochMilli = expirationEpochMilli,
+                    loginToken = loginTokenResult.loginToken,
+                    isModerator = false,
+                )
+            }
         }
     }
 }

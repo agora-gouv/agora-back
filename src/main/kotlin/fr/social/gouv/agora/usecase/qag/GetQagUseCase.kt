@@ -1,7 +1,9 @@
 package fr.social.gouv.agora.usecase.qag
 
+import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.domain.Qag
 import fr.social.gouv.agora.domain.QagStatus
+import fr.social.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
 import fr.social.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
@@ -16,6 +18,7 @@ class GetQagUseCase(
     private val responseQagRepository: ResponseQagRepository,
     private val getFeedbackQagRepository: GetFeedbackQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
+    private val featureFlagsUseCase: FeatureFlagsUseCase,
 ) {
     fun getQag(qagId: String, userId: String): QagResult {
         val qag = qagInfoRepository.getQagInfo(qagId)?.let { qagInfo ->
@@ -32,7 +35,10 @@ class GetQagUseCase(
                         userId = qagInfo.userId,
                         support = supportQag,
                         response = responseQagRepository.getResponseQag(qagId = qagId),
-                        feedback = getFeedbackQagRepository.getFeedbackQagStatus(qagId = qagId, userId = userId)
+                        feedback = getFeedbackQagRepository.getFeedbackQagList(qagId = qagId)
+                            .any { feedbackQag -> feedbackQag.userId == userId },
+                        feedbackResults = if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag))
+                            getFeedbackQagRepository.getFeedbackQagList(qagId = qagId) else null,
                     )
                 }
             }
