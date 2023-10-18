@@ -75,7 +75,7 @@ internal class QagInfoRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(listOf(qagInfo))
-        then(databaseRepository).should(only()).getDisplayedQagList()
+        then(databaseRepository).should(only()).getPopularQags()
         then(mapper).should(only()).toDomain(qagDTO)
     }
 

@@ -49,7 +49,8 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status ARCHIVED - should return QagNotFound`() {
         // Given
-        given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(mockQag(status = QagStatus.ARCHIVED))
+        val qag = mockQag(status = QagStatus.ARCHIVED)
+        given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
@@ -64,7 +65,8 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status MODERATED_REJECTED - should return QagNotFound`() {
         // Given
-        given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(mockQag(status = QagStatus.MODERATED_REJECTED))
+        val qag = mockQag(status = QagStatus.MODERATED_REJECTED)
+        given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
@@ -79,8 +81,8 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status OPEN but userId is not the same as QaG author - should return QagNotFound`() {
         // Given
-        given(qagDetailsAggregate.getQag(qagId = "qagId"))
-            .willReturn(mockQag(status = QagStatus.OPEN, userId = "anotherUserId"))
+        val qag = mockQag(status = QagStatus.OPEN, userId = "anotherUserId")
+        given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
