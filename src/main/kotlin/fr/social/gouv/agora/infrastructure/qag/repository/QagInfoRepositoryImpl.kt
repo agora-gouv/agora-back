@@ -73,6 +73,14 @@ class QagInfoRepositoryImpl(
         }
     }
 
+    override fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount? {
+        return qagId.toUuidOrNull()?.let { qagUUID ->
+            databaseRepository.getQagWithSupportCount(qagId = qagUUID)?.let { qagDTO ->
+                mapper.toDomain(qagDTO)
+            }
+        }
+    }
+
     override fun getQagInfo(qagIds: List<String>): List<QagInfo> {
         TODO("Not yet implemented")
     }

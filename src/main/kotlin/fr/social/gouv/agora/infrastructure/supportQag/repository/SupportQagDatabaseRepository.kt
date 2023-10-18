@@ -25,9 +25,6 @@ interface SupportQagDatabaseRepository : CrudRepository<SupportQagDTO, UUID> {
     @Query(value = "DELETE FROM supports_qag WHERE qag_id = :qagId", nativeQuery = true)
     fun deleteSupportListByQagId(@Param("qagId") qagId: UUID): Int
 
-    @Query(value = "SELECT qag_id, count(*) FROM supports_qag GROUP BY qag_id", nativeQuery = true)
-    fun geQagSupportCounts(@Param("qagIDs") qagIDs: List<UUID>): Map<UUID, Int>
-
     @Query(value = "SELECT qag_id FROM supports_qag WHERE user_id = :userId ORDER BY support_date DESC", nativeQuery = true)
     fun getUserSupportedQags(@Param("userId") userId: UUID): List<UUID>
 }

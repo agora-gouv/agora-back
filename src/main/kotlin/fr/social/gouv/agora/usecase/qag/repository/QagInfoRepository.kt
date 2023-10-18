@@ -13,6 +13,7 @@ interface QagInfoRepository {
     fun getSupportedQags(userId: String, thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo>
     fun getQagInfo(qagId: String): QagInfo?
+    fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?
     fun getQagInfo(qagIds: List<String>): List<QagInfo>
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult

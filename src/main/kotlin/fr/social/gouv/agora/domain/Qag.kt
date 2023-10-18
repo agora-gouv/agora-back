@@ -11,7 +11,6 @@ data class Qag(
     val status: QagStatus,
     val username: String,
     val userId: String,
-    val support: SupportQag,
+    val supportCount: Int,
     val response: ResponseQag?,
-    val feedback: FeedbackQagStatus?,
 )

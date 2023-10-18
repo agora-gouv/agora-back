@@ -13,11 +13,13 @@ import java.util.*
 @Repository
 interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
 
-    @Query(value = """SELECT * FROM qags 
+    @Query(
+        value = """SELECT * FROM qags 
         WHERE status = 0 
         AND id NOT IN (SELECT qag_id FROM moderatus_locked_qags)
         SORT BY post_date ASC
-        LIMIT 100""", nativeQuery = true)
+        LIMIT 100""", nativeQuery = true
+    )
     fun getQagToModerateList(): List<QagDTO>
 
     @Query(
@@ -97,7 +99,10 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
             LIMIT 10;
         """, nativeQuery = true
     )
-    fun getSupportedQags(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): List<QagWithSupportCountDTO>
+    fun getSupportedQags(
+        @Param("userId") userId: UUID,
+        @Param("thematiqueId") thematiqueId: UUID
+    ): List<QagWithSupportCountDTO>
 
     @Query(value = "SELECT * FROM qags WHERE status = 0 AND user_id = :userId", nativeQuery = true)
     fun getUserQagList(@Param("userId") userId: UUID): List<QagDTO>
@@ -110,6 +115,15 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
 
     @Query(value = "SELECT * from qags WHERE id = :qagId", nativeQuery = true)
     fun getQagById(@Param("qagId") qagId: UUID): QagDTO?
+
+    @Query(
+        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
+            FROM qags LEFT JOIN supports_qag 
+            ON qags.id = supports_qag.qag_id 
+            WHERE qags.id = :qagId
+    """, nativeQuery = true
+    )
+    fun getQagWithSupportCount(@Param("qagId") qagId: UUID): QagWithSupportCountDTO?
 
     @Modifying
     @Transactional
