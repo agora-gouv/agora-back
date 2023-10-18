@@ -4,4 +4,5 @@ import fr.social.gouv.agora.domain.FeedbackQag
 
 interface GetFeedbackQagRepository {
     fun getFeedbackQagList(qagId: String): List<FeedbackQag>
+    fun getUserFeedbackQagIds(userId: String): List<String>
 }
