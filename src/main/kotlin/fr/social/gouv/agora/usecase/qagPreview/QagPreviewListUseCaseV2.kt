@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.qagPreview
 
+import fr.social.gouv.agora.domain.QagPreview
 import fr.social.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.social.gouv.agora.usecase.qag.QagWithSupportCountAggregate
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
@@ -27,3 +28,9 @@ class QagPreviewListUseCaseV2(
     }
 
 }
+
+data class QagPreviewList(
+    val popularPreviewList: List<QagPreview>,
+    val latestPreviewList: List<QagPreview>,
+    val supportedPreviewList: List<QagPreview>,
+)

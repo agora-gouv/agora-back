@@ -19,14 +19,15 @@ class InsertSupportQagUseCase(
     private val qagWithSupportCountCacheRepository: QagWithSupportCountCacheRepository,
 ) {
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
-        if (getSupportQagRepository.getSupportQag(
-                qagId = supportQagInserting.qagId,
-                userId = supportQagInserting.userId,
-            )?.isSupportedByUser == true
-        ) {
-            println("⚠️ Add support error: already supported")
-            return SupportQagResult.FAILURE
-        }
+        // TODO
+//        if (getSupportQagRepository.getSupportQag(
+//                qagId = supportQagInserting.qagId,
+//                userId = supportQagInserting.userId,
+//            )?.isSupportedByUser == true
+//        ) {
+//            println("⚠️ Add support error: already supported")
+//            return SupportQagResult.FAILURE
+//        }
 
         val qagInfo = qagInfoRepository.getQagInfo(supportQagInserting.qagId)
         return when (qagInfo?.status) {

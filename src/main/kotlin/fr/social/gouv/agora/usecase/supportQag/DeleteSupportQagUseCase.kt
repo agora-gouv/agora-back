@@ -18,14 +18,15 @@ class DeleteSupportQagUseCase(
     private val qagWithSupportCountCacheRepository: QagWithSupportCountCacheRepository,
 ) {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
-        if (getSupportQagRepository.getSupportQag(
-                qagId = supportQagDeleting.qagId,
-                userId = supportQagDeleting.userId,
-            )?.isSupportedByUser == false
-        ) {
-            println("⚠️ Remove support error: already unsupported")
-            return SupportQagResult.FAILURE
-        }
+        // TODO
+//        if (getSupportQagRepository.getSupportQag(
+//                qagId = supportQagDeleting.qagId,
+//                userId = supportQagDeleting.userId,
+//            )?.isSupportedByUser == false
+//        ) {
+//            println("⚠️ Remove support error: already unsupported")
+//            return SupportQagResult.FAILURE
+//        }
 
         val qagInfo = qagInfoRepository.getQagInfo(supportQagDeleting.qagId)
         return when (qagInfo?.status) {

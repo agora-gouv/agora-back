@@ -7,21 +7,6 @@ import org.springframework.stereotype.Component
 @Component
 class QagPreviewMapper {
 
-    fun toPreview(qag: QagInfoWithSupportAndThematique, userId: String): QagPreview {
-        return QagPreview(
-            id = qag.qagInfo.id,
-            thematique = qag.thematique,
-            title = qag.qagInfo.title,
-            username = qag.qagInfo.username,
-            date = qag.qagInfo.date,
-            support = SupportQag(
-                supportCount = qag.supportQagInfoList.size,
-                isSupportedByUser = qag.supportQagInfoList.find { supportQagInfo -> supportQagInfo.userId == userId } != null
-            ),
-            isAuthor = qag.qagInfo.userId == userId,
-        )
-    }
-
     fun toPreview(qag: QagWithSupportCount, supportedQagIds: List<String>, userId: String): QagPreview {
         return QagPreview(
             id = qag.qagInfo.id,
@@ -36,4 +21,5 @@ class QagPreviewMapper {
             isAuthor = qag.qagInfo.userId == userId,
         )
     }
+
 }
