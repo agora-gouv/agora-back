@@ -106,6 +106,10 @@ class QagInfoRepositoryImpl(
         } ?: QagUpdateResult.Failure
     }
 
+    override fun getMostPopularQags(): List<QagInfoWithSupportCount> {
+        return databaseRepository.getMostPopularQags().map(mapper::toDomain)
+    }
+
     override fun selectQagForResponse(qagId: String): QagUpdateResult {
         return qagId.toUuidOrNull()?.let { qagUUID ->
             val updatedQagsCount = databaseRepository.selectQagForResponse(qagUUID)

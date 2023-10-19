@@ -13,6 +13,13 @@ import java.util.*
 @Repository
 interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
 
+    companion object {
+        private const val QAG_WITH_SUPPORT_COUNT_PROJECTION =
+            "qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount"
+
+        private const val QAG_WITH_SUPPORT_JOIN = "qags LEFT JOIN supports_qag ON qags.id = supports_qag.qag_id"
+    }
+
     @Query(
         value = """SELECT * FROM qags 
         WHERE status = 0 
@@ -23,9 +30,8 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     fun getQagToModerateList(): List<QagDTO>
 
     @Query(
-        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
-            FROM qags LEFT JOIN supports_qag 
-            ON qags.id = supports_qag.qag_id 
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
             GROUP BY (qags.id)
             ORDER BY supportCount DESC
@@ -35,9 +41,8 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     fun getPopularQags(): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
-            FROM qags LEFT JOIN supports_qag 
-            ON qags.id = supports_qag.qag_id 
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
             AND thematique_id = :thematiqueId
             GROUP BY (qags.id)
@@ -48,9 +53,8 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     fun getPopularQags(@Param("thematiqueId") thematiqueId: UUID): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
-            FROM qags LEFT JOIN supports_qag 
-            ON qags.id = supports_qag.qag_id 
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
             GROUP BY (qags.id)
             ORDER BY postDate DESC
@@ -60,9 +64,8 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     fun getLatestQags(): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
-            FROM qags LEFT JOIN supports_qag 
-            ON qags.id = supports_qag.qag_id 
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
             AND thematique_id = :thematiqueId
             GROUP BY (qags.id)
@@ -73,9 +76,8 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     fun getLatestQags(@Param("thematiqueId") thematiqueId: UUID): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
-            FROM qags LEFT JOIN supports_qag 
-            ON qags.id = supports_qag.qag_id 
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
             WHERE (qags.status = 1 AND qags.id IN (SELECT qag_id FROM supports_qag WHERE user_id = :userId))
             OR ((qags.status = 0 OR qags.status = 1) AND qags.user_id = :userId)
             GROUP BY (qags.id)
@@ -86,9 +88,8 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     fun getSupportedQags(@Param("userId") userId: UUID): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
-            FROM qags LEFT JOIN supports_qag 
-            ON qags.id = supports_qag.qag_id 
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN 
             WHERE (
                 (qags.status = 1 AND qags.id IN (SELECT qag_id FROM supports_qag WHERE user_id = :userId))
                 OR ((qags.status = 0 OR qags.status = 1) AND qags.user_id = :userId)
@@ -117,9 +118,8 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     fun getQagById(@Param("qagId") qagId: UUID): QagDTO?
 
     @Query(
-        value = """SELECT qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount
-            FROM qags LEFT JOIN supports_qag 
-            ON qags.id = supports_qag.qag_id 
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN 
             WHERE qags.id = :qagId
     """, nativeQuery = true
     )
@@ -134,6 +134,24 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Transactional
     @Query(value = "UPDATE qags SET status = :newStatus WHERE id = :qagId", nativeQuery = true)
     fun updateQagStatus(@Param("qagId") qagId: UUID, @Param("newStatus") newStatus: Int): Int
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION 
+            FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE status = 1
+            GROUP BY qags.id
+            HAVING count(*) = (
+                SELECT max(supportCount)
+                FROM (
+                    SELECT count(*) as supportCount
+                    FROM $QAG_WITH_SUPPORT_JOIN
+                    WHERE status = 1
+                    GROUP BY qags.id
+                ) as supportCounts
+            )
+        """, nativeQuery = true
+    )
+    fun getMostPopularQags(): List<QagWithSupportCountDTO>
 
     @Modifying
     @Transactional

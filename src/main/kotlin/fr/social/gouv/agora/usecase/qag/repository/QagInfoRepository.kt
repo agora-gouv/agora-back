@@ -17,6 +17,7 @@ interface QagInfoRepository {
     fun getQagInfo(qagIds: List<String>): List<QagInfo>
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
+    fun getMostPopularQags(): List<QagInfoWithSupportCount>
     fun selectQagForResponse(qagId: String): QagUpdateResult
     fun archiveOldQags(resetDate: Date)
     fun deleteQag(qagId: String): QagDeleteResult

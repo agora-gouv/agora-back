@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 @Service
 class SelectMostPopularQagUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
-    private val filterGenerator: MostPopularQagFilterGenerator,
     private val qagInfoRepository: QagInfoRepository,
     private val randomQagSelector: RandomQagSelector,
 ) {
@@ -18,21 +17,20 @@ class SelectMostPopularQagUseCase(
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect).not()) return
 
         println("🗳️ Selecting the most popular QaG...")
-//        qagListUseCase.getQagWithSupportAndThematique(qagFilters = filterGenerator.generateFilter())
-//            .takeIf { it.isNotEmpty() }
-//            ?.let { allQags ->
-//                val maxSupportCount = allQags.maxOf { qag -> qag.supportQagInfoList.size }
-//                val qagsWithMaxSupports = allQags.filter { qag -> qag.supportQagInfoList.size == maxSupportCount }
-//                val selectedQag = when (qagsWithMaxSupports.size) {
-//                    1 -> qagsWithMaxSupports.first()
-//                    else -> randomQagSelector.chooseRandom(qagsWithMaxSupports)
-//                }
-//
-//                println("🗳️ Most popular QaG, with ${selectedQag.supportQagInfoList.size} supports is : ${selectedQag.qagInfo.title}")
-//                if (qagInfoRepository.selectQagForResponse(qagId = selectedQag.qagInfo.id) == QagUpdateResult.Failure) {
-//                    println("⚠️️ Select popular QaG error")
-//                }
-//            }
+        val mostPopularQags = qagInfoRepository.getMostPopularQags()
+        val selectedQag = when (mostPopularQags.size) {
+            0 -> {
+                println("⚠️ Select popular QaG error: no QaGs to select")
+                return
+            }
+            1 -> mostPopularQags.first()
+            else -> randomQagSelector.chooseRandom(mostPopularQags)
+        }
+
+        println("🗳️ Most popular QaG, with ${selectedQag.supportCount} supports is : ${selectedQag.title}")
+        if (qagInfoRepository.selectQagForResponse(qagId = selectedQag.id) == QagUpdateResult.Failure) {
+            println("⚠️️ Select popular QaG error")
+        }
         println("🗳️ Selecting the most popular QaG finished !")
     }
 

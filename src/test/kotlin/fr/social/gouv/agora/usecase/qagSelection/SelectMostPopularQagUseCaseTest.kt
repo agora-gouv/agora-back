@@ -1,10 +1,9 @@
 package fr.social.gouv.agora.usecase.qagSelection
 
 import fr.social.gouv.agora.domain.AgoraFeature
-import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
-import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,9 +25,6 @@ internal class SelectMostPopularQagUseCaseTest {
     private lateinit var featureFlagsRepository: FeatureFlagsRepository
 
     @MockBean
-    private lateinit var filterGenerator: MostPopularQagFilterGenerator
-
-    @MockBean
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @MockBean
@@ -36,99 +32,76 @@ internal class SelectMostPopularQagUseCaseTest {
 
     @BeforeEach
     fun setUp() {
+        reset(featureFlagsRepository)
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(true)
     }
 
-//    @Test
-//    fun `putMostPopularQagInSelectedStatus - when feature is disabled - should do nothing`() {
-//        // Given
-//        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(false)
-//
-//        // When
-//        useCase.putMostPopularQagInSelectedStatus()
-//
-//        // Then
-//        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
-//        then(filterGenerator).shouldHaveNoInteractions()
-//        then(qagListUseCase).shouldHaveNoInteractions()
-//        then(qagInfoRepository).shouldHaveNoMoreInteractions()
-//        then(randomQagSelector).shouldHaveNoMoreInteractions()
-//    }
-//
-//    @Test
-//    fun `putMostPopularQagInSelectedStatus - when has no qag - should do nothing`() {
-//        // Given
-//        val qagFilters = mock(QagFilters::class.java)
-//        given(filterGenerator.generateFilter()).willReturn(qagFilters)
-//        given(qagListUseCase.getQagWithSupportAndThematique(qagFilters)).willReturn(emptyList())
-//
-//        // When
-//        useCase.putMostPopularQagInSelectedStatus()
-//
-//        // Then
-//        then(filterGenerator).should(only()).generateFilter()
-//        then(qagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters)
-//        then(qagInfoRepository).shouldHaveNoMoreInteractions()
-//        then(randomQagSelector).shouldHaveNoMoreInteractions()
-//    }
-//
-//    @Test
-//    fun `putMostPopularQagInSelectedStatus - when has qags with different support count - should take most supported then update status`() {
-//        // Given
-//        val qagFilters = mock(QagFilters::class.java)
-//        given(filterGenerator.generateFilter()).willReturn(qagFilters)
-//        val qagWith5Supports = mockQag(qagId = "qag5", supportCount = 5)
-//        val qagWith13Supports = mockQag(qagId = "qag13", supportCount = 13)
-//        given(qagListUseCase.getQagWithSupportAndThematique(qagFilters)).willReturn(
-//            listOf(qagWith5Supports, qagWith13Supports)
-//        )
-//
-//        // When
-//        useCase.putMostPopularQagInSelectedStatus()
-//
-//        // Then
-//        then(filterGenerator).should(only()).generateFilter()
-//        then(qagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters)
-//        then(qagInfoRepository).should(only()).updateQagStatus(
-//            qagId = "qag13",
-//            newQagStatus = QagStatus.SELECTED_FOR_RESPONSE,
-//        )
-//        then(randomQagSelector).shouldHaveNoMoreInteractions()
-//    }
-//
-//    @Test
-//    fun `putMostPopularQagInSelectedStatus - when has qags with same support count - should take a random then update its status`() {
-//        // Given
-//        val qagFilters = mock(QagFilters::class.java)
-//        given(filterGenerator.generateFilter()).willReturn(qagFilters)
-//        val qag1 = mockQag(qagId = "qag1", supportCount = 6)
-//        val qag2 = mockQag(qagId = "qag2", supportCount = 6)
-//        given(qagListUseCase.getQagWithSupportAndThematique(qagFilters)).willReturn(listOf(qag1, qag2))
-//        given(randomQagSelector.chooseRandom(listOf(qag1, qag2))).willReturn(qag2)
-//
-//        // When
-//        useCase.putMostPopularQagInSelectedStatus()
-//
-//        // Then
-//        then(filterGenerator).should(only()).generateFilter()
-//        then(qagListUseCase).should(only()).getQagWithSupportAndThematique(qagFilters)
-//        then(qagInfoRepository).should(only()).updateQagStatus(
-//            qagId = "qag2",
-//            newQagStatus = QagStatus.SELECTED_FOR_RESPONSE,
-//        )
-//        then(randomQagSelector).should(only()).chooseRandom(listOf(qag1, qag2))
-//    }
-//
-//    private fun mockQag(qagId: String, supportCount: Int): QagInfoWithSupportAndThematique {
-//        val qagInfo = mock(QagInfo::class.java).also {
-//            given(it.id).willReturn(qagId)
-//        }
-//        val supportQagInfoList = (0 until supportCount).map { mock(SupportQagInfo::class.java) }
-//
-//        return mock(QagInfoWithSupportAndThematique::class.java).also {
-//            given(it.qagInfo).willReturn(qagInfo)
-//            given(it.supportQagInfoList).willReturn(supportQagInfoList)
-//        }
-//    }
+    @Test
+    fun `putMostPopularQagInSelectedStatus - when feature is disabled - should do nothing`() {
+        // Given
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(false)
+
+        // When
+        useCase.putMostPopularQagInSelectedStatus()
+
+        // Then
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(randomQagSelector).shouldHaveNoMoreInteractions()
+    }
+
+    @Test
+    fun `putMostPopularQagInSelectedStatus - when has no qag - should do nothing`() {
+        // Given
+        given(qagInfoRepository.getMostPopularQags()).willReturn(emptyList())
+
+        // When
+        useCase.putMostPopularQagInSelectedStatus()
+
+        // Then
+        then(qagInfoRepository).should(only()).getMostPopularQags()
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(randomQagSelector).shouldHaveNoMoreInteractions()
+    }
+
+    @Test
+    fun `putMostPopularQagInSelectedStatus - when has only 1 QaG - should select it`() {
+        // Given
+        val qag = mockQag(qagId = "qagId")
+        given(qagInfoRepository.getMostPopularQags()).willReturn(listOf(qag))
+
+        // When
+        useCase.putMostPopularQagInSelectedStatus()
+
+        // Then
+        then(qagInfoRepository).should().getMostPopularQags()
+        then(qagInfoRepository).should().selectQagForResponse(qagId = "qagId")
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(randomQagSelector).shouldHaveNoMoreInteractions()
+    }
+
+    @Test
+    fun `putMostPopularQagInSelectedStatus - when has multiple qags - should take a random then update its status`() {
+        // Given
+        val qag1 = mockQag(qagId = "qag1")
+        val qag2 = mockQag(qagId = "qag2")
+        given(qagInfoRepository.getMostPopularQags()).willReturn(listOf(qag1, qag2))
+        given(randomQagSelector.chooseRandom(listOf(qag1, qag2))).willReturn(qag2)
+
+        // When
+        useCase.putMostPopularQagInSelectedStatus()
+
+        // Then
+        then(qagInfoRepository).should().getMostPopularQags()
+        then(qagInfoRepository).should().selectQagForResponse(qagId = "qag2")
+        then(qagInfoRepository).shouldHaveNoMoreInteractions()
+        then(randomQagSelector).should(only()).chooseRandom(listOf(qag1, qag2))
+    }
+
+    private fun mockQag(qagId: String): QagInfoWithSupportCount {
+        return mock(QagInfoWithSupportCount::class.java).also {
+            given(it.id).willReturn(qagId)
+        }
+    }
 
 }
