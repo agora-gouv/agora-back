@@ -35,6 +35,10 @@ class FeedbackResultsCacheRepositoryImpl(
         getCache()?.put(qagId, objectMapper.writeValueAsString(results))
     }
 
+    override fun evictFeedbackResults(qagId: String) {
+        getCache()?.evict(qagId)
+    }
+
     private fun getCache() = cacheManager.getCache(FEEDBACK_RESULTS_CACHE)
 
 }

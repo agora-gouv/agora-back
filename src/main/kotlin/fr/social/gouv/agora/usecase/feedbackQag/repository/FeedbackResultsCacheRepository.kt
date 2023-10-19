@@ -5,6 +5,7 @@ import fr.social.gouv.agora.domain.FeedbackResults
 interface FeedbackResultsCacheRepository {
     fun getFeedbackResults(qagId: String): FeedbackResultsCacheResult
     fun initFeedbackResults(qagId: String, results: FeedbackResults)
+    fun evictFeedbackResults(qagId: String)
 }
 
 sealed class FeedbackResultsCacheResult {

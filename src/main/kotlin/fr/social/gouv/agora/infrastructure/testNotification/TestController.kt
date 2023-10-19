@@ -17,7 +17,7 @@ class TestController(
         @RequestHeader("Authorization") authorizationHeader: String,
     ): ResponseEntity<*> {
         return ResponseEntity.ok().body(
-            qagInfoRepository.getPopularQags(thematiqueId = null)
+            qagInfoRepository.getMostPopularQags()
         )
     }
 
