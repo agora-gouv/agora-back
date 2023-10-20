@@ -16,16 +16,13 @@ class NotificationRepositoryImpl(
     private val mapper: NotificationMapper,
 ) : NotificationRepository {
 
-    override fun insertNotification(notification: NotificationInserting): NotificationInsertionResult {
-        return mapper.toDto(notification)?.let { notificationDTO ->
-            val savedNotificationDTO = databaseRepository.save(notificationDTO)
-            try {
-                cacheRepository.insertNotification(notificationDTO = savedNotificationDTO)
-            } catch (e: IllegalStateException) {
-                getAllNotifactionFromDatabaseAndInitializeCache()
-            }
-            NotificationInsertionResult.SUCCESS
-        } ?: NotificationInsertionResult.FAILURE
+    override fun insertNotifications(notification: NotificationInserting): NotificationInsertionResult {
+        return mapper.toDto(notification).takeUnless { it.isEmpty() }
+            ?.let { notificationDTOList ->
+                val savedNotificationDTOList = databaseRepository.saveAll(notificationDTOList)
+                cacheRepository.insertNotification(savedNotificationDTOList.toList())
+                NotificationInsertionResult.SUCCESS
+            } ?: NotificationInsertionResult.FAILURE
     }
 
     override fun getUserNotificationList(userId: String): List<Notification> {

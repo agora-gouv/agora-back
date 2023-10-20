@@ -1,24 +1,41 @@
 package fr.social.gouv.agora.usecase.notification.repository
 
+import fr.social.gouv.agora.usecase.notification.repository.MultiNotificationRequest.ConsultationMultiNotificationRequest
+import fr.social.gouv.agora.usecase.notification.repository.MultiNotificationRequest.QagMultiNotificationRequest
+
 interface NotificationSendingRepository {
-    fun sendNotificationMessage(request: NotificationRequest): NotificationResult
-    fun sendQagDetailsNotification(request: NotificationRequest, qagId: String): NotificationResult
-    fun sendNewConsultationNotification(request: ConsultationNotificationRequest): Pair<Int, Int>?
-    fun sendConsultationUpdateNotification(request: ConsultationNotificationRequest): Pair<Int, Int>?
+    fun sendQagDetailsNotification(request: QagNotificationRequest): NotificationResult
+    fun sendQagDetailsMultiNotification(request: QagMultiNotificationRequest)
+    fun sendNewConsultationMultiNotification(request: ConsultationMultiNotificationRequest)
+    fun sendConsultationUpdateMultiNotification(request: ConsultationMultiNotificationRequest)
 }
 
-data class NotificationRequest(
-    val fcmToken: String,
+data class QagNotificationRequest(
     val title: String,
     val description: String,
+    val fcmToken: String,
+    val qagId: String,
 )
 
-data class ConsultationNotificationRequest(
-    val title: String,
-    val description: String,
-    val fcmTokenList: List<String>,
-    val consultationId: String,
-)
+sealed class MultiNotificationRequest {
+    abstract val title: String
+    abstract val description: String
+    abstract val fcmTokenList: List<String>
+
+    data class QagMultiNotificationRequest(
+        override val title: String,
+        override val description: String,
+        override val fcmTokenList: List<String>,
+        val qagId: String,
+    ) : MultiNotificationRequest()
+
+    data class ConsultationMultiNotificationRequest(
+        override val title: String,
+        override val description: String,
+        override val fcmTokenList: List<String>,
+        val consultationId: String,
+    ) : MultiNotificationRequest()
+}
 
 enum class NotificationResult {
     SUCCESS, FAILURE

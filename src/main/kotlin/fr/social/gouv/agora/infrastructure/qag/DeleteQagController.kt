@@ -22,8 +22,8 @@ class DeleteQagController(
             qagId = qagId,
         )
         return when (qagDeleteResult) {
-            QagDeleteResult.SUCCESS -> ResponseEntity.ok().body(Unit)
-            QagDeleteResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
+            is QagDeleteResult.Success -> ResponseEntity.ok().body(Unit)
+            QagDeleteResult.Failure -> ResponseEntity.badRequest().body(Unit)
         }
     }
 }

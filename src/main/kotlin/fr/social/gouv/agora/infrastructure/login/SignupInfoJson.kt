@@ -7,6 +7,8 @@ data class SignupInfoJson(
     val userId: String,
     @JsonProperty("jwtToken")
     val jwtToken: String,
+    @JsonProperty("jwtExpirationEpochMilli")
+    val jwtExpirationEpochMilli: Long,
     @JsonProperty("loginToken")
     val loginToken: String,
     @JsonProperty("isModerator")

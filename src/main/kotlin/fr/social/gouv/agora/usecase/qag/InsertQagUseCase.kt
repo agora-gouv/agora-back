@@ -4,6 +4,7 @@ import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.SupportQagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
+import fr.social.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Service
 
@@ -12,6 +13,7 @@ class InsertQagUseCase(
     private val contentSanitizer: ContentSanitizer,
     private val qagInfoRepository: QagInfoRepository,
     private val supportQagRepository: SupportQagRepository,
+    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
 ) {
 
     companion object {
@@ -21,25 +23,30 @@ class InsertQagUseCase(
     }
 
     fun insertQag(qagInserting: QagInserting): QagInsertionResult {
-        if (isContentNotSaint(qagInserting)) {
-            return QagInsertionResult.Failure
-        }
-
-        val qagInsertionResult = qagInfoRepository.insertQagInfo(qagInserting)
+        val qagInsertionResult = qagInfoRepository.insertQagInfo(
+            qagInserting.copy(
+                title = contentSanitizer.sanitize(qagInserting.title, TITLE_MAX_LENGTH),
+                description = contentSanitizer.sanitize(qagInserting.description, DESCRIPTION_MAX_LENGTH),
+                username = contentSanitizer.sanitize(qagInserting.username, USERNAME_MAX_LENGTH),
+            )
+        )
         if (qagInsertionResult is QagInsertionResult.Success) {
             supportQagRepository.insertSupportQag(
                 SupportQagInserting(
-                    qagId = qagInsertionResult.qagId.toString(),
+                    qagId = qagInsertionResult.qagInfo.id,
                     userId = qagInserting.userId,
                 )
             )
+            qagPreviewCacheRepository.evictQagSupportedList(userId = qagInserting.userId, thematiqueId = null)
+            qagPreviewCacheRepository.evictQagSupportedList(
+                userId = qagInserting.userId,
+                thematiqueId = qagInserting.thematiqueId,
+            )
+        } else {
+            println("⚠️ Insert QaG error")
         }
         return qagInsertionResult
     }
 
-    private fun isContentNotSaint(qagInserting: QagInserting) =
-        !contentSanitizer.isContentSaint(qagInserting.title, TITLE_MAX_LENGTH)
-                || !contentSanitizer.isContentSaint(qagInserting.description, DESCRIPTION_MAX_LENGTH)
-                || !contentSanitizer.isContentSaint(qagInserting.username, USERNAME_MAX_LENGTH)
 }
 

@@ -1,11 +1,15 @@
 package fr.social.gouv.agora.infrastructure.consultation
 
 import fr.social.gouv.agora.domain.Consultation
+import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationDetailsJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
+class ConsultationDetailsJsonMapper(
+    private val thematiqueJsonMapper: ThematiqueJsonMapper,
+    private val dateMapper: DateMapper,
+) {
 
     fun toJson(domain: Consultation, participantCount: Int): ConsultationDetailsJson {
         return ConsultationDetailsJson(
@@ -13,7 +17,7 @@ class ConsultationDetailsJsonMapper(private val thematiqueJsonMapper: Thematique
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
             title = domain.title,
             coverUrl = domain.coverUrl,
-            endDate = domain.endDate.toString(),
+            endDate = dateMapper.toFormattedDate(domain.endDate),
             questionCount = domain.questionCount,
             estimatedTime = domain.estimatedTime,
             participantCount = participantCount,

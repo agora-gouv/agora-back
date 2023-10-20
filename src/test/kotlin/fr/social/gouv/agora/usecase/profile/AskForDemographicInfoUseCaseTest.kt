@@ -113,7 +113,7 @@ internal class AskForDemographicInfoUseCaseTest {
         assertThat(result).isEqualTo(true)
         then(profileRepository).should(only()).getProfile(userId = "1234")
         then(demographicInfoAskDateRepository).should(times(1)).getDate(userId = "1234")
-        then(demographicInfoAskDateRepository).should(times(1)).updateDate(userId = "1234")
+        then(demographicInfoAskDateRepository).should(times(1)).insertDate(userId = "1234")
     }
 
     @Test

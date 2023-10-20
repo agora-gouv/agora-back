@@ -7,20 +7,20 @@ import io.jsonwebtoken.security.Keys
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-
 object JwtTokenUtils {
 
     private val JWT_TOKEN_VALIDITY = TimeUnit.DAYS.toMillis(1)
     private const val JWT_PREFIX = "Bearer "
 
-    fun generateToken(userId: String, claims: Map<String, Any> = emptyMap()): String {
+    fun generateToken(userId: String, claims: Map<String, Any> = emptyMap()): Pair<String, Long> {
+        val expirationDate = Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY)
         return Jwts.builder()
             .setSubject(userId)
             .setIssuedAt(Date())
-            .setExpiration(Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+            .setExpiration(expirationDate)
             .addClaims(claims)
             .signWith(getKey())
-            .compact()
+            .compact() to expirationDate.toInstant().toEpochMilli()
     }
 
     fun extractUserId(jwtToken: String): String {

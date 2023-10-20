@@ -3,11 +3,10 @@ package fr.social.gouv.agora.infrastructure.qag.repository
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.infrastructure.qag.dto.QagDTO
-import fr.social.gouv.agora.infrastructure.qag.repository.QagInfoCacheRepository.CacheResult
+import fr.social.gouv.agora.infrastructure.qag.dto.QagWithSupportCountDTO
 import fr.social.gouv.agora.usecase.qag.repository.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -28,463 +27,511 @@ internal class QagInfoRepositoryImplTest {
     private lateinit var databaseRepository: QagInfoDatabaseRepository
 
     @MockBean
-    private lateinit var cacheRepository: QagInfoCacheRepository
-
-    @MockBean
     private lateinit var mapper: QagInfoMapper
 
-    @Nested
-    inner class GetAllQagInfoTestCases {
+    @Test
+    fun `getQagInfoToModerateList - when has emptyList - should return emptyList`() {
+        // Given
+        given(databaseRepository.getQagToModerateList()).willReturn(emptyList())
 
-        @Test
-        fun `getAllQagInfo - when cache is not initialized - should initialize cache with database then return mapped results`() {
-            // Given
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CacheNotInitialized)
-            val qagDTO = mock(QagDTO::class.java)
-            given(databaseRepository.getAllQagList()).willReturn(listOf(qagDTO))
+        // When
+        val result = repository.getQagInfoToModerateList()
 
-            val qagInfo = mock(QagInfo::class.java)
-            given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
-
-            // When
-            val result = repository.getAllQagInfo()
-
-            // Then
-            assertThat(result).isEqualTo(listOf(qagInfo))
-            inOrder(cacheRepository, databaseRepository, mapper).also {
-                then(cacheRepository).should(it).getAllQagList()
-                then(databaseRepository).should(it).getAllQagList()
-                then(cacheRepository).should(it).initializeCache(listOf(qagDTO))
-                then(mapper).should(it).toDomain(qagDTO)
-                it.verifyNoMoreInteractions()
-            }
-        }
-
-        @Test
-        fun `getAllQagInfo - when cache is initialized - should return mapped result`() {
-            // Given
-            val qagDTO = mock(QagDTO::class.java)
-            val allQagDTO = listOf(qagDTO)
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(allQagDTO))
-
-            val qagInfo = mock(QagInfo::class.java)
-            given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
-
-            // When
-            val result = repository.getAllQagInfo()
-
-            // Then
-            assertThat(result).isEqualTo(listOf(qagInfo))
-            inOrder(cacheRepository, databaseRepository, mapper).also {
-                then(cacheRepository).should(it).getAllQagList()
-                then(mapper).should(it).toDomain(qagDTO)
-                it.verifyNoMoreInteractions()
-            }
-            then(databaseRepository).shouldHaveNoInteractions()
-        }
-
+        // Then
+        assertThat(result).isEqualTo(emptyList<QagInfo>())
+        then(databaseRepository).should(only()).getQagToModerateList()
+        then(mapper).shouldHaveNoInteractions()
     }
 
-    @Nested
-    inner class GetQagInfoTestCases {
-        @Test
-        fun `getQagInfo - when invalid UUID - should return null`() {
-            // When
-            val result = repository.getQagInfo(qagId = "invalid UUID")
+    @Test
+    fun `getQagInfoToModerateList - when has qags - should return mapped qags`() {
+        // Given
+        val qagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.getQagToModerateList()).willReturn(listOf(qagDTO))
 
-            // Then
-            assertThat(result).isEqualTo(null)
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
-        @Test
-        fun `getQagInfo - when cache is not initialized and has no result - should initialize cache with database then return null`() {
-            // Given
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CacheNotInitialized)
-            given(databaseRepository.getAllQagList()).willReturn(emptyList())
+        // When
+        val result = repository.getQagInfoToModerateList()
 
-            // When
-            val result = repository.getQagInfo(qagId = UUID.randomUUID().toString())
-
-            // Then
-            assertThat(result).isEqualTo(null)
-            inOrder(cacheRepository, databaseRepository).also {
-                then(cacheRepository).should(it).getAllQagList()
-                then(databaseRepository).should(it).getAllQagList()
-                then(cacheRepository).should(it).initializeCache(emptyList())
-                it.verifyNoMoreInteractions()
-            }
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `getQagInfo - when cache is initialized and has result - should return mapped result`() {
-            // Given
-            val qagId = UUID.randomUUID()
-            val qagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(qagId)
-            }
-            val allQagDTO = listOf(qagDTO)
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(allQagDTO))
-
-            val qagInfo = mock(QagInfo::class.java)
-            given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
-
-            // When
-            val result = repository.getQagInfo(qagId = qagId.toString())
-
-            // Then
-            assertThat(result).isEqualTo(qagInfo)
-            inOrder(cacheRepository, databaseRepository, mapper).also {
-                then(cacheRepository).should(it).getAllQagList()
-                then(mapper).should(it).toDomain(qagDTO)
-                it.verifyNoMoreInteractions()
-            }
-            then(databaseRepository).shouldHaveNoInteractions()
-        }
-
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getQagToModerateList()
+        then(mapper).should(only()).toDomain(qagDTO)
     }
 
-    @Nested
-    inner class InsertQagInfoTestCases {
-        @Test
-        fun `insertQagInfo - when mapper returns null - should return FAILURE`() {
-            // Given
-            val qagInserting = mock(QagInserting::class.java)
-            given(mapper.toDto(qagInserting)).willReturn(null)
+    @Test
+    fun `getPopularQags - when has null thematiqueId - should call database without thematique then return mapped qags`() {
+        // Given
+        val qagDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getPopularQags()).willReturn(listOf(qagDTO))
 
-            // When
-            val result = repository.insertQagInfo(qagInserting)
+        val qagInfo = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
-            // Then
-            assertThat(result).isEqualTo(QagInsertionResult.Failure)
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(cacheRepository).shouldHaveNoInteractions()
-        }
+        // When
+        val result = repository.getPopularQags(thematiqueId = null)
 
-        @Test
-        fun `insertQagInfo - when mapper returns DTO - should return SUCCESS`() {
-            // Given
-            val qagInserting = mock(QagInserting::class.java)
-            val qagDTO = mock(QagDTO::class.java)
-            given(mapper.toDto(qagInserting)).willReturn(qagDTO)
-
-            val savedQagId = UUID.randomUUID()
-            val savedQagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(savedQagId)
-            }
-            given(databaseRepository.save(qagDTO)).willReturn(savedQagDTO)
-
-            // When
-            val result = repository.insertQagInfo(qagInserting)
-
-            // Then
-            assertThat(result).isEqualTo(QagInsertionResult.Success(qagId = savedQagId))
-            then(databaseRepository).should(only()).save(qagDTO)
-            then(cacheRepository).should(only()).insertQag(qagDTO = savedQagDTO)
-        }
-
-        @Test
-        fun `insertQagInfo - when mapper returns DTO but insert to cache causes exception - should initialize cache with added qag then return SUCCESS`() {
-            // Given
-            val qagInserting = mock(QagInserting::class.java)
-            val qagDTO = mock(QagDTO::class.java)
-            given(mapper.toDto(qagInserting)).willReturn(qagDTO)
-
-            val savedQagId = UUID.randomUUID()
-            val savedQagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(savedQagId)
-            }
-            given(databaseRepository.save(qagDTO)).willReturn(savedQagDTO)
-
-            given(cacheRepository.insertQag(savedQagDTO)).willThrow(IllegalStateException::class.java)
-            val storedQagDTO = mock(QagDTO::class.java)
-            given(databaseRepository.getAllQagList()).willReturn(listOf(storedQagDTO))
-
-            // When
-            val result = repository.insertQagInfo(qagInserting)
-
-            // Then
-            assertThat(result).isEqualTo(QagInsertionResult.Success(qagId = savedQagId))
-            then(databaseRepository).should().save(qagDTO)
-            then(databaseRepository).should().getAllQagList()
-            then(databaseRepository).shouldHaveNoMoreInteractions()
-            then(cacheRepository).should().insertQag(qagDTO = savedQagDTO)
-            then(cacheRepository).should().initializeCache(listOf(storedQagDTO))
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-        }
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getPopularQags()
+        then(mapper).should(only()).toDomain(qagDTO)
     }
 
-    @Nested
-    inner class UpdateQagStatusTestCases {
-        @Test
-        fun `updateQagStatus - when invalid UUID - should return FAILURE`() {
-            // When
-            val result = repository.updateQagStatus(qagId = "invalid UUID", newQagStatus = QagStatus.MODERATED_ACCEPTED)
+    @Test
+    fun `getPopularQags - when has invalid thematiqueId UUID - should call database without thematique then return mapped qags`() {
+        // Given
+        val qagDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getPopularQags()).willReturn(listOf(qagDTO))
 
-            // Then
-            assertThat(result).isEqualTo(QagUpdateResult.FAILURE)
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
+        val qagInfo = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
-        @Test
-        fun `updateQagStatus - when cache is not initialized and has no result - should return FAILURE`() {
-            // Given
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CacheNotInitialized)
-            given(databaseRepository.getAllQagList()).willReturn(emptyList())
+        // When
+        val result = repository.getPopularQags(thematiqueId = "Invalid thematique UUID")
 
-            // When
-            val result = repository.updateQagStatus(
-                qagId = UUID.randomUUID().toString(),
-                newQagStatus = QagStatus.ARCHIVED
-            )
-
-            // Then
-            assertThat(result).isEqualTo(QagUpdateResult.FAILURE)
-            inOrder(cacheRepository, databaseRepository).also {
-                then(cacheRepository).should(it).getAllQagList()
-                then(databaseRepository).should(it).getAllQagList()
-                then(cacheRepository).should(it).initializeCache(emptyList())
-                it.verifyNoMoreInteractions()
-            }
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `updateQagStatus - when cache returns DTO - should return SUCCESS`() {
-            // Given
-            val qagUUID = UUID.randomUUID()
-            val qagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(qagUUID)
-            }
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
-
-            val updatedQagDTO = mock(QagDTO::class.java)
-            given(mapper.updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED))
-                .willReturn(updatedQagDTO)
-
-            val savedQagDTO = mock(QagDTO::class.java)
-            given(databaseRepository.save(updatedQagDTO)).willReturn(savedQagDTO)
-
-            // When
-            val result = repository.updateQagStatus(
-                qagId = qagUUID.toString(),
-                newQagStatus = QagStatus.MODERATED_ACCEPTED,
-            )
-
-            // Then
-            assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
-            then(databaseRepository).should(only()).save(updatedQagDTO)
-            then(cacheRepository).should().getAllQagList()
-            then(cacheRepository).should().updateQag(updatedQagDTO = savedQagDTO)
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(mapper).should(only()).updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
-        }
-
-        @Test
-        fun `updateQagStatus - when cache returns DTO but update causes exception - should initialize cache then return SUCCESS`() {
-            // Given
-            val qagUUID = UUID.randomUUID()
-            val qagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(qagUUID)
-            }
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
-
-            val updatedQagDTO = mock(QagDTO::class.java)
-            given(mapper.updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED))
-                .willReturn(updatedQagDTO)
-
-            val savedQagDTO = mock(QagDTO::class.java)
-            given(databaseRepository.save(updatedQagDTO)).willReturn(savedQagDTO)
-
-            given(cacheRepository.updateQag(savedQagDTO)).willThrow(IllegalStateException::class.java)
-            val storedQagDTO = mock(QagDTO::class.java)
-            given(databaseRepository.getAllQagList()).willReturn(listOf(storedQagDTO))
-
-            // When
-            val result = repository.updateQagStatus(
-                qagId = qagUUID.toString(),
-                newQagStatus = QagStatus.MODERATED_ACCEPTED,
-            )
-
-            // Then
-            assertThat(result).isEqualTo(QagUpdateResult.SUCCESS)
-            then(databaseRepository).should().save(updatedQagDTO)
-            then(databaseRepository).should().getAllQagList()
-            then(databaseRepository).shouldHaveNoMoreInteractions()
-            then(cacheRepository).should().getAllQagList()
-            then(cacheRepository).should().updateQag(updatedQagDTO = savedQagDTO)
-            then(cacheRepository).should().initializeCache(listOf(storedQagDTO))
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-            then(mapper).should(only()).updateQagStatus(dto = qagDTO, qagStatus = QagStatus.MODERATED_ACCEPTED)
-        }
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getPopularQags()
+        then(mapper).should(only()).toDomain(qagDTO)
     }
 
-    @Nested
-    inner class ArchiveQagTestCases {
-        @Test
-        fun `archiveQag - when invalid UUID - should return FAILURE`() {
-            // When
-            val result = repository.archiveQag(qagId = "invalid UUID")
+    @Test
+    fun `getPopularQags - when has valid thematiqueId UUID - should call database with thematique then return mapped qags`() {
+        // Given
+        val thematiqueUUID = UUID.randomUUID()
 
-            // Then
-            assertThat(result).isEqualTo(QagArchiveResult.FAILURE)
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
+        val qagDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getPopularQags(thematiqueId = thematiqueUUID)).willReturn(listOf(qagDTO))
 
-        @Test
-        fun `archiveQag - when cache is not initialized and has no result - should return FAILURE`() {
-            // Given
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CacheNotInitialized)
-            given(databaseRepository.getAllQagList()).willReturn(emptyList())
+        val qagInfo = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
-            // When
-            val result = repository.archiveQag(qagId = UUID.randomUUID().toString())
+        // When
+        val result = repository.getPopularQags(thematiqueId = thematiqueUUID.toString())
 
-            // Then
-            assertThat(result).isEqualTo(QagArchiveResult.FAILURE)
-            inOrder(cacheRepository, databaseRepository).also {
-                then(cacheRepository).should(it).getAllQagList()
-                then(databaseRepository).should(it).getAllQagList()
-                then(cacheRepository).should(it).initializeCache(emptyList())
-                it.verifyNoMoreInteractions()
-            }
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `archiveQag - when cache returns DTO - should return SUCCESS`() {
-            // Given
-            val qagUUID = UUID.randomUUID()
-            val qagDTO = mock(QagDTO::class.java).also {
-                given(it.id).willReturn(qagUUID)
-            }
-            given(cacheRepository.getAllQagList()).willReturn(CacheResult.CachedQagList(listOf(qagDTO)))
-            val archivedQagDTO = mock(QagDTO::class.java)
-            given(mapper.archiveQag(dto = qagDTO)).willReturn(archivedQagDTO)
-
-            // When
-            val result = repository.archiveQag(qagId = qagUUID.toString())
-
-            // Then
-            assertThat(result).isEqualTo(QagArchiveResult.SUCCESS)
-            then(databaseRepository).should(only()).save(archivedQagDTO)
-            then(cacheRepository).should(only()).getAllQagList()
-            then(mapper).should(only()).archiveQag(dto = qagDTO)
-        }
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getPopularQags(thematiqueId = thematiqueUUID)
+        then(mapper).should(only()).toDomain(qagDTO)
     }
 
-    @Nested
-    inner class DeleteQagListTestCases {
-        @Test
-        fun `deleteQagList - when invalid UUID - should return FAILURE`() {
-            val result = repository.deleteQagListFromCache(listOf("qagId"))
+    @Test
+    fun `getLatestQags - when has null thematiqueId - should call database without thematique then return mapped qags`() {
+        // Given
+        val qagDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getLatestQags()).willReturn(listOf(qagDTO))
 
-            //Then
-            assertThat(result).isEqualTo(QagDeleteResult.FAILURE)
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
+        val qagInfo = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
-        @Test
-        fun `deleteQagList - when valid UUID - should return SUCCESS`() {
-            val qagId = UUID.randomUUID()
-            val result = repository.deleteQagListFromCache(listOf(qagId.toString()))
+        // When
+        val result = repository.getLatestQags(thematiqueId = null)
 
-            //Then
-            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
-            then(cacheRepository).should(only()).deleteQagList(listOf(qagId))
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `deleteQagList - when valid UUID but delete causes exception - should return SUCCESS`() {
-            val qagId = UUID.randomUUID()
-            val result = repository.deleteQagListFromCache(listOf(qagId.toString()))
-
-            //Then
-            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
-            then(cacheRepository).should(only()).deleteQagList(listOf(qagId))
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getLatestQags()
+        then(mapper).should(only()).toDomain(qagDTO)
     }
 
-    @Nested
-    inner class DeleteQagTestCases {
-        @Test
-        fun `deleteQag - when invalid UUID for qagID - should return FAILURE`() {
-            // When
-            val result = repository.deleteQag(
-                qagId = "invalid qagId UUID",
-            )
+    @Test
+    fun `getLatestQags - when has invalid thematiqueId UUID - should call database without thematique then return mapped qags`() {
+        // Given
+        val qagDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getLatestQags()).willReturn(listOf(qagDTO))
 
-            // Then
-            assertThat(result).isEqualTo(QagDeleteResult.FAILURE)
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(cacheRepository).shouldHaveNoInteractions()
-        }
+        val qagInfo = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
-        @Test
-        fun `deleteQag - when valid UUID for qagID AND exists in Database - should return SUCCESS`() {
-            // Given
-            val qagId = UUID.randomUUID()
-            given(databaseRepository.deleteQagById(qagId = qagId)).willReturn(1)
+        // When
+        val result = repository.getLatestQags(thematiqueId = "Invalid thematique UUID")
 
-            // When
-            val result = repository.deleteQag(qagId = qagId.toString())
-
-            // Then
-            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
-            then(databaseRepository).should(only()).deleteQagById(qagId = qagId)
-            then(cacheRepository).should(only()).deleteQagList(qagUUIDList = listOf(qagId))
-        }
-
-        @Test
-        fun `deleteQag - when valid UUID for qagID AND exists in Database but delete fails in cache - should initialize cache then return SUCCESS`() {
-            // Given
-            val qagId = UUID.randomUUID()
-            given(databaseRepository.deleteQagById(qagId = qagId)).willReturn(1)
-
-            given(cacheRepository.deleteQagList(qagUUIDList = listOf(qagId)))
-                .willThrow(IllegalStateException::class.java)
-            val storedQagDTO = mock(QagDTO::class.java)
-            given(databaseRepository.getAllQagList()).willReturn(listOf(storedQagDTO))
-
-            // When
-            val result = repository.deleteQag(qagId = qagId.toString())
-
-            // Then
-            assertThat(result).isEqualTo(QagDeleteResult.SUCCESS)
-            then(databaseRepository).should().deleteQagById(qagId = qagId)
-            then(databaseRepository).should().getAllQagList()
-            then(databaseRepository).shouldHaveNoMoreInteractions()
-            then(cacheRepository).should().deleteQagList(qagUUIDList = listOf(qagId))
-            then(cacheRepository).should().initializeCache(listOf(storedQagDTO))
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-        }
-
-        @Test
-        fun `deleteQag - when valid UUID for qagID AND NOT exist in Database should return FAILURE`() {
-            // Given
-            val qagId = UUID.randomUUID()
-            given(databaseRepository.deleteQagById(qagId = qagId)).willReturn(0)
-
-            // When
-            val result = repository.deleteQag(qagId = qagId.toString())
-
-            // Then
-            assertThat(result).isEqualTo(QagDeleteResult.FAILURE)
-            then(databaseRepository).should(only()).deleteQagById(qagId = qagId)
-            then(cacheRepository).shouldHaveNoInteractions()
-        }
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getLatestQags()
+        then(mapper).should(only()).toDomain(qagDTO)
     }
+
+    @Test
+    fun `getLatestQags - when has valid thematiqueId UUID - should call database with thematique then return mapped qags`() {
+        // Given
+        val thematiqueUUID = UUID.randomUUID()
+
+        val qagDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getLatestQags(thematiqueId = thematiqueUUID)).willReturn(listOf(qagDTO))
+
+        val qagInfo = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.getLatestQags(thematiqueId = thematiqueUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getLatestQags(thematiqueId = thematiqueUUID)
+        then(mapper).should(only()).toDomain(qagDTO)
+    }
+
+    @Test
+    fun `getUserQagInfoList - when invalid user UUID - should return emptyList`() {
+        // When
+        val result = repository.getUserQagInfoList(userId = "Invalid user UUID", thematiqueId = null)
+
+        // Then
+        assertThat(result).isEqualTo(emptyList<QagInfo>())
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getUserQagInfoList - when has null thematiqueId - should call database without thematique then return mapped qags`() {
+        // Given
+        val userUUID = UUID.randomUUID()
+
+        val qagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.getUserQagList(userId = userUUID)).willReturn(listOf(qagDTO))
+
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.getUserQagInfoList(userId = userUUID.toString(), thematiqueId = null)
+
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getUserQagList(userId = userUUID)
+        then(mapper).should(only()).toDomain(qagDTO)
+    }
+
+    @Test
+    fun `getUserQagInfoList - when has invalid thematique UUID - should call database without thematique then return mapped qags`() {
+        // Given
+        val userUUID = UUID.randomUUID()
+
+        val qagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.getUserQagList(userId = userUUID)).willReturn(listOf(qagDTO))
+
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result =
+            repository.getUserQagInfoList(userId = userUUID.toString(), thematiqueId = "Invalid thematique UUID")
+
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should(only()).getUserQagList(userId = userUUID)
+        then(mapper).should(only()).toDomain(qagDTO)
+    }
+
+    @Test
+    fun `getUserQagInfoList - when has valid thematiqueId UUID - should call database with thematique then return mapped qags`() {
+        // Given
+        val userUUID = UUID.randomUUID()
+        val thematiqueUUID = UUID.randomUUID()
+
+        val qagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.getUserQagList(userId = userUUID, thematiqueId = thematiqueUUID))
+            .willReturn(listOf(qagDTO))
+
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.getUserQagInfoList(
+            userId = userUUID.toString(),
+            thematiqueId = thematiqueUUID.toString(),
+        )
+
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfo))
+        then(databaseRepository).should().getUserQagList(userId = userUUID, thematiqueId = thematiqueUUID)
+        then(mapper).should(only()).toDomain(qagDTO)
+    }
+
+    @Test
+    fun `getQagInfo - when invalid UUID - should return null`() {
+        // When
+        val result = repository.getQagInfo(qagId = "Invalid qag UUID")
+
+        // Then
+        assertThat(result).isEqualTo(null)
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getQagInfo - when valid UUID - should return mapped result from database`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        val qagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.getQagById(qagId = qagUUID)).willReturn(qagDTO)
+
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.getQagInfo(qagId = qagUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(qagInfo)
+        then(databaseRepository).should(only()).getQagById(qagId = qagUUID)
+        then(mapper).should(only()).toDomain(qagDTO)
+    }
+
+    @Test
+    fun `insertQagInfo - when mapper returns null - should return FAILURE`() {
+        // Given
+        val qagInserting = mock(QagInserting::class.java)
+        given(mapper.toDto(qagInserting)).willReturn(null)
+
+        // When
+        val result = repository.insertQagInfo(qagInserting)
+
+        // Then
+        assertThat(result).isEqualTo(QagInsertionResult.Failure)
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).should(only()).toDto(qagInserting)
+    }
+
+    @Test
+    fun `insertQagInfo - when mapper returns DTO - should return SUCCESS`() {
+        // Given
+        val qagInserting = mock(QagInserting::class.java)
+        val qagDTO = mock(QagDTO::class.java)
+        given(mapper.toDto(qagInserting)).willReturn(qagDTO)
+
+        val savedQagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.save(qagDTO)).willReturn(savedQagDTO)
+
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(savedQagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.insertQagInfo(qagInserting)
+
+        // Then
+        assertThat(result).isEqualTo(QagInsertionResult.Success(qagInfo = qagInfo))
+        then(databaseRepository).should(only()).save(qagDTO)
+    }
+
+    @Test
+    fun `updateQagStatus - when invalid qag UUID - should return Failure`() {
+        // When
+        val result = repository.updateQagStatus(qagId = "Invalid QaG UUID", newQagStatus = QagStatus.MODERATED_ACCEPTED)
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.Failure)
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `updateQagStatus - when valid qag UUID but updates nothing - should return Failure`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        given(mapper.toIntStatus(qagStatus = QagStatus.MODERATED_REJECTED)).willReturn(49)
+        given(databaseRepository.updateQagStatus(qagId = qagUUID, newStatus = 49)).willReturn(0)
+
+        // When
+        val result = repository.updateQagStatus(qagId = qagUUID.toString(), newQagStatus = QagStatus.MODERATED_REJECTED)
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.Failure)
+        then(databaseRepository).should(only()).updateQagStatus(qagId = qagUUID, newStatus = 49)
+        then(mapper).should(only()).toIntStatus(QagStatus.MODERATED_REJECTED)
+    }
+
+    @Test
+    fun `updateQagStatus - when valid qag UUID, updates something but getQag is null - should return Failure`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        given(mapper.toIntStatus(qagStatus = QagStatus.OPEN)).willReturn(6)
+        given(databaseRepository.updateQagStatus(qagId = qagUUID, newStatus = 6)).willReturn(8)
+
+        given(databaseRepository.getQagById(qagId = qagUUID)).willReturn(null)
+
+        // When
+        val result = repository.updateQagStatus(qagId = qagUUID.toString(), newQagStatus = QagStatus.OPEN)
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.Failure)
+        then(databaseRepository).should().updateQagStatus(qagId = qagUUID, newStatus = 6)
+        then(databaseRepository).should().getQagById(qagId = qagUUID)
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(mapper).should(only()).toIntStatus(QagStatus.OPEN)
+    }
+
+    @Test
+    fun `updateQagStatus - when valid qag UUID, updates something and getQag returns qag - should return Success`() {
+        // Given
+        given(mapper.toIntStatus(qagStatus = QagStatus.ARCHIVED)).willReturn(77)
+        val qagUUID = UUID.randomUUID()
+        given(databaseRepository.updateQagStatus(qagId = qagUUID, newStatus = 77)).willReturn(1)
+
+        val qagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.getQagById(qagId = qagUUID)).willReturn(qagDTO)
+
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.updateQagStatus(qagId = qagUUID.toString(), newQagStatus = QagStatus.ARCHIVED)
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.Success(updatedQagInfo = qagInfo))
+        then(databaseRepository).should().updateQagStatus(qagId = qagUUID, newStatus = 77)
+        then(databaseRepository).should().getQagById(qagId = qagUUID)
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(mapper).should().toIntStatus(QagStatus.ARCHIVED)
+        then(mapper).should().toDomain(qagDTO)
+        then(mapper).shouldHaveNoMoreInteractions()
+    }
+
+    @Test
+    fun `selectQagForResponse - when invalid qag UUID - should return Failure`() {
+        // When
+        val result = repository.selectQagForResponse(qagId = "Invalid QaG UUID")
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.Failure)
+        then(databaseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `selectQagForResponse - when valid qag UUID but updates nothing - should return Failure`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        given(databaseRepository.selectQagForResponse(qagId = qagUUID)).willReturn(0)
+
+        // When
+        val result = repository.selectQagForResponse(qagId = qagUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.Failure)
+        then(databaseRepository).should(only()).selectQagForResponse(qagId = qagUUID)
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `selectQagForResponse - when valid qag UUID, updated something but getQag is null - should return Failure`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        given(databaseRepository.selectQagForResponse(qagId = qagUUID)).willReturn(9)
+        given(databaseRepository.getQagById(qagId = qagUUID)).willReturn(null)
+
+        // When
+        val result = repository.selectQagForResponse(qagId = qagUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.Failure)
+        then(databaseRepository).should().selectQagForResponse(qagId = qagUUID)
+        then(databaseRepository).should().getQagById(qagId = qagUUID)
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `selectQagForResponse - when valid qag UUID and getQag returns qag - should return Success`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        given(databaseRepository.selectQagForResponse(qagId = qagUUID)).willReturn(4)
+
+        val qagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.getQagById(qagId = qagUUID)).willReturn(qagDTO)
+
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.selectQagForResponse(qagId = qagUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(QagUpdateResult.Success(updatedQagInfo = qagInfo))
+        then(databaseRepository).should().selectQagForResponse(qagId = qagUUID)
+        then(databaseRepository).should().getQagById(qagId = qagUUID)
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(mapper).should(only()).toDomain(qagDTO)
+    }
+
+    @Test
+    fun `archiveOldQags - should call database archive and anonymize then clear cache`() {
+        // Given
+        val resetDate = mock(Date::class.java)
+
+        // When
+        repository.archiveOldQags(resetDate)
+
+        // Then
+        then(databaseRepository).should().archiveQagsBeforeDate(resetDate)
+        then(databaseRepository).should().anonymizeRejectedQagsBeforeDate(resetDate)
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+    }
+
+    @Test
+    fun `deleteQag - when invalid qag UUID - should return FAILURE`() {
+        // When
+        val result = repository.deleteQag(qagId = "Invalid qag UUID")
+
+        // Then
+        assertThat(result).isEqualTo(QagDeleteResult.Failure)
+        then(databaseRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `deleteQag - when valid qag UUID, but does not exist in Database - should return Failure`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        given(databaseRepository.getQagById(qagId = qagUUID)).willReturn(null)
+
+        // When
+        val result = repository.deleteQag(qagId = qagUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(QagDeleteResult.Failure)
+        then(databaseRepository).should(only()).getQagById(qagId = qagUUID)
+    }
+
+    @Test
+    fun `deleteQag - when valid qag UUID, exists in database but deletes nothing - should return FAILURE`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        given(databaseRepository.getQagById(qagId = qagUUID)).willReturn(mock(QagDTO::class.java))
+        given(databaseRepository.deleteQagById(qagId = qagUUID)).willReturn(0)
+
+        // When
+        val result = repository.deleteQag(qagId = qagUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(QagDeleteResult.Failure)
+        then(databaseRepository).should().getQagById(qagId = qagUUID)
+        then(databaseRepository).should().deleteQagById(qagId = qagUUID)
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `deleteQag - when valid qag UUID, exists in database and deletes something - should return Success`() {
+        // Given
+        val qagUUID = UUID.randomUUID()
+        val qagDTO = mock(QagDTO::class.java)
+        given(databaseRepository.getQagById(qagId = qagUUID)).willReturn(qagDTO)
+        given(databaseRepository.deleteQagById(qagId = qagUUID)).willReturn(1)
+
+        val qagInfo = mock(QagInfo::class.java)
+        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
+
+        // When
+        val result = repository.deleteQag(qagId = qagUUID.toString())
+
+        // Then
+        assertThat(result).isEqualTo(QagDeleteResult.Success(qagInfo))
+        then(databaseRepository).should().getQagById(qagId = qagUUID)
+        then(databaseRepository).should().deleteQagById(qagId = qagUUID)
+        then(databaseRepository).shouldHaveNoMoreInteractions()
+        then(mapper).should(only()).toDomain(qagDTO)
+    }
+
 }

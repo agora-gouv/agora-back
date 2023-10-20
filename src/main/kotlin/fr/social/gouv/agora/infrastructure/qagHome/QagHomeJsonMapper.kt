@@ -1,9 +1,11 @@
 package fr.social.gouv.agora.infrastructure.qagHome
 
+import fr.social.gouv.agora.domain.IncomingResponsePreview
 import fr.social.gouv.agora.domain.QagPreview
-import fr.social.gouv.agora.domain.QagSelectedForResponse
 import fr.social.gouv.agora.domain.ResponseQagPreview
+import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.social.gouv.agora.infrastructure.qag.QagJsonMapper
+import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
@@ -11,8 +13,8 @@ import org.springframework.stereotype.Component
 class QagHomeJsonMapper(
     private val qagMapper: QagJsonMapper,
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
+    private val dateMapper: DateMapper,
 ) {
-
     fun toJson(
         qagPopularList: List<QagPreview>,
         qagLatestList: List<QagPreview>,
@@ -30,26 +32,29 @@ class QagHomeJsonMapper(
     }
 
     fun toResponsesJson(
-        qagSelectedForResponseList: List<QagSelectedForResponse>,
-        responseQagList: List<ResponseQagPreview>,
+        incomingResponses: List<IncomingResponsePreview>,
+        responses: List<ResponseQagPreview>,
     ): QagResponsesJson {
         return QagResponsesJson(
-            incomingResponses = qagSelectedForResponseList.map { qagSelectedForResponse ->
+            incomingResponses = incomingResponses.map { qag ->
                 IncomingResponseQagPreviewJson(
-                    qagId = qagSelectedForResponse.id,
-                    thematique = thematiqueJsonMapper.toNoIdJson(qagSelectedForResponse.thematique),
-                    title = qagSelectedForResponse.title,
-                    support = qagMapper.toJson(qagSelectedForResponse.support)
+                    qagId = qag.id,
+                    thematique = thematiqueJsonMapper.toNoIdJson(qag.thematique),
+                    title = qag.title,
+                    support = SupportQagJson(
+                        supportCount = qag.supportCount,
+                        isSupportedByUser = true,
+                    )
                 )
             },
-            responsesList = responseQagList.map { responseQag ->
+            responsesList = responses.map { responseQag ->
                 ResponseQagPreviewJson(
                     qagId = responseQag.qagId,
                     thematique = thematiqueJsonMapper.toNoIdJson(responseQag.thematique),
                     title = responseQag.title,
                     author = responseQag.author,
                     authorPortraitUrl = responseQag.authorPortraitUrl,
-                    responseDate = responseQag.responseDate.toString(),
+                    responseDate = dateMapper.toFormattedDate(responseQag.responseDate),
                 )
             },
         )
@@ -61,7 +66,7 @@ class QagHomeJsonMapper(
             thematique = thematiqueJsonMapper.toNoIdJson(qagPreview.thematique),
             title = qagPreview.title,
             username = qagPreview.username,
-            date = qagPreview.date.toString(),
+            date = dateMapper.toFormattedDate(qagPreview.date),
             support = qagMapper.toJson(qagPreview.support),
             isAuthor = qagPreview.isAuthor
         )

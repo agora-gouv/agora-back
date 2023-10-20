@@ -1,7 +1,8 @@
 package fr.social.gouv.agora.usecase.feedbackQag.repository
 
-import fr.social.gouv.agora.domain.FeedbackQagStatus
+import fr.social.gouv.agora.domain.FeedbackQag
 
 interface GetFeedbackQagRepository {
-    fun getFeedbackQagStatus(qagId: String, userId: String) : FeedbackQagStatus?
+    fun getFeedbackQagList(qagId: String): List<FeedbackQag>
+    fun getUserFeedbackQagIds(userId: String): List<String>
 }

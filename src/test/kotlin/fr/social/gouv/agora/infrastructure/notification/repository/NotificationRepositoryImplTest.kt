@@ -36,13 +36,13 @@ internal class NotificationRepositoryImplTest {
     @Nested
     inner class InsertNotificationTestCases {
         @Test
-        fun `insertNotification - when mapper returns null - should return FAILURE`() {
+        fun `insertNotification - when mapper returns emptyList - should return FAILURE`() {
             // Given
             val notification = mock(NotificationInserting::class.java)
-            given(mapper.toDto(notification)).willReturn(null)
+            given(mapper.toDto(notification)).willReturn(emptyList())
 
             // When
-            val result = repository.insertNotification(notification)
+            val result = repository.insertNotifications(notification)
 
             // Then
             assertThat(result).isEqualTo(NotificationInsertionResult.FAILURE)
@@ -55,52 +55,20 @@ internal class NotificationRepositoryImplTest {
             // Given
             val notification = mock(NotificationInserting::class.java)
             val notificationDTO = mock(NotificationDTO::class.java)
-            given(mapper.toDto(notification)).willReturn(notificationDTO)
+            given(mapper.toDto(notification)).willReturn(listOf(notificationDTO))
 
-            val savedNotificationId = UUID.randomUUID()
-            val savedNotificationDTO = mock(NotificationDTO::class.java).also {
-                given(it.id).willReturn(savedNotificationId)
-            }
-            given(databaseRepository.save(notificationDTO)).willReturn(savedNotificationDTO)
+            val savedNotificationDTO = mock(NotificationDTO::class.java)
+            given(databaseRepository.saveAll(listOf(notificationDTO))).willReturn(listOf(savedNotificationDTO))
 
             // When
-            val result = repository.insertNotification(notification)
+            val result = repository.insertNotifications(notification)
 
             // Then
             assertThat(result).isEqualTo(NotificationInsertionResult.SUCCESS)
-            then(databaseRepository).should(only()).save(notificationDTO)
-            then(cacheRepository).should(only()).insertNotification(notificationDTO = savedNotificationDTO)
+            then(databaseRepository).should(only()).saveAll(listOf(notificationDTO))
+            then(cacheRepository).should(only()).insertNotification(notificationDTOList = listOf(savedNotificationDTO))
         }
 
-        @Test
-        fun `insertNotification - when mapper returns DTO but insert causes exception - should initialize cache with added notification then return SUCCESS`() {
-            // Given
-            val notification = mock(NotificationInserting::class.java)
-            val notificationDTO = mock(NotificationDTO::class.java)
-            given(mapper.toDto(notification)).willReturn(notificationDTO)
-
-            val savedNotificationId = UUID.randomUUID()
-            val savedNotificationDTO = mock(NotificationDTO::class.java).also {
-                given(it.id).willReturn(savedNotificationId)
-            }
-            given(databaseRepository.save(notificationDTO)).willReturn(savedNotificationDTO)
-
-            given(cacheRepository.insertNotification(savedNotificationDTO)).willThrow(IllegalStateException::class.java)
-            val storedNotificationDTO = mock(NotificationDTO::class.java)
-            given(databaseRepository.findAll()).willReturn(listOf(storedNotificationDTO))
-
-            // When
-            val result = repository.insertNotification(notification)
-
-            // Then
-            assertThat(result).isEqualTo(NotificationInsertionResult.SUCCESS)
-            then(databaseRepository).should().save(notificationDTO)
-            then(databaseRepository).should().findAll()
-            then(databaseRepository).shouldHaveNoMoreInteractions()
-            then(cacheRepository).should().insertNotification(savedNotificationDTO)
-            then(cacheRepository).should().initializeCache(listOf(storedNotificationDTO))
-            then(cacheRepository).shouldHaveNoMoreInteractions()
-        }
     }
 
     @Nested

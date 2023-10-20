@@ -122,14 +122,14 @@ internal class GetAskQagStatusUseCaseTest {
     fun `getAskQagStatus - when feature enabled and user didn't have Qag - should return ENABLED`() {
         // Given
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(true)
-        given(qagInfoRepository.getAllQagInfo()).willReturn(emptyList())
+        given(qagInfoRepository.getUserQagInfoList(userId = userId, thematiqueId = null)).willReturn(emptyList())
 
         // When
         val result = useCase.getAskQagStatus(userId)
 
         // Then
         assertThat(result).isEqualTo(AskQagStatus.ENABLED)
-        then(qagInfoRepository).should(only()).getAllQagInfo()
+        then(qagInfoRepository).should(only()).getUserQagInfoList(userId = userId, thematiqueId = null)
     }
 
     @ParameterizedTest(name = "getAskQagStatus - when {0} - should return {3}")
@@ -152,14 +152,14 @@ internal class GetAskQagStatusUseCaseTest {
             given(it.date).willReturn(qagPostDate.toDate())
             given(it.userId).willReturn(userId)
         }
-        given(qagInfoRepository.getAllQagInfo()).willReturn(listOf(qagInfo))
+        given(qagInfoRepository.getUserQagInfoList(userId = userId, thematiqueId = null)).willReturn(listOf(qagInfo))
 
         // When
         val result = useCase.getAskQagStatus(userId)
 
         // Then
         assertThat(result).isEqualTo(expectedStatus)
-        then(qagInfoRepository).should(only()).getAllQagInfo()
+        then(qagInfoRepository).should(only()).getUserQagInfoList(userId = userId, thematiqueId = null)
     }
 
 }

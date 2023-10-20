@@ -2,12 +2,13 @@ package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagPreview
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import org.springframework.stereotype.Component
 
 @Component
 class QagPreviewMapper {
 
-    fun toPreview(qag: QagInfoWithSupportAndThematique, userId: String): QagPreview {
+    fun toPreview(qag: QagWithSupportCount, supportedQagIds: List<String>, userId: String): QagPreview {
         return QagPreview(
             id = qag.qagInfo.id,
             thematique = qag.thematique,
@@ -15,10 +16,11 @@ class QagPreviewMapper {
             username = qag.qagInfo.username,
             date = qag.qagInfo.date,
             support = SupportQag(
-                supportCount = qag.supportQagInfoList.size,
-                isSupportedByUser = qag.supportQagInfoList.find { supportQagInfo -> supportQagInfo.userId == userId } != null
+                supportCount = qag.qagInfo.supportCount,
+                isSupportedByUser = supportedQagIds.any { supportedQagId -> supportedQagId == qag.qagInfo.id }
             ),
             isAuthor = qag.qagInfo.userId == userId,
         )
     }
+
 }

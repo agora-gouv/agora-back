@@ -5,28 +5,36 @@ import fr.social.gouv.agora.domain.QagStatus
 import java.util.*
 
 interface QagInfoRepository {
-    fun getAllQagInfo(): List<QagInfo>
+    fun getQagInfoToModerateList(): List<QagInfo>
+    fun getQagResponsesWithSupportCount(): List<QagInfoWithSupportCount>
+    fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount>
+    fun getPopularQagsPaginated(thematiqueId: String?, maxDate: Date, pageNumber: Int): List<QagInfoWithSupportCount>
+    fun getLatestQags(thematiqueId: String?): List<QagInfoWithSupportCount>
+    fun getLatestQagsPaginated(thematiqueId: String?, maxDate: Date, pageNumber: Int): List<QagInfoWithSupportCount>
+    fun getSupportedQags(userId: String, thematiqueId: String?): List<QagInfoWithSupportCount>
+    fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo>
     fun getQagInfo(qagId: String): QagInfo?
+    fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?
+    fun getQagsWithSupportCount(qagIds: List<String>): List<QagInfoWithSupportCount>
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
-    fun archiveQag(qagId: String): QagArchiveResult
-    fun deleteQagListFromCache(qagIdList: List<String>): QagDeleteResult
+    fun getMostPopularQags(): List<QagInfoWithSupportCount>
+    fun selectQagForResponse(qagId: String): QagUpdateResult
+    fun archiveOldQags(resetDate: Date)
     fun deleteQag(qagId: String): QagDeleteResult
 }
 
 sealed class QagInsertionResult {
-    data class Success(val qagId: UUID) : QagInsertionResult()
+    data class Success(val qagInfo: QagInfo) : QagInsertionResult()
     object Failure : QagInsertionResult()
 }
 
-enum class QagUpdateResult {
-    SUCCESS, FAILURE
+sealed class QagUpdateResult {
+    data class Success(val updatedQagInfo: QagInfo) : QagUpdateResult()
+    object Failure : QagUpdateResult()
 }
 
-enum class QagArchiveResult {
-    SUCCESS, FAILURE
-}
-
-enum class QagDeleteResult {
-    SUCCESS, FAILURE
+sealed class QagDeleteResult {
+    data class Success(val deletedQagInfo: QagInfo) : QagDeleteResult()
+    object Failure : QagDeleteResult()
 }

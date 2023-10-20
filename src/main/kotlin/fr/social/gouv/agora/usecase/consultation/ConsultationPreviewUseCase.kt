@@ -23,8 +23,6 @@ class ConsultationPreviewUseCase(
 
     fun getConsultationPreviewPage(userId: String): ConsultationPreviewPage {
         // TODO: tests
-
-        // FIXME: read from cache
         val ongoingList = consultationPreviewPageRepository.getConsultationPreviewOngoingList(userId)
         val finishedList = consultationPreviewPageRepository.getConsultationPreviewFinishedList()
         val answeredList = consultationPreviewPageRepository.getConsultationPreviewAnsweredList(userId)

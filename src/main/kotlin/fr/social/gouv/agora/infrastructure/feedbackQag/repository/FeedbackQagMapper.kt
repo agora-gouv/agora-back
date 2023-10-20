@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.infrastructure.feedbackQag.repository
 
+import fr.social.gouv.agora.domain.FeedbackQag
 import fr.social.gouv.agora.domain.FeedbackQagInserting
 import fr.social.gouv.agora.infrastructure.feedbackQag.dto.FeedbackQagDTO
 import org.springframework.stereotype.Component
@@ -25,5 +26,13 @@ class FeedbackQagMapper {
         } catch (e: IllegalArgumentException) {
             null
         }
+    }
+
+    fun toDomain(dto: FeedbackQagDTO): FeedbackQag {
+        return FeedbackQag(
+            qagId = dto.qagId.toString(),
+            userId = dto.userId.toString(),
+            isHelpful = dto.isHelpful == IS_HELPFUL_TRUE_VALUE,
+        )
     }
 }
