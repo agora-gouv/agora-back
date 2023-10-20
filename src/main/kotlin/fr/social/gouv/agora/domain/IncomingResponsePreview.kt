@@ -1,8 +1,8 @@
 package fr.social.gouv.agora.domain
 
-data class QagSelectedForResponse(
+data class IncomingResponsePreview(
     val id: String,
     val thematique: Thematique,
     val title: String,
-    val support: SupportQag,
+    val supportCount: Int,
 )

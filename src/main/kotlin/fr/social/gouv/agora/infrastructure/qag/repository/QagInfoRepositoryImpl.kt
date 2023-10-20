@@ -17,6 +17,10 @@ class QagInfoRepositoryImpl(
         return databaseRepository.getQagToModerateList().map(mapper::toDomain)
     }
 
+    override fun getQagResponsesWithSupportCount(): List<QagInfoWithSupportCount> {
+        return databaseRepository.getQagResponses().map(mapper::toDomain)
+    }
+
     override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
         val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
             databaseRepository.getPopularQags(thematiqueId = thematiqueUUID)
@@ -81,8 +85,10 @@ class QagInfoRepositoryImpl(
         }
     }
 
-    override fun getQagInfo(qagIds: List<String>): List<QagInfo> {
-        TODO("Not yet implemented")
+    override fun getQagsWithSupportCount(qagIds: List<String>): List<QagInfoWithSupportCount> {
+        return databaseRepository.getQagsWithSupportCount(
+            qagIds = qagIds.mapNotNull { it.toUuidOrNull() }
+        ).map(mapper::toDomain)
     }
 
     override fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult {

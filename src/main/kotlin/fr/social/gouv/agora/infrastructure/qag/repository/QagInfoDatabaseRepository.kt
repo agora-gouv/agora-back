@@ -32,6 +32,17 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Query(
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE qags.status = 7
+            GROUP BY (qags.id)
+            ORDER BY postDate DESC
+            LIMIT 5
+        """, nativeQuery = true
+    )
+    fun getQagResponses(): List<QagWithSupportCountDTO>
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
             GROUP BY (qags.id)
             ORDER BY supportCount DESC
@@ -124,6 +135,14 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     """, nativeQuery = true
     )
     fun getQagWithSupportCount(@Param("qagId") qagId: UUID): QagWithSupportCountDTO?
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN 
+            WHERE qags.id IN :qagIds
+    """, nativeQuery = true
+    )
+    fun getQagsWithSupportCount(@Param("qagIds") qagIds: List<UUID>): List<QagWithSupportCountDTO>
 
     @Modifying
     @Transactional

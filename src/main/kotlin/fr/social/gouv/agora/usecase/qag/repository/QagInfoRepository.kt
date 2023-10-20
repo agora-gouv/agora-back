@@ -6,6 +6,7 @@ import java.util.*
 
 interface QagInfoRepository {
     fun getQagInfoToModerateList(): List<QagInfo>
+    fun getQagResponsesWithSupportCount(): List<QagInfoWithSupportCount>
     fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getPopularQagsPaginated(thematiqueId: String?, maxDate: Date, pageNumber: Int): List<QagInfoWithSupportCount>
     fun getLatestQags(thematiqueId: String?): List<QagInfoWithSupportCount>
@@ -14,7 +15,7 @@ interface QagInfoRepository {
     fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo>
     fun getQagInfo(qagId: String): QagInfo?
     fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?
-    fun getQagInfo(qagIds: List<String>): List<QagInfo>
+    fun getQagsWithSupportCount(qagIds: List<String>): List<QagInfoWithSupportCount>
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun getMostPopularQags(): List<QagInfoWithSupportCount>

@@ -3,8 +3,7 @@ package fr.social.gouv.agora.infrastructure.qagHome
 import fr.social.gouv.agora.security.jwt.JwtTokenUtils
 import fr.social.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.social.gouv.agora.usecase.qagPreview.QagPreviewListUseCaseV2
-import fr.social.gouv.agora.usecase.qagSelection.GetQagSelectedForResponseUseCase
-import fr.social.gouv.agora.usecase.responseQag.GetResponseQagPreviewListUseCase
+import fr.social.gouv.agora.usecase.responseQag.ResponseQagPreviewListUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @Suppress("unused")
 class QagHomeController(
-    private val getQagSelectedForResponseUseCase: GetQagSelectedForResponseUseCase,
-    private val getResponseQagPreviewListUseCase: GetResponseQagPreviewListUseCase,
+    private val responseQagPreviewListUseCase: ResponseQagPreviewListUseCase,
     private val getQagPreviewListUseCase: QagPreviewListUseCaseV2,
     private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
     private val qagHomeJsonMapper: QagHomeJsonMapper,
@@ -45,14 +43,12 @@ class QagHomeController(
     fun getQagResponses(
         @RequestHeader("Authorization") authorizationHeader: String,
     ): ResponseEntity<QagResponsesJson> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        val qagSelectedForResponseList = getQagSelectedForResponseUseCase.getQagSelectedForResponseList(userId = userId)
-        val responseQagPreviewList = getResponseQagPreviewListUseCase.getResponseQagPreviewList()
+        val responseQagPreviewList = responseQagPreviewListUseCase.getResponseQagPreviewList()
 
         return ResponseEntity.ok().body(
             qagHomeJsonMapper.toResponsesJson(
-                qagSelectedForResponseList = qagSelectedForResponseList,
-                responseQagList = responseQagPreviewList,
+                incomingResponses = responseQagPreviewList.incomingResponses,
+                responses = responseQagPreviewList.responses,
             )
         )
     }
