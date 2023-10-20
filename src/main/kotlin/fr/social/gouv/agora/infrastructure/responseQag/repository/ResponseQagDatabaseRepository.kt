@@ -11,7 +11,7 @@ import java.util.*
 interface ResponseQagDatabaseRepository : CrudRepository<ResponseQagDTO, UUID> {
 
     @Query(value = "SELECT * FROM responses_qag WHERE qag_id in :qagIds", nativeQuery = true)
-    fun getResponsesQag(@Param("qagId") qagIds: List<UUID>): List<ResponseQagDTO>
+    fun getResponsesQag(@Param("qagIds") qagIds: List<UUID>): List<ResponseQagDTO>
 
     @Query(
         value = "SELECT * FROM responses_qag WHERE qag_id = :qagId ORDER BY response_date DESC LIMIT 1",
