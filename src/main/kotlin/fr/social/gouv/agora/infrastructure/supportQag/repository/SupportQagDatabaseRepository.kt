@@ -25,6 +25,6 @@ interface SupportQagDatabaseRepository : CrudRepository<SupportQagDTO, UUID> {
     @Query(value = "SELECT qag_id FROM supports_qag WHERE user_id = :userId ORDER BY support_date DESC", nativeQuery = true)
     fun getUserSupportedQags(@Param("userId") userId: UUID): List<UUID>
 
-    @Query(value = "SELECT qag_id FROM supports_qag WHERE user_id = :userId AND qag_id = :qagId LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM supports_qag WHERE user_id = :userId AND qag_id = :qagId LIMIT 1", nativeQuery = true)
     fun getSupportQag(@Param("userId") userId: UUID, @Param("qagId") qagId: UUID): SupportQagDTO?
 }
