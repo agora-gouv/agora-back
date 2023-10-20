@@ -33,7 +33,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 7
-            GROUP BY (qags.id)
+            GROUP BY qags.id
             ORDER BY postDate DESC
             LIMIT 5
         """, nativeQuery = true
@@ -44,7 +44,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
-            GROUP BY (qags.id)
+            GROUP BY qags.id
             ORDER BY supportCount DESC
             LIMIT 10
         """, nativeQuery = true
@@ -56,7 +56,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
             FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
             AND thematique_id = :thematiqueId
-            GROUP BY (qags.id)
+            GROUP BY qags.id
             ORDER BY supportCount DESC
             LIMIT 10
         """, nativeQuery = true
@@ -67,7 +67,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
-            GROUP BY (qags.id)
+            GROUP BY qags.id
             ORDER BY postDate DESC
             LIMIT 10
         """, nativeQuery = true
@@ -79,7 +79,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
             FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 1
             AND thematique_id = :thematiqueId
-            GROUP BY (qags.id)
+            GROUP BY qags.id
             ORDER BY postDate DESC
             LIMIT 10
         """, nativeQuery = true
@@ -91,7 +91,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
             FROM $QAG_WITH_SUPPORT_JOIN
             WHERE (qags.status = 1 AND qags.id IN (SELECT qag_id FROM supports_qag WHERE user_id = :userId))
             OR ((qags.status = 0 OR qags.status = 1) AND qags.user_id = :userId)
-            GROUP BY (qags.id)
+            GROUP BY qags.id
             ORDER BY postDate DESC
             LIMIT 10;
         """, nativeQuery = true
@@ -106,7 +106,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
                 OR ((qags.status = 0 OR qags.status = 1) AND qags.user_id = :userId)
             )
             AND thematique_id = :thematiqueId
-            GROUP BY (qags.id)
+            GROUP BY qags.id
             ORDER BY postDate DESC
             LIMIT 10;
         """, nativeQuery = true
@@ -132,6 +132,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN 
             WHERE qags.id = :qagId
+            GROUP BY qags.id
     """, nativeQuery = true
     )
     fun getQagWithSupportCount(@Param("qagId") qagId: UUID): QagWithSupportCountDTO?
@@ -140,6 +141,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN 
             WHERE qags.id IN :qagIds
+            GROUP BY qags.id
     """, nativeQuery = true
     )
     fun getQagsWithSupportCount(@Param("qagIds") qagIds: List<UUID>): List<QagWithSupportCountDTO>
