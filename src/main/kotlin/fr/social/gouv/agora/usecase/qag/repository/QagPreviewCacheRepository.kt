@@ -1,8 +1,8 @@
 package fr.social.gouv.agora.usecase.qag.repository
 
-import fr.social.gouv.agora.usecase.qag.QagWithSupportCount
+import fr.social.gouv.agora.usecase.qagPreview.QagWithSupportCount
 
-interface QagWithSupportCountCacheRepository {
+interface QagPreviewCacheRepository {
 
     fun getQagPopularList(thematiqueId: String?): List<QagWithSupportCount>?
     fun initQagPopularList(thematiqueId: String?, qagList: List<QagWithSupportCount>)

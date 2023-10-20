@@ -4,7 +4,7 @@ import fr.social.gouv.agora.domain.QagDetails
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagWithUserData
 import fr.social.gouv.agora.usecase.feedbackQag.FeedbackQagUseCase
-import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
+import fr.social.gouv.agora.usecase.supportQag.SupportQagUseCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -26,7 +26,7 @@ internal class GetQagDetailsUseCaseTest {
     private lateinit var qagDetailsAggregate: QagDetailsAggregate
 
     @MockBean
-    private lateinit var supportQagRepository: GetSupportQagRepository
+    private lateinit var supportQagUseCase: SupportQagUseCase
 
     @MockBean
     private lateinit var feedbackQagUseCase: FeedbackQagUseCase
@@ -42,7 +42,7 @@ internal class GetQagDetailsUseCaseTest {
         // Then
         assertThat(result).isEqualTo(QagResult.QagNotFound)
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).shouldHaveNoInteractions()
+        then(supportQagUseCase).shouldHaveNoInteractions()
         then(feedbackQagUseCase).shouldHaveNoInteractions()
     }
 
@@ -58,7 +58,7 @@ internal class GetQagDetailsUseCaseTest {
         // Then
         assertThat(result).isEqualTo(QagResult.QagNotFound)
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).shouldHaveNoInteractions()
+        then(supportQagUseCase).shouldHaveNoInteractions()
         then(feedbackQagUseCase).shouldHaveNoInteractions()
     }
 
@@ -74,7 +74,7 @@ internal class GetQagDetailsUseCaseTest {
         // Then
         assertThat(result).isEqualTo(QagResult.QagRejectedStatus)
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).shouldHaveNoInteractions()
+        then(supportQagUseCase).shouldHaveNoInteractions()
         then(feedbackQagUseCase).shouldHaveNoInteractions()
     }
 
@@ -90,7 +90,7 @@ internal class GetQagDetailsUseCaseTest {
         // Then
         assertThat(result).isEqualTo(QagResult.QagNotFound)
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).shouldHaveNoInteractions()
+        then(supportQagUseCase).shouldHaveNoInteractions()
         then(feedbackQagUseCase).shouldHaveNoInteractions()
     }
 
@@ -118,7 +118,7 @@ internal class GetQagDetailsUseCaseTest {
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).should(only()).getUserSupportedQags(userId = "userId")
+        then(supportQagUseCase).should(only()).getUserSupportedQagIds(userId = "userId")
         then(feedbackQagUseCase).shouldHaveNoInteractions()
     }
 
@@ -127,7 +127,7 @@ internal class GetQagDetailsUseCaseTest {
         // Given
         val qag = mockQag(status = QagStatus.MODERATED_ACCEPTED, userId = "anotherUserId")
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
-        given(supportQagRepository.getUserSupportedQags(userId = "userId")).willReturn(emptyList())
+        given(supportQagUseCase.getUserSupportedQagIds(userId = "userId")).willReturn(emptyList())
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
@@ -147,7 +147,7 @@ internal class GetQagDetailsUseCaseTest {
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).should(only()).getUserSupportedQags(userId = "userId")
+        then(supportQagUseCase).should(only()).getUserSupportedQagIds(userId = "userId")
         then(feedbackQagUseCase).shouldHaveNoInteractions()
     }
 
@@ -156,7 +156,7 @@ internal class GetQagDetailsUseCaseTest {
         // Given
         val qag = mockQag(status = QagStatus.MODERATED_ACCEPTED, userId = "userId")
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
-        given(supportQagRepository.getUserSupportedQags(userId = "userId")).willReturn(listOf("qagId"))
+        given(supportQagUseCase.getUserSupportedQagIds(userId = "userId")).willReturn(listOf("qagId"))
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
@@ -176,7 +176,7 @@ internal class GetQagDetailsUseCaseTest {
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).should(only()).getUserSupportedQags(userId = "userId")
+        then(supportQagUseCase).should(only()).getUserSupportedQagIds(userId = "userId")
         then(feedbackQagUseCase).shouldHaveNoInteractions()
     }
 
@@ -205,7 +205,7 @@ internal class GetQagDetailsUseCaseTest {
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).shouldHaveNoInteractions()
+        then(supportQagUseCase).shouldHaveNoInteractions()
         then(feedbackQagUseCase).should(only()).getUserFeedbackQagIds(userId = "userId")
     }
 
@@ -234,7 +234,7 @@ internal class GetQagDetailsUseCaseTest {
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
-        then(supportQagRepository).shouldHaveNoInteractions()
+        then(supportQagUseCase).shouldHaveNoInteractions()
         then(feedbackQagUseCase).should(only()).getUserFeedbackQagIds(userId = "userId")
     }
 

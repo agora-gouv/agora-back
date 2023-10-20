@@ -24,7 +24,11 @@ class QagDetailsCacheRepositoryImpl(
         return when (val cacheContent = getCache()?.get(qagId, String::class.java)) {
             null -> QagDetailsCacheResult.QagDetailsCacheNotInitialized
             QAG_NOT_FOUND_VALUE -> QagDetailsCacheResult.QagDetailsNotFount
-            else -> QagDetailsCacheResult.CachedQagDetails(objectMapper.readValue(cacheContent, QagDetails::class.java))
+            else -> try {
+                QagDetailsCacheResult.CachedQagDetails(objectMapper.readValue(cacheContent, QagDetails::class.java))
+            } catch (e: Exception) {
+                QagDetailsCacheResult.QagDetailsCacheNotInitialized
+            }
         }
     }
 
@@ -34,6 +38,24 @@ class QagDetailsCacheRepositoryImpl(
 
     override fun initQag(qagDetails: QagDetails) {
         getCache()?.put(qagDetails.id, objectMapper.writeValueAsString(qagDetails))
+    }
+
+    override fun incrementSupportCount(qagId: String) {
+        when (val cacheResult = getQag(qagId)) {
+            is QagDetailsCacheResult.CachedQagDetails -> {
+                initQag(cacheResult.qagDetails.copy(supportCount = cacheResult.qagDetails.supportCount + 1))
+            }
+            else -> {} // Do nothing
+        }
+    }
+
+    override fun decrementSupportCount(qagId: String) {
+        when (val cacheResult = getQag(qagId)) {
+            is QagDetailsCacheResult.CachedQagDetails -> {
+                initQag(cacheResult.qagDetails.copy(supportCount = cacheResult.qagDetails.supportCount - 1))
+            }
+            else -> {} // Do nothing
+        }
     }
 
     override fun evictQag(qagId: String) {

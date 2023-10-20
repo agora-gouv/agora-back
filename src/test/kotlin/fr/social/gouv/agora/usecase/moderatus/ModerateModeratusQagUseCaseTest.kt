@@ -8,7 +8,7 @@ import fr.social.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagUpdateResult
-import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -41,7 +41,7 @@ internal class ModerateModeratusQagUseCaseTest {
 
     @MockBean
     @Suppress("unused")
-    private lateinit var previewPageRepository: QagWithSupportCountCacheRepository
+    private lateinit var previewPageRepository: QagPreviewCacheRepository
 
     private val moderateQagOptions = ModerateQagOptions(
         qagId = "qagId",

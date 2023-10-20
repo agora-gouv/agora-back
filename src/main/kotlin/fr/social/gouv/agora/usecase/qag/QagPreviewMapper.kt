@@ -2,6 +2,7 @@ package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagPreview
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import org.springframework.stereotype.Component
 
 @Component

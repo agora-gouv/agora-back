@@ -2,70 +2,48 @@ package fr.social.gouv.agora.infrastructure.supportQag.repository
 
 import fr.social.gouv.agora.domain.SupportQagDeleting
 import fr.social.gouv.agora.domain.SupportQagInserting
+import fr.social.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagResult
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
+@Suppress("unused")
 class SupportQagRepositoryImpl(
-    private val cacheRepository: SupportQagCacheRepository,
     private val databaseRepository: SupportQagDatabaseRepository,
     private val mapper: SupportQagMapper,
 ) : SupportQagRepository {
 
     override fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
         return mapper.toDto(supportQagInserting)?.let { supportQagDTO ->
-            val savedSupportQagDTO = databaseRepository.save(supportQagDTO)
-            try {
-                cacheRepository.insertSupportQag(supportQagDTO = savedSupportQagDTO)
-            } catch (e: IllegalStateException) {
-                initializeCache()
-            }
+            databaseRepository.save(supportQagDTO)
             SupportQagResult.SUCCESS
         } ?: SupportQagResult.FAILURE
     }
 
     override fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
-        return try {
-            val qagId = UUID.fromString(supportQagDeleting.qagId)
-            val userId = UUID.fromString(supportQagDeleting.userId)
-            val resultDelete = databaseRepository.deleteSupportQag(userId = userId, qagId = qagId)
-            if (resultDelete <= 0)
-                SupportQagResult.FAILURE
-            else {
-                try {
-                    cacheRepository.deleteSupportQag(qagId = qagId, userId = userId)
-                } catch (e: IllegalStateException) {
-                    initializeCache()
+        return supportQagDeleting.qagId.toUuidOrNull()?.let { qagUUID ->
+            supportQagDeleting.userId.toUuidOrNull()?.let { userUUID ->
+                val resultDelete = databaseRepository.deleteSupportQag(userId = userUUID, qagId = qagUUID)
+                if (resultDelete <= 0)
+                    SupportQagResult.FAILURE
+                else {
+                    SupportQagResult.SUCCESS
                 }
-                SupportQagResult.SUCCESS
             }
-        } catch (e: IllegalArgumentException) {
-            SupportQagResult.FAILURE
-        }
+        } ?: SupportQagResult.FAILURE
     }
 
     override fun deleteSupportListByQagId(qagId: String): SupportQagResult {
-        return try {
-            val qagUUID = UUID.fromString(qagId)
+        return qagId.toUuidOrNull()?.let { qagUUID ->
             val resultDelete = databaseRepository.deleteSupportListByQagId(qagId = qagUUID)
             if (resultDelete <= 0)
                 SupportQagResult.FAILURE
             else {
-                try {
-                    cacheRepository.deleteSupportListByQagId(qagId = qagUUID)
-                } catch (e: IllegalStateException) {
-                    initializeCache()
-                }
                 SupportQagResult.SUCCESS
             }
-        } catch (e: IllegalArgumentException) {
-            SupportQagResult.FAILURE
-        }
+        } ?: SupportQagResult.FAILURE
     }
 
-    private fun initializeCache() {
-        cacheRepository.initializeCache(databaseRepository.getAllSupportQagList())
-    }
 }

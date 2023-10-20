@@ -5,6 +5,7 @@ import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepositor
 import org.springframework.stereotype.Component
 
 @Component
+@Suppress("unused")
 class GetSupportQagRepositoryImpl(
     private val databaseRepository: SupportQagDatabaseRepository,
 ) : GetSupportQagRepository {
@@ -14,6 +15,14 @@ class GetSupportQagRepositoryImpl(
             databaseRepository.getUserSupportedQags(userUUID)
                 .map { qagUUID -> qagUUID.toString() }
         } ?: emptyList()
+    }
+
+    override fun isQagSupported(userId: String, qagId: String): Boolean {
+        return userId.toUuidOrNull()?.let { userUUID ->
+            qagId.toUuidOrNull()?.let { qagUUID ->
+                databaseRepository.getSupportQag(userId = userUUID, qagId = qagUUID) != null
+            }
+        } ?: false
     }
 
 }

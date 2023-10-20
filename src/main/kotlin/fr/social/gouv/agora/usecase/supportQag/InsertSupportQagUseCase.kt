@@ -2,11 +2,12 @@ package fr.social.gouv.agora.usecase.supportQag
 
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQagInserting
-import fr.social.gouv.agora.usecase.qag.QagWithSupportCount
+import fr.social.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
+import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagResult
 import org.springframework.stereotype.Service
@@ -16,18 +17,19 @@ class InsertSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val qagWithSupportCountCacheRepository: QagWithSupportCountCacheRepository,
+    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
+    private val qagDetailsCacheRepository: QagDetailsCacheRepository,
+    private val supportQagCacheRepository: SupportQagCacheRepository,
 ) {
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
-        // TODO
-//        if (getSupportQagRepository.getSupportQag(
-//                qagId = supportQagInserting.qagId,
-//                userId = supportQagInserting.userId,
-//            )?.isSupportedByUser == true
-//        ) {
-//            println("⚠️ Add support error: already supported")
-//            return SupportQagResult.FAILURE
-//        }
+        if (getSupportQagRepository.isQagSupported(
+                qagId = supportQagInserting.qagId,
+                userId = supportQagInserting.userId,
+            )
+        ) {
+            println("⚠️ Add support error: already supported")
+            return SupportQagResult.FAILURE
+        }
 
         val qagInfo = qagInfoRepository.getQagInfo(supportQagInserting.qagId)
         return when (qagInfo?.status) {
@@ -48,26 +50,28 @@ class InsertSupportQagUseCase(
     }
 
     private fun updateCache(qagInfo: QagInfo, userId: String) {
-        qagWithSupportCountCacheRepository.incrementQagPopularSupportCount(thematiqueId = null, qagId = qagInfo.id)
-        qagWithSupportCountCacheRepository.incrementQagPopularSupportCount(
+        qagPreviewCacheRepository.incrementQagPopularSupportCount(thematiqueId = null, qagId = qagInfo.id)
+        qagPreviewCacheRepository.incrementQagPopularSupportCount(
             thematiqueId = qagInfo.thematiqueId,
             qagId = qagInfo.id,
         )
-        qagWithSupportCountCacheRepository.incrementQagLatestSupportCount(thematiqueId = null, qagId = qagInfo.id)
-        qagWithSupportCountCacheRepository.incrementQagLatestSupportCount(
+        qagPreviewCacheRepository.incrementQagLatestSupportCount(thematiqueId = null, qagId = qagInfo.id)
+        qagPreviewCacheRepository.incrementQagLatestSupportCount(
             thematiqueId = qagInfo.thematiqueId,
             qagId = qagInfo.id,
         )
-        qagWithSupportCountCacheRepository.incrementSupportedSupportCount(
+        qagPreviewCacheRepository.incrementSupportedSupportCount(
             thematiqueId = null,
             qagId = qagInfo.id,
             userId = userId,
         )
-        qagWithSupportCountCacheRepository.incrementSupportedSupportCount(
+        qagPreviewCacheRepository.incrementSupportedSupportCount(
             thematiqueId = qagInfo.thematiqueId,
             qagId = qagInfo.id,
             userId = userId,
         )
+        qagDetailsCacheRepository.incrementSupportCount(qagInfo.id)
+        supportQagCacheRepository.addSupportedQagIds(userId = userId, qagId = qagInfo.id)
     }
 
 }

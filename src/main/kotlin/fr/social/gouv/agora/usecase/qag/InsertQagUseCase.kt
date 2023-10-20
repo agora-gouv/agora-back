@@ -4,7 +4,7 @@ import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.SupportQagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
-import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Service
 
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service
 class InsertQagUseCase(
     private val contentSanitizer: ContentSanitizer,
     private val qagInfoRepository: QagInfoRepository,
-    private val qagPreviewPageRepository: QagWithSupportCountCacheRepository,
     private val supportQagRepository: SupportQagRepository,
+    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
 ) {
 
     companion object {
@@ -37,8 +37,8 @@ class InsertQagUseCase(
                     userId = qagInserting.userId,
                 )
             )
-            qagPreviewPageRepository.evictQagSupportedList(userId = qagInserting.userId, thematiqueId = null)
-            qagPreviewPageRepository.evictQagSupportedList(
+            qagPreviewCacheRepository.evictQagSupportedList(userId = qagInserting.userId, thematiqueId = null)
+            qagPreviewCacheRepository.evictQagSupportedList(
                 userId = qagInserting.userId,
                 thematiqueId = qagInserting.thematiqueId,
             )

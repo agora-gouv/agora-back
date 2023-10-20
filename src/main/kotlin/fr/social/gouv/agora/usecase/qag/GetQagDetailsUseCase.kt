@@ -4,13 +4,13 @@ import fr.social.gouv.agora.domain.QagDetails
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagWithUserData
 import fr.social.gouv.agora.usecase.feedbackQag.FeedbackQagUseCase
-import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
+import fr.social.gouv.agora.usecase.supportQag.SupportQagUseCase
 import org.springframework.stereotype.Service
 
 @Service
 class GetQagDetailsUseCase(
     private val qagDetailsAggregate: QagDetailsAggregate,
-    private val supportQagRepository: GetSupportQagRepository,
+    private val supportQagUseCase: SupportQagUseCase,
     private val feedbackQagUseCase: FeedbackQagUseCase,
 ) {
 
@@ -42,7 +42,7 @@ class GetQagDetailsUseCase(
         return when (qagDetails.status) {
             QagStatus.ARCHIVED, QagStatus.MODERATED_REJECTED -> false
             QagStatus.SELECTED_FOR_RESPONSE -> true
-            QagStatus.MODERATED_ACCEPTED, QagStatus.OPEN -> supportQagRepository.getUserSupportedQags(userId = userId)
+            QagStatus.MODERATED_ACCEPTED, QagStatus.OPEN -> supportQagUseCase.getUserSupportedQagIds(userId = userId)
                 .any { supportedQagId -> supportedQagId == qagDetails.id }
         }
     }

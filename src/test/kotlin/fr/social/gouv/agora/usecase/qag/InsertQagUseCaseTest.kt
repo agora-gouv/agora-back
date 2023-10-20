@@ -6,7 +6,7 @@ import fr.social.gouv.agora.domain.SupportQagInserting
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
-import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -34,7 +34,7 @@ internal class InsertQagUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @MockBean
-    private lateinit var qagPreviewPageRepository: QagWithSupportCountCacheRepository
+    private lateinit var qagPreviewCacheRepository: QagPreviewCacheRepository
 
     @MockBean
     private lateinit var supportQagRepository: SupportQagRepository
@@ -81,7 +81,7 @@ internal class InsertQagUseCaseTest {
         then(contentSanitizer).should().sanitize("username", 50)
         then(contentSanitizer).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).insertQagInfo(sanitizedQagInserting)
-        then(qagPreviewPageRepository).shouldHaveNoInteractions()
+        then(qagPreviewCacheRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -108,9 +108,9 @@ internal class InsertQagUseCaseTest {
                 userId = "userId",
             )
         )
-        then(qagPreviewPageRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = null)
-        then(qagPreviewPageRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = "thematiqueId")
-        then(qagPreviewPageRepository).shouldHaveNoMoreInteractions()
+        then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = null)
+        then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = "thematiqueId")
+        then(qagPreviewCacheRepository).shouldHaveNoMoreInteractions()
     }
 
 }

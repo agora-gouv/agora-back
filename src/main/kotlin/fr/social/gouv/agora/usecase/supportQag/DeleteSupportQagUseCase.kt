@@ -2,10 +2,12 @@ package fr.social.gouv.agora.usecase.supportQag
 
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.SupportQagDeleting
+import fr.social.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.social.gouv.agora.usecase.qag.repository.QagWithSupportCountCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
+import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagResult
 import org.springframework.stereotype.Service
@@ -15,18 +17,19 @@ class DeleteSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val qagWithSupportCountCacheRepository: QagWithSupportCountCacheRepository,
+    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
+    private val qagDetailsCacheRepository: QagDetailsCacheRepository,
+    private val supportQagCacheRepository: SupportQagCacheRepository,
 ) {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
-        // TODO
-//        if (getSupportQagRepository.getSupportQag(
-//                qagId = supportQagDeleting.qagId,
-//                userId = supportQagDeleting.userId,
-//            )?.isSupportedByUser == false
-//        ) {
-//            println("⚠️ Remove support error: already unsupported")
-//            return SupportQagResult.FAILURE
-//        }
+        if (getSupportQagRepository.isQagSupported(
+                qagId = supportQagDeleting.qagId,
+                userId = supportQagDeleting.userId,
+            )
+        ) {
+            println("⚠️ Remove support error: already unsupported")
+            return SupportQagResult.FAILURE
+        }
 
         val qagInfo = qagInfoRepository.getQagInfo(supportQagDeleting.qagId)
         return when (qagInfo?.status) {
@@ -47,26 +50,28 @@ class DeleteSupportQagUseCase(
     }
 
     private fun updateCache(qagInfo: QagInfo, userId: String) {
-        qagWithSupportCountCacheRepository.decrementQagPopularSupportCount(thematiqueId = null, qagId = qagInfo.id)
-        qagWithSupportCountCacheRepository.decrementQagPopularSupportCount(
+        qagPreviewCacheRepository.decrementQagPopularSupportCount(thematiqueId = null, qagId = qagInfo.id)
+        qagPreviewCacheRepository.decrementQagPopularSupportCount(
             thematiqueId = qagInfo.thematiqueId,
             qagId = qagInfo.id,
         )
-        qagWithSupportCountCacheRepository.decrementQagLatestSupportCount(thematiqueId = null, qagId = qagInfo.id)
-        qagWithSupportCountCacheRepository.decrementQagLatestSupportCount(
+        qagPreviewCacheRepository.decrementQagLatestSupportCount(thematiqueId = null, qagId = qagInfo.id)
+        qagPreviewCacheRepository.decrementQagLatestSupportCount(
             thematiqueId = qagInfo.thematiqueId,
             qagId = qagInfo.id,
         )
-        qagWithSupportCountCacheRepository.decrementSupportedSupportCount(
+        qagPreviewCacheRepository.decrementSupportedSupportCount(
             thematiqueId = null,
             qagId = qagInfo.id,
             userId = userId,
         )
-        qagWithSupportCountCacheRepository.decrementSupportedSupportCount(
+        qagPreviewCacheRepository.decrementSupportedSupportCount(
             thematiqueId = qagInfo.thematiqueId,
             qagId = qagInfo.id,
             userId = userId,
         )
+        qagDetailsCacheRepository.decrementSupportCount(qagInfo.id)
+        supportQagCacheRepository.removeSupportedQagIds(userId = userId, qagId = qagInfo.id)
     }
 
 }
