@@ -14,17 +14,24 @@ class InsertFeedbackQagUseCase(
     private val repository: FeedbackQagRepository,
     private val getFeedbackQagRepository: GetFeedbackQagRepository,
     private val featureFlagsUseCase: FeatureFlagsUseCase,
+    private val feedbackQagResultMapper: FeedbackQagResultMapper,
 ) {
     fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagListResult {
-        return if (getFeedbackQagRepository.getFeedbackQagList(qagId = feedbackQagInserting.qagId)
-                .any { feedbackQag -> feedbackQag.userId == feedbackQagInserting.userId }
+        val feedbackQagList = getFeedbackQagRepository.getFeedbackQagList(qagId = feedbackQagInserting.qagId)
+        return if (feedbackQagList.any { feedbackQag -> feedbackQag.userId == feedbackQagInserting.userId }
         )
             FeedbackQagListResult.Failure
         else {
             when (repository.insertFeedbackQag(feedbackQagInserting)) {
                 FeedbackQagResult.SUCCESS -> if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag))
-                    FeedbackQagListResult.Success(getFeedbackQagRepository.getFeedbackQagList(qagId = feedbackQagInserting.qagId))
-                else FeedbackQagListResult.Success(null)
+                    FeedbackQagListResult.Success(
+                        feedbackQagList + listOf(
+                            feedbackQagResultMapper.toFeedbackQag(
+                                feedbackQagInserting
+                            )
+                        )
+                    )
+                else FeedbackQagListResult.FeedbackDisabled
 
                 else -> FeedbackQagListResult.Failure
             }
@@ -33,6 +40,7 @@ class InsertFeedbackQagUseCase(
 }
 
 sealed class FeedbackQagListResult {
-    data class Success(val feedbackQagList: List<FeedbackQag>?) : FeedbackQagListResult()
+    data class Success(val feedbackQagList: List<FeedbackQag>) : FeedbackQagListResult()
     object Failure : FeedbackQagListResult()
+    object FeedbackDisabled : FeedbackQagListResult()
 }
