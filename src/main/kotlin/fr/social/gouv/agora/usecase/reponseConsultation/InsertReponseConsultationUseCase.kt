@@ -4,7 +4,9 @@ import fr.social.gouv.agora.domain.Question
 import fr.social.gouv.agora.domain.QuestionOpen
 import fr.social.gouv.agora.domain.QuestionWithChoices
 import fr.social.gouv.agora.domain.ReponseConsultationInserting
+import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.social.gouv.agora.infrastructure.utils.UuidUtils
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.social.gouv.agora.usecase.qag.ContentSanitizer
@@ -13,6 +15,7 @@ import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetConsultati
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class InsertReponseConsultationUseCase(
@@ -23,6 +26,7 @@ class InsertReponseConsultationUseCase(
     private val questionRepository: QuestionRepository,
     private val insertConsultationResponseParametersMapper: InsertConsultationResponseParametersMapper,
     private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
+    private val consultationInfoRepository: ConsultationInfoRepository,
 ) {
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
@@ -34,10 +38,19 @@ class InsertReponseConsultationUseCase(
         userId: String,
         consultationResponses: List<ReponseConsultationInserting>,
     ): InsertResult {
+        if (consultationInfoRepository.getConsultation(consultationId = consultationId)?.endDate?.before(
+                LocalDate.now().toDate()
+            ) == true
+        ) {
+            println("⚠️ Insert response consultation error: this consultation is already finished")
+            return InsertResult.INSERT_FAILURE
+        }
+
         if (consultationResponseRepository.hasAnsweredConsultation(consultationId = consultationId, userId = userId)) {
             println("⚠️ Insert response consultation error: user has already answered this consultation")
             return InsertResult.INSERT_FAILURE
         }
+
         val questionList = questionRepository.getConsultationQuestionList(consultationId)
 
         val filledConsultationResponses = addMissingResponseIfQuestionWithChoices(

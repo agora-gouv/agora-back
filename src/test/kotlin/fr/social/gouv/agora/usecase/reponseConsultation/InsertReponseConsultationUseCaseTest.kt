@@ -3,6 +3,9 @@ package fr.social.gouv.agora.usecase.reponseConsultation
 import fr.social.gouv.agora.domain.QuestionOpen
 import fr.social.gouv.agora.domain.QuestionUniqueChoice
 import fr.social.gouv.agora.domain.ReponseConsultationInserting
+import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfo
+import fr.social.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.social.gouv.agora.usecase.qag.ContentSanitizer
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.time.LocalDateTime
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
@@ -50,14 +54,57 @@ internal class InsertReponseConsultationUseCaseTest {
     @MockBean
     private lateinit var contentSanitizer: ContentSanitizer
 
+    @MockBean
+    private lateinit var consultationInfoRepository: ConsultationInfoRepository
+
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
         private const val OPEN_QUESTION_MAX_LENGTH = 400
     }
 
+    private val consultationInfo = ConsultationInfo(
+        id = "consultId",
+        title = "consultTitle",
+        coverUrl = "",
+        startDate = Date(0),
+        endDate = LocalDateTime.now().plusDays(30).toDate(),
+        questionCount = "",
+        estimatedTime = "",
+        participantCountGoal = 1,
+        description = "",
+        tipsDescription = "",
+        thematiqueId = "",
+    )
+
     @Test
-    fun `insertReponseConsultation - when has already answered - should return failure`() {
+    fun `insertReponseConsultation - when consultation is already finished - should return failure`() {
         // Given
+        val consultationFinished = consultationInfo.copy(endDate = LocalDateTime.now().minusDays(30).toDate())
+
+        given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationFinished)
+
+        // When
+        val result = useCase.insertReponseConsultation(
+            consultationId = "consultId",
+            userId = "userId",
+            consultationResponses = listOf(mock(ReponseConsultationInserting::class.java)),
+        )
+
+        // Then
+        assertThat(result).isEqualTo(InsertResult.INSERT_FAILURE)
+        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
+        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(consultationPreviewAnsweredRepository).shouldHaveNoInteractions()
+        then(insertReponseConsultationRepository).shouldHaveNoInteractions()
+        then(questionRepository).shouldHaveNoInteractions()
+        then(consultationPreviewPageRepository).shouldHaveNoInteractions()
+        then(contentSanitizer).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `insertReponseConsultation - when has already answered and consultation not finished - should return failure`() {
+        // Given
+        given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(true)
 
@@ -74,6 +121,7 @@ internal class InsertReponseConsultationUseCaseTest {
             consultationId = "consultId",
             userId = "userId",
         )
+        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
         then(consultationPreviewAnsweredRepository).shouldHaveNoInteractions()
         then(insertReponseConsultationRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
@@ -82,8 +130,9 @@ internal class InsertReponseConsultationUseCaseTest {
     }
 
     @Test
-    fun `insertReponseConsultation - when has not answered yet and answer open question - should delete ConsultationAnswered cache and sanitize with open_text_max_length then return result from insert repository`() {
+    fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer open question - should delete ConsultationAnswered cache and sanitize with open_text_max_length then return result from insert repository`() {
         // Given
+        given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(false)
 
@@ -133,6 +182,7 @@ internal class InsertReponseConsultationUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
+        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
         then(consultationResponseRepository).should(only()).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
@@ -150,8 +200,9 @@ internal class InsertReponseConsultationUseCaseTest {
     }
 
     @Test
-    fun `insertReponseConsultation - when has not answered yet and answer unique question with choice other - should delete ConsultationAnswered cache and sanitize with other_text_max_length then return result from insert repository`() {
+    fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer unique question with choice other - should delete ConsultationAnswered cache and sanitize with other_text_max_length then return result from insert repository`() {
         // Given
+        given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(false)
 
@@ -200,6 +251,7 @@ internal class InsertReponseConsultationUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
+        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
         then(consultationResponseRepository).should(only()).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
@@ -217,8 +269,9 @@ internal class InsertReponseConsultationUseCaseTest {
     }
 
     @Test
-    fun `insertReponseConsultation - when has missing response on questions with condition - should delete ConsultationAnswered cache then return result from insert repository with added responses`() {
+    fun `insertReponseConsultation - when has not answered yet and consultation not finished and has missing response on questions with condition - should delete ConsultationAnswered cache then return result from insert repository with added responses`() {
         // Given
+        given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(
             consultationResponseRepository.hasAnsweredConsultation(
                 consultationId = "consultId",
@@ -264,6 +317,7 @@ internal class InsertReponseConsultationUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
+        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
         then(consultationResponseRepository).should(only()).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
