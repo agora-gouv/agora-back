@@ -18,6 +18,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
 ) {
 
     fun getConsultationResults(consultationId: String): ConsultationResultWithDemographicInfo? {
+        println("📊 Building consultation results for consultationId: $consultationId...")
         val consultationInfo = consultationInfoRepository.getConsultation(consultationId) ?: return null
         val questionList =
             questionRepository.getConsultationQuestionList(consultationId).takeUnless { it.isEmpty() } ?: return null
@@ -49,6 +50,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
             consultation = consultationInfo,
             participantCount = participantCount,
             results = filteredQuestionList.map { question ->
+                println("📊 Building consultation results for question ${question.title}...")
                 buildQuestionResults(
                     question = question,
                     participantCount = participantCount,
