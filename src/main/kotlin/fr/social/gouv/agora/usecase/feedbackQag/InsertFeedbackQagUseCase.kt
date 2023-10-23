@@ -31,7 +31,7 @@ class InsertFeedbackQagUseCase(
                             )
                         )
                     )
-                else FeedbackQagListResult.FeedbackDisabled
+                else FeedbackQagListResult.SuccessFeedbackDisabled
 
                 else -> FeedbackQagListResult.Failure
             }
@@ -42,5 +42,5 @@ class InsertFeedbackQagUseCase(
 sealed class FeedbackQagListResult {
     data class Success(val feedbackQagList: List<FeedbackQag>) : FeedbackQagListResult()
     object Failure : FeedbackQagListResult()
-    object FeedbackDisabled : FeedbackQagListResult()
+    object SuccessFeedbackDisabled : FeedbackQagListResult()
 }

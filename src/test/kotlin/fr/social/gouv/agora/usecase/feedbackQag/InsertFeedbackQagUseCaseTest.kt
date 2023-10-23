@@ -60,7 +60,7 @@ internal class InsertFeedbackQagUseCaseTest {
         then(repository).shouldHaveNoInteractions()
         then(featureFlagsUseCase).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
-        then(getFeedbackQagRepository).should(times(1)).getFeedbackQagList(qagId = "qagId")
+        then(getFeedbackQagRepository).should(only()).getFeedbackQagList(qagId = "qagId")
     }
 
     @Test
@@ -74,8 +74,8 @@ internal class InsertFeedbackQagUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(FeedbackQagListResult.Failure)
-        then(repository).should(times(1)).insertFeedbackQag(feedbackQagInserting)
-        then(getFeedbackQagRepository).should(times(1)).getFeedbackQagList(qagId = "qagId")
+        then(repository).should(only()).insertFeedbackQag(feedbackQagInserting)
+        then(getFeedbackQagRepository).should(only()).getFeedbackQagList(qagId = "qagId")
         then(featureFlagsUseCase).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
     }
@@ -91,10 +91,10 @@ internal class InsertFeedbackQagUseCaseTest {
         val result = useCase.insertFeedbackQag(feedbackQagInserting = feedbackQagInserting)
 
         // Then
-        assertThat(result).isEqualTo(FeedbackQagListResult.FeedbackDisabled)
-        then(repository).should(times(1)).insertFeedbackQag(feedbackQagInserting)
-        then(getFeedbackQagRepository).should(times(1)).getFeedbackQagList(qagId = "qagId")
-        then(featureFlagsUseCase).should(times(1)).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
+        assertThat(result).isEqualTo(FeedbackQagListResult.SuccessFeedbackDisabled)
+        then(repository).should(only()).insertFeedbackQag(feedbackQagInserting)
+        then(getFeedbackQagRepository).should(only()).getFeedbackQagList(qagId = "qagId")
+        then(featureFlagsUseCase).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
         then(mapper).shouldHaveNoInteractions()
     }
 
@@ -111,9 +111,9 @@ internal class InsertFeedbackQagUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(FeedbackQagListResult.Success(listOf(feedbackQag)))
-        then(repository).should(times(1)).insertFeedbackQag(feedbackQagInserting)
-        then(getFeedbackQagRepository).should(times(1)).getFeedbackQagList(qagId = "qagId")
-        then(featureFlagsUseCase).should(times(1)).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
-        then(mapper).should(times(1)).toFeedbackQag(feedbackQagInserting)
+        then(repository).should(only()).insertFeedbackQag(feedbackQagInserting)
+        then(getFeedbackQagRepository).should(only()).getFeedbackQagList(qagId = "qagId")
+        then(featureFlagsUseCase).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
+        then(mapper).should(only()).toFeedbackQag(feedbackQagInserting)
     }
 }

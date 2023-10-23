@@ -33,11 +33,10 @@ class FeedbackQagController(
                     )
                 )
                 when (insertResult) {
-                    is FeedbackQagListResult.Success -> if (!insertResult.feedbackQagList.isNullOrEmpty())
-                        ResponseEntity.ok().body(mapper.toJson(insertResult.feedbackQagList)) else ResponseEntity.ok()
-                        .body("")
+                    is FeedbackQagListResult.Success -> ResponseEntity.ok()
+                        .body(mapper.toJson(insertResult.feedbackQagList))
 
-                    FeedbackQagListResult.FeedbackDisabled -> ResponseEntity.ok().body("")
+                    FeedbackQagListResult.SuccessFeedbackDisabled -> ResponseEntity.ok().body("")
                     else -> ResponseEntity.badRequest().body("")
                 }
             },
