@@ -25,7 +25,13 @@ class ConsultationResponseResultJsonRepositoryImpl(
 
     override fun getConsultationResults(consultationId: String): ConsultationResultJson? {
         return getCache()?.get(consultationId, String::class.java)
-            ?.let { objectMapper.readValue(it, ConsultationResultJson::class.java) }
+            ?.let { cacheContent ->
+                try {
+                    objectMapper.readValue(cacheContent, ConsultationResultJson::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
     }
 
     override fun insertConsultationResults(consultationId: String, results: ConsultationResultJson) {

@@ -27,7 +27,7 @@ class ConsultationPreviewPageRepositoryImpl(
         return try {
             val modelList = getCache()?.get("$ONGOING_CACHE_PREFIX/$userId", List::class.java) as? List<String>
             return modelList?.map { objectMapper.readValue(it, ConsultationPreviewOngoing::class.java) }
-        } catch (e: IllegalStateException) {
+        } catch (e: Exception) {
             null
         }
     }
@@ -45,7 +45,7 @@ class ConsultationPreviewPageRepositoryImpl(
         return try {
             val modelList = getCache()?.get(FINISHED_CACHE_KEY, List::class.java) as? List<String>
             return modelList?.map { objectMapper.readValue(it, ConsultationPreviewFinished::class.java) }
-        } catch (e: IllegalStateException) {
+        } catch (e: Exception) {
             null
         }
     }
@@ -63,7 +63,7 @@ class ConsultationPreviewPageRepositoryImpl(
         return try {
             val modelList = getCache()?.get(ANSWERED_CACHE_PREFIX, List::class.java) as? List<String>
             return modelList?.map { objectMapper.readValue(it, ConsultationPreviewAnswered::class.java) }
-        } catch (e: IllegalStateException) {
+        } catch (e: Exception) {
             null
         }
     }
