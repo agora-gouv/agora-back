@@ -34,13 +34,12 @@ class FeedbackQagController(
                 )
                 when (insertResult) {
                     is FeedbackQagListResult.Success -> ResponseEntity.ok()
-                        .body(mapper.toJson(insertResult.feedbackQagList))
-
-                    FeedbackQagListResult.SuccessFeedbackDisabled -> ResponseEntity.ok().body("")
-                    else -> ResponseEntity.badRequest().body("")
+                        .body(mapper.toJson(insertResult.feedbackResults))
+                    FeedbackQagListResult.SuccessFeedbackDisabled -> ResponseEntity.ok().body(Unit)
+                    else -> ResponseEntity.badRequest().body(Unit)
                 }
             },
-            onTaskRejected = { ResponseEntity.badRequest().body("") }
+            onTaskRejected = { ResponseEntity.badRequest().body(Unit) }
         )
     }
 }

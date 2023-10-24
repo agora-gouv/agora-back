@@ -20,16 +20,25 @@ class DeleteQagUseCase(
         val qagInfo = qagInfoRepository.getQagInfo(qagId = qagId)
         return when {
             qagInfo?.userId == userId && qagInfo.status != QagStatus.SELECTED_FOR_RESPONSE -> {
-                qagInfoRepository.deleteQag(qagId = qagId)
-                // TODO check delete result
-                supportQagRepository.deleteSupportListByQagId(qagId = qagId)
-                qagDeleteLogRepository.insertQagDeleteLog(qagDeleteLog = QagDeleteLog(userId = userId, qagId = qagId))
-                qagPreviewCacheRepository.evictQagSupportedList(userId = userId, thematiqueId = null)
-                qagPreviewCacheRepository.evictQagSupportedList(
-                    userId = userId,
-                    thematiqueId = qagInfo.thematiqueId,
-                )
-                deleteResult
+                val deleteResult = qagInfoRepository.deleteQag(qagId = qagId)
+                when (deleteResult) {
+                    is QagDeleteResult.Success -> {
+                        supportQagRepository.deleteSupportListByQagId(qagId = qagId)
+                        qagDeleteLogRepository.insertQagDeleteLog(
+                            qagDeleteLog = QagDeleteLog(
+                                userId = userId,
+                                qagId = qagId,
+                            )
+                        )
+                        qagPreviewCacheRepository.evictQagSupportedList(userId = userId, thematiqueId = null)
+                        qagPreviewCacheRepository.evictQagSupportedList(
+                            userId = userId,
+                            thematiqueId = qagInfo.thematiqueId,
+                        )
+                    }
+                    QagDeleteResult.Failure -> {} // Do nothing
+                }
+                return deleteResult
             }
             else -> QagDeleteResult.Failure
         }

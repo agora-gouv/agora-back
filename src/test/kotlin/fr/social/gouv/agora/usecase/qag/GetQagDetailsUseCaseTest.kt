@@ -31,6 +31,9 @@ internal class GetQagDetailsUseCaseTest {
     @MockBean
     private lateinit var feedbackQagUseCase: FeedbackQagUseCase
 
+    @MockBean
+    private lateinit var mapper: QagDetailsMapper
+
     @Test
     fun `getQag - when qag is null - should return QagNotFound`() {
         // Given
@@ -181,11 +184,14 @@ internal class GetQagDetailsUseCaseTest {
     }
 
     @Test
-    fun `getQag - when status SELECTED_FOR_RESPONSE and has not given feedback - should return Success`() {
+    fun `getQag - when status SELECTED_FOR_RESPONSE and has not given feedback - should remove feedbackResults from qag and return Success`() {
         // Given
         val qag = mockQag(status = QagStatus.SELECTED_FOR_RESPONSE, userId = "anotherUserId")
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
         given(feedbackQagUseCase.getUserFeedbackQagIds(userId = "userId")).willReturn(emptyList())
+
+        val qagWithoutFeedbackResults = mock(QagDetails::class.java)
+        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qagWithoutFeedbackResults)
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
@@ -194,7 +200,7 @@ internal class GetQagDetailsUseCaseTest {
         assertThat(result).isEqualTo(
             QagResult.Success(
                 QagWithUserData(
-                    qagDetails = qag,
+                    qagDetails = qagWithoutFeedbackResults,
                     canShare = true,
                     canSupport = false,
                     canDelete = false,
@@ -242,11 +248,13 @@ internal class GetQagDetailsUseCaseTest {
         status: QagStatus,
         userId: String = "userId",
     ): QagDetails {
-        return mock(QagDetails::class.java).also {
+        val qag = mock(QagDetails::class.java).also {
             given(it.id).willReturn("qagId")
             given(it.status).willReturn(status)
             given(it.userId).willReturn(userId)
         }
+        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
+        return qag
     }
 
 }

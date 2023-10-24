@@ -12,6 +12,7 @@ class GetQagDetailsUseCase(
     private val qagDetailsAggregate: QagDetailsAggregate,
     private val supportQagUseCase: SupportQagUseCase,
     private val feedbackQagUseCase: FeedbackQagUseCase,
+    private val mapper: QagDetailsMapper,
 ) {
 
     fun getQagDetails(qagId: String, userId: String): QagResult {
@@ -22,15 +23,18 @@ class GetQagDetailsUseCase(
                 QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED, QagStatus.SELECTED_FOR_RESPONSE -> if (qag.status == QagStatus.OPEN && userId != qag.userId) {
                     QagResult.QagNotFound
                 } else {
+                    val hasGivenFeedback = hasGivenFeedback(qagDetails = qag, userId = userId)
                     QagResult.Success(
                         QagWithUserData(
-                            qagDetails = qag,
+                            qagDetails = if (!hasGivenFeedback) {
+                                mapper.toQagWithoutFeedbackResults(qag)
+                            } else qag,
                             canShare = qag.status == QagStatus.MODERATED_ACCEPTED || qag.status == QagStatus.SELECTED_FOR_RESPONSE,
                             canSupport = qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED,
                             canDelete = qag.userId == userId && qag.status != QagStatus.SELECTED_FOR_RESPONSE,
                             isAuthor = qag.userId == userId,
                             isSupportedByUser = isSupportedByUser(qagDetails = qag, userId = userId),
-                            hasGivenFeedback = hasGivenFeedback(qagDetails = qag, userId = userId),
+                            hasGivenFeedback = hasGivenFeedback,
                         )
                     )
                 }
