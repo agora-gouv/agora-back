@@ -1,5 +1,6 @@
 package fr.social.gouv.agora.usecase.reponseConsultation
 
+import fr.social.gouv.agora.TestUtils
 import fr.social.gouv.agora.domain.QuestionOpen
 import fr.social.gouv.agora.domain.QuestionUniqueChoice
 import fr.social.gouv.agora.domain.ReponseConsultationInserting
@@ -19,18 +20,17 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
+import java.time.Month
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 internal class InsertReponseConsultationUseCaseTest {
 
-    @Autowired
     private lateinit var useCase: InsertReponseConsultationUseCase
 
     @MockBean
@@ -67,7 +67,7 @@ internal class InsertReponseConsultationUseCaseTest {
         title = "consultTitle",
         coverUrl = "",
         startDate = Date(0),
-        endDate = LocalDateTime.now().plusDays(30).toDate(),
+        endDate = LocalDateTime.of(2024, Month.OCTOBER, 19, 19, 0, 0).toDate(),
         questionCount = "",
         estimatedTime = "",
         participantCountGoal = 1,
@@ -79,8 +79,10 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when consultation is already finished - should return failure`() {
         // Given
-        val consultationFinished = consultationInfo.copy(endDate = LocalDateTime.now().minusDays(30).toDate())
-
+        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
+        val endDate = LocalDateTime.of(2023, Month.JUNE, 20, 14, 0, 0)
+        val consultationFinished = consultationInfo.copy(endDate = endDate.toDate())
+        mockDate(todayDate)
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationFinished)
 
         // When
@@ -104,6 +106,8 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when has already answered and consultation not finished - should return failure`() {
         // Given
+        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
+        mockDate(todayDate)
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(true)
@@ -132,6 +136,8 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer open question - should delete ConsultationAnswered cache and sanitize with open_text_max_length then return result from insert repository`() {
         // Given
+        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
+        mockDate(todayDate)
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(false)
@@ -202,6 +208,8 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer unique question with choice other - should delete ConsultationAnswered cache and sanitize with other_text_max_length then return result from insert repository`() {
         // Given
+        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
+        mockDate(todayDate)
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(false)
@@ -271,6 +279,8 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when has not answered yet and consultation not finished and has missing response on questions with condition - should delete ConsultationAnswered cache then return result from insert repository with added responses`() {
         // Given
+        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
+        mockDate(todayDate)
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(
             consultationResponseRepository.hasAnsweredConsultation(
@@ -334,4 +344,17 @@ internal class InsertReponseConsultationUseCaseTest {
         then(contentSanitizer).shouldHaveNoInteractions()
     }
 
+    private fun mockDate(localDateTime: LocalDateTime) {
+        useCase = InsertReponseConsultationUseCase(
+            contentSanitizer = contentSanitizer,
+            consultationPreviewAnsweredRepository = consultationPreviewAnsweredRepository,
+            insertReponseConsultationRepository = insertReponseConsultationRepository,
+            consultationResponseRepository = consultationResponseRepository,
+            questionRepository = questionRepository,
+            insertConsultationResponseParametersMapper = insertConsultationResponseParametersMapper,
+            consultationPreviewPageRepository = consultationPreviewPageRepository,
+            consultationInfoRepository = consultationInfoRepository,
+            clock = TestUtils.getFixedClock(localDateTime),
+        )
+    }
 }

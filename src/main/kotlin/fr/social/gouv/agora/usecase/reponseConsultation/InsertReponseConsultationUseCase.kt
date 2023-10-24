@@ -15,10 +15,12 @@ import fr.social.gouv.agora.usecase.reponseConsultation.repository.GetConsultati
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
 import fr.social.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
 import org.springframework.stereotype.Service
-import java.time.LocalDate
+import java.time.Clock
+import java.time.LocalDateTime
 
 @Service
 class InsertReponseConsultationUseCase(
+    private val clock: Clock,
     private val contentSanitizer: ContentSanitizer,
     private val consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository,
     private val insertReponseConsultationRepository: InsertReponseConsultationRepository,
@@ -39,7 +41,7 @@ class InsertReponseConsultationUseCase(
         consultationResponses: List<ReponseConsultationInserting>,
     ): InsertResult {
         if (consultationInfoRepository.getConsultation(consultationId = consultationId)?.endDate?.before(
-                LocalDate.now().toDate()
+                LocalDateTime.now(clock).toDate()
             ) == true
         ) {
             println("⚠️ Insert response consultation error: this consultation is already finished")
