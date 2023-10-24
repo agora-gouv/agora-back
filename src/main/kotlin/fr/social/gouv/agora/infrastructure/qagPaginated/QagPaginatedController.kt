@@ -5,8 +5,6 @@ import fr.social.gouv.agora.usecase.qagPaginated.QagPaginatedUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 
 @RestController
 @Suppress("unused")
@@ -24,15 +22,11 @@ class QagPaginatedController(
         @PathVariable pageNumber: String,
         @RequestParam("filterType") filterType: String?,
         @RequestParam("thematiqueId") thematiqueId: String?,
-        @RequestParam("keywords") keywords: String?,
     ): ResponseEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val usedFilterType = filterType.takeUnless { it.isNullOrBlank() }
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedPageNumber = pageNumber.toIntOrNull()
-        val filteredKeywords =
-            keywords.takeUnless { it.isNullOrBlank() }?.let { URLDecoder.decode(it, StandardCharsets.UTF_8.toString()) }
-                ?.take(MAX_CHARACTER_SIZE)
 
         return usedPageNumber?.let { pageNumberInt ->
             when (usedFilterType) {
@@ -40,21 +34,18 @@ class QagPaginatedController(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
-                    keywords = filteredKeywords,
                 )
 
                 "latest" -> qagPaginatedUseCase.getLatestQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
-                    keywords = filteredKeywords,
                 )
 
                 "supporting" -> qagPaginatedUseCase.getSupportedQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
-                    keywords = filteredKeywords,
                 )
 
                 else -> null

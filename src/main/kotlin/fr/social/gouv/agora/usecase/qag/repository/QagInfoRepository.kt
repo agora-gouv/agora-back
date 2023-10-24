@@ -8,11 +8,29 @@ interface QagInfoRepository {
     fun getQagInfoToModerateList(): List<QagInfo>
     fun getQagResponsesWithSupportCount(): List<QagInfoWithSupportCount>
     fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount>
-    fun getPopularQagsPaginated(thematiqueId: String?, maxDate: Date, pageNumber: Int): List<QagInfoWithSupportCount>
     fun getLatestQags(thematiqueId: String?): List<QagInfoWithSupportCount>
-    fun getLatestQagsPaginated(thematiqueId: String?, maxDate: Date, pageNumber: Int): List<QagInfoWithSupportCount>
     fun getSupportedQags(userId: String, thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo>
+    fun getPopularQagsPaginated(
+        maxDate: Date,
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount>
+
+    fun getLatestQagsPaginated(
+        maxDate: Date,
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount>
+
+    fun getSupportedQagsPaginated(
+        userId: String,
+        maxDate: Date,
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount>
+
+    fun getQagsCount(): Int
     fun getQagInfo(qagId: String): QagInfo?
     fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?
     fun getQagsWithSupportCount(qagIds: List<String>): List<QagInfoWithSupportCount>

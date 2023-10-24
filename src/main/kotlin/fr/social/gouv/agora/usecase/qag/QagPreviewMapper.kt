@@ -2,24 +2,40 @@ package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagPreview
 import fr.social.gouv.agora.domain.SupportQag
+import fr.social.gouv.agora.domain.Thematique
+import fr.social.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.social.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import org.springframework.stereotype.Component
 
 @Component
 class QagPreviewMapper {
 
-    fun toPreview(qag: QagWithSupportCount, supportedQagIds: List<String>, userId: String): QagPreview {
-        return QagPreview(
-            id = qag.qagInfo.id,
+    fun toPreview(qag: QagWithSupportCount, isSupportedByUser: Boolean, isAuthor: Boolean): QagPreview {
+        return toPreview(
+            qag = qag.qagInfo,
             thematique = qag.thematique,
-            title = qag.qagInfo.title,
-            username = qag.qagInfo.username,
-            date = qag.qagInfo.date,
+            isSupportedByUser = isSupportedByUser,
+            isAuthor = isAuthor,
+        )
+    }
+
+    fun toPreview(
+        qag: QagInfoWithSupportCount,
+        thematique: Thematique,
+        isSupportedByUser: Boolean,
+        isAuthor: Boolean,
+    ): QagPreview {
+        return QagPreview(
+            id = qag.id,
+            thematique = thematique,
+            title = qag.title,
+            username = qag.username,
+            date = qag.date,
             support = SupportQag(
-                supportCount = qag.qagInfo.supportCount,
-                isSupportedByUser = supportedQagIds.any { supportedQagId -> supportedQagId == qag.qagInfo.id }
+                supportCount = qag.supportCount,
+                isSupportedByUser = isSupportedByUser,
             ),
-            isAuthor = qag.qagInfo.userId == userId,
+            isAuthor = isAuthor,
         )
     }
 

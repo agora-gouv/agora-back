@@ -23,13 +23,31 @@ class QagPreviewListUseCaseV2(
         val supportedQagIds = supportQagUseCase.getUserSupportedQagIds(userId)
         return QagPreviewList(
             popularPreviewList = getPopularQags(thematiqueId = thematiqueId)
-                .map { qag -> mapper.toPreview(qag, supportedQagIds, userId) },
+                .map { qag ->
+                    mapper.toPreview(
+                        qag = qag,
+                        isSupportedByUser = supportedQagIds.any { qagId -> qagId == qag.qagInfo.id },
+                        isAuthor = userId == qag.qagInfo.userId,
+                    )
+                },
             latestPreviewList = getLatestQags(thematiqueId = thematiqueId)
-                .map { qag -> mapper.toPreview(qag, supportedQagIds, userId) },
+                .map { qag ->
+                    mapper.toPreview(
+                        qag = qag,
+                        isSupportedByUser = supportedQagIds.any { qagId -> qagId == qag.qagInfo.id },
+                        isAuthor = userId == qag.qagInfo.userId,
+                    )
+                },
             supportedPreviewList = getSupportedQags(
                 userId = userId,
                 thematiqueId = thematiqueId,
-            ).map { qag -> mapper.toPreview(qag, supportedQagIds, userId) },
+            ).map { qag ->
+                mapper.toPreview(
+                    qag = qag,
+                    isSupportedByUser = supportedQagIds.any { qagId -> qagId == qag.qagInfo.id },
+                    isAuthor = userId == qag.qagInfo.userId,
+                )
+            },
         )
     }
 

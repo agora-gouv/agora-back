@@ -93,7 +93,7 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
             OR ((qags.status = 0 OR qags.status = 1) AND qags.user_id = :userId)
             GROUP BY qags.id
             ORDER BY postDate DESC
-            LIMIT 10;
+            LIMIT 10
         """, nativeQuery = true
     )
     fun getSupportedQags(@Param("userId") userId: UUID): List<QagWithSupportCountDTO>
@@ -108,12 +108,12 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
             AND thematique_id = :thematiqueId
             GROUP BY qags.id
             ORDER BY postDate DESC
-            LIMIT 10;
+            LIMIT 10
         """, nativeQuery = true
     )
     fun getSupportedQags(
         @Param("userId") userId: UUID,
-        @Param("thematiqueId") thematiqueId: UUID
+        @Param("thematiqueId") thematiqueId: UUID,
     ): List<QagWithSupportCountDTO>
 
     @Query(value = "SELECT * FROM qags WHERE status = 0 AND user_id = :userId", nativeQuery = true)
@@ -124,6 +124,119 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
         nativeQuery = true,
     )
     fun getUserQagList(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE qags.status = 1
+            AND post_date < :maxDate
+            GROUP BY qags.id
+            ORDER BY supportCount DESC
+            LIMIT 20
+            OFFSET :offset
+        """, nativeQuery = true
+    )
+    fun getPopularQagsPaginated(
+        @Param("maxDate") maxDate: Date,
+        @Param("offset") offset: Int,
+    ): List<QagWithSupportCountDTO>
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE qags.status = 1
+            AND post_date < :maxDate
+            AND thematique_id = :thematiqueId
+            GROUP BY qags.id
+            ORDER BY supportCount DESC
+            LIMIT 20
+            OFFSET :offset
+        """, nativeQuery = true
+    )
+    fun getPopularQagsPaginated(
+        @Param("maxDate") maxDate: Date,
+        @Param("offset") offset: Int,
+        @Param("thematiqueId") thematiqueId: UUID,
+    ): List<QagWithSupportCountDTO>
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE qags.status = 1
+            AND post_date < :maxDate
+            GROUP BY qags.id
+            ORDER BY post_date DESC
+            LIMIT 20
+            OFFSET :offset
+        """, nativeQuery = true
+    )
+    fun getLatestQagsPaginated(
+        @Param("maxDate") maxDate: Date,
+        @Param("offset") offset: Int,
+    ): List<QagWithSupportCountDTO>
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE qags.status = 1
+            AND post_date < :maxDate
+            AND thematique_id = :thematiqueId
+            GROUP BY qags.id
+            ORDER BY post_date DESC
+            LIMIT 20
+            OFFSET :offset
+        """, nativeQuery = true
+    )
+    fun getLatestQagsPaginated(
+        @Param("maxDate") maxDate: Date,
+        @Param("offset") offset: Int,
+        @Param("thematiqueId") thematiqueId: UUID,
+    ): List<QagWithSupportCountDTO>
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE (
+                (qags.status = 1 AND qags.id IN (SELECT qag_id FROM supports_qag WHERE user_id = :userId))
+                OR ((qags.status = 0 OR qags.status = 1) AND qags.user_id = :userId)
+            )
+            AND post_date < :maxDate
+            GROUP BY qags.id
+            ORDER BY postDate DESC
+            LIMIT 20
+            OFFSET :offset
+        """, nativeQuery = true
+    )
+    fun getSupportedQagsPaginated(
+        @Param("userId") userId: UUID,
+        @Param("maxDate") maxDate: Date,
+        @Param("offset") offset: Int,
+    ): List<QagWithSupportCountDTO>
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN 
+            WHERE (
+                (qags.status = 1 AND qags.id IN (SELECT qag_id FROM supports_qag WHERE user_id = :userId))
+                OR ((qags.status = 0 OR qags.status = 1) AND qags.user_id = :userId)
+            )
+            AND post_date < :maxDate
+            AND thematique_id = :thematiqueId
+            GROUP BY qags.id
+            ORDER BY postDate DESC
+            LIMIT 20
+            OFFSET :offset
+        """, nativeQuery = true
+    )
+    fun getSupportedQagsPaginated(
+        @Param("userId") userId: UUID,
+        @Param("maxDate") maxDate: Date,
+        @Param("offset") offset: Int,
+        @Param("thematiqueId") thematiqueId: UUID,
+    ): List<QagWithSupportCountDTO>
+
+    @Query(value = "SELECT count(*) FROM qags WHERE status = 1", nativeQuery = true)
+    fun getQagsCount(): Int
 
     @Query(value = "SELECT * from qags WHERE id = :qagId", nativeQuery = true)
     fun getQagById(@Param("qagId") qagId: UUID): QagDTO?
