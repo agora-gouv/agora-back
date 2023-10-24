@@ -24,6 +24,8 @@ class GetQagUseCase(
         val qag = qagInfoRepository.getQagInfo(qagId)?.let { qagInfo ->
             thematiqueRepository.getThematique(qagInfo.thematiqueId)?.let { thematique ->
                 qagSupportQagRepository.getSupportQag(qagId = qagId, userId = userId)?.let { supportQag ->
+                    val feedbackStatus = getFeedbackQagRepository.getFeedbackQagList(qagId = qagId)
+                        .any { feedbackQag -> feedbackQag.userId == userId }
                     Qag(
                         id = qagInfo.id,
                         thematique = thematique,
@@ -35,9 +37,8 @@ class GetQagUseCase(
                         userId = qagInfo.userId,
                         support = supportQag,
                         response = responseQagRepository.getResponseQag(qagId = qagId),
-                        feedback = getFeedbackQagRepository.getFeedbackQagList(qagId = qagId)
-                            .any { feedbackQag -> feedbackQag.userId == userId },
-                        feedbackResults = if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag))
+                        feedback = feedbackStatus,
+                        feedbackResults = if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag) && feedbackStatus)
                             getFeedbackQagRepository.getFeedbackQagList(qagId = qagId) else null,
                     )
                 }

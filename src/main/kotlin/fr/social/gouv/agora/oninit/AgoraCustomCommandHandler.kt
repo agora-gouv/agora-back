@@ -1,10 +1,12 @@
 package fr.social.gouv.agora.oninit
 
 import fr.social.gouv.agora.AgoraCustomCommandHelper
+import fr.social.gouv.agora.infrastructure.reponseConsultation.ConsultationResultWithDemographicInfoTsvMapper
 import fr.social.gouv.agora.usecase.consultation.ConsultationCacheClearUseCase
 import fr.social.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.social.gouv.agora.usecase.qagArchive.ArchiveOldQagUseCase
 import fr.social.gouv.agora.usecase.qagSelection.SelectMostPopularQagUseCase
+import fr.social.gouv.agora.usecase.reponseConsultation.GetConsultationResultsWithDemographicRatiosUseCase
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.boot.SpringApplication
 import org.springframework.context.ApplicationContext
@@ -14,15 +16,21 @@ import org.springframework.stereotype.Component
 @Suppress("unused")
 class AgoraCustomCommandHandler(
     private val applicationContext: ApplicationContext,
+    // Daily tasks
     private val consultationCacheClearUseCase: ConsultationCacheClearUseCase,
     private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
+    // Weekly tasks
     private val selectMostPopularQagUseCase: SelectMostPopularQagUseCase,
     private val archiveOldQagUseCase: ArchiveOldQagUseCase,
+    // Admin commands
+    private val consultationResultsUseCase: GetConsultationResultsWithDemographicRatiosUseCase,
+    private val mapper: ConsultationResultWithDemographicInfoTsvMapper,
 ) : InitializingBean {
 
     companion object {
         private const val DAILY_TASKS = "dailyTasks"
         private const val WEEKLY_TASKS = "weeklyTasks"
+        private const val CONSULTATION_RESULTS = "consultationResults"
         private const val SELECT_MOST_POPULAR_QAG = "selectMostPopularQag"
         private const val ARCHIVE_OLD_QAGS = "archiveOldQags"
     }
@@ -52,6 +60,14 @@ class AgoraCustomCommandHandler(
                 }
                 SELECT_MOST_POPULAR_QAG -> {
                     selectMostPopularQagUseCase.putMostPopularQagInSelectedStatus()
+                    true
+                }
+                CONSULTATION_RESULTS -> {
+                    customCommand.argument?.let { consultationId ->
+                        consultationResultsUseCase.getConsultationResults(consultationId)?.let { consultationResult ->
+                            println(mapper.buildTsvBody(consultationResult))
+                        } ?: println("Error while building consultation results")
+                    } ?: println("Missing custom command argument: consultationId")
                     true
                 }
                 else -> false

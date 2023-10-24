@@ -13,7 +13,7 @@ object AgoraCustomCommandHelper {
 
             System.setProperty(
                 CUSTOM_COMMAND_PROPERTY_KEY,
-                customCommandFullArgument.substringAfter(CUSTOM_COMMAND_PREFIX),
+                customCommandFullArgument.substringAfter(CUSTOM_COMMAND_PREFIX).trim(),
             )
             args.getOrNull(customCommandArgumentIndex + 1)?.let { customCommandArgument ->
                 System.setProperty(CUSTOM_COMMAND_ARGUMENT_PROPERTY_KEY, customCommandArgument)
