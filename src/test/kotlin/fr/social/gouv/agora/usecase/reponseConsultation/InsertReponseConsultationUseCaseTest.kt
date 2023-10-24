@@ -79,10 +79,9 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when consultation is already finished - should return failure`() {
         // Given
-        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
         val endDate = LocalDateTime.of(2023, Month.JUNE, 20, 14, 0, 0)
         val consultationFinished = consultationInfo.copy(endDate = endDate.toDate())
-        mockDate(todayDate)
+        mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationFinished)
 
         // When
@@ -106,8 +105,7 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when has already answered and consultation not finished - should return failure`() {
         // Given
-        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
-        mockDate(todayDate)
+        mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(true)
@@ -136,8 +134,7 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer open question - should delete ConsultationAnswered cache and sanitize with open_text_max_length then return result from insert repository`() {
         // Given
-        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
-        mockDate(todayDate)
+        mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(false)
@@ -208,8 +205,7 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer unique question with choice other - should delete ConsultationAnswered cache and sanitize with other_text_max_length then return result from insert repository`() {
         // Given
-        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
-        mockDate(todayDate)
+        mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(false)
@@ -279,8 +275,7 @@ internal class InsertReponseConsultationUseCaseTest {
     @Test
     fun `insertReponseConsultation - when has not answered yet and consultation not finished and has missing response on questions with condition - should delete ConsultationAnswered cache then return result from insert repository with added responses`() {
         // Given
-        val todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0)
-        mockDate(todayDate)
+        mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(
             consultationResponseRepository.hasAnsweredConsultation(
@@ -344,7 +339,7 @@ internal class InsertReponseConsultationUseCaseTest {
         then(contentSanitizer).shouldHaveNoInteractions()
     }
 
-    private fun mockDate(localDateTime: LocalDateTime) {
+    private fun mockDate(todayDate: LocalDateTime) {
         useCase = InsertReponseConsultationUseCase(
             contentSanitizer = contentSanitizer,
             consultationPreviewAnsweredRepository = consultationPreviewAnsweredRepository,
@@ -354,7 +349,7 @@ internal class InsertReponseConsultationUseCaseTest {
             insertConsultationResponseParametersMapper = insertConsultationResponseParametersMapper,
             consultationPreviewPageRepository = consultationPreviewPageRepository,
             consultationInfoRepository = consultationInfoRepository,
-            clock = TestUtils.getFixedClock(localDateTime),
+            clock = TestUtils.getFixedClock(todayDate),
         )
     }
 }
