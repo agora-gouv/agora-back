@@ -43,4 +43,21 @@ class ConsultationNotificationController(
             NotificationResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
         }
     }
+
+    @GetMapping("/admin/notifyConsultationDeadline/{consultationId}")
+    fun consultationDeadlineNotification(
+        @RequestParam("title") title: String,
+        @RequestParam("description") description: String,
+        @PathVariable("consultationId") consultationId: String,
+    ): ResponseEntity<*> {
+        val result = sendConsultationNotificationUseCase.sendConsultationDeadlineNotification(
+            title = title,
+            description = description,
+            consultationId = consultationId
+        )
+        return when (result) {
+            NotificationResult.SUCCESS -> ResponseEntity.ok().body(Unit)
+            NotificationResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
+        }
+    }
 }
