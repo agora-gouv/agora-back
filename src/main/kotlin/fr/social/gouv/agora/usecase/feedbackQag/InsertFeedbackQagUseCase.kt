@@ -1,29 +1,56 @@
 package fr.social.gouv.agora.usecase.feedbackQag
 
+import fr.social.gouv.agora.domain.AgoraFeature
+import fr.social.gouv.agora.domain.FeedbackQag
 import fr.social.gouv.agora.domain.FeedbackQagInserting
 import fr.social.gouv.agora.usecase.feedbackQag.repository.*
+import fr.social.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
+import fr.social.gouv.agora.usecase.feedbackQag.repository.FeedbackQagRepository
+import fr.social.gouv.agora.usecase.feedbackQag.repository.FeedbackQagResult
+import fr.social.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
 import org.springframework.stereotype.Service
 
 @Service
 class InsertFeedbackQagUseCase(
     private val repository: FeedbackQagRepository,
     private val getFeedbackQagRepository: GetFeedbackQagRepository,
+    private val featureFlagsUseCase: FeatureFlagsUseCase,
     private val userFeedbackCacheRepository: UserFeedbackQagCacheRepository,
     private val feedbackResultsCacheRepository: FeedbackResultsCacheRepository,
 ) {
-    fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagResult {
-        return if (hasAlreadyGivenFeedback(feedbackQagInserting)) FeedbackQagResult.FAILURE
+
+    fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagListResult {
+        val feedbackQagList = getFeedbackQagRepository.getFeedbackQagList(qagId = feedbackQagInserting.qagId)
+        return if (feedbackQagList.any { feedbackQag -> feedbackQag.userId == feedbackQagInserting.userId }) {
+            FeedbackQagListResult.Failure
+        }
         else {
-            userFeedbackCacheRepository.addUserFeedbackQagId(
-                userId = feedbackQagInserting.userId,
-                qagId = feedbackQagInserting.qagId,
-            )
-            feedbackResultsCacheRepository.evictFeedbackResults(qagId = feedbackQagInserting.qagId)
-            repository.insertFeedbackQag(feedbackQagInserting)
+            when (repository.insertFeedbackQag(feedbackQagInserting)) {
+                FeedbackQagResult.SUCCESS -> {
+                    userFeedbackCacheRepository.addUserFeedbackQagId(
+                        userId = feedbackQagInserting.userId,
+                        qagId = feedbackQagInserting.qagId,
+                    )
+                    feedbackResultsCacheRepository.evictFeedbackResults(qagId = feedbackQagInserting.qagId)
+                    // TODO rework this
+                    if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag))
+                        FeedbackQagListResult.Success(
+                            feedbackQagList + listOf(
+                                feedbackQagResultMapper.toFeedbackQag(
+                                    feedbackQagInserting
+                                )
+                            )
+                        )
+                    else FeedbackQagListResult.SuccessFeedbackDisabled
+                }
+                else -> FeedbackQagListResult.Failure
+            }
         }
     }
+}
 
-    private fun hasAlreadyGivenFeedback(feedbackQagInserting: FeedbackQagInserting) =
-        getFeedbackQagRepository.getFeedbackQagList(qagId = feedbackQagInserting.qagId)
-            .any { feedbackQag -> feedbackQag.userId == feedbackQagInserting.userId }
+sealed class FeedbackQagListResult {
+    data class Success(val feedbackQagList: List<FeedbackQag>) : FeedbackQagListResult()
+    object Failure : FeedbackQagListResult()
+    object SuccessFeedbackDisabled : FeedbackQagListResult()
 }

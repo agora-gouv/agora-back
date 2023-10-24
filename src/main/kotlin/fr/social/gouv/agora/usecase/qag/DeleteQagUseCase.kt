@@ -1,6 +1,7 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagDeleteLog
+import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.usecase.qag.repository.QagDeleteLogRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagDeleteResult
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -17,9 +18,9 @@ class DeleteQagUseCase(
 ) {
     fun deleteQagById(userId: String, qagId: String): QagDeleteResult {
         val qagInfo = qagInfoRepository.getQagInfo(qagId = qagId)
-        return when (qagInfo?.userId) {
-            userId -> {
-                val deleteResult = qagInfoRepository.deleteQag(qagId = qagId)
+        return when {
+            qagInfo?.userId == userId && qagInfo.status != QagStatus.SELECTED_FOR_RESPONSE -> {
+                qagInfoRepository.deleteQag(qagId = qagId)
                 // TODO check delete result
                 supportQagRepository.deleteSupportListByQagId(qagId = qagId)
                 qagDeleteLogRepository.insertQagDeleteLog(qagDeleteLog = QagDeleteLog(userId = userId, qagId = qagId))
