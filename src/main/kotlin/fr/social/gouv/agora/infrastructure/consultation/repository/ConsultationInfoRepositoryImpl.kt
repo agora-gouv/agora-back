@@ -23,7 +23,6 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getConsultations(): List<ConsultationInfo> {
-        // TODO tests
         return databaseRepository.getConsultations().map(consultationInfoMapper::toDomain)
     }
 

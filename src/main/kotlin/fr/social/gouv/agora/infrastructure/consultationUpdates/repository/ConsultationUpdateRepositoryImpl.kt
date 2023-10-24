@@ -18,7 +18,6 @@ class ConsultationUpdateRepositoryImpl(
 ) : ConsultationUpdateRepository {
 
     override fun getConsultationUpdates(consultationIDs: List<String>): List<ConsultationUpdate> {
-        // TODO tests
         val consultationUUIDs = consultationIDs.mapNotNull { consultationId ->
             try {
                 UUID.fromString(consultationId)

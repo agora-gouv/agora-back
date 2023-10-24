@@ -11,7 +11,6 @@ class SupportQagUseCase(
 ) {
 
     fun getUserSupportedQagIds(userId: String): List<String> {
-        // TODO tests
         return cacheRepository.getUserSupportedQagIds(userId = userId)
             ?: supportQagRepository.getUserSupportedQags(userId = userId).also { userSupportedQagIds ->
                 cacheRepository.initUserSupportedQagIds(userId, userSupportedQagIds)
