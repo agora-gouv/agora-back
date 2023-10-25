@@ -16,7 +16,7 @@ class QagDetailsCacheRepositoryImpl(
 ) : QagDetailsCacheRepository {
 
     companion object {
-        private const val QAG_CACHE = "qag"
+        private const val QAG_CACHE = "qagDetails"
         private const val QAG_NOT_FOUND_VALUE = ""
     }
 
