@@ -2,19 +2,17 @@ package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagDeleteLog
 import fr.social.gouv.agora.domain.QagStatus
-import fr.social.gouv.agora.usecase.qag.repository.QagDeleteLogRepository
-import fr.social.gouv.agora.usecase.qag.repository.QagDeleteResult
-import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.social.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
+import fr.social.gouv.agora.usecase.qag.repository.*
 import fr.social.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Service
 
 @Service
 class DeleteQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
-    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val supportQagRepository: SupportQagRepository,
     private val qagDeleteLogRepository: QagDeleteLogRepository,
+    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
+    private val qagDetailsCacheRepository: QagDetailsCacheRepository,
 ) {
     fun deleteQagById(userId: String, qagId: String): QagDeleteResult {
         val qagInfo = qagInfoRepository.getQagInfo(qagId = qagId)
@@ -35,6 +33,7 @@ class DeleteQagUseCase(
                             userId = userId,
                             thematiqueId = qagInfo.thematiqueId,
                         )
+                        qagDetailsCacheRepository.evictQag(qagId = qagId)
                     }
                     QagDeleteResult.Failure -> {} // Do nothing
                 }

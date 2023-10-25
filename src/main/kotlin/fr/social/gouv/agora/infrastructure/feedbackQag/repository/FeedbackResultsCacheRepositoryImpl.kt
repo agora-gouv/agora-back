@@ -5,14 +5,13 @@ import fr.social.gouv.agora.domain.FeedbackResults
 import fr.social.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheRepository
 import fr.social.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheResult
 import fr.social.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheResult.*
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
 class FeedbackResultsCacheRepositoryImpl(
-    @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager,
+    private val cacheManager: CacheManager,
     private val objectMapper: ObjectMapper,
 ) : FeedbackResultsCacheRepository {
 
