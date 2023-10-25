@@ -174,79 +174,33 @@ internal class QagInfoRepositoryImplTest {
     }
 
     @Test
-    fun `getUserQagInfoList - when invalid user UUID - should return emptyList`() {
+    fun `getUserLastQagInfo - when invalid user UUID - should return null`() {
         // When
-        val result = repository.getUserQagInfoList(userId = "Invalid user UUID", thematiqueId = null)
+        val result = repository.getUserLastQagInfo(userId = "Invalid user UUID")
 
         // Then
-        assertThat(result).isEqualTo(emptyList<QagInfo>())
+        assertThat(result).isEqualTo(null)
         then(databaseRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `getUserQagInfoList - when has null thematiqueId - should call database without thematique then return mapped qags`() {
+    fun `getUserQagInfoList - when has valid user UUID - should call database then return mapped qag`() {
         // Given
         val userUUID = UUID.randomUUID()
 
         val qagDTO = mock(QagDTO::class.java)
-        given(databaseRepository.getUserQagList(userId = userUUID)).willReturn(listOf(qagDTO))
+        given(databaseRepository.getLastUserQag(userId = userUUID)).willReturn(qagDTO)
 
         val qagInfo = mock(QagInfo::class.java)
         given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
 
         // When
-        val result = repository.getUserQagInfoList(userId = userUUID.toString(), thematiqueId = null)
+        val result = repository.getUserLastQagInfo(userId = userUUID.toString())
 
         // Then
-        assertThat(result).isEqualTo(listOf(qagInfo))
-        then(databaseRepository).should(only()).getUserQagList(userId = userUUID)
-        then(mapper).should(only()).toDomain(qagDTO)
-    }
-
-    @Test
-    fun `getUserQagInfoList - when has invalid thematique UUID - should call database without thematique then return mapped qags`() {
-        // Given
-        val userUUID = UUID.randomUUID()
-
-        val qagDTO = mock(QagDTO::class.java)
-        given(databaseRepository.getUserQagList(userId = userUUID)).willReturn(listOf(qagDTO))
-
-        val qagInfo = mock(QagInfo::class.java)
-        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
-
-        // When
-        val result =
-            repository.getUserQagInfoList(userId = userUUID.toString(), thematiqueId = "Invalid thematique UUID")
-
-        // Then
-        assertThat(result).isEqualTo(listOf(qagInfo))
-        then(databaseRepository).should(only()).getUserQagList(userId = userUUID)
-        then(mapper).should(only()).toDomain(qagDTO)
-    }
-
-    @Test
-    fun `getUserQagInfoList - when has valid thematiqueId UUID - should call database with thematique then return mapped qags`() {
-        // Given
-        val userUUID = UUID.randomUUID()
-        val thematiqueUUID = UUID.randomUUID()
-
-        val qagDTO = mock(QagDTO::class.java)
-        given(databaseRepository.getUserQagList(userId = userUUID, thematiqueId = thematiqueUUID))
-            .willReturn(listOf(qagDTO))
-
-        val qagInfo = mock(QagInfo::class.java)
-        given(mapper.toDomain(qagDTO)).willReturn(qagInfo)
-
-        // When
-        val result = repository.getUserQagInfoList(
-            userId = userUUID.toString(),
-            thematiqueId = thematiqueUUID.toString(),
-        )
-
-        // Then
-        assertThat(result).isEqualTo(listOf(qagInfo))
-        then(databaseRepository).should().getUserQagList(userId = userUUID, thematiqueId = thematiqueUUID)
+        assertThat(result).isEqualTo(qagInfo)
+        then(databaseRepository).should(only()).getLastUserQag(userId = userUUID)
         then(mapper).should(only()).toDomain(qagDTO)
     }
 

@@ -3,6 +3,7 @@ package fr.social.gouv.agora.usecase.qag
 import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
+import fr.social.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 import java.time.Clock
@@ -14,18 +15,23 @@ import java.util.*
 class GetAskQagStatusUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val featureFlagsRepository: FeatureFlagsRepository,
+    private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
     private val clock: Clock,
 ) {
     fun getAskQagStatus(userId: String): AskQagStatus {
         return if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)) {
             AskQagStatus.FEATURE_DISABLED
         } else {
-            val latestQagByUser = qagInfoRepository.getUserQagInfoList(userId = userId, thematiqueId = null)
-                .maxByOrNull { it.date }
+            val cachedStatus = askQagStatusCacheRepository.getAskQagStatus(userId = userId)
+            if (cachedStatus != null) return cachedStatus
+
+            val latestQagByUser = qagInfoRepository.getUserLastQagInfo(userId = userId)
             when {
                 latestQagByUser == null -> AskQagStatus.ENABLED
                 isDateWithinTheWeek(latestQagByUser.date) -> AskQagStatus.WEEKLY_LIMIT_REACHED
                 else -> AskQagStatus.ENABLED
+            }.also {
+                askQagStatusCacheRepository.initAskQagStatus(userId = userId, status = it)
             }
         }
     }

@@ -116,14 +116,15 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
         @Param("thematiqueId") thematiqueId: UUID,
     ): List<QagWithSupportCountDTO>
 
-    @Query(value = "SELECT * FROM qags WHERE status = 0 AND user_id = :userId", nativeQuery = true)
-    fun getUserQagList(@Param("userId") userId: UUID): List<QagDTO>
-
     @Query(
-        value = "SELECT * FROM qags WHERE status = 0 AND user_id = :userId AND thematique_id = :thematiqueId",
-        nativeQuery = true,
+        value = """SELECT * FROM qags 
+        WHERE (status = 0 OR status = 1) 
+        AND user_id = :userId 
+        ORDER BY post_date DESC
+        LIMIT 1
+        """, nativeQuery = true
     )
-    fun getUserQagList(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): List<QagDTO>
+    fun getLastUserQag(@Param("userId") userId: UUID): QagDTO?
 
     @Query(
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION

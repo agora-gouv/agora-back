@@ -10,7 +10,7 @@ interface QagInfoRepository {
     fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getLatestQags(thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getSupportedQags(userId: String, thematiqueId: String?): List<QagInfoWithSupportCount>
-    fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo>
+    fun getUserLastQagInfo(userId: String): QagInfo?
     fun getPopularQagsPaginated(
         maxDate: Date,
         offset: Int,

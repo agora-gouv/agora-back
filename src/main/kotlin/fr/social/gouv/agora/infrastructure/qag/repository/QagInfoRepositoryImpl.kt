@@ -44,13 +44,10 @@ class QagInfoRepositoryImpl(
         return qagList.map(mapper::toDomain)
     }
 
-    override fun getUserQagInfoList(userId: String, thematiqueId: String?): List<QagInfo> {
+    override fun getUserLastQagInfo(userId: String): QagInfo? {
         return userId.toUuidOrNull()?.let { userUUID ->
-            val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-                databaseRepository.getUserQagList(userId = userUUID, thematiqueId = thematiqueUUID)
-            } ?: databaseRepository.getUserQagList(userId = userUUID)
-            qagList.map(mapper::toDomain)
-        } ?: emptyList()
+            databaseRepository.getLastUserQag(userId = userUUID)?.let(mapper::toDomain)
+        }
     }
 
     override fun getPopularQagsPaginated(

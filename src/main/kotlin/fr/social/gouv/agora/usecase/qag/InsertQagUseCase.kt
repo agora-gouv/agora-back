@@ -2,6 +2,7 @@ package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.SupportQagInserting
+import fr.social.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInsertionResult
 import fr.social.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
@@ -14,6 +15,7 @@ class InsertQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val supportQagRepository: SupportQagRepository,
     private val qagPreviewCacheRepository: QagPreviewCacheRepository,
+    private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
 ) {
 
     companion object {
@@ -42,6 +44,7 @@ class InsertQagUseCase(
                 userId = qagInserting.userId,
                 thematiqueId = qagInserting.thematiqueId,
             )
+            askQagStatusCacheRepository.evictAskQagStatus(userId = qagInserting.userId)
         } else {
             println("⚠️ Insert QaG error")
         }

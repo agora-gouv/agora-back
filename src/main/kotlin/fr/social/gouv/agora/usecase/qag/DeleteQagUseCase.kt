@@ -13,6 +13,7 @@ class DeleteQagUseCase(
     private val qagDeleteLogRepository: QagDeleteLogRepository,
     private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagDetailsCacheRepository: QagDetailsCacheRepository,
+    private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
 ) {
     fun deleteQagById(userId: String, qagId: String): QagDeleteResult {
         val qagInfo = qagInfoRepository.getQagInfo(qagId = qagId)
@@ -34,6 +35,7 @@ class DeleteQagUseCase(
                             thematiqueId = qagInfo.thematiqueId,
                         )
                         qagDetailsCacheRepository.evictQag(qagId = qagId)
+                        askQagStatusCacheRepository.evictAskQagStatus(userId = userId)
                     }
                     QagDeleteResult.Failure -> {} // Do nothing
                 }

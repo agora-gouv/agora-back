@@ -4,6 +4,7 @@ import fr.social.gouv.agora.TestUtils
 import fr.social.gouv.agora.domain.AgoraFeature
 import fr.social.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.social.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
+import fr.social.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.social.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -32,6 +33,9 @@ internal class ArchiveOldQagUseCaseTest {
 
     @MockBean
     private lateinit var qagUpdatesRepository: QagUpdatesRepository
+
+    @MockBean
+    private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
 
     @BeforeEach
     fun setUp() {
@@ -69,7 +73,7 @@ internal class ArchiveOldQagUseCaseTest {
         // Then
         assertThat(result).isEqualTo(ArchiveQagListResult.SUCCESS)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
-        then(qagInfoRepository).should().archiveOldQags(resetDate.toDate())
+        then(qagInfoRepository).should(only()).archiveOldQags(resetDate.toDate())
     }
 
     @Test
@@ -87,13 +91,15 @@ internal class ArchiveOldQagUseCaseTest {
         // Then
         assertThat(result).isEqualTo(ArchiveQagListResult.SUCCESS)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
-        then(qagInfoRepository).should().archiveOldQags(resetDate.toDate())
+        then(qagInfoRepository).should(only()).archiveOldQags(resetDate.toDate())
+        then(askQagStatusCacheRepository).should(only()).clear()
     }
 
     private fun mockDate(localDateTime: LocalDateTime) {
         useCase = ArchiveOldQagUseCase(
             featureFlagsRepository = featureFlagsRepository,
             qagInfoRepository = qagInfoRepository,
+            askQagStatusCacheRepository = askQagStatusCacheRepository,
             clock = TestUtils.getFixedClock(localDateTime),
         )
     }
