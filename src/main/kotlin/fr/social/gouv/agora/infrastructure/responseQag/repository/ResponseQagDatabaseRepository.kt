@@ -19,4 +19,10 @@ interface ResponseQagDatabaseRepository : CrudRepository<ResponseQagDTO, UUID> {
     )
     fun getResponseQag(@Param("qagId") qagId: UUID): ResponseQagDTO?
 
+    @Query(value = "SELECT count(*) FROM responses_qag", nativeQuery = true)
+    fun getResponsesQagCount(): Int
+
+    @Query(value = "SELECT * FROM responses_qag LIMIT 20 OFFSET :offset", nativeQuery = true)
+    fun getResponsesQag(@Param("offset") offset: Int): List<ResponseQagDTO>
+
 }

@@ -16,7 +16,7 @@ class ResponseQagPaginatedJsonMapper(
     fun toJson(responseQagPaginatedList: ResponseQagPaginatedList): ResponseQagPaginatedJson {
         return ResponseQagPaginatedJson(
             maxPageNumber = responseQagPaginatedList.maxPageNumber,
-            responses = responseQagPaginatedList.listResponseQag.map { domain -> toJson(domain) },
+            responses = responseQagPaginatedList.responsesQag.map { domain -> toJson(domain) },
         )
     }
 

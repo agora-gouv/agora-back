@@ -29,179 +29,149 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
     private lateinit var useCase: GetResponseQagPreviewPaginatedListUseCase
 
     @MockBean
-    private lateinit var thematiqueRepository: ThematiqueRepository
-
-    @MockBean
-    private lateinit var qagRepository: QagInfoRepository
-
-    @MockBean
     private lateinit var responseQagRepository: ResponseQagRepository
+
+    @MockBean
+    private lateinit var qagInfoRepository: QagInfoRepository
+
+    @MockBean
+    private lateinit var thematiqueRepository: ThematiqueRepository
 
     @MockBean
     private lateinit var mapper: ResponseQagPreviewListMapper
 
-//    @Test
-//    fun `getResponseQagPreviewPaginatedList - when pageNumber is lower or equals 0 - should return null`() {
-//        // When
-//        val result = useCase.getResponseQagPreviewPaginatedList(
-//            pageNumber = 0,
-//        )
-//
-//        // Then
-//        assertThat(result).isEqualTo(null)
-//        then(thematiqueRepository).shouldHaveNoInteractions()
-//        then(qagRepository).shouldHaveNoInteractions()
-//        then(responseQagRepository).shouldHaveNoInteractions()
-//    }
-//
-//    @Test
-//    fun `getResponseQagPreviewPaginatedList - when pageNumber is higher than maxPageNumber - should return null`() {
-//        // Given
-//        val listResponseQag = (0 until 21).map { index -> mockResponseQag(index = index, date = Date(index.toLong())) }
-//        given(responseQagRepository.getAllResponseQag()).willReturn(listResponseQag.map { it.responseQag })
-//
-//        // When
-//        val result = useCase.getResponseQagPreviewPaginatedList(
-//            pageNumber = 3,
-//        )
-//
-//        // Then
-//        assertThat(result).isEqualTo(null)
-//        then(responseQagRepository).should(only()).getAllResponseQag()
-//        then(thematiqueRepository).shouldHaveNoInteractions()
-//        then(qagRepository).shouldHaveNoInteractions()
-//    }
-//
-//
-//    @Test
-//    fun `getResponseQagPreviewPaginatedList - when have less than 20 results and pageNumber is 1 - should return ordered responseQagPreviews with most recent responseDate and maxPageNumber 1`() {
-//        // Given
-//        val listResponseQag = (10 downTo 1).map { index -> mockResponseQag(index = index, date = Date(index.toLong())) }
-//        given(responseQagRepository.getAllResponseQag()).willReturn(listResponseQag.map { it.responseQag })
-//
-//        // When
-//        val result = useCase.getResponseQagPreviewPaginatedList(
-//            pageNumber = 1,
-//        )
-//
-//        // Then
-//        assertThat(result).isEqualTo(
-//            ResponseQagPaginatedList(
-//                listResponseQag = listResponseQag.map { it.responseQagPreview },
-//                maxPageNumber = 1,
-//            )
-//        )
-//        then(responseQagRepository).should(only()).getAllResponseQag()
-//        listResponseQag.forEach {
-//            then(qagRepository).should().getQagInfo(it.responseQag.qagId)
-//            then(thematiqueRepository).should().getThematique(it.qagInfo.thematiqueId)
-//            then(mapper).should()
-//                .toResponseQagPreview(responseQag = it.responseQag, qagInfo = it.qagInfo, thematique = it.thematique)
-//        }
-//        then(mapper).shouldHaveNoMoreInteractions()
-//    }
-//
-//    @Test
-//    fun `getResponseQagPreviewPaginatedList - when have more than 20 results and pageNumber is 1 - should return ordered responseQagPreviews with most recent responseDate limited to 20`() {
-//        // Given
-//        val listResponseQagFirstPage =
-//            (20 downTo 1).map { index -> mockResponseQag(index = index, date = Date(index.toLong())) }
-//        val listResponseQagOtherPage = (21 until 50).map { index -> mockResponseQag(index = index, date = Date(0)) }
-//
-//        given(responseQagRepository.getAllResponseQag()).willReturn(listResponseQagFirstPage.map { it.responseQag } + listResponseQagOtherPage.map { it.responseQag })
-//
-//        // When
-//        val result = useCase.getResponseQagPreviewPaginatedList(
-//            pageNumber = 1,
-//        )
-//
-//        // Then
-//        assertThat(result?.listResponseQag?.size).isEqualTo(20)
-//        assertThat(result).isEqualTo(
-//            ResponseQagPaginatedList(
-//                listResponseQag = listResponseQagFirstPage.map { it.responseQagPreview },
-//                maxPageNumber = 3,
-//            )
-//        )
-//
-//        then(responseQagRepository).should(only()).getAllResponseQag()
-//        listResponseQagFirstPage.forEach {
-//            then(qagRepository).should().getQagInfo(it.responseQag.qagId)
-//            then(thematiqueRepository).should().getThematique(it.qagInfo.thematiqueId)
-//            then(mapper).should()
-//                .toResponseQagPreview(responseQag = it.responseQag, qagInfo = it.qagInfo, thematique = it.thematique)
-//        }
-//        then(mapper).shouldHaveNoMoreInteractions()
-//    }
-//
-//    @Test
-//    fun `getResponseQagPreviewPaginatedList - when has not enough to fill page 2 entirely and pageNumber is 2 - should return ordered responseQagPreviews with most recent responsedate starting from 20th index and limited to 20 items or less`() {
-//        // Given
-//        val listResponseQagFirstPage =
-//            (35 downTo 16).map { index -> mockResponseQag(index = index, date = Date(index.toLong())) }
-//        val listResponseQagSecondPage =
-//            (10 downTo 1).map { index -> mockResponseQag(index = index, date = Date(index.toLong())) }
-//
-//        given(responseQagRepository.getAllResponseQag()).willReturn(listResponseQagFirstPage.map { it.responseQag } + listResponseQagSecondPage.map { it.responseQag })
-//
-//        // When
-//        val result = useCase.getResponseQagPreviewPaginatedList(
-//            pageNumber = 2,
-//        )
-//
-//        // Then
-//        assertThat(result?.listResponseQag?.size).isEqualTo(10)
-//        assertThat(result).isEqualTo(
-//            ResponseQagPaginatedList(
-//                listResponseQag = listResponseQagSecondPage.map { it.responseQagPreview },
-//                maxPageNumber = 2,
-//            )
-//        )
-//
-//        then(responseQagRepository).should(only()).getAllResponseQag()
-//        listResponseQagSecondPage.forEach {
-//            then(qagRepository).should().getQagInfo(it.responseQag.qagId)
-//            then(thematiqueRepository).should().getThematique(it.qagInfo.thematiqueId)
-//            then(mapper).should()
-//                .toResponseQagPreview(responseQag = it.responseQag, qagInfo = it.qagInfo, thematique = it.thematique)
-//        }
-//        then(mapper).shouldHaveNoMoreInteractions()
-//    }
-//
-//    private fun mockResponseQag(index: Int, date: Date): MockResult {
-//        val responseQag = mock(ResponseQag::class.java).also {
-//            given(it.qagId).willReturn("qagId$index")
-//            given(it.responseDate).willReturn(date)
-//        }
-//        val qagInfo = mock(QagInfo::class.java).also {
-//            given(it.thematiqueId).willReturn("thematiqueId$index")
-//        }
-//        val thematique = mock(Thematique::class.java)
-//
-//        given(qagRepository.getQagInfo("qagId$index")).willReturn(qagInfo)
-//        given(thematiqueRepository.getThematique("thematiqueId$index")).willReturn(thematique)
-//
-//        val reponseQagPreview = mock(ResponseQagPreview::class.java)
-//        given(
-//            mapper.toResponseQagPreview(
-//                responseQag = responseQag,
-//                qagInfo = qagInfo,
-//                thematique = thematique,
-//            )
-//        ).willReturn(reponseQagPreview)
-//        return MockResult(
-//            responseQag = responseQag,
-//            qagInfo = qagInfo,
-//            thematique = thematique,
-//            responseQagPreview = reponseQagPreview,
-//        )
-//    }
+    @Test
+    fun `getResponseQagPreviewPaginatedList - when pageNumber is lower or equals 0 - should return null`() {
+        // When
+        val result = useCase.getResponseQagPreviewPaginatedList(
+            pageNumber = 0,
+        )
+
+        // Then
+        assertThat(result).isEqualTo(null)
+        then(responseQagRepository).shouldHaveNoInteractions()
+        then(qagInfoRepository).shouldHaveNoInteractions()
+        then(thematiqueRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getResponseQagPreviewPaginatedList - when pageNumber is higher than maxPageNumber - should return null`() {
+        // Given
+        given(responseQagRepository.getResponsesQagCount()).willReturn(5)
+
+        // When
+        val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 2)
+
+        // Then
+        assertThat(result).isEqualTo(null)
+        then(responseQagRepository).should(only()).getResponsesQagCount()
+        then(qagInfoRepository).shouldHaveNoInteractions()
+        then(thematiqueRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getResponseQagPreviewPaginatedList - when has responses without qag - should return emptyList`() {
+        // Given
+        given(responseQagRepository.getResponsesQagCount()).willReturn(1)
+
+        val responseQag = mock(ResponseQag::class.java).also {
+            given(it.qagId).willReturn("qagId")
+        }
+        given(responseQagRepository.getResponsesQag(offset = 0)).willReturn(listOf(responseQag))
+
+        given(qagInfoRepository.getQagsInfo(qagIds = listOf("qagId"))).willReturn(emptyList())
+        given(thematiqueRepository.getThematiqueList()).willReturn(emptyList())
+
+        // When
+        val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 1)
+
+        // Then
+        assertThat(result).isEqualTo(
+            ResponseQagPaginatedList(
+                responsesQag = emptyList(),
+                maxPageNumber = 1,
+            )
+        )
+        then(responseQagRepository).should().getResponsesQagCount()
+        then(responseQagRepository).should().getResponsesQag(offset = 0)
+        then(responseQagRepository).shouldHaveNoMoreInteractions()
+        then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
+        then(thematiqueRepository).should(only()).getThematiqueList()
+    }
+
+    @Test
+    fun `getResponseQagPreviewPaginatedList - when has responses with qag but no thematique - should return emptyList`() {
+        // Given
+        given(responseQagRepository.getResponsesQagCount()).willReturn(50)
+
+        val responseQag = mock(ResponseQag::class.java).also {
+            given(it.qagId).willReturn("qagId")
+        }
+        given(responseQagRepository.getResponsesQag(offset = 20)).willReturn(listOf(responseQag))
+
+        val qag = mock(QagInfo::class.java).also {
+            given(it.id).willReturn("qagId")
+        }
+        given(qagInfoRepository.getQagsInfo(qagIds = listOf("qagId"))).willReturn(listOf(qag))
+        given(thematiqueRepository.getThematiqueList()).willReturn(emptyList())
+
+        // When
+        val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 2)
+
+        // Then
+        assertThat(result).isEqualTo(
+            ResponseQagPaginatedList(
+                responsesQag = emptyList(),
+                maxPageNumber = 3,
+            )
+        )
+        then(responseQagRepository).should().getResponsesQagCount()
+        then(responseQagRepository).should().getResponsesQag(offset = 20)
+        then(responseQagRepository).shouldHaveNoMoreInteractions()
+        then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
+        then(thematiqueRepository).should(only()).getThematiqueList()
+    }
+
+    @Test
+    fun `getResponseQagPreviewPaginatedList - when has responses with qag and thematique - should return mapped response`() {
+        // Given
+        given(responseQagRepository.getResponsesQagCount()).willReturn(81)
+
+        val responseQag = mock(ResponseQag::class.java).also {
+            given(it.qagId).willReturn("qagId")
+        }
+        given(responseQagRepository.getResponsesQag(offset = 80)).willReturn(listOf(responseQag))
+
+        val qag = mock(QagInfo::class.java).also {
+            given(it.id).willReturn("qagId")
+            given(it.thematiqueId).willReturn("thematiqueId")
+        }
+        given(qagInfoRepository.getQagsInfo(qagIds = listOf("qagId"))).willReturn(listOf(qag))
+
+        val thematique = mock(Thematique::class.java).also {
+            given(it.id).willReturn("thematiqueId")
+        }
+        given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
+
+        val responseQagPreview = mock(ResponseQagPreview::class.java)
+        given(mapper.toResponseQagPreview(qag = qag, thematique = thematique, responseQag = responseQag))
+            .willReturn(responseQagPreview)
+
+        // When
+        val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 5)
+
+        // Then
+        assertThat(result).isEqualTo(
+            ResponseQagPaginatedList(
+                responsesQag = listOf(responseQagPreview),
+                maxPageNumber = 5,
+            )
+        )
+        then(responseQagRepository).should().getResponsesQagCount()
+        then(responseQagRepository).should().getResponsesQag(offset = 80)
+        then(responseQagRepository).shouldHaveNoMoreInteractions()
+        then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
+        then(thematiqueRepository).should(only()).getThematiqueList()
+    }
 
 }
-
-private data class MockResult(
-    val responseQag: ResponseQag,
-    val qagInfo: QagInfo,
-    val thematique: Thematique,
-    val responseQagPreview: ResponseQagPreview,
-)

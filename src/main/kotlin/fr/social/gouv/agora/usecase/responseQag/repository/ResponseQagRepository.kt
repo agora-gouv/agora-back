@@ -5,5 +5,6 @@ import fr.social.gouv.agora.domain.ResponseQag
 interface ResponseQagRepository {
     fun getResponsesQag(qagIds: List<String>): List<ResponseQag>
     fun getResponseQag(qagId: String): ResponseQag?
-    fun getResponsesQag(pageNumber: Int): List<ResponseQag>
+    fun getResponsesQagCount(): Int
+    fun getResponsesQag(offset: Int): List<ResponseQag>
 }

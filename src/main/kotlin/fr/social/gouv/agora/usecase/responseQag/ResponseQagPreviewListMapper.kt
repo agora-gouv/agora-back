@@ -4,11 +4,27 @@ import fr.social.gouv.agora.domain.IncomingResponsePreview
 import fr.social.gouv.agora.domain.ResponseQag
 import fr.social.gouv.agora.domain.ResponseQagPreview
 import fr.social.gouv.agora.domain.Thematique
+import fr.social.gouv.agora.usecase.qag.repository.QagInfo
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import org.springframework.stereotype.Component
 
 @Component
 class ResponseQagPreviewListMapper {
+
+    fun toResponseQagPreview(
+        qag: QagInfo,
+        thematique: Thematique,
+        responseQag: ResponseQag,
+    ): ResponseQagPreview {
+        return ResponseQagPreview(
+            qagId = responseQag.qagId,
+            thematique = thematique,
+            title = qag.title,
+            author = responseQag.author,
+            authorPortraitUrl = responseQag.authorPortraitUrl,
+            responseDate = responseQag.responseDate,
+        )
+    }
 
     fun toResponseQagPreview(
         qag: QagInfoWithSupportCount,

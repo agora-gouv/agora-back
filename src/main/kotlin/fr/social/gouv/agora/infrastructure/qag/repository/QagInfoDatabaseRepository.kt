@@ -241,6 +241,9 @@ interface QagInfoDatabaseRepository : CrudRepository<QagDTO, UUID> {
     @Query(value = "SELECT * from qags WHERE id = :qagId", nativeQuery = true)
     fun getQagById(@Param("qagId") qagId: UUID): QagDTO?
 
+    @Query(value = "SELECT * from qags WHERE id IN :qagIds", nativeQuery = true)
+    fun getQagByIds(@Param("qagIds") qagIds: List<UUID>): List<QagDTO>
+
     @Query(
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN 

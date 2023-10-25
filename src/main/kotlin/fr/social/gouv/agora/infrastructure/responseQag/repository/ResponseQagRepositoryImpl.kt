@@ -22,7 +22,11 @@ class ResponseQagRepositoryImpl(
         }
     }
 
-    override fun getResponsesQag(pageNumber: Int): List<ResponseQag> {
-        TODO("Not yet implemented")
+    override fun getResponsesQagCount(): Int {
+        return databaseRepository.getResponsesQagCount()
+    }
+
+    override fun getResponsesQag(offset: Int): List<ResponseQag> {
+        return databaseRepository.getResponsesQag(offset = offset).map(mapper::toDomain)
     }
 }

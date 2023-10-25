@@ -32,6 +32,7 @@ interface QagInfoRepository {
 
     fun getQagsCount(): Int
     fun getQagInfo(qagId: String): QagInfo?
+    fun getQagsInfo(qagIds: List<String>): List<QagInfo>
     fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?
     fun getQagsWithSupportCount(qagIds: List<String>): List<QagInfoWithSupportCount>
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult

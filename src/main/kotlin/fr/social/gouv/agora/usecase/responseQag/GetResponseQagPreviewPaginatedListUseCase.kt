@@ -10,9 +10,9 @@ import kotlin.math.ceil
 
 @Service
 class GetResponseQagPreviewPaginatedListUseCase(
-    private val thematiqueRepository: ThematiqueRepository,
-    private val qagRepository: QagInfoRepository,
     private val responseQagRepository: ResponseQagRepository,
+    private val qagInfoRepository: QagInfoRepository,
+    private val thematiqueRepository: ThematiqueRepository,
     private val mapper: ResponseQagPreviewListMapper,
 ) {
     companion object {
@@ -20,41 +20,37 @@ class GetResponseQagPreviewPaginatedListUseCase(
     }
 
     fun getResponseQagPreviewPaginatedList(pageNumber: Int): ResponseQagPaginatedList? {
-        TODO()
-//        if (pageNumber <= 0) return null
-//        val listResponseQag = responseQagRepository.getAllResponseQag().sortedByDescending { it.responseDate }
-//
-//        val minIndex = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
-//        if (minIndex > listResponseQag.size) return null
-//        val maxIndex = Integer.min(pageNumber * MAX_PAGE_LIST_SIZE, listResponseQag.size)
-//
-//        val listResponseQagPaginated = listResponseQag
-//            .subList(fromIndex = minIndex, toIndex = maxIndex)
-//
-//        return ResponseQagPaginatedList(
-//            listResponseQag = getResponseQagPreviewList(listResponseQagPaginated),
-//            maxPageNumber = ceil(listResponseQag.size.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
-//        )
+        if (pageNumber <= 0) return null
+
+        val responsesCount = responseQagRepository.getResponsesQagCount()
+        val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
+        if (offset > responsesCount) return null
+
+        return ResponseQagPaginatedList(
+            responsesQag = toResponseQagPreview(responseQagRepository.getResponsesQag(offset)),
+            maxPageNumber = ceil(responsesCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
+        )
     }
 
-//    private fun getResponseQagPreviewList(listResponseQag: List<ResponseQag>): List<ResponseQagPreview> {
-//        return listResponseQag.mapNotNull { responseQag ->
-//            qagRepository.getQagInfo(responseQag.qagId)
-//                ?.let { qagInfo ->
-//                    thematiqueRepository.getThematique(qagInfo.thematiqueId)
-//                        ?.let { thematique ->
-//                            mapper.toResponseQagPreview(
-//                                responseQag = responseQag,
-//                                qagInfo = qagInfo,
-//                                thematique = thematique,
-//                            )
-//                        }
-//                }
-//        }
-//    }
+    private fun toResponseQagPreview(responsesQag: List<ResponseQag>): List<ResponseQagPreview> {
+        val qags = qagInfoRepository.getQagsInfo(responsesQag.map { it.qagId })
+        val thematiques = thematiqueRepository.getThematiqueList()
+
+        return responsesQag.mapNotNull { responseQag ->
+            qags.find { qagInfo -> qagInfo.id == responseQag.qagId }?.let { qagInfo ->
+                thematiques.find { thematique -> thematique.id == qagInfo.thematiqueId }?.let { thematique ->
+                    mapper.toResponseQagPreview(
+                        qag = qagInfo,
+                        responseQag = responseQag,
+                        thematique = thematique,
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class ResponseQagPaginatedList(
-    val listResponseQag: List<ResponseQagPreview>,
+    val responsesQag: List<ResponseQagPreview>,
     val maxPageNumber: Int,
 )

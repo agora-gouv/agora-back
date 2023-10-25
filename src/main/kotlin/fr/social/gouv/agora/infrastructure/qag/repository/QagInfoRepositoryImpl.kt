@@ -124,11 +124,13 @@ class QagInfoRepositoryImpl(
         }
     }
 
+    override fun getQagsInfo(qagIds: List<String>): List<QagInfo> {
+        return databaseRepository.getQagByIds(qagIds = qagIds.mapNotNull { it.toUuidOrNull() }).map(mapper::toDomain)
+    }
+
     override fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount? {
         return qagId.toUuidOrNull()?.let { qagUUID ->
-            databaseRepository.getQagWithSupportCount(qagId = qagUUID)?.let { qagDTO ->
-                mapper.toDomain(qagDTO)
-            }
+            databaseRepository.getQagWithSupportCount(qagId = qagUUID)?.let(mapper::toDomain)
         }
     }
 
