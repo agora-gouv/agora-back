@@ -1,14 +1,14 @@
 package fr.social.gouv.agora.infrastructure.consultationUpdates.repository
 
 import fr.social.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateDTO
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface ConsultationUpdateDatabaseRepository : CrudRepository<ConsultationUpdateDTO, UUID> {
+interface ConsultationUpdateDatabaseRepository : JpaRepository<ConsultationUpdateDTO, UUID> {
 
     @Query(value = "SELECT * FROM consultation_updates WHERE consultation_id IN :consultationIDs", nativeQuery = true)
     fun getConsultationUpdates(@Param("consultationIDs") consultationIDs: List<UUID>): List<ConsultationUpdateDTO>
