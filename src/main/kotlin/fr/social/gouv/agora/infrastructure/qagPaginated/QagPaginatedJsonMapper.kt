@@ -29,8 +29,8 @@ class QagPaginatedJsonMapper(
             username = domain.username,
             date = dateMapper.toFormattedDate(domain.date),
             support = SupportQagJson(
-                supportCount = domain.support.supportCount,
-                isSupportedByUser = domain.support.isSupportedByUser,
+                supportCount = domain.supportCount,
+                isSupportedByUser = domain.isSupportedByUser,
             ),
             isAuthor = domain.isAuthor,
         )

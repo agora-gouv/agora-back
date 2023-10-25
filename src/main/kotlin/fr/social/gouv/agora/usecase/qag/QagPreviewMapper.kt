@@ -1,7 +1,6 @@
 package fr.social.gouv.agora.usecase.qag
 
 import fr.social.gouv.agora.domain.QagPreview
-import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.domain.Thematique
 import fr.social.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.social.gouv.agora.usecase.qagPreview.QagWithSupportCount
@@ -31,10 +30,8 @@ class QagPreviewMapper {
             title = qag.title,
             username = qag.username,
             date = qag.date,
-            support = SupportQag(
-                supportCount = qag.supportCount,
-                isSupportedByUser = isSupportedByUser,
-            ),
+            supportCount = qag.supportCount,
+            isSupportedByUser = isSupportedByUser,
             isAuthor = isAuthor,
         )
     }

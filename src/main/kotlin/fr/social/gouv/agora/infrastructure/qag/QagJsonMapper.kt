@@ -3,7 +3,6 @@ package fr.social.gouv.agora.infrastructure.qag
 import fr.social.gouv.agora.domain.QagInserting
 import fr.social.gouv.agora.domain.QagStatus
 import fr.social.gouv.agora.domain.QagWithUserData
-import fr.social.gouv.agora.domain.SupportQag
 import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.social.gouv.agora.infrastructure.utils.StringUtils
@@ -34,13 +33,6 @@ class QagJsonMapper(
             ),
             isAuthor = qagWithUserData.isAuthor,
             response = buildResponseQagJson(qagWithUserData),
-        )
-    }
-
-    fun toJson(supportQag: SupportQag): SupportQagJson {
-        return SupportQagJson(
-            supportCount = supportQag.supportCount,
-            isSupportedByUser = supportQag.isSupportedByUser,
         )
     }
 

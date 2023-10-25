@@ -4,14 +4,12 @@ import fr.social.gouv.agora.domain.IncomingResponsePreview
 import fr.social.gouv.agora.domain.QagPreview
 import fr.social.gouv.agora.domain.ResponseQagPreview
 import fr.social.gouv.agora.infrastructure.profile.repository.DateMapper
-import fr.social.gouv.agora.infrastructure.qag.QagJsonMapper
 import fr.social.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.social.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
 class QagHomeJsonMapper(
-    private val qagMapper: QagJsonMapper,
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
     private val dateMapper: DateMapper,
 ) {
@@ -67,7 +65,10 @@ class QagHomeJsonMapper(
             title = qagPreview.title,
             username = qagPreview.username,
             date = dateMapper.toFormattedDate(qagPreview.date),
-            support = qagMapper.toJson(qagPreview.support),
+            support = SupportQagJson(
+                supportCount = qagPreview.supportCount,
+                isSupportedByUser = qagPreview.isSupportedByUser,
+            ),
             isAuthor = qagPreview.isAuthor
         )
     }
