@@ -8,6 +8,7 @@ interface NotificationSendingRepository {
     fun sendQagDetailsMultiNotification(request: QagMultiNotificationRequest)
     fun sendNewConsultationMultiNotification(request: ConsultationMultiNotificationRequest)
     fun sendConsultationUpdateMultiNotification(request: ConsultationMultiNotificationRequest)
+    fun sendConsultationDeadlineMultiNotification(request: ConsultationMultiNotificationRequest)
 }
 
 data class QagNotificationRequest(
