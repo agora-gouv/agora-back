@@ -32,7 +32,7 @@ internal class FeedbackQagUseCaseTest {
                 helpfulFeedbackCount = 3,
                 notHelpfulFeedbackCount = 1,
                 expectedPositiveRatio = 75,
-                expectedNegativeRatio = 1,
+                expectedNegativeRatio = 25,
             ),
             input(
                 helpfulFeedbackCount = 2,
