@@ -92,7 +92,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             WHERE (qags.status = 1 AND qags.id IN (SELECT qag_id FROM supports_qag WHERE user_id = :userId))
             OR ((qags.status = 0 OR qags.status = 1) AND qags.user_id = :userId)
             GROUP BY qags.id
-            ORDER BY CASE WHEN qags.user_id = :userId THEN 0 ELSE 1 END, postDate DESC
+            ORDER BY CASE WHEN qags.user_id = :userId THEN 0 ELSE 1 END, supports_qag.support_date DESC
             LIMIT 10
         """, nativeQuery = true
     )
@@ -107,7 +107,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             )
             AND thematique_id = :thematiqueId
             GROUP BY qags.id
-            ORDER BY CASE WHEN qags.user_id = :userId THEN 0 ELSE 1 END, postDate DESC
+            ORDER BY CASE WHEN qags.user_id = :userId THEN 0 ELSE 1 END, supports_qag.support_date DESC
             LIMIT 10
         """, nativeQuery = true
     )
@@ -203,7 +203,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             )
             AND post_date < :maxDate
             GROUP BY qags.id
-            ORDER BY postDate DESC
+            ORDER BY CASE WHEN qags.user_id = :userId THEN 0 ELSE 1 END, supports_qag.support_date DESC
             LIMIT 20
             OFFSET :offset
         """, nativeQuery = true
