@@ -263,6 +263,19 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     )
     fun getQagsWithSupportCount(@Param("qagIds") qagIds: List<UUID>): List<QagWithSupportCountDTO>
 
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+        FROM $QAG_WITH_SUPPORT_JOIN
+        WHERE qags.status = 1
+        AND (title ILIKE ALL (array[:keywords]) OR description ILIKE ALL (array[:keywords]))
+        GROUP BY (qags.id)
+        ORDER BY supportCount DESC
+        LIMIT 20
+    """,
+        nativeQuery = true
+    )
+    fun getQagByKeywordsList(@Param("keywords") keywords: Array<String>): List<QagWithSupportCountDTO>
+
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM qags WHERE id = :qagId", nativeQuery = true)

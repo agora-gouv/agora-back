@@ -188,6 +188,9 @@ class QagInfoRepositoryImpl(
         } ?: QagDeleteResult.Failure
     }
 
+    override fun getQagByKeywordsList(keywords: Array<String>): List<QagInfoWithSupportCount> {
+        return databaseRepository.getQagByKeywordsList(keywords).map(mapper::toDomain)
+    }
 }
 
 
