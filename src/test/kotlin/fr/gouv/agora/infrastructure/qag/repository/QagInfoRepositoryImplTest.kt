@@ -488,4 +488,39 @@ internal class QagInfoRepositoryImplTest {
         then(mapper).should(only()).toDomain(qagDTO)
     }
 
+    @Test
+    fun `getQagByKeywordsList - when has emptyList - should return emptyList`() {
+        // Given
+        given(databaseRepository.getQagByKeywordsList(keywords = arrayOf("test", "qag"))).willReturn(emptyList())
+
+        // When
+        val result = repository.getQagByKeywordsList(keywords = arrayOf("test", "qag"))
+
+        // Then
+        assertThat(result).isEqualTo(emptyList<QagInfoWithSupportCount>())
+        then(databaseRepository).should(only()).getQagByKeywordsList(keywords = arrayOf("test", "qag"))
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getQagByKeywordsList - when has qags - should return mapped qags`() {
+        // Given
+        val qagWithSupportCountDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getQagByKeywordsList(keywords = arrayOf("test", "qag"))).willReturn(
+            listOf(
+                qagWithSupportCountDTO
+            )
+        )
+
+        val qagInfoWithSupportCount = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagWithSupportCountDTO)).willReturn(qagInfoWithSupportCount)
+
+        // When
+        val result = repository.getQagByKeywordsList(keywords = arrayOf("test", "qag"))
+
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfoWithSupportCount))
+        then(databaseRepository).should(only()).getQagByKeywordsList(keywords = arrayOf("test", "qag"))
+        then(mapper).should(only()).toDomain(qagWithSupportCountDTO)
+    }
 }
