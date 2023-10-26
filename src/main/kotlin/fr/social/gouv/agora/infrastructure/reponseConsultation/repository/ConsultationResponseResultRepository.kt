@@ -2,7 +2,6 @@ package fr.social.gouv.agora.infrastructure.reponseConsultation.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.social.gouv.agora.infrastructure.reponseConsultation.*
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
@@ -15,7 +14,7 @@ interface ConsultationResponseResultJsonCacheRepository {
 @Component
 @Suppress("unused")
 class ConsultationResponseResultJsonRepositoryImpl(
-    @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager,
+    private val cacheManager: CacheManager,
     private val objectMapper: ObjectMapper,
 ) : ConsultationResponseResultJsonCacheRepository {
 
