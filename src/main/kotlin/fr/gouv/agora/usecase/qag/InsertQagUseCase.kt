@@ -44,8 +44,6 @@ class InsertQagUseCase(
                 userId = qagInserting.userId,
                 thematiqueId = qagInserting.thematiqueId,
             )
-            qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
-            qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInserting.thematiqueId)
             askQagStatusCacheRepository.evictAskQagStatus(userId = qagInserting.userId)
         } else {
             println("⚠️ Insert QaG error")
