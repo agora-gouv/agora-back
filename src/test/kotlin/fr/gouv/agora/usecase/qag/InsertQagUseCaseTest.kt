@@ -109,6 +109,8 @@ internal class InsertQagUseCaseTest {
                 userId = "userId",
             )
         )
+        then(qagPreviewCacheRepository).should().evictQagLatestList(thematiqueId = null)
+        then(qagPreviewCacheRepository).should().evictQagLatestList(thematiqueId = "thematiqueId")
         then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = null)
         then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = "thematiqueId")
         then(qagPreviewCacheRepository).shouldHaveNoMoreInteractions()

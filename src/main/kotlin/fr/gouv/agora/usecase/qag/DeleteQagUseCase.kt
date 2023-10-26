@@ -29,6 +29,8 @@ class DeleteQagUseCase(
                                 qagId = qagId,
                             )
                         )
+                        qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
+                        qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
                         qagPreviewCacheRepository.evictQagSupportedList(userId = userId, thematiqueId = null)
                         qagPreviewCacheRepository.evictQagSupportedList(
                             userId = userId,
