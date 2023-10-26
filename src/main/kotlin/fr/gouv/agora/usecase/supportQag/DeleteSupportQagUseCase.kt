@@ -22,7 +22,7 @@ class DeleteSupportQagUseCase(
     private val supportQagCacheRepository: SupportQagCacheRepository,
 ) {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
-        if (getSupportQagRepository.isQagSupported(
+        if (!getSupportQagRepository.isQagSupported(
                 qagId = supportQagDeleting.qagId,
                 userId = supportQagDeleting.userId,
             )
