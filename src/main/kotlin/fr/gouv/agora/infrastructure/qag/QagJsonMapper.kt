@@ -62,6 +62,7 @@ class QagJsonMapper(
                 videoWidth = response.videoWidth,
                 videoHeight = response.videoHeight,
                 transcription = StringUtils.unescapeLineBreaks(response.transcription),
+                feedbackQuestion = response.feedbackQuestion,
                 feedbackStatus = qagWithUserData.hasGivenFeedback,
                 feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
                     FeedbackResultsJson(

@@ -12,5 +12,6 @@ data class ResponseQag(
     val videoWidth: Int,
     val videoHeight: Int,
     val transcription: String,
+    val feedbackQuestion: String,
     val qagId: String,
 )

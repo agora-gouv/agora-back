@@ -18,6 +18,7 @@ class ResponseQagMapper {
             videoWidth = dto.videoWidth,
             videoHeight = dto.videoHeight,
             transcription = dto.transcription,
+            feedbackQuestion = dto.feedbackQuestion,
             qagId = dto.qagId.toString(),
         )
     }

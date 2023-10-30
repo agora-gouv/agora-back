@@ -23,6 +23,8 @@ data class ResponseQagDTO(
     val videoHeight: Int,
     @Column(columnDefinition = "TEXT")
     val transcription: String,
+    @Column(columnDefinition = "TEXT")
+    val feedbackQuestion: String,
     @JoinTable(joinColumns = [JoinColumn(name = "qag_id", table = "qags", referencedColumnName = "id")])
     val qagId: UUID,
 ) {
@@ -38,7 +40,7 @@ data class ResponseQagDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , author = $author , authorPortraitUrl = $authorPortraitUrl , authorDescription = $authorDescription , responseDate = $responseDate , videoUrl = $videoUrl , videoWidth = $videoWidth , videoHeight = $videoHeight transcription = $transcription , qagId = $qagId )"
+        return this::class.simpleName + "(id = $id , author = $author , authorPortraitUrl = $authorPortraitUrl , authorDescription = $authorDescription , responseDate = $responseDate , videoUrl = $videoUrl , videoWidth = $videoWidth , videoHeight = $videoHeight , transcription = $transcription , feedbackQuestion = $feedbackQuestion , qagId = $qagId )"
     }
 
 }
