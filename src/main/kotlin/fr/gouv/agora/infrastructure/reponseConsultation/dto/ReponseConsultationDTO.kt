@@ -3,7 +3,7 @@ package fr.gouv.agora.infrastructure.reponseConsultation.dto
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import java.io.Serializable
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "reponses_consultation")
 data class ReponseConsultationDTO(
@@ -20,6 +20,7 @@ data class ReponseConsultationDTO(
     @Column(columnDefinition = "TEXT")
     val responseText: String,
     val participationId: UUID,
+    val participationDate: Date,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
 ) : Serializable {
@@ -35,6 +36,6 @@ data class ReponseConsultationDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , consultationId = $consultationId, questionId = $questionId, choiceId = $choiceId, responseText = $responseText, participationId = $participationId, userId = $userId)"
+        return this::class.simpleName + "(id = $id , consultationId = $consultationId, questionId = $questionId, choiceId = $choiceId, responseText = $responseText, participationId = $participationId, participationDate = $participationDate, userId = $userId)"
     }
 }
