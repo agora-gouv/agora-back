@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.gouv.agora.domain.ReponseConsultation
+import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.reponseConsultation.repository.ReponseConsultationCacheRepository.CacheResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -15,8 +16,21 @@ class GetConsultationResponseRepositoryImpl(
     private val mapper: ReponseConsultationMapper,
 ) : GetConsultationResponseRepository {
 
+    @Deprecated("Should use getConsultationResponsesCount instead for better performances")
     override fun getConsultationResponses(consultationId: String): List<ReponseConsultation> {
         return getConsultationResponseDTOList(consultationId).map(mapper::toDomain)
+    }
+
+    override fun getParticipantCount(consultationId: String): Int {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            databaseRepository.getParticipantCount(consultationId = consultationUUID)
+        } ?: 0
+    }
+
+    override fun getConsultationResponsesCount(consultationId: String): List<ResponseConsultationCount> {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            databaseRepository.getConsultationResponsesCount(consultationId = consultationUUID).map(mapper::toDomain)
+        } ?: emptyList()
     }
 
     override fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean {

@@ -9,6 +9,12 @@ data class ReponseConsultation(
     val responseText: String?,
 )
 
+data class ResponseConsultationCount(
+    val questionId: String,
+    val choiceId: String,
+    val responseCount: Int,
+)
+
 data class ReponseConsultationInserting(
     val questionId: String,
     val choiceIds: List<String>?,

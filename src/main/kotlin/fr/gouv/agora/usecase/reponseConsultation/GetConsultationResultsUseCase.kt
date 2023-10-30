@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.reponseConsultation
 
 import fr.gouv.agora.domain.*
-import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
@@ -12,59 +11,49 @@ import org.springframework.stereotype.Service
 class GetConsultationResultsUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val questionRepository: QuestionRepository,
-    private val getConsultationResponseRepository: GetConsultationResponseRepository,
+    private val consultationResponseRepository: GetConsultationResponseRepository,
     private val consultationUpdateUseCase: ConsultationUpdateUseCase,
     private val mapper: QuestionNoResponseMapper,
 ) {
 
     fun getConsultationResults(consultationId: String): ConsultationResult? {
-        val consultationInfo = consultationInfoRepository.getConsultation(consultationId) ?: return null
-        val consultationUpdate = consultationUpdateUseCase.getConsultationUpdate(consultationInfo) ?: return null
-        val questionList =
-            questionRepository.getConsultationQuestionList(consultationId).takeUnless { it.isEmpty() } ?: return null
-        val consultationResponseList = getConsultationResponseRepository.getConsultationResponses(consultationId)
+        val consultationInfo = consultationInfoRepository.getConsultation(consultationId = consultationId)
+            ?: return null
+        val consultationUpdate = consultationUpdateUseCase.getConsultationUpdate(consultationInfo = consultationInfo)
+            ?: return null
 
-        return buildResults(
-            consultationInfo = consultationInfo,
-            consultationUpdate = consultationUpdate,
-            questionList = questionList,
-            consultationResponseList = consultationResponseList
-        )
-    }
-
-    private fun buildResults(
-        consultationInfo: ConsultationInfo,
-        consultationUpdate: ConsultationUpdate,
-        questionList: List<Question>,
-        consultationResponseList: List<ReponseConsultation>,
-    ): ConsultationResult {
-        val filteredQuestionList = questionList.filterIsInstance<QuestionWithChoices>()
-            .filter { it.choixPossibleList.isNotEmpty() }
-            .map { questionWithChoices -> mapper.toQuestionNoResponse(questionWithChoices) }
-        val participantCount = consultationResponseList.map { it.participationId }.toSet().size
+        val questionList = questionRepository.getConsultationQuestionList(consultationId = consultationId)
+            .filterIsInstance<QuestionWithChoices>()
+        val participantCount = consultationResponseRepository.getParticipantCount(consultationId = consultationId)
+        val consultationResponseList = if (questionList.isNotEmpty()) {
+            consultationResponseRepository.getConsultationResponsesCount(consultationId = consultationId)
+        } else emptyList()
 
         return ConsultationResult(
             consultation = consultationInfo,
             lastUpdate = consultationUpdate,
             participantCount = participantCount,
-            results = filteredQuestionList.map { question ->
-                buildQuestionResults(
-                    question = question,
-                    participantCount = participantCount,
-                    consultationResponseList = consultationResponseList
-                )
-            }
+            results = questionList
+                .filter { question -> question.choixPossibleList.isNotEmpty() }
+                .map { question -> mapper.toQuestionNoResponse(question) }
+                .map { question ->
+                    buildQuestionResults(
+                        question = question,
+                        participantCount = participantCount,
+                        consultationResponseList = consultationResponseList,
+                    )
+                }
         )
     }
 
     private fun buildQuestionResults(
         question: QuestionWithChoices,
         participantCount: Int,
-        consultationResponseList: List<ReponseConsultation>,
+        consultationResponseList: List<ResponseConsultationCount>,
     ) = QuestionResult(
         question = question,
         responses = question.choixPossibleList.map { choix ->
-            buildQuestionResult(
+            buildChoiceResult(
                 question = question,
                 choix = choix,
                 participantCount = participantCount,
@@ -73,15 +62,15 @@ class GetConsultationResultsUseCase(
         }
     )
 
-    private fun buildQuestionResult(
+    private fun buildChoiceResult(
         question: Question,
         choix: ChoixPossible,
         participantCount: Int,
-        consultationResponseList: List<ReponseConsultation>,
+        consultationResponseList: List<ResponseConsultationCount>,
     ): ChoiceResult {
-        val choixCount = consultationResponseList.filter {
-            it.questionId == question.id && it.choiceId == choix.id
-        }.size
+        val choixCount = consultationResponseList
+            .filter { it.questionId == question.id && it.choiceId == choix.id }
+            .sumOf { it.responseCount }
 
         return ChoiceResult(
             choixPossible = choix,

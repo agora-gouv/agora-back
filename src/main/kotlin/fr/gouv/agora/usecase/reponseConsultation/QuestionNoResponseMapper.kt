@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
 class QuestionNoResponseMapper {
 
     fun toQuestionNoResponse(questionWithChoices: QuestionWithChoices): QuestionWithChoices {
-
         return when (questionWithChoices) {
             is QuestionUniqueChoice -> QuestionUniqueChoice(
                 id = questionWithChoices.id,

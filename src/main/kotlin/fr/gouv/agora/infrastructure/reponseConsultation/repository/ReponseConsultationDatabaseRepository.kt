@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountDTO
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -12,6 +13,27 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
 
     @Query(value = "SELECT * FROM reponses_consultation WHERE consultation_id = :consultationId", nativeQuery = true)
     fun getConsultationResponses(@Param("consultationId") consultationId: UUID): List<ReponseConsultationDTO>
+
+    @Query(
+        value = """SELECT count(*)
+        FROM (SELECT DISTINCT participation_id
+            FROM reponses_consultation 
+            WHERE consultation_id = :consultationId
+        ) as participationIds
+        """, nativeQuery = true
+    )
+    fun getParticipantCount(@Param("consultationId") consultationId: UUID): Int
+
+    @Query(
+        value = """SELECT question_id as questionId, choice_id as choiceId, count(*) as responseCount
+            FROM reponses_consultation
+            WHERE consultation_id = :consultationId
+            AND choice_id IS NOT NULL
+            GROUP BY (question_id, choice_id)
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationResponsesCount(@Param("consultationId") consultationId: UUID): List<ResponseConsultationCountDTO>
 
     @Query(
         value = """SELECT DISTINCT consultation_id FROM reponses_consultation
