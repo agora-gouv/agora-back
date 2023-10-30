@@ -55,6 +55,8 @@ data class ResponseQagJson(
     val videoHeight: Int,
     @JsonProperty("transcription")
     val transcription: String,
+    @JsonProperty("feedbackQuestion")
+    val feedbackQuestion: String,
     @JsonProperty("feedbackStatus")
     val feedbackStatus: Boolean,
     @JsonProperty("feedbackResults")
