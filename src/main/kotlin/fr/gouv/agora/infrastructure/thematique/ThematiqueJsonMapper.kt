@@ -1,7 +1,6 @@
 package fr.gouv.agora.infrastructure.thematique
 
 import fr.gouv.agora.domain.Thematique
-import fr.gouv.agora.infrastructure.utils.UnicodeStringDecoder
 import org.springframework.stereotype.Component
 
 @Component
@@ -15,14 +14,14 @@ class ThematiqueJsonMapper {
         return ThematiqueJson(
             id = domain.id,
             label = domain.label,
-            picto = UnicodeStringDecoder.decodeUnicode(domain.picto),
+            picto = domain.picto,
         )
     }
 
     fun toNoIdJson(domain: Thematique): ThematiqueNoIdJson {
         return ThematiqueNoIdJson(
             label = domain.label,
-            picto = UnicodeStringDecoder.decodeUnicode(domain.picto),
+            picto = domain.picto,
         )
     }
 
