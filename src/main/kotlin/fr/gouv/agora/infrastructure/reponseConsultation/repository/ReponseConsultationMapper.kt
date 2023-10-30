@@ -64,6 +64,7 @@ class ReponseConsultationMapper {
                 choiceId = choiceId?.let { UUID.fromString(choiceId) },
                 responseText = domain.responseText,
                 participationId = participationId,
+                participationDate = Date(),
                 userId = userId,
             )
         } catch (e: IllegalStateException) {
