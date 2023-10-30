@@ -8,7 +8,6 @@ class GetConsultationParticipantCountUseCase(
     private val getConsultationResponseRepository: GetConsultationResponseRepository,
 ) {
     fun getCount(consultationId: String): Int {
-        return getConsultationResponseRepository.getConsultationResponses(consultationId).map { it.participationId }
-            .toSet().size
+        return getConsultationResponseRepository.getParticipantCount(consultationId = consultationId)
     }
 }

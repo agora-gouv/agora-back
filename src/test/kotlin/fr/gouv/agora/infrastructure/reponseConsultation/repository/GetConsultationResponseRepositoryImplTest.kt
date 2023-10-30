@@ -48,10 +48,12 @@ internal class GetConsultationResponseRepositoryImplTest {
         choiceId = UUID.randomUUID(),
         responseText = "dto-responseText",
         participationId = UUID.randomUUID(),
+        participationDate = Date(),
         userId = UUID.randomUUID(),
     )
 
     @Nested
+    @Suppress("DEPRECATION")
     inner class GetConsultationResponsesTestCases {
         @Test
         fun `getConsultationResponses - when invalid UUID - should return emptyList`() {

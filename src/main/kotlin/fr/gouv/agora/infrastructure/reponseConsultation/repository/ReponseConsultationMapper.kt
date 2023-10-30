@@ -2,7 +2,9 @@ package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.gouv.agora.domain.ReponseConsultation
 import fr.gouv.agora.domain.ReponseConsultationInserting
+import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountDTO
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -17,6 +19,14 @@ class ReponseConsultationMapper {
             participationId = dto.participationId.toString(),
             userId = dto.userId.toString(),
             responseText = dto.responseText,
+        )
+    }
+
+    fun toDomain(dto: ResponseConsultationCountDTO): ResponseConsultationCount {
+        return ResponseConsultationCount(
+            questionId = dto.questionId.toString(),
+            choiceId = dto.choiceId.toString(),
+            responseCount = dto.responseCount,
         )
     }
 
