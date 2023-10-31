@@ -22,10 +22,11 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
 
     @Query(
         value = """SELECT * FROM qags 
-        WHERE status = 0 
-        AND id NOT IN (SELECT qag_id FROM moderatus_locked_qags)
-        SORT BY post_date ASC
-        LIMIT 100""", nativeQuery = true
+            WHERE status = 0 
+            AND id NOT IN (SELECT qag_id FROM moderatus_locked_qags)
+            ORDER BY post_date ASC
+            LIMIT 100
+        """, nativeQuery = true
     )
     fun getQagToModerateList(): List<QagDTO>
 
