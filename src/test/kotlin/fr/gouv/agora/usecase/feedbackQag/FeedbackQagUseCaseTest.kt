@@ -1,10 +1,13 @@
 package fr.gouv.agora.usecase.feedbackQag
 
+import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.FeedbackResults
+import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -60,6 +63,9 @@ internal class FeedbackQagUseCaseTest {
     private lateinit var useCase: FeedbackQagUseCase
 
     @MockBean
+    private lateinit var featureFlagsRepository: FeatureFlagsRepository
+
+    @MockBean
     private lateinit var feedbackQagRepository: GetFeedbackQagRepository
 
     @MockBean
@@ -68,9 +74,32 @@ internal class FeedbackQagUseCaseTest {
     @MockBean
     private lateinit var userFeedbackCacheRepository: UserFeedbackQagCacheRepository
 
+    @BeforeEach
+    fun setUp() {
+        reset(featureFlagsRepository)
+    }
+
     @Test
-    fun `getFeedbackResults - when has CachedFeedbackResults - should return result from cache`() {
+    fun `getFeedbackResults - when feature disabled - should return null`() {
         // Given
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)).willReturn(false)
+
+        // When
+        val result = useCase.getFeedbackResults(qagId = "qagId")
+
+        // Then
+        assertThat(result).isEqualTo(null)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
+        then(resultsCacheRepository).shouldHaveNoInteractions()
+        then(userFeedbackCacheRepository).shouldHaveNoInteractions()
+        then(feedbackQagRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getFeedbackResults - when feature enabled and has CachedFeedbackResults - should return result from cache`() {
+        // Given
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)).willReturn(true)
+
         val feedbackResults = mock(FeedbackResults::class.java)
         given(resultsCacheRepository.getFeedbackResults(qagId = "qagId"))
             .willReturn(FeedbackResultsCacheResult.CachedFeedbackResults(feedbackResults))
@@ -80,6 +109,7 @@ internal class FeedbackQagUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(feedbackResults)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
         then(resultsCacheRepository).should(only()).getFeedbackResults(qagId = "qagId")
         then(userFeedbackCacheRepository).shouldHaveNoInteractions()
         then(feedbackQagRepository).shouldHaveNoInteractions()
@@ -87,13 +117,15 @@ internal class FeedbackQagUseCaseTest {
 
     @MethodSource("getFeedbackResultsTestCases")
     @ParameterizedTest(name = "getFeedbackResults - when has {0} yes and {1} no - should return {2}% yes and {3}% no")
-    fun `getFeedbackResults - when has FeedbackResultsCacheNotInitialized - should return expected result and store to cache`(
+    fun `getFeedbackResults - when feature enabled and has FeedbackResultsCacheNotInitialized - should return expected result and store to cache`(
         helpfulFeedbackCount: Int,
         notHelpfulFeedbackCount: Int,
         expectedPositiveRatio: Int,
         expectedNegativeRatio: Int,
     ) {
         // Given
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)).willReturn(true)
+
         given(resultsCacheRepository.getFeedbackResults(qagId = "qagId"))
             .willReturn(FeedbackResultsCacheResult.FeedbackResultsCacheNotInitialized)
 
@@ -111,6 +143,7 @@ internal class FeedbackQagUseCaseTest {
             count = helpfulFeedbackCount + notHelpfulFeedbackCount,
         )
         assertThat(result).isEqualTo(expectedResults)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
         then(resultsCacheRepository).should().getFeedbackResults(qagId = "qagId")
         then(resultsCacheRepository).should().initFeedbackResults(qagId = "qagId", results = expectedResults)
         then(userFeedbackCacheRepository).shouldHaveNoInteractions()

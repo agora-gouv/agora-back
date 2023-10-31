@@ -25,16 +25,16 @@ class InsertFeedbackQagUseCase(
         } else {
             when (repository.insertFeedbackQag(feedbackQagInserting)) {
                 FeedbackQagResult.SUCCESS -> {
+                    userFeedbackCacheRepository.addUserFeedbackQagId(
+                        userId = feedbackQagInserting.userId,
+                        qagId = feedbackQagInserting.qagId,
+                    )
                     if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)) {
-                        userFeedbackCacheRepository.addUserFeedbackQagId(
-                            userId = feedbackQagInserting.userId,
-                            qagId = feedbackQagInserting.qagId,
-                        )
                         feedbackResultsCacheRepository.evictFeedbackResults(qagId = feedbackQagInserting.qagId)
-
-                        FeedbackQagListResult.Success(
-                            feedbackResults = feedbackQagUseCase.getFeedbackResults(qagId = feedbackQagInserting.qagId)
-                        )
+                        feedbackQagUseCase.getFeedbackResults(qagId = feedbackQagInserting.qagId)
+                            ?.let { feedbackResults ->
+                                FeedbackQagListResult.Success(feedbackResults)
+                            } ?: FeedbackQagListResult.SuccessFeedbackDisabled
                     } else FeedbackQagListResult.SuccessFeedbackDisabled
                 }
                 else -> FeedbackQagListResult.Failure
