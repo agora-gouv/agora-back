@@ -1,10 +1,9 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
-import fr.gouv.agora.domain.ReponseConsultation
-import fr.gouv.agora.domain.ReponseConsultationInserting
-import fr.gouv.agora.domain.ResponseConsultationCount
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountWithDemographicInfoDTO
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -30,6 +29,22 @@ class ReponseConsultationMapper {
         )
     }
 
+    fun toDomain(dto: ResponseConsultationCountWithDemographicInfoDTO): ResponseConsultationCountWithDemographicInfo {
+        return ResponseConsultationCountWithDemographicInfo(
+            questionId = dto.questionId.toString(),
+            choiceId = dto.choiceId.toString(),
+            responseCount = dto.responseCount,
+            gender = toGender(dto.gender),
+            yearOfBirth = dto.yearOfBirth,
+            department = findDepartmentByNumber(dto.department),
+            cityType = toCityType(dto.cityType),
+            jobCategory = toJobCategory(dto.jobCategory),
+            voteFrequency = toFrequency(dto.voteFrequency),
+            publicMeetingFrequency = toFrequency(dto.publicMeetingFrequency),
+            consultationFrequency = toFrequency(dto.consultationFrequency),
+        )
+    }
+
     fun toDto(
         consultationId: UUID,
         userId: UUID,
@@ -43,7 +58,7 @@ class ReponseConsultationMapper {
                     userId = userId,
                     participationId = participationId,
                     domain = domain,
-                    choiceId = null
+                    choiceId = null,
                 )
             )
         } else {
@@ -53,7 +68,7 @@ class ReponseConsultationMapper {
                     userId = userId,
                     participationId = participationId,
                     domain = domain,
-                    choiceId = choiceId
+                    choiceId = choiceId,
                 )
             }
         }
@@ -81,4 +96,44 @@ class ReponseConsultationMapper {
             null
         }
     }
+
+    private fun toGender(gender: String?) = when (gender) {
+        "M" -> Gender.MASCULIN
+        "F" -> Gender.FEMININ
+        "A" -> Gender.AUTRE
+        else -> null
+    }
+
+    private fun toCityType(cityType: String?) = when (cityType) {
+        "R" -> CityType.RURAL
+        "U" -> CityType.URBAIN
+        "A" -> CityType.AUTRE
+        else -> null
+    }
+
+    private fun toJobCategory(jobCategory: String?) = when (jobCategory) {
+        "AG" -> JobCategory.AGRICULTEUR
+        "AR" -> JobCategory.ARTISAN
+        "CA" -> JobCategory.CADRE
+        "PI" -> JobCategory.PROFESSION_INTERMEDIAIRE
+        "EM" -> JobCategory.EMPLOYE
+        "OU" -> JobCategory.OUVRIER
+        "ET" -> JobCategory.ETUDIANTS
+        "RE" -> JobCategory.RETRAITES
+        "AU" -> JobCategory.AUTRESOUSANSACTIVITEPRO
+        "UN" -> JobCategory.UNKNOWN
+        else -> null
+    }
+
+    private fun findDepartmentByNumber(number: String?): Department? {
+        return number?.let { Department.values().find { it.name.endsWith("_$number") } }
+    }
+
+    private fun toFrequency(frequencyString: String?) = when (frequencyString) {
+        "S" -> Frequency.SOUVENT
+        "P" -> Frequency.PARFOIS
+        "J" -> Frequency.JAMAIS
+        else -> null
+    }
+
 }

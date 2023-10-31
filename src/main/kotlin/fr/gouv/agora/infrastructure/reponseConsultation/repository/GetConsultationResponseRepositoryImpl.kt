@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.gouv.agora.domain.ReponseConsultation
 import fr.gouv.agora.domain.ResponseConsultationCount
+import fr.gouv.agora.domain.ResponseConsultationCountWithDemographicInfo
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.reponseConsultation.repository.ReponseConsultationCacheRepository.CacheResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -30,6 +31,13 @@ class GetConsultationResponseRepositoryImpl(
     override fun getConsultationResponsesCount(consultationId: String): List<ResponseConsultationCount> {
         return consultationId.toUuidOrNull()?.let { consultationUUID ->
             databaseRepository.getConsultationResponsesCount(consultationId = consultationUUID).map(mapper::toDomain)
+        } ?: emptyList()
+    }
+
+    override fun getConsultationResponsesCountWithDemographicInfo(consultationId: String): List<ResponseConsultationCountWithDemographicInfo> {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            databaseRepository.getConsultationResponsesCountWithDemographicInfo(consultationId = consultationUUID)
+                .map(mapper::toDomain)
         } ?: emptyList()
     }
 
