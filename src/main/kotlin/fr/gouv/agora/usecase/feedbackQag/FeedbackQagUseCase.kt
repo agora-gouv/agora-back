@@ -1,18 +1,22 @@
 package fr.gouv.agora.usecase.feedbackQag
 
+import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.FeedbackResults
+import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.*
 import org.springframework.stereotype.Service
 import kotlin.math.roundToInt
 
 @Service
 class FeedbackQagUseCase(
+    private val featureFlagsRepository: FeatureFlagsRepository,
     private val feedbackQagRepository: GetFeedbackQagRepository,
     private val resultsCacheRepository: FeedbackResultsCacheRepository,
     private val userFeedbackCacheRepository: UserFeedbackQagCacheRepository,
 ) {
 
-    fun getFeedbackResults(qagId: String): FeedbackResults {
+    fun getFeedbackResults(qagId: String): FeedbackResults? {
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)) return null
         return when (val cacheResult = resultsCacheRepository.getFeedbackResults(qagId = qagId)) {
             is FeedbackResultsCacheResult.CachedFeedbackResults -> cacheResult.feedbackResults
             FeedbackResultsCacheResult.FeedbackResultsCacheNotInitialized -> buildResults(qagId = qagId).also {

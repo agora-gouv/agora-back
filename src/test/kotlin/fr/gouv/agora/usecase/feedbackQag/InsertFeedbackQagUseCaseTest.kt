@@ -94,13 +94,37 @@ internal class InsertFeedbackQagUseCaseTest {
         assertThat(result).isEqualTo(FeedbackQagListResult.SuccessFeedbackDisabled)
         then(repository).should(only()).insertFeedbackQag(feedbackQagInserting)
         then(featureFlagsUseCase).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
-        then(userFeedbackCacheRepository).shouldHaveNoInteractions()
+        then(userFeedbackCacheRepository).should(only()).addUserFeedbackQagId(userId = "userId", qagId = "qagId")
         then(feedbackResultsCacheRepository).shouldHaveNoInteractions()
         then(feedbackQagUseCase).should(only()).getUserFeedbackQagIds(userId = "userId")
     }
 
     @Test
-    fun `insertFeedbackQag - when insertFeedbackQag returns success and feature enabled - should update caches then return Success with new feedback results`() {
+    fun `insertFeedbackQag - when insertFeedbackQag returns success, feature enabled but return null feedbackResult - should update caches then return SuccessFeedbackDisabled`() {
+        // Given
+        given(feedbackQagUseCase.getUserFeedbackQagIds(userId = "userId")).willReturn(emptyList())
+        given(repository.insertFeedbackQag(feedbackQagInserting)).willReturn(FeedbackQagResult.SUCCESS)
+        given(featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)).willReturn(true)
+        given(feedbackQagUseCase.getFeedbackResults(qagId = "qagId")).willReturn(null)
+
+        // When
+        val result = useCase.insertFeedbackQag(feedbackQagInserting = feedbackQagInserting)
+
+        // Then
+        assertThat(result).isEqualTo(FeedbackQagListResult.SuccessFeedbackDisabled)
+        then(repository).should(only()).insertFeedbackQag(feedbackQagInserting)
+        then(featureFlagsUseCase).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
+        inOrder(userFeedbackCacheRepository, feedbackResultsCacheRepository, feedbackQagUseCase).also {
+            then(feedbackQagUseCase).should(it).getUserFeedbackQagIds(userId = "userId")
+            then(userFeedbackCacheRepository).should(it).addUserFeedbackQagId(userId = "userId", qagId = "qagId")
+            then(feedbackResultsCacheRepository).should(it).evictFeedbackResults(qagId = "qagId")
+            then(feedbackQagUseCase).should(it).getFeedbackResults(qagId = "qagId")
+            it.verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `insertFeedbackQag - when insertFeedbackQag returns success, feature enabled and return non-null feedbackResult - should update caches then return Success with new feedback results`() {
         // Given
         given(feedbackQagUseCase.getUserFeedbackQagIds(userId = "userId")).willReturn(emptyList())
         given(repository.insertFeedbackQag(feedbackQagInserting)).willReturn(FeedbackQagResult.SUCCESS)
