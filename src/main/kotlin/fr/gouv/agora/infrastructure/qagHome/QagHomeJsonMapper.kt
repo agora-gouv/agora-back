@@ -58,7 +58,7 @@ class QagHomeJsonMapper(
         )
     }
 
-    private fun qagToJson(qagPreview: QagPreview): QagPreviewJson {
+    fun qagToJson(qagPreview: QagPreview): QagPreviewJson {
         return QagPreviewJson(
             qagId = qagPreview.id,
             thematique = thematiqueJsonMapper.toNoIdJson(qagPreview.thematique),
