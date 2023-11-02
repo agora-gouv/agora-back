@@ -37,7 +37,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationResponsesCount(@Param("consultationId") consultationId: UUID): List<ResponseConsultationCountDTO>
 
     @Query(
-        value = """SELECT question_id as questionId, choice_id as choiceId, count(*) AS responseCount, gender, year_of_birth as yearOfBirth, department, city_type as cityType, job_category as jobCategory, vote_frequency as voteFrequence, public_meeting_frequency as publicMeetingFrequency, consultation_frequency as consultationFrequency
+        value = """SELECT question_id as questionId, choice_id as choiceId, count(*) AS responseCount, gender, year_of_birth as yearOfBirth, department, city_type as cityType, job_category as jobCategory, vote_frequency as voteFrequency, public_meeting_frequency as publicMeetingFrequency, consultation_frequency as consultationFrequency
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE consultation_id = :consultationId
