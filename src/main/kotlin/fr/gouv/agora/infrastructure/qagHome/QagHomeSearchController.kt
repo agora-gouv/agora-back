@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.qagHome
 
+import fr.gouv.agora.infrastructure.utils.StringUtils.replaceDiacritics
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetQagByKeywordsUseCase
 import org.springframework.http.HttpStatus
@@ -27,14 +28,19 @@ class QagHomeSearchController(
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val filteredKeywords =
             keywords.takeUnless { it.isNullOrBlank() }?.take(MAX_CHARACTER_SIZE)?.replace(Regex("[^A-Za-z0-9 ]"), "")
-        return if (filteredKeywords == null || filteredKeywords.length < 3)
+                ?.let { replaceDiacritics(it) }
+        println(filteredKeywords)
+        return if (filteredKeywords.isNullOrBlank() || filteredKeywords.length < 3)
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(Unit)
         else {
             ResponseEntity.ok().body(
-                getQagByKeywordsUseCase.getQagByKeywordsUseCase(
-                    userId = userId,
-                    keywords = filteredKeywords.split(" "),
-                ).map { qagPreview -> qagHomeJsonMapper.qagToJson(qagPreview) })
+                qagHomeJsonMapper.toJson(
+                    getQagByKeywordsUseCase.getQagByKeywordsUseCase(
+                        userId = userId,
+                        keywords = filteredKeywords.trim().split(" "),
+                    )
+                )
+            )
         }
     }
 }

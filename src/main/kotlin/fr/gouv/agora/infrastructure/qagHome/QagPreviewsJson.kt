@@ -72,3 +72,7 @@ data class QagPreviewJson(
     val isAuthor: Boolean,
 )
 
+data class QagPreviewListJson(
+    @JsonProperty("results")
+    val results: List<QagPreviewJson>,
+)

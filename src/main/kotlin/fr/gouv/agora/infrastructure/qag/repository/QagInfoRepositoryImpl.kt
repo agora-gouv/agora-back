@@ -189,9 +189,7 @@ class QagInfoRepositoryImpl(
     }
 
     override fun getQagByKeywordsList(keywords: List<String>): List<QagInfoWithSupportCount> {
-        val keywordsArray = Array(keywords.size) {
-            '%' + keywords[it] + '%'
-        }
+        val keywordsArray = keywords.map { keyword -> "%$keyword%" }.toTypedArray()
         return databaseRepository.getQagByKeywordsList(keywordsArray).map(mapper::toDomain)
     }
 }

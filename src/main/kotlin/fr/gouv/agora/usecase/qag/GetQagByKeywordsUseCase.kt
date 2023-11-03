@@ -15,22 +15,27 @@ class GetQagByKeywordsUseCase(
     private val qagPreviewMapper: QagPreviewMapper,
 ) {
     fun getQagByKeywordsUseCase(userId: String, keywords: List<String>): List<QagPreview> {
-        val thematiqueList = thematiqueRepository.getThematiqueList()
-        val qagWithSupportCountList = qagInfoRepository.getQagByKeywordsList(keywords).mapNotNull { qagInfo ->
-            thematiqueList.find { thematique -> thematique.id == qagInfo.thematiqueId }?.let { thematique ->
-                QagWithSupportCount(
-                    qagInfo = qagInfo,
-                    thematique = thematique,
-                )
-            }
-        }
-        val supportedQagIds = supportQagUseCase.getUserSupportedQagIds(userId)
-        return qagWithSupportCountList.map { qagWithSupportCount ->
-            qagPreviewMapper.toPreview(
-                qag = qagWithSupportCount,
-                isSupportedByUser = supportedQagIds.any { qagId -> qagId == qagWithSupportCount.qagInfo.id },
-                isAuthor = userId == qagWithSupportCount.qagInfo.userId
-            )
+        return qagInfoRepository.getQagByKeywordsList(keywords).mapNotNull { qagInfo ->
+            thematiqueRepository.getThematiqueList().find { thematique -> thematique.id == qagInfo.thematiqueId }
+                ?.let { thematique ->
+                    val qagWithSupportCount = QagWithSupportCount(
+                        qagInfo = qagInfo,
+                        thematique = thematique,
+                    )
+
+                    val supportedQagIds = supportQagUseCase.getUserSupportedQagIds(userId)
+                    println("supportedQagIds"+supportedQagIds)
+                    println(qagWithSupportCount.qagInfo.id in supportedQagIds)
+                    println(userId == qagWithSupportCount.qagInfo.userId)
+                    val test = qagPreviewMapper.toPreview(
+                        qag = qagWithSupportCount,
+                        isSupportedByUser = qagWithSupportCount.qagInfo.id in supportedQagIds,
+                        isAuthor = userId == qagWithSupportCount.qagInfo.userId
+                    )
+                    println(test.id)
+                    println(test.title)
+                    test
+                }
         }
     }
 }
