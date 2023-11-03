@@ -27,9 +27,8 @@ class QagHomeSearchController(
     ): ResponseEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val filteredKeywords =
-            keywords.takeUnless { it.isNullOrBlank() }?.take(MAX_CHARACTER_SIZE)?.replace(Regex("[^A-Za-z0-9 ]"), "")
-                ?.let { replaceDiacritics(it) }
-        println(filteredKeywords)
+            keywords.takeUnless { it.isNullOrBlank() }?.take(MAX_CHARACTER_SIZE)?.let { replaceDiacritics(it) }
+                ?.replace(Regex("[^A-Za-z0-9 ]"), "")
         return if (filteredKeywords.isNullOrBlank() || filteredKeywords.length < 3)
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(Unit)
         else {

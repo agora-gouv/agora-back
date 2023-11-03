@@ -22,19 +22,12 @@ class GetQagByKeywordsUseCase(
                         qagInfo = qagInfo,
                         thematique = thematique,
                     )
-
                     val supportedQagIds = supportQagUseCase.getUserSupportedQagIds(userId)
-                    println("supportedQagIds"+supportedQagIds)
-                    println(qagWithSupportCount.qagInfo.id in supportedQagIds)
-                    println(userId == qagWithSupportCount.qagInfo.userId)
-                    val test = qagPreviewMapper.toPreview(
+                    qagPreviewMapper.toPreview(
                         qag = qagWithSupportCount,
                         isSupportedByUser = qagWithSupportCount.qagInfo.id in supportedQagIds,
                         isAuthor = userId == qagWithSupportCount.qagInfo.userId
                     )
-                    println(test.id)
-                    println(test.title)
-                    test
                 }
         }
     }
