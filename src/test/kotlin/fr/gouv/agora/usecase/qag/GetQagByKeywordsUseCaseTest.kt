@@ -36,6 +36,9 @@ internal class GetQagByKeywordsUseCaseTest {
     @MockBean
     private lateinit var mapper: QagPreviewMapper
 
+    @MockBean
+    private lateinit var qagDetailsMapper: QagDetailsMapper
+
     @Test
     fun `getQagByKeywordsUseCase - when database returns emptyList() - should return emptyList`() {
         // Given
@@ -79,40 +82,33 @@ internal class GetQagByKeywordsUseCaseTest {
     @Test
     fun `getQagByKeywordsUseCase - when thematique and qag exist - should return mapped qag`() {
         // Given
-        val thematique = Thematique(
-            id = "thematiqueId",
-            label = "label",
-            picto = "picto",
-        )
+        val thematique = mock(Thematique::class.java).also {
+            given(it.id).willReturn("thematiqueId")
+        }
         given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
         given(supportQagUseCase.getUserSupportedQagIds("userId")).willReturn(listOf("qagId"))
-        val qagInfoWithSupportCount = QagInfoWithSupportCount(
-            id = "qagId",
-            thematiqueId = "thematiqueId",
-            title = "title",
-            description = "description",
-            date = Date(0),
-            status = QagStatus.OPEN,
-            username = "username",
-            userId = "userId",
-            supportCount = 1,
-        )
+        val qagInfoWithSupportCount =
+            mock(QagInfoWithSupportCount::class.java).also {
+                given(it.id).willReturn("qagId")
+                given(it.thematiqueId).willReturn("thematiqueId")
+                given(it.userId).willReturn("userId")
+            }
         given(qagInfoRepository.getQagByKeywordsList(listOf("keywords"))).willReturn(listOf(qagInfoWithSupportCount))
-        val qagWithSupportCount = QagWithSupportCount(
-            qagInfo = qagInfoWithSupportCount,
-            thematique = thematique,
-        )
-        val qagPreview = QagPreview(
-            id = "qagId",
-            thematique = thematique,
-            title = "title",
-            username = "username",
-            date = Date(0),
-            supportCount = 1,
-            isSupportedByUser = true,
-            isAuthor = true,
-        )
-
+        val qagWithSupportCount =
+            mock(QagWithSupportCount::class.java).also {
+                given(it.qagInfo).willReturn(qagInfoWithSupportCount)
+                given(it.thematique).willReturn(thematique)
+            }
+        given(
+            qagDetailsMapper.toQagWithSupportCount(
+                qagInfoWithSupportCount = qagInfoWithSupportCount,
+                thematique = thematique
+            )
+        ).willReturn(qagWithSupportCount)
+        val qagPreview = mock(QagPreview::class.java).also {
+            given(it.id).willReturn("qagId")
+            given(it.thematique).willReturn(thematique)
+        }
         given(
             mapper.toPreview(
                 qag = qagWithSupportCount,
@@ -128,6 +124,10 @@ internal class GetQagByKeywordsUseCaseTest {
         then(qagInfoRepository).should(only()).getQagByKeywordsList(listOf("keywords"))
         then(thematiqueRepository).should(only()).getThematiqueList()
         then(supportQagUseCase).should(only()).getUserSupportedQagIds("userId")
+        then(qagDetailsMapper).should(only()).toQagWithSupportCount(
+            qagInfoWithSupportCount = qagInfoWithSupportCount,
+            thematique = thematique
+        )
         then(mapper).should(only()).toPreview(
             qag = qagWithSupportCount,
             isSupportedByUser = true,

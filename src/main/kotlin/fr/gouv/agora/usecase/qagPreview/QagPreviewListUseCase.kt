@@ -2,6 +2,7 @@ package fr.gouv.agora.usecase.qagPreview
 
 import fr.gouv.agora.domain.QagPreview
 import fr.gouv.agora.domain.Thematique
+import fr.gouv.agora.usecase.qag.QagDetailsMapper
 import fr.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
@@ -17,6 +18,7 @@ class QagPreviewListUseCase(
     private val cacheRepository: QagPreviewCacheRepository,
     private val supportQagUseCase: SupportQagUseCase,
     private val mapper: QagPreviewMapper,
+    private val qagDetailsMapper: QagDetailsMapper,
 ) {
 
     fun getQagPreviewList(userId: String, thematiqueId: String?): QagPreviewList {
@@ -83,8 +85,8 @@ class QagPreviewListUseCase(
         val thematiqueList = thematiqueRepository.getThematiqueList()
         return this.mapNotNull { qagInfo ->
             thematiqueList.find { thematique -> thematique.id == qagInfo.thematiqueId }?.let { thematique ->
-                QagWithSupportCount(
-                    qagInfo = qagInfo,
+                qagDetailsMapper.toQagWithSupportCount(
+                    qagInfoWithSupportCount = qagInfo,
                     thematique = thematique,
                 )
             }

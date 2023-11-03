@@ -36,7 +36,7 @@ class QagHomeSearchController(
                 qagHomeJsonMapper.toJson(
                     getQagByKeywordsUseCase.getQagByKeywordsUseCase(
                         userId = userId,
-                        keywords = filteredKeywords.trim().split(" "),
+                        keywords = filteredKeywords.split(" ").filterNot{ it.isBlank() },
                     )
                 )
             )
