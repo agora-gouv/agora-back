@@ -6,35 +6,37 @@ import org.springframework.stereotype.Component
 @Component
 class ConsultationResultWithDemographicInfoTsvMapper {
 
-    fun buildTsvBody(consultationResult: ConsultationResultWithDemographicInfo) = """
-${buildHeader(consultationResult)}
-# Données socio-démographiques
-${buildDemographicInfoBloc(consultationResult.demographicInfo)}           
-# Réponses aux questions
-${buildConsultationResponsesBloc(consultationResult)}
-""".trimIndent()
+    fun buildTsvBody(consultationResult: ConsultationResultWithDemographicInfo): String {
+        return StringBuilder()
+            .append(buildHeader(consultationResult))
+            .append("# Données socio-démographiques")
+            .append(buildDemographicInfoBloc(consultationResult.demographicInfo))
+            .append("# Réponses aux questions")
+            .append(buildConsultationResponsesBloc(consultationResult))
+            .toString()
+    }
 
     private fun buildHeader(consultationResult: ConsultationResultWithDemographicInfo): String {
-        val bodyBuilder = StringBuilder()
+        val headerBuilder = StringBuilder()
 
-        bodyBuilder.append(consultationResult.consultation.title)
-        bodyBuilder.append("\n")
-        bodyBuilder.append("${consultationResult.participantCount}\tparticipants")
-        bodyBuilder.append("\n")
+        headerBuilder.append(consultationResult.consultation.title)
+        headerBuilder.append("\n")
+        headerBuilder.append("${consultationResult.participantCount}\tparticipants")
+        headerBuilder.append("\n")
 
-        return bodyBuilder.toString()
+        return headerBuilder.toString()
     }
 
     private fun buildConsultationResponsesBloc(consultationResult: ConsultationResultWithDemographicInfo): String {
-        val bodyBuilder = StringBuilder()
+        val stringBuilder = StringBuilder()
 
         consultationResult.results.forEach { questionResult ->
-            bodyBuilder.append("## ${questionResult.question.title}\t#\t%")
-            bodyBuilder.append("\t${buildDemographicHeaders(consultationResult.demographicInfo)}")
-            bodyBuilder.append("\n")
+            stringBuilder.append("## ${questionResult.question.title}\t#\t%")
+            stringBuilder.append("\t${buildDemographicHeaders(consultationResult.demographicInfo)}")
+            stringBuilder.append("\n")
             questionResult.responses.forEach { choiceResult ->
-                bodyBuilder.append("- ${choiceResult.choixPossible.label}\t${choiceResult.countAndRatio.count}\t${choiceResult.countAndRatio.ratio}")
-                bodyBuilder.append(
+                stringBuilder.append("- ${choiceResult.choixPossible.label}\t${choiceResult.countAndRatio.count}\t${choiceResult.countAndRatio.ratio}")
+                stringBuilder.append(
                     "\t${
                         buildDemographicValues(
                             globalDemographicInfo = consultationResult.demographicInfo,
@@ -42,73 +44,86 @@ ${buildConsultationResponsesBloc(consultationResult)}
                         )
                     }"
                 )
-                bodyBuilder.append("\n")
+                stringBuilder.append("\n")
             }
         }
 
-        return bodyBuilder.toString()
+        return stringBuilder.toString()
     }
 
     private fun buildDemographicInfoBloc(demographicInfo: DemographicInfo): String {
-        val bodyBuilder = StringBuilder()
+        val stringBuilder = StringBuilder()
 
-        bodyBuilder.append("### Genre\t#\t%")
-        bodyBuilder.append("\n")
-        demographicInfo.genderCount.forEach { (gender, countAndRatio) ->
-            bodyBuilder.append("-- ${gender.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
-            bodyBuilder.append("\n")
-        }
+        stringBuilder.append("### Genre\t#\t%")
+        stringBuilder.append("\n")
+        demographicInfo.genderCount.toList().sortedBy { (gender, _) -> gender?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (gender, countAndRatio) ->
+                stringBuilder.append("-- ${gender.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
+                stringBuilder.append("\n")
+            }
 
-        bodyBuilder.append("### Année de naissance\t#\t%")
-        bodyBuilder.append("\n")
-        demographicInfo.yearOfBirthCount.forEach { (yearOfBirth, countAndRatio) ->
-            bodyBuilder.append("-- ${yearOfBirth.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
-            bodyBuilder.append("\n")
-        }
+        stringBuilder.append("### Année de naissance\t#\t%")
+        stringBuilder.append("\n")
+        demographicInfo.ageRangeCount.toList().sortedBy { (ageRange, _) -> ageRange?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (ageRange, countAndRatio) ->
+                stringBuilder.append("-- ${ageRange.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
+                stringBuilder.append("\n")
+            }
 
-        bodyBuilder.append("### Département ou collectivité d'outre mer\t#\t%")
-        bodyBuilder.append("\n")
-        demographicInfo.departmentCount.forEach { (department, countAndRatio) ->
-            bodyBuilder.append("-- ${department.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
-            bodyBuilder.append("\n")
-        }
+        stringBuilder.append("### Département ou collectivité d'outre mer\t#\t%")
+        stringBuilder.append("\n")
+        demographicInfo.departmentCount.toList()
+            .sortedBy { (department, _) -> department?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (department, countAndRatio) ->
+                stringBuilder.append("-- ${department.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
+                stringBuilder.append("\n")
+            }
 
-        bodyBuilder.append("### Habite en milieu\t#\t%")
-        bodyBuilder.append("\n")
-        demographicInfo.cityTypeCount.forEach { (cityType, countAndRatio) ->
-            bodyBuilder.append("-- ${cityType.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
-            bodyBuilder.append("\n")
-        }
+        stringBuilder.append("### Habite en milieu\t#\t%")
+        stringBuilder.append("\n")
+        demographicInfo.cityTypeCount.toList().sortedBy { (cityType, _) -> cityType?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (cityType, countAndRatio) ->
+                stringBuilder.append("-- ${cityType.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
+                stringBuilder.append("\n")
+            }
 
-        bodyBuilder.append("### Catégorie socio-professionnelle\t#\t%")
-        bodyBuilder.append("\n")
-        demographicInfo.jobCategoryCount.forEach { (jobCategory, countAndRatio) ->
-            bodyBuilder.append("-- ${jobCategory.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
-            bodyBuilder.append("\n")
-        }
+        stringBuilder.append("### Catégorie socio-professionnelle\t#\t%")
+        stringBuilder.append("\n")
+        demographicInfo.jobCategoryCount.toList()
+            .sortedBy { (jobCategory, _) -> jobCategory?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (jobCategory, countAndRatio) ->
+                stringBuilder.append("-- ${jobCategory.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
+                stringBuilder.append("\n")
+            }
 
-        bodyBuilder.append("### Fréquence de vote\t#\t%")
-        bodyBuilder.append("\n")
-        demographicInfo.voteFrequencyCount.forEach { (frequency, countAndRatio) ->
-            bodyBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
-            bodyBuilder.append("\n")
-        }
+        stringBuilder.append("### Fréquence de vote\t#\t%")
+        stringBuilder.append("\n")
+        demographicInfo.voteFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, countAndRatio) ->
+                stringBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
+                stringBuilder.append("\n")
+            }
 
-        bodyBuilder.append("### Fréquence d'engagement sur le terrain\t#\t%")
-        bodyBuilder.append("\n")
-        demographicInfo.publicMeetingFrequencyCount.forEach { (frequency, countAndRatio) ->
-            bodyBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
-            bodyBuilder.append("\n")
-        }
+        stringBuilder.append("### Fréquence d'engagement sur le terrain\t#\t%")
+        stringBuilder.append("\n")
+        demographicInfo.publicMeetingFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, countAndRatio) ->
+                stringBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
+                stringBuilder.append("\n")
+            }
 
-        bodyBuilder.append("### Fréquence d'engagement en ligne\t#\t%")
-        bodyBuilder.append("\n")
-        demographicInfo.consultationFrequencyCount.forEach { (frequency, countAndRatio) ->
-            bodyBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
-            bodyBuilder.append("\n")
-        }
+        stringBuilder.append("### Fréquence d'engagement en ligne\t#\t%")
+        stringBuilder.append("\n")
+        demographicInfo.consultationFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, countAndRatio) ->
+                stringBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.count}\t${countAndRatio.ratio}")
+                stringBuilder.append("\n")
+            }
 
-        return bodyBuilder.toString()
+        return stringBuilder.toString()
     }
 
     private fun buildDemographicHeaders(demographicInfo: DemographicInfo): String {
@@ -116,107 +131,136 @@ ${buildConsultationResponsesBloc(consultationResult)}
 
         headerBuilder.append("### Genre")
         headerBuilder.append("\t")
-        demographicInfo.genderCount.forEach { (gender, _) ->
-            headerBuilder.append("-- ${gender.toPretty()}")
-            headerBuilder.append("\t")
-        }
+        demographicInfo.genderCount.toList().sortedBy { (gender, _) -> gender?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (gender, _) ->
+                headerBuilder.append("-- ${gender.toPretty()}")
+                headerBuilder.append("\t")
+            }
 
         headerBuilder.append("### Année de naissance")
         headerBuilder.append("\t")
-        demographicInfo.yearOfBirthCount.forEach { (yearOfBirth, _) ->
-            headerBuilder.append("-- ${yearOfBirth.toPretty()}")
-            headerBuilder.append("\t")
-        }
+        demographicInfo.ageRangeCount.toList().sortedBy { (ageRange, _) -> ageRange?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (ageRange, _) ->
+                headerBuilder.append("-- ${ageRange.toPretty()}")
+                headerBuilder.append("\t")
+            }
 
         headerBuilder.append("### Département ou collectivité d'outre mer")
         headerBuilder.append("\t")
-        demographicInfo.departmentCount.forEach { (department, _) ->
-            headerBuilder.append("-- ${department.toPretty()}")
-            headerBuilder.append("\t")
-        }
+        demographicInfo.departmentCount.toList()
+            .sortedBy { (department, _) -> department?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (department, _) ->
+                headerBuilder.append("-- ${department.toPretty()}")
+                headerBuilder.append("\t")
+            }
 
         headerBuilder.append("### Habite en milieu")
         headerBuilder.append("\t")
-        demographicInfo.cityTypeCount.forEach { (cityType, _) ->
-            headerBuilder.append("-- ${cityType.toPretty()}")
-            headerBuilder.append("\t")
-        }
+        demographicInfo.cityTypeCount.toList().sortedBy { (cityType, _) -> cityType?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (cityType, _) ->
+                headerBuilder.append("-- ${cityType.toPretty()}")
+                headerBuilder.append("\t")
+            }
 
         headerBuilder.append("### Catégorie socio-professionnelle")
         headerBuilder.append("\t")
-        demographicInfo.jobCategoryCount.forEach { (jobCategory, _) ->
-            headerBuilder.append("-- ${jobCategory.toPretty()}")
-            headerBuilder.append("\t")
-        }
+        demographicInfo.jobCategoryCount.toList()
+            .sortedBy { (jobCategory, _) -> jobCategory?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (jobCategory, _) ->
+                headerBuilder.append("-- ${jobCategory.toPretty()}")
+                headerBuilder.append("\t")
+            }
 
         headerBuilder.append("### Fréquence de vote")
         headerBuilder.append("\t")
-        demographicInfo.voteFrequencyCount.forEach { (frequency, _) ->
-            headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t")
-        }
+        demographicInfo.voteFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, _) ->
+                headerBuilder.append("-- ${frequency.toPretty()}")
+                headerBuilder.append("\t")
+            }
 
         headerBuilder.append("### Fréquence d'engagement sur le terrain")
         headerBuilder.append("\t")
-        demographicInfo.publicMeetingFrequencyCount.forEach { (frequency, _) ->
-            headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t")
-        }
+        demographicInfo.publicMeetingFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, _) ->
+                headerBuilder.append("-- ${frequency.toPretty()}")
+                headerBuilder.append("\t")
+            }
 
         headerBuilder.append("### Fréquence d'engagement en ligne")
         headerBuilder.append("\t")
-        demographicInfo.consultationFrequencyCount.forEach { (frequency, _) ->
-            headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t")
-        }
+        demographicInfo.consultationFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, _) ->
+                headerBuilder.append("-- ${frequency.toPretty()}")
+                headerBuilder.append("\t")
+            }
 
         return headerBuilder.toString()
     }
 
-    private fun buildDemographicValues(globalDemographicInfo: DemographicInfo, choiceDemographicInfo: DemographicInfo): String {
+    private fun buildDemographicValues(
+        globalDemographicInfo: DemographicInfo,
+        choiceDemographicInfo: DemographicInfo
+    ): String {
         val valuesBuilder = StringBuilder()
 
         valuesBuilder.append("\t")
-        globalDemographicInfo.genderCount.forEach { (gender, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.genderCount[gender]?.ratio ?: 0}")
-            valuesBuilder.append("\t")
-        }
+        globalDemographicInfo.genderCount.toList().sortedBy { (gender, _) -> gender?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (gender, _) ->
+                valuesBuilder.append("${choiceDemographicInfo.genderCount[gender]?.ratio ?: 0}")
+                valuesBuilder.append("\t")
+            }
 
         valuesBuilder.append("\t")
-        globalDemographicInfo.yearOfBirthCount.forEach { (yearOfBirth, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.yearOfBirthCount[yearOfBirth]?.ratio ?: 0}")
-            valuesBuilder.append("\t")
-        }
+        globalDemographicInfo.ageRangeCount.toList()
+            .sortedBy { (ageRange, _) -> ageRange?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (ageRange, _) ->
+                valuesBuilder.append("${choiceDemographicInfo.ageRangeCount[ageRange]?.ratio ?: 0}")
+                valuesBuilder.append("\t")
+            }
 
         valuesBuilder.append("\t")
-        globalDemographicInfo.departmentCount.forEach { (department, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.departmentCount[department]?.ratio ?: 0}")
-            valuesBuilder.append("\t")
-        }
+        globalDemographicInfo.departmentCount.toList()
+            .sortedBy { (department, _) -> department?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (department, _) ->
+                valuesBuilder.append("${choiceDemographicInfo.departmentCount[department]?.ratio ?: 0}")
+                valuesBuilder.append("\t")
+            }
 
         valuesBuilder.append("\t")
-        globalDemographicInfo.cityTypeCount.forEach { (cityType, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.cityTypeCount[cityType]?.ratio ?: 0}")
-            valuesBuilder.append("\t")
-        }
+        globalDemographicInfo.cityTypeCount.toList()
+            .sortedBy { (cityType, _) -> cityType?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (cityType, _) ->
+                valuesBuilder.append("${choiceDemographicInfo.cityTypeCount[cityType]?.ratio ?: 0}")
+                valuesBuilder.append("\t")
+            }
 
         valuesBuilder.append("\t")
-        globalDemographicInfo.voteFrequencyCount.forEach { (frequency, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.voteFrequencyCount[frequency]?.ratio ?: 0}")
-            valuesBuilder.append("\t")
-        }
+        globalDemographicInfo.voteFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, _) ->
+                valuesBuilder.append("${choiceDemographicInfo.voteFrequencyCount[frequency]?.ratio ?: 0}")
+                valuesBuilder.append("\t")
+            }
 
         valuesBuilder.append("\t")
-        globalDemographicInfo.publicMeetingFrequencyCount.forEach { (frequency, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.publicMeetingFrequencyCount[frequency]?.ratio ?: 0}")
-            valuesBuilder.append("\t")
-        }
+        globalDemographicInfo.publicMeetingFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, _) ->
+                valuesBuilder.append("${choiceDemographicInfo.publicMeetingFrequencyCount[frequency]?.ratio ?: 0}")
+                valuesBuilder.append("\t")
+            }
 
         valuesBuilder.append("\t")
-        globalDemographicInfo.consultationFrequencyCount.forEach { (frequency, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.consultationFrequencyCount[frequency]?.ratio ?: 0}")
-            valuesBuilder.append("\t")
-        }
+        globalDemographicInfo.consultationFrequencyCount.toList()
+            .sortedBy { (frequency, _) -> frequency?.ordinal ?: Integer.MAX_VALUE }
+            .forEach { (frequency, _) ->
+                valuesBuilder.append("${choiceDemographicInfo.consultationFrequencyCount[frequency]?.ratio ?: 0}")
+                valuesBuilder.append("\t")
+            }
 
         return valuesBuilder.toString()
     }
@@ -228,9 +272,15 @@ ${buildConsultationResponsesBloc(consultationResult)}
         null -> "N/A"
     }
 
-    private fun Int?.toPretty() = when (this) {
+    private fun AgeRange?.toPretty() = when (this) {
+        AgeRange.LESS_THAN_18 -> "< 18 ans"
+        AgeRange.BETWEEN_18_AND_25 -> "18 à 25 ans"
+        AgeRange.BETWEEN_26_AND_35 -> "26 à 35 ans"
+        AgeRange.BETWEEN_36_AND_45 -> "36 à 45 ans"
+        AgeRange.BETWEEN_46_AND_55 -> "46 à 55 ans"
+        AgeRange.BETWEEN_56_AND_65 -> "56 à 65 ans"
+        AgeRange.MORE_THAN_65 -> "> 65 ans"
         null -> "N/A"
-        else -> toString()
     }
 
     private fun Department?.toPretty() = when (this) {

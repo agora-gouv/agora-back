@@ -15,6 +15,17 @@ data class ResponseConsultationCount(
     val responseCount: Int,
 )
 
+data class DemographicInfoCount(
+    val genderCount: Map<Gender?, Int>,
+    val ageRangeCount: Map<AgeRange?, Int>,
+    val departmentCount: Map<Department?, Int>,
+    val cityTypeCount: Map<CityType?, Int>,
+    val jobCategoryCount: Map<JobCategory?, Int>,
+    val voteFrequencyCount: Map<Frequency?, Int>,
+    val publicMeetingFrequencyCount: Map<Frequency?, Int>,
+    val consultationFrequencyCount: Map<Frequency?, Int>,
+)
+
 data class ResponseConsultationCountWithDemographicInfo(
     val questionId: String,
     val choiceId: String,

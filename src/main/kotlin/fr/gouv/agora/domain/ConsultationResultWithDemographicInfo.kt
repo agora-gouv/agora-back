@@ -22,7 +22,7 @@ data class ChoiceResultWithDemographicInfo(
 
 data class DemographicInfo(
     val genderCount: Map<Gender?, CountAndRatio>,
-    val yearOfBirthCount: Map<Int?, CountAndRatio>,
+    val ageRangeCount: Map<AgeRange?, CountAndRatio>,
     val departmentCount: Map<Department?, CountAndRatio>,
     val cityTypeCount: Map<CityType?, CountAndRatio>,
     val jobCategoryCount: Map<JobCategory?, CountAndRatio>,

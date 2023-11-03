@@ -27,6 +27,16 @@ enum class Gender {
     MASCULIN, FEMININ, AUTRE
 }
 
+enum class AgeRange {
+    LESS_THAN_18,
+    BETWEEN_18_AND_25,
+    BETWEEN_26_AND_35,
+    BETWEEN_36_AND_45,
+    BETWEEN_46_AND_55,
+    BETWEEN_56_AND_65,
+    MORE_THAN_65
+}
+
 enum class CityType {
     RURAL, URBAIN, AUTRE,
 }

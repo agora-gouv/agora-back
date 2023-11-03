@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.DemographicInfoCountDTO
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountDTO
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountWithDemographicInfoDTO
@@ -35,6 +36,118 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
         nativeQuery = true,
     )
     fun getConsultationResponsesCount(@Param("consultationId") consultationId: UUID): List<ResponseConsultationCountDTO>
+
+    @Query(
+        value = """SELECT gender as key, count(DISTINCT user_id) as count
+            FROM users_profile
+            WHERE user_id IN (
+                SELECT DISTINCT user_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+            )
+            GROUP BY gender
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationGender(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+
+    @Query(
+        value = """SELECT year_of_birth as key, count(DISTINCT user_id) as count
+            FROM users_profile
+            WHERE user_id IN (
+                SELECT DISTINCT user_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+            )
+            GROUP BY year_of_birth
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationYearOfBirth(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+
+    @Query(
+        value = """SELECT department as key, count(DISTINCT user_id) as count
+            FROM users_profile
+            WHERE user_id IN (
+                SELECT DISTINCT user_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+            )
+            GROUP BY department
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationDepartment(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+
+    @Query(
+        value = """SELECT city_type as key, count(DISTINCT user_id) as count
+            FROM users_profile
+            WHERE user_id IN (
+                SELECT DISTINCT user_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+            )
+            GROUP BY city_type
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationCityType(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+
+    @Query(
+        value = """SELECT job_category as key, count(DISTINCT user_id) as count
+            FROM users_profile
+            WHERE user_id IN (
+                SELECT DISTINCT user_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+            )
+            GROUP BY job_category
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationJobCategory(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+
+    @Query(
+        value = """SELECT vote_frequency as key, count(DISTINCT user_id) as count
+            FROM users_profile
+            WHERE user_id IN (
+                SELECT DISTINCT user_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+            )
+            GROUP BY vote_frequency
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationVoteFrequency(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+
+    @Query(
+        value = """SELECT public_meeting_frequency as key, count(DISTINCT user_id) as count
+            FROM users_profile
+            WHERE user_id IN (
+                SELECT DISTINCT user_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+            )
+            GROUP BY public_meeting_frequency
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationPublicMeetingFrequency(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+
+    @Query(
+        value = """SELECT consultation_frequency as key, count(DISTINCT user_id) as count
+            FROM users_profile
+            WHERE user_id IN (
+                SELECT DISTINCT user_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+            )
+            GROUP BY consultation_frequency
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationConsultationFrequency(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT question_id as questionId, choice_id as choiceId, count(*) AS responseCount, gender, year_of_birth as yearOfBirth, department, city_type as cityType, job_category as jobCategory, vote_frequency as voteFrequency, public_meeting_frequency as publicMeetingFrequency, consultation_frequency as consultationFrequency

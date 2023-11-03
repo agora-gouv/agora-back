@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
+import fr.gouv.agora.domain.DemographicInfoCount
 import fr.gouv.agora.domain.ReponseConsultation
 import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.domain.ResponseConsultationCountWithDemographicInfo
@@ -32,6 +33,30 @@ class GetConsultationResponseRepositoryImpl(
         return consultationId.toUuidOrNull()?.let { consultationUUID ->
             databaseRepository.getConsultationResponsesCount(consultationId = consultationUUID).map(mapper::toDomain)
         } ?: emptyList()
+    }
+
+    override fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            mapper.toDomain(
+                genderCount = databaseRepository.getConsultationGender(consultationUUID),
+                ageRangeCount = databaseRepository.getConsultationYearOfBirth(consultationUUID),
+                departmentCount = databaseRepository.getConsultationDepartment(consultationUUID),
+                cityTypeCount = databaseRepository.getConsultationCityType(consultationUUID),
+                jobCategoryCount = databaseRepository.getConsultationJobCategory(consultationUUID),
+                voteFrequencyCount = databaseRepository.getConsultationVoteFrequency(consultationUUID),
+                publicMeetingFrequencyCount = databaseRepository.getConsultationPublicMeetingFrequency(consultationUUID),
+                consultationFrequencyCount = databaseRepository.getConsultationConsultationFrequency(consultationUUID),
+            )
+        } ?: DemographicInfoCount(
+            genderCount = emptyMap(),
+            ageRangeCount = emptyMap(),
+            departmentCount = emptyMap(),
+            cityTypeCount = emptyMap(),
+            jobCategoryCount = emptyMap(),
+            voteFrequencyCount = emptyMap(),
+            publicMeetingFrequencyCount = emptyMap(),
+            consultationFrequencyCount = emptyMap(),
+        )
     }
 
     override fun getConsultationResponsesCountWithDemographicInfo(consultationId: String): List<ResponseConsultationCountWithDemographicInfo> {
