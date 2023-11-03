@@ -18,15 +18,12 @@ class GetQagByKeywordsUseCase(
         return qagInfoRepository.getQagByKeywordsList(keywords).mapNotNull { qagInfo ->
             thematiqueRepository.getThematiqueList().find { thematique -> thematique.id == qagInfo.thematiqueId }
                 ?.let { thematique ->
-                    val qagWithSupportCount = qagDetailsMapper.toQagWithSupportCount(
-                        qagInfoWithSupportCount = qagInfo,
-                        thematique = thematique,
-                    )
                     val supportedQagIds = supportQagUseCase.getUserSupportedQagIds(userId)
                     qagPreviewMapper.toPreview(
-                        qag = qagWithSupportCount,
-                        isSupportedByUser = qagWithSupportCount.qagInfo.id in supportedQagIds,
-                        isAuthor = userId == qagWithSupportCount.qagInfo.userId
+                        qag = qagInfo,
+                        thematique = thematique,
+                        isSupportedByUser = qagInfo.id in supportedQagIds,
+                        isAuthor = userId == qagInfo.userId,
                     )
                 }
         }

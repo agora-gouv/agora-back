@@ -3,7 +3,6 @@ package fr.gouv.agora.usecase.qag
 import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
-import fr.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -35,9 +34,6 @@ internal class GetQagByKeywordsUseCaseTest {
 
     @MockBean
     private lateinit var mapper: QagPreviewMapper
-
-    @MockBean
-    private lateinit var qagDetailsMapper: QagDetailsMapper
 
     @Test
     fun `getQagByKeywordsUseCase - when database returns emptyList() - should return emptyList`() {
@@ -91,20 +87,11 @@ internal class GetQagByKeywordsUseCaseTest {
                 given(it.userId).willReturn("userId")
             }
         given(qagInfoRepository.getQagByKeywordsList(listOf("keywords"))).willReturn(listOf(qagInfoWithSupportCount))
-        val qagWithSupportCount =
-            mock(QagWithSupportCount::class.java).also {
-                given(it.qagInfo).willReturn(qagInfoWithSupportCount)
-            }
-        given(
-            qagDetailsMapper.toQagWithSupportCount(
-                qagInfoWithSupportCount = qagInfoWithSupportCount,
-                thematique = thematique
-            )
-        ).willReturn(qagWithSupportCount)
         val qagPreview = mock(QagPreview::class.java)
         given(
             mapper.toPreview(
-                qag = qagWithSupportCount,
+                qag = qagInfoWithSupportCount,
+                thematique = thematique,
                 isSupportedByUser = true,
                 isAuthor = true
             )
@@ -118,12 +105,9 @@ internal class GetQagByKeywordsUseCaseTest {
         then(qagInfoRepository).should(only()).getQagByKeywordsList(listOf("keywords"))
         then(thematiqueRepository).should(only()).getThematiqueList()
         then(supportQagUseCase).should(only()).getUserSupportedQagIds("userId")
-        then(qagDetailsMapper).should(only()).toQagWithSupportCount(
-            qagInfoWithSupportCount = qagInfoWithSupportCount,
-            thematique = thematique
-        )
         then(mapper).should(only()).toPreview(
-            qag = qagWithSupportCount,
+            qag = qagInfoWithSupportCount,
+            thematique = thematique,
             isSupportedByUser = true,
             isAuthor = true
         )
