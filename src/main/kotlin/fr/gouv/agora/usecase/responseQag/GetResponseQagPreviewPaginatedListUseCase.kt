@@ -27,7 +27,7 @@ class GetResponseQagPreviewPaginatedListUseCase(
         if (offset > responsesCount) return null
 
         return ResponseQagPaginatedList(
-            responsesQag = toResponseQagPreview(responseQagRepository.getResponsesQag(offset).sortedByDescending { responseQag ->  responseQag.responseDate }),
+            responsesQag = toResponseQagPreview(responseQagRepository.getResponsesQag(offset)),
             maxPageNumber = ceil(responsesCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
         )
     }
