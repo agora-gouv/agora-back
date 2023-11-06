@@ -9,5 +9,4 @@ class QagDetailsMapper {
     fun toQagWithoutFeedbackResults(qag: QagDetails): QagDetails {
         return qag.copy(feedbackResults = null)
     }
-
 }

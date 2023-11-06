@@ -491,14 +491,14 @@ internal class QagInfoRepositoryImplTest {
     @Test
     fun `getQagByKeywordsList - when has emptyList - should return emptyList`() {
         // Given
-        given(databaseRepository.getQagByKeywordsList(keywords = arrayOf("test", "qag"))).willReturn(emptyList())
+        given(databaseRepository.getQagByKeywordsList(keywords = arrayOf("%test%", "%qag%"))).willReturn(emptyList())
 
         // When
-        val result = repository.getQagByKeywordsList(keywords = arrayOf("test", "qag"))
+        val result = repository.getQagByKeywordsList(keywords = listOf("test", "qag"))
 
         // Then
         assertThat(result).isEqualTo(emptyList<QagInfoWithSupportCount>())
-        then(databaseRepository).should(only()).getQagByKeywordsList(keywords = arrayOf("test", "qag"))
+        then(databaseRepository).should(only()).getQagByKeywordsList(keywords = arrayOf("%test%", "%qag%"))
         then(mapper).shouldHaveNoInteractions()
     }
 
@@ -506,7 +506,7 @@ internal class QagInfoRepositoryImplTest {
     fun `getQagByKeywordsList - when has qags - should return mapped qags`() {
         // Given
         val qagWithSupportCountDTO = mock(QagWithSupportCountDTO::class.java)
-        given(databaseRepository.getQagByKeywordsList(keywords = arrayOf("test", "qag"))).willReturn(
+        given(databaseRepository.getQagByKeywordsList(keywords = arrayOf("%test%", "%qag%"))).willReturn(
             listOf(
                 qagWithSupportCountDTO
             )
@@ -516,11 +516,11 @@ internal class QagInfoRepositoryImplTest {
         given(mapper.toDomain(qagWithSupportCountDTO)).willReturn(qagInfoWithSupportCount)
 
         // When
-        val result = repository.getQagByKeywordsList(keywords = arrayOf("test", "qag"))
+        val result = repository.getQagByKeywordsList(keywords = listOf("test", "qag"))
 
         // Then
         assertThat(result).isEqualTo(listOf(qagInfoWithSupportCount))
-        then(databaseRepository).should(only()).getQagByKeywordsList(keywords = arrayOf("test", "qag"))
+        then(databaseRepository).should(only()).getQagByKeywordsList(keywords = arrayOf("%test%", "%qag%"))
         then(mapper).should(only()).toDomain(qagWithSupportCountDTO)
     }
 }

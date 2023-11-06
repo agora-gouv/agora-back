@@ -58,6 +58,12 @@ class QagHomeJsonMapper(
         )
     }
 
+    fun toJson(qagPreviewList: List<QagPreview>): QagPreviewListJson {
+        return QagPreviewListJson(
+            results = qagPreviewList.map { qagPreview -> qagToJson(qagPreview) }
+        )
+    }
+
     private fun qagToJson(qagPreview: QagPreview): QagPreviewJson {
         return QagPreviewJson(
             qagId = qagPreview.id,
