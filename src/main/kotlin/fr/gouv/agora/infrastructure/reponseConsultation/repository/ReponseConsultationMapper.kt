@@ -1,10 +1,7 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.DemographicInfoCountDTO
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountDTO
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountWithDemographicInfoDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.*
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.util.*
@@ -31,23 +28,6 @@ class ReponseConsultationMapper {
         )
     }
 
-    fun toDomain(dto: ResponseConsultationCountWithDemographicInfoDTO): ResponseConsultationCountWithDemographicInfo {
-        return ResponseConsultationCountWithDemographicInfo(
-            questionId = dto.questionId.toString(),
-            choiceId = dto.choiceId.toString(),
-            responseCount = dto.responseCount,
-            gender = toGender(dto.gender),
-            yearOfBirth = dto.yearOfBirth,
-            department = findDepartmentByNumber(dto.department),
-            cityType = toCityType(dto.cityType),
-            jobCategory = toJobCategory(dto.jobCategory),
-            voteFrequency = toFrequency(dto.voteFrequency),
-            publicMeetingFrequency = toFrequency(dto.publicMeetingFrequency),
-            consultationFrequency = toFrequency(dto.consultationFrequency),
-        )
-    }
-
-    @Suppress("KotlinConstantConditions")
     fun toDomain(
         genderCount: List<DemographicInfoCountDTO>,
         ageRangeCount: List<DemographicInfoCountDTO>,
@@ -68,6 +48,46 @@ class ReponseConsultationMapper {
             voteFrequencyCount = voteFrequencyCount.associate { toFrequency(it.key) to it.count },
             publicMeetingFrequencyCount = publicMeetingFrequencyCount.associate { toFrequency(it.key) to it.count },
             consultationFrequencyCount = consultationFrequencyCount.associate { toFrequency(it.key) to it.count },
+        )
+    }
+
+    fun toDomain(
+        genderCount: List<DemographicInfoCountByChoiceDTO>,
+        ageRangeCount: List<DemographicInfoCountByChoiceDTO>,
+        departmentCount: List<DemographicInfoCountByChoiceDTO>,
+        cityTypeCount: List<DemographicInfoCountByChoiceDTO>,
+        jobCategoryCount: List<DemographicInfoCountByChoiceDTO>,
+        voteFrequencyCount: List<DemographicInfoCountByChoiceDTO>,
+        publicMeetingFrequencyCount: List<DemographicInfoCountByChoiceDTO>,
+        consultationFrequencyCount: List<DemographicInfoCountByChoiceDTO>,
+    ): DemographicInfoCountByChoices {
+        val currentYear = LocalDate.now().year
+        val allChoices =
+            (genderCount + ageRangeCount + departmentCount + cityTypeCount + jobCategoryCount + voteFrequencyCount + publicMeetingFrequencyCount + consultationFrequencyCount)
+                .map { it.choiceId.toString() }
+                .toSet()
+
+        return DemographicInfoCountByChoices(
+            choiceDemographicInfoMap = allChoices.associateWith { choice ->
+                DemographicInfoCount(
+                    genderCount = genderCount.filter { it.choiceId.toString() == choice }
+                        .associate { toGender(it.key) to it.count },
+                    ageRangeCount = ageRangeCount.filter { it.choiceId.toString() == choice }
+                        .associate { toAgeRange(currentYear, it.key) to it.count },
+                    departmentCount = departmentCount.filter { it.choiceId.toString() == choice }
+                        .associate { findDepartmentByNumber(it.key) to it.count },
+                    cityTypeCount = cityTypeCount.filter { it.choiceId.toString() == choice }
+                        .associate { toCityType(it.key) to it.count },
+                    jobCategoryCount = jobCategoryCount.filter { it.choiceId.toString() == choice }
+                        .associate { toJobCategory(it.key) to it.count },
+                    voteFrequencyCount = voteFrequencyCount.filter { it.choiceId.toString() == choice }
+                        .associate { toFrequency(it.key) to it.count },
+                    publicMeetingFrequencyCount = publicMeetingFrequencyCount.filter { it.choiceId.toString() == choice }
+                        .associate { toFrequency(it.key) to it.count },
+                    consultationFrequencyCount = consultationFrequencyCount.filter { it.choiceId.toString() == choice }
+                        .associate { toFrequency(it.key) to it.count },
+                )
+            }
         )
     }
 

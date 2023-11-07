@@ -1,9 +1,6 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.DemographicInfoCountDTO
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountDTO
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountWithDemographicInfoDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -150,16 +147,100 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationConsultationFrequency(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
 
     @Query(
-        value = """SELECT question_id as questionId, choice_id as choiceId, count(*) AS responseCount, gender, year_of_birth as yearOfBirth, department, city_type as cityType, job_category as jobCategory, vote_frequency as voteFrequency, public_meeting_frequency as publicMeetingFrequency, consultation_frequency as consultationFrequency
+        value = """SELECT choice_id as choiceId, gender as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE consultation_id = :consultationId
             AND choice_id IS NOT NULL
-            GROUP BY (question_id, choice_id, gender, year_of_birth, department, city_type, job_category, vote_frequency, public_meeting_frequency, consultation_frequency)
+            GROUP BY (choice_id, gender)
             """,
         nativeQuery = true,
     )
-    fun getConsultationResponsesCountWithDemographicInfo(@Param("consultationId") consultationId: UUID): List<ResponseConsultationCountWithDemographicInfoDTO>
+    fun getConsultationGenderByChoice(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountByChoiceDTO>
+
+    @Query(
+        value = """SELECT choice_id as choiceId, year_of_birth as key, count(DISTINCT users_profile.user_id) AS count
+            FROM reponses_consultation LEFT JOIN users_profile
+            ON reponses_consultation.user_id = users_profile.user_id
+            WHERE consultation_id = :consultationId
+            AND choice_id IS NOT NULL
+            GROUP BY (choice_id, year_of_birth)
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationYearOfBirthByChoice(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountByChoiceDTO>
+
+    @Query(
+        value = """SELECT choice_id as choiceId, department as key, count(DISTINCT users_profile.user_id) AS count
+            FROM reponses_consultation LEFT JOIN users_profile
+            ON reponses_consultation.user_id = users_profile.user_id
+            WHERE consultation_id = :consultationId
+            AND choice_id IS NOT NULL
+            GROUP BY (choice_id, department)
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationDepartmentByChoice(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountByChoiceDTO>
+
+    @Query(
+        value = """SELECT choice_id as choiceId, city_type as key, count(DISTINCT users_profile.user_id) AS count
+            FROM reponses_consultation LEFT JOIN users_profile
+            ON reponses_consultation.user_id = users_profile.user_id
+            WHERE consultation_id = :consultationId
+            AND choice_id IS NOT NULL
+            GROUP BY (choice_id, city_type)
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationCityTypeByChoice(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountByChoiceDTO>
+
+    @Query(
+        value = """SELECT choice_id as choiceId, job_category as key, count(DISTINCT users_profile.user_id) AS count
+            FROM reponses_consultation LEFT JOIN users_profile
+            ON reponses_consultation.user_id = users_profile.user_id
+            WHERE consultation_id = :consultationId
+            AND choice_id IS NOT NULL
+            GROUP BY (choice_id, job_category)
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationJobCategoryByChoice(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountByChoiceDTO>
+
+    @Query(
+        value = """SELECT choice_id as choiceId, vote_frequency as key, count(DISTINCT users_profile.user_id) AS count
+            FROM reponses_consultation LEFT JOIN users_profile
+            ON reponses_consultation.user_id = users_profile.user_id
+            WHERE consultation_id = :consultationId
+            AND choice_id IS NOT NULL
+            GROUP BY (choice_id, vote_frequency)
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationVoteFrequencyByChoice(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountByChoiceDTO>
+
+    @Query(
+        value = """SELECT choice_id as choiceId, public_meeting_frequency as key, count(DISTINCT users_profile.user_id) AS count
+            FROM reponses_consultation LEFT JOIN users_profile
+            ON reponses_consultation.user_id = users_profile.user_id
+            WHERE consultation_id = :consultationId
+            AND choice_id IS NOT NULL
+            GROUP BY (choice_id, public_meeting_frequency)
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationPublicMeetingFrequencyByChoice(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountByChoiceDTO>
+
+    @Query(
+        value = """SELECT choice_id as choiceId, consultation_frequency as key, count(DISTINCT users_profile.user_id) AS count
+            FROM reponses_consultation LEFT JOIN users_profile
+            ON reponses_consultation.user_id = users_profile.user_id
+            WHERE consultation_id = :consultationId
+            AND choice_id IS NOT NULL
+            GROUP BY (choice_id, consultation_frequency)
+            """,
+        nativeQuery = true,
+    )
+    fun getConsultationConsultationFrequencyByChoice(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
         value = """SELECT DISTINCT consultation_id FROM reponses_consultation
