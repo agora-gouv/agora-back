@@ -1,5 +1,7 @@
 package fr.gouv.agora.infrastructure.login.repository
 
+import fr.gouv.agora.domain.LoginRequest
+import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.domain.UserAuthorization
 import fr.gouv.agora.domain.UserInfo
 import fr.gouv.agora.infrastructure.login.dto.UserDTO
@@ -33,11 +35,11 @@ class UserInfoMapper {
         )
     }
 
-    fun generateDto(fcmToken: String): UserDTO {
+    fun generateDto(signupRequest: SignupRequest): UserDTO {
         return UserDTO(
             id = UuidUtils.NOT_FOUND_UUID,
             password = DEFAULT_PASSWORD,
-            fcmToken = fcmToken,
+            fcmToken = signupRequest.fcmToken,
             createdDate = Date(),
             authorizationLevel = DEFAULT_AUTHORIZATION_LEVEL,
             isBanned = IS_BANNED_FALSE_VALUE,
@@ -45,8 +47,11 @@ class UserInfoMapper {
         )
     }
 
-    fun updateDto(dto: UserDTO, fcmToken: String): UserDTO {
-        return dto.copy(fcmToken = fcmToken, lastConnectionDate = Date())
+    fun updateDto(dto: UserDTO, loginRequest: LoginRequest): UserDTO {
+        return dto.copy(
+            fcmToken = loginRequest.fcmToken,
+            lastConnectionDate = Date(),
+        )
     }
 
 }

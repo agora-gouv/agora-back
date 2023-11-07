@@ -1,6 +1,6 @@
 package fr.gouv.agora.usecase.login
 
-import fr.gouv.agora.domain.LoginTokenData
+import fr.gouv.agora.domain.LoginRequest
 import fr.gouv.agora.domain.UserInfo
 import fr.gouv.agora.usecase.login.repository.UserRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -21,6 +21,10 @@ internal class LoginUseCaseTest {
 
     @MockBean
     private lateinit var repository: UserRepository
+
+    private val loginRequest = mock(LoginRequest::class.java).also {
+        given(it.userId).willReturn("userId")
+    }
 
     @Test
     fun `findUser - should return result from Repository`() {
@@ -43,20 +47,15 @@ internal class LoginUseCaseTest {
         given(repository.getUserById(userId = "userId")).willReturn(userInfo)
 
         val updatedUserInfo = mock(UserInfo::class.java)
-        given(repository.updateUser(userId = "userId", fcmToken = "fcmToken")).willReturn(updatedUserInfo)
+        given(repository.updateUser(loginRequest = loginRequest)).willReturn(updatedUserInfo)
 
         // When
-        val result = useCase.login(
-            loginTokenData = LoginTokenData(
-                userId = "userId",
-            ),
-            fcmToken = "fcmToken",
-        )
+        val result = useCase.login(loginRequest = loginRequest)
 
         // Then
         assertThat(result).isEqualTo(updatedUserInfo)
         then(repository).should().getUserById(userId = "userId")
-        then(repository).should().updateUser(userId = "userId", fcmToken = "fcmToken")
+        then(repository).should().updateUser(loginRequest = loginRequest)
         then(repository).shouldHaveNoMoreInteractions()
     }
 }

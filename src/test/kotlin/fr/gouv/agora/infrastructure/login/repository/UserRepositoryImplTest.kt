@@ -1,5 +1,7 @@
 package fr.gouv.agora.infrastructure.login.repository
 
+import fr.gouv.agora.domain.LoginRequest
+import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.domain.UserInfo
 import fr.gouv.agora.infrastructure.login.dto.UserDTO
 import fr.gouv.agora.infrastructure.login.repository.LoginCacheRepository.CacheResult
@@ -139,10 +141,19 @@ internal class UserRepositoryImplTest {
 
         private val userId = UUID.randomUUID()
 
+        private val loginRequest = mock(LoginRequest::class.java).also {
+            given(it.userId).willReturn(userId.toString())
+        }
+
         @Test
         fun `updateUser - when invalid user UUID - should return null without doing anything`() {
+            // Given
+            val loginRequest = mock(LoginRequest::class.java).also {
+                given(it.userId).willReturn("Invalid user UUID")
+            }
+
             // When
-            val result = repository.updateUser(userId = "invalid userId", fcmToken = "fcmToken")
+            val result = repository.updateUser(loginRequest = loginRequest)
 
             // Then
             assertThat(result).isEqualTo(null)
@@ -158,7 +169,7 @@ internal class UserRepositoryImplTest {
             given(databaseRepository.getUserById(userId = userId)).willReturn(null)
 
             // When
-            val result = repository.updateUser(userId = userId.toString(), fcmToken = "fcmToken")
+            val result = repository.updateUser(loginRequest = loginRequest)
 
             // Then
             assertThat(result).isEqualTo(null)
@@ -177,7 +188,7 @@ internal class UserRepositoryImplTest {
             given(cacheRepository.getUser(userUUID = userId)).willReturn(CacheResult.CacheUserNotFound)
 
             // When
-            val result = repository.updateUser(userId = userId.toString(), fcmToken = "fcmToken")
+            val result = repository.updateUser(loginRequest = loginRequest)
 
             // Then
             assertThat(result).isEqualTo(null)
@@ -193,7 +204,7 @@ internal class UserRepositoryImplTest {
             given(cacheRepository.getUser(userUUID = userId)).willReturn(CacheResult.CachedUser(userDTO))
 
             val updatedUserDTO = mock(UserDTO::class.java)
-            given(mapper.updateDto(dto = userDTO, fcmToken = "fcmToken")).willReturn(updatedUserDTO)
+            given(mapper.updateDto(dto = userDTO, loginRequest = loginRequest)).willReturn(updatedUserDTO)
 
             val savedUserDTO = mock(UserDTO::class.java)
             given(databaseRepository.save(updatedUserDTO)).willReturn(savedUserDTO)
@@ -202,13 +213,13 @@ internal class UserRepositoryImplTest {
             given(mapper.toDomain(savedUserDTO)).willReturn(userInfo)
 
             // When
-            val result = repository.updateUser(userId = userId.toString(), fcmToken = "fcmToken")
+            val result = repository.updateUser(loginRequest = loginRequest)
 
             // Then
             assertThat(result).isEqualTo(userInfo)
             inOrder(cacheRepository, databaseRepository, mapper).also {
                 then(cacheRepository).should(it).getUser(userUUID = userId)
-                then(mapper).should(it).updateDto(dto = userDTO, fcmToken = "fcmToken")
+                then(mapper).should(it).updateDto(dto = userDTO, loginRequest = loginRequest)
                 then(databaseRepository).should(it).save(updatedUserDTO)
                 then(cacheRepository).should(it).updateUser(userDTO = savedUserDTO)
                 then(mapper).should(it).toDomain(dto = savedUserDTO)
@@ -221,25 +232,27 @@ internal class UserRepositoryImplTest {
     @Test
     fun `generateUser - should generate dto and insert it in database and cache then return saved dto`() {
         // Given
+        val signupRequest = mock(SignupRequest::class.java)
+
         val userDTO = mock(UserDTO::class.java)
-        given(mapper.generateDto(fcmToken = "fcmToken")).willReturn(userDTO)
+        given(mapper.generateDto(signupRequest = signupRequest)).willReturn(userDTO)
 
         val savedUserDTO = mock(UserDTO::class.java)
         given(databaseRepository.save(userDTO)).willReturn(savedUserDTO)
 
         val userInfo = mock(UserInfo::class.java)
-        given(mapper.toDomain(savedUserDTO)).willReturn(userInfo)
+        given(mapper.toDomain(dto = savedUserDTO)).willReturn(userInfo)
 
         // When
-        val result = repository.generateUser(fcmToken = "fcmToken")
+        val result = repository.generateUser(signupRequest = signupRequest)
 
         // Then
         assertThat(result).isEqualTo(userInfo)
         inOrder(cacheRepository, databaseRepository, mapper).also { inOrder ->
-            then(mapper).should(inOrder).generateDto(fcmToken = "fcmToken")
+            then(mapper).should(inOrder).generateDto(signupRequest= signupRequest)
             then(databaseRepository).should(inOrder).save(userDTO)
-            then(cacheRepository).should(inOrder).insertUser(savedUserDTO)
-            then(mapper).should(inOrder).toDomain(savedUserDTO)
+            then(cacheRepository).should(inOrder).insertUser(userDTO = savedUserDTO)
+            then(mapper).should(inOrder).toDomain(dto = savedUserDTO)
             inOrder.verifyNoMoreInteractions()
         }
     }

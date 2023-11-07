@@ -1,8 +1,11 @@
 package fr.gouv.agora.infrastructure.login.repository
 
+import fr.gouv.agora.domain.LoginRequest
+import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.domain.UserInfo
 import fr.gouv.agora.infrastructure.login.dto.UserDTO
 import fr.gouv.agora.infrastructure.login.repository.LoginCacheRepository.CacheResult
+import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.login.repository.UserRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -28,22 +31,20 @@ class UserRepositoryImpl(
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun updateUser(userId: String, fcmToken: String): UserInfo? {
-        return try {
-            getUserDTO(UUID.fromString(userId))?.let { userDTO ->
-                val updatedUserDTO = mapper.updateDto(dto = userDTO, fcmToken = fcmToken)
+    override fun updateUser(loginRequest: LoginRequest): UserInfo? {
+        return loginRequest.userId.toUuidOrNull()?.let { userUUID ->
+            getUserDTO(userUUID = userUUID)?.let { userDTO ->
+                val updatedUserDTO = mapper.updateDto(dto = userDTO, loginRequest = loginRequest)
                 val savedUserDTO = databaseRepository.save(updatedUserDTO)
                 cacheRepository.updateUser(savedUserDTO)
                 mapper.toDomain(savedUserDTO)
             }
-        } catch (e: IllegalArgumentException) {
-            null
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun generateUser(fcmToken: String): UserInfo {
-        val userDTO = mapper.generateDto(fcmToken = fcmToken)
+    override fun generateUser(signupRequest: SignupRequest): UserInfo {
+        val userDTO = mapper.generateDto(signupRequest = signupRequest)
         val savedUserDTO = databaseRepository.save(userDTO)
         cacheRepository.insertUser(savedUserDTO)
         return mapper.toDomain(savedUserDTO)
