@@ -41,7 +41,7 @@ interface QagInfoRepository {
     fun selectQagForResponse(qagId: String): QagUpdateResult
     fun archiveOldQags(resetDate: Date)
     fun deleteQag(qagId: String): QagDeleteResult
-    fun getQagByKeywordsList(keywords: Array<String>): List<QagInfoWithSupportCount>
+    fun getQagByKeywordsList(keywords: List<String>): List<QagInfoWithSupportCount>
 }
 
 sealed class QagInsertionResult {

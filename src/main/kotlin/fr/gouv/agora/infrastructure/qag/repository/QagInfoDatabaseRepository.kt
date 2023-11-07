@@ -268,7 +268,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
         FROM $QAG_WITH_SUPPORT_JOIN
         WHERE qags.status = 1
-        AND (title ILIKE ALL (array[:keywords]) OR description ILIKE ALL (array[:keywords]))
+        AND (unaccent(title) ILIKE ALL (array[:keywords]) OR unaccent(description) ILIKE ALL (array[:keywords]))
         GROUP BY (qags.id)
         ORDER BY supportCount DESC
         LIMIT 20

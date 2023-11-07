@@ -1,10 +1,9 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountDTO
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountWithDemographicInfoDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.*
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 import java.util.*
 
 @Component
@@ -29,19 +28,66 @@ class ReponseConsultationMapper {
         )
     }
 
-    fun toDomain(dto: ResponseConsultationCountWithDemographicInfoDTO): ResponseConsultationCountWithDemographicInfo {
-        return ResponseConsultationCountWithDemographicInfo(
-            questionId = dto.questionId.toString(),
-            choiceId = dto.choiceId.toString(),
-            responseCount = dto.responseCount,
-            gender = toGender(dto.gender),
-            yearOfBirth = dto.yearOfBirth,
-            department = findDepartmentByNumber(dto.department),
-            cityType = toCityType(dto.cityType),
-            jobCategory = toJobCategory(dto.jobCategory),
-            voteFrequency = toFrequency(dto.voteFrequency),
-            publicMeetingFrequency = toFrequency(dto.publicMeetingFrequency),
-            consultationFrequency = toFrequency(dto.consultationFrequency),
+    fun toDomain(
+        genderCount: List<DemographicInfoCountDTO>,
+        ageRangeCount: List<DemographicInfoCountDTO>,
+        departmentCount: List<DemographicInfoCountDTO>,
+        cityTypeCount: List<DemographicInfoCountDTO>,
+        jobCategoryCount: List<DemographicInfoCountDTO>,
+        voteFrequencyCount: List<DemographicInfoCountDTO>,
+        publicMeetingFrequencyCount: List<DemographicInfoCountDTO>,
+        consultationFrequencyCount: List<DemographicInfoCountDTO>,
+    ): DemographicInfoCount {
+        val currentYear = LocalDate.now().year
+        return DemographicInfoCount(
+            genderCount = genderCount.associate { toGender(it.key) to it.count },
+            ageRangeCount = ageRangeCount.associate { toAgeRange(currentYear, it.key) to it.count },
+            departmentCount = departmentCount.associate { findDepartmentByNumber(it.key) to it.count },
+            cityTypeCount = cityTypeCount.associate { toCityType(it.key) to it.count },
+            jobCategoryCount = jobCategoryCount.associate { toJobCategory(it.key) to it.count },
+            voteFrequencyCount = voteFrequencyCount.associate { toFrequency(it.key) to it.count },
+            publicMeetingFrequencyCount = publicMeetingFrequencyCount.associate { toFrequency(it.key) to it.count },
+            consultationFrequencyCount = consultationFrequencyCount.associate { toFrequency(it.key) to it.count },
+        )
+    }
+
+    fun toDomain(
+        genderCount: List<DemographicInfoCountByChoiceDTO>,
+        ageRangeCount: List<DemographicInfoCountByChoiceDTO>,
+        departmentCount: List<DemographicInfoCountByChoiceDTO>,
+        cityTypeCount: List<DemographicInfoCountByChoiceDTO>,
+        jobCategoryCount: List<DemographicInfoCountByChoiceDTO>,
+        voteFrequencyCount: List<DemographicInfoCountByChoiceDTO>,
+        publicMeetingFrequencyCount: List<DemographicInfoCountByChoiceDTO>,
+        consultationFrequencyCount: List<DemographicInfoCountByChoiceDTO>,
+    ): DemographicInfoCountByChoices {
+        val currentYear = LocalDate.now().year
+        val allChoices =
+            (genderCount + ageRangeCount + departmentCount + cityTypeCount + jobCategoryCount + voteFrequencyCount + publicMeetingFrequencyCount + consultationFrequencyCount)
+                .map { it.choiceId.toString() }
+                .toSet()
+
+        return DemographicInfoCountByChoices(
+            choiceDemographicInfoMap = allChoices.associateWith { choice ->
+                DemographicInfoCount(
+                    genderCount = genderCount.filter { it.choiceId.toString() == choice }
+                        .associate { toGender(it.key) to it.count },
+                    ageRangeCount = ageRangeCount.filter { it.choiceId.toString() == choice }
+                        .associate { toAgeRange(currentYear, it.key) to it.count },
+                    departmentCount = departmentCount.filter { it.choiceId.toString() == choice }
+                        .associate { findDepartmentByNumber(it.key) to it.count },
+                    cityTypeCount = cityTypeCount.filter { it.choiceId.toString() == choice }
+                        .associate { toCityType(it.key) to it.count },
+                    jobCategoryCount = jobCategoryCount.filter { it.choiceId.toString() == choice }
+                        .associate { toJobCategory(it.key) to it.count },
+                    voteFrequencyCount = voteFrequencyCount.filter { it.choiceId.toString() == choice }
+                        .associate { toFrequency(it.key) to it.count },
+                    publicMeetingFrequencyCount = publicMeetingFrequencyCount.filter { it.choiceId.toString() == choice }
+                        .associate { toFrequency(it.key) to it.count },
+                    consultationFrequencyCount = consultationFrequencyCount.filter { it.choiceId.toString() == choice }
+                        .associate { toFrequency(it.key) to it.count },
+                )
+            }
         )
     }
 
@@ -102,6 +148,24 @@ class ReponseConsultationMapper {
         "F" -> Gender.FEMININ
         "A" -> Gender.AUTRE
         else -> null
+    }
+
+    @Suppress("KotlinConstantConditions")
+    private fun toAgeRange(currentYear: Int, yearOfBirthString: String?): AgeRange? {
+        return yearOfBirthString?.toIntOrNull()?.let { yearOfBirth ->
+            val age = currentYear - yearOfBirth
+            when {
+                age < 0 -> null
+                age in 0..18 -> AgeRange.LESS_THAN_18
+                age in 18..25 -> AgeRange.BETWEEN_18_AND_25
+                age in 26..35 -> AgeRange.BETWEEN_26_AND_35
+                age in 36..45 -> AgeRange.BETWEEN_36_AND_45
+                age in 46..55 -> AgeRange.BETWEEN_46_AND_55
+                age in 56..65 -> AgeRange.BETWEEN_56_AND_65
+                age > 65 -> AgeRange.MORE_THAN_65
+                else -> null
+            }
+        }
     }
 
     private fun toCityType(cityType: String?) = when (cityType) {

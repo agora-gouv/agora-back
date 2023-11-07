@@ -1,8 +1,6 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
-import fr.gouv.agora.domain.ReponseConsultation
-import fr.gouv.agora.domain.ResponseConsultationCount
-import fr.gouv.agora.domain.ResponseConsultationCountWithDemographicInfo
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.reponseConsultation.repository.ReponseConsultationCacheRepository.CacheResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -34,11 +32,47 @@ class GetConsultationResponseRepositoryImpl(
         } ?: emptyList()
     }
 
-    override fun getConsultationResponsesCountWithDemographicInfo(consultationId: String): List<ResponseConsultationCountWithDemographicInfo> {
+    override fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount {
         return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            databaseRepository.getConsultationResponsesCountWithDemographicInfo(consultationId = consultationUUID)
-                .map(mapper::toDomain)
-        } ?: emptyList()
+            mapper.toDomain(
+                genderCount = databaseRepository.getConsultationGender(consultationUUID),
+                ageRangeCount = databaseRepository.getConsultationYearOfBirth(consultationUUID),
+                departmentCount = databaseRepository.getConsultationDepartment(consultationUUID),
+                cityTypeCount = databaseRepository.getConsultationCityType(consultationUUID),
+                jobCategoryCount = databaseRepository.getConsultationJobCategory(consultationUUID),
+                voteFrequencyCount = databaseRepository.getConsultationVoteFrequency(consultationUUID),
+                publicMeetingFrequencyCount = databaseRepository.getConsultationPublicMeetingFrequency(consultationUUID),
+                consultationFrequencyCount = databaseRepository.getConsultationConsultationFrequency(consultationUUID),
+            )
+        } ?: DemographicInfoCount(
+            genderCount = emptyMap(),
+            ageRangeCount = emptyMap(),
+            departmentCount = emptyMap(),
+            cityTypeCount = emptyMap(),
+            jobCategoryCount = emptyMap(),
+            voteFrequencyCount = emptyMap(),
+            publicMeetingFrequencyCount = emptyMap(),
+            consultationFrequencyCount = emptyMap(),
+        )
+    }
+
+    override fun getParticipantDemographicInfoByChoices(consultationId: String): DemographicInfoCountByChoices {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            mapper.toDomain(
+                genderCount = databaseRepository.getConsultationGenderByChoice(consultationUUID),
+                ageRangeCount = databaseRepository.getConsultationYearOfBirthByChoice(consultationUUID),
+                departmentCount = databaseRepository.getConsultationDepartmentByChoice(consultationUUID),
+                cityTypeCount = databaseRepository.getConsultationCityTypeByChoice(consultationUUID),
+                jobCategoryCount = databaseRepository.getConsultationJobCategoryByChoice(consultationUUID),
+                voteFrequencyCount = databaseRepository.getConsultationVoteFrequencyByChoice(consultationUUID),
+                publicMeetingFrequencyCount = databaseRepository.getConsultationPublicMeetingFrequencyByChoice(
+                    consultationUUID
+                ),
+                consultationFrequencyCount = databaseRepository.getConsultationConsultationFrequencyByChoice(
+                    consultationUUID
+                ),
+            )
+        } ?: DemographicInfoCountByChoices(emptyMap())
     }
 
     override fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean {
