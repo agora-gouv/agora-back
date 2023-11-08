@@ -1,10 +1,12 @@
 package fr.gouv.agora.infrastructure.login
 
 import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.usecase.appVersionControl.AppVersionControlUseCase
 import fr.gouv.agora.usecase.appVersionControl.AppVersionStatus
 import fr.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
 import fr.gouv.agora.usecase.login.LoginUseCase
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,10 +26,12 @@ class SignupController(
 
     @PostMapping("/signup")
     fun signup(
+        @RequestHeader("User-Agent") userAgent: String,
         @RequestHeader("fcmToken") fcmToken: String,
         @RequestHeader("versionName") versionName: String?,
         @RequestHeader("versionCode") versionCode: String,
         @RequestHeader("platform") platform: String,
+        request: HttpServletRequest,
     ): ResponseEntity<*> {
         if (!featureFlagsUseCase.isFeatureEnabled(AgoraFeature.SignUp)) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
@@ -37,7 +41,16 @@ class SignupController(
             AppVersionStatus.INVALID_APP -> ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
             AppVersionStatus.UPDATE_REQUIRED -> ResponseEntity.status(HttpServletResponse.SC_PRECONDITION_FAILED)
                 .body(Unit)
-            AppVersionStatus.AUTHORIZED -> loginUseCase.signUp(fcmToken = fcmToken).let { userInfo ->
+            AppVersionStatus.AUTHORIZED -> loginUseCase.signUp(
+                SignupRequest(
+                    remoteAddress = request.getHeader("X-Remote-Address") ?: request.remoteAddr,
+                    userAgent = userAgent,
+                    fcmToken = fcmToken,
+                    platform = platform,
+                    versionName = versionName ?: "($versionCode)",
+                    versionCode = versionCode,
+                )
+            ).let { userInfo ->
                 signupInfoJsonMapper.toJson(domain = userInfo)?.let { userInfoJson ->
                     ResponseEntity.ok().body(userInfoJson)
                 }
