@@ -14,6 +14,7 @@ class ETagConfig {
     fun shallowETagHeaderFilter(): FilterRegistrationBean<ShallowEtagHeaderFilter>? {
         return FilterRegistrationBean(ShallowEtagHeaderFilter()).apply {
             addUrlPatterns("/thematiques")
+            addUrlPatterns("/participation_charter")
             setName("etagFilter")
         }
     }
