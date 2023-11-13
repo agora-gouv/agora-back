@@ -19,8 +19,8 @@ class QagHomeJsonMapper(
         qagSupportedList: List<QagPreview>,
         qagErrorText: String?,
     ): QagPreviewsJson {
-        val qagHomePopupTitle = System.getenv("QAG_HOME_POPUP_TITLE").takeIf { it.isNotBlank() }
-        val qagHomePopupDescription = System.getenv("QAG_HOME_POPUP_DESCRIPTION").takeIf { it.isNotBlank() }
+        val qagHomePopupTitle = System.getenv("QAG_HOME_POPUP_TITLE")?.takeIf { it.isNotBlank() }
+        val qagHomePopupDescription = System.getenv("QAG_HOME_POPUP_DESCRIPTION")?.takeIf { it.isNotBlank() }
 
         return QagPreviewsJson(
             qagList = QagListJson(
