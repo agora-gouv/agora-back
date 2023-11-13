@@ -11,6 +11,8 @@ data class QagPreviewsJson(
     val qagList: QagListJson,
     @JsonProperty("askQagErrorText")
     val askQagErrorText: String?,
+    @JsonProperty("popup")
+    val qagPopup: QagPopupJson?,
 )
 
 data class QagResponsesJson(
@@ -75,4 +77,11 @@ data class QagPreviewJson(
 data class QagPreviewListJson(
     @JsonProperty("results")
     val results: List<QagPreviewJson>,
+)
+
+data class QagPopupJson(
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("description")
+    val description: String,
 )
