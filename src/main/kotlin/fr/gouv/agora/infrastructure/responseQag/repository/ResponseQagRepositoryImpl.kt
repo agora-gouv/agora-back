@@ -12,8 +12,8 @@ class ResponseQagRepositoryImpl(
     private val mapper: ResponseQagMapper,
 ) : ResponseQagRepository {
 
-    override fun getResponsesQag(qagIds: List<String>): List<ResponseQag?> {
-        return databaseRepository.getResponsesQag(qagIds.mapNotNull { it.toUuidOrNull() }).map(mapper::toDomain)
+    override fun getResponsesQag(qagIds: List<String>): List<ResponseQag> {
+        return databaseRepository.getResponsesQag(qagIds.mapNotNull { it.toUuidOrNull() }).mapNotNull(mapper::toDomain)
     }
 
     override fun getResponseQag(qagId: String): ResponseQag? {
@@ -26,7 +26,7 @@ class ResponseQagRepositoryImpl(
         return databaseRepository.getResponsesQagCount()
     }
 
-    override fun getResponsesQag(offset: Int): List<ResponseQag?> {
-        return databaseRepository.getResponsesQag(offset = offset).map(mapper::toDomain)
+    override fun getResponsesQag(offset: Int): List<ResponseQag> {
+        return databaseRepository.getResponsesQag(offset = offset).mapNotNull(mapper::toDomain)
     }
 }

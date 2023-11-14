@@ -1,8 +1,6 @@
 package fr.gouv.agora.infrastructure.qag
 
-import fr.gouv.agora.domain.QagInserting
-import fr.gouv.agora.domain.QagStatus
-import fr.gouv.agora.domain.QagWithUserData
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.infrastructure.utils.StringUtils
@@ -17,6 +15,7 @@ class QagJsonMapper(
 ) {
 
     fun toJson(qagWithUserData: QagWithUserData): QagJson {
+        val (responseVideo, responseText) = buildResponseQagJson(qagWithUserData)
         return QagJson(
             id = qagWithUserData.qagDetails.id,
             thematique = thematiqueJsonMapper.toNoIdJson(qagWithUserData.qagDetails.thematique),
@@ -32,7 +31,8 @@ class QagJsonMapper(
                 isSupportedByUser = qagWithUserData.isSupportedByUser,
             ),
             isAuthor = qagWithUserData.isAuthor,
-            response = buildResponseQagJson(qagWithUserData),
+            response = responseVideo,
+            textResponse = responseText,
         )
     }
 
@@ -52,9 +52,22 @@ class QagJsonMapper(
         )
     }
 
-    private fun buildResponseQagJson(qagWithUserData: QagWithUserData): ResponseQagJson? {
-        return qagWithUserData.qagDetails.response?.let { response ->
-            ResponseQagJson(
+    private fun buildResponseQagJson(qagWithUserData: QagWithUserData): Pair<ResponseQagVideoJson?, ResponseQagTextJson?> {
+        return when (val response = qagWithUserData.qagDetails.response) {
+            is ResponseQagText -> null to ResponseQagTextJson(
+                responseLabel = response.responseLabel,
+                responseText = response.responseText,
+                feedbackQuestion = response.feedbackQuestion,
+                feedbackStatus = qagWithUserData.hasGivenFeedback,
+                feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
+                    FeedbackResultsJson(
+                        positiveRatio = feedbackResults.positiveRatio,
+                        negativeRatio = feedbackResults.negativeRatio,
+                        count = feedbackResults.count,
+                    )
+                })
+
+            is ResponseQagVideo -> ResponseQagVideoJson(
                 author = response.author,
                 authorDescription = response.authorDescription,
                 responseDate = dateMapper.toFormattedDate(response.responseDate),
@@ -70,8 +83,9 @@ class QagJsonMapper(
                         negativeRatio = feedbackResults.negativeRatio,
                         count = feedbackResults.count,
                     )
-                }
-            )
+                }) to null
+
+            else -> null to null
         }
     }
 }
