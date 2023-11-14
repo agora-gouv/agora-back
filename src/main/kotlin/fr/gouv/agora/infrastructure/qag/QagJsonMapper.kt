@@ -15,7 +15,6 @@ class QagJsonMapper(
 ) {
 
     fun toJson(qagWithUserData: QagWithUserData): QagJson {
-        val (responseVideo, responseText) = buildResponseQagJson(qagWithUserData)
         return QagJson(
             id = qagWithUserData.qagDetails.id,
             thematique = thematiqueJsonMapper.toNoIdJson(qagWithUserData.qagDetails.thematique),
@@ -31,8 +30,8 @@ class QagJsonMapper(
                 isSupportedByUser = qagWithUserData.isSupportedByUser,
             ),
             isAuthor = qagWithUserData.isAuthor,
-            response = responseVideo,
-            textResponse = responseText,
+            response = buildResponseQagVideoJson(qagWithUserData),
+            textResponse = buildResponseQagTextJson(qagWithUserData),
         )
     }
 
@@ -52,40 +51,47 @@ class QagJsonMapper(
         )
     }
 
-    private fun buildResponseQagJson(qagWithUserData: QagWithUserData): Pair<ResponseQagVideoJson?, ResponseQagTextJson?> {
-        return when (val response = qagWithUserData.qagDetails.response) {
-            is ResponseQagText -> null to ResponseQagTextJson(
-                responseLabel = response.responseLabel,
-                responseText = response.responseText,
-                feedbackQuestion = response.feedbackQuestion,
-                feedbackStatus = qagWithUserData.hasGivenFeedback,
-                feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
-                    FeedbackResultsJson(
-                        positiveRatio = feedbackResults.positiveRatio,
-                        negativeRatio = feedbackResults.negativeRatio,
-                        count = feedbackResults.count,
-                    )
-                })
-
-            is ResponseQagVideo -> ResponseQagVideoJson(
-                author = response.author,
-                authorDescription = response.authorDescription,
-                responseDate = dateMapper.toFormattedDate(response.responseDate),
-                videoUrl = response.videoUrl,
-                videoWidth = response.videoWidth,
-                videoHeight = response.videoHeight,
-                transcription = StringUtils.unescapeLineBreaks(response.transcription),
-                feedbackQuestion = response.feedbackQuestion,
-                feedbackStatus = qagWithUserData.hasGivenFeedback,
-                feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
-                    FeedbackResultsJson(
-                        positiveRatio = feedbackResults.positiveRatio,
-                        negativeRatio = feedbackResults.negativeRatio,
-                        count = feedbackResults.count,
-                    )
-                }) to null
-
-            else -> null to null
+    private fun buildResponseQagVideoJson(qagWithUserData: QagWithUserData): ResponseQagVideoJson? {
+        return qagWithUserData.qagDetails.response?.let { response ->
+            if (response is ResponseQagVideo)
+                ResponseQagVideoJson(
+                    author = response.author,
+                    authorDescription = response.authorDescription,
+                    responseDate = dateMapper.toFormattedDate(response.responseDate),
+                    videoUrl = response.videoUrl,
+                    videoWidth = response.videoWidth,
+                    videoHeight = response.videoHeight,
+                    transcription = StringUtils.unescapeLineBreaks(response.transcription),
+                    feedbackQuestion = response.feedbackQuestion,
+                    feedbackStatus = qagWithUserData.hasGivenFeedback,
+                    feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
+                        FeedbackResultsJson(
+                            positiveRatio = feedbackResults.positiveRatio,
+                            negativeRatio = feedbackResults.negativeRatio,
+                            count = feedbackResults.count,
+                        )
+                    }) else null
         }
     }
+
+    private fun buildResponseQagTextJson(qagWithUserData: QagWithUserData): ResponseQagTextJson? {
+        return qagWithUserData.qagDetails.response?.let { response ->
+            if (response is ResponseQagText)
+                ResponseQagTextJson(
+                    responseLabel = response.responseLabel,
+                    responseText = response.responseText,
+                    feedbackQuestion = response.feedbackQuestion,
+                    feedbackStatus = qagWithUserData.hasGivenFeedback,
+                    feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let
+                    { feedbackResults ->
+                        FeedbackResultsJson(
+                            positiveRatio = feedbackResults.positiveRatio,
+                            negativeRatio = feedbackResults.negativeRatio,
+                            count = feedbackResults.count,
+                        )
+                    }
+                ) else null
+        }
+    }
+
 }

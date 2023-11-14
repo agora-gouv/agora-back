@@ -10,27 +10,19 @@ import org.springframework.stereotype.Component
 class ResponseQagMapper {
 
     fun toDomain(dto: ResponseQagDTO): ResponseQag? {
-        return if (!dto.videoUrl.isNullOrEmpty())
-            dto.authorDescription?.let { authorDescription ->
-                dto.videoWidth?.let { videoWidth ->
-                    dto.videoHeight?.let { videoHeight ->
-                        dto.transcription?.let { transcription ->
-                            ResponseQagVideo(
-                                author = dto.author,
-                                authorPortraitUrl = dto.authorPortraitUrl,
-                                authorDescription = authorDescription,
-                                responseDate = dto.responseDate,
-                                videoUrl = dto.videoUrl,
-                                videoWidth = videoWidth,
-                                videoHeight = videoHeight,
-                                transcription = transcription,
-                                feedbackQuestion = dto.feedbackQuestion,
-                                qagId = dto.qagId.toString(),
-                            )
-                        }
-                    }
-                }
-            }
+        return if (!dto.videoUrl.isNullOrEmpty() && !dto.authorDescription.isNullOrEmpty() && dto.videoWidth != null && dto.videoHeight != null && !dto.transcription.isNullOrEmpty())
+            ResponseQagVideo(
+                author = dto.author,
+                authorPortraitUrl = dto.authorPortraitUrl,
+                authorDescription = dto.authorDescription,
+                responseDate = dto.responseDate,
+                videoUrl = dto.videoUrl,
+                videoWidth = dto.videoWidth,
+                videoHeight = dto.videoHeight,
+                transcription = dto.transcription,
+                feedbackQuestion = dto.feedbackQuestion,
+                qagId = dto.qagId.toString(),
+            )
         else if (!dto.responseText.isNullOrEmpty())
             ResponseQagText(
                 author = dto.author,

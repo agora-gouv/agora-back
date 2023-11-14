@@ -162,7 +162,7 @@ internal class ResponseQagPreviewListUseCaseTest {
         }
         given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
 
-        val responseQag = mock(ResponseQagVideo::class.java).also {
+        val responseQag = mock(ResponseQagText::class.java).also {
             given(it.qagId).willReturn("qagId")
         }
         given(responseQagRepository.getResponsesQag(listOf("qagId"))).willReturn(listOf(responseQag))

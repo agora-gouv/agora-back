@@ -2,6 +2,7 @@ package fr.gouv.agora.usecase.reponseQag
 
 import fr.gouv.agora.domain.ResponseQagPreview
 import fr.gouv.agora.domain.ResponseQagVideo
+import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -104,7 +105,7 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
         // Given
         given(responseQagRepository.getResponsesQagCount()).willReturn(50)
 
-        val responseQag = mock(ResponseQagVideo::class.java).also {
+        val responseQag = mock(ResponseQagText::class.java).also {
             given(it.qagId).willReturn("qagId")
         }
         given(responseQagRepository.getResponsesQag(offset = 20)).willReturn(listOf(responseQag))
