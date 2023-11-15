@@ -1,9 +1,6 @@
 package fr.gouv.agora.usecase.responseQag
 
-import fr.gouv.agora.domain.IncomingResponsePreview
-import fr.gouv.agora.domain.ResponseQag
-import fr.gouv.agora.domain.ResponseQagPreview
-import fr.gouv.agora.domain.Thematique
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagPreviewCacheRepository
@@ -165,7 +162,7 @@ internal class ResponseQagPreviewListUseCaseTest {
         }
         given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
 
-        val responseQag = mock(ResponseQag::class.java).also {
+        val responseQag = mock(ResponseQagText::class.java).also {
             given(it.qagId).willReturn("qagId")
         }
         given(responseQagRepository.getResponsesQag(listOf("qagId"))).willReturn(listOf(responseQag))

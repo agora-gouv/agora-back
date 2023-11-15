@@ -1,8 +1,6 @@
 package fr.gouv.agora.infrastructure.qag
 
-import fr.gouv.agora.domain.QagInserting
-import fr.gouv.agora.domain.QagStatus
-import fr.gouv.agora.domain.QagWithUserData
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.infrastructure.utils.StringUtils
@@ -32,7 +30,8 @@ class QagJsonMapper(
                 isSupportedByUser = qagWithUserData.isSupportedByUser,
             ),
             isAuthor = qagWithUserData.isAuthor,
-            response = buildResponseQagJson(qagWithUserData),
+            response = buildResponseQagVideoJson(qagWithUserData),
+            textResponse = buildResponseQagTextJson(qagWithUserData),
         )
     }
 
@@ -52,26 +51,47 @@ class QagJsonMapper(
         )
     }
 
-    private fun buildResponseQagJson(qagWithUserData: QagWithUserData): ResponseQagJson? {
+    private fun buildResponseQagVideoJson(qagWithUserData: QagWithUserData): ResponseQagVideoJson? {
         return qagWithUserData.qagDetails.response?.let { response ->
-            ResponseQagJson(
-                author = response.author,
-                authorDescription = response.authorDescription,
-                responseDate = dateMapper.toFormattedDate(response.responseDate),
-                videoUrl = response.videoUrl,
-                videoWidth = response.videoWidth,
-                videoHeight = response.videoHeight,
-                transcription = StringUtils.unescapeLineBreaks(response.transcription),
-                feedbackQuestion = response.feedbackQuestion,
-                feedbackStatus = qagWithUserData.hasGivenFeedback,
-                feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
-                    FeedbackResultsJson(
-                        positiveRatio = feedbackResults.positiveRatio,
-                        negativeRatio = feedbackResults.negativeRatio,
-                        count = feedbackResults.count,
-                    )
-                }
-            )
+            if (response is ResponseQagVideo)
+                ResponseQagVideoJson(
+                    author = response.author,
+                    authorDescription = response.authorDescription,
+                    responseDate = dateMapper.toFormattedDate(response.responseDate),
+                    videoUrl = response.videoUrl,
+                    videoWidth = response.videoWidth,
+                    videoHeight = response.videoHeight,
+                    transcription = StringUtils.unescapeLineBreaks(response.transcription),
+                    feedbackQuestion = response.feedbackQuestion,
+                    feedbackStatus = qagWithUserData.hasGivenFeedback,
+                    feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
+                        FeedbackResultsJson(
+                            positiveRatio = feedbackResults.positiveRatio,
+                            negativeRatio = feedbackResults.negativeRatio,
+                            count = feedbackResults.count,
+                        )
+                    }) else null
         }
     }
+
+    private fun buildResponseQagTextJson(qagWithUserData: QagWithUserData): ResponseQagTextJson? {
+        return qagWithUserData.qagDetails.response?.let { response ->
+            if (response is ResponseQagText)
+                ResponseQagTextJson(
+                    responseLabel = response.responseLabel,
+                    responseText = response.responseText,
+                    feedbackQuestion = response.feedbackQuestion,
+                    feedbackStatus = qagWithUserData.hasGivenFeedback,
+                    feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let
+                    { feedbackResults ->
+                        FeedbackResultsJson(
+                            positiveRatio = feedbackResults.positiveRatio,
+                            negativeRatio = feedbackResults.negativeRatio,
+                            count = feedbackResults.count,
+                        )
+                    }
+                ) else null
+        }
+    }
+
 }

@@ -2,16 +2,33 @@ package fr.gouv.agora.domain
 
 import java.util.*
 
-data class ResponseQag(
-    val id: String,
-    val author: String,
-    val authorPortraitUrl: String,
+sealed class ResponseQag {
+    abstract val author: String
+    abstract val authorPortraitUrl: String
+    abstract val responseDate: Date
+    abstract val feedbackQuestion: String
+    abstract val qagId: String
+}
+
+data class ResponseQagVideo(
+    override val author: String,
+    override val authorPortraitUrl: String,
+    override val responseDate: Date,
+    override val feedbackQuestion: String,
+    override val qagId: String,
     val authorDescription: String,
-    val responseDate: Date,
     val videoUrl: String,
     val videoWidth: Int,
     val videoHeight: Int,
     val transcription: String,
-    val feedbackQuestion: String,
-    val qagId: String,
-)
+) : ResponseQag()
+
+data class ResponseQagText(
+    override val author: String,
+    override val authorPortraitUrl: String,
+    override val responseDate: Date,
+    override val feedbackQuestion: String,
+    override val qagId: String,
+    val responseLabel: String,
+    val responseText: String,
+) : ResponseQag()

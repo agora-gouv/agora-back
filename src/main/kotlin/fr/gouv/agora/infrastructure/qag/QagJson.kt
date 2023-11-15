@@ -30,7 +30,9 @@ data class QagJson(
     @JsonProperty("isAuthor")
     val isAuthor: Boolean,
     @JsonProperty("response")
-    val response: ResponseQagJson?,
+    val response: ResponseQagVideoJson?,
+    @JsonProperty("textResponse")
+    val textResponse: ResponseQagTextJson?,
 )
 
 data class SupportQagJson(
@@ -40,7 +42,7 @@ data class SupportQagJson(
     val isSupportedByUser: Boolean,
 )
 
-data class ResponseQagJson(
+data class ResponseQagVideoJson(
     @JsonProperty("author")
     val author: String,
     @JsonProperty("authorDescription")
@@ -55,6 +57,19 @@ data class ResponseQagJson(
     val videoHeight: Int,
     @JsonProperty("transcription")
     val transcription: String,
+    @JsonProperty("feedbackQuestion")
+    val feedbackQuestion: String,
+    @JsonProperty("feedbackStatus")
+    val feedbackStatus: Boolean,
+    @JsonProperty("feedbackResults")
+    val feedbackResults: FeedbackResultsJson?,
+)
+
+data class ResponseQagTextJson(
+    @JsonProperty("responseLabel")
+    val responseLabel: String,
+    @JsonProperty("responseText")
+    val responseText: String,
     @JsonProperty("feedbackQuestion")
     val feedbackQuestion: String,
     @JsonProperty("feedbackStatus")
