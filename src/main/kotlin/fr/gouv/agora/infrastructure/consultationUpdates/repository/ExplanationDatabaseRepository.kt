@@ -11,13 +11,13 @@ import java.util.*
 interface ExplanationDatabaseRepository : JpaRepository<ExplanationDTO, UUID> {
 
     @Query(
-        value = "SELECT * FROM explanations WHERE consultation_updates_id IN :consultationUpdatesIDs",
+        value = "SELECT * FROM explanations WHERE consultation_updates_id IN :consultationUpdatesIDs ORDER BY ordre",
         nativeQuery = true
     )
     fun getExplanationUpdates(@Param("consultationUpdatesIDs") consultationUpdatesIDs: List<UUID>): List<ExplanationDTO>
 
     @Query(
-        value = "SELECT * FROM explanations WHERE consultation_updates_id = :consultationUpdatesUUId",
+        value = "SELECT * FROM explanations WHERE consultation_updates_id = :consultationUpdatesUUId ORDER BY ordre",
         nativeQuery = true
     )
     fun getExplanationList(@Param("consultationUpdatesUUId") consultationUpdatesUUId: UUID): List<ExplanationDTO>
