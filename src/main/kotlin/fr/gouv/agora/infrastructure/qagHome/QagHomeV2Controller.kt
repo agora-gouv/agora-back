@@ -28,14 +28,11 @@ class QagHomeV2Controller(
 
         return usedPageNumber?.let { pageNumberInt ->
             when (usedFilterType) {
-                "top" -> {val test = qagPaginatedV2UseCase.getPopularQagPaginated(
+                "top" -> qagPaginatedV2UseCase.getPopularQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
                 )
-                    println( test?.qags)
-                    test
-                }
 
                 "latest" -> qagPaginatedV2UseCase.getLatestQagPaginated(
                     userId = userId,

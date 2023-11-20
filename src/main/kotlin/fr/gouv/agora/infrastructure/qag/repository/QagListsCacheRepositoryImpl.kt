@@ -73,7 +73,6 @@ class QagListsCacheRepositoryImpl(
     @Suppress("UNCHECKED_CAST")
     private fun getQagList(key: String): QagsAndMaxPageCount? {
         return try {
-            println("salut du cache")
             val value = getCache()?.get(key, Pair::class.java) as? Pair<Int, List<String>>
             value?.first?.let { maxPageCount ->
                 value.second.map { objectMapper.readValue(it, QagPreview::class.java) }.let { qags ->

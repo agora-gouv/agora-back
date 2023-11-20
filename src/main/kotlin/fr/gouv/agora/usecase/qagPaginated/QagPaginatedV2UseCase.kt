@@ -27,12 +27,6 @@ class QagPaginatedV2UseCase(
         pageNumber: Int,
         thematiqueId: String?,
     ): QagsAndMaxPageCount? {
-        print(
-            "retour du cache" + qagListsCacheRepository.getQagPopularList(
-                thematiqueId = thematiqueId,
-                pageNumber = pageNumber
-            )
-        )
         return qagListsCacheRepository.getQagPopularList(thematiqueId = thematiqueId, pageNumber = pageNumber)
             ?: getQagPaginated(
                 getQagMethod = GetQagMethodNew.WithoutUserId(QagInfoRepository::getPopularQagsPaginatedV2),
@@ -98,7 +92,6 @@ class QagPaginatedV2UseCase(
         pageNumber: Int,
         thematiqueId: String?,
     ): QagsAndMaxPageCount? {
-        println("salut")
         if (pageNumber < 1) return null
 
         val qagsCount = qagInfoRepository.getQagsCount()
@@ -122,7 +115,7 @@ class QagPaginatedV2UseCase(
         val thematiques = thematiqueRepository.getThematiqueList()
         val userSupportedQagIds = supportQagRepository.getUserSupportedQags(userId = userId)
 
-        val qagImane = QagsAndMaxPageCount(
+        return QagsAndMaxPageCount(
             qags = qags.mapNotNull { qag ->
                 thematiques.find { thematique -> thematique.id == qag.thematiqueId }?.let { thematique ->
                     mapper.toPreview(
@@ -135,8 +128,6 @@ class QagPaginatedV2UseCase(
             },
             maxPageCount = ceil(qagsCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
         )
-        println(qagImane.qags)
-        return qagImane
     }
 }
 
