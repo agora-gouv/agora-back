@@ -1,45 +1,49 @@
-package fr.gouv.agora.infrastructure.qagPaginated
+package fr.gouv.agora.infrastructure.qagHome
 
+import fr.gouv.agora.infrastructure.qagPaginated.QagPaginatedJsonMapper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
-import fr.gouv.agora.usecase.qagPaginated.QagPaginatedUseCase
+import fr.gouv.agora.usecase.qagPaginated.QagPaginatedV2UseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
-class QagPaginatedController(
-    private val qagPaginatedUseCase: QagPaginatedUseCase,
+class QagHomeV2Controller(
+    private val qagPaginatedV2UseCase: QagPaginatedV2UseCase,
     private val qagPaginatedJsonMapper: QagPaginatedJsonMapper,
 ) {
 
-    @GetMapping("/qags/page/{pageNumber}")
+    @GetMapping("/v2/qags")
     fun getQagDetails(
         @RequestHeader("Authorization") authorizationHeader: String,
-        @PathVariable pageNumber: String,
-        @RequestParam("filterType") filterType: String?,
+        @RequestParam("pageNumber") pageNumber: String,
         @RequestParam("thematiqueId") thematiqueId: String?,
+        @RequestParam("filterType") filterType: String,
     ): ResponseEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        val usedFilterType = filterType.takeUnless { it.isNullOrBlank() }
-        val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedPageNumber = pageNumber.toIntOrNull()
+        val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
+        val usedFilterType = filterType.takeUnless { it.isBlank() }
 
         return usedPageNumber?.let { pageNumberInt ->
             when (usedFilterType) {
-                "popular" -> qagPaginatedUseCase.getPopularQagPaginated(
+                "top" -> {val test = qagPaginatedV2UseCase.getPopularQagPaginated(
+                    userId = userId,
+                    pageNumber = pageNumberInt,
+                    thematiqueId = usedThematiqueId,
+                )
+                    println( test?.qags)
+                    test
+                }
+
+                "latest" -> qagPaginatedV2UseCase.getLatestQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,
                 )
 
-                "latest" -> qagPaginatedUseCase.getLatestQagPaginated(
-                    userId = userId,
-                    pageNumber = pageNumberInt,
-                    thematiqueId = usedThematiqueId,
-                )
-
-                "supporting" -> qagPaginatedUseCase.getSupportedQagPaginated(
+                "supporting" -> qagPaginatedV2UseCase.getSupportedQagPaginated(
                     userId = userId,
                     pageNumber = pageNumberInt,
                     thematiqueId = usedThematiqueId,

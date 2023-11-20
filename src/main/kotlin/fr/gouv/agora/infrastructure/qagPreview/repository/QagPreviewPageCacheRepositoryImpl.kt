@@ -58,7 +58,7 @@ class QagPreviewPageCacheRepositoryImpl(
         getCache()?.evict("$LATEST_PREFIX_KEY/$thematiqueId")
     }
 
-    override fun getQagSupportedList(userId: String, thematiqueId: String?) = getQagList("$SUPPORTED_PREFIX_KEY$userId")
+    override fun getQagSupportedList(userId: String, thematiqueId: String?) = getQagList("$SUPPORTED_PREFIX_KEY/$userId")
 
     override fun initQagSupportedList(
         userId: String,
@@ -90,7 +90,7 @@ class QagPreviewPageCacheRepositoryImpl(
     private fun getQagList(key: String): List<QagWithSupportCount>? {
         return try {
             val modelList = getCache()?.get(key, List::class.java) as? List<String>
-            return modelList?.map { objectMapper.readValue(it, QagWithSupportCount::class.java) }
+            modelList?.map { objectMapper.readValue(it, QagWithSupportCount::class.java) }
         } catch (e: IllegalStateException) {
             null
         }
