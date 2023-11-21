@@ -1,9 +1,8 @@
 package fr.gouv.agora.infrastructure.qag.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.agora.domain.QagPreview
-import fr.gouv.agora.usecase.qagPaginated.QagsAndMaxPageCount
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
+import fr.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
@@ -26,8 +25,13 @@ class QagListsCacheRepositoryImpl(
     override fun getQagPopularList(thematiqueId: String?, pageNumber: Int) =
         getQagList(key = "$TOP_PREFIX_KEY/$thematiqueId/$pageNumber")
 
-    override fun initQagPopularList(thematiqueId: String?, pageNumber: Int, qagsAndMaxPageCount: QagsAndMaxPageCount) {
-        initQagList(key = "$TOP_PREFIX_KEY/$thematiqueId/$pageNumber", qagsAndMaxPageCount = qagsAndMaxPageCount)
+    override fun initQagPopularList(
+        thematiqueId: String?,
+        pageNumber: Int,
+        maxPageCount: Int,
+        qags: List<QagWithSupportCount>,
+    ) {
+        initQagList(key = "$TOP_PREFIX_KEY/$thematiqueId/$pageNumber", maxPageCount = maxPageCount, qags = qags)
     }
 
     override fun evictQagPopularList(thematiqueId: String?, pageNumber: Int) {
@@ -37,8 +41,13 @@ class QagListsCacheRepositoryImpl(
     override fun getQagLatestList(thematiqueId: String?, pageNumber: Int) =
         getQagList("$LATEST_PREFIX_KEY/$thematiqueId/$pageNumber")
 
-    override fun initQagLatestList(thematiqueId: String?, pageNumber: Int, qagsAndMaxPageCount: QagsAndMaxPageCount) {
-        initQagList(key = "$LATEST_PREFIX_KEY/$thematiqueId/$pageNumber", qagsAndMaxPageCount = qagsAndMaxPageCount)
+    override fun initQagLatestList(
+        thematiqueId: String?,
+        pageNumber: Int,
+        maxPageCount: Int,
+        qags: List<QagWithSupportCount>,
+    ) {
+        initQagList(key = "$LATEST_PREFIX_KEY/$thematiqueId/$pageNumber", maxPageCount = maxPageCount, qags = qags)
     }
 
     override fun evictQagLatestList(thematiqueId: String?, pageNumber: Int) {
@@ -52,11 +61,13 @@ class QagListsCacheRepositoryImpl(
         userId: String,
         thematiqueId: String?,
         pageNumber: Int,
-        qagsAndMaxPageCount: QagsAndMaxPageCount,
+        maxPageCount: Int,
+        qags: List<QagWithSupportCount>,
     ) {
         initQagList(
             key = "$SUPPORTED_PREFIX_KEY/$userId/$thematiqueId/$pageNumber",
-            qagsAndMaxPageCount = qagsAndMaxPageCount
+            maxPageCount = maxPageCount,
+            qags = qags
         )
     }
 
@@ -71,26 +82,27 @@ class QagListsCacheRepositoryImpl(
     private fun getCache() = cacheManager.getCache(QAG_LISTS_PAGINATED_CACHE_NAME)
 
     @Suppress("UNCHECKED_CAST")
-    private fun getQagList(key: String): QagsAndMaxPageCount? {
+    private fun getQagList(key: String): Pair<Int, List<QagWithSupportCount>>? {
         return try {
             val value = getCache()?.get(key, Pair::class.java) as? Pair<Int, List<String>>
-            value?.first?.let { maxPageCount ->
-                value.second.map { objectMapper.readValue(it, QagPreview::class.java) }.let { qags ->
-                    QagsAndMaxPageCount(
-                        maxPageCount = maxPageCount,
-                        qags = qags
+            value?.let {
+                val count = it.first
+                val qags = it.second.mapNotNull { serializedQag ->
+                    objectMapper.readValue(
+                        serializedQag,
+                        QagWithSupportCount::class.java
                     )
                 }
+                Pair(count, qags)
             }
-
         } catch (e: IllegalStateException) {
             null
         }
     }
 
-    private fun initQagList(key: String, qagsAndMaxPageCount: QagsAndMaxPageCount) {
+    private fun initQagList(key: String, maxPageCount: Int, qags: List<QagWithSupportCount>) {
         getCache()?.put(
             key,
-            qagsAndMaxPageCount.maxPageCount to qagsAndMaxPageCount.qags.map { objectMapper.writeValueAsString(it) })
+            maxPageCount to qags.map { objectMapper.writeValueAsString(it) })
     }
 }
