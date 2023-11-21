@@ -81,20 +81,11 @@ class QagListsCacheRepositoryImpl(
 
     private fun getCache() = cacheManager.getCache(QAG_LISTS_PAGINATED_CACHE_NAME)
 
-    @Suppress("UNCHECKED_CAST")
     private fun getQagList(key: String): Pair<Int, List<QagWithSupportCount>>? {
         return try {
-            val value = getCache()?.get(key, Pair::class.java) as? Pair<Int, List<String>>
-            value?.let {
-                val count = it.first
-                val qags = it.second.mapNotNull { serializedQag ->
-                    objectMapper.readValue(
-                        serializedQag,
-                        QagWithSupportCount::class.java
-                    )
-                }
-                Pair(count, qags)
-            }
+            val qagListWithMaxPageCount = getCache()?.get(key, QagListWithMaxPageCount::class.java)
+            if (qagListWithMaxPageCount != null) qagListWithMaxPageCount.maxPageCount to qagListWithMaxPageCount.qags
+            else null
         } catch (e: IllegalStateException) {
             null
         }
@@ -103,6 +94,12 @@ class QagListsCacheRepositoryImpl(
     private fun initQagList(key: String, maxPageCount: Int, qags: List<QagWithSupportCount>) {
         getCache()?.put(
             key,
-            maxPageCount to qags.map { objectMapper.writeValueAsString(it) })
+            objectMapper.writeValueAsString(QagListWithMaxPageCount(maxPageCount = maxPageCount, qags = qags))
+        )
     }
 }
+
+data class QagListWithMaxPageCount(
+    val maxPageCount: Int,
+    val qags: List<QagWithSupportCount>,
+)
