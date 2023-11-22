@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.qagHome
 import fr.gouv.agora.infrastructure.qagPaginated.QagPaginatedJsonMapper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qagPaginated.QagPaginatedV2UseCase
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -48,9 +47,9 @@ class QagHomeV2Controller(
 
                 else -> null
             }?.let { qagsAndMaxPageCount ->
-                ResponseEntity.ok(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
-            } ?: ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Unit)
-        } ?: ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Unit)
+                ResponseEntity.ok().body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
+            } ?: ResponseEntity.badRequest().body(Unit)
+        } ?: ResponseEntity.badRequest().body(Unit)
 
     }
 

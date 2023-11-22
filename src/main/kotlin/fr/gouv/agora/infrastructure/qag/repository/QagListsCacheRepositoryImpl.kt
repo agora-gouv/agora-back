@@ -28,10 +28,12 @@ class QagListsCacheRepositoryImpl(
     override fun initQagPopularList(
         thematiqueId: String?,
         pageNumber: Int,
-        maxPageCount: Int,
-        qags: List<QagWithSupportCount>,
+        qagListWithMaxPageCount: QagListWithMaxPageCount,
     ) {
-        initQagList(key = "$TOP_PREFIX_KEY/$thematiqueId/$pageNumber", maxPageCount = maxPageCount, qags = qags)
+        initQagList(
+            key = "$TOP_PREFIX_KEY/$thematiqueId/$pageNumber",
+            qagListWithMaxPageCount = qagListWithMaxPageCount
+        )
     }
 
     override fun evictQagPopularList(thematiqueId: String?, pageNumber: Int) {
@@ -44,10 +46,12 @@ class QagListsCacheRepositoryImpl(
     override fun initQagLatestList(
         thematiqueId: String?,
         pageNumber: Int,
-        maxPageCount: Int,
-        qags: List<QagWithSupportCount>,
+        qagListWithMaxPageCount: QagListWithMaxPageCount,
     ) {
-        initQagList(key = "$LATEST_PREFIX_KEY/$thematiqueId/$pageNumber", maxPageCount = maxPageCount, qags = qags)
+        initQagList(
+            key = "$LATEST_PREFIX_KEY/$thematiqueId/$pageNumber",
+            qagListWithMaxPageCount = qagListWithMaxPageCount
+        )
     }
 
     override fun evictQagLatestList(thematiqueId: String?, pageNumber: Int) {
@@ -61,13 +65,11 @@ class QagListsCacheRepositoryImpl(
         userId: String,
         thematiqueId: String?,
         pageNumber: Int,
-        maxPageCount: Int,
-        qags: List<QagWithSupportCount>,
+        qagListWithMaxPageCount: QagListWithMaxPageCount,
     ) {
         initQagList(
             key = "$SUPPORTED_PREFIX_KEY/$userId/$thematiqueId/$pageNumber",
-            maxPageCount = maxPageCount,
-            qags = qags
+            qagListWithMaxPageCount = qagListWithMaxPageCount
         )
     }
 
@@ -81,20 +83,18 @@ class QagListsCacheRepositoryImpl(
 
     private fun getCache() = cacheManager.getCache(QAG_LISTS_PAGINATED_CACHE_NAME)
 
-    private fun getQagList(key: String): Pair<Int, List<QagWithSupportCount>>? {
+    private fun getQagList(key: String): QagListWithMaxPageCount? {
         return try {
-            val qagListWithMaxPageCount = getCache()?.get(key, QagListWithMaxPageCount::class.java)
-            if (qagListWithMaxPageCount != null) qagListWithMaxPageCount.maxPageCount to qagListWithMaxPageCount.qags
-            else null
+            getCache()?.get(key, QagListWithMaxPageCount::class.java)
         } catch (e: IllegalStateException) {
             null
         }
     }
 
-    private fun initQagList(key: String, maxPageCount: Int, qags: List<QagWithSupportCount>) {
+    private fun initQagList(key: String, qagListWithMaxPageCount: QagListWithMaxPageCount) {
         getCache()?.put(
             key,
-            objectMapper.writeValueAsString(QagListWithMaxPageCount(maxPageCount = maxPageCount, qags = qags))
+            objectMapper.writeValueAsString(qagListWithMaxPageCount)
         )
     }
 }
