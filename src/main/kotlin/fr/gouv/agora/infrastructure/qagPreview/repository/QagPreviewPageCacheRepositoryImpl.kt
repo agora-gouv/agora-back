@@ -58,7 +58,7 @@ class QagPreviewPageCacheRepositoryImpl(
         getCache()?.evict("$LATEST_PREFIX_KEY/$thematiqueId")
     }
 
-    override fun getQagSupportedList(userId: String, thematiqueId: String?) = getQagList("$SUPPORTED_PREFIX_KEY/$userId")
+    override fun getQagSupportedList(userId: String, thematiqueId: String?) = getQagList("$SUPPORTED_PREFIX_KEY/$userId/$thematiqueId")
 
     override fun initQagSupportedList(
         userId: String,

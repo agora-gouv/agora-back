@@ -6,6 +6,7 @@ import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
 import fr.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.gouv.agora.usecase.qag.repository.*
+import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.springframework.stereotype.Service
 
@@ -17,6 +18,7 @@ class ModerateModeratusQagUseCase(
     private val moderatusQagLockRepository: ModeratusQagLockRepository,
     private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagDetailsCacheRepository: QagDetailsCacheRepository,
+    private val qagListsCacheRepository: QagListsCacheRepository,
 ) {
 
     companion object {
@@ -59,6 +61,7 @@ class ModerateModeratusQagUseCase(
                 )
                 ModeratusQagModerateResult.SUCCESS
             }
+
             QagUpdateResult.Failure -> ModeratusQagModerateResult.FAILURE
         }
     }
@@ -74,16 +77,21 @@ class ModerateModeratusQagUseCase(
                 }
                 moderatusQagLockRepository.removeLockedQagId(qagInfo.id)
             }
+
             QagStatus.MODERATED_ACCEPTED -> if (!isAccepted) {
                 sendNotificationUseCase.sendNotificationQagRejected(qagInfo.id)
                 qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
                 qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
                 qagDetailsCacheRepository.evictQag(qagId = qagInfo.id)
+                qagListsCacheRepository.evictQagLatestList(thematiqueId = null, pageNumber = 1)
+                qagListsCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
             }
+
             QagStatus.MODERATED_REJECTED -> if (isAccepted) {
                 sendNotificationUseCase.sendNotificationQagAcceptedAfterReject(qagInfo.id)
                 updateCache(qagInfo)
             }
+
             QagStatus.ARCHIVED, QagStatus.SELECTED_FOR_RESPONSE -> throw IllegalStateException("Can not moderate qag with status ${qagInfo.status}")
         }
     }
@@ -92,15 +100,19 @@ class ModerateModeratusQagUseCase(
         val popularQagsNoThematique = qagPreviewCacheRepository.getQagPopularList(thematiqueId = null)
         if (popularQagsNoThematique != null && popularQagsNoThematique.size < MAX_PREVIEW_LIST_SIZE) {
             qagPreviewCacheRepository.evictQagPopularList(thematiqueId = null)
+            qagListsCacheRepository.evictQagPopularList(thematiqueId = null, pageNumber = 1)
         }
         val popularQagsWithThematique =
             qagPreviewCacheRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)
         if (popularQagsWithThematique != null && popularQagsWithThematique.size < MAX_PREVIEW_LIST_SIZE) {
             qagPreviewCacheRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId)
+            qagListsCacheRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
         }
         qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
         qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
         qagDetailsCacheRepository.evictQag(qagId = qagInfo.id)
+        qagListsCacheRepository.evictQagLatestList(thematiqueId = null, pageNumber = 1)
+        qagListsCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
     }
 
 }

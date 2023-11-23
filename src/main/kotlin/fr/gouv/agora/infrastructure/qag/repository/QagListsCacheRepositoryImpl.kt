@@ -36,6 +36,14 @@ class QagListsCacheRepositoryImpl(
         )
     }
 
+    override fun incrementQagPopularSupportCount(thematiqueId: String?, pageNumber: Int, qagId: String) {
+        incrementSupportCount(key = "$TOP_PREFIX_KEY/$thematiqueId/$pageNumber", qagId = qagId)
+    }
+
+    override fun decrementQagPopularSupportCount(thematiqueId: String?, pageNumber: Int, qagId: String) {
+        decrementSupportCount(key = "$TOP_PREFIX_KEY/$thematiqueId/$pageNumber", qagId = qagId)
+    }
+
     override fun evictQagPopularList(thematiqueId: String?, pageNumber: Int) {
         getCache()?.evict("$TOP_PREFIX_KEY/$thematiqueId/$pageNumber")
     }
@@ -54,6 +62,14 @@ class QagListsCacheRepositoryImpl(
         )
     }
 
+    override fun incrementQagLatestSupportCount(thematiqueId: String?, pageNumber: Int, qagId: String) {
+        incrementSupportCount(key = "$LATEST_PREFIX_KEY/$thematiqueId/$pageNumber", qagId = qagId)
+    }
+
+    override fun decrementQagLatestSupportCount(thematiqueId: String?, pageNumber: Int, qagId: String) {
+        decrementSupportCount(key = "$LATEST_PREFIX_KEY/$thematiqueId/$pageNumber", qagId = qagId)
+    }
+
     override fun evictQagLatestList(thematiqueId: String?, pageNumber: Int) {
         getCache()?.evict("$LATEST_PREFIX_KEY/$thematiqueId/$pageNumber")
     }
@@ -70,6 +86,20 @@ class QagListsCacheRepositoryImpl(
         initQagList(
             key = "$SUPPORTED_PREFIX_KEY/$userId/$thematiqueId/$pageNumber",
             qagListWithMaxPageCount = qagListWithMaxPageCount
+        )
+    }
+
+    override fun incrementSupportedSupportCount(userId: String, thematiqueId: String?, pageNumber: Int, qagId: String) {
+        incrementSupportCount(
+            key = "$SUPPORTED_PREFIX_KEY/$userId/$thematiqueId/$pageNumber",
+            qagId = qagId
+        )
+    }
+
+    override fun decrementSupportedSupportCount(userId: String, thematiqueId: String?, pageNumber: Int, qagId: String) {
+        decrementSupportCount(
+            key = "$SUPPORTED_PREFIX_KEY/$userId/$thematiqueId/$pageNumber",
+            qagId = qagId
         )
     }
 
@@ -96,6 +126,30 @@ class QagListsCacheRepositoryImpl(
             key,
             objectMapper.writeValueAsString(qagListWithMaxPageCount)
         )
+    }
+
+    private fun incrementSupportCount(key: String, qagId: String) {
+        alterQag(key, qagId, alterQagMethod = { qag ->
+            qag.copy(qagInfo = qag.qagInfo.copy(supportCount = qag.qagInfo.supportCount + 1))
+        })
+    }
+
+    private fun decrementSupportCount(key: String, qagId: String) {
+        alterQag(key, qagId, alterQagMethod = { qag ->
+            qag.copy(qagInfo = qag.qagInfo.copy(supportCount = qag.qagInfo.supportCount - 1))
+        })
+    }
+
+    private fun alterQag(key: String, qagId: String, alterQagMethod: (QagWithSupportCount) -> QagWithSupportCount) {
+        getQagList(key = key)?.let { qagListWithMaxPageCount ->
+            if (qagListWithMaxPageCount.qags.any { qag -> qag.qagInfo.id == qagId }) {
+                qagListWithMaxPageCount.qags.map { qag ->
+                    if (qag.qagInfo.id == qagId) {
+                        alterQagMethod.invoke(qag)
+                    } else qag
+                }
+            }
+        }
     }
 }
 

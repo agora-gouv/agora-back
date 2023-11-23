@@ -6,6 +6,7 @@ import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
@@ -20,6 +21,7 @@ class DeleteSupportQagUseCase(
     private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagDetailsCacheRepository: QagDetailsCacheRepository,
     private val supportQagCacheRepository: SupportQagCacheRepository,
+    private val qagListsCacheRepository: QagListsCacheRepository,
 ) {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult {
         if (!getSupportQagRepository.isQagSupported(
@@ -37,6 +39,7 @@ class DeleteSupportQagUseCase(
                 println("⚠️ Remove support error: QaG with invalid status")
                 SupportQagResult.FAILURE
             }
+
             QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED -> {
                 val supportResult = supportQagRepository.deleteSupportQag(supportQagDeleting)
                 if (supportResult == SupportQagResult.SUCCESS) {
@@ -72,6 +75,30 @@ class DeleteSupportQagUseCase(
         )
         qagDetailsCacheRepository.decrementSupportCount(qagInfo.id)
         supportQagCacheRepository.removeSupportedQagIds(userId = userId, qagId = qagInfo.id)
+        qagListsCacheRepository.decrementQagPopularSupportCount(thematiqueId = null, pageNumber = 1, qagId = qagInfo.id)
+        qagListsCacheRepository.decrementQagPopularSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            pageNumber = 1,
+            qagId = qagInfo.id
+        )
+        qagListsCacheRepository.decrementQagLatestSupportCount(thematiqueId = null, pageNumber = 1, qagId = qagInfo.id)
+        qagListsCacheRepository.decrementQagLatestSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            pageNumber = 1,
+            qagId = qagInfo.id
+        )
+        qagListsCacheRepository.decrementSupportedSupportCount(
+            userId = userId,
+            thematiqueId = null,
+            pageNumber = 1,
+            qagId = qagInfo.id
+        )
+        qagListsCacheRepository.decrementSupportedSupportCount(
+            userId = userId,
+            thematiqueId = qagInfo.thematiqueId,
+            pageNumber = 1,
+            qagId = qagInfo.id
+        )
     }
 
 }
