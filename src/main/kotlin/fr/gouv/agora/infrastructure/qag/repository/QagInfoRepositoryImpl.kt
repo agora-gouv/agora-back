@@ -109,6 +109,56 @@ class QagInfoRepositoryImpl(
         return qagList.map(mapper::toDomain)
     }
 
+    override fun getPopularQagsPaginatedV2(
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount> {
+        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+            databaseRepository.getPopularQagsPaginatedV2(
+                offset = offset,
+                thematiqueId = thematiqueUUID,
+            )
+        } ?: databaseRepository.getPopularQagsPaginatedV2(
+            offset = offset,
+        )
+        return qagList.map(mapper::toDomain)
+    }
+
+    override fun getLatestQagsPaginatedV2(
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount> {
+        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+            databaseRepository.getLatestQagsPaginatedV2(
+                offset = offset,
+                thematiqueId = thematiqueUUID,
+            )
+        } ?: databaseRepository.getLatestQagsPaginatedV2(
+            offset = offset,
+        )
+        return qagList.map(mapper::toDomain)
+    }
+
+    override fun getSupportedQagsPaginatedV2(
+        userId: String,
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount> {
+        val qagList = userId.toUuidOrNull()?.let { userUUID ->
+            thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+                databaseRepository.getSupportedQagsPaginatedV2(
+                    userId = userUUID,
+                    offset = offset,
+                    thematiqueId = thematiqueUUID,
+                )
+            } ?: databaseRepository.getSupportedQagsPaginatedV2(
+                userId = userUUID,
+                offset = offset,
+            )
+        } ?: emptyList()
+        return qagList.map(mapper::toDomain)
+    }
+
     override fun getQagsCount(): Int {
         return databaseRepository.getQagsCount()
     }

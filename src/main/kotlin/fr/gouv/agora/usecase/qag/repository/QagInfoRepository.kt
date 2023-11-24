@@ -30,6 +30,21 @@ interface QagInfoRepository {
         thematiqueId: String?,
     ): List<QagInfoWithSupportCount>
 
+    fun getPopularQagsPaginatedV2(
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount>
+
+    fun getLatestQagsPaginatedV2(
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount>
+
+    fun getSupportedQagsPaginatedV2(
+        userId: String,
+        offset: Int,
+        thematiqueId: String?,
+    ): List<QagInfoWithSupportCount>
     fun getQagsCount(): Int
     fun getQagInfo(qagId: String): QagInfo?
     fun getQagsInfo(qagIds: List<String>): List<QagInfo>
