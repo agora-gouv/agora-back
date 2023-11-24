@@ -23,7 +23,10 @@ interface SupportQagDatabaseRepository : JpaRepository<SupportQagDTO, UUID> {
     fun deleteSupportListByQagId(@Param("qagId") qagId: UUID): Int
 
     @Query(
-        value = "SELECT qag_id FROM supports_qag WHERE user_id = :userId ORDER BY support_date DESC",
+        value = """SELECT qag_id FROM supports_qag 
+            WHERE qag_id IN (SELECT id FROM qags WHERE (status = 0 OR status = 1))
+            AND user_id = :userId 
+            ORDER BY support_date DESC""",
         nativeQuery = true
     )
     fun getUserSupportedQags(@Param("userId") userId: UUID): List<UUID>

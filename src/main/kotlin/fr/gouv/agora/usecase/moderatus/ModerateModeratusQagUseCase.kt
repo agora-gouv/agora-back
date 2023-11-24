@@ -100,14 +100,22 @@ class ModerateModeratusQagUseCase(
         val popularQagsNoThematique = qagPreviewCacheRepository.getQagPopularList(thematiqueId = null)
         if (popularQagsNoThematique != null && popularQagsNoThematique.size < MAX_PREVIEW_LIST_SIZE) {
             qagPreviewCacheRepository.evictQagPopularList(thematiqueId = null)
-            qagListsCacheRepository.evictQagPopularList(thematiqueId = null, pageNumber = 1)
         }
         val popularQagsWithThematique =
             qagPreviewCacheRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)
         if (popularQagsWithThematique != null && popularQagsWithThematique.size < MAX_PREVIEW_LIST_SIZE) {
             qagPreviewCacheRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId)
-            qagListsCacheRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
         }
+        val popularQagListNoThematique = qagListsCacheRepository.getQagPopularList(thematiqueId = null, pageNumber = 1)
+        if (popularQagListNoThematique != null && popularQagListNoThematique.qags.size < MAX_PREVIEW_LIST_SIZE) {
+            qagListsCacheRepository.evictQagPopularList(thematiqueId = null, pageNumber = 1)
+        }
+        val popularQagListWithThematique =
+            qagListsCacheRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
+        if (popularQagListWithThematique != null && popularQagListWithThematique.qags.size < MAX_PREVIEW_LIST_SIZE) {
+            qagListsCacheRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
+        }
+        qagListsCacheRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
         qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
         qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
         qagDetailsCacheRepository.evictQag(qagId = qagInfo.id)
