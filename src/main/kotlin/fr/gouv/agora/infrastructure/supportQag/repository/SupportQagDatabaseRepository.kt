@@ -24,7 +24,11 @@ interface SupportQagDatabaseRepository : JpaRepository<SupportQagDTO, UUID> {
 
     @Query(
         value = """SELECT qag_id FROM supports_qag 
-            WHERE qag_id IN (SELECT id FROM qags WHERE (status = 0 OR status = 1))
+            WHERE qag_id IN (
+                SELECT id FROM qags 
+                WHERE status = 1 
+                OR (status = 0 AND user_id = :userId)
+            )
             AND user_id = :userId 
             ORDER BY support_date DESC""",
         nativeQuery = true
