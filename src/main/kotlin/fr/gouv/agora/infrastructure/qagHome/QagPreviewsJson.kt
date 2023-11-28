@@ -85,3 +85,12 @@ data class QagPopupJson(
     @JsonProperty("description")
     val description: String,
 )
+
+data class HeaderJson(
+    @JsonProperty("headerId")
+    val headerId: String,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("message")
+    val message: String,
+)

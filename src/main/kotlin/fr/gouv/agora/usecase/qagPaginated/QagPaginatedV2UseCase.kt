@@ -1,9 +1,13 @@
 package fr.gouv.agora.usecase.qagPaginated
 
+import fr.gouv.agora.domain.Header
+import fr.gouv.agora.domain.QagPreview
 import fr.gouv.agora.infrastructure.qag.repository.QagListWithMaxPageCount
 import fr.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
+import fr.gouv.agora.usecase.qagPaginated.repository.HeaderCacheRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.HeaderRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
@@ -17,18 +21,23 @@ class QagPaginatedV2UseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val supportQagRepository: GetSupportQagRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
+    private val headerRepository: HeaderRepository,
+    private val headerCacheRepository: HeaderCacheRepository,
     private val mapper: QagPreviewMapper,
 ) {
 
     companion object {
         private const val MAX_PAGE_LIST_SIZE = 20
+        private const val TOP = "top"
+        private const val LATEST = "latest"
+        private const val SUPPORTING = "supporting"
     }
 
     fun getPopularQagPaginated(
         userId: String,
         pageNumber: Int,
         thematiqueId: String?,
-    ): QagsAndMaxPageCount? {
+    ): QagsAndMaxPageCountV2? {
         val qagListWithMaxPageCount =
             qagListsCacheRepository.getQagPopularList(thematiqueId = thematiqueId, pageNumber = pageNumber)
                 ?: getQagPaginated(
@@ -43,14 +52,14 @@ class QagPaginatedV2UseCase(
                         qagListWithMaxPageCount = it
                     )
                 }
-        return qagListWithMaxPageCount?.mapQags(userId)
+        return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = TOP, pageNumber = pageNumber)
     }
 
     fun getLatestQagPaginated(
         userId: String,
         pageNumber: Int,
         thematiqueId: String?,
-    ): QagsAndMaxPageCount? {
+    ): QagsAndMaxPageCountV2? {
         val qagListWithMaxPageCount =
             qagListsCacheRepository.getQagLatestList(thematiqueId = thematiqueId, pageNumber = pageNumber)
                 ?: getQagPaginated(
@@ -65,7 +74,7 @@ class QagPaginatedV2UseCase(
                         qagListWithMaxPageCount = it
                     )
                 }
-        return qagListWithMaxPageCount?.mapQags(userId)
+        return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = LATEST, pageNumber = pageNumber)
     }
 
 
@@ -73,7 +82,7 @@ class QagPaginatedV2UseCase(
         userId: String,
         pageNumber: Int,
         thematiqueId: String?,
-    ): QagsAndMaxPageCount? {
+    ): QagsAndMaxPageCountV2? {
         val qagListWithMaxPageCount = qagListsCacheRepository.getQagSupportedList(
             userId = userId,
             thematiqueId = thematiqueId,
@@ -92,7 +101,7 @@ class QagPaginatedV2UseCase(
                     qagListWithMaxPageCount = it
                 )
             }
-        return qagListWithMaxPageCount?.mapQags(userId)
+        return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = SUPPORTING, pageNumber = pageNumber)
     }
 
     private fun getQagPaginated(
@@ -137,7 +146,17 @@ class QagPaginatedV2UseCase(
         return QagListWithMaxPageCount(maxPageCount = maxPageCount, qags = qagWithSupportCountList)
     }
 
-    private fun QagListWithMaxPageCount.mapQags(userId: String): QagsAndMaxPageCount {
+    private fun QagListWithMaxPageCount.mapQags(
+        userId: String,
+        filterType: String,
+        pageNumber: Int,
+    ): QagsAndMaxPageCountV2 {
+        val header = when (pageNumber) {
+            1 -> headerCacheRepository.getHeader(filterType) ?: headerRepository.getHeader(filterType)
+                ?.also { headerCacheRepository.initHeader(filterType, it) }
+
+            else -> null
+        }
         val userSupportedQagIds = supportQagRepository.getUserSupportedQags(userId = userId)
         val qagList = this.qags.map { qagWithSupportCount ->
             mapper.toPreview(
@@ -146,12 +165,19 @@ class QagPaginatedV2UseCase(
                 isAuthor = qagWithSupportCount.qagInfo.userId == userId
             )
         }
-        return QagsAndMaxPageCount(
+        return QagsAndMaxPageCountV2(
             maxPageCount = this.maxPageCount,
+            header = header,
             qags = qagList
         )
     }
 }
+
+data class QagsAndMaxPageCountV2(
+    val qags: List<QagPreview>,
+    val header: Header?,
+    val maxPageCount: Int,
+)
 
 private sealed class RetrieveQagMethod {
     data class WithoutUserId(
