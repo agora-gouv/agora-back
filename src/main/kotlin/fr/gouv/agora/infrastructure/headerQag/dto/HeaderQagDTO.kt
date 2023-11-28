@@ -1,11 +1,11 @@
-package fr.gouv.agora.infrastructure.header.dto
+package fr.gouv.agora.infrastructure.headerQag.dto
 
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import java.util.*
 
 @Entity(name = "headers")
-data class HeaderDTO(
+data class HeaderQagDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
@@ -24,7 +24,7 @@ data class HeaderDTO(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as HeaderDTO
+        other as HeaderQagDTO
 
         return id == other.id
     }

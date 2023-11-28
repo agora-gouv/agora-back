@@ -1,10 +1,10 @@
 package fr.gouv.agora.infrastructure.qagPaginated
 
-import fr.gouv.agora.domain.Header
+import fr.gouv.agora.domain.HeaderQag
 import fr.gouv.agora.domain.QagPreview
 import fr.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.gouv.agora.infrastructure.qag.SupportQagJson
-import fr.gouv.agora.infrastructure.qagHome.HeaderJson
+import fr.gouv.agora.infrastructure.qagHome.HeaderQagJson
 import fr.gouv.agora.infrastructure.qagHome.QagPreviewJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.usecase.qagPaginated.QagsAndMaxPageCount
@@ -27,8 +27,8 @@ class QagPaginatedJsonMapper(
     fun toJson(qagsAndMaxPageCount: QagsAndMaxPageCountV2): QagPaginatedJsonV2 {
         return QagPaginatedJsonV2(
             maxPageNumber = qagsAndMaxPageCount.maxPageCount,
-            header = qagsAndMaxPageCount.header?.let { toJson(it) },
-            qags = qagsAndMaxPageCount.qags.map { domain -> toJson(domain) },
+            header = qagsAndMaxPageCount.headerQag?.let(::toJson),
+            qags = qagsAndMaxPageCount.qags.map(::toJson),
         )
     }
 
@@ -47,11 +47,11 @@ class QagPaginatedJsonMapper(
         )
     }
 
-    private fun toJson(header: Header): HeaderJson {
-        return HeaderJson(
-            headerId = header.headerId,
-            title = header.title,
-            message = header.message
+    private fun toJson(headerQag: HeaderQag): HeaderQagJson {
+        return HeaderQagJson(
+            headerId = headerQag.headerId,
+            title = headerQag.title,
+            message = headerQag.message
         )
     }
 

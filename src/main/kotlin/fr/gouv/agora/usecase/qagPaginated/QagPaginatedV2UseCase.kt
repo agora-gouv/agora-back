@@ -1,13 +1,13 @@
 package fr.gouv.agora.usecase.qagPaginated
 
-import fr.gouv.agora.domain.Header
+import fr.gouv.agora.domain.HeaderQag
 import fr.gouv.agora.domain.QagPreview
 import fr.gouv.agora.infrastructure.qag.repository.QagListWithMaxPageCount
 import fr.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
-import fr.gouv.agora.usecase.qagPaginated.repository.HeaderCacheRepository
-import fr.gouv.agora.usecase.qagPaginated.repository.HeaderRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
@@ -21,8 +21,8 @@ class QagPaginatedV2UseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val supportQagRepository: GetSupportQagRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
-    private val headerRepository: HeaderRepository,
-    private val headerCacheRepository: HeaderCacheRepository,
+    private val headerRepository: HeaderQagRepository,
+    private val headerCacheRepository: HeaderQagCacheRepository,
     private val mapper: QagPreviewMapper,
 ) {
 
@@ -167,7 +167,7 @@ class QagPaginatedV2UseCase(
         }
         return QagsAndMaxPageCountV2(
             maxPageCount = this.maxPageCount,
-            header = header,
+            headerQag = header,
             qags = qagList
         )
     }
@@ -175,7 +175,7 @@ class QagPaginatedV2UseCase(
 
 data class QagsAndMaxPageCountV2(
     val qags: List<QagPreview>,
-    val header: Header?,
+    val headerQag: HeaderQag?,
     val maxPageCount: Int,
 )
 
