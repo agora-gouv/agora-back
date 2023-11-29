@@ -22,6 +22,8 @@ class ResponseQagMapper {
                 transcription = dto.transcription,
                 feedbackQuestion = dto.feedbackQuestion,
                 qagId = dto.qagId.toString(),
+                additionalInfoTitle = dto.additionalInfoTitle,
+                additionalInfoDescription = dto.additionalInfoDescription,
             )
         else if (!dto.responseText.isNullOrEmpty())
             ResponseQagText(

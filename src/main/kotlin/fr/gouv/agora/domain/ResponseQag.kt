@@ -21,6 +21,8 @@ data class ResponseQagVideo(
     val videoWidth: Int,
     val videoHeight: Int,
     val transcription: String,
+    val additionalInfoTitle: String?,
+    val additionalInfoDescription: String?,
 ) : ResponseQag()
 
 data class ResponseQagText(
