@@ -71,11 +71,14 @@ class QagJsonMapper(
                             count = feedbackResults.count,
                         )
                     },
-                    additionalInfo = if (response.additionalInfoTitle != null && response.additionalInfoDescription != null) AdditionalInfoJson(
-                        title = response.additionalInfoTitle,
-                        description = response.additionalInfoDescription
-                    ) else null
-                ) else null
+                    additionalInfo = response.additionalInfo?.let {
+                        AdditionalInfoJson(
+                            title = it.additionalInfoTitle,
+                            description = response.additionalInfo.additionalInfoDescription
+                        )
+                    }
+                )
+            else null
         }
     }
 
