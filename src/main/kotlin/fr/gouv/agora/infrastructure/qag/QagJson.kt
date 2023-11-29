@@ -42,6 +42,7 @@ data class SupportQagJson(
     val isSupportedByUser: Boolean,
 )
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class ResponseQagVideoJson(
     @JsonProperty("author")
     val author: String,
@@ -63,8 +64,11 @@ data class ResponseQagVideoJson(
     val feedbackStatus: Boolean,
     @JsonProperty("feedbackResults")
     val feedbackResults: FeedbackResultsJson?,
+    @JsonProperty("additionalInfo")
+    val additionalInfo: AdditionalInfoJson?,
 )
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class ResponseQagTextJson(
     @JsonProperty("responseLabel")
     val responseLabel: String,
@@ -85,4 +89,11 @@ data class FeedbackResultsJson(
     val negativeRatio: Int,
     @JsonProperty("count")
     val count: Int,
+)
+
+data class AdditionalInfoJson(
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("description")
+    val description: String,
 )
