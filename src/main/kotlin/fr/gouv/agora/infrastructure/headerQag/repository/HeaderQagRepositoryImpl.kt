@@ -6,7 +6,7 @@ import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagRepository
 import org.springframework.stereotype.Component
 
 @Component
-class HeaderQagQagRepositoryImpl(
+class HeaderQagRepositoryImpl(
     private val databaseRepository: HeaderQagDatabaseRepository,
     private val mapper: HeaderQagMapper,
 ) : HeaderQagRepository {

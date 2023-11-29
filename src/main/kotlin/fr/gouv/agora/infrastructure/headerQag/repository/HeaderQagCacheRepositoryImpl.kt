@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
-class HeaderQagQagCacheRepositoryImpl(
+class HeaderQagCacheRepositoryImpl(
     private val cacheManager: CacheManager,
     private val objectMapper: ObjectMapper,
 ) : HeaderQagCacheRepository {
