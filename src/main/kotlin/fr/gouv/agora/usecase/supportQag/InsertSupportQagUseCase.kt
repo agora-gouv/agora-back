@@ -6,6 +6,7 @@ import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
@@ -20,6 +21,7 @@ class InsertSupportQagUseCase(
     private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagDetailsCacheRepository: QagDetailsCacheRepository,
     private val supportQagCacheRepository: SupportQagCacheRepository,
+    private val qagListsCacheRepository: QagListsCacheRepository,
 ) {
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
         if (getSupportQagRepository.isQagSupported(
@@ -37,6 +39,7 @@ class InsertSupportQagUseCase(
                 println("⚠️ Add support error: QaG with invalid status")
                 SupportQagResult.FAILURE
             }
+
             QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED -> {
                 val supportResult = supportQagRepository.insertSupportQag(supportQagInserting)
                 if (supportResult == SupportQagResult.SUCCESS) {
@@ -72,6 +75,30 @@ class InsertSupportQagUseCase(
         )
         qagDetailsCacheRepository.incrementSupportCount(qagInfo.id)
         supportQagCacheRepository.addSupportedQagIds(userId = userId, qagId = qagInfo.id)
+        qagListsCacheRepository.incrementQagPopularSupportCount(thematiqueId = null, pageNumber = 1, qagId = qagInfo.id)
+        qagListsCacheRepository.incrementQagPopularSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            pageNumber = 1,
+            qagId = qagInfo.id
+        )
+        qagListsCacheRepository.incrementQagLatestSupportCount(thematiqueId = null, pageNumber = 1, qagId = qagInfo.id)
+        qagListsCacheRepository.incrementQagLatestSupportCount(
+            thematiqueId = qagInfo.thematiqueId,
+            pageNumber = 1,
+            qagId = qagInfo.id
+        )
+        qagListsCacheRepository.incrementSupportedSupportCount(
+            userId = userId,
+            thematiqueId = null,
+            pageNumber = 1,
+            qagId = qagInfo.id
+        )
+        qagListsCacheRepository.incrementSupportedSupportCount(
+            userId = userId,
+            thematiqueId = qagInfo.thematiqueId,
+            pageNumber = 1,
+            qagId = qagInfo.id
+        )
     }
 
 }

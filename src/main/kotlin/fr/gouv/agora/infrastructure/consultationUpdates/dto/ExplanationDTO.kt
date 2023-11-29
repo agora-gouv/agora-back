@@ -10,6 +10,7 @@ data class ExplanationDTO(
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
+    val ordre: Int,
     @Column(columnDefinition = "TEXT")
     val title: String,
     @Column(columnDefinition = "TEXT")
@@ -35,6 +36,6 @@ data class ExplanationDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , toggleable = $toggleable , title = $title , intro = $intro , imageUrl = $imageUrl , description = $description)"
+        return this::class.simpleName + "(id = $id , ordre = $ordre , title = $title , intro = $intro , imageUrl = $imageUrl , description = $description , consultationUpdatesId = $consultationUpdatesId , toggleable = $toggleable )"
     }
 }

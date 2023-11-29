@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.responseQag.repository
 
 import fr.gouv.agora.domain.ResponseQag
+import fr.gouv.agora.domain.ResponseQagAdditionalInfo
 import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
@@ -22,6 +23,10 @@ class ResponseQagMapper {
                 transcription = dto.transcription,
                 feedbackQuestion = dto.feedbackQuestion,
                 qagId = dto.qagId.toString(),
+                additionalInfo = if (dto.additionalInfoTitle != null && dto.additionalInfoDescription != null) ResponseQagAdditionalInfo(
+                    additionalInfoTitle = dto.additionalInfoTitle,
+                    additionalInfoDescription = dto.additionalInfoDescription
+                ) else null,
             )
         else if (!dto.responseText.isNullOrEmpty())
             ResponseQagText(

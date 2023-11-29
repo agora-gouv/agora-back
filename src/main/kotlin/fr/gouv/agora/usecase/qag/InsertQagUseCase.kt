@@ -6,6 +6,7 @@ import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInsertionResult
 import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Service
 
@@ -15,6 +16,7 @@ class InsertQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val supportQagRepository: SupportQagRepository,
     private val qagPreviewCacheRepository: QagPreviewCacheRepository,
+    private val qagListsCacheRepository: QagListsCacheRepository,
     private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
 ) {
 
@@ -43,6 +45,16 @@ class InsertQagUseCase(
             qagPreviewCacheRepository.evictQagSupportedList(
                 userId = qagInserting.userId,
                 thematiqueId = qagInserting.thematiqueId,
+            )
+            qagListsCacheRepository.evictQagSupportedList(
+                userId = qagInserting.userId,
+                thematiqueId = null,
+                pageNumber = 1
+            )
+            qagListsCacheRepository.evictQagSupportedList(
+                userId = qagInserting.userId,
+                thematiqueId = qagInserting.thematiqueId,
+                pageNumber = 1
             )
             askQagStatusCacheRepository.evictAskQagStatus(userId = qagInserting.userId)
         } else {
