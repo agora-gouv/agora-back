@@ -45,6 +45,8 @@ class QagHomeV2Controller(
                     thematiqueId = usedThematiqueId,
                 )
 
+                "trending" -> qagPaginatedV2UseCase.getTrendingQag(userId = userId)
+
                 else -> null
             }?.let { qagsAndMaxPageCount ->
                 ResponseEntity.ok().body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
