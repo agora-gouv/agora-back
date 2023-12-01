@@ -85,6 +85,7 @@ class ModerateModeratusQagUseCase(
                 qagDetailsCacheRepository.evictQag(qagId = qagInfo.id)
                 qagListsCacheRepository.evictQagLatestList(thematiqueId = null, pageNumber = 1)
                 qagListsCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
+                qagListsCacheRepository.evictQagTrendingList()
             }
 
             QagStatus.MODERATED_REJECTED -> if (isAccepted) {
@@ -121,6 +122,7 @@ class ModerateModeratusQagUseCase(
         qagDetailsCacheRepository.evictQag(qagId = qagInfo.id)
         qagListsCacheRepository.evictQagLatestList(thematiqueId = null, pageNumber = 1)
         qagListsCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
+        qagListsCacheRepository.evictQagTrendingList()
     }
 
 }

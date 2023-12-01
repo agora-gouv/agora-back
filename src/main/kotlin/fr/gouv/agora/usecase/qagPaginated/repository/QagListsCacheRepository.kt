@@ -22,6 +22,12 @@ interface QagListsCacheRepository {
     fun decrementSupportedSupportCount(userId: String, thematiqueId: String?, pageNumber: Int, qagId: String)
     fun evictQagSupportedList(userId: String, thematiqueId: String?, pageNumber: Int)
 
+    fun getQagTrendingList(): QagListWithMaxPageCount?
+    fun initQagTrendingList(qagListWithMaxPageCount: QagListWithMaxPageCount)
+    fun incrementTrendingSupportCount(qagId: String)
+    fun decrementTrendingSupportCount(qagId: String)
+    fun evictQagTrendingList()
+
     fun clear()
 
 }

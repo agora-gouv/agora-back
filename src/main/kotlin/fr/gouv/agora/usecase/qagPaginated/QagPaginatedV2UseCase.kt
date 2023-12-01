@@ -28,9 +28,11 @@ class QagPaginatedV2UseCase(
 
     companion object {
         private const val MAX_PAGE_LIST_SIZE = 20
+        private const val TRENDING_LIST_SIZE = 20
         private const val TOP = "top"
         private const val LATEST = "latest"
         private const val SUPPORTING = "supporting"
+        private const val TRENDING = "trending"
     }
 
     fun getPopularQagPaginated(
@@ -104,6 +106,24 @@ class QagPaginatedV2UseCase(
         return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = SUPPORTING, pageNumber = pageNumber)
     }
 
+    fun getTrendingQag(
+        userId: String,
+    ): QagsAndMaxPageCountV2? {
+        val qagListWithMaxPageCount =
+            qagListsCacheRepository.getQagTrendingList()
+                ?: getQagPaginated(
+                    getQagMethod = RetrieveQagMethod.WithoutParams(QagInfoRepository::getTrendingQags),
+                    userId = userId,
+                    pageNumber = 1,
+                    thematiqueId = null,
+                )?.also {
+                    qagListsCacheRepository.initQagTrendingList(
+                        qagListWithMaxPageCount = it
+                    )
+                }
+        return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = TRENDING, pageNumber = 1)
+    }
+
     private fun getQagPaginated(
         getQagMethod: RetrieveQagMethod,
         userId: String,
@@ -111,13 +131,17 @@ class QagPaginatedV2UseCase(
         thematiqueId: String?,
     ): QagListWithMaxPageCount? {
         if (pageNumber < 1) return null
+
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         val userSupportedQagIds = supportQagRepository.getUserSupportedQags(userId = userId)
         val qagsCount = when (getQagMethod) {
             is RetrieveQagMethod.WithUserId -> userSupportedQagIds.size
             is RetrieveQagMethod.WithoutUserId -> qagInfoRepository.getQagsCount()
+            is RetrieveQagMethod.WithoutParams -> TRENDING_LIST_SIZE
         }
+
         if (offset > qagsCount) return null
+
         val thematiques = thematiqueRepository.getThematiqueList()
 
         val qags = when (getQagMethod) {
@@ -137,12 +161,17 @@ class QagPaginatedV2UseCase(
                     thematiqueId,
                 )
             }
+
+            is RetrieveQagMethod.WithoutParams -> getQagMethod.method.invoke(qagInfoRepository)
         }
         val qagWithSupportCountList = qags.mapNotNull { qagInfoWithSupportCount ->
             thematiques.find { thematique -> thematique.id == qagInfoWithSupportCount.thematiqueId }
                 ?.let { QagWithSupportCount(qagInfo = qagInfoWithSupportCount, thematique = it) }
         }
-        val maxPageCount = ceil(qagsCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt()
+        val maxPageCount = when (getQagMethod) {
+            is RetrieveQagMethod.WithoutParams -> 1
+            else -> ceil(qagsCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt()
+        }
         return QagListWithMaxPageCount(maxPageCount = maxPageCount, qags = qagWithSupportCountList)
     }
 
@@ -186,6 +215,10 @@ private sealed class RetrieveQagMethod {
 
     data class WithUserId(
         val method: QagInfoRepository.(userId: String, offset: Int, thematiqueId: String?) -> List<QagInfoWithSupportCount>,
+    ) : RetrieveQagMethod()
+
+    data class WithoutParams(
+        val method: QagInfoRepository.() -> List<QagInfoWithSupportCount>,
     ) : RetrieveQagMethod()
 }
 

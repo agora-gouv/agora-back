@@ -15,7 +15,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
 
     companion object {
         private const val QAG_WITH_SUPPORT_COUNT_PROJECTION =
-            "qags.id as id, title, description, post_date as postDate, status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount"
+            "qags.id as id, title, description, post_date as postDate, qags.status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount"
 
         private const val QAG_WITH_SUPPORT_JOIN = "qags LEFT JOIN supports_qag ON qags.id = supports_qag.qag_id"
     }
@@ -402,6 +402,23 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
         """, nativeQuery = true
     )
     fun getMostPopularQags(): List<QagWithSupportCountDTO>
+
+    @Query(
+        value = """SELECT id, title, description, postDate, status, username, thematiqueId, userId, supportCount
+                 FROM (
+                    SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION, ROW_NUMBER() OVER (PARTITION BY thematique_id ORDER BY count(*) DESC) as thematiqueRowNumber
+                    FROM (qags LEFT JOIN qag_updates ON qags.id = qag_updates.qag_id) LEFT JOIN supports_qag ON qags.id = supports_qag.qag_id
+                    WHERE qags.status = 1
+                    AND qag_updates.status = 1
+                    AND moderated_date >= (CURRENT_TIMESTAMP - INTERVAL '48 HOUR')
+                    GROUP BY qags.id
+                    ORDER BY supportCount DESC
+                ) as rowNumber
+                WHERE thematiqueRowNumber < 3
+                LIMIT 20
+        """, nativeQuery = true
+    )
+    fun getTrendingQags(): List<QagWithSupportCountDTO>
 
     @Modifying
     @Transactional
