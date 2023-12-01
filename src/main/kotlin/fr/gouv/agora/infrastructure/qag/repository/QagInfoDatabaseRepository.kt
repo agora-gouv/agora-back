@@ -415,7 +415,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
                     ORDER BY supportCount DESC
                 ) as rowNumber
                 WHERE thematiqueRowNumber < 3
-                LIMIT 10
+                LIMIT 20
         """, nativeQuery = true
     )
     fun getTrendingQags(): List<QagWithSupportCountDTO>
