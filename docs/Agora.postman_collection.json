@@ -1,0 +1,1359 @@
+{
+	"info": {
+		"_postman_id": "e873341c-954c-49b8-8b14-7bb6da1a2e18",
+		"name": "Agora",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26529867"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "/signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"jwtToken\", \"Bearer \"+jsonData.jwtToken);",
+									"    pm.environment.set(\"loginToken\", jsonData.loginToken);",
+									"    pm.environment.set(\"urlEncodedLoginToken\", encodeURIComponent(jsonData.loginToken));",
+									"    pm.environment.set(\"userId\", jsonData.userId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fcmToken",
+								"value": "{{fcmToken}}",
+								"type": "text"
+							},
+							{
+								"key": "versionName",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "versionCode",
+								"value": "1",
+								"type": "text"
+							},
+							{
+								"key": "platform",
+								"value": "web",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/signup",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"jwtToken\", \"Bearer \"+jsonData.jwtToken);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fcmToken",
+								"value": "{{fcmToken}}",
+								"type": "text"
+							},
+							{
+								"key": "versionName",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "versionCode",
+								"value": "1",
+								"type": "text"
+							},
+							{
+								"key": "platform",
+								"value": "web",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"loginToken\": \"{{loginToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/login",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile / Notifications",
+			"item": [
+				{
+					"name": "/profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/profile",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"gender\": \"A\",\n\t\"yearOfBirth\": 1998,\n\t\"department\": \"75\",\n\t\"cityType\": \"U\",\n\t\"jobCategory\": \"UN\",\n\t\"voteFrequency\": \"S\",\n\t\"publicMeetingFrequency\": \"P\",\n\t\"consultationFrequency\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/profile",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/profile (other profile)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"gender\": \"F\",\n\t\"yearOfBirth\": 1998,\n\t\"department\": \"77\",\n\t\"cityType\": \"R\",\n\t\"jobCategory\": \"CA\",\n\t\"voteFrequency\": \"P\",\n\t\"publicMeetingFrequency\": \"S\",\n\t\"consultationFrequency\": \"S\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/profile",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications/paginated/<nb>",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/notifications/paginated/1",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"notifications",
+								"paginated",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/participation_charter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/participation_charter",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"participation_charter"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Consultations",
+			"item": [
+				{
+					"name": "/consultations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/questions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/questions",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId}}",
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/responses (petit dej)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"consultationId\":\"f5fd9c1d-6583-494c-8b0f-78129d6a0382\",\n   \"responses\":[\n      {\n         \"questionId\":\"32a4b9b4-e9aa-4930-9983-31f477abc279\",\n         \"choiceIds\":[\n            \"865b3e7b-1fe8-4c55-b056-3042ca34bc36\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"7bb4b993-6cc1-44d3-adf2-338df840dca0\",\n         \"choiceIds\":[\n            \"25a8f600-d71a-409d-b403-e266d1639235\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"cde0382a-206d-4d3a-9c4e-665d336fbd21\",\n         \"choiceIds\":[\n            \"695a7d4f-e5d3-49db-b7bd-5a6d29c54314\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"12f262e7-7a2e-4318-914b-825cddbab3e8\",\n         \"choiceIds\":[],\n         \"responseText\":\"¯⁠\\\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯\"\n      }\n   ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/f5fd9c1d-6583-494c-8b0f-78129d6a0382/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"f5fd9c1d-6583-494c-8b0f-78129d6a0382",
+								"responses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/responses (covoiturage)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"consultationId\":\"6d85522a-ee71-11ed-a05b-0242ac120003\",\n   \"responses\":[\n      {\n         \"questionId\":\"e271ed7a-ef05-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"f5dd076e-ef05-11ed-a05b-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"48d3c502-ef06-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"84f7f70e-ef08-11ed-a05b-0242ac120011\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"e52c5868-ef08-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"1b52a816-ef09-11ed-a05b-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"867b767a-0905-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"ab7d336e-0905-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"91c3411c-ef0a-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"ac24b428-ef0a-11ed-a05b-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"4c85adfe-0906-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"5f30b336-0906-11ee-be56-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"ac24b428-ef0a-11ed-a05b-0242ac120015\",\n         \"choiceIds\":[\n         ],\n         \"responseText\":\"¯⁠\\\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯\"\n      },\n      {\n         \"questionId\":\"cea510c2-0906-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"6ed88358-0907-11ee-be56-0242ac120033\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"91c3411c-ef0a-11ed-a05b-0242ac120100\",\n         \"choiceIds\":[\n            \"ac24b428-ef0a-11ed-a05b-0242ac121002\",\n            \"ac24b428-ef0a-11ed-a05b-0242ac121000\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"ac24b428-ef0a-11ed-a05b-0242ac120020\",\n         \"choiceIds\":[\n            \n         ],\n         \"responseText\":\"Non déso 😕\"\n      },\n      {\n         \"questionId\":\"9197bab0-0909-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"9f724178-0909-11ee-be56-0242ac120011\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"580bd3c0-090a-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"66bab292-090a-11ee-be56-0242ac120102\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"d6cba992-090a-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"e615de2c-090a-11ee-be56-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"1f0d4940-090b-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"5453e924-090b-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      }\n   ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId}}",
+								"responses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/responses (covoiturage 2)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"consultationId\":\"6d85522a-ee71-11ed-a05b-0242ac120003\",\n   \"responses\":[\n      {\n         \"questionId\":\"e271ed7a-ef05-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"0fd15904-ef06-11ed-a05b-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"48d3c502-ef06-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"84f7f70e-ef08-11ed-a05b-0242ac120013\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"e52c5868-ef08-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"1b52a816-ef09-12ed-a05b-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"867b767a-0905-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"ab7d336e-0905-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"91c3411c-ef0a-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"ac24b428-ef0a-11ed-a05b-0242ac120011\",\n            \"ac24b428-ef0a-11ed-a05b-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"4c85adfe-0906-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"5f30b336-0906-10ee-be56-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"ac24b428-ef0a-11ed-a05b-0242ac120015\",\n         \"choiceIds\":[\n         ],\n         \"responseText\":\"Aucune idée\"\n      },\n      {\n         \"questionId\":\"cea510c2-0906-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"6ed88358-0907-11ee-be56-0242ac120011\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"ac24b428-ef0a-11ed-a05b-0242ac120020\",\n         \"choiceIds\":[\n            \n         ],\n         \"responseText\":\"Je ne sais pas non plus\"\n      },\n      {\n         \"questionId\":\"9197bab0-0909-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"9f724178-0909-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"580bd3c0-090a-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"66bab292-090a-11ee-be56-0242ac120102\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"d6cba992-090a-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"e615de2c-090a-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"1f0d4940-090b-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"5453e924-090b-11ee-be56-0242ac120010\"\n         ],\n         \"responseText\":\"\"\n      }\n   ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId}}",
+								"responses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/responses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId}}",
+								"responses"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Consultations (admin)",
+			"item": [
+				{
+					"name": "/admin/consultations/ID/responses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/consultations/{{consultationId}}/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"consultations",
+								"{{consultationId}}",
+								"responses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/admin/consultations/ID/responses/open",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/consultations/{{consultationId}}/responses/open",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"consultations",
+								"{{consultationId}}",
+								"responses",
+								"open"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "QaGs",
+			"item": [
+				{
+					"name": "/thematiques",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/thematiques",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"thematiques"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qas/responses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"responses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags?thematiqueId",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags"
+							],
+							"query": [
+								{
+									"key": "thematiqueId",
+									"value": "1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15",
+									"description": "Travail & emploi",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": "bb051bf2-644b-47b6-9488-7759fa727dc0",
+									"description": "Transition écologique",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/v2/qags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/v2/qags?pageNumber=1&filterType=top&thematiqueId",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v2",
+								"qags"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "filterType",
+									"value": "top"
+								},
+								{
+									"key": "thematiqueId",
+									"value": "1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15",
+									"description": "Travail & emploi",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": "bb051bf2-644b-47b6-9488-7759fa727dc0",
+									"description": "Transition écologique",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"0 + 0 = ?\",\n\t\"thematiqueId\": \"47897e51-8e94-4920-a26a-1b1e5e232e82\",\n\t\"description\": \"La tête à Toto !\",\n\t\"author\": \"Toto\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/{{qagId}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"{{qagId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/ID (with response)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/{{qagIdWithResponse}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"{{qagIdWithResponse}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/has_similar",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/has_similar?title=Intelligence artificielle, un danger ?",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"has_similar"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Intelligence artificielle, un danger ?"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/similar",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/similar?title=Intelligence artificielle, un danger ? ",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"similar"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Intelligence artificielle, un danger ? "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/page/<nb>",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/page/1?filterType=popular&thematiqueId&keywords=",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"page",
+								"1"
+							],
+							"query": [
+								{
+									"key": "filterType",
+									"value": "popular"
+								},
+								{
+									"key": "filterType",
+									"value": "latest",
+									"disabled": true
+								},
+								{
+									"key": "filterType",
+									"value": "supporting",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": "1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15",
+									"description": "Travail & emploi",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": "bb051bf2-644b-47b6-9488-7759fa727dc0",
+									"description": "Transition écologique",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": null
+								},
+								{
+									"key": "keywords",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/ID/support",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/{{qagId}}/support",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"{{qagId}}",
+								"support"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/ID/support",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/{{qagId}}/support",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"{{qagId}}",
+								"support"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/ID/feedback",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isHelpful\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/{{qagIdWithResponse}}/feedback",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"{{qagIdWithResponse}}",
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Netino / Moderatus",
+			"item": [
+				{
+					"name": "/moderatus/new_qags",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/moderatus/new_qags?password={{urlEncodedLoginToken}}&mediaType=xml",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"moderatus",
+								"new_qags"
+							],
+							"query": [
+								{
+									"key": "password",
+									"value": "{{urlEncodedLoginToken}}"
+								},
+								{
+									"key": "mediaType",
+									"value": "xml"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/moderatus/ack_qags",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/moderatus/ack_qags?password={{urlEncodedLoginToken}}&mediaType=xml&content_id=96a75110-4f64-4ba5-825b-db81ee796372;96a75110-4f64-4ba5-825b-db81ee796372",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"moderatus",
+								"ack_qags"
+							],
+							"query": [
+								{
+									"key": "password",
+									"value": "{{urlEncodedLoginToken}}"
+								},
+								{
+									"key": "mediaType",
+									"value": "xml"
+								},
+								{
+									"key": "content_id",
+									"value": "96a75110-4f64-4ba5-825b-db81ee796372;96a75110-4f64-4ba5-825b-db81ee796372"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/moderatus/result_qag",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/moderatus/result_qag?password={{urlEncodedLoginToken}}&mediaType=xml&content_id=69dae988-3744-41fd-9275-9e719c5a9634&status=OK",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"moderatus",
+								"result_qag"
+							],
+							"query": [
+								{
+									"key": "password",
+									"value": "{{urlEncodedLoginToken}}"
+								},
+								{
+									"key": "mediaType",
+									"value": "xml"
+								},
+								{
+									"key": "content_id",
+									"value": "69dae988-3744-41fd-9275-9e719c5a9634"
+								},
+								{
+									"key": "status",
+									"value": "OK"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "/admin/testNotification",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/testNotification?userId=&title=Titre !&description=Description de la notification&type=qagDetails&qagId=f29c5d6f-9838-4c57-a7ec-0612145bb0c8&consultationId=6d85522a-ee71-11ed-a05b-0242ac120003&step=1",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"testNotification"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "title",
+									"value": "Titre !"
+								},
+								{
+									"key": "description",
+									"value": "Description de la notification"
+								},
+								{
+									"key": "type",
+									"value": "qagDetails",
+									"description": "qagDetails\nconsultationDetails\nconsultationResults"
+								},
+								{
+									"key": "qagId",
+									"value": "f29c5d6f-9838-4c57-a7ec-0612145bb0c8"
+								},
+								{
+									"key": "consultationId",
+									"value": "6d85522a-ee71-11ed-a05b-0242ac120003"
+								},
+								{
+									"key": "step",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/admin/notifyNewConsultation/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/notifyNewConsultation/{{consultationId}}?title=Nouvelle consultation !&description=Une nouvelle consultation est disponible",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifyNewConsultation",
+								"{{consultationId}}"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Nouvelle consultation !"
+								},
+								{
+									"key": "description",
+									"value": "Une nouvelle consultation est disponible"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/admin/notifyConsultationUpdate/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/notifyConsultationUpdate/{{consultationId}}?title=MàJ consultation !&description=Une consultation donne de ses nouvelles",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifyConsultationUpdate",
+								"{{consultationId}}"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "MàJ consultation !"
+								},
+								{
+									"key": "description",
+									"value": "Une consultation donne de ses nouvelles"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/admin/notifyQag/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/notifyQag/{{qagIdWithResponse}}?title=Le gouvernement vous répond !&description=M. Véran vous répond sur la question à propos de <Indiquer résumé de la QaG ici>.",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifyQag",
+								"{{qagIdWithResponse}}"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Le gouvernement vous répond !"
+								},
+								{
+									"key": "description",
+									"value": "M. Véran vous répond sur la question à propos de <Indiquer résumé de la QaG ici>."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/test",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{scheme}}://{{baseUrl}}/test",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.request.headers.add({key: 'User-Agent', value: 'fr.agora.gouv/1 Postman/10.18.2'});",
+					"//pm.request.headers.add({key: 'User-Agent', value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)'});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwtToken",
+			"value": ""
+		}
+	]
+}
