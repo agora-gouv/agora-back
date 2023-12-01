@@ -28,7 +28,7 @@ class QagPaginatedV2UseCase(
 
     companion object {
         private const val MAX_PAGE_LIST_SIZE = 20
-        private const val TRENDING_LIST_SIZE = 10
+        private const val TRENDING_LIST_SIZE = 20
         private const val TOP = "top"
         private const val LATEST = "latest"
         private const val SUPPORTING = "supporting"
