@@ -35,7 +35,7 @@ internal class AskForDemographicInfoUseCaseTest {
     private val profile = Profile(
         gender = Gender.FEMININ,
         yearOfBirth = 1990,
-        department = Department.ALLIER_3,
+        department = Department.ALLIER_03,
         cityType = CityType.URBAIN,
         jobCategory = JobCategory.OUVRIER,
         voteFrequency = Frequency.JAMAIS,

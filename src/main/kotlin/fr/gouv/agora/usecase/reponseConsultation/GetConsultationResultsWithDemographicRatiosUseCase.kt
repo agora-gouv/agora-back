@@ -88,6 +88,9 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
         val choiceCount = consultationResponseList
             .filter { it.questionId == question.id && it.choiceId == choix.id }
             .sumOf { it.responseCount }
+        val questionCount = consultationResponseList
+            .filter { it.questionId == question.id }
+            .sumOf { it.responseCount }
 
         return ChoiceResultWithDemographicInfo(
             choixPossible = choix,
@@ -97,7 +100,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
             ),
             demographicInfo = buildDemographicInfo(
                 demographicInfoCount = demographicInfoCount,
-                participantCount = choiceCount,
+                participantCount = questionCount,
             ),
         )
     }
