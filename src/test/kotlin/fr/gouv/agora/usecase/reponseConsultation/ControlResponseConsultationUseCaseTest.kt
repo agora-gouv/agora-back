@@ -1,7 +1,7 @@
-package fr.social.gouv.agora.usecase.reponseConsultation
+package fr.gouv.agora.usecase.reponseConsultation
 
-import fr.social.gouv.agora.domain.*
-import fr.social.gouv.agora.usecase.question.repository.QuestionRepository
+import fr.gouv.agora.domain.*
+import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested

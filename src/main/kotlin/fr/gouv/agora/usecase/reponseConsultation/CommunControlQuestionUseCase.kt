@@ -1,6 +1,6 @@
-package fr.social.gouv.agora.usecase.reponseConsultation
+package fr.gouv.agora.usecase.reponseConsultation
 
-import fr.social.gouv.agora.domain.ReponseConsultationInserting
+import fr.gouv.agora.domain.ReponseConsultationInserting
 import org.springframework.stereotype.Service
 
 @Service
