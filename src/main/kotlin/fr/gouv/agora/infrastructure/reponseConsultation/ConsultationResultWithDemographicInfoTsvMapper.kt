@@ -42,7 +42,7 @@ class ConsultationResultWithDemographicInfoTsvMapper {
         val maxCount = allCount.max()
         val minRatio = (minCount.toDouble() / consultationResult.participantCount).takeUnless { it.isNaN() } ?: 0.0
         val maxRatio = (maxCount.toDouble() / consultationResult.participantCount).takeUnless { it.isNaN() } ?: 0.0
-        return "$minCount ~ $maxCount" to "${numberFormat.format(100*minRatio)}% ~ ${numberFormat.format(100*maxRatio)}%"
+        return "$minCount ~ $maxCount" to "${numberFormat.format(100 * minRatio)}% ~ ${numberFormat.format(100 * maxRatio)}%"
     }
 
     private fun <Key> getNonNullDemographicInfoCount(map: Map<Key?, CountAndRatio>): Int {
@@ -153,56 +153,56 @@ class ConsultationResultWithDemographicInfoTsvMapper {
         headerBuilder.append("\t")
         demographicInfo.genderCount.toSorted().forEach { (gender, _) ->
             headerBuilder.append("-- ${gender.toPretty()}")
-            headerBuilder.append("\t")
+            headerBuilder.append("\t-- %\t")
         }
 
         headerBuilder.append("### Tranche d'age")
         headerBuilder.append("\t")
         demographicInfo.ageRangeCount.toSorted().forEach { (ageRange, _) ->
             headerBuilder.append("-- ${ageRange.toPretty()}")
-            headerBuilder.append("\t")
+            headerBuilder.append("\t-- %\t")
         }
 
         headerBuilder.append("### Département ou collectivité d'outre mer")
         headerBuilder.append("\t")
         demographicInfo.departmentCount.toSorted().forEach { (department, _) ->
             headerBuilder.append("-- ${department.toPretty()}")
-            headerBuilder.append("\t")
+            headerBuilder.append("\t-- %\t")
         }
 
         headerBuilder.append("### Habite en milieu")
         headerBuilder.append("\t")
         demographicInfo.cityTypeCount.toSorted().forEach { (cityType, _) ->
             headerBuilder.append("-- ${cityType.toPretty()}")
-            headerBuilder.append("\t")
+            headerBuilder.append("\t-- %\t")
         }
 
         headerBuilder.append("### Catégorie socio-professionnelle")
         headerBuilder.append("\t")
         demographicInfo.jobCategoryCount.toSorted().forEach { (jobCategory, _) ->
             headerBuilder.append("-- ${jobCategory.toPretty()}")
-            headerBuilder.append("\t")
+            headerBuilder.append("\t-- %\t")
         }
 
         headerBuilder.append("### Fréquence de vote")
         headerBuilder.append("\t")
         demographicInfo.voteFrequencyCount.toSorted().forEach { (frequency, _) ->
             headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t")
+            headerBuilder.append("\t-- %\t")
         }
 
         headerBuilder.append("### Fréquence d'engagement sur le terrain")
         headerBuilder.append("\t")
         demographicInfo.publicMeetingFrequencyCount.toSorted().forEach { (frequency, _) ->
             headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t")
+            headerBuilder.append("\t-- %\t")
         }
 
         headerBuilder.append("### Fréquence d'engagement en ligne")
         headerBuilder.append("\t")
         demographicInfo.consultationFrequencyCount.toSorted().forEach { (frequency, _) ->
             headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t")
+            headerBuilder.append("\t-- %\t")
         }
 
         return headerBuilder.toString()
@@ -216,49 +216,49 @@ class ConsultationResultWithDemographicInfoTsvMapper {
 
         valuesBuilder.append("\t")
         globalDemographicInfo.genderCount.toSorted().forEach { (gender, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.genderCount[gender]?.toRatioString() ?: 0}")
+            valuesBuilder.append(choiceDemographicInfo.genderCount[gender].toPretty())
             valuesBuilder.append("\t")
         }
 
         valuesBuilder.append("\t")
         globalDemographicInfo.ageRangeCount.toSorted().forEach { (ageRange, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.ageRangeCount[ageRange]?.toRatioString() ?: 0}")
+            valuesBuilder.append(choiceDemographicInfo.ageRangeCount[ageRange].toPretty())
             valuesBuilder.append("\t")
         }
 
         valuesBuilder.append("\t")
         globalDemographicInfo.departmentCount.toSorted().forEach { (department, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.departmentCount[department]?.toRatioString() ?: 0}")
+            valuesBuilder.append(choiceDemographicInfo.departmentCount[department].toPretty())
             valuesBuilder.append("\t")
         }
 
         valuesBuilder.append("\t")
         globalDemographicInfo.cityTypeCount.toSorted().forEach { (cityType, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.cityTypeCount[cityType]?.toRatioString() ?: 0}")
+            valuesBuilder.append(choiceDemographicInfo.cityTypeCount[cityType].toPretty())
             valuesBuilder.append("\t")
         }
 
         valuesBuilder.append("\t")
         globalDemographicInfo.jobCategoryCount.toSorted().forEach { (jobCategory, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.jobCategoryCount[jobCategory]?.toRatioString() ?: 0}")
+            valuesBuilder.append(choiceDemographicInfo.jobCategoryCount[jobCategory].toPretty())
             valuesBuilder.append("\t")
         }
 
         valuesBuilder.append("\t")
         globalDemographicInfo.voteFrequencyCount.toSorted().forEach { (frequency, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.voteFrequencyCount[frequency]?.toRatioString() ?: 0}")
+            valuesBuilder.append(choiceDemographicInfo.voteFrequencyCount[frequency].toPretty())
             valuesBuilder.append("\t")
         }
 
         valuesBuilder.append("\t")
         globalDemographicInfo.publicMeetingFrequencyCount.toSorted().forEach { (frequency, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.publicMeetingFrequencyCount[frequency]?.toRatioString() ?: 0}")
+            valuesBuilder.append(choiceDemographicInfo.publicMeetingFrequencyCount[frequency].toPretty())
             valuesBuilder.append("\t")
         }
 
         valuesBuilder.append("\t")
         globalDemographicInfo.consultationFrequencyCount.toSorted().forEach { (frequency, _) ->
-            valuesBuilder.append("${choiceDemographicInfo.consultationFrequencyCount[frequency]?.toRatioString() ?: 0}")
+            valuesBuilder.append(choiceDemographicInfo.consultationFrequencyCount[frequency].toPretty())
             valuesBuilder.append("\t")
         }
 
@@ -268,12 +268,12 @@ class ConsultationResultWithDemographicInfoTsvMapper {
     private fun <K : Enum<*>, V> Map<K?, V>.toSorted() =
         this.toList().sortedBy { (key, _) -> key?.ordinal ?: Integer.MAX_VALUE }
 
-    private fun CountAndRatio.toPretty(): String {
-        return "$count\t${toRatioString()}"
+    private fun CountAndRatio?.toPretty(): String {
+        return "${this?.count ?: 0}\t${toRatioString()}"
     }
 
-    private fun CountAndRatio.toRatioString(): String {
-        return "${numberFormat.format(100*ratio)}%"
+    private fun CountAndRatio?.toRatioString(): String {
+        return "${this?.ratio?.let { numberFormat.format(100 * ratio) } ?: 0}%"
     }
 
     private fun Gender?.toPretty() = when (this) {
@@ -295,15 +295,15 @@ class ConsultationResultWithDemographicInfoTsvMapper {
     }
 
     private fun Department?.toPretty() = when (this) {
-        Department.AIN_1 -> "1 - Ain"
-        Department.AISNE_2 -> "2 - Aisne"
-        Department.ALLIER_3 -> "3 - Allier"
-        Department.ALPESDEHAUTEPROVENCE_4 -> "4 - Alpes-de-Haute-Provence"
-        Department.HAUTESALPES_5 -> "5 - Hautes-Alpes"
-        Department.ALPESMARITIMES_6 -> "6 - Alpes-Maritimes"
-        Department.ARDECHE_7 -> "7 - Ardèche"
-        Department.ARDENNES_8 -> "8 - Ardennes"
-        Department.ARIEGE_9 -> "9 - Ariège"
+        Department.AIN_01 -> "1 - Ain"
+        Department.AISNE_02 -> "2 - Aisne"
+        Department.ALLIER_03 -> "3 - Allier"
+        Department.ALPESDEHAUTEPROVENCE_04 -> "4 - Alpes-de-Haute-Provence"
+        Department.HAUTESALPES_05 -> "5 - Hautes-Alpes"
+        Department.ALPESMARITIMES_06 -> "6 - Alpes-Maritimes"
+        Department.ARDECHE_07 -> "7 - Ardèche"
+        Department.ARDENNES_08 -> "8 - Ardennes"
+        Department.ARIEGE_09 -> "9 - Ariège"
         Department.AUBE_10 -> "10 - Aube"
         Department.AUDE_11 -> "11 - Aude"
         Department.AVEYRON_12 -> "12 - Aveyron"
