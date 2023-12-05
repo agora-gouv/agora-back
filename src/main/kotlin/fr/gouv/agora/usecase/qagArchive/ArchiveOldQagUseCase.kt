@@ -5,6 +5,7 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.DayOfWeek
@@ -15,6 +16,7 @@ class ArchiveOldQagUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val qagInfoRepository: QagInfoRepository,
     private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
+    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val clock: Clock,
 ) {
 
@@ -25,6 +27,7 @@ class ArchiveOldQagUseCase(
         val tuesdayThisWeek = LocalDateTime.now(clock).with(DayOfWeek.TUESDAY).withHour(14).withMinute(0).withSecond(0)
         qagInfoRepository.archiveOldQags(tuesdayThisWeek.toDate())
         askQagStatusCacheRepository.clear()
+        qagPreviewCacheRepository.clear()
         println("📜️ Archiving old QaGs finished !")
 
         return ArchiveQagListResult.SUCCESS
