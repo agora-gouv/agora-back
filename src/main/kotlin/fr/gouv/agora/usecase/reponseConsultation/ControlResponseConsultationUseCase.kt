@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service
 @Service
 class ControlResponseConsultationUseCase(
     private val questionRepository: QuestionRepository,
-    private val controlQuestionMultipleChoicesUseCase: ControlQuestionMultipleChoicesUseCase,
-    private val controlQuestionOpenUseCase: ControlQuestionOpenUseCase,
-    private val communControlQuestionUseCase: CommunControlQuestionUseCase,
+    private val questionMultipleChoicesValidator: QuestionMultipleChoicesValidator,
+    private val questionUniqueChoiceAndConditionalValidator: QuestionUniqueChoiceAndConditionalValidator,
+    private val questionOpenValidator: QuestionOpenValidator,
 ) {
 
     fun isResponseConsultationValid(
@@ -25,33 +25,18 @@ class ControlResponseConsultationUseCase(
 
         return consultationResponses.all { response ->
             val question = questionList.find { it.id == response.questionId }
-            val listChoices = response.choiceIds
-            val responseQuestionValidator = getResponseQuestionValidator(question, listChoices)
+            val responseQuestionValidator = getResponseQuestionValidator(question)
             question?.let { responseQuestionValidator?.isValid(question, response) } == true
         }
-}
+    }
+
     private fun getResponseQuestionValidator(
         question: Question?,
-        listChoices: List<String>?
     ): ResponseQuestionValidator? {
         return when (question) {
-            is QuestionMultipleChoices -> listChoices?.let {
-                QuestionMultipleChoicesValidator(
-                    controlQuestionMultipleChoicesUseCase,
-                    communControlQuestionUseCase,
-                    it
-                )
-            }
-
-            is QuestionUniqueChoice, is QuestionConditional -> listChoices?.let {
-                QuestionUniqueChoiceAndConditionalValidator(
-                    communControlQuestionUseCase,
-                    it
-                )
-            }
-
-            is QuestionOpen -> QuestionOpenValidator(controlQuestionOpenUseCase)
-
+            is QuestionMultipleChoices -> questionMultipleChoicesValidator
+            is QuestionUniqueChoice, is QuestionConditional -> questionUniqueChoiceAndConditionalValidator
+            is QuestionOpen -> questionOpenValidator
             else -> null
         }
     }
