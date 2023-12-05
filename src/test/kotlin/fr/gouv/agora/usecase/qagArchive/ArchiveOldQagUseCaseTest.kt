@@ -6,9 +6,9 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.*
-import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -36,6 +35,9 @@ internal class ArchiveOldQagUseCaseTest {
 
     @MockBean
     private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
+
+    @MockBean
+    private lateinit var qagPreviewCacheRepository: QagPreviewCacheRepository
 
     @BeforeEach
     fun setUp() {
@@ -56,13 +58,14 @@ internal class ArchiveOldQagUseCaseTest {
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
         then(qagInfoRepository).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
+        then(qagPreviewCacheRepository).shouldHaveNoInteractions()
     }
 
     @Test
     fun `archiveOldQag - when feature enabled and today is after tuesday from this week - should call repository with resetDate as tuesday before today at 14h then return SUCCESS`() {
         // Given
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(true)
-        // Thursday June 22th, 16h00 => Tuesday this week is Tuesday June 20th, 14h00
+        // Thursday, June 22nd, 16h00 => Tuesday this week is Tuesday, June 20th, 14h00
         val todayDate = LocalDateTime.of(2023, Month.JUNE, 22, 16, 0, 0)
         val resetDate = LocalDateTime.of(2023, Month.JUNE, 20, 14, 0, 0)
         mockDate(todayDate)
@@ -74,13 +77,14 @@ internal class ArchiveOldQagUseCaseTest {
         assertThat(result).isEqualTo(ArchiveQagListResult.SUCCESS)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
         then(qagInfoRepository).should(only()).archiveOldQags(resetDate.toDate())
+        then(qagPreviewCacheRepository).should(only()).clear()
     }
 
     @Test
     fun `archiveOldQag - when feature enabled and today is before reset date - should call repository with resetDate as tuesday after today at 14h then return SUCCESS`() {
         // Given
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(true)
-        // Monday June 19th, 19h00 => Tuesday this week is Tuesday June 20th, 14h00
+        // Monday, June 19th, 19h00 => Tuesday this week is Tuesday, June 20th, 14h00
         val todayDate = LocalDateTime.of(2023, Month.JUNE, 19, 19, 0, 0)
         val resetDate = LocalDateTime.of(2023, Month.JUNE, 20, 14, 0, 0)
         mockDate(todayDate)
@@ -93,6 +97,7 @@ internal class ArchiveOldQagUseCaseTest {
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
         then(qagInfoRepository).should(only()).archiveOldQags(resetDate.toDate())
         then(askQagStatusCacheRepository).should(only()).clear()
+        then(qagPreviewCacheRepository).should(only()).clear()
     }
 
     private fun mockDate(localDateTime: LocalDateTime) {
@@ -100,6 +105,7 @@ internal class ArchiveOldQagUseCaseTest {
             featureFlagsRepository = featureFlagsRepository,
             qagInfoRepository = qagInfoRepository,
             askQagStatusCacheRepository = askQagStatusCacheRepository,
+            qagPreviewCacheRepository = qagPreviewCacheRepository,
             clock = TestUtils.getFixedClock(localDateTime),
         )
     }
