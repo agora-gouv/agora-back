@@ -19,37 +19,43 @@ class ControlResponseConsultationUseCase(
         val questionList = questionRepository.getConsultationQuestionList(consultationId)
         val uniqueQuestionIdList =
             consultationResponses.map { consultationResponse -> consultationResponse.questionId }.toSet()
+
         if (uniqueQuestionIdList.size < consultationResponses.size)
             return false
-        else {
-            for (response in consultationResponses) {
-                val question = questionList.find { question -> question.id == response.questionId }
-                val listChoices = response.choiceIds
-                when (question) {
-                    is QuestionMultipleChoices -> {
-                        if (listChoices?.let { controlQuestionMultipleChoicesUseCase.isChoiceIdDuplicated(it) } == true
-                            || listChoices?.let {
-                                controlQuestionMultipleChoicesUseCase.isChoiceIdListOverMaxChoices(it, question)
-                            } == true
-                            || communControlQuestionUseCase.isChoiceAutreOverMaxLength(response)
-                        ) return false
-                    }
 
-                    is QuestionUniqueChoice, is QuestionConditional -> {
-                        if (listChoices?.let { communControlQuestionUseCase.isChoiceIdOverOne(it) } == true
-                            || communControlQuestionUseCase.isChoiceAutreOverMaxLength(response)) return false
-                    }
-
-                    is QuestionOpen -> {
-                        if (controlQuestionOpenUseCase.isTextFieldOverMaxLength(response)) return false
-                    }
-
-                    else -> return false
-                }
+        return consultationResponses.all { response ->
+            val question = questionList.find { it.id == response.questionId }
+            val listChoices = response.choiceIds
+            val responseQuestionValidator = getResponseQuestionValidator(question, listChoices)
+            question?.let { responseQuestionValidator?.isValid(question, response) } == true
+        }
+}
+    private fun getResponseQuestionValidator(
+        question: Question?,
+        listChoices: List<String>?
+    ): ResponseQuestionValidator? {
+        return when (question) {
+            is QuestionMultipleChoices -> listChoices?.let {
+                QuestionMultipleChoicesValidator(
+                    controlQuestionMultipleChoicesUseCase,
+                    communControlQuestionUseCase,
+                    it
+                )
             }
-            return true
+
+            is QuestionUniqueChoice, is QuestionConditional -> listChoices?.let {
+                QuestionUniqueChoiceAndConditionalValidator(
+                    communControlQuestionUseCase,
+                    it
+                )
+            }
+
+            is QuestionOpen -> QuestionOpenValidator(controlQuestionOpenUseCase)
+
+            else -> null
         }
     }
 }
+
 
 
