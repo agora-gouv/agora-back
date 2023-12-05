@@ -20,6 +20,7 @@ class QagListsCacheRepositoryImpl(
         private const val TOP_PREFIX_KEY = "top"
         private const val LATEST_PREFIX_KEY = "latest"
         private const val SUPPORTED_PREFIX_KEY = "supported"
+        private const val TRENDING_PREFIX_KEY = "trending"
     }
 
     override fun getQagPopularList(thematiqueId: String?, pageNumber: Int) =
@@ -109,6 +110,27 @@ class QagListsCacheRepositoryImpl(
 
     override fun clear() {
         getCache()?.clear()
+    }
+
+    override fun getQagTrendingList() = getQagList(key = "$TRENDING_PREFIX_KEY")
+
+    override fun initQagTrendingList(qagListWithMaxPageCount: QagListWithMaxPageCount) {
+        initQagList(
+            key = "$TRENDING_PREFIX_KEY",
+            qagListWithMaxPageCount = qagListWithMaxPageCount
+        )
+    }
+
+    override fun incrementTrendingSupportCount(qagId: String) {
+        incrementSupportCount(key = "$TRENDING_PREFIX_KEY", qagId = qagId)
+    }
+
+    override fun decrementTrendingSupportCount(qagId: String) {
+        decrementSupportCount(key = "$TRENDING_PREFIX_KEY", qagId = qagId)
+    }
+
+    override fun evictQagTrendingList() {
+        getCache()?.evict("$TRENDING_PREFIX_KEY")
     }
 
     private fun getCache() = cacheManager.getCache(QAG_LISTS_PAGINATED_CACHE_NAME)

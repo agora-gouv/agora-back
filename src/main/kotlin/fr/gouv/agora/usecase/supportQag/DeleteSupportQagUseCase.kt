@@ -99,6 +99,7 @@ class DeleteSupportQagUseCase(
             pageNumber = 1,
             qagId = qagInfo.id
         )
+        qagListsCacheRepository.decrementTrendingSupportCount(qagId = qagInfo.id)
     }
 
 }

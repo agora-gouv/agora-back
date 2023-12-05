@@ -99,6 +99,7 @@ class InsertSupportQagUseCase(
             pageNumber = 1,
             qagId = qagInfo.id
         )
+        qagListsCacheRepository.incrementTrendingSupportCount(qagId = qagInfo.id)
     }
 
 }
