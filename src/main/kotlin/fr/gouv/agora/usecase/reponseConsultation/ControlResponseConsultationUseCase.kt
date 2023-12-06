@@ -24,9 +24,9 @@ class ControlResponseConsultationUseCase(
             return false
 
         return consultationResponses.all { response ->
-            val question = questionList.find { it.id == response.questionId }
-            val responseQuestionValidator = question?.let { getResponseQuestionValidator(it) }
-            question?.let { responseQuestionValidator?.isValid(question, response) } == true
+            questionList.find { it.id == response.questionId }?.let { question ->
+                getResponseQuestionValidator(question)?.isValid(question, response) ?: false
+            } ?: false
         }
     }
 
@@ -36,9 +36,9 @@ class ControlResponseConsultationUseCase(
         return when (question) {
             is QuestionOpen -> questionOpenValidator
             is QuestionChapter -> null
-            is QuestionWithChoices ->
-                if (question is QuestionMultipleChoices) questionMultipleChoicesValidator
-                else questionUniqueChoiceAndConditionalValidator
+            is QuestionMultipleChoices -> questionMultipleChoicesValidator
+            is QuestionUniqueChoice, is QuestionConditional -> questionUniqueChoiceAndConditionalValidator
+            else -> null
         }
     }
 }

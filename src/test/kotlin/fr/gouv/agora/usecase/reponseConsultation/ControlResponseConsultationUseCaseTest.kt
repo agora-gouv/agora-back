@@ -25,13 +25,13 @@ internal class ControlResponseConsultationUseCaseTest {
     private lateinit var questionRepository: QuestionRepository
 
     @MockBean
-    private lateinit var controlQuestionMultipleChoicesUseCase: ControlQuestionMultipleChoicesUseCase
+    private lateinit var questionMultipleChoicesValidator: QuestionMultipleChoicesValidator
 
     @MockBean
-    private lateinit var controlQuestionOpenUseCase: ControlQuestionOpenUseCase
+    private lateinit var questionUniqueChoiceAndConditionalValidator: QuestionUniqueChoiceAndConditionalValidator
 
     @MockBean
-    private lateinit var communControlQuestionUseCase: CommunControlQuestionUseCase
+    private lateinit var questionOpenValidator: QuestionOpenValidator
 
     @Test
     fun `isResponseConsultationValid - when response has duplicated questionId - should return false`() {
@@ -56,16 +56,16 @@ internal class ControlResponseConsultationUseCaseTest {
         then(questionRepository).should(only()).getConsultationQuestionList(
             consultationId = "consultId",
         )
-        then(controlQuestionMultipleChoicesUseCase).shouldHaveNoInteractions()
-        then(controlQuestionOpenUseCase).shouldHaveNoInteractions()
-        then(communControlQuestionUseCase).shouldHaveNoInteractions()
+        then(questionOpenValidator).shouldHaveNoInteractions()
+        then(questionMultipleChoicesValidator).shouldHaveNoInteractions()
+        then(questionUniqueChoiceAndConditionalValidator).shouldHaveNoInteractions()
     }
 
     @Nested
     inner class QuestionOpenTestCases {
 
         @Test
-        fun `isResponseConsultationValid - when isTextFieldOverMaxLength returns true - should return false`() {
+        fun `isResponseConsultationValid - when isValid returns true - should return true`() {
             //Given
             val response =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
@@ -75,7 +75,7 @@ internal class ControlResponseConsultationUseCaseTest {
                     question
                 )
             )
-            given(controlQuestionOpenUseCase.isTextFieldOverMaxLength(response)).willReturn(true)
+            given(questionOpenValidator.isValid(question, response)).willReturn(true)
 
             //When
             val result = useCase.isResponseConsultationValid(
@@ -84,17 +84,17 @@ internal class ControlResponseConsultationUseCaseTest {
             )
 
             //Then
-            assertThat(result).isEqualTo(false)
+            assertThat(result).isEqualTo(true)
             then(questionRepository).should(only()).getConsultationQuestionList(
                 consultationId = "consultationId",
             )
-            then(controlQuestionOpenUseCase).should(only()).isTextFieldOverMaxLength(response)
-            then(controlQuestionMultipleChoicesUseCase).shouldHaveNoInteractions()
-            then(communControlQuestionUseCase).shouldHaveNoInteractions()
+            then(questionOpenValidator).should(only()).isValid(question, response)
+            then(questionMultipleChoicesValidator).shouldHaveNoInteractions()
+            then(questionUniqueChoiceAndConditionalValidator).shouldHaveNoInteractions()
         }
 
         @Test
-        fun `isResponseConsultationValid - when isTextFieldOverMaxLength returns false - should return true`() {
+        fun `isResponseConsultationValid - when isValid returns false - should return false`() {
             //Given
             val response =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
@@ -104,7 +104,7 @@ internal class ControlResponseConsultationUseCaseTest {
                     question
                 )
             )
-            given(controlQuestionOpenUseCase.isTextFieldOverMaxLength(response)).willReturn(false)
+            given(questionOpenValidator.isValid(question, response)).willReturn(false)
 
             //When
             val result = useCase.isResponseConsultationValid(
@@ -113,102 +113,31 @@ internal class ControlResponseConsultationUseCaseTest {
             )
 
             //Then
-            assertThat(result).isEqualTo(true)
+            assertThat(result).isEqualTo(false)
             then(questionRepository).should(only()).getConsultationQuestionList(
                 consultationId = "consultationId",
             )
-            then(controlQuestionOpenUseCase).should(only()).isTextFieldOverMaxLength(response)
-            then(controlQuestionMultipleChoicesUseCase).shouldHaveNoInteractions()
-            then(communControlQuestionUseCase).shouldHaveNoInteractions()
+            then(questionOpenValidator).should(only()).isValid(question, response)
+            then(questionMultipleChoicesValidator).shouldHaveNoInteractions()
+            then(questionUniqueChoiceAndConditionalValidator).shouldHaveNoInteractions()
         }
     }
 
     @Nested
-    inner class QuestionUniqueAndConditionalTestCases {
+    inner class QuestionMultipleTestCases {
 
         @Test
-        fun `isResponseConsultationValid - when isChoiceIdOverOne returns false and isChoiceAutreOverMaxLength returns true- should return false`() {
+        fun `isResponseConsultationValid - when isValid returns true - should return true`() {
             //Given
             val response =
-                mock(ReponseConsultationInserting::class.java).also {
-                    given(it.questionId).willReturn("question1")
-                    given(it.choiceIds).willReturn(listOf("choiceId"))
-                }
-            val question = mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") }
+                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
+            val question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
             given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
                 listOf(
                     question
                 )
             )
-            given(communControlQuestionUseCase.isChoiceIdOverOne(response.choiceIds!!)).willReturn(false)
-            given(communControlQuestionUseCase.isChoiceAutreOverMaxLength(response)).willReturn(true)
-
-            //When
-            val result = useCase.isResponseConsultationValid(
-                consultationId = "consultationId",
-                consultationResponses = listOf(response)
-            )
-
-            //Then
-            assertThat(result).isEqualTo(false)
-            then(questionRepository).should(only()).getConsultationQuestionList(
-                consultationId = "consultationId",
-            )
-            then(communControlQuestionUseCase).should(times(1)).isChoiceIdOverOne(response.choiceIds!!)
-            then(communControlQuestionUseCase).should(times(1)).isChoiceAutreOverMaxLength(response)
-            then(controlQuestionOpenUseCase).shouldHaveNoInteractions()
-            then(controlQuestionMultipleChoicesUseCase).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `isResponseConsultationValid - when isChoiceIdOverOne returns true and isChoiceAutreOverMaxLength returns false - should return false`() {
-            //Given
-            val response =
-                mock(ReponseConsultationInserting::class.java).also {
-                    given(it.questionId).willReturn("question1")
-                    given(it.choiceIds).willReturn(listOf("choiceId"))
-                }
-            val question = mock(QuestionConditional::class.java).also { given(it.id).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
-            )
-            given(communControlQuestionUseCase.isChoiceIdOverOne(response.choiceIds!!)).willReturn(true)
-            given(communControlQuestionUseCase.isChoiceAutreOverMaxLength(response)).willReturn(false)
-
-            //When
-            val result = useCase.isResponseConsultationValid(
-                consultationId = "consultationId",
-                consultationResponses = listOf(response)
-            )
-
-            //Then
-            assertThat(result).isEqualTo(false)
-            then(questionRepository).should(only()).getConsultationQuestionList(
-                consultationId = "consultationId",
-            )
-            then(communControlQuestionUseCase).should(only()).isChoiceIdOverOne(response.choiceIds!!)
-            then(controlQuestionOpenUseCase).shouldHaveNoInteractions()
-            then(controlQuestionMultipleChoicesUseCase).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `isResponseConsultationValid - when isChoiceIdOverOne returns false and isChoiceAutreOverMaxLength returns false - should return true`() {
-            //Given
-            val response =
-                mock(ReponseConsultationInserting::class.java).also {
-                    given(it.questionId).willReturn("question1")
-                    given(it.choiceIds).willReturn(listOf("choiceId"))
-                }
-            val question = mock(QuestionConditional::class.java).also { given(it.id).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
-            )
-            given(communControlQuestionUseCase.isChoiceIdOverOne(response.choiceIds!!)).willReturn(false)
-            given(communControlQuestionUseCase.isChoiceAutreOverMaxLength(response)).willReturn(false)
+            given(questionMultipleChoicesValidator.isValid(question, response)).willReturn(true)
 
             //When
             val result = useCase.isResponseConsultationValid(
@@ -221,159 +150,65 @@ internal class ControlResponseConsultationUseCaseTest {
             then(questionRepository).should(only()).getConsultationQuestionList(
                 consultationId = "consultationId",
             )
-            then(communControlQuestionUseCase).should(times(1)).isChoiceIdOverOne(response.choiceIds!!)
-            then(communControlQuestionUseCase).should(times(1)).isChoiceAutreOverMaxLength(response)
-            then(controlQuestionOpenUseCase).shouldHaveNoInteractions()
-            then(controlQuestionMultipleChoicesUseCase).shouldHaveNoInteractions()
+            then(questionOpenValidator).shouldHaveNoInteractions()
+            then(questionMultipleChoicesValidator).should(only()).isValid(question, response)
+            then(questionUniqueChoiceAndConditionalValidator).shouldHaveNoInteractions()
         }
 
+        @Test
+        fun `isResponseConsultationValid - when isValid returns false - should return false`() {
+            //Given
+            val response =
+                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
+            val question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
+            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
+                listOf(
+                    question
+                )
+            )
+            given(questionMultipleChoicesValidator.isValid(question, response)).willReturn(false)
+
+            //When
+            val result = useCase.isResponseConsultationValid(
+                consultationId = "consultationId",
+                consultationResponses = listOf(response)
+            )
+
+            //Then
+            assertThat(result).isEqualTo(false)
+            then(questionRepository).should(only()).getConsultationQuestionList(
+                consultationId = "consultationId",
+            )
+            then(questionOpenValidator).shouldHaveNoInteractions()
+            then(questionMultipleChoicesValidator).should(only()).isValid(question, response)
+            then(questionUniqueChoiceAndConditionalValidator).shouldHaveNoInteractions()
+        }
     }
 
     @Nested
-    inner class QuestionMultipleChoicesTestCases {
+    inner class QuestionUniqueChoiceAndConditionalTestCases {
 
         @Test
-        fun `isResponseConsultationValid - when isChoiceIdDuplicated returns true - should return false`() {
+        fun `isResponseConsultationValid - when isValid returns true for QuestionUniqueChoice and Conditional  - should return true`() {
             //Given
-            val response =
-                mock(ReponseConsultationInserting::class.java).also {
-                    given(it.questionId).willReturn("question1")
-                    given(it.choiceIds).willReturn(listOf("choiceId"))
-                }
-            val question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
+            val response1 =
+                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
+            val response2 =
+                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question2") }
+            val question1 = mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") }
+            val question2 = mock(QuestionConditional::class.java).also { given(it.id).willReturn("question2") }
             given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
                 listOf(
-                    question
+                    question1, question2
                 )
             )
-            given(controlQuestionMultipleChoicesUseCase.isChoiceIdDuplicated(response.choiceIds!!)).willReturn(true)
+            given(questionUniqueChoiceAndConditionalValidator.isValid(question1, response1)).willReturn(true)
+            given(questionUniqueChoiceAndConditionalValidator.isValid(question2, response2)).willReturn(true)
 
             //When
             val result = useCase.isResponseConsultationValid(
                 consultationId = "consultationId",
-                consultationResponses = listOf(response)
-            )
-
-            //Then
-            assertThat(result).isEqualTo(false)
-            then(questionRepository).should(only()).getConsultationQuestionList(
-                consultationId = "consultationId",
-            )
-            then(controlQuestionMultipleChoicesUseCase).should(only()).isChoiceIdDuplicated(response.choiceIds!!)
-            then(controlQuestionOpenUseCase).shouldHaveNoInteractions()
-            then(communControlQuestionUseCase).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `isResponseConsultationValid - when isChoiceIdDuplicated returns false and isChoiceIdListOverMaxChoices returns true - should return false`() {
-            //Given
-            val response =
-                mock(ReponseConsultationInserting::class.java).also {
-                    given(it.questionId).willReturn("question1")
-                    given(it.choiceIds).willReturn(listOf("choiceId"))
-                }
-            val question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
-            )
-            given(controlQuestionMultipleChoicesUseCase.isChoiceIdDuplicated(response.choiceIds!!)).willReturn(false)
-            given(
-                controlQuestionMultipleChoicesUseCase.isChoiceIdListOverMaxChoices(
-                    response.choiceIds!!,
-                    question
-                )
-            ).willReturn(true)
-
-            //When
-            val result = useCase.isResponseConsultationValid(
-                consultationId = "consultationId",
-                consultationResponses = listOf(response)
-            )
-
-            //Then
-            assertThat(result).isEqualTo(false)
-            then(questionRepository).should(only()).getConsultationQuestionList(
-                consultationId = "consultationId",
-            )
-            then(controlQuestionMultipleChoicesUseCase).should(times(1)).isChoiceIdDuplicated(response.choiceIds!!)
-            then(controlQuestionMultipleChoicesUseCase).should(times(1))
-                .isChoiceIdListOverMaxChoices(response.choiceIds!!, question)
-            then(controlQuestionMultipleChoicesUseCase).shouldHaveNoMoreInteractions()
-            then(controlQuestionOpenUseCase).shouldHaveNoInteractions()
-            then(communControlQuestionUseCase).shouldHaveNoInteractions()
-        }
-
-        @Test
-        fun `isResponseConsultationValid - when isChoiceIdDuplicated returns false and isChoiceIdListOverMaxChoices returns false and isChoiceAutreOverMaxLength returns true - should return false`() {
-            //Given
-            val response =
-                mock(ReponseConsultationInserting::class.java).also {
-                    given(it.questionId).willReturn("question1")
-                    given(it.choiceIds).willReturn(listOf("choiceId"))
-                }
-            val question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
-            )
-            given(controlQuestionMultipleChoicesUseCase.isChoiceIdDuplicated(response.choiceIds!!)).willReturn(false)
-            given(
-                controlQuestionMultipleChoicesUseCase.isChoiceIdListOverMaxChoices(
-                    response.choiceIds!!,
-                    question
-                )
-            ).willReturn(false)
-            given(communControlQuestionUseCase.isChoiceAutreOverMaxLength(response)).willReturn(true)
-
-            //When
-            val result = useCase.isResponseConsultationValid(
-                consultationId = "consultationId",
-                consultationResponses = listOf(response)
-            )
-
-            //Then
-            assertThat(result).isEqualTo(false)
-            then(questionRepository).should(only()).getConsultationQuestionList(
-                consultationId = "consultationId",
-            )
-            then(controlQuestionMultipleChoicesUseCase).should(times(1)).isChoiceIdDuplicated(response.choiceIds!!)
-            then(controlQuestionMultipleChoicesUseCase).should(times(1))
-                .isChoiceIdListOverMaxChoices(response.choiceIds!!, question)
-            then(controlQuestionMultipleChoicesUseCase).shouldHaveNoMoreInteractions()
-            then(controlQuestionOpenUseCase).shouldHaveNoInteractions()
-            then(communControlQuestionUseCase).should(only()).isChoiceAutreOverMaxLength(response)
-        }
-
-        @Test
-        fun `isResponseConsultationValid - when isChoiceIdDuplicated returns false and isChoiceIdListOverMaxChoices returns false and isChoiceAutreOverMaxLength returns false - should return true`() {
-            //Given
-            val response =
-                mock(ReponseConsultationInserting::class.java).also {
-                    given(it.questionId).willReturn("question1")
-                    given(it.choiceIds).willReturn(listOf("choiceId"))
-                }
-            val question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
-            )
-            given(controlQuestionMultipleChoicesUseCase.isChoiceIdDuplicated(response.choiceIds!!)).willReturn(false)
-            given(
-                controlQuestionMultipleChoicesUseCase.isChoiceIdListOverMaxChoices(
-                    response.choiceIds!!,
-                    question
-                )
-            ).willReturn(false)
-            given(communControlQuestionUseCase.isChoiceAutreOverMaxLength(response)).willReturn(false)
-
-            //When
-            val result = useCase.isResponseConsultationValid(
-                consultationId = "consultationId",
-                consultationResponses = listOf(response)
+                consultationResponses = listOf(response1, response2)
             )
 
             //Then
@@ -381,12 +216,45 @@ internal class ControlResponseConsultationUseCaseTest {
             then(questionRepository).should(only()).getConsultationQuestionList(
                 consultationId = "consultationId",
             )
-            then(controlQuestionMultipleChoicesUseCase).should(times(1)).isChoiceIdDuplicated(response.choiceIds!!)
-            then(controlQuestionMultipleChoicesUseCase).should(times(1))
-                .isChoiceIdListOverMaxChoices(response.choiceIds!!, question)
-            then(controlQuestionMultipleChoicesUseCase).shouldHaveNoMoreInteractions()
-            then(controlQuestionOpenUseCase).shouldHaveNoInteractions()
-            then(communControlQuestionUseCase).should(only()).isChoiceAutreOverMaxLength(response)
+            then(questionOpenValidator).shouldHaveNoInteractions()
+            then(questionMultipleChoicesValidator).shouldHaveNoInteractions()
+            then(questionUniqueChoiceAndConditionalValidator).should().isValid(question1, response1)
+            then(questionUniqueChoiceAndConditionalValidator).should().isValid(question2, response2)
+
+        }
+
+        @Test
+        fun `isResponseConsultationValid - when isValid returns true for QuestionUniqueChoice and false for Conditional  - should return false`() {
+            //Given
+            val response1 =
+                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
+            val response2 =
+                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question2") }
+            val question1 = mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") }
+            val question2 = mock(QuestionConditional::class.java).also { given(it.id).willReturn("question2") }
+            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
+                listOf(
+                    question1, question2
+                )
+            )
+            given(questionUniqueChoiceAndConditionalValidator.isValid(question1, response1)).willReturn(true)
+            given(questionUniqueChoiceAndConditionalValidator.isValid(question2, response2)).willReturn(false)
+
+            //When
+            val result = useCase.isResponseConsultationValid(
+                consultationId = "consultationId",
+                consultationResponses = listOf(response1, response2)
+            )
+
+            //Then
+            assertThat(result).isEqualTo(false)
+            then(questionRepository).should(only()).getConsultationQuestionList(
+                consultationId = "consultationId",
+            )
+            then(questionOpenValidator).shouldHaveNoInteractions()
+            then(questionMultipleChoicesValidator).shouldHaveNoInteractions()
+            then(questionUniqueChoiceAndConditionalValidator).should().isValid(question1, response1)
+            then(questionUniqueChoiceAndConditionalValidator).should().isValid(question2, response2)
         }
     }
 }
