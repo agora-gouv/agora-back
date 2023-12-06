@@ -1,6 +1,7 @@
 package fr.gouv.agora.usecase.reponseConsultation
 
 import fr.gouv.agora.domain.*
+import org.springframework.stereotype.Component
 
 abstract class ResponseQuestionValidator {
     abstract fun isValid(question: Question, response: ReponseConsultationInserting): Boolean
@@ -15,7 +16,7 @@ abstract class ResponseQuestionWithChoicesValidator : ResponseQuestionValidator(
         response.responseText.length <= OPEN_FIELD_TEXT_MAX_LENGTH
 
 }
-
+@Component
 class QuestionMultipleChoicesValidator : ResponseQuestionWithChoicesValidator() {
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
         return if (question is QuestionMultipleChoices)
@@ -36,7 +37,7 @@ class QuestionMultipleChoicesValidator : ResponseQuestionWithChoicesValidator() 
     }
 }
 
-
+@Component
 class QuestionUniqueChoiceAndConditionalValidator : ResponseQuestionWithChoicesValidator() {
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
         return if (question is QuestionUniqueChoice || question is QuestionConditional)
@@ -47,7 +48,7 @@ class QuestionUniqueChoiceAndConditionalValidator : ResponseQuestionWithChoicesV
     private fun hasOneChoiceId(listChoices: List<String>) = listChoices.size == 1
 }
 
-
+@Component
 class QuestionOpenValidator : ResponseQuestionValidator() {
 
     companion object {

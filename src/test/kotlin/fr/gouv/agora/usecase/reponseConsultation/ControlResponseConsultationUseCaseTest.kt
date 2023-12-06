@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -64,17 +65,25 @@ internal class ControlResponseConsultationUseCaseTest {
     @Nested
     inner class QuestionOpenTestCases {
 
-        @Test
-        fun `isResponseConsultationValid - when isValid returns true - should return true`() {
-            //Given
-            val response =
+        private lateinit var question: QuestionOpen
+        private lateinit var response: ReponseConsultationInserting
+
+        @BeforeEach
+
+        fun setUp() {
+            question = mock(QuestionOpen::class.java).also { given(it.id).willReturn("question1") }
+            response =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
-            val question = mock(QuestionOpen::class.java).also { given(it.id).willReturn("question1") }
             given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
                 listOf(
                     question
                 )
             )
+        }
+
+        @Test
+        fun `isResponseConsultationValid - when isValid returns true - should return true`() {
+            //Given
             given(questionOpenValidator.isValid(question, response)).willReturn(true)
 
             //When
@@ -96,14 +105,6 @@ internal class ControlResponseConsultationUseCaseTest {
         @Test
         fun `isResponseConsultationValid - when isValid returns false - should return false`() {
             //Given
-            val response =
-                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
-            val question = mock(QuestionOpen::class.java).also { given(it.id).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
-            )
             given(questionOpenValidator.isValid(question, response)).willReturn(false)
 
             //When
@@ -126,17 +127,24 @@ internal class ControlResponseConsultationUseCaseTest {
     @Nested
     inner class QuestionMultipleTestCases {
 
-        @Test
-        fun `isResponseConsultationValid - when isValid returns true - should return true`() {
-            //Given
-            val response =
+        private lateinit var question: QuestionMultipleChoices
+        private lateinit var response: ReponseConsultationInserting
+
+        @BeforeEach
+        fun setUp() {
+            question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
+            response =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
-            val question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
             given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
                 listOf(
                     question
                 )
             )
+        }
+
+        @Test
+        fun `isResponseConsultationValid - when isValid returns true - should return true`() {
+            //Given
             given(questionMultipleChoicesValidator.isValid(question, response)).willReturn(true)
 
             //When
@@ -158,14 +166,6 @@ internal class ControlResponseConsultationUseCaseTest {
         @Test
         fun `isResponseConsultationValid - when isValid returns false - should return false`() {
             //Given
-            val response =
-                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
-            val question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
-            )
             given(questionMultipleChoicesValidator.isValid(question, response)).willReturn(false)
 
             //When
@@ -187,21 +187,29 @@ internal class ControlResponseConsultationUseCaseTest {
 
     @Nested
     inner class QuestionUniqueChoiceAndConditionalTestCases {
+        private lateinit var question1: QuestionUniqueChoice
+        private lateinit var question2: QuestionConditional
+        private lateinit var response1: ReponseConsultationInserting
+        private lateinit var response2: ReponseConsultationInserting
 
-        @Test
-        fun `isResponseConsultationValid - when isValid returns true for QuestionUniqueChoice and Conditional  - should return true`() {
-            //Given
-            val response1 =
+        @BeforeEach
+        fun setUp() {
+            question1 = mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") }
+            question2 = mock(QuestionConditional::class.java).also { given(it.id).willReturn("question2") }
+            response1 =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
-            val response2 =
+            response2 =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question2") }
-            val question1 = mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") }
-            val question2 = mock(QuestionConditional::class.java).also { given(it.id).willReturn("question2") }
             given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
                 listOf(
                     question1, question2
                 )
             )
+        }
+
+        @Test
+        fun `isResponseConsultationValid - when isValid returns true for QuestionUniqueChoice and Conditional  - should return true`() {
+            //Given
             given(questionUniqueChoiceAndConditionalValidator.isValid(question1, response1)).willReturn(true)
             given(questionUniqueChoiceAndConditionalValidator.isValid(question2, response2)).willReturn(true)
 
@@ -226,17 +234,6 @@ internal class ControlResponseConsultationUseCaseTest {
         @Test
         fun `isResponseConsultationValid - when isValid returns true for QuestionUniqueChoice and false for Conditional  - should return false`() {
             //Given
-            val response1 =
-                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
-            val response2 =
-                mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question2") }
-            val question1 = mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") }
-            val question2 = mock(QuestionConditional::class.java).also { given(it.id).willReturn("question2") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question1, question2
-                )
-            )
             given(questionUniqueChoiceAndConditionalValidator.isValid(question1, response1)).willReturn(true)
             given(questionUniqueChoiceAndConditionalValidator.isValid(question2, response2)).willReturn(false)
 
