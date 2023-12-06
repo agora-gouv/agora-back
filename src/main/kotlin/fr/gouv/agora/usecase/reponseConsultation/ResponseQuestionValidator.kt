@@ -3,49 +3,48 @@ package fr.gouv.agora.usecase.reponseConsultation
 import fr.gouv.agora.domain.*
 
 abstract class ResponseQuestionValidator {
-    companion object {
-        private const val AUTRE_MAX_TEXT_LENGTH = 200
-    }
-
     abstract fun isValid(question: Question, response: ReponseConsultationInserting): Boolean
+}
 
-    fun isChoiceIdOverOne(listChoices: List<String>) = listChoices.size > 1
-    fun isChoiceAutreOverMaxLength(response: ReponseConsultationInserting) =
-        response.responseText.length > AUTRE_MAX_TEXT_LENGTH
+abstract class ResponseQuestionWithChoicesValidator : ResponseQuestionValidator() {
+    companion object {
+        private const val OPEN_FIELD_TEXT_MAX_LENGTH = 200
+    }
+
+    fun isValidOpenTextFieldLength(response: ReponseConsultationInserting) =
+        response.responseText.length <= OPEN_FIELD_TEXT_MAX_LENGTH
 
 }
 
-class QuestionMultipleChoicesValidator : ResponseQuestionValidator() {
+class QuestionMultipleChoicesValidator : ResponseQuestionWithChoicesValidator() {
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
-        return when (question) {
-            is QuestionMultipleChoices -> (response.choiceIds?.let { isChoiceIdDuplicated(it) } == false && !isChoiceIdListOverMaxChoices(
-                response.choiceIds, question
-            )) && !isChoiceAutreOverMaxLength(response)
-
-            else -> false
-        }
+        return if (question is QuestionMultipleChoices)
+            response.choiceIds?.let {
+                isChoiceIdListUnique(it)
+                        && isChoiceIdListUnderMaxChoices(it, question)
+                        && isValidOpenTextFieldLength(response)
+            } == true
+        else false
     }
 
-    private fun isChoiceIdDuplicated(listChoices: List<String>): Boolean {
-        return (listChoices.toSet().size < listChoices.size)
+    private fun isChoiceIdListUnique(listChoices: List<String>): Boolean {
+        return (listChoices.toSet().size == listChoices.size)
     }
 
-    private fun isChoiceIdListOverMaxChoices(listChoices: List<String>, question: QuestionMultipleChoices): Boolean {
-        return (question.maxChoices < listChoices.size)
+    private fun isChoiceIdListUnderMaxChoices(listChoices: List<String>, question: QuestionMultipleChoices): Boolean {
+        return (listChoices.size <= question.maxChoices)
     }
 }
 
 
-class QuestionUniqueChoiceAndConditionalValidator : ResponseQuestionValidator() {
+class QuestionUniqueChoiceAndConditionalValidator : ResponseQuestionWithChoicesValidator() {
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
-        return when (question) {
-            is QuestionUniqueChoice, is QuestionConditional -> (response.choiceIds?.let { isChoiceIdOverOne(it) } == false && !isChoiceAutreOverMaxLength(
-                response
-            ))
-
-            else -> false
-        }
+        return if (question is QuestionUniqueChoice || question is QuestionConditional)
+            response.choiceIds?.let { hasOneChoiceId(it) && isValidOpenTextFieldLength(response) } == true
+        else false
     }
+
+    private fun hasOneChoiceId(listChoices: List<String>) = listChoices.size == 1
 }
 
 
@@ -56,13 +55,10 @@ class QuestionOpenValidator : ResponseQuestionValidator() {
     }
 
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
-        return when (question) {
-            is QuestionOpen -> !isTextFieldOverMaxLength(response)
-            else -> false
-        }
+        return if (question is QuestionOpen) isValidOpenTextFieldLength(response) else false
     }
 
-    private fun isTextFieldOverMaxLength(response: ReponseConsultationInserting) =
-        response.responseText.length > OPEN_QUESTION_MAX_TEXT_LENGTH
+    private fun isValidOpenTextFieldLength(response: ReponseConsultationInserting) =
+        response.responseText.length <= OPEN_QUESTION_MAX_TEXT_LENGTH
 }
 
