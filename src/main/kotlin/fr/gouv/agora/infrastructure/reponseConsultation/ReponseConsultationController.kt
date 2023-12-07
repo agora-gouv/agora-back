@@ -4,6 +4,7 @@ import fr.gouv.agora.infrastructure.reponseConsultation.InsertResponseConsultati
 import fr.gouv.agora.infrastructure.reponseConsultation.repository.ConsultationResponseResultJsonCacheRepository
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
+import fr.gouv.agora.usecase.reponseConsultation.ControlResponseConsultationUseCase
 import fr.gouv.agora.usecase.reponseConsultation.InsertReponseConsultationUseCase
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
 import org.springframework.http.HttpEntity
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*
 @Suppress("unused")
 class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,
+    private val controlResponseConsultationUseCase: ControlResponseConsultationUseCase,
     private val askForDemographicInfoUseCase: AskForDemographicInfoUseCase,
     private val cacheRepository: ConsultationResponseResultJsonCacheRepository,
     private val jsonMapper: ReponseConsultationJsonMapper,
@@ -26,25 +28,36 @@ class ReponseConsultationController(
         @RequestBody responsesConsultationJson: ReponsesConsultationJson,
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+
         return queue.executeTask(
             taskType = TaskType.InsertResponse(userId = userId),
             onTaskExecuted = {
-                val statusInsertion = insertReponseConsultationUseCase.insertReponseConsultation(
+                val consultationResponses = jsonMapper.toDomain(responsesConsultationJson)
+                val isConsultationResponseValid = controlResponseConsultationUseCase.isResponseConsultationValid(
                     consultationId = consultationId,
-                    userId = userId,
-                    consultationResponses = jsonMapper.toDomain(responsesConsultationJson),
+                    consultationResponses = consultationResponses
                 )
-                when (statusInsertion) {
-                    InsertResult.INSERT_SUCCESS -> {
-                        val askDemographicInfo = askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
-                        cacheRepository.evictConsultationResults(consultationId)
-                        ResponseEntity.ok()
-                            .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
+                if (!isConsultationResponseValid) ResponseEntity.badRequest().body(Unit)
+                else {
+                    val statusInsertion = insertReponseConsultationUseCase.insertReponseConsultation(
+                        consultationId = consultationId,
+                        userId = userId,
+                        consultationResponses = consultationResponses,
+                    )
+                    when (statusInsertion) {
+                        InsertResult.INSERT_SUCCESS -> {
+                            val askDemographicInfo =
+                                askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
+                            cacheRepository.evictConsultationResults(consultationId)
+                            ResponseEntity.ok()
+                                .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
+                        }
+
+                        InsertResult.INSERT_FAILURE -> ResponseEntity.badRequest().body(Unit)
                     }
-                    InsertResult.INSERT_FAILURE -> ResponseEntity.badRequest().body(Unit)
                 }
             },
-            onTaskRejected = { ResponseEntity.badRequest().body(Unit) },
+            onTaskRejected = { ResponseEntity.badRequest().body(Unit) }
         )
     }
 }
