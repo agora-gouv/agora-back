@@ -28,10 +28,11 @@ class ReponseConsultationController(
         @RequestBody responsesConsultationJson: ReponsesConsultationJson,
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        val consultationResponses = jsonMapper.toDomain(responsesConsultationJson)
+
         return queue.executeTask(
             taskType = TaskType.InsertResponse(userId = userId),
             onTaskExecuted = {
+                val consultationResponses = jsonMapper.toDomain(responsesConsultationJson)
                 val isConsultationResponseValid = controlResponseConsultationUseCase.isResponseConsultationValid(
                     consultationId = consultationId,
                     consultationResponses = consultationResponses
