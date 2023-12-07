@@ -30,36 +30,31 @@ class ReponseConsultationController(
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val consultationResponses = jsonMapper.toDomain(responsesConsultationJson)
         return queue.executeTask(
-            taskType = TaskType.ControlResponse(consultationResponses = consultationResponses),
+            taskType = TaskType.InsertResponse(userId = userId),
             onTaskExecuted = {
-                if (controlResponseConsultationUseCase.isResponseConsultationValid(
+                val isConsultationResponseValid = controlResponseConsultationUseCase.isResponseConsultationValid(
+                    consultationId = consultationId,
+                    consultationResponses = consultationResponses
+                )
+                if (!isConsultationResponseValid) ResponseEntity.badRequest().body(Unit)
+                else {
+                    val statusInsertion = insertReponseConsultationUseCase.insertReponseConsultation(
                         consultationId = consultationId,
-                        consultationResponses = consultationResponses
+                        userId = userId,
+                        consultationResponses = consultationResponses,
                     )
-                ) {
-                    queue.executeTask(
-                        taskType = TaskType.InsertResponse(userId = userId),
-                        onTaskExecuted = {
-                            val statusInsertion = insertReponseConsultationUseCase.insertReponseConsultation(
-                                consultationId = consultationId,
-                                userId = userId,
-                                consultationResponses = consultationResponses,
-                            )
-                            when (statusInsertion) {
-                                InsertResult.INSERT_SUCCESS -> {
-                                    val askDemographicInfo =
-                                        askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
-                                    cacheRepository.evictConsultationResults(consultationId)
-                                    ResponseEntity.ok()
-                                        .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
-                                }
+                    when (statusInsertion) {
+                        InsertResult.INSERT_SUCCESS -> {
+                            val askDemographicInfo =
+                                askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
+                            cacheRepository.evictConsultationResults(consultationId)
+                            ResponseEntity.ok()
+                                .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
+                        }
 
-                                InsertResult.INSERT_FAILURE -> ResponseEntity.badRequest().body(Unit)
-                            }
-                        },
-                        onTaskRejected = { ResponseEntity.badRequest().body(Unit) }
-                    )
-                } else ResponseEntity.badRequest().body(Unit)
+                        InsertResult.INSERT_FAILURE -> ResponseEntity.badRequest().body(Unit)
+                    }
+                }
             },
             onTaskRejected = { ResponseEntity.badRequest().body(Unit) }
         )
