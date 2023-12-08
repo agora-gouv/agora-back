@@ -13,6 +13,7 @@ class CrossOriginConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry
             .addMapping("/**")
+            .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE")
             .allowedOrigins("https://app.agora.incubateur.net/")
     }
 
