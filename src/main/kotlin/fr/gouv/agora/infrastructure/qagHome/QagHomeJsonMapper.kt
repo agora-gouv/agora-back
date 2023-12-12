@@ -73,6 +73,10 @@ class QagHomeJsonMapper(
         )
     }
 
+    fun toQagAskStatusJson(askQagErrorText: String?): QagAskStatusJson {
+        return QagAskStatusJson(askQagErrorText = askQagErrorText)
+    }
+
     private fun qagToJson(qagPreview: QagPreview): QagPreviewJson {
         return QagPreviewJson(
             qagId = qagPreview.id,
