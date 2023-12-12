@@ -338,6 +338,9 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     @Query(value = "SELECT count(*) FROM qags WHERE status = 1", nativeQuery = true)
     fun getQagsCount(): Int
 
+    @Query(value = "SELECT count(*) FROM qags WHERE status = 1 AND thematique_id = :thematiqueId", nativeQuery = true)
+    fun getQagsCountByThematique(@Param("thematiqueId") thematiqueId: UUID): Int
+
     @Query(value = "SELECT * from qags WHERE id = :qagId", nativeQuery = true)
     fun getQagById(@Param("qagId") qagId: UUID): QagDTO?
 

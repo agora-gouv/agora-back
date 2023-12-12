@@ -37,4 +37,29 @@ interface SupportQagDatabaseRepository : JpaRepository<SupportQagDTO, UUID> {
 
     @Query(value = "SELECT * FROM supports_qag WHERE user_id = :userId AND qag_id = :qagId LIMIT 1", nativeQuery = true)
     fun getSupportQag(@Param("userId") userId: UUID, @Param("qagId") qagId: UUID): SupportQagDTO?
+
+    @Query(
+        value = """SELECT count(*) FROM supports_qag 
+            WHERE qag_id IN (
+                SELECT id FROM qags 
+                WHERE status = 1 
+                OR (status = 0 AND user_id = :userId)
+                AND thematique_id = :thematiqueId
+            )
+            AND user_id = :userId """,
+        nativeQuery = true
+    )
+    fun getSupportedQagCountByThematique(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): Int
+
+    @Query(
+        value = """SELECT count(*) FROM supports_qag 
+            WHERE qag_id IN (
+                SELECT id FROM qags 
+                WHERE status = 1 
+                OR (status = 0 AND user_id = :userId)
+            )
+            AND user_id = :userId """,
+        nativeQuery = true
+    )
+    fun getSupportedQagCount(@Param("userId") userId: UUID): Int
 }

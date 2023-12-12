@@ -17,4 +17,7 @@ class SupportQagUseCase(
             }
     }
 
+    fun getSupportedQagCount(userId: String, thematiqueId: String?): Int {
+        return supportQagRepository.getSupportedQagCount(userId = userId, thematiqueId = thematiqueId)
+    }
 }
