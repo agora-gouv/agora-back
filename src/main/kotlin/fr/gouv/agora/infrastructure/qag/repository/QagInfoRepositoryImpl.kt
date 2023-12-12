@@ -163,6 +163,11 @@ class QagInfoRepositoryImpl(
         return databaseRepository.getQagsCount()
     }
 
+    override fun getQagsCountByThematique(thematiqueId: String): Int {
+        return thematiqueId.toUuidOrNull()
+            ?.let { thematiqueUUId -> databaseRepository.getQagsCountByThematique(thematiqueUUId) } ?: 0
+    }
+
     override fun getQagInfo(qagId: String): QagInfo? {
         return qagId.toUuidOrNull()?.let { qagUUID ->
             databaseRepository.getQagById(qagId = qagUUID)?.let { qagDTO ->

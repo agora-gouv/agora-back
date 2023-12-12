@@ -37,4 +37,18 @@ interface SupportQagDatabaseRepository : JpaRepository<SupportQagDTO, UUID> {
 
     @Query(value = "SELECT * FROM supports_qag WHERE user_id = :userId AND qag_id = :qagId LIMIT 1", nativeQuery = true)
     fun getSupportQag(@Param("userId") userId: UUID, @Param("qagId") qagId: UUID): SupportQagDTO?
+
+    @Query(
+        value = """SELECT qag_id FROM supports_qag 
+            WHERE qag_id IN (
+                SELECT id FROM qags 
+                WHERE status = 1 
+                OR (status = 0 AND user_id = :userId)
+                AND thematique_id = :thematiqueId
+            )
+            AND user_id = :userId 
+            ORDER BY support_date DESC""",
+        nativeQuery = true
+    )
+    fun getUserSupportedQagsByThematique(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): List<UUID>
 }

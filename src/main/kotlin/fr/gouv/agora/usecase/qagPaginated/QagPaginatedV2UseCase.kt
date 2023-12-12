@@ -133,10 +133,22 @@ class QagPaginatedV2UseCase(
         if (pageNumber < 1) return null
 
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
-        val userSupportedQagIds = supportQagRepository.getUserSupportedQags(userId = userId)
+        val userSupportedQagIds =
+            thematiqueId?.let {
+                supportQagRepository.getUserSupportedQagsByThematique(
+                    userId = userId,
+                    thematiqueId = thematiqueId
+                )
+            }
+                ?: supportQagRepository.getUserSupportedQags(userId = userId)
         val qagsCount = when (getQagMethod) {
             is RetrieveQagMethod.WithUserId -> userSupportedQagIds.size
-            is RetrieveQagMethod.WithoutUserId -> qagInfoRepository.getQagsCount()
+            is RetrieveQagMethod.WithoutUserId -> thematiqueId?.let {
+                qagInfoRepository.getQagsCountByThematique(
+                    thematiqueId = thematiqueId
+                )
+            } ?: qagInfoRepository.getQagsCount()
+
             is RetrieveQagMethod.WithoutParams -> TRENDING_LIST_SIZE
         }
 

@@ -46,6 +46,7 @@ interface QagInfoRepository {
         thematiqueId: String?,
     ): List<QagInfoWithSupportCount>
     fun getQagsCount(): Int
+    fun getQagsCountByThematique(thematiqueId: String): Int
     fun getQagInfo(qagId: String): QagInfo?
     fun getQagsInfo(qagIds: List<String>): List<QagInfo>
     fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?

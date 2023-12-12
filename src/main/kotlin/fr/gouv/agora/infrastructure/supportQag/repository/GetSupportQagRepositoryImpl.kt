@@ -25,4 +25,12 @@ class GetSupportQagRepositoryImpl(
         } ?: false
     }
 
+    override fun getUserSupportedQagsByThematique(userId: String, thematiqueId: String): List<String> {
+        return userId.toUuidOrNull()?.let { userUUID ->
+            thematiqueId.toUuidOrNull()?.let { thematiqueUUID ->
+                databaseRepository.getUserSupportedQagsByThematique(userUUID, thematiqueUUID)
+                    .map { qagUUID -> qagUUID.toString() }
+            }
+        } ?: emptyList()
+    }
 }
