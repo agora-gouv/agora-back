@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.qagHome
 
 import fr.gouv.agora.infrastructure.qagPaginated.QagPaginatedJsonMapper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
+import fr.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.gouv.agora.usecase.qagPaginated.QagPaginatedV2UseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.*
 @Suppress("unused")
 class QagHomeV2Controller(
     private val qagPaginatedV2UseCase: QagPaginatedV2UseCase,
+    private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
     private val qagPaginatedJsonMapper: QagPaginatedJsonMapper,
+    private val qagHomeJsonMapper: QagHomeJsonMapper,
 ) {
 
     @GetMapping("/v2/qags")
@@ -52,7 +55,17 @@ class QagHomeV2Controller(
                 ResponseEntity.ok().body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
             } ?: ResponseEntity.badRequest().body(Unit)
         } ?: ResponseEntity.badRequest().body(Unit)
+    }
 
+    @GetMapping("/qags/ask_status")
+    fun askStatus(@RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<*> {
+        return ResponseEntity.ok().body(
+            qagHomeJsonMapper.toQagAskStatusJson(
+                getQagErrorTextUseCase.getGetQagErrorText(
+                    userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+                )
+            )
+        )
     }
 
 }

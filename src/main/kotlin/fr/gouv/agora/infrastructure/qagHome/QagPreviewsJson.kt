@@ -94,3 +94,8 @@ data class HeaderQagJson(
     @JsonProperty("message")
     val message: String,
 )
+
+data class QagAskStatusJson(
+    @JsonProperty("askQagErrorText")
+    val askQagErrorText: String?,
+)
