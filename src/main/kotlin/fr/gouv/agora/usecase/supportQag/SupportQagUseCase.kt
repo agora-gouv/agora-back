@@ -12,7 +12,7 @@ class SupportQagUseCase(
 
     fun getUserSupportedQagIds(userId: String): List<String> {
         return cacheRepository.getUserSupportedQagIds(userId = userId)
-            ?: supportQagRepository.getUserSupportedQags(userId = userId).also { userSupportedQagIds ->
+            ?: supportQagRepository.getUserSupportedQags(userId = userId, thematiqueId = null).also { userSupportedQagIds ->
                 cacheRepository.initUserSupportedQagIds(userId, userSupportedQagIds)
             }
     }

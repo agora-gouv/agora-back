@@ -67,7 +67,7 @@ class QagPaginatedUseCase(
     ): QagsAndMaxPageCount? {
         if (pageNumber <= 0) return null
 
-        val qagsCount = qagInfoRepository.getQagsCount()
+        val qagsCount = qagInfoRepository.getQagsCount(thematiqueId = thematiqueId)
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (offset > qagsCount) return null
 
@@ -92,7 +92,7 @@ class QagPaginatedUseCase(
             )
         }
         val thematiques = thematiqueRepository.getThematiqueList()
-        val userSupportedQagIds = supportQagRepository.getUserSupportedQags(userId = userId)
+        val userSupportedQagIds = supportQagRepository.getUserSupportedQags(userId = userId, thematiqueId = null)
 
         return QagsAndMaxPageCount(
             qags = qags.mapNotNull { qag ->

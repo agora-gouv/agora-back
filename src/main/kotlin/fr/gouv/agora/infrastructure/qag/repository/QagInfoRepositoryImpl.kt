@@ -159,13 +159,10 @@ class QagInfoRepositoryImpl(
         return qagList.map(mapper::toDomain)
     }
 
-    override fun getQagsCount(): Int {
-        return databaseRepository.getQagsCount()
-    }
-
-    override fun getQagsCountByThematique(thematiqueId: String): Int {
-        return thematiqueId.toUuidOrNull()
-            ?.let { thematiqueUUId -> databaseRepository.getQagsCountByThematique(thematiqueUUId) } ?: 0
+    override fun getQagsCount(thematiqueId: String?): Int {
+        return thematiqueId?.toUuidOrNull()
+            ?.let { thematiqueUUId -> databaseRepository.getQagsCountByThematique(thematiqueUUId) }
+            ?: databaseRepository.getQagsCount()
     }
 
     override fun getQagInfo(qagId: String): QagInfo? {
