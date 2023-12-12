@@ -9,12 +9,11 @@ import org.springframework.stereotype.Component
 class GetSupportQagRepositoryImpl(
     private val databaseRepository: SupportQagDatabaseRepository,
 ) : GetSupportQagRepository {
-    override fun getUserSupportedQags(userId: String, thematiqueId: String?): List<String> {
-        val userUUID = userId.toUuidOrNull() ?: return emptyList()
-        val qagUUIdList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-            databaseRepository.getUserSupportedQagsByThematique(userUUID, thematiqueUUID)
-        } ?: databaseRepository.getUserSupportedQags(userUUID)
-        return qagUUIdList.map { qagUUID -> qagUUID.toString() }
+    override fun getUserSupportedQags(userId: String): List<String> {
+        return userId.toUuidOrNull()?.let { userUUID ->
+            databaseRepository.getUserSupportedQags(userUUID)
+                .map { qagUUID -> qagUUID.toString() }
+        } ?: emptyList()
     }
 
     override fun isQagSupported(userId: String, qagId: String): Boolean {
@@ -23,5 +22,16 @@ class GetSupportQagRepositoryImpl(
                 databaseRepository.getSupportQag(userId = userUUID, qagId = qagUUID) != null
             }
         } ?: false
+    }
+
+    override fun getSupportedQagCount(userId: String, thematiqueId: String?): Int {
+        return userId.toUuidOrNull()?.let { userUUID ->
+            thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+                databaseRepository.getSupportedQagCountByThematique(
+                    userId = userUUID,
+                    thematiqueId = thematiqueUUID
+                )
+            } ?: databaseRepository.getSupportedQagCount(userUUID)
+        } ?: 0
     }
 }
