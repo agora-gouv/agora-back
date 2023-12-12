@@ -38,6 +38,7 @@ class ConsultationListUseCase(
                 consultationUpdates.find { consultationUpdate -> consultationUpdate.consultationId == consultationInfo.id && consultationUpdate.status == ConsultationStatus.COLLECTING_DATA }
             } else {
                 consultationUpdates.find { consultationUpdate -> consultationUpdate.consultationId == consultationInfo.id && consultationUpdate.status != ConsultationStatus.COLLECTING_DATA }
+                    ?: generateTemporaryConsultationUpdate(consultationUpdates.find { consultationUpdate -> consultationUpdate.consultationId == consultationInfo.id })
             }
 
             if (thematique != null && consultationUpdate != null) {
@@ -60,6 +61,15 @@ class ConsultationListUseCase(
 
     private fun isOngoing(dateNow: LocalDateTime, startDate: LocalDateTime, endDate: LocalDateTime) =
         (dateNow.isAfter(startDate) || dateNow == startDate) && dateNow.isBefore(endDate)
+
+    private fun generateTemporaryConsultationUpdate(consultationUpdate: ConsultationUpdate?): ConsultationUpdate? {
+        return consultationUpdate?.copy(
+            description = consultationUpdate.description.replace(
+                "<body>",
+                "<body>\uD83D\uDDF3 La consultation est terminée !<br/>Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.<br/><br/>—<br/><br/>"
+            )
+        )
+    }
 
 }
 
