@@ -7,6 +7,7 @@ import fr.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheResult
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.qagPreview.QagWithSupportCount
@@ -185,8 +186,18 @@ class QagPaginatedV2UseCase(
         pageNumber: Int,
     ): QagsAndMaxPageCountV2 {
         val header = when (pageNumber) {
-            1 -> headerCacheRepository.getHeader(filterType) ?: headerRepository.getHeader(filterType)
-                ?.also { headerCacheRepository.initHeader(filterType, it) }
+            1 -> when (val cachedHeader = headerCacheRepository.getHeader(filterType)) {
+                is HeaderQagCacheResult.CachedHeaderQag -> cachedHeader.headerQag
+                HeaderQagCacheResult.HeaderQagCacheNotInitialized -> headerRepository.getHeader(filterType)
+                    .also { headerQag ->
+                        if (headerQag != null) headerCacheRepository.initHeader(
+                            filterType,
+                            headerQag
+                        ) else headerCacheRepository.initHeaderNotFound(filterType)
+                    }
+
+                HeaderQagCacheResult.HeaderQagNotFound -> null
+            }
 
             else -> null
         }

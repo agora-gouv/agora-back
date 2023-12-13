@@ -22,7 +22,7 @@ class QagDetailsAggregate(
     fun getQag(qagId: String): QagDetails? {
         return when (val cacheResult = qagDetailsCacheRepository.getQag(qagId)) {
             is QagDetailsCacheResult.CachedQagDetails -> cacheResult.qagDetails
-            QagDetailsCacheResult.QagDetailsNotFount -> null
+            QagDetailsCacheResult.QagDetailsNotFound -> null
             QagDetailsCacheResult.QagDetailsCacheNotInitialized -> buildQag(qagId)
         }
     }

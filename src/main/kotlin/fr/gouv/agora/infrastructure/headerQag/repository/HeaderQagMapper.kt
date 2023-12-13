@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class HeaderQagMapper {
     fun toDomain(dto: HeaderQagDTO): HeaderQag {
         return HeaderQag(
-            headerId = dto.headerId,
+            headerId = dto.id.toString(),
             title = dto.title,
             message = dto.message,
         )
