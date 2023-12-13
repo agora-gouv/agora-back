@@ -68,7 +68,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getPopularQagPaginated - when pageNumber is higher than maxPageNumber - should return null`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(16)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(16)
 
             // When
             val result = useCase.getPopularQagPaginated(
@@ -79,7 +79,7 @@ internal class QagPaginatedUseCaseTest {
 
             // Then
             assertThat(result).isEqualTo(null)
-            then(qagInfoRepository).should(only()).getQagsCount()
+            then(qagInfoRepository).should(only()).getQagsCount(thematiqueId)
             then(thematiqueRepository).shouldHaveNoInteractions()
             then(supportQagRepository).shouldHaveNoInteractions()
             then(dateFreezeRepository).shouldHaveNoInteractions()
@@ -89,7 +89,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getPopularQagPaginated - when pageNumber is 1 but has only qags without matching thematique - should init dateFreeze then return emptyList`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(1)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(1)
 
             val dateFreeze = mock(Date::class.java)
             given(dateFreezeRepository.initQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
@@ -123,7 +123,7 @@ internal class QagPaginatedUseCaseTest {
                     maxPageCount = 1,
                 )
             )
-            then(qagInfoRepository).should().getQagsCount()
+            then(qagInfoRepository).should().getQagsCount(thematiqueId)
             then(qagInfoRepository).should().getPopularQagsPaginated(
                 thematiqueId = thematiqueId,
                 maxDate = dateFreeze,
@@ -139,7 +139,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getPopularQagPaginated - when pageNumber is 2 and has qags with matching thematique - should get dateFreeze from repository then return mapped results`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(27)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(27)
 
             val dateFreeze = mock(Date::class.java)
             given(dateFreezeRepository.getQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
@@ -178,7 +178,7 @@ internal class QagPaginatedUseCaseTest {
                     maxPageCount = 2,
                 )
             )
-            then(qagInfoRepository).should().getQagsCount()
+            then(qagInfoRepository).should().getQagsCount(thematiqueId)
             then(qagInfoRepository).should().getPopularQagsPaginated(
                 thematiqueId = thematiqueId,
                 maxDate = dateFreeze,
@@ -218,7 +218,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getLatestQagPaginated - when pageNumber is higher than maxPageNumber - should return null`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(16)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(16)
 
             // When
             val result = useCase.getLatestQagPaginated(
@@ -229,7 +229,7 @@ internal class QagPaginatedUseCaseTest {
 
             // Then
             assertThat(result).isEqualTo(null)
-            then(qagInfoRepository).should(only()).getQagsCount()
+            then(qagInfoRepository).should(only()).getQagsCount(thematiqueId)
             then(thematiqueRepository).shouldHaveNoInteractions()
             then(supportQagRepository).shouldHaveNoInteractions()
             then(dateFreezeRepository).shouldHaveNoInteractions()
@@ -239,7 +239,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getLatestQagPaginated - when pageNumber is 1 but has only qags without matching thematique - should init dateFreeze then return emptyList`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(1)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(1)
 
             val dateFreeze = mock(Date::class.java)
             given(dateFreezeRepository.initQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
@@ -273,7 +273,7 @@ internal class QagPaginatedUseCaseTest {
                     maxPageCount = 1,
                 )
             )
-            then(qagInfoRepository).should().getQagsCount()
+            then(qagInfoRepository).should().getQagsCount(thematiqueId)
             then(qagInfoRepository).should().getLatestQagsPaginated(
                 thematiqueId = thematiqueId,
                 maxDate = dateFreeze,
@@ -289,7 +289,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getLatestQagPaginated - when pageNumber is 2 and has qags with matching thematique - should get dateFreeze from repository then return mapped results`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(27)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(27)
 
             val dateFreeze = mock(Date::class.java)
             given(dateFreezeRepository.getQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
@@ -328,7 +328,7 @@ internal class QagPaginatedUseCaseTest {
                     maxPageCount = 2,
                 )
             )
-            then(qagInfoRepository).should().getQagsCount()
+            then(qagInfoRepository).should().getQagsCount(thematiqueId)
             then(qagInfoRepository).should().getLatestQagsPaginated(
                 thematiqueId = thematiqueId,
                 maxDate = dateFreeze,
@@ -368,7 +368,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getSupportedQagPaginated - when pageNumber is higher than maxPageNumber - should return null`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(16)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(16)
 
             // When
             val result = useCase.getSupportedQagPaginated(
@@ -379,7 +379,7 @@ internal class QagPaginatedUseCaseTest {
 
             // Then
             assertThat(result).isEqualTo(null)
-            then(qagInfoRepository).should(only()).getQagsCount()
+            then(qagInfoRepository).should(only()).getQagsCount(thematiqueId)
             then(thematiqueRepository).shouldHaveNoInteractions()
             then(supportQagRepository).shouldHaveNoInteractions()
             then(dateFreezeRepository).shouldHaveNoInteractions()
@@ -389,7 +389,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getSupportedQagPaginated - when pageNumber is 1 but has only qags without matching thematique - should init dateFreeze then return emptyList`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(1)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(1)
 
             val dateFreeze = mock(Date::class.java)
             given(dateFreezeRepository.initQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
@@ -424,7 +424,7 @@ internal class QagPaginatedUseCaseTest {
                     maxPageCount = 1,
                 )
             )
-            then(qagInfoRepository).should().getQagsCount()
+            then(qagInfoRepository).should().getQagsCount(thematiqueId)
             then(qagInfoRepository).should().getSupportedQagsPaginated(
                 userId = userId,
                 thematiqueId = thematiqueId,
@@ -441,7 +441,7 @@ internal class QagPaginatedUseCaseTest {
         @Test
         fun `getSupportedQagPaginated - when pageNumber is 2 and has qags with matching thematique - should get dateFreeze from repository then return mapped results`() {
             // Given
-            given(qagInfoRepository.getQagsCount()).willReturn(27)
+            given(qagInfoRepository.getQagsCount(thematiqueId)).willReturn(27)
 
             val dateFreeze = mock(Date::class.java)
             given(dateFreezeRepository.getQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
@@ -481,7 +481,7 @@ internal class QagPaginatedUseCaseTest {
                     maxPageCount = 2,
                 )
             )
-            then(qagInfoRepository).should().getQagsCount()
+            then(qagInfoRepository).should().getQagsCount(thematiqueId)
             then(qagInfoRepository).should().getSupportedQagsPaginated(
                 userId = userId,
                 thematiqueId = thematiqueId,

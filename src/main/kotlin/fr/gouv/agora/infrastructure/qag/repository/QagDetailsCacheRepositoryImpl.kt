@@ -23,7 +23,7 @@ class QagDetailsCacheRepositoryImpl(
     override fun getQag(qagId: String): QagDetailsCacheResult {
         return when (val cacheContent = getCache()?.get(qagId, String::class.java)) {
             null -> QagDetailsCacheResult.QagDetailsCacheNotInitialized
-            QAG_NOT_FOUND_VALUE -> QagDetailsCacheResult.QagDetailsNotFount
+            QAG_NOT_FOUND_VALUE -> QagDetailsCacheResult.QagDetailsNotFound
             else -> try {
                 QagDetailsCacheResult.CachedQagDetails(objectMapper.readValue(cacheContent, QagDetails::class.java))
             } catch (e: Exception) {
