@@ -21,6 +21,11 @@ class ConsultationListUseCase(
     private val consultationUpdateRepository: ConsultationUpdateRepository,
     private val consultationResponseRepository: GetConsultationResponseRepository,
 ) {
+    companion object {
+        private const val START_OF_DESCRIPTION = "<body>"
+        private const val START_OF_DESCRIPTION_WITH_ADDED_PREFIX =
+            "$START_OF_DESCRIPTION🗳 La consultation est terminée !<br/>Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.<br/><br/>—<br/><br/>"
+    }
 
     fun getConsultationList(userId: String): List<ConsultationWithThematiqueUpdateAndAnswered> {
         // TODO : tests
@@ -65,8 +70,8 @@ class ConsultationListUseCase(
     private fun generateTemporaryConsultationUpdate(consultationUpdate: ConsultationUpdate?): ConsultationUpdate? {
         return consultationUpdate?.copy(
             description = consultationUpdate.description.replace(
-                "<body>",
-                "<body>🗳 La consultation est terminée !<br/>Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.<br/><br/>—<br/><br/>"
+                START_OF_DESCRIPTION,
+                START_OF_DESCRIPTION_WITH_ADDED_PREFIX
             )
         )
     }
