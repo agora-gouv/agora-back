@@ -66,7 +66,7 @@ class ConsultationListUseCase(
         return consultationUpdate?.copy(
             description = consultationUpdate.description.replace(
                 "<body>",
-                "<body>\uD83D\uDDF3 La consultation est terminée !<br/>Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.<br/><br/>—<br/><br/>"
+                "<body>🗳 La consultation est terminée !<br/>Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.<br/><br/>—<br/><br/>"
             )
         )
     }
