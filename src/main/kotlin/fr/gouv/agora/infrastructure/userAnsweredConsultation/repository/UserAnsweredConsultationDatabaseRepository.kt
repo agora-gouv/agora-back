@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.userAnsweredConsultation.repository
 
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.*
 import fr.gouv.agora.infrastructure.userAnsweredConsultation.dto.UserAnsweredConsultationDTO
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
