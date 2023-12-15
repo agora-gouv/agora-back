@@ -1,5 +1,8 @@
 package fr.gouv.agora.infrastructure.userAnsweredConsultation.repository
 
+import fr.gouv.agora.domain.UserAnsweredConsultation
+import fr.gouv.agora.infrastructure.userAnsweredConsultation.dto.UserAnsweredConsultationDTO
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -21,6 +24,9 @@ internal class UserAnsweredConsultationRepositoryImplTest {
 
     @MockBean
     private lateinit var databaseRepository: UserAnsweredConsultationDatabaseRepository
+
+    @MockBean
+    private lateinit var mapper: UserAnsweredConsultationMapper
 
     @Nested
     inner class HasAnsweredConsultationTestCases {
@@ -213,4 +219,35 @@ internal class UserAnsweredConsultationRepositoryImplTest {
         }
     }
 
+    @Nested
+    inner class InsertUserAnsweredConsultationTestCases {
+        @Test
+        fun `insertUserAnsweredConsultation - when mapper returns null - should return Failure`(){
+            //Given
+            val userAnsweredConsultation = mock(UserAnsweredConsultation::class.java)
+            given(mapper.toDto(userAnsweredConsultation)).willReturn(null)
+
+            //When
+            val result = repository.insertUserAnsweredConsultation(userAnsweredConsultation)
+
+            //Then
+            assertThat(result).isEqualTo(UserAnsweredConsultationResult.FAILURE)
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `insertUserAnsweredConsultation - when mapper returns DTO - should return Success`(){
+            //Given
+            val userAnsweredConsultation = mock(UserAnsweredConsultation::class.java)
+            val userAnsweredConsultationDTO = mock(UserAnsweredConsultationDTO::class.java)
+            given(mapper.toDto(userAnsweredConsultation)).willReturn(userAnsweredConsultationDTO)
+
+            //When
+            val result = repository.insertUserAnsweredConsultation(userAnsweredConsultation)
+
+            //Then
+            assertThat(result).isEqualTo(UserAnsweredConsultationResult.SUCCESS)
+            then(databaseRepository).should(only()).save(userAnsweredConsultationDTO)
+        }
+    }
 }

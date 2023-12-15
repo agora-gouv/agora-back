@@ -1,12 +1,15 @@
 package fr.gouv.agora.infrastructure.userAnsweredConsultation.repository
 
+import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationResult
 import org.springframework.stereotype.Component
 
 @Component
 class UserAnsweredConsultationRepositoryImpl(
     private val databaseRepository: UserAnsweredConsultationDatabaseRepository,
+    private val mapper: UserAnsweredConsultationMapper,
 ) : UserAnsweredConsultationRepository {
 
     override fun getParticipantCount(consultationId: String): Int {
@@ -49,5 +52,12 @@ class UserAnsweredConsultationRepositoryImpl(
         return consultationId.toUuidOrNull()?.let { consultationUUID ->
             databaseRepository.getUsersAnsweredConsultation(consultationUUID).map { it.toString() }
         } ?: emptyList()
+    }
+
+    override fun insertUserAnsweredConsultation(userAnsweredConsultation: UserAnsweredConsultation): UserAnsweredConsultationResult {
+        return mapper.toDto(userAnsweredConsultation)?.let { userAnsweredConsultationDTO ->
+            databaseRepository.save(userAnsweredConsultationDTO)
+            UserAnsweredConsultationResult.SUCCESS
+        } ?: UserAnsweredConsultationResult.FAILURE
     }
 }

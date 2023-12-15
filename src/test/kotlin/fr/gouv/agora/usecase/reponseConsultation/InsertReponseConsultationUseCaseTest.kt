@@ -4,6 +4,7 @@ import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.ReponseConsultationInserting
+import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -186,9 +187,12 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should(only()).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should(times(1)).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
+        )
+        then(userAnsweredConsultationRepository).should(times(1)).insertUserAnsweredConsultation(
+            UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
@@ -256,9 +260,12 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should(only()).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should(times(1)).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
+        )
+        then(userAnsweredConsultationRepository).should(times(1)).insertUserAnsweredConsultation(
+            UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
@@ -323,9 +330,12 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should(only()).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should(times(1)).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
+        )
+        then(userAnsweredConsultationRepository).should(times(1)).insertUserAnsweredConsultation(
+            UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
