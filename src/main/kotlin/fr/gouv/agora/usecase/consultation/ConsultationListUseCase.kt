@@ -7,7 +7,7 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 import java.time.Clock
@@ -19,7 +19,7 @@ class ConsultationListUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val thematiqueRepository: ThematiqueRepository,
     private val consultationUpdateRepository: ConsultationUpdateRepository,
-    private val consultationResponseRepository: GetConsultationResponseRepository,
+    private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
 ) {
     companion object {
         private const val START_OF_DESCRIPTION = "<body>"
@@ -35,7 +35,7 @@ class ConsultationListUseCase(
 
         val thematiqueList = thematiqueRepository.getThematiqueList()
         val consultationUpdates = consultationUpdateRepository.getConsultationUpdates(consultationInfoIds)
-        val hasAnswered = consultationResponseRepository.hasAnsweredConsultations(consultationInfoIds, userId)
+        val hasAnswered = userAnsweredConsultationRepository.hasAnsweredConsultations(consultationInfoIds, userId)
 
         return consultationInfoList.mapNotNull { consultationInfo ->
             val thematique = thematiqueList.find { thematique -> consultationInfo.thematiqueId == thematique.id }

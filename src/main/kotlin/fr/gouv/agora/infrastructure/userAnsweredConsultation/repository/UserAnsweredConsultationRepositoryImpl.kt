@@ -21,7 +21,7 @@ class UserAnsweredConsultationRepositoryImpl(
                 consultationId.toUuidOrNull()
                     ?.let { consultationUUID ->
                         databaseRepository.hasAnsweredConsultation(
-                            consultationID = consultationUUID,
+                            consultationId = consultationUUID,
                             userId = userUUID
                         ) == 1
                     } ?: false
@@ -36,7 +36,7 @@ class UserAnsweredConsultationRepositoryImpl(
                 .takeIf { it.isNotEmpty() }
                 ?.let { consultationUUIDs ->
                     val answeredConsultationList = databaseRepository.getAnsweredConsultations(
-                        consultationIDs = consultationUUIDs,
+                        consultationIds = consultationUUIDs,
                         userId = userUUID,
                     ).map { consultationUUID -> consultationUUID.toString() }
 

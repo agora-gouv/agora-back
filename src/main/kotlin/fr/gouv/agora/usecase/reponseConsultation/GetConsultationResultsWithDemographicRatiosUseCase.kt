@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -11,6 +12,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val questionRepository: QuestionRepository,
     private val consultationResponseRepository: GetConsultationResponseRepository,
+    private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val mapper: QuestionNoResponseMapper,
 ) {
 
@@ -21,7 +23,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
 
         val questionList =
             questionRepository.getConsultationQuestionList(consultationId).filterIsInstance<QuestionWithChoices>()
-        val participantCount = consultationResponseRepository.getParticipantCount(consultationId = consultationId)
+        val participantCount = userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
         val demographicInfo =
             consultationResponseRepository.getParticipantDemographicInfo(consultationId = consultationId)
         val consultationResponseList =

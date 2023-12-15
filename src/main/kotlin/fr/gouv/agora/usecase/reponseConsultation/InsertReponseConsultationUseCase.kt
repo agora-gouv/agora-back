@@ -11,9 +11,9 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnswered
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.LocalDateTime
@@ -24,7 +24,7 @@ class InsertReponseConsultationUseCase(
     private val contentSanitizer: ContentSanitizer,
     private val consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository,
     private val insertReponseConsultationRepository: InsertReponseConsultationRepository,
-    private val consultationResponseRepository: GetConsultationResponseRepository,
+    private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val questionRepository: QuestionRepository,
     private val insertConsultationResponseParametersMapper: InsertConsultationResponseParametersMapper,
     private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
@@ -48,7 +48,11 @@ class InsertReponseConsultationUseCase(
             return InsertResult.INSERT_FAILURE
         }
 
-        if (consultationResponseRepository.hasAnsweredConsultation(consultationId = consultationId, userId = userId)) {
+        if (userAnsweredConsultationRepository.hasAnsweredConsultation(
+                consultationId = consultationId,
+                userId = userId
+            )
+        ) {
             println("⚠️ Insert response consultation error: user has already answered this consultation")
             return InsertResult.INSERT_FAILURE
         }

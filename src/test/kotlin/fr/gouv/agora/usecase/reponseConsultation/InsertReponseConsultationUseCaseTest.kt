@@ -11,10 +11,10 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnswered
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertParameters
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -40,7 +40,7 @@ internal class InsertReponseConsultationUseCaseTest {
     private lateinit var insertReponseConsultationRepository: InsertReponseConsultationRepository
 
     @MockBean
-    private lateinit var consultationResponseRepository: GetConsultationResponseRepository
+    private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
     @MockBean
     private lateinit var questionRepository: QuestionRepository
@@ -94,7 +94,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_FAILURE)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
         then(consultationPreviewAnsweredRepository).shouldHaveNoInteractions()
         then(insertReponseConsultationRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
@@ -107,7 +107,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
-        given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
+        given(userAnsweredConsultationRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(true)
 
         // When
@@ -119,7 +119,7 @@ internal class InsertReponseConsultationUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_FAILURE)
-        then(consultationResponseRepository).should(only()).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should(only()).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
         )
@@ -136,7 +136,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
-        given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
+        given(userAnsweredConsultationRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(false)
 
         val questionList = listOf(
@@ -186,7 +186,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(consultationResponseRepository).should(only()).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should(only()).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
         )
@@ -207,7 +207,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
-        given(consultationResponseRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
+        given(userAnsweredConsultationRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
             .willReturn(false)
 
         val questionList = listOf(
@@ -256,7 +256,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(consultationResponseRepository).should(only()).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should(only()).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
         )
@@ -278,7 +278,7 @@ internal class InsertReponseConsultationUseCaseTest {
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(
-            consultationResponseRepository.hasAnsweredConsultation(
+            userAnsweredConsultationRepository.hasAnsweredConsultation(
                 consultationId = "consultId",
                 userId = "userId"
             )
@@ -323,7 +323,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(consultationResponseRepository).should(only()).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should(only()).hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
         )
@@ -344,7 +344,7 @@ internal class InsertReponseConsultationUseCaseTest {
             contentSanitizer = contentSanitizer,
             consultationPreviewAnsweredRepository = consultationPreviewAnsweredRepository,
             insertReponseConsultationRepository = insertReponseConsultationRepository,
-            consultationResponseRepository = consultationResponseRepository,
+            userAnsweredConsultationRepository = userAnsweredConsultationRepository,
             questionRepository = questionRepository,
             insertConsultationResponseParametersMapper = insertConsultationResponseParametersMapper,
             consultationPreviewPageRepository = consultationPreviewPageRepository,
