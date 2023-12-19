@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewFinishedInfo
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewFinishedRepository
+import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
@@ -15,6 +16,7 @@ class GetConsultationFinishedPaginatedListUseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val consultationUpdateRepository: ConsultationUpdateRepository,
     private val mapper: ConsultationPreviewFinishedMapper,
+    private val consultationUpdateUseCase: ConsultationUpdateUseCase,
 ) {
     companion object {
         private const val MAX_PAGE_LIST_SIZE = 20
@@ -47,6 +49,14 @@ class GetConsultationFinishedPaginatedListUseCase(
                         mapper.toConsultationPreviewFinished(
                             consultationPreviewInfo = consultationPreviewFinishedInfo,
                             consultationUpdate = consultationUpdate,
+                            thematique = thematique,
+                        )
+                    } ?: consultationUpdateUseCase.generateTemporaryConsultationUpdate(
+                        consultationUpdateRepository.getOngoingConsultationUpdate(consultationPreviewFinishedInfo.id)
+                    )?.let {
+                        mapper.toConsultationPreviewFinished(
+                            consultationPreviewInfo = consultationPreviewFinishedInfo,
+                            consultationUpdate = it,
                             thematique = thematique,
                         )
                     }

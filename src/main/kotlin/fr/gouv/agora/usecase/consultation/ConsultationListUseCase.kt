@@ -6,6 +6,7 @@ import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
+import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
@@ -20,12 +21,8 @@ class ConsultationListUseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val consultationUpdateRepository: ConsultationUpdateRepository,
     private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
+    private val consultationUpdateUseCase: ConsultationUpdateUseCase,
 ) {
-    companion object {
-        private const val START_OF_DESCRIPTION = "<body>"
-        private const val START_OF_DESCRIPTION_WITH_ADDED_PREFIX =
-            "$START_OF_DESCRIPTION🗳 La consultation est terminée !<br/>Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.<br/><br/>—<br/><br/>"
-    }
 
     fun getConsultationList(userId: String): List<ConsultationWithThematiqueUpdateAndAnswered> {
         // TODO : tests
@@ -43,7 +40,7 @@ class ConsultationListUseCase(
                 consultationUpdates.find { consultationUpdate -> consultationUpdate.consultationId == consultationInfo.id && consultationUpdate.status == ConsultationStatus.COLLECTING_DATA }
             } else {
                 consultationUpdates.find { consultationUpdate -> consultationUpdate.consultationId == consultationInfo.id && consultationUpdate.status != ConsultationStatus.COLLECTING_DATA }
-                    ?: generateTemporaryConsultationUpdate(consultationUpdates.find { consultationUpdate -> consultationUpdate.consultationId == consultationInfo.id })
+                    ?: consultationUpdateUseCase.generateTemporaryConsultationUpdate(consultationUpdates.find { consultationUpdate -> consultationUpdate.consultationId == consultationInfo.id })
             }
 
             if (thematique != null && consultationUpdate != null) {
@@ -66,15 +63,6 @@ class ConsultationListUseCase(
 
     private fun isOngoing(dateNow: LocalDateTime, startDate: LocalDateTime, endDate: LocalDateTime) =
         (dateNow.isAfter(startDate) || dateNow == startDate) && dateNow.isBefore(endDate)
-
-    private fun generateTemporaryConsultationUpdate(consultationUpdate: ConsultationUpdate?): ConsultationUpdate? {
-        return consultationUpdate?.copy(
-            description = consultationUpdate.description.replace(
-                START_OF_DESCRIPTION,
-                START_OF_DESCRIPTION_WITH_ADDED_PREFIX
-            )
-        )
-    }
 
 }
 
