@@ -6,6 +6,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -41,6 +42,9 @@ internal class GetConsultationResultsUseCaseTest {
 
     @MockBean
     private lateinit var mapper: QuestionNoResponseMapper
+
+    @MockBean
+    private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
     companion object {
         @JvmStatic
@@ -193,7 +197,7 @@ internal class GetConsultationResultsUseCaseTest {
             // Given
             given(questionRepository.getConsultationQuestionList(consultationId = "consultationId"))
                 .willReturn(emptyList())
-            given(consultationResponseRepository.getParticipantCount(consultationId = "consultationId"))
+            given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
                 .willReturn(23)
 
             // When
@@ -211,7 +215,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
-            then(consultationResponseRepository).should(only()).getParticipantCount(consultationId = "consultationId")
+            then(userAnsweredConsultationRepository).should(only()).getParticipantCount(consultationId = "consultationId")
             then(mapper).shouldHaveNoInteractions()
         }
 
@@ -220,7 +224,7 @@ internal class GetConsultationResultsUseCaseTest {
             // Given
             val question = mock(QuestionOpen::class.java)
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
-            given(consultationResponseRepository.getParticipantCount(consultationId = "consultationId"))
+            given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
                 .willReturn(77)
 
             // When
@@ -238,7 +242,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
-            then(consultationResponseRepository).should(only()).getParticipantCount(consultationId = "consultationId")
+            then(userAnsweredConsultationRepository).should(only()).getParticipantCount(consultationId = "consultationId")
             then(mapper).shouldHaveNoInteractions()
         }
 
@@ -249,7 +253,7 @@ internal class GetConsultationResultsUseCaseTest {
                 given(it.choixPossibleList).willReturn(emptyList())
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
-            given(consultationResponseRepository.getParticipantCount(consultationId = "consultationId"))
+            given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
                 .willReturn(1337)
 
             // When
@@ -267,7 +271,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
-            then(consultationResponseRepository).should().getParticipantCount(consultationId = "consultationId")
+            then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
             then(consultationResponseRepository).should()
                 .getConsultationResponsesCount(consultationId = "consultationId")
             then(consultationResponseRepository).shouldHaveNoMoreInteractions()
@@ -282,7 +286,7 @@ internal class GetConsultationResultsUseCaseTest {
                 given(it.choixPossibleList).willReturn(listOf(choixPossible))
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
-            given(consultationResponseRepository.getParticipantCount(consultationId = "consultationId"))
+            given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
                 .willReturn(1)
             given(mapper.toQuestionNoResponse(question)).willReturn(question)
 
@@ -311,7 +315,7 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
-            then(consultationResponseRepository).should().getParticipantCount(consultationId = "consultationId")
+            then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
             then(consultationResponseRepository).should()
                 .getConsultationResponsesCount(consultationId = "consultationId")
             then(consultationResponseRepository).shouldHaveNoMoreInteractions()
@@ -335,7 +339,7 @@ internal class GetConsultationResultsUseCaseTest {
 
         val testDataList = inputDataList.map(::buildTestData)
         given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
-        given(consultationResponseRepository.getParticipantCount(consultationId = "consultationId"))
+        given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
             .willReturn(participantCount)
         given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
             .willReturn(testDataList.flatMap { it.responsesConsultationList })
@@ -362,7 +366,7 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
         then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
         then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
-        then(consultationResponseRepository).should().getParticipantCount(consultationId = "consultationId")
+        then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
         then(consultationResponseRepository).should().getConsultationResponsesCount(consultationId = "consultationId")
         then(consultationResponseRepository).shouldHaveNoMoreInteractions()
         testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {

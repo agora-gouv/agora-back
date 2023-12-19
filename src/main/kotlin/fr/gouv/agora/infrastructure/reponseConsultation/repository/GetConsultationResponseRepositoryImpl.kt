@@ -20,12 +20,6 @@ class GetConsultationResponseRepositoryImpl(
         return getConsultationResponseDTOList(consultationId).map(mapper::toDomain)
     }
 
-    override fun getParticipantCount(consultationId: String): Int {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            databaseRepository.getParticipantCount(consultationId = consultationUUID)
-        } ?: 0
-    }
-
     override fun getConsultationResponsesCount(consultationId: String): List<ResponseConsultationCount> {
         return consultationId.toUuidOrNull()?.let { consultationUUID ->
             databaseRepository.getConsultationResponsesCount(consultationId = consultationUUID).map(mapper::toDomain)
@@ -75,39 +69,6 @@ class GetConsultationResponseRepositoryImpl(
         } ?: DemographicInfoCountByChoices(emptyMap())
     }
 
-    override fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean {
-        return try {
-            val userUUID = UUID.fromString(userId)
-            getConsultationResponseDTOList(consultationId).any { consultationResponseDTO ->
-                consultationResponseDTO.userId == userUUID
-            }
-        } catch (e: IllegalArgumentException) {
-            false
-        }
-    }
-
-    override fun hasAnsweredConsultations(consultationIds: List<String>, userId: String): Map<String, Boolean> {
-        return userId.toUuidOrNull()?.let { userUUID ->
-            consultationIds
-                .mapNotNull { consultationId -> consultationId.toUuidOrNull() }
-                .takeIf { it.isNotEmpty() }
-                ?.let { consultationUUIDs ->
-                    val answeredConsultationList = databaseRepository.getAnsweredConsultations(
-                        consultationIDs = consultationUUIDs,
-                        userId = userUUID,
-                    ).map { consultationUUID -> consultationUUID.toString() }
-
-                    consultationIds.associateWith { consultationId -> answeredConsultationList.contains(consultationId) }
-                }
-        } ?: emptyMap()
-    }
-
-    override fun getUsersAnsweredConsultation(consultationId: String): List<String> {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            databaseRepository.getUsersAnsweredConsultation(consultationUUID).map { it.toString() }
-        } ?: emptyList()
-    }
-
     private fun getConsultationResponseDTOList(consultationId: String): List<ReponseConsultationDTO> {
         return try {
             val consultationUUID = UUID.fromString(consultationId)
@@ -119,7 +80,6 @@ class GetConsultationResponseRepositoryImpl(
         } catch (e: IllegalArgumentException) {
             emptyList()
         }
-
     }
 
     private fun getConsultationResponsesFromDatabase(consultationUUID: UUID): List<ReponseConsultationDTO> {

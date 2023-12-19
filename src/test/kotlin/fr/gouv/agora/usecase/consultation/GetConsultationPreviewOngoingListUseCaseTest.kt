@@ -2,7 +2,7 @@ package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewOngoingRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -29,7 +29,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
     private lateinit var thematiqueRepository: ThematiqueRepository
 
     @MockBean
-    private lateinit var consultationResponseRepository: GetConsultationResponseRepository
+    private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
     @MockBean
     private lateinit var mapper: ConsultationPreviewOngoingMapper
@@ -46,7 +46,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         assertThat(result).isEqualTo(emptyList<ConsultationPreviewOngoing>())
         then(consultationPreviewOngoingRepository).should(only()).getConsultationPreviewOngoingList()
         then(thematiqueRepository).shouldHaveNoInteractions()
-        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
     }
 
@@ -67,7 +67,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         assertThat(result).isEqualTo(emptyList<ConsultationPreviewOngoing>())
         then(consultationPreviewOngoingRepository).should(only()).getConsultationPreviewOngoingList()
         then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
     }
 
@@ -85,7 +85,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
 
         given(
-            consultationResponseRepository.hasAnsweredConsultation(
+            userAnsweredConsultationRepository.hasAnsweredConsultation(
                 consultationId = "consultationId",
                 userId = "userId",
             )
@@ -106,7 +106,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         assertThat(result).isEqualTo(listOf(consultationPreviewOngoing))
         then(consultationPreviewOngoingRepository).should(only()).getConsultationPreviewOngoingList()
         then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).should(only())
+        then(userAnsweredConsultationRepository).should(only())
             .hasAnsweredConsultation(consultationId = "consultationId", userId = "userId")
         then(mapper).should(only()).toConsultationPreviewOngoing(
             consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
@@ -128,7 +128,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
 
         given(
-            consultationResponseRepository.hasAnsweredConsultation(
+            userAnsweredConsultationRepository.hasAnsweredConsultation(
                 consultationId = "consultationId",
                 userId = "userId",
             )
@@ -141,7 +141,7 @@ internal class GetConsultationPreviewOngoingListUseCaseTest {
         assertThat(result).isEqualTo(emptyList<ConsultationPreviewOngoing>())
         then(consultationPreviewOngoingRepository).should(only()).getConsultationPreviewOngoingList()
         then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).should(only())
+        then(userAnsweredConsultationRepository).should(only())
             .hasAnsweredConsultation(consultationId = "consultationId", userId = "userId")
         then(mapper).shouldHaveNoInteractions()
     }

@@ -8,14 +8,14 @@ import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.Co
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 
 @Service
 class SendConsultationNotificationUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val userRepository: UserRepository,
-    private val getConsultationResponseRepository: GetConsultationResponseRepository,
+    private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val notificationSendingRepository: NotificationSendingRepository,
     private val notificationRepository: NotificationRepository,
 ) {
@@ -55,7 +55,7 @@ class SendConsultationNotificationUseCase(
         if (consultationInfoRepository.getConsultation(consultationId) == null) return NotificationResult.FAILURE
 
         val userAnsweredConsultationIds =
-            getConsultationResponseRepository.getUsersAnsweredConsultation(consultationId = consultationId)
+            userAnsweredConsultationRepository.getUsersAnsweredConsultation(consultationId = consultationId)
         val userList = userRepository.getAllUsers()
             .filter { userInfo -> userAnsweredConsultationIds.contains(userInfo.userId) }
 
@@ -87,7 +87,7 @@ class SendConsultationNotificationUseCase(
         if (consultationInfoRepository.getConsultation(consultationId) == null) return NotificationResult.FAILURE
 
         val userAnsweredConsultationIds =
-            getConsultationResponseRepository.getUsersAnsweredConsultation(consultationId = consultationId)
+            userAnsweredConsultationRepository.getUsersAnsweredConsultation(consultationId = consultationId)
         val userList = userRepository.getAllUsers()
             .filterNot { userInfo -> userAnsweredConsultationIds.contains(userInfo.userId) }
 
