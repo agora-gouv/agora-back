@@ -5,7 +5,6 @@ import fr.gouv.agora.domain.ConsultationPreviewFinishedInfo
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
-import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 import kotlin.math.ceil
@@ -14,7 +13,6 @@ import kotlin.math.ceil
 class GetConsultationFinishedPaginatedListUseCase(
     private val consultationPreviewFinishedRepository: ConsultationPreviewFinishedRepository,
     private val thematiqueRepository: ThematiqueRepository,
-    private val consultationUpdateRepository: ConsultationUpdateRepository,
     private val mapper: ConsultationPreviewFinishedMapper,
     private val consultationUpdateUseCase: ConsultationUpdateUseCase,
 ) {
@@ -43,17 +41,7 @@ class GetConsultationFinishedPaginatedListUseCase(
         return consultationFinishedList.mapNotNull { consultationPreviewFinishedInfo ->
             thematiqueRepository.getThematique(consultationPreviewFinishedInfo.thematiqueId)
                 ?.let { thematique ->
-                    consultationUpdateRepository.getFinishedConsultationUpdate(
-                        consultationPreviewFinishedInfo.id
-                    )?.let { consultationUpdate ->
-                        mapper.toConsultationPreviewFinished(
-                            consultationPreviewInfo = consultationPreviewFinishedInfo,
-                            consultationUpdate = consultationUpdate,
-                            thematique = thematique,
-                        )
-                    } ?: consultationUpdateUseCase.generateTemporaryConsultationUpdate(
-                        consultationUpdateRepository.getOngoingConsultationUpdate(consultationPreviewFinishedInfo.id)
-                    )?.let {
+                    consultationUpdateUseCase.getConsultationUpdate(consultationPreviewFinishedInfo)?.let {
                         mapper.toConsultationPreviewFinished(
                             consultationPreviewInfo = consultationPreviewFinishedInfo,
                             consultationUpdate = it,

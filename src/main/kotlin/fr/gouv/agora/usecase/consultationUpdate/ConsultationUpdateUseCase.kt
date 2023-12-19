@@ -37,16 +37,6 @@ class ConsultationUpdateUseCase(
         )
     }
 
-    fun generateTemporaryConsultationUpdate(consultationUpdate: ConsultationUpdate?): ConsultationUpdate? {
-        return consultationUpdate?.copy(
-            description = consultationUpdate.description.replace(
-                START_OF_DESCRIPTION,
-                START_OF_DESCRIPTION_WITH_ADDED_PREFIX
-            ),
-            status = ConsultationStatus.POLITICAL_COMMITMENT
-        )
-    }
-
     private fun getConsultationUpdate(
         consultationId: String,
         startDate: LocalDateTime,
@@ -56,6 +46,10 @@ class ConsultationUpdateUseCase(
         return when {
             isAfterEndDate(currentDate = currentDate, endDate = endDate) -> repository.getFinishedConsultationUpdate(
                 consultationId
+            ) ?: generateTemporaryConsultationUpdate(
+                repository.getOngoingConsultationUpdate(
+                    consultationId
+                )
             )
 
             isBetweenStartAndEndDate(
@@ -77,4 +71,13 @@ class ConsultationUpdateUseCase(
     private fun isAfterEndDate(currentDate: LocalDateTime, endDate: LocalDateTime) =
         currentDate == endDate || currentDate.isAfter(endDate)
 
+    private fun generateTemporaryConsultationUpdate(consultationUpdate: ConsultationUpdate?): ConsultationUpdate? {
+        return consultationUpdate?.copy(
+            description = consultationUpdate.description.replace(
+                START_OF_DESCRIPTION,
+                START_OF_DESCRIPTION_WITH_ADDED_PREFIX
+            ),
+            status = ConsultationStatus.POLITICAL_COMMITMENT
+        )
+    }
 }
