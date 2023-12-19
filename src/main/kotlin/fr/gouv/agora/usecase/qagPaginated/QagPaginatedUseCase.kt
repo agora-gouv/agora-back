@@ -67,7 +67,7 @@ class QagPaginatedUseCase(
     ): QagsAndMaxPageCount? {
         if (pageNumber <= 0) return null
 
-        val qagsCount = qagInfoRepository.getQagsCount()
+        val qagsCount = qagInfoRepository.getQagsCount(thematiqueId = thematiqueId)
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (offset > qagsCount) return null
 

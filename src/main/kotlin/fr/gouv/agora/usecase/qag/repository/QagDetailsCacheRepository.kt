@@ -14,6 +14,6 @@ interface QagDetailsCacheRepository {
 
 sealed class QagDetailsCacheResult {
     data class CachedQagDetails(val qagDetails: QagDetails): QagDetailsCacheResult()
-    object QagDetailsNotFount: QagDetailsCacheResult()
+    object QagDetailsNotFound: QagDetailsCacheResult()
     object QagDetailsCacheNotInitialized: QagDetailsCacheResult()
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 class GetSupportQagRepositoryImpl(
     private val databaseRepository: SupportQagDatabaseRepository,
 ) : GetSupportQagRepository {
-
     override fun getUserSupportedQags(userId: String): List<String> {
         return userId.toUuidOrNull()?.let { userUUID ->
             databaseRepository.getUserSupportedQags(userUUID)
@@ -25,4 +24,14 @@ class GetSupportQagRepositoryImpl(
         } ?: false
     }
 
+    override fun getSupportedQagCount(userId: String, thematiqueId: String?): Int {
+        return userId.toUuidOrNull()?.let { userUUID ->
+            thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+                databaseRepository.getSupportedQagCountByThematique(
+                    userId = userUUID,
+                    thematiqueId = thematiqueUUID
+                )
+            } ?: databaseRepository.getSupportedQagCount(userUUID)
+        } ?: 0
+    }
 }

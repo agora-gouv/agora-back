@@ -45,7 +45,7 @@ interface QagInfoRepository {
         offset: Int,
         thematiqueId: String?,
     ): List<QagInfoWithSupportCount>
-    fun getQagsCount(): Int
+    fun getQagsCount(thematiqueId: String?): Int
     fun getQagInfo(qagId: String): QagInfo?
     fun getQagsInfo(qagIds: List<String>): List<QagInfo>
     fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?

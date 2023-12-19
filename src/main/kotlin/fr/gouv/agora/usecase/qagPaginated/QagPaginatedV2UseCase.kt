@@ -7,10 +7,11 @@ import fr.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheResult
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.qagPreview.QagWithSupportCount
-import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
+import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 import kotlin.math.ceil
@@ -19,11 +20,11 @@ import kotlin.math.ceil
 class QagPaginatedV2UseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val thematiqueRepository: ThematiqueRepository,
-    private val supportQagRepository: GetSupportQagRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
     private val headerRepository: HeaderQagRepository,
     private val headerCacheRepository: HeaderQagCacheRepository,
     private val mapper: QagPreviewMapper,
+    private val supportQagUseCase: SupportQagUseCase,
 ) {
 
     companion object {
@@ -133,10 +134,14 @@ class QagPaginatedV2UseCase(
         if (pageNumber < 1) return null
 
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
-        val userSupportedQagIds = supportQagRepository.getUserSupportedQags(userId = userId)
         val qagsCount = when (getQagMethod) {
-            is RetrieveQagMethod.WithUserId -> userSupportedQagIds.size
-            is RetrieveQagMethod.WithoutUserId -> qagInfoRepository.getQagsCount()
+            is RetrieveQagMethod.WithUserId -> supportQagUseCase.getSupportedQagCount(
+                userId = userId,
+                thematiqueId = thematiqueId
+            )
+
+            is RetrieveQagMethod.WithoutUserId -> qagInfoRepository.getQagsCount(thematiqueId)
+
             is RetrieveQagMethod.WithoutParams -> TRENDING_LIST_SIZE
         }
 
@@ -181,12 +186,22 @@ class QagPaginatedV2UseCase(
         pageNumber: Int,
     ): QagsAndMaxPageCountV2 {
         val header = when (pageNumber) {
-            1 -> headerCacheRepository.getHeader(filterType) ?: headerRepository.getHeader(filterType)
-                ?.also { headerCacheRepository.initHeader(filterType, it) }
+            1 -> when (val cachedHeader = headerCacheRepository.getHeader(filterType)) {
+                is HeaderQagCacheResult.CachedHeaderQag -> cachedHeader.headerQag
+                HeaderQagCacheResult.HeaderQagCacheNotInitialized -> headerRepository.getHeader(filterType)
+                    .also { headerQag ->
+                        if (headerQag != null) headerCacheRepository.initHeader(
+                            filterType,
+                            headerQag
+                        ) else headerCacheRepository.initHeaderNotFound(filterType)
+                    }
+
+                HeaderQagCacheResult.HeaderQagNotFound -> null
+            }
 
             else -> null
         }
-        val userSupportedQagIds = supportQagRepository.getUserSupportedQags(userId = userId)
+        val userSupportedQagIds = supportQagUseCase.getUserSupportedQagIds(userId)
         val qagList = this.qags.map { qagWithSupportCount ->
             mapper.toPreview(
                 qag = qagWithSupportCount,

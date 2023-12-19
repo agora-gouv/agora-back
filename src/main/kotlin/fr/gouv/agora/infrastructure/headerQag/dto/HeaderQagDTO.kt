@@ -11,8 +11,6 @@ data class HeaderQagDTO(
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
     @Column(columnDefinition = "TEXT")
-    val headerId: String,
-    @Column(columnDefinition = "TEXT")
     val title: String,
     @Column(columnDefinition = "TEXT")
     val message: String,
@@ -33,6 +31,6 @@ data class HeaderQagDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , headerId = $headerId , title = $title , message = $message , startDate = $startDate , endDate = $endDate , type = $type)"
+        return this::class.simpleName + "(id = $id , title = $title , message = $message , startDate = $startDate , endDate = $endDate , type = $type)"
     }
 }

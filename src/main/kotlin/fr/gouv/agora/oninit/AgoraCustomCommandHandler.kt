@@ -68,6 +68,7 @@ class AgoraCustomCommandHandler(
         // - Consultation responses aggregation when finished
         // - Save consultations answered by users but remove link to responses
         // - Delete everything related to a user when last connection date is over 2 years (except QaG if status is SELECTED_FOR_RESPONSE)
+        // - Remove feedback link to userId ?
     }
 
     private fun performWeeklyTasks() {
@@ -76,8 +77,6 @@ class AgoraCustomCommandHandler(
         // TODOs
         // - Remove username from QaGs even when status is SELECTED_FOR_RESPONSE
         // - Remove supports from archived QaGs
-        // - Remove support link to userId when SELECTED_FOR_RESPONSE
-        // - Remove feedback link to userId ?
     }
 
 }
