@@ -187,13 +187,14 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should(times(1)).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
         )
-        then(userAnsweredConsultationRepository).should(times(1)).insertUserAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should().insertUserAnsweredConsultation(
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
+        then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
@@ -260,13 +261,14 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should(times(1)).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
         )
-        then(userAnsweredConsultationRepository).should(times(1)).insertUserAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should().insertUserAnsweredConsultation(
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
+        then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
@@ -330,13 +332,14 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should(times(1)).hasAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(
             consultationId = "consultId",
             userId = "userId",
         )
-        then(userAnsweredConsultationRepository).should(times(1)).insertUserAnsweredConsultation(
+        then(userAnsweredConsultationRepository).should().insertUserAnsweredConsultation(
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
+        then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")

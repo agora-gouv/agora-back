@@ -26,7 +26,7 @@ class UserAnsweredConsultationRepositoryImpl(
                         databaseRepository.hasAnsweredConsultation(
                             consultationId = consultationUUID,
                             userId = userUUID
-                        ) == 1
+                        ) >= 1
                     } ?: false
             }
             ?: false
