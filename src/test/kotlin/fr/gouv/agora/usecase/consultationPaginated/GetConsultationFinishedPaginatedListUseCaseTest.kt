@@ -79,6 +79,8 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
         given(consultationPreviewFinishedRepository.getConsultationFinishedList()).willReturn(consultationFinishedList.map { it.consultationPreviewFinishedInfo })
         given(consultationUpdateUseCase.getConsultationPreviewUpdates(consultationFinishedList.map { it.consultationPreviewFinishedInfo })).willReturn(
             consultationFinishedList.map { it.consultationUpdate })
+        given(thematiqueRepository.getThematiqueList()).willReturn(consultationFinishedList.map { it.thematique })
+
         // When
         val result = useCase.getConsultationFinishedPaginatedList(
             pageNumber = 1,
@@ -94,8 +96,8 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
         then(consultationPreviewFinishedRepository).should(only()).getConsultationFinishedList()
         then(consultationUpdateUseCase).should()
             .getConsultationPreviewUpdates(consultationFinishedList.map { it.consultationPreviewFinishedInfo })
+        then(thematiqueRepository).should().getThematiqueList()
         consultationFinishedList.forEach {
-            then(thematiqueRepository).should().getThematique(it.consultationPreviewFinishedInfo.thematiqueId)
             then(mapper).should()
                 .toConsultationPreviewFinished(
                     consultationPreviewInfo = it.consultationPreviewFinishedInfo,
@@ -119,6 +121,7 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
             .willReturn(consultationFinishedListFirstPage.map { it.consultationPreviewFinishedInfo } + consultationFinishedListOtherPage.map { it.consultationPreviewFinishedInfo })
         given(consultationUpdateUseCase.getConsultationPreviewUpdates(consultationFinishedListFirstPage.map { it.consultationPreviewFinishedInfo })).willReturn(
             consultationFinishedListFirstPage.map { it.consultationUpdate })
+        given(thematiqueRepository.getThematiqueList()).willReturn(consultationFinishedListFirstPage.map { it.thematique })
 
         // When
         val result = useCase.getConsultationFinishedPaginatedList(
@@ -137,8 +140,8 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
         then(consultationPreviewFinishedRepository).should(only()).getConsultationFinishedList()
         then(consultationUpdateUseCase).should()
             .getConsultationPreviewUpdates(consultationFinishedListFirstPage.map { it.consultationPreviewFinishedInfo })
+        then(thematiqueRepository).should().getThematiqueList()
         consultationFinishedListFirstPage.forEach {
-            then(thematiqueRepository).should().getThematique(it.consultationPreviewFinishedInfo.thematiqueId)
             then(mapper).should()
                 .toConsultationPreviewFinished(
                     consultationPreviewInfo = it.consultationPreviewFinishedInfo,
@@ -162,6 +165,7 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
             .willReturn(consultationFinishedListFirstPage.map { it.consultationPreviewFinishedInfo } + consultationFinishedListSecondPage.map { it.consultationPreviewFinishedInfo })
         given(consultationUpdateUseCase.getConsultationPreviewUpdates(consultationFinishedListSecondPage.map { it.consultationPreviewFinishedInfo })).willReturn(
             consultationFinishedListSecondPage.map { it.consultationUpdate })
+        given(thematiqueRepository.getThematiqueList()).willReturn(consultationFinishedListSecondPage.map { it.thematique })
 
         // When
         val result = useCase.getConsultationFinishedPaginatedList(
@@ -179,8 +183,8 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
         then(consultationUpdateUseCase).should()
             .getConsultationPreviewUpdates(consultationFinishedListSecondPage.map { it.consultationPreviewFinishedInfo })
         then(consultationPreviewFinishedRepository).should(only()).getConsultationFinishedList()
+        then(thematiqueRepository).should().getThematiqueList()
         consultationFinishedListSecondPage.forEach {
-            then(thematiqueRepository).should().getThematique(it.consultationPreviewFinishedInfo.thematiqueId)
             then(mapper).should()
                 .toConsultationPreviewFinished(
                     consultationPreviewInfo = it.consultationPreviewFinishedInfo,
@@ -196,8 +200,8 @@ internal class GetConsultationFinishedPaginatedListUseCaseTest {
             given(it.thematiqueId).willReturn("thematiqueId$index")
             given(it.id).willReturn("consultationId$index")
         }
-        val thematique = mock(Thematique::class.java)
-        given(thematiqueRepository.getThematique("thematiqueId$index")).willReturn(thematique)
+        val thematique = mock(Thematique::class.java).also { given(it.id).willReturn("thematiqueId$index") }
+
 
         val consultationUpdate = mock(ConsultationUpdate::class.java).also {
             given(it.consultationId).willReturn("consultationId$index")
