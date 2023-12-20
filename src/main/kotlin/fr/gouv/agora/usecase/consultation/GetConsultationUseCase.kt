@@ -2,7 +2,7 @@ package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.domain.Consultation
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 class GetConsultationUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val thematiqueRepository: ThematiqueRepository,
-    private val consultationResponseRepository: GetConsultationResponseRepository,
+    private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
 ) {
     fun getConsultation(consultationId: String, userId: String): Consultation? {
         return consultationInfoRepository.getConsultation(consultationId)?.let { consultationInfo ->
@@ -28,7 +28,7 @@ class GetConsultationUseCase(
                     description = consultationInfo.description,
                     tipsDescription = consultationInfo.tipsDescription,
                     thematique = thematique,
-                    hasAnswered = consultationResponseRepository.hasAnsweredConsultation(
+                    hasAnswered = userAnsweredConsultationRepository.hasAnsweredConsultation(
                         consultationId = consultationId,
                         userId = userId,
                     )

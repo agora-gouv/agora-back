@@ -4,7 +4,7 @@ import fr.gouv.agora.domain.Consultation
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -31,7 +31,7 @@ internal class GetConsultationUseCaseTest {
     private lateinit var thematiqueRepository: ThematiqueRepository
 
     @MockBean
-    private lateinit var consultationResponseRepository: GetConsultationResponseRepository
+    private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
     private val consultationInfo = mock(ConsultationInfo::class.java).also {
         given(it.thematiqueId).willReturn("thematiqueId")
@@ -74,7 +74,7 @@ internal class GetConsultationUseCaseTest {
         assertThat(result).isEqualTo(null)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
         then(thematiqueRepository).shouldHaveNoInteractions()
-        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -93,7 +93,7 @@ internal class GetConsultationUseCaseTest {
         assertThat(result).isEqualTo(null)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
         then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -105,7 +105,7 @@ internal class GetConsultationUseCaseTest {
         given(thematiqueRepository.getThematique(thematiqueId = "thematiqueId")).willReturn(thematique)
 
         given(
-            consultationResponseRepository.hasAnsweredConsultation(
+            userAnsweredConsultationRepository.hasAnsweredConsultation(
                 consultationId = "consultationId",
                 userId = "userId",
             )
@@ -118,7 +118,7 @@ internal class GetConsultationUseCaseTest {
         assertThat(result).isEqualTo(consultation.copy(thematique = thematique, hasAnswered = true))
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
         then(thematiqueRepository).should(only()).getThematique(thematiqueId = "thematiqueId")
-        then(consultationResponseRepository).should(only())
+        then(userAnsweredConsultationRepository).should(only())
             .hasAnsweredConsultation(consultationId = "consultationId", userId = "userId")
     }
 

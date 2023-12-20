@@ -4,7 +4,7 @@ import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewFinishedInfo
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewFinishedRepository
-import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
+import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 import kotlin.math.ceil
@@ -13,8 +13,8 @@ import kotlin.math.ceil
 class GetConsultationFinishedPaginatedListUseCase(
     private val consultationPreviewFinishedRepository: ConsultationPreviewFinishedRepository,
     private val thematiqueRepository: ThematiqueRepository,
-    private val consultationUpdateRepository: ConsultationUpdateRepository,
     private val mapper: ConsultationPreviewFinishedMapper,
+    private val consultationUpdateUseCase: ConsultationUpdateUseCase,
 ) {
     companion object {
         private const val MAX_PAGE_LIST_SIZE = 20
@@ -38,19 +38,20 @@ class GetConsultationFinishedPaginatedListUseCase(
     }
 
     private fun getConsultationFinishedPreviewList(consultationFinishedList: List<ConsultationPreviewFinishedInfo>): List<ConsultationPreviewFinished> {
+        val consultationUpdateList = consultationUpdateUseCase.getConsultationPreviewUpdates(consultationFinishedList)
+        val thematiqueList = thematiqueRepository.getThematiqueList()
         return consultationFinishedList.mapNotNull { consultationPreviewFinishedInfo ->
-            thematiqueRepository.getThematique(consultationPreviewFinishedInfo.thematiqueId)
-                ?.let { thematique ->
-                    consultationUpdateRepository.getFinishedConsultationUpdate(
-                        consultationPreviewFinishedInfo.id
-                    )?.let { consultationUpdate ->
-                        mapper.toConsultationPreviewFinished(
-                            consultationPreviewInfo = consultationPreviewFinishedInfo,
-                            consultationUpdate = consultationUpdate,
-                            thematique = thematique,
-                        )
-                    }
-                }
+                    consultationUpdateList.find { consultationUpdate -> consultationPreviewFinishedInfo.id == consultationUpdate.consultationId }
+                        ?.let { consultationUpdate ->
+                            thematiqueList.find { thematique -> consultationPreviewFinishedInfo.thematiqueId == thematique.id }
+                                ?.let { thematique ->
+                                    mapper.toConsultationPreviewFinished(
+                                        consultationPreviewInfo = consultationPreviewFinishedInfo,
+                                        consultationUpdate = consultationUpdate,
+                                        thematique = thematique,
+                                    )
+                                }
+                        }
         }
     }
 }

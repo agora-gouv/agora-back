@@ -1,13 +1,13 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 
 @Service
 class GetConsultationParticipantCountUseCase(
-    private val getConsultationResponseRepository: GetConsultationResponseRepository,
+    private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
 ) {
     fun getCount(consultationId: String): Int {
-        return getConsultationResponseRepository.getParticipantCount(consultationId = consultationId)
+        return userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
     }
 }

@@ -5,6 +5,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,6 +13,7 @@ class GetConsultationResultsUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val questionRepository: QuestionRepository,
     private val consultationResponseRepository: GetConsultationResponseRepository,
+    private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val consultationUpdateUseCase: ConsultationUpdateUseCase,
     private val mapper: QuestionNoResponseMapper,
 ) {
@@ -24,7 +26,7 @@ class GetConsultationResultsUseCase(
 
         val questionList = questionRepository.getConsultationQuestionList(consultationId = consultationId)
             .filterIsInstance<QuestionWithChoices>()
-        val participantCount = consultationResponseRepository.getParticipantCount(consultationId = consultationId)
+        val participantCount = userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
         val consultationResponseList = if (questionList.isNotEmpty()) {
             consultationResponseRepository.getConsultationResponsesCount(consultationId = consultationId)
         } else emptyList()
