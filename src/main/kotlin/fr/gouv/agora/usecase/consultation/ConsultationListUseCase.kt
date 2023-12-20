@@ -23,10 +23,12 @@ class ConsultationListUseCase(
         val consultationInfoIds = consultationInfoList.map { consultationInfo -> consultationInfo.id }
         val thematiqueList = thematiqueRepository.getThematiqueList()
         val hasAnswered = userAnsweredConsultationRepository.hasAnsweredConsultations(consultationInfoIds, userId)
+        val consultationUpdateList = consultationUpdateUseCase.getConsultationInfoUpdates(consultationInfoList)
 
         return consultationInfoList.mapNotNull { consultationInfo ->
             val thematique = thematiqueList.find { thematique -> consultationInfo.thematiqueId == thematique.id }
-            val consultationUpdate = consultationUpdateUseCase.getConsultationUpdate(consultationInfo)
+            val consultationUpdate =
+                consultationUpdateList.find { consultationUpdate -> consultationInfo.id == consultationUpdate.consultationId }
             if (thematique != null && consultationUpdate != null) {
                 ConsultationWithThematiqueUpdateAndAnswered(
                     info = consultationInfo,
