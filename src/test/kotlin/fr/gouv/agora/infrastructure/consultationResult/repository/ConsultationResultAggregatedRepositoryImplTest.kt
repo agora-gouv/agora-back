@@ -3,9 +3,8 @@ package fr.gouv.agora.infrastructure.consultationResult.repository
 import fr.gouv.agora.domain.ConsultationResultAggregated
 import fr.gouv.agora.domain.ConsultationResultAggregatedInserting
 import fr.gouv.agora.infrastructure.consultationResult.dto.ConsultationResultAggregatedDTO
-import fr.gouv.agora.usecase.reponseConsultation.repository.InsertResult
+import fr.gouv.agora.usecase.reponseConsultation.repository.ConsultationAggregatedInsertResult
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -38,7 +37,7 @@ internal class ConsultationResultAggregatedRepositoryImplTest {
         val result = repository.insertConsultationResultAggregated(listOf(consultationResultAggregatedInserting))
 
         // Then
-        assertThat(result).isEqualTo(InsertResult.INSERT_FAILURE)
+        assertThat(result).isEqualTo(ConsultationAggregatedInsertResult.FAILURE)
         then(databaseRepository).shouldHaveNoInteractions()
         then(mapper).should(only()).toDto(consultationResultAggregatedInserting)
     }
@@ -54,7 +53,7 @@ internal class ConsultationResultAggregatedRepositoryImplTest {
         val result = repository.insertConsultationResultAggregated(listOf(consultationResultAggregatedInserting))
 
         // Then
-        assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
+        assertThat(result).isEqualTo(ConsultationAggregatedInsertResult.SUCCESS)
         then(databaseRepository).should(only()).saveAll(listOf(consultationResultAggregatedDTO))
         then(mapper).should().toDto(consultationResultAggregatedInserting)
         then(mapper).shouldHaveNoMoreInteractions()

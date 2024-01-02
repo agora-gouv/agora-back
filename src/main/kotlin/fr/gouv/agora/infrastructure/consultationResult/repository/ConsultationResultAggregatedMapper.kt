@@ -22,6 +22,7 @@ class ConsultationResultAggregatedMapper {
             null
         }
     }
+    
     fun toDomain(dto: ConsultationResultAggregatedDTO): ConsultationResultAggregated {
         return ConsultationResultAggregated(
             consultationId = dto.consultationId.toString(),
