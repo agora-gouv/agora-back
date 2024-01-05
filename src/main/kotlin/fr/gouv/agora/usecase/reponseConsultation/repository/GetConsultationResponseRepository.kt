@@ -9,6 +9,7 @@ interface GetConsultationResponseRepository {
     @Deprecated(message = "Should use getConsultationResponsesCount instead for better performances")
     fun getConsultationResponses(consultationId: String): List<ReponseConsultation>
     fun getConsultationResponsesCount(consultationId: String): List<ResponseConsultationCount>
+    fun deleteConsultationResponses(consultationId: String)
     fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount
     fun getParticipantDemographicInfoByChoices(questionId: String): DemographicInfoCountByChoices
 }

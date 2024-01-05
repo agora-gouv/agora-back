@@ -29,6 +29,7 @@ class GetConsultationResultsUseCase(
         val participantCount = userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
         val consultationResponseList = if (questionList.isNotEmpty()) {
             consultationResponseRepository.getConsultationResponsesCount(consultationId = consultationId)
+            // TODO: if aggregated, use dedicated repository instead
         } else emptyList()
 
         return ConsultationResult(

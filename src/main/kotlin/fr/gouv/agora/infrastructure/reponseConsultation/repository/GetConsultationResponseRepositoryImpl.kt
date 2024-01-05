@@ -26,6 +26,10 @@ class GetConsultationResponseRepositoryImpl(
         } ?: emptyList()
     }
 
+    override fun deleteConsultationResponses(consultationId: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount {
         return consultationId.toUuidOrNull()?.let { consultationUUID ->
             mapper.toDomain(
