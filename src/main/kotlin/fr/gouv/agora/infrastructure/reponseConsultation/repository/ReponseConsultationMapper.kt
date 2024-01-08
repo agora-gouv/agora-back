@@ -1,7 +1,10 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.reponseConsultation.dto.*
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.DemographicInfoCountByChoiceDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.DemographicInfoCountDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
+import fr.gouv.agora.infrastructure.reponseConsultation.dto.ResponseConsultationCountDTO
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.util.*
@@ -41,7 +44,14 @@ class ReponseConsultationMapper {
         val currentYear = LocalDate.now().year
         return DemographicInfoCount(
             genderCount = genderCount.associate { toGender(it.key) to it.count },
-            ageRangeCount = ageRangeCount.associate { toAgeRange(currentYear, it.key) to it.count },
+            ageRangeCount = ageRangeCount.fold(
+                initial = mutableMapOf(),
+                operation = { buildingAgeRangeCount, demographicInfo ->
+                    val ageRange = toAgeRange(currentYear = currentYear, demographicInfo.key)
+                    buildingAgeRangeCount[ageRange] = (buildingAgeRangeCount[ageRange] ?: 0) + demographicInfo.count
+                    buildingAgeRangeCount
+                },
+            ),
             departmentCount = departmentCount.associate { findDepartmentByNumber(it.key) to it.count },
             cityTypeCount = cityTypeCount.associate { toCityType(it.key) to it.count },
             jobCategoryCount = jobCategoryCount.associate { toJobCategory(it.key) to it.count },
