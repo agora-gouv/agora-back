@@ -3,6 +3,7 @@ package fr.gouv.agora.oninit
 import fr.gouv.agora.AgoraCustomCommandHelper
 import fr.gouv.agora.usecase.consultation.ConsultationCacheClearUseCase
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
+import fr.gouv.agora.usecase.consultationResult.PickConsultationsToAggregateUseCase
 import fr.gouv.agora.usecase.qagArchive.ArchiveOldQagUseCase
 import fr.gouv.agora.usecase.qagSelection.SelectMostPopularQagUseCase
 import org.springframework.beans.factory.InitializingBean
@@ -17,6 +18,7 @@ class AgoraCustomCommandHandler(
     // Daily tasks
     private val consultationCacheClearUseCase: ConsultationCacheClearUseCase,
     private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
+    private val pickConsultationsToAggregateUseCase: PickConsultationsToAggregateUseCase,
     // Weekly tasks
     private val selectMostPopularQagUseCase: SelectMostPopularQagUseCase,
     private val archiveOldQagUseCase: ArchiveOldQagUseCase,
@@ -64,6 +66,7 @@ class AgoraCustomCommandHandler(
     private fun performDailyTasks() {
         consultationCacheClearUseCase.clearConsultationCaches()
         consultationPreviewPageRepository.clear()
+        pickConsultationsToAggregateUseCase.aggregateConsultations()
         // TODOs
         // - Consultation responses aggregation when finished
         // - Save consultations answered by users but remove link to responses

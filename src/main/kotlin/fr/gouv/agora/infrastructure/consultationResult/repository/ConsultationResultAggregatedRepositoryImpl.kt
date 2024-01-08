@@ -3,9 +3,10 @@ package fr.gouv.agora.infrastructure.consultationResult.repository
 import fr.gouv.agora.domain.ConsultationResultAggregated
 import fr.gouv.agora.domain.ConsultationResultAggregatedInserting
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
-import fr.gouv.agora.usecase.reponseConsultation.repository.ConsultationResultAggregatedRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.ConsultationAggregatedInsertResult
+import fr.gouv.agora.usecase.reponseConsultation.repository.ConsultationResultAggregatedRepository
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 @Suppress("unused")
@@ -13,6 +14,10 @@ class ConsultationResultAggregatedRepositoryImpl(
     private val databaseRepository: ConsultationResultAggregatedDatabaseRepository,
     private val mapper: ConsultationResultAggregatedMapper,
 ) : ConsultationResultAggregatedRepository {
+
+    override fun getAggregatedResultsConsultationIds(): List<String> {
+        return databaseRepository.getAggregatedResultsConsultationIds().map(UUID::toString)
+    }
 
     override fun insertConsultationResultAggregated(consultationResults: List<ConsultationResultAggregatedInserting>): ConsultationAggregatedInsertResult {
         return consultationResults
