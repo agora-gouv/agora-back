@@ -1,6 +1,9 @@
 package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.DemographicInfoCount
+import fr.gouv.agora.domain.DemographicInfoCountByChoices
+import fr.gouv.agora.domain.ReponseConsultation
+import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.reponseConsultation.repository.ReponseConsultationCacheRepository.CacheResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -27,7 +30,7 @@ class GetConsultationResponseRepositoryImpl(
     }
 
     override fun deleteConsultationResponses(consultationId: String) {
-        TODO("Not yet implemented")
+        consultationId.toUuidOrNull()?.let(databaseRepository::deleteConsultationResponses)
     }
 
     override fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount {
