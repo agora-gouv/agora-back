@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.ConsultationResultAggregatedRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
@@ -13,6 +14,7 @@ class GetConsultationResultsUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val questionRepository: QuestionRepository,
     private val consultationResponseRepository: GetConsultationResponseRepository,
+    private val consultationResultAggregatedRepository: ConsultationResultAggregatedRepository,
     private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val consultationUpdateUseCase: ConsultationUpdateUseCase,
     private val mapper: QuestionNoResponseMapper,
@@ -28,8 +30,16 @@ class GetConsultationResultsUseCase(
             .filterIsInstance<QuestionWithChoices>()
         val participantCount = userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
         val consultationResponseList = if (questionList.isNotEmpty()) {
-            consultationResponseRepository.getConsultationResponsesCount(consultationId = consultationId)
-            // TODO: if aggregated, use dedicated repository instead
+            consultationResponseRepository.getConsultationResponsesCount(consultationId = consultationId).ifEmpty {
+                consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = consultationId)
+                    .map { consultationResultAggregated ->
+                        ResponseConsultationCount(
+                            questionId = consultationResultAggregated.questionId,
+                            choiceId = consultationResultAggregated.choiceId,
+                            responseCount = consultationResultAggregated.responseCount,
+                        )
+                    }
+            }
         } else emptyList()
 
         return ConsultationResult(
