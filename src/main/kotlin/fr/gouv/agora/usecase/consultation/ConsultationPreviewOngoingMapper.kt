@@ -15,7 +15,7 @@ import java.util.*
 class ConsultationPreviewOngoingMapper(private val clock: Clock) {
 
     companion object {
-        private const val MAXIMUM_DAYS_DIFFERENCE_TO_HIGHLIGHT = 15L
+        private const val MAXIMUM_DAYS_DIFFERENCE_TO_HIGHLIGHT = 6L
     }
 
     fun toConsultationPreviewOngoing(
@@ -54,8 +54,7 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
         return if (consultationEndDate.isAfter(dateNow)) {
             when (daysDifference) {
                 0L -> "Dernier jour !"
-                1L -> "Plus que 1 jour !"
-                in 1L..MAXIMUM_DAYS_DIFFERENCE_TO_HIGHLIGHT -> "Plus que $daysDifference jours !"
+                in 1L..MAXIMUM_DAYS_DIFFERENCE_TO_HIGHLIGHT -> "Plus que ${daysDifference + 1} jours !"
                 else -> null
             }
         } else null
