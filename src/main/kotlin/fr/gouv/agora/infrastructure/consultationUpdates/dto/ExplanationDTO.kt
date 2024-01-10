@@ -16,7 +16,9 @@ data class ExplanationDTO(
     @Column(columnDefinition = "TEXT")
     val intro: String,
     @Column(columnDefinition = "TEXT")
-    val imageUrl: String,
+    val imageUrl: String?,
+    @Column(columnDefinition = "TEXT")
+    val imageDescription: String?,
     @Column(columnDefinition = "TEXT")
     val description: String,
     @JoinTable(joinColumns = [JoinColumn(table = "consultation_updates", referencedColumnName = "id")])

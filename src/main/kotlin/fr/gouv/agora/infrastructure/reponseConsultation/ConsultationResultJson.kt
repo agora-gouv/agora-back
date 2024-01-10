@@ -59,8 +59,17 @@ data class ExplanationJson(
     val intro: String,
     @JsonProperty("imageUrl")
     val imageUrl: String,
+    @JsonProperty("image")
+    val image: ImageJson?,
     @JsonProperty("description")
     val description: String,
+)
+
+data class ImageJson(
+    @JsonProperty("url")
+    val url: String,
+    @JsonProperty("description")
+    val description: String?,
 )
 
 data class VideoJson(

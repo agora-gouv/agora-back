@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.consultationUpdates.repository
 
 import fr.gouv.agora.domain.Explanation
+import fr.gouv.agora.domain.ExplanationImage
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ExplanationDTO
 import org.springframework.stereotype.Component
 
@@ -12,7 +13,13 @@ class ExplanationMapper {
             isTogglable = dto.toggleable.toBoolean(),
             title = dto.title,
             intro = dto.intro,
-            imageUrl = dto.imageUrl,
+            image = dto.imageUrl?.let { url ->
+                ExplanationImage(
+                    url = url,
+                    description = dto.imageDescription,
+                )
+            },
+            imageDescription = dto.imageDescription,
             description = dto.description,
         )
     }
