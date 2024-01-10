@@ -11,10 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class CrossOriginConfig : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {
+        val allowedOrigins = System.getenv("ALLOWED_ORIGINS").split("\n")
         registry
             .addMapping("/**")
             .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE")
-            .allowedOrigins("https://app.agora.incubateur.net/")
+            .allowedOrigins(*allowedOrigins.toTypedArray())
     }
 
 }
