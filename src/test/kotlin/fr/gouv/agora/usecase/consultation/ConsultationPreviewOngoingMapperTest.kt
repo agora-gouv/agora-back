@@ -6,15 +6,15 @@ import fr.gouv.agora.domain.ConsultationPreviewOngoingInfo
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.*
+import java.time.LocalDateTime
+import java.time.Month
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
@@ -49,22 +49,52 @@ internal class ConsultationPreviewOngoingMapperTest {
         @JvmStatic
         fun toConsultationPreviewOngoingCases() = arrayOf(
             input(
-                whenTestDescription = "consultationEndDate is more than 15 days away in the future from today",
+                whenTestDescription = "consultationEndDate is more than 7 days away in the future from today",
                 serverDate = LocalDateTime.of(1998, Month.JULY, 12, 9, 30, 0),
                 consultationEndDate = LocalDateTime.of(2012, Month.DECEMBER, 21, 16, 45, 0),
                 expectedHighlightLabel = null,
             ),
             input(
-                whenTestDescription = "consultationEndDate is 15 days in the future from today",
+                whenTestDescription = "consultationEndDate is 7 days in the future from today",
                 serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
-                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 16, 16, 45, 0),
-                expectedHighlightLabel = "Plus que 15 jours !",
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 8, 16, 45, 0),
+                expectedHighlightLabel = null,
+            ),
+            input(
+                whenTestDescription = "consultationEndDate is 6 days in the future from today",
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 7, 16, 45, 0),
+                expectedHighlightLabel = "Plus que 7 jours !",
+            ),
+            input(
+                whenTestDescription = "consultationEndDate is 5 days in the future from today",
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 6, 16, 45, 0),
+                expectedHighlightLabel = "Plus que 6 jours !",
+            ),
+            input(
+                whenTestDescription = "consultationEndDate is 4 days in the future from today",
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 5, 16, 45, 0),
+                expectedHighlightLabel = "Plus que 5 jours !",
+            ),
+            input(
+                whenTestDescription = "consultationEndDate is 3 days in the future from today",
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 4, 16, 45, 0),
+                expectedHighlightLabel = "Plus que 4 jours !",
+            ),
+            input(
+                whenTestDescription = "consultationEndDate is 2 days in the future from today",
+                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
+                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 3, 16, 45, 0),
+                expectedHighlightLabel = "Plus que 3 jours !",
             ),
             input(
                 whenTestDescription = "consultationEndDate is 1 days from today",
                 serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
                 consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 2, 16, 45, 0),
-                expectedHighlightLabel = "Plus que 1 jour !",
+                expectedHighlightLabel = "Plus que 2 jours !",
             ),
             input(
                 whenTestDescription = "consultationEndDate is today before hour",
