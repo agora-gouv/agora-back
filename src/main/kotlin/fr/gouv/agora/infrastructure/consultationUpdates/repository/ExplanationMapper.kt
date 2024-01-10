@@ -19,7 +19,6 @@ class ExplanationMapper {
                     description = dto.imageDescription,
                 )
             },
-            imageDescription = dto.imageDescription,
             description = dto.description,
         )
     }
