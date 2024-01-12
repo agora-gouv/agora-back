@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.QagInserting
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.domain.SupportQagInserting
 import fr.gouv.agora.usecase.qag.repository.*
+import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -38,6 +39,9 @@ internal class InsertQagUseCaseTest {
 
     @MockBean
     private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
+
+    @MockBean
+    private lateinit var supportQagCacheRepository: SupportQagCacheRepository
 
     private val qagInserting = QagInserting(
         thematiqueId = "thematiqueId",
@@ -113,6 +117,7 @@ internal class InsertQagUseCaseTest {
         then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = "thematiqueId")
         then(qagPreviewCacheRepository).shouldHaveNoMoreInteractions()
         then(askQagStatusCacheRepository).should(only()).evictAskQagStatus(userId = "userId")
+        then(supportQagCacheRepository).should(only()).addSupportedQagIds(userId = "userId", qagId = "qagId")
     }
 
 }
