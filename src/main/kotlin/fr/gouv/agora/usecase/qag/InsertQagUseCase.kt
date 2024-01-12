@@ -7,6 +7,7 @@ import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInsertionResult
 import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
+import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Service
 
@@ -18,6 +19,7 @@ class InsertQagUseCase(
     private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
     private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
+    private val supportQagCacheRepository: SupportQagCacheRepository,
 ) {
 
     companion object {
@@ -40,6 +42,10 @@ class InsertQagUseCase(
                     qagId = qagInsertionResult.qagInfo.id,
                     userId = qagInserting.userId,
                 )
+            )
+            supportQagCacheRepository.addSupportedQagIds(
+                userId = qagInserting.userId,
+                qagId = qagInsertionResult.qagInfo.id,
             )
             qagPreviewCacheRepository.evictQagSupportedList(userId = qagInserting.userId, thematiqueId = null)
             qagPreviewCacheRepository.evictQagSupportedList(
