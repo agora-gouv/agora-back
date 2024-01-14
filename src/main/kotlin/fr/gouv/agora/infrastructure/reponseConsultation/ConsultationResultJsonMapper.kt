@@ -59,7 +59,10 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
             isTogglable = domain.isTogglable,
             title = domain.title,
             intro = domain.intro,
-            imageUrl = domain.imageUrl,
+            imageUrl = domain.image?.url ?: System.getenv("DEFAULT_EXPLANATION_IMAGE_URL"),
+            image = domain.image?.let { image ->
+                ImageJson(url = image.url, description = image.description)
+            },
             description = domain.description,
         )
     }

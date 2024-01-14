@@ -4,6 +4,11 @@ data class Explanation(
     val isTogglable: Boolean,
     val title: String,
     val intro: String,
-    val imageUrl: String,
+    val image: ExplanationImage?,
     val description: String,
+)
+
+data class ExplanationImage(
+    val url: String,
+    val description: String?,
 )

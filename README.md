@@ -39,6 +39,8 @@ export ERROR_TEXT_QAG_DISABLED="QaG disabled ¯\_(ツ)_/¯"
 export REQUIRED_IOS_VERSION="12"
 export REQUIRED_ANDROID_VERSION="18"
 export REQUIRED_WEB_VERSION="1"
+export DEFAULT_EXPLANATION_IMAGE_URL=""
+export ALLOWED_ORIGINS="*"
 ```
 
 ## 2. Launch back-end server
