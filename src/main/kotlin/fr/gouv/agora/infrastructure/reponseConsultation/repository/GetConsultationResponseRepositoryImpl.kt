@@ -50,20 +50,20 @@ class GetConsultationResponseRepositoryImpl(
         )
     }
 
-    override fun getParticipantDemographicInfoByChoices(consultationId: String): DemographicInfoCountByChoices {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+    override fun getParticipantDemographicInfoByChoices(questionId: String): DemographicInfoCountByChoices {
+        return questionId.toUuidOrNull()?.let { questionUUID ->
             mapper.toDomain(
-                genderCount = databaseRepository.getConsultationGenderByChoice(consultationUUID),
-                ageRangeCount = databaseRepository.getConsultationYearOfBirthByChoice(consultationUUID),
-                departmentCount = databaseRepository.getConsultationDepartmentByChoice(consultationUUID),
-                cityTypeCount = databaseRepository.getConsultationCityTypeByChoice(consultationUUID),
-                jobCategoryCount = databaseRepository.getConsultationJobCategoryByChoice(consultationUUID),
-                voteFrequencyCount = databaseRepository.getConsultationVoteFrequencyByChoice(consultationUUID),
+                genderCount = databaseRepository.getConsultationGenderByChoice(questionUUID),
+                ageRangeCount = databaseRepository.getConsultationYearOfBirthByChoice(questionUUID),
+                departmentCount = databaseRepository.getConsultationDepartmentByChoice(questionUUID),
+                cityTypeCount = databaseRepository.getConsultationCityTypeByChoice(questionUUID),
+                jobCategoryCount = databaseRepository.getConsultationJobCategoryByChoice(questionUUID),
+                voteFrequencyCount = databaseRepository.getConsultationVoteFrequencyByChoice(questionUUID),
                 publicMeetingFrequencyCount = databaseRepository.getConsultationPublicMeetingFrequencyByChoice(
-                    consultationUUID
+                    questionUUID
                 ),
                 consultationFrequencyCount = databaseRepository.getConsultationConsultationFrequencyByChoice(
-                    consultationUUID
+                    questionUUID
                 ),
             )
         } ?: DemographicInfoCountByChoices(emptyMap())

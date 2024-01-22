@@ -10,5 +10,5 @@ interface GetConsultationResponseRepository {
     fun getConsultationResponses(consultationId: String): List<ReponseConsultation>
     fun getConsultationResponsesCount(consultationId: String): List<ResponseConsultationCount>
     fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount
-    fun getParticipantDemographicInfoByChoices(consultationId: String): DemographicInfoCountByChoices
+    fun getParticipantDemographicInfoByChoices(questionId: String): DemographicInfoCountByChoices
 }
