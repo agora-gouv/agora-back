@@ -82,15 +82,16 @@ class ReponseConsultationMapper {
                 DemographicInfoCount(
                     genderCount = genderCount.filter { it.choiceId.toString() == choice }
                         .associate { toGender(it.key) to it.count },
-                    ageRangeCount = ageRangeCount.fold(
-                        initial = mutableMapOf(),
-                        operation = { buildingAgeRangeCount, demographicInfo ->
-                            val ageRange = toAgeRange(currentYear = currentYear, demographicInfo.key)
-                            buildingAgeRangeCount[ageRange] =
-                                (buildingAgeRangeCount[ageRange] ?: 0) + demographicInfo.count
-                            buildingAgeRangeCount
-                        },
-                    ),
+                    ageRangeCount = ageRangeCount.filter { it.choiceId.toString() == choice }
+                        .fold(
+                            initial = mutableMapOf(),
+                            operation = { buildingAgeRangeCount, demographicInfo ->
+                                val ageRange = toAgeRange(currentYear = currentYear, demographicInfo.key)
+                                buildingAgeRangeCount[ageRange] =
+                                    (buildingAgeRangeCount[ageRange] ?: 0) + demographicInfo.count
+                                buildingAgeRangeCount
+                            },
+                        ),
                     departmentCount = departmentCount.filter { it.choiceId.toString() == choice }
                         .associate { findDepartmentByNumber(it.key) to it.count },
                     cityTypeCount = cityTypeCount.filter { it.choiceId.toString() == choice }
