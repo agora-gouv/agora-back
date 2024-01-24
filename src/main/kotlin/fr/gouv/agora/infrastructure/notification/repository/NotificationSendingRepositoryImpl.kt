@@ -25,7 +25,6 @@ class NotificationSendingRepositoryImpl(
         private const val QAG_DETAILS_NOTIFICATION_TYPE = "qagDetails"
         private const val CONSULTATION_DETAILS_NOTIFICATION_TYPE = "consultationDetails"
         private const val CONSULTATION_RESULTS_NOTIFICATION_TYPE = "consultationResults"
-        private const val CONSULTATION_DEADLINE_NOTIFICATION_TYPE = "consultationDeadline"
 
         private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 500
     }
@@ -51,7 +50,7 @@ class NotificationSendingRepositoryImpl(
         )
     }
 
-    override fun sendNewConsultationMultiNotification(request: ConsultationMultiNotificationRequest) {
+    override fun sendConsultationDetailsMultiNotification(request: ConsultationMultiNotificationRequest) {
         println("📩 Sending multi-notification: ${request.title}")
         sendMultiNotifications(
             createMultiMessage(request = request, type = CONSULTATION_DETAILS_NOTIFICATION_TYPE)
@@ -62,13 +61,6 @@ class NotificationSendingRepositoryImpl(
         println("📩 Sending multi-notification: ${request.title}")
         sendMultiNotifications(
             createMultiMessage(request = request, type = CONSULTATION_RESULTS_NOTIFICATION_TYPE)
-        )
-    }
-
-    override fun sendConsultationDeadlineMultiNotification(request: ConsultationMultiNotificationRequest) {
-        println("📩 Sending multi-notification: ${request.title}")
-        sendMultiNotifications(
-            createMultiMessage(request = request, type = CONSULTATION_DEADLINE_NOTIFICATION_TYPE)
         )
     }
 

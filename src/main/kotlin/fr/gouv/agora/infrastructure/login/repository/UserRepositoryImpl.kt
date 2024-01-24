@@ -30,7 +30,6 @@ class UserRepositoryImpl(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun updateUser(loginRequest: LoginRequest): UserInfo? {
         return loginRequest.userId.toUuidOrNull()?.let { userUUID ->
             getUserDTO(userUUID = userUUID)?.let { userDTO ->
@@ -42,12 +41,17 @@ class UserRepositoryImpl(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun generateUser(signupRequest: SignupRequest): UserInfo {
         val userDTO = mapper.generateDto(signupRequest = signupRequest)
         val savedUserDTO = databaseRepository.save(userDTO)
         cacheRepository.insertUser(savedUserDTO)
         return mapper.toDomain(savedUserDTO)
+    }
+
+    override fun getUsersNotAnsweredConsultation(consultationId: String): List<UserInfo> {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            databaseRepository.getUsersNotAnsweredConsultation(consultationUUID).map(mapper::toDomain)
+        } ?: emptyList()
     }
 
     private fun getUserDTO(userUUID: UUID): UserDTO? {

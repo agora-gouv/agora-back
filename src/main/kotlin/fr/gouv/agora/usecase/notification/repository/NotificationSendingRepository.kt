@@ -6,9 +6,8 @@ import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.Qa
 interface NotificationSendingRepository {
     fun sendQagDetailsNotification(request: QagNotificationRequest): NotificationResult
     fun sendQagDetailsMultiNotification(request: QagMultiNotificationRequest)
-    fun sendNewConsultationMultiNotification(request: ConsultationMultiNotificationRequest)
+    fun sendConsultationDetailsMultiNotification(request: ConsultationMultiNotificationRequest)
     fun sendConsultationUpdateMultiNotification(request: ConsultationMultiNotificationRequest)
-    fun sendConsultationDeadlineMultiNotification(request: ConsultationMultiNotificationRequest)
 }
 
 data class QagNotificationRequest(
