@@ -40,7 +40,7 @@ interface UserAnsweredConsultationDatabaseRepository : JpaRepository<UserAnswere
     ): List<UUID>
 
     @Query(
-        value = "SELECT DISTINCT user_id from user_answered_consultation WHERE consultation_id = :consultationId",
+        value = "SELECT DISTINCT user_id FROM user_answered_consultation WHERE consultation_id = :consultationId",
         nativeQuery = true
     )
     fun getUsersAnsweredConsultation(@Param("consultationId") consultationId: UUID): List<UUID>

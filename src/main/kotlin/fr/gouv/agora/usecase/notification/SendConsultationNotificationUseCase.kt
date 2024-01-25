@@ -27,7 +27,7 @@ class SendConsultationNotificationUseCase(
         if (consultationInfoRepository.getConsultation(consultationId) == null) return NotificationResult.FAILURE
 
         val userList = userRepository.getAllUsers()
-        notificationSendingRepository.sendNewConsultationMultiNotification(
+        notificationSendingRepository.sendConsultationDetailsMultiNotification(
             request = ConsultationMultiNotificationRequest(
                 title = title,
                 description = description,
@@ -85,13 +85,9 @@ class SendConsultationNotificationUseCase(
         consultationId: String,
     ): NotificationResult {
         if (consultationInfoRepository.getConsultation(consultationId) == null) return NotificationResult.FAILURE
+        val userList = userRepository.getUsersNotAnsweredConsultation(consultationId = consultationId)
 
-        val userAnsweredConsultationIds =
-            userAnsweredConsultationRepository.getUsersAnsweredConsultation(consultationId = consultationId)
-        val userList = userRepository.getAllUsers()
-            .filterNot { userInfo -> userAnsweredConsultationIds.contains(userInfo.userId) }
-
-        notificationSendingRepository.sendConsultationDeadlineMultiNotification(
+        notificationSendingRepository.sendConsultationDetailsMultiNotification(
             request = ConsultationMultiNotificationRequest(
                 title = title,
                 description = description,
