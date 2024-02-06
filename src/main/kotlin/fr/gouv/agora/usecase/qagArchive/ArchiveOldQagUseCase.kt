@@ -24,8 +24,8 @@ class ArchiveOldQagUseCase(
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive).not()) return ArchiveQagListResult.FAILURE
 
         println("📜️ Archiving old QaGs...")
-        val tuesdayThisWeek = LocalDateTime.now(clock).with(DayOfWeek.TUESDAY).withHour(14).withMinute(0).withSecond(0)
-        qagInfoRepository.archiveOldQags(tuesdayThisWeek.toDate())
+        val mondayThisWeek = LocalDateTime.now(clock).with(DayOfWeek.MONDAY).withHour(14).withMinute(0).withSecond(0)
+        qagInfoRepository.archiveOldQags(mondayThisWeek.toDate())
         askQagStatusCacheRepository.clear()
         qagPreviewCacheRepository.clear()
         println("📜️ Archiving old QaGs finished !")
