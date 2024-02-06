@@ -39,15 +39,15 @@ class GetAskQagStatusUseCase(
     private fun isDateWithinTheWeek(postDate: Date): Boolean {
         val postDateLocalDateTime = postDate.toLocalDateTime()
         val currentDate = LocalDateTime.now(clock)
-        val tuesdayThisWeek = currentDate.with(DayOfWeek.TUESDAY).withHour(14).withMinute(0).withSecond(0)
+        val mondayThisWeek = currentDate.with(DayOfWeek.MONDAY).withHour(14).withMinute(0).withSecond(0)
 
-        val (previousTuesday, nextTuesday) = when {
-            currentDate < tuesdayThisWeek -> tuesdayThisWeek.minusDays(7) to tuesdayThisWeek
-            currentDate > tuesdayThisWeek -> tuesdayThisWeek to tuesdayThisWeek.plusDays(7)
-            else -> tuesdayThisWeek to tuesdayThisWeek.plusDays(7) // equals case
+        val (previousMonday, nextMonday) = when {
+            currentDate < mondayThisWeek -> mondayThisWeek.minusDays(7) to mondayThisWeek
+            currentDate > mondayThisWeek -> mondayThisWeek to mondayThisWeek.plusDays(7)
+            else -> mondayThisWeek to mondayThisWeek.plusDays(7) // equals case
         }
 
-        return postDateLocalDateTime >= previousTuesday && postDateLocalDateTime < nextTuesday
+        return postDateLocalDateTime >= previousMonday && postDateLocalDateTime < nextMonday
     }
 }
 
