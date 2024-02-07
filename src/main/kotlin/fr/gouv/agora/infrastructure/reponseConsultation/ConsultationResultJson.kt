@@ -20,6 +20,8 @@ data class ConsultationResultJson(
 )
 
 data class QuestionResultJson(
+    @JsonProperty("questionId")
+    val questionId: String,
     @JsonProperty("questionTitle")
     val questionTitle: String,
     @JsonProperty("order")
@@ -29,6 +31,8 @@ data class QuestionResultJson(
 )
 
 data class ChoiceResultJson(
+    @JsonProperty("choiceId")
+    val choiceId: String,
     @JsonProperty("label")
     val label: String,
     @JsonProperty("ratio")
