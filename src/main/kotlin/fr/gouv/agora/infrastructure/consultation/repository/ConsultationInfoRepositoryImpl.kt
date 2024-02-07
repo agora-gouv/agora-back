@@ -26,6 +26,10 @@ class ConsultationInfoRepositoryImpl(
         return databaseRepository.getConsultations().map(consultationInfoMapper::toDomain)
     }
 
+    override fun getConsultationsToAggregate(): List<ConsultationInfo> {
+        return databaseRepository.getConsultationsToAggregate().map(consultationInfoMapper::toDomain)
+    }
+
     override fun getConsultation(consultationId: String): ConsultationInfo? {
         return try {
             val uuid = UUID.fromString(consultationId)
