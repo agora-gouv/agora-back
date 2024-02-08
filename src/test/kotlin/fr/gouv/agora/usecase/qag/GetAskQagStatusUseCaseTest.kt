@@ -8,7 +8,6 @@ import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,7 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
 import java.time.Month
-import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -45,57 +43,59 @@ internal class GetAskQagStatusUseCaseTest {
         @JvmStatic
         fun getAskQagStatusDateTestCases() = arrayOf(
             input(
-                testWhenDescription = "qagPostDate < serverDate, qagPostDate is Monday week N and serverDate is Tuesday week N",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 1, 0, 0, 0),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 2, 12, 30, 0),
+                testWhenDescription = "qagPostDate < serverDate < resetDate, same week",
+                qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 1, 0, 0, 0),
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30, 0),
+                // resetDate = January 1st 14h
                 expectedStatus = AskQagStatus.WEEKLY_LIMIT_REACHED,
             ),
             input(
-                testWhenDescription = "qagPostDate < serverDate, qagPostDate is Thursday week N and serverDate is Friday week N",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 4, 0, 0, 0),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 5, 12, 30, 0),
-                expectedStatus = AskQagStatus.WEEKLY_LIMIT_REACHED,
-            ),
-            input(
-                testWhenDescription = "qagPostDate < serverDate, qagPostDate is Tuesday week N and serverDate is Thursday week N",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 2, 0, 0, 0),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 4, 12, 30, 0),
+                testWhenDescription = "qagPostDate < resetDate < serverDate, same week",
+                qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 1, 0, 0, 0),
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 5, 12, 30, 0),
+                // resetDate = January 1st 14h
                 expectedStatus = AskQagStatus.ENABLED,
             ),
             input(
-                testWhenDescription = "qagPostDate < serverDate, qagPostDate is Friday week N and serverDate is Monday week N+1",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 5, 0, 0, 0),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 8, 12, 30, 0),
+                testWhenDescription = "qagPostDate < serverDate < resetDate, across a week",
+                qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 1, 22, 0, 0),
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 8, 12, 30, 0),
+                // resetDate = January 8th 14h
                 expectedStatus = AskQagStatus.WEEKLY_LIMIT_REACHED,
             ),
             input(
-                testWhenDescription = "qagPostDate < serverDate, qagPostDate is 1 second before weekly reset and serverDate is at weekly reset",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 2, 13, 59, 59),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 2, 14, 0, 0),
+                testWhenDescription = "qagPostDate < serverDate < resetDate, qagPostDate is 1 second before weekly reset and serverDate is at weekly reset",
+                qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 1, 13, 59, 59),
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 8, 14, 0, 0),
+                // resetDate = January 8th 14h
                 expectedStatus = AskQagStatus.ENABLED,
             ),
             input(
-                testWhenDescription = "qagPostDate = serverDate, qagPostDate at a random time",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 4, 12, 0, 0),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 4, 12, 0, 0),
+                testWhenDescription = "qagPostDate = serverDate < resetDate, qagPostDate at a random time",
+                qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30, 0),
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30, 0),
+                // resetDate = January 1st 14h
                 expectedStatus = AskQagStatus.WEEKLY_LIMIT_REACHED,
             ),
             input(
                 testWhenDescription = "qagPostDate = serverDate, qagPostDate is at weekly reset and serverDate is at weekly reset",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 3, 14, 0, 0),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 3, 14, 0, 0),
+                qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0, 0),
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0, 0),
+                // resetDate = January 1st 14h
                 expectedStatus = AskQagStatus.WEEKLY_LIMIT_REACHED,
             ),
             input(
-                testWhenDescription = "qagPostDate is week + 1 after serverDate",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 8, 14, 0, 0),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 1, 14, 0, 0),
+                testWhenDescription = "qagPostDate > serverDate + 1 week",
+                qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 8, 14, 0, 1),
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 5, 0),
+                // resetDate = January 1st 14h
                 expectedStatus = AskQagStatus.ENABLED,
             ),
             input(
-                testWhenDescription = "qagPostDate is after serverDate but same week",
-                qagPostDate = LocalDateTime.of(2023, Month.MAY, 2, 12, 0, 0),
-                serverDate = LocalDateTime.of(2023, Month.MAY, 1, 14, 0, 0),
+                testWhenDescription = "qagPostDate > serverDate but qagPostDate - serverDate < 1 week",
+                qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 0, 0),
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0, 0),
+                // resetDate = January 1st 14h
                 expectedStatus = AskQagStatus.WEEKLY_LIMIT_REACHED,
             ),
         )

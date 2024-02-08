@@ -5,10 +5,10 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationUpdate.ConsultationUpdateUseCase
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.ConsultationResultAggregatedRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -36,6 +36,9 @@ internal class GetConsultationResultsUseCaseTest {
 
     @MockBean
     private lateinit var consultationResponseRepository: GetConsultationResponseRepository
+
+    @MockBean
+    private lateinit var consultationResultAggregatedRepository: ConsultationResultAggregatedRepository
 
     @MockBean
     private lateinit var consultationUpdateUseCase: ConsultationUpdateUseCase
@@ -190,6 +193,8 @@ internal class GetConsultationResultsUseCaseTest {
                 .willReturn(consultationUpdate)
             given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
                 .willReturn(emptyList())
+            given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
+                .willReturn(emptyList())
         }
 
         @Test
@@ -215,7 +220,8 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
-            then(userAnsweredConsultationRepository).should(only()).getParticipantCount(consultationId = "consultationId")
+            then(userAnsweredConsultationRepository).should(only())
+                .getParticipantCount(consultationId = "consultationId")
             then(mapper).shouldHaveNoInteractions()
         }
 
@@ -242,7 +248,8 @@ internal class GetConsultationResultsUseCaseTest {
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
-            then(userAnsweredConsultationRepository).should(only()).getParticipantCount(consultationId = "consultationId")
+            then(userAnsweredConsultationRepository).should(only())
+                .getParticipantCount(consultationId = "consultationId")
             then(mapper).shouldHaveNoInteractions()
         }
 
@@ -324,9 +331,9 @@ internal class GetConsultationResultsUseCaseTest {
 
     }
 
-    @ParameterizedTest(name = "getConsultationResults - {0} - should return expected")
+    @ParameterizedTest(name = "getConsultationResults / consultationResponseRepository - {0} - should return expected")
     @MethodSource("getConsultationResultsParameters")
-    fun `getConsultationResults - when given inputs - should return expected`(
+    fun `getConsultationResults - when given inputs returned by consultationResponseRepository - should return expected`(
         testDescription: String,
         participantCount: Int,
         inputDataList: List<QuestionInputData>,
@@ -367,8 +374,63 @@ internal class GetConsultationResultsUseCaseTest {
         then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
         then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
         then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
-        then(consultationResponseRepository).should().getConsultationResponsesCount(consultationId = "consultationId")
-        then(consultationResponseRepository).shouldHaveNoMoreInteractions()
+        then(consultationResponseRepository).should(only())
+            .getConsultationResponsesCount(consultationId = "consultationId")
+        then(consultationResultAggregatedRepository).shouldHaveNoInteractions()
+        testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
+            then(mapper).should().toQuestionNoResponse(it.question)
+        }
+    }
+
+    @ParameterizedTest(name = "getConsultationResults / consultationResultAggregatedRepository - {0} - should return expected")
+    @MethodSource("getConsultationResultsParameters")
+    fun `getConsultationResults - when given inputs returned by consultationResultAggregatedRepository - should return expected`(
+        testDescription: String,
+        participantCount: Int,
+        inputDataList: List<QuestionInputData>,
+    ) {
+        // Given
+        val consultationInfo = mock(ConsultationInfo::class.java)
+        given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultationInfo)
+        val consultationUpdate = mock(ConsultationUpdate::class.java)
+        given(consultationUpdateUseCase.getConsultationUpdate(consultationInfo)).willReturn(consultationUpdate)
+
+        val testDataList = inputDataList.map(::buildTestData)
+        given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
+        given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
+            .willReturn(participantCount)
+        given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
+            .willReturn(emptyList())
+        given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
+            .willReturn(testDataList.flatMap { it.consultationResultAggregated })
+
+        // When
+        val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+        // Then
+        assertThat(result).isEqualTo(
+            ConsultationResult(
+                consultation = consultationInfo,
+                participantCount = participantCount,
+                results = testDataList.mapNotNull { testData ->
+                    testData.expectedQuestionResultList?.let {
+                        QuestionResult(
+                            question = testData.question,
+                            responses = testData.expectedQuestionResultList,
+                        )
+                    }
+                },
+                lastUpdate = consultationUpdate,
+            )
+        )
+        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
+        then(consultationUpdateUseCase).should(only()).getConsultationUpdate(consultationInfo = consultationInfo)
+        then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
+        then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
+        then(consultationResponseRepository).should(only())
+            .getConsultationResponsesCount(consultationId = "consultationId")
+        then(consultationResultAggregatedRepository).should(only())
+            .getConsultationResultAggregated(consultationId = "consultationId")
         testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
             then(mapper).should().toQuestionNoResponse(it.question)
         }
@@ -393,6 +455,13 @@ internal class GetConsultationResultsUseCaseTest {
                 given(it.responseCount).willReturn(choiceInput.responseCount)
             }
         }
+        val consultationResultAggregated = testInput.choices.map { choiceInput ->
+            mock(ConsultationResultAggregated::class.java).also {
+                given(it.questionId).willReturn(testInput.questionId)
+                given(it.choiceId).willReturn(choiceInput.choiceId)
+                given(it.responseCount).willReturn(choiceInput.responseCount)
+            }
+        }
 
         val expectedQuestionResultList = testInput.choices.map { choiceInput ->
             ChoiceResult(
@@ -402,12 +471,13 @@ internal class GetConsultationResultsUseCaseTest {
         }.takeIf { it.isNotEmpty() }
 
         given(mapper.toQuestionNoResponse(question)).willReturn(question)
-        return TestData(question, responseConsultationList, expectedQuestionResultList)
+        return TestData(question, responseConsultationList, consultationResultAggregated, expectedQuestionResultList)
     }
 
     private data class TestData(
         val question: QuestionWithChoices,
         val responsesConsultationList: List<ResponseConsultationCount>,
+        val consultationResultAggregated: List<ConsultationResultAggregated>,
         val expectedQuestionResultList: List<ChoiceResult>?,
     )
 

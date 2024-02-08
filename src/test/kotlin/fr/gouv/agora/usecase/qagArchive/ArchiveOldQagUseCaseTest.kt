@@ -48,7 +48,7 @@ internal class ArchiveOldQagUseCaseTest {
     fun `archiveOldQag - when feature disabled - should do nothing and return FAILURE`() {
         // Given
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(false)
-        mockDate(LocalDateTime.of(2023, Month.JUNE, 22, 16, 0, 0))
+        mockDate(LocalDateTime.of(2024, Month.JANUARY, 4, 16, 0, 0))
 
         // When
         val result = useCase.archiveOldQag()
@@ -62,12 +62,12 @@ internal class ArchiveOldQagUseCaseTest {
     }
 
     @Test
-    fun `archiveOldQag - when feature enabled and today is after tuesday from this week - should call repository with resetDate as tuesday before today at 14h then return SUCCESS`() {
+    fun `archiveOldQag - when feature enabled and today is after monday from this week - should call repository with resetDate as monday before today at 14h then return SUCCESS`() {
         // Given
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(true)
-        // Thursday, June 22nd, 16h00 => Tuesday this week is Tuesday, June 20th, 14h00
-        val todayDate = LocalDateTime.of(2023, Month.JUNE, 22, 16, 0, 0)
-        val resetDate = LocalDateTime.of(2023, Month.JUNE, 20, 14, 0, 0)
+        // Thursday, Thursday 4th 2024, 16h00 => resetDate is Monday, January 1st, 14h00
+        val todayDate = LocalDateTime.of(2024, Month.JANUARY, 4, 16, 0, 0)
+        val resetDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0, 0)
         mockDate(todayDate)
 
         // When
@@ -81,12 +81,12 @@ internal class ArchiveOldQagUseCaseTest {
     }
 
     @Test
-    fun `archiveOldQag - when feature enabled and today is before reset date - should call repository with resetDate as tuesday after today at 14h then return SUCCESS`() {
+    fun `archiveOldQag - when feature enabled and today is before reset date - should call repository with resetDate as monday after today at 14h then return SUCCESS`() {
         // Given
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(true)
-        // Monday, June 19th, 19h00 => Tuesday this week is Tuesday, June 20th, 14h00
-        val todayDate = LocalDateTime.of(2023, Month.JUNE, 19, 19, 0, 0)
-        val resetDate = LocalDateTime.of(2023, Month.JUNE, 20, 14, 0, 0)
+        // Monday, January 1st 2024, 10h00 => resetDate is Monday, January 1st, 14h00
+        val todayDate = LocalDateTime.of(2024, Month.JANUARY, 1, 10, 0, 0)
+        val resetDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0, 0)
         mockDate(todayDate)
 
         // When

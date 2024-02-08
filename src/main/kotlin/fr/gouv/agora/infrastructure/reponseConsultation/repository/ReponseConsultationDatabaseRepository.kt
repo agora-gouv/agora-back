@@ -2,9 +2,11 @@ package fr.gouv.agora.infrastructure.reponseConsultation.repository
 
 import fr.gouv.agora.infrastructure.reponseConsultation.dto.*
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Repository
@@ -231,5 +233,13 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
         nativeQuery = true,
     )
     fun getConsultationConsultationFrequencyByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = "DELETE from reponses_consultation WHERE consultation_id = :consultationId",
+        nativeQuery = true
+    )
+    fun deleteConsultationResponses(@Param("consultationId") consultationId: UUID)
 
 }

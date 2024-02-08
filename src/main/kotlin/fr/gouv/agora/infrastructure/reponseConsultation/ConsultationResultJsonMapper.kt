@@ -41,6 +41,7 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
 
     private fun toQuestionResultJson(domain: QuestionResult): QuestionResultJson {
         return QuestionResultJson(
+            questionId = domain.question.id,
             questionTitle = domain.question.title,
             order = domain.question.order,
             responses = domain.responses.map(::toChoiceResultJson),
@@ -49,6 +50,7 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
 
     private fun toChoiceResultJson(domain: ChoiceResult): ChoiceResultJson {
         return ChoiceResultJson(
+            choiceId = domain.choixPossible.id,
             label = domain.choixPossible.label,
             ratio = (domain.ratio * 100).roundToInt(),
         )
