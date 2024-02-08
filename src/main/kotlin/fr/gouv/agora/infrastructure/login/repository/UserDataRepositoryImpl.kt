@@ -20,4 +20,8 @@ class UserDataRepositoryImpl(
         databaseRepository.save(mapper.toDto(signupRequest = signupRequest, userId = generatedUserId))
     }
 
+    override fun deleteUsersData(userIDs: List<String>) {
+        databaseRepository.deleteUsersData(userIDs)
+    }
+
 }

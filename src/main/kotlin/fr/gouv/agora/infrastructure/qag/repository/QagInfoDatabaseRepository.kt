@@ -460,4 +460,13 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             )""", nativeQuery = true
     )
     fun anonymizeRejectedQagsBeforeDate(@Param("resetDate") date: Date)
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """DELETE FROM qags 
+            WHERE user_id IN :userIDs
+            AND status <> 7""", nativeQuery = true
+    )
+    fun deleteUsersQags(@Param("userIDs") userIDs: List<UUID>)
 }

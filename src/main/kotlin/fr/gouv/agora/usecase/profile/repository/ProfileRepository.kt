@@ -7,6 +7,7 @@ interface ProfileRepository {
     fun getProfile(userId: String): Profile?
     fun updateProfile(profileInserting: ProfileInserting): ProfileEditResult
     fun insertProfile(profileInserting: ProfileInserting): ProfileEditResult
+    fun deleteUsersProfile(userIDs: List<String>)
 }
 
 enum class ProfileEditResult {

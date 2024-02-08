@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.Profile
 import fr.gouv.agora.domain.ProfileInserting
 import fr.gouv.agora.infrastructure.profile.dto.ProfileDTO
 import fr.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
+import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.profile.repository.ProfileEditResult
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.springframework.stereotype.Component
@@ -56,6 +57,10 @@ class ProfileRepositoryImpl(
                 ProfileEditResult.SUCCESS
             } else ProfileEditResult.FAILURE
         } ?: ProfileEditResult.FAILURE
+    }
+
+    override fun deleteUsersProfile(userIDs: List<String>) {
+        databaseRepository.deleteUsersProfile(userIDs.mapNotNull { it.toUuidOrNull() })
     }
 
     private fun getProfileFromDatabase(userUUID: UUID): ProfileDTO? {

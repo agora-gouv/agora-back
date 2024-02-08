@@ -2,9 +2,11 @@ package fr.gouv.agora.infrastructure.login.repository
 
 import fr.gouv.agora.infrastructure.login.dto.UserDTO
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Repository
@@ -32,4 +34,9 @@ interface LoginDatabaseRepository : JpaRepository<UserDTO, UUID> {
         nativeQuery = true,
     )
     fun getUsersNotAnsweredConsultation(@Param("consultationId") consultationId: UUID): List<UserDTO>
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM agora_users WHERE id IN :userIDs", nativeQuery = true)
+    fun deleteUsers(@Param("userIDs") userIDs: List<UUID>)
 }

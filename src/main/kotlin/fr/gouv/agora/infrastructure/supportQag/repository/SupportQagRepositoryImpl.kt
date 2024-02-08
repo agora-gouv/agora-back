@@ -6,7 +6,6 @@ import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagResult
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 @Suppress("unused")
@@ -44,6 +43,13 @@ class SupportQagRepositoryImpl(
                 SupportQagResult.SUCCESS
             }
         } ?: SupportQagResult.FAILURE
+    }
+
+    override fun deleteUsersSupportQag(userIDs: List<String>) {
+        val userUUIDs = userIDs.mapNotNull { it.toUuidOrNull() }
+        databaseRepository.deleteUserSupportsQags(userUUIDs)
+        databaseRepository.anonymizeSupportsOnSelectedQags(userUUIDs)
+        databaseRepository.deleteSupportsOnDeletedUsersQags(userUUIDs)
     }
 
 }

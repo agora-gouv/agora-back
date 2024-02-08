@@ -10,4 +10,5 @@ interface UserRepository {
     fun generateUser(signupRequest: SignupRequest): UserInfo
     fun getAllUsers(): List<UserInfo>
     fun getUsersNotAnsweredConsultation(consultationId: String): List<UserInfo>
+    fun deleteUsers(userIDs: List<String>)
 }
