@@ -248,6 +248,10 @@ class QagInfoRepositoryImpl(
         val keywordsArray = keywords.map { keyword -> "%$keyword%" }.toTypedArray()
         return databaseRepository.getQagByKeywordsList(keywordsArray).map(mapper::toDomain)
     }
+
+    override fun deleteUsersQag(userIDs: List<String>) {
+        databaseRepository.deleteUsersQags(userIDs.mapNotNull { it.toUuidOrNull() })
+    }
 }
 
 

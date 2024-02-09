@@ -54,6 +54,14 @@ class UserRepositoryImpl(
         } ?: emptyList()
     }
 
+    override fun deleteUsers(userIDs: List<String>) {
+        val userUUIDs = userIDs.mapNotNull { it.toUuidOrNull() }
+        databaseRepository.deleteUsers(userUUIDs)
+        userUUIDs.forEach { userUUID ->
+            cacheRepository.deleteUser(userUUID)
+        }
+    }
+
     private fun getUserDTO(userUUID: UUID): UserDTO? {
         return when (val cacheResult = cacheRepository.getUser(userUUID)) {
             is CacheResult.CachedUser -> cacheResult.userDTO

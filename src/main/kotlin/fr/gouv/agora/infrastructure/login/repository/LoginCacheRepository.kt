@@ -40,6 +40,10 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
         getCache()?.put(userUUID.toString(), createNotFoundUser())
     }
 
+    fun deleteUser(userUUID: UUID) {
+        getCache()?.evict(userUUID.toString())
+    }
+
     private fun getCache() = cacheManager.getCache(USER_CACHE_NAME)
 
     private fun createNotFoundUser(): UserDTO {
