@@ -62,4 +62,41 @@ interface SupportQagDatabaseRepository : JpaRepository<SupportQagDTO, UUID> {
         nativeQuery = true
     )
     fun getSupportedQagCount(@Param("userId") userId: UUID): Int
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """DELETE FROM supports_qag
+        WHERE user_id IN :userIDs
+        AND qag_id IN (
+            SELECT id FROM qags
+            WHERE status <> 7
+        )""", nativeQuery = true
+    )
+    fun deleteUserSupportsQags(@Param("userIDs") userIDs: List<UUID>)
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """UPDATE supports_qag
+        SET user_id = '00000000-0000-0000-0000-000000000000'
+        WHERE user_id IN :userIDs
+        AND qag_id IN (
+            SELECT id FROM qags
+            WHERE status = 7
+        )""", nativeQuery = true
+    )
+    fun anonymizeSupportsOnSelectedQags(@Param("userIDs") userIDs: List<UUID>)
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """DELETE FROM supports_qag
+        WHERE qag_id IN (
+            SELECT id FROM qags
+            WHERE status <> 7
+            AND user_id IN :userIDs
+        )""", nativeQuery = true
+    )
+    fun deleteSupportsOnDeletedUsersQags(@Param("userIDs") userIDs: List<UUID>)
 }

@@ -45,6 +45,7 @@ interface QagInfoRepository {
         offset: Int,
         thematiqueId: String?,
     ): List<QagInfoWithSupportCount>
+
     fun getQagsCount(thematiqueId: String?): Int
     fun getQagInfo(qagId: String): QagInfo?
     fun getQagsInfo(qagIds: List<String>): List<QagInfo>
@@ -58,6 +59,7 @@ interface QagInfoRepository {
     fun archiveOldQags(resetDate: Date)
     fun deleteQag(qagId: String): QagDeleteResult
     fun getQagByKeywordsList(keywords: List<String>): List<QagInfoWithSupportCount>
+    fun deleteUsersQag(userIDs: List<String>)
 }
 
 sealed class QagInsertionResult {

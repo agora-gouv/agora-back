@@ -1,0 +1,37 @@
+package fr.gouv.agora.usecase.deleteUsers
+
+import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagRepository
+import fr.gouv.agora.usecase.login.repository.UserDataRepository
+import fr.gouv.agora.usecase.login.repository.UserRepository
+import fr.gouv.agora.usecase.notification.repository.NotificationRepository
+import fr.gouv.agora.usecase.profile.repository.ProfileRepository
+import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
+import org.springframework.stereotype.Component
+
+@Component
+class DeleteUsersUseCase(
+    private val notificationRepository: NotificationRepository,
+    private val consultationResponseRepository: GetConsultationResponseRepository,
+    private val supportQagRepository: SupportQagRepository,
+    private val qagInfoRepository: QagInfoRepository,
+    private val feedbackQagRepository: FeedbackQagRepository,
+    private val profileRepository: ProfileRepository,
+    private val userDataRepository: UserDataRepository,
+    private val userRepository: UserRepository,
+) {
+
+    fun deleteUsers(userIdsToDelete: List<String>) {
+        if (userIdsToDelete.isEmpty()) return
+        notificationRepository.deleteUsersNotifications(userIdsToDelete)
+        consultationResponseRepository.deleteUserConsultationResponses(userIdsToDelete)
+        supportQagRepository.deleteUsersSupportQag(userIdsToDelete)
+        qagInfoRepository.deleteUsersQag(userIdsToDelete)
+        feedbackQagRepository.deleteUsersFeedbackQag(userIdsToDelete)
+        profileRepository.deleteUsersProfile(userIdsToDelete)
+        userDataRepository.deleteUsersData(userIdsToDelete)
+        userRepository.deleteUsers(userIdsToDelete)
+    }
+
+}

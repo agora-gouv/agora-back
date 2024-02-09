@@ -76,6 +76,10 @@ class GetConsultationResponseRepositoryImpl(
         } ?: DemographicInfoCountByChoices(emptyMap())
     }
 
+    override fun deleteUserConsultationResponses(userIDs: List<String>) {
+        databaseRepository.deleteUserConsultationResponses(userIDs.mapNotNull { it.toUuidOrNull() })
+    }
+
     private fun getConsultationResponseDTOList(consultationId: String): List<ReponseConsultationDTO> {
         return try {
             val consultationUUID = UUID.fromString(consultationId)

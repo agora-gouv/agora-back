@@ -12,4 +12,5 @@ interface GetConsultationResponseRepository {
     fun deleteConsultationResponses(consultationId: String)
     fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount
     fun getParticipantDemographicInfoByChoices(questionId: String): DemographicInfoCountByChoices
+    fun deleteUserConsultationResponses(userIDs: List<String>)
 }

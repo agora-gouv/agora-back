@@ -7,6 +7,7 @@ interface SupportQagRepository {
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult
     fun deleteSupportListByQagId(qagId: String): SupportQagResult
+    fun deleteUsersSupportQag(userIDs: List<String>)
 }
 
 enum class SupportQagResult {

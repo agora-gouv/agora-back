@@ -242,4 +242,9 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     )
     fun deleteConsultationResponses(@Param("consultationId") consultationId: UUID)
 
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM reponses_consultation WHERE user_id IN :userIDs", nativeQuery = true)
+    fun deleteUserConsultationResponses(@Param("userIDs") userIDs: List<UUID>)
+
 }
