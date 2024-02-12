@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.login
 
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.LoginRequest
+import fr.gouv.agora.infrastructure.utils.IpAddressUtils
 import fr.gouv.agora.usecase.appVersionControl.AppVersionControlUseCase
 import fr.gouv.agora.usecase.appVersionControl.AppVersionStatus.*
 import fr.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
@@ -42,12 +43,13 @@ class LoginController(
             INVALID_APP -> ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
             UPDATE_REQUIRED -> ResponseEntity.status(HttpServletResponse.SC_PRECONDITION_FAILED)
                 .body(Unit)
+
             AUTHORIZED -> when (val loginTokenResult = loginTokenGenerator.decodeLoginToken(loginRequest.loginToken)) {
                 DecodeResult.Failure -> ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Unit)
                 is DecodeResult.Success -> loginUseCase.login(
                     loginRequest = LoginRequest(
                         userId = loginTokenResult.loginTokenData.userId,
-                        remoteAddress = request.getHeader("X-Remote-Address") ?: request.remoteAddr,
+                        ipAddress = IpAddressUtils.retrieveIpAddress(request),
                         userAgent = userAgent,
                         fcmToken = fcmToken,
                         platform = platform,
