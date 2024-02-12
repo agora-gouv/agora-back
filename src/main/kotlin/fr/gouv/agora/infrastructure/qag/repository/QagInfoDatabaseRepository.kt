@@ -36,7 +36,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             WHERE qags.status = 7
             GROUP BY qags.id
             ORDER BY postDate DESC
-            LIMIT 5
+            LIMIT 6
         """, nativeQuery = true
     )
     fun getQagResponses(): List<QagWithSupportCountDTO>
