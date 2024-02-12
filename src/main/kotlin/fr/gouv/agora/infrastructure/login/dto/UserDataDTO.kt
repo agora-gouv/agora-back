@@ -13,7 +13,7 @@ data class UserDataDTO(
     val eventType: String,
     val eventDate: Date,
     val userId: String,
-    val remoteAddressHash: String,
+    val ipAddressHash: String,
     val userAgent: String,
     val fcmToken: String,
     val platform: String,
@@ -32,6 +32,6 @@ data class UserDataDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , eventType = $eventType , eventDate = $eventDate , userId = $userId , remoteAddressHash = $remoteAddressHash , userAgent = $userAgent , fcmToken = $fcmToken , platform = $platform , versionName = $versionName , versionCode = $versionCode )"
+        return this::class.simpleName + "(id = $id , eventType = $eventType , eventDate = $eventDate , userId = $userId , ipAddressHash = $ipAddressHash , userAgent = $userAgent , fcmToken = $fcmToken , platform = $platform , versionName = $versionName , versionCode = $versionCode )"
     }
 }
