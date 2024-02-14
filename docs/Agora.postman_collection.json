@@ -208,7 +208,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"gender\": \"F\",\n\t\"yearOfBirth\": 1998,\n\t\"department\": \"77\",\n\t\"cityType\": \"R\",\n\t\"jobCategory\": \"CA\",\n\t\"voteFrequency\": \"P\",\n\t\"publicMeetingFrequency\": \"S\",\n\t\"consultationFrequency\": \"S\"\n}",
+							"raw": "{\n\t\"gender\": \"F\",\n\t\"yearOfBirth\": 1997,\n\t\"department\": \"77\",\n\t\"cityType\": \"R\",\n\t\"jobCategory\": \"CA\",\n\t\"voteFrequency\": \"P\",\n\t\"publicMeetingFrequency\": \"S\",\n\t\"consultationFrequency\": \"S\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -273,6 +273,39 @@
 							],
 							"path": [
 								"participation_charter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "feedback",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"comment\",\n    \"description\": \"Bonjour, voici une description d'un retour utilisateur\",\n    \"deviceInfo\": {\n        \"model\": \"PC avec Postman\",\n        \"osVersion\": \"OpenBSD 7.7\",\n        \"appVersion\": \"1.0.1\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/feedback",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"feedback"
 							]
 						}
 					},
@@ -646,6 +679,31 @@
 					"response": []
 				},
 				{
+					"name": "/qags/ask_status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/ask_status",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"ask_status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/v2/qags",
 					"request": {
 						"method": "GET",
@@ -657,7 +715,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/v2/qags?pageNumber=1&filterType=top&thematiqueId",
+							"raw": "{{scheme}}://{{baseUrl}}/v2/qags?pageNumber=1&thematiqueId&filterType=trending",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{baseUrl}}"
@@ -670,10 +728,6 @@
 								{
 									"key": "pageNumber",
 									"value": "1"
-								},
-								{
-									"key": "filterType",
-									"value": "top"
 								},
 								{
 									"key": "thematiqueId",
@@ -690,6 +744,10 @@
 								{
 									"key": "thematiqueId",
 									"value": null
+								},
+								{
+									"key": "filterType",
+									"value": "trending"
 								}
 							]
 						}
@@ -724,6 +782,40 @@
 							],
 							"path": [
 								"qags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"0 + 0 = ?\",\n\t\"thematiqueId\": \"47897e51-8e94-4920-a26a-1b1e5e232e82\",\n\t\"description\": \"La tête à Toto !\",\n\t\"author\": \"Toto\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/68ce478b-09e2-4cb2-a158-37bf74eafb7f",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"68ce478b-09e2-4cb2-a158-37bf74eafb7f"
 							]
 						}
 					},
@@ -1214,6 +1306,42 @@
 							"path": [
 								"admin",
 								"notifyNewConsultation",
+								"{{consultationId}}"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Nouvelle consultation !"
+								},
+								{
+									"key": "description",
+									"value": "Une nouvelle consultation est disponible"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/admin/notifyConsultationDeadline/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/notifyConsultationDeadline/{{consultationId}}?title=Nouvelle consultation !&description=Une nouvelle consultation est disponible",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifyConsultationDeadline",
 								"{{consultationId}}"
 							],
 							"query": [
