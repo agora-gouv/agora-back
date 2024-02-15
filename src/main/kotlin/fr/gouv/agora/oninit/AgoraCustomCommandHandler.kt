@@ -12,13 +12,11 @@ class AgoraCustomCommandHandler(
     private val applicationContext: ApplicationContext,
     private val dailyTasksHandler: DailyTasksHandler,
     private val weeklyTasksHandler: WeeklyTasksHandler,
-    private val deleteUsersHandler: DeleteUsersHandler,
 ) : InitializingBean {
 
     companion object {
         private const val DAILY_TASKS = "dailyTasks"
         private const val WEEKLY_TASKS = "weeklyTasks"
-        private const val DELETE_USERS = "deleteUsers"
     }
 
     override fun afterPropertiesSet() {
@@ -40,7 +38,6 @@ class AgoraCustomCommandHandler(
         return when (command) {
             DAILY_TASKS -> dailyTasksHandler
             WEEKLY_TASKS -> weeklyTasksHandler
-            DELETE_USERS -> deleteUsersHandler
             else -> null
         }
     }
