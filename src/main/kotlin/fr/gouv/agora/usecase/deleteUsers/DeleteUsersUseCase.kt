@@ -23,6 +23,7 @@ class DeleteUsersUseCase(
 ) {
 
     fun deleteUsers(userIdsToDelete: List<String>) {
+        println("💁❌ Delete ${userIdsToDelete.size} user(s) with ID:\n${userIdsToDelete.joinToString("\n")}")
         if (userIdsToDelete.isEmpty()) return
         notificationRepository.deleteUsersNotifications(userIdsToDelete)
         consultationResponseRepository.deleteUserConsultationResponses(userIdsToDelete)

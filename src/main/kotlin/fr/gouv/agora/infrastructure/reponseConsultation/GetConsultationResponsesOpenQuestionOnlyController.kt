@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.reponseConsultation
 
-import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.reponseConsultation.GetConsultationResultsForOpenQuestionOnlyUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
