@@ -20,7 +20,7 @@ import java.time.Duration
 @Configuration
 @Suppress("unused")
 @EnableCaching
-class CacheConfig {
+class AgoraCacheConfig {
     companion object {
         const val DEFAULT_REDIS_USER = "default"
         const val DEFAULT_REDIS_PORT = 6379
