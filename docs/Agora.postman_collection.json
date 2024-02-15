@@ -1433,6 +1433,45 @@
 			]
 		},
 		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "/admin/delete_users",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/delete_users",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"delete_users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "/test",
 			"request": {
 				"method": "GET",
