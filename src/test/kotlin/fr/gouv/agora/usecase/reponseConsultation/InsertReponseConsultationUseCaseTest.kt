@@ -6,10 +6,7 @@ import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.ReponseConsultationInserting
 import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
-import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
-import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
+import fr.gouv.agora.usecase.consultation.repository.*
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
@@ -17,7 +14,6 @@ import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsult
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository.InsertResult
 import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -57,6 +53,9 @@ internal class InsertReponseConsultationUseCaseTest {
 
     @MockBean
     private lateinit var consultationInfoRepository: ConsultationInfoRepository
+
+    @MockBean
+    private lateinit var consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository
 
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
@@ -108,7 +107,12 @@ internal class InsertReponseConsultationUseCaseTest {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
-        given(userAnsweredConsultationRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
+        given(
+            userAnsweredConsultationRepository.hasAnsweredConsultation(
+                consultationId = "consultId",
+                userId = "userId"
+            )
+        )
             .willReturn(true)
 
         // When
@@ -137,7 +141,12 @@ internal class InsertReponseConsultationUseCaseTest {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
-        given(userAnsweredConsultationRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
+        given(
+            userAnsweredConsultationRepository.hasAnsweredConsultation(
+                consultationId = "consultId",
+                userId = "userId"
+            )
+        )
             .willReturn(false)
 
         val questionList = listOf(
@@ -197,6 +206,8 @@ internal class InsertReponseConsultationUseCaseTest {
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
+        then(consultationDetailsV2CacheRepository).should(only())
+            .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
@@ -212,7 +223,12 @@ internal class InsertReponseConsultationUseCaseTest {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
-        given(userAnsweredConsultationRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId"))
+        given(
+            userAnsweredConsultationRepository.hasAnsweredConsultation(
+                consultationId = "consultId",
+                userId = "userId"
+            )
+        )
             .willReturn(false)
 
         val questionList = listOf(
@@ -271,6 +287,8 @@ internal class InsertReponseConsultationUseCaseTest {
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
+        then(consultationDetailsV2CacheRepository).should(only())
+            .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
@@ -342,6 +360,8 @@ internal class InsertReponseConsultationUseCaseTest {
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewAnsweredRepository).should(only())
             .deleteConsultationAnsweredListFromCache(userId = "userId")
+        then(consultationDetailsV2CacheRepository).should(only())
+            .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
         then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
@@ -362,6 +382,7 @@ internal class InsertReponseConsultationUseCaseTest {
             insertConsultationResponseParametersMapper = insertConsultationResponseParametersMapper,
             consultationPreviewPageRepository = consultationPreviewPageRepository,
             consultationInfoRepository = consultationInfoRepository,
+            consultationDetailsV2CacheRepository = consultationDetailsV2CacheRepository,
             clock = TestUtils.getFixedClock(todayDate),
         )
     }

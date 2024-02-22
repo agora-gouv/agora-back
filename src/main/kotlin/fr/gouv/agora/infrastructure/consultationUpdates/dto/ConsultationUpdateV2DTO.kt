@@ -12,9 +12,10 @@ data class ConsultationUpdateV2DTO(
     val id: UUID,
     @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
     val consultationId: UUID,
-    val updateDate: Date,
+    val isVisibleToUnansweredUsersOnly: Int,
     @Column(columnDefinition = "TEXT")
-    val updateLabel: String,
+    val updateLabel: String?,
+    val updateDate: Date,
     @Column(columnDefinition = "TEXT")
     val shareTextTemplate: String,
     val hasQuestionsInfo: Int,
@@ -51,8 +52,7 @@ data class ConsultationUpdateV2DTO(
     override fun hashCode(): Int = javaClass.hashCode()
 
     override fun toString(): String {
-        return this::class.simpleName + "(id=$id, consultationId=$consultationId, updateDate=$updateDate, hasQuestionsInfo=$hasQuestionsInfo, responsesInfoPicto=$responsesInfoPicto, responsesInfoDescription=$responsesInfoDescription, infoHeaderPicto=$infoHeaderPicto, infoHeaderDescription=$infoHeaderDescription, hasParticipationInfo=$hasParticipationInfo, downloadAnalysisUrl=$downloadAnalysisUrl, feedbackQuestionPicto=$feedbackQuestionPicto, feedbackQuestionTitle=$feedbackQuestionTitle, feedbackQuestionDescription=$feedbackQuestionDescription, footerTitle=$footerTitle, footerDescription=$footerDescription)"
+        return this::class.simpleName + "(id=$id, consultationId=$consultationId, isVisibleToUnansweredUsersOnly=$isVisibleToUnansweredUsersOnly, updateLabel=$updateLabel, updateDate=$updateDate, hasQuestionsInfo=$hasQuestionsInfo, responsesInfoPicto=$responsesInfoPicto, responsesInfoDescription=$responsesInfoDescription, infoHeaderPicto=$infoHeaderPicto, infoHeaderDescription=$infoHeaderDescription, hasParticipationInfo=$hasParticipationInfo, downloadAnalysisUrl=$downloadAnalysisUrl, feedbackQuestionPicto=$feedbackQuestionPicto, feedbackQuestionTitle=$feedbackQuestionTitle, feedbackQuestionDescription=$feedbackQuestionDescription, footerTitle=$footerTitle, footerDescription=$footerDescription)"
     }
-
 
 }

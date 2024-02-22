@@ -18,17 +18,29 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
             LIMIT 1""",
         nativeQuery = true
     )
-    fun getLastConsultationUpdateLabel(@Param("consultationId") consultationId: UUID): String
+    fun getLatestConsultationUpdateLabel(@Param("consultationId") consultationId: UUID): String
 
     @Query(
         value = """SELECT * FROM consultation_updates 
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date
+            AND is_visible_to_unanswered_users_only = 1
             ORDER BY update_date
             LIMIT 1""",
         nativeQuery = true
     )
-    fun getLastConsultationUpdate(@Param("consultationId") consultationId: UUID): ConsultationUpdateV2DTO
+    fun getUnansweredUsersConsultationUpdate(@Param("consultationId") consultationId: UUID): ConsultationUpdateV2DTO
+
+    @Query(
+        value = """SELECT * FROM consultation_updates 
+            WHERE consultation_id = :consultationId
+            AND CURRENT_TIMESTAMP > update_date
+            AND is_visible_to_unanswered_users_only = 0
+            ORDER BY update_date
+            LIMIT 1""",
+        nativeQuery = true
+    )
+    fun getLatestConsultationUpdate(@Param("consultationId") consultationId: UUID): ConsultationUpdateV2DTO
 
     @Query(
         value = """SELECT * FROM consultation_updates 

@@ -5,6 +5,7 @@ import java.util.*
 data class ConsultationUpdateInfoV2(
     val id: String,
     val updateDate: Date,
+    val shareTextTemplate: String,
     val hasQuestionsInfo: Boolean,
     val hasParticipationInfo: Boolean,
     val responsesInfo: ResponsesInfo?,

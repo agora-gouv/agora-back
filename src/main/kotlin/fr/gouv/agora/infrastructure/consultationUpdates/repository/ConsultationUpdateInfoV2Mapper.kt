@@ -27,6 +27,7 @@ class ConsultationUpdateInfoV2Mapper {
         return ConsultationUpdateInfoV2(
             id = dto.id.toString(),
             updateDate = dto.updateDate,
+            shareTextTemplate = dto.shareTextTemplate,
             hasQuestionsInfo = dto.hasQuestionsInfo == TRUE_INT_VALUE,
             hasParticipationInfo = dto.hasParticipationInfo == TRUE_INT_VALUE,
             responsesInfo = buildResponsesInfo(dto),

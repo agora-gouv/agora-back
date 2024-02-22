@@ -13,15 +13,23 @@ class ConsultationUpdateV2RepositoryImpl(
     private val mapper: ConsultationUpdateInfoV2Mapper,
 ) : ConsultationUpdateV2Repository {
 
-    override fun getLastConsultationUpdateLabel(consultationId: String): String? {
+    override fun getLatestConsultationUpdateLabel(consultationId: String): String? {
         return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            updateDatabaseRepository.getLastConsultationUpdateLabel(consultationUUID)
+            updateDatabaseRepository.getLatestConsultationUpdateLabel(consultationUUID)
         }
     }
 
-    override fun getLastConsultationUpdate(consultationId: String): ConsultationUpdateInfoV2? {
+    override fun getUnansweredUsersConsultationUpdate(consultationId: String): ConsultationUpdateInfoV2? {
         return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            val updateDTO = updateDatabaseRepository.getLastConsultationUpdate(consultationUUID)
+            val updateDTO = updateDatabaseRepository.getUnansweredUsersConsultationUpdate(consultationUUID)
+            val sectionDTOs = sectionDatabaseRepository.getConsultationUpdateSections(updateDTO.id)
+            mapper.toDomain(updateDTO, sectionDTOs)
+        }
+    }
+
+    override fun getLatestConsultationUpdate(consultationId: String): ConsultationUpdateInfoV2? {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            val updateDTO = updateDatabaseRepository.getLatestConsultationUpdate(consultationUUID)
             val sectionDTOs = sectionDatabaseRepository.getConsultationUpdateSections(updateDTO.id)
             mapper.toDomain(updateDTO, sectionDTOs)
         }
