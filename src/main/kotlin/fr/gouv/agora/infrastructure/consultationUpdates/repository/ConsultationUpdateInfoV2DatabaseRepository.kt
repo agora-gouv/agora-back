@@ -11,7 +11,7 @@ import java.util.*
 interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<ConsultationUpdateV2DTO, UUID> {
 
     @Query(
-        value = """SELECT update_label FROM consultation_updates 
+        value = """SELECT update_label FROM consultation_updates_v2
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date
             ORDER BY update_date
@@ -21,7 +21,7 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
     fun getLatestConsultationUpdateLabel(@Param("consultationId") consultationId: UUID): String
 
     @Query(
-        value = """SELECT * FROM consultation_updates 
+        value = """SELECT * FROM consultation_updates_v2
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date
             AND is_visible_to_unanswered_users_only = 1
@@ -32,7 +32,7 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
     fun getUnansweredUsersConsultationUpdate(@Param("consultationId") consultationId: UUID): ConsultationUpdateV2DTO
 
     @Query(
-        value = """SELECT * FROM consultation_updates 
+        value = """SELECT * FROM consultation_updates_v2
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date
             AND is_visible_to_unanswered_users_only = 0
@@ -43,7 +43,7 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
     fun getLatestConsultationUpdate(@Param("consultationId") consultationId: UUID): ConsultationUpdateV2DTO
 
     @Query(
-        value = """SELECT * FROM consultation_updates 
+        value = """SELECT * FROM consultation_updates_v2
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date
             ORDER BY update_date

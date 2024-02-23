@@ -97,7 +97,7 @@ class ConsultationDetailsV2UseCase(
                 )
             }
         }.also { details ->
-            cacheRepository.initLastConsultationDetails(consultationInfo.id, details)
+            cacheRepository.initUnansweredUsersConsultationDetails(consultationInfo.id, details)
         }
     }
 

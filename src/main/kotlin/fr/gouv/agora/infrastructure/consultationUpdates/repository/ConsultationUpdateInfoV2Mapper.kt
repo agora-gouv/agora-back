@@ -32,7 +32,10 @@ class ConsultationUpdateInfoV2Mapper {
             hasParticipationInfo = dto.hasParticipationInfo == TRUE_INT_VALUE,
             responsesInfo = buildResponsesInfo(dto),
             infoHeader = buildInfoHeader(dto),
-            body = buildBody(sectionDTOs),
+            body = buildBody(
+                sectionDTOs = sectionDTOs,
+                filter = { sectionDTO -> sectionDTO.isPreview != TRUE_INT_VALUE },
+            ),
             bodyPreview = buildBody(
                 sectionDTOs = sectionDTOs,
                 filter = { sectionDTO -> sectionDTO.isPreview == TRUE_INT_VALUE },

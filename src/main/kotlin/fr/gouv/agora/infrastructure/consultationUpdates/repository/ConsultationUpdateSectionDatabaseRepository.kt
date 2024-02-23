@@ -12,7 +12,7 @@ interface ConsultationUpdateSectionDatabaseRepository : JpaRepository<Consultati
 
     @Query(
         value = """SELECT * FROM consultation_update_sections 
-            WHERE consultation_id = :consultationUpdateId
+            WHERE consultation_update_id = :consultationUpdateId
             ORDER BY ordre""",
         nativeQuery = true
     )

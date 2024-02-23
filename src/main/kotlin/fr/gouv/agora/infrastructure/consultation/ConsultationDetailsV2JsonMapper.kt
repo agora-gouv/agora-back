@@ -20,7 +20,7 @@ class ConsultationDetailsV2JsonMapper(
     fun toJson(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDetailsV2Json {
         return ConsultationDetailsV2Json(
             title = consultationDetails.consultation.title,
-            coverUrl = consultationDetails.consultation.coverUrl,
+            coverUrl = consultationDetails.consultation.detailsCoverUrl,
             shareText = buildShareText(consultationDetails),
             thematique = ThematiqueNoIdJson(
                 label = consultationDetails.thematique.label,
