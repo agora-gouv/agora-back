@@ -6,13 +6,13 @@ data class ConsultationDetailsV2(
     val consultation: ConsultationInfo,
     val thematique: Thematique,
     val update: ConsultationUpdateInfoV2,
-    // TODO history
+    val history: List<ConsultationUpdateHistory>?,
 )
 
 data class ConsultationDetailsV2WithInfo(
     val consultation: ConsultationInfo,
     val thematique: Thematique,
     val update: ConsultationUpdateInfoV2,
-    // TODO history
+    val history: List<ConsultationUpdateHistory>?,
     val participantCount: Int,
 )

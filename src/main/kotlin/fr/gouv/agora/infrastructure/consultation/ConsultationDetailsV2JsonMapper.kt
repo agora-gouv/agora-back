@@ -1,6 +1,8 @@
 package fr.gouv.agora.infrastructure.consultation
 
 import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
+import fr.gouv.agora.domain.ConsultationUpdateHistoryStatus
+import fr.gouv.agora.domain.ConsultationUpdateHistoryType
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
 import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.*
 import fr.gouv.agora.infrastructure.profile.repository.DateMapper
@@ -34,6 +36,7 @@ class ConsultationDetailsV2JsonMapper(
             participationInfo = buildParticipationInfo(consultationDetails),
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
             footer = buildFooter(consultationDetails),
+            history = buildHistory(consultationDetails),
         )
     }
 
@@ -85,6 +88,26 @@ class ConsultationDetailsV2JsonMapper(
             Footer(
                 title = footer.title,
                 description = footer.description,
+            )
+        }
+    }
+
+    private fun buildHistory(consultationDetails: ConsultationDetailsV2WithInfo): List<History>? {
+        return consultationDetails.history?.map { historyItem ->
+            History(
+                updateId = historyItem.consultationUpdateId,
+                type = when (historyItem.type) {
+                    ConsultationUpdateHistoryType.UPDATE -> "update"
+                    ConsultationUpdateHistoryType.RESULTS -> "results"
+                },
+                status = when (historyItem.status) {
+                    ConsultationUpdateHistoryStatus.DONE -> "done"
+                    ConsultationUpdateHistoryStatus.CURRENT -> "current"
+                    ConsultationUpdateHistoryStatus.INCOMING -> "incoming'"
+                },
+                title = historyItem.title,
+                date = historyItem.updateDate?.let(dateMapper::toFormattedDate),
+                actionText = historyItem.actionText,
             )
         }
     }

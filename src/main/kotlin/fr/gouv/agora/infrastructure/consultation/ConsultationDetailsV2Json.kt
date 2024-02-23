@@ -31,7 +31,8 @@ data class ConsultationDetailsV2Json(
     // TODO feedbacks
     @JsonProperty("footer")
     val footer: Footer?,
-    // TODO history
+    @JsonProperty("history")
+    val history: List<History>?,
 ) {
 
     data class QuestionsInfo(
@@ -143,4 +144,18 @@ data class ConsultationDetailsV2Json(
         val description: String,
     )
 
+    data class History(
+        @JsonProperty("updateId")
+        val updateId: String?,
+        @JsonProperty("type")
+        val type: String,
+        @JsonProperty("status")
+        val status: String,
+        @JsonProperty("title")
+        val title: String,
+        @JsonProperty("date")
+        val date: String?,
+        @JsonProperty("actionText")
+        val actionText: String?,
+    )
 }

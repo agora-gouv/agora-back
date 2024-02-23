@@ -1,8 +1,6 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.ConsultationDetailsV2
-import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
-import fr.gouv.agora.domain.Thematique
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
@@ -31,6 +29,7 @@ class ConsultationDetailsV2UseCase(
                 consultation = details.consultation,
                 thematique = details.thematique,
                 update = details.update,
+                history = details.history,
                 participantCount = getParticipantCount(consultationId),
             )
         }
@@ -60,7 +59,7 @@ class ConsultationDetailsV2UseCase(
 
     private fun shouldUseUnansweredUsersUpdate(consultationInfo: ConsultationInfo, userId: String): Boolean {
         val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate.toLocalDateTime())
-        return isConsultationOngoing && hasUserAnsweredConsultation(
+        return isConsultationOngoing && !hasUserAnsweredConsultation(
             consultationId = consultationInfo.id,
             userId = userId,
         )
@@ -94,6 +93,7 @@ class ConsultationDetailsV2UseCase(
                     consultation = consultationInfo,
                     thematique = thematique,
                     update = update,
+                    history = emptyList(),
                 )
             }
         }.also { details ->
@@ -111,10 +111,31 @@ class ConsultationDetailsV2UseCase(
             ConsultationUpdateCacheResult.CacheNotInitialized -> updateRepository.getLatestConsultationUpdate(
                 consultationId = consultationInfo.id,
             )?.let { update ->
+                // TODO : retrieve real history
                 ConsultationDetailsV2(
                     consultation = consultationInfo,
                     thematique = thematique,
                     update = update,
+                    history = listOf(
+                        ConsultationUpdateHistory(
+                            stepNumber = 1,
+                            ConsultationUpdateHistoryType.UPDATE,
+                            consultationUpdateId = "aa0180a2-fa10-4cdf-888b-bd58bb6f1709",
+                            status = ConsultationUpdateHistoryStatus.DONE,
+                            title = "Lancement",
+                            updateDate = consultationInfo.startDate,
+                            actionText = "Voir les objectifs",
+                        ),
+                        ConsultationUpdateHistory(
+                            stepNumber = 2,
+                            ConsultationUpdateHistoryType.RESULTS,
+                            consultationUpdateId = "aa0180a2-fa10-4cdf-888b-bd58bb6f1709",
+                            status = ConsultationUpdateHistoryStatus.CURRENT,
+                            title = "Fin de la consultation",
+                            updateDate = consultationInfo.endDate,
+                            actionText = "Consulter toutes les réponses",
+                        )
+                    )
                 )
             }
         }.also { details ->
