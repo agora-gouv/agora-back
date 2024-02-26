@@ -66,6 +66,7 @@ internal class InsertReponseConsultationUseCaseTest {
         id = "consultId",
         title = "consultTitle",
         coverUrl = "",
+        detailsCoverUrl = "",
         startDate = Date(0),
         endDate = LocalDateTime.of(2024, Month.OCTOBER, 19, 19, 0, 0).toDate(),
         questionCount = "",

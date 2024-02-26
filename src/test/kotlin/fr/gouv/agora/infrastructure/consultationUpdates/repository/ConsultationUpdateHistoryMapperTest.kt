@@ -38,7 +38,7 @@ class ConsultationUpdateHistoryMapperTest {
                 )
             ),
             input(
-                testName = "when has two history items with date same stepNumber - should return only first item",
+                testName = "when has two history items with date same stepNumber - should return only first item ordered by date ASC",
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
