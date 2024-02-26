@@ -1,11 +1,14 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.ConsultationDetailsV2
+import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
+import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
+import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateHistoryRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
 import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
@@ -20,6 +23,7 @@ class ConsultationDetailsV2UseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val updateRepository: ConsultationUpdateV2Repository,
     private val userAnsweredRepository: UserAnsweredConsultationRepository,
+    private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
 
@@ -111,31 +115,11 @@ class ConsultationDetailsV2UseCase(
             ConsultationUpdateCacheResult.CacheNotInitialized -> updateRepository.getLatestConsultationUpdate(
                 consultationId = consultationInfo.id,
             )?.let { update ->
-                // TODO : retrieve real history
                 ConsultationDetailsV2(
                     consultation = consultationInfo,
                     thematique = thematique,
                     update = update,
-                    history = listOf(
-                        ConsultationUpdateHistory(
-                            stepNumber = 1,
-                            ConsultationUpdateHistoryType.UPDATE,
-                            consultationUpdateId = "aa0180a2-fa10-4cdf-888b-bd58bb6f1709",
-                            status = ConsultationUpdateHistoryStatus.DONE,
-                            title = "Lancement",
-                            updateDate = consultationInfo.startDate,
-                            actionText = "Voir les objectifs",
-                        ),
-                        ConsultationUpdateHistory(
-                            stepNumber = 2,
-                            ConsultationUpdateHistoryType.RESULTS,
-                            consultationUpdateId = "aa0180a2-fa10-4cdf-888b-bd58bb6f1709",
-                            status = ConsultationUpdateHistoryStatus.CURRENT,
-                            title = "Fin de la consultation",
-                            updateDate = consultationInfo.endDate,
-                            actionText = "Consulter toutes les réponses",
-                        )
-                    )
+                    history = historyRepository.getConsultationUpdateHistory(consultationInfo.id),
                 )
             }
         }.also { details ->

@@ -7,6 +7,7 @@ import fr.gouv.agora.domain.ConsultationUpdateHistoryType
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateHistoryWithDateDTO
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
 import java.time.Month
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -26,6 +28,28 @@ class ConsultationUpdateHistoryMapperTest {
     companion object {
         @JvmStatic
         fun toDomainCases() = arrayOf(
+            input(
+                testName = "when has a history item with null updateDate - should return status INCOMING",
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
+                historyItems = listOf(
+                    HistoryMapperTestInput(
+                        stepNumber = 1,
+                        updateDate = null,
+                        expectedStatus = ConsultationUpdateHistoryStatus.INCOMING,
+                    ),
+                )
+            ),
+            input(
+                testName = "when has a history item updateDate is after serverDate - should return status INCOMING",
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
+                historyItems = listOf(
+                    HistoryMapperTestInput(
+                        stepNumber = 1,
+                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 6, 21, 30),
+                        expectedStatus = ConsultationUpdateHistoryStatus.INCOMING,
+                    ),
+                )
+            ),
             input(
                 testName = "when has a history item before serverDate but no other step further - should return status CURRENT",
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
@@ -38,18 +62,66 @@ class ConsultationUpdateHistoryMapperTest {
                 )
             ),
             input(
-                testName = "when has two history items with date same stepNumber - should return only first item ordered by date ASC",
+                testName = "when has 2 history items before serverDate - should return first step as DONE and last step as CURRENT",
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
                         stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
+                        expectedStatus = ConsultationUpdateHistoryStatus.DONE,
+                    ),
+                    HistoryMapperTestInput(
+                        stepNumber = 2,
+                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 18, 45),
+                        expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
+                    ),
+                )
+            ),
+            input(
+                testName = "when has 2 history items before serverDate with any step order - should return first step as DONE and last step as CURRENT",
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
+                historyItems = listOf(
+                    HistoryMapperTestInput(
+                        stepNumber = 2,
+                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 18, 45),
                         expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
                     ),
                     HistoryMapperTestInput(
                         stepNumber = 1,
-                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
+                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
+                        expectedStatus = ConsultationUpdateHistoryStatus.DONE,
+                    ),
+                )
+            ),
+            input(
+                testName = "when has two history items with date before serverDate and same stepNumber - should return the first one ordered by date DESC",
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
+                historyItems = listOf(
+                    HistoryMapperTestInput(
+                        stepNumber = 1,
+                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                         expectedStatus = null,
+                    ),
+                    HistoryMapperTestInput(
+                        stepNumber = 1,
+                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
+                        expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
+                    ),
+                )
+            ),
+            input(
+                testName = "when has two history items one with null date and the other with date before serverDate and same stepNumber - should return item without null date",
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
+                historyItems = listOf(
+                    HistoryMapperTestInput(
+                        stepNumber = 1,
+                        updateDate = null,
+                        expectedStatus = null,
+                    ),
+                    HistoryMapperTestInput(
+                        stepNumber = 1,
+                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
+                        expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
                     ),
                 )
             ),
@@ -61,6 +133,72 @@ class ConsultationUpdateHistoryMapperTest {
             historyItems: List<HistoryMapperTestInput>,
         ) = arrayOf(testName, serverDate, historyItems)
 
+    }
+
+    @Test
+    fun `toDomain - when type is UPDATE - should type UPDATE`() {
+        // Given
+        mockCurrentDate(LocalDateTime.of(2024, Month.JANUARY, 1, 9, 30))
+        val updateUUID = UUID.randomUUID()
+        val dto = mock(ConsultationUpdateHistoryWithDateDTO::class.java).also {
+            given(it.stepNumber).willReturn(1)
+            given(it.consultationUpdateId).willReturn(updateUUID)
+            given(it.type).willReturn("update")
+            given(it.title).willReturn("title")
+            given(it.updateDate).willReturn(Date(0))
+            given(it.actionText).willReturn("actionText")
+        }
+
+        // When
+        val result = mapper.toDomain(listOf(dto))
+
+        // Then
+        assertThat(result).isEqualTo(
+            listOf(
+                ConsultationUpdateHistory(
+                    stepNumber = 1,
+                    type = ConsultationUpdateHistoryType.UPDATE,
+                    consultationUpdateId = updateUUID.toString(),
+                    status = ConsultationUpdateHistoryStatus.CURRENT,
+                    title = "title",
+                    updateDate = Date(0),
+                    actionText = "actionText",
+                ),
+            )
+        )
+    }
+
+    @Test
+    fun `toDomain - when type is RESULTS - should type RESULTS`() {
+        // Given
+        mockCurrentDate(LocalDateTime.of(2024, Month.JANUARY, 1, 9, 30))
+        val updateUUID = UUID.randomUUID()
+        val dto = mock(ConsultationUpdateHistoryWithDateDTO::class.java).also {
+            given(it.stepNumber).willReturn(1)
+            given(it.consultationUpdateId).willReturn(updateUUID)
+            given(it.type).willReturn("results")
+            given(it.title).willReturn("title")
+            given(it.updateDate).willReturn(Date(0))
+            given(it.actionText).willReturn("actionText")
+        }
+
+        // When
+        val result = mapper.toDomain(listOf(dto))
+
+        // Then
+        assertThat(result).isEqualTo(
+            listOf(
+                ConsultationUpdateHistory(
+                    stepNumber = 1,
+                    type = ConsultationUpdateHistoryType.RESULTS,
+                    consultationUpdateId = updateUUID.toString(),
+                    status = ConsultationUpdateHistoryStatus.CURRENT,
+                    title = "title",
+                    updateDate = Date(0),
+                    actionText = "actionText",
+                ),
+            )
+        )
     }
 
     // When type is update should return type update
@@ -90,7 +228,7 @@ class ConsultationUpdateHistoryMapperTest {
         val result = mapper.toDomain(historyDTOs)
 
         // Then
-        val expectedResults = historyItems.mapNotNull { historyItem ->
+        val expectedResults = historyItems.sortedBy { it.stepNumber }.mapNotNull { historyItem ->
             historyItem.expectedStatus?.let {
                 ConsultationUpdateHistory(
                     stepNumber = historyItem.stepNumber,
@@ -102,7 +240,7 @@ class ConsultationUpdateHistoryMapperTest {
                     actionText = "actionText",
                 )
             }
-        }.reversed()
+        }
         assertThat(result).isEqualTo(expectedResults)
     }
 

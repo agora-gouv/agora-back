@@ -12,3 +12,4 @@ interface ConsultationUpdateHistoryWithDateDTO {
     val updateDate: Date?
     val actionText: String?
 }
+

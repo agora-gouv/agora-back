@@ -16,7 +16,7 @@ interface ConsultationUpdateHistoryDatabaseRepository: JpaRepository<Consultatio
             FROM consultation_update_history LEFT JOIN consultation_updates_v2
             ON consultation_update_history.consultation_update_id = consultation_updates_v2.id
             WHERE consultation_update_history.consultation_id = :consultationId
-            ORDER BY stepNumber ASC, updateDate ASC""",
+            ORDER BY stepNumber ASC, updateDate DESC""",
         nativeQuery = true
     )
     fun getConsultationUpdateHistory(@Param("consultationId") consultationId: UUID): List<ConsultationUpdateHistoryWithDateDTO>
