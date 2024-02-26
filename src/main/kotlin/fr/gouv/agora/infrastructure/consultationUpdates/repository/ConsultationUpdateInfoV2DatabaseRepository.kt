@@ -14,7 +14,7 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
         value = """SELECT update_label FROM consultation_updates_v2
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date
-            ORDER BY update_date
+            ORDER BY update_date DESC
             LIMIT 1""",
         nativeQuery = true
     )
@@ -25,7 +25,7 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date
             AND is_visible_to_unanswered_users_only = 1
-            ORDER BY update_date
+            ORDER BY update_date DESC
             LIMIT 1""",
         nativeQuery = true
     )
@@ -36,7 +36,7 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date
             AND is_visible_to_unanswered_users_only = 0
-            ORDER BY update_date
+            ORDER BY update_date DESC
             LIMIT 1""",
         nativeQuery = true
     )
