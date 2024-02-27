@@ -42,59 +42,42 @@ class ConsultationDetailsV2CacheRepositoryImpl(
     }
 
     override fun getUnansweredUsersConsultationDetails(consultationId: String): ConsultationUpdateCacheResult {
-        return try {
-            when (val cachedValue =
-                getCache()?.get("$UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX/$consultationId", String::class.java)) {
-                null -> ConsultationUpdateCacheResult.CacheNotInitialized
-                "" -> ConsultationUpdateCacheResult.ConsultationUpdateNotFound
-                else -> ConsultationUpdateCacheResult.CachedConsultationsDetails(
-                    details = fromCacheable(
-                        objectMapper.readValue(
-                            cachedValue,
-                            CacheableConsultationDetails::class.java,
-                        )
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            ConsultationUpdateCacheResult.CacheNotInitialized
-        }
+        return getConsultationDetailsCache("$UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX/$consultationId")
     }
 
-    override fun initUnansweredUsersConsultationDetails(
-        consultationId: String,
-        consultationDetails: ConsultationDetailsV2?,
-    ) {
-        getCache()?.put(
+    override fun initUnansweredUsersConsultationDetails(consultationId: String, details: ConsultationDetailsV2?) {
+        initConsultationDetailsCache(
             "$UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX/$consultationId",
-            objectMapper.writeValueAsString(consultationDetails?.let(::toCacheable) ?: ""),
+            details,
         )
     }
 
     override fun getLastConsultationDetails(consultationId: String): ConsultationUpdateCacheResult {
-        return try {
-            when (val cachedValue =
-                getCache()?.get("$LATEST_CONSULTATION_DETAILS_PREFIX/$consultationId", String::class.java)) {
-                null -> ConsultationUpdateCacheResult.CacheNotInitialized
-                "" -> ConsultationUpdateCacheResult.ConsultationUpdateNotFound
-                else -> ConsultationUpdateCacheResult.CachedConsultationsDetails(
-                    details = fromCacheable(
-                        objectMapper.readValue(
-                            cachedValue,
-                            CacheableConsultationDetails::class.java,
-                        )
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            ConsultationUpdateCacheResult.CacheNotInitialized
-        }
+        return getConsultationDetailsCache("$LATEST_CONSULTATION_DETAILS_PREFIX/$consultationId")
     }
 
-    override fun initLastConsultationDetails(consultationId: String, consultationDetails: ConsultationDetailsV2?) {
-        getCache()?.put(
+    override fun initLastConsultationDetails(consultationId: String, details: ConsultationDetailsV2?) {
+        initConsultationDetailsCache(
             "$LATEST_CONSULTATION_DETAILS_PREFIX/$consultationId",
-            objectMapper.writeValueAsString(consultationDetails?.let(::toCacheable) ?: ""),
+            details,
+        )
+    }
+
+    override fun getConsultationDetails(
+        consultationId: String,
+        consultationUpdateId: String,
+    ): ConsultationUpdateCacheResult {
+        return getConsultationDetailsCache("$consultationId/$consultationUpdateId")
+    }
+
+    override fun initConsultationDetails(
+        consultationId: String,
+        consultationUpdateId: String,
+        details: ConsultationDetailsV2?,
+    ) {
+        initConsultationDetailsCache(
+            "$consultationId/$consultationUpdateId",
+            details,
         )
     }
 
@@ -130,6 +113,32 @@ class ConsultationDetailsV2CacheRepositoryImpl(
 
     private fun getCache() = cacheManager.getCache(CONSULTATION_DETAILS_CACHE_NAME)
     private fun getShortTermCache() = shortTermCacheManager.getCache(CONSULTATION_INFO_CACHE_NAME)
+
+    private fun getConsultationDetailsCache(cacheKey: String): ConsultationUpdateCacheResult {
+        return try {
+            when (val cachedValue = getCache()?.get(cacheKey, String::class.java)) {
+                null -> ConsultationUpdateCacheResult.CacheNotInitialized
+                "" -> ConsultationUpdateCacheResult.ConsultationUpdateNotFound
+                else -> ConsultationUpdateCacheResult.CachedConsultationsDetails(
+                    details = fromCacheable(
+                        objectMapper.readValue(
+                            cachedValue,
+                            CacheableConsultationDetails::class.java,
+                        )
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            ConsultationUpdateCacheResult.CacheNotInitialized
+        }
+    }
+
+    private fun initConsultationDetailsCache(cacheKey: String, details: ConsultationDetailsV2?) {
+        getCache()?.put(
+            cacheKey,
+            objectMapper.writeValueAsString(details?.let(::toCacheable) ?: ""),
+        )
+    }
 
     private fun toCacheable(details: ConsultationDetailsV2) = CacheableConsultationDetails(
         consultation = details.consultation,

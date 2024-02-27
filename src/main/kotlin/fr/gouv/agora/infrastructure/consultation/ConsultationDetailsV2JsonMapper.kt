@@ -29,7 +29,7 @@ class ConsultationDetailsV2JsonMapper(
                 picto = consultationDetails.thematique.picto,
             ),
             questionsInfo = buildQuestionsInfo(consultationDetails),
-            consultationDates = null, // TODO
+            consultationDates = null,
             responsesInfo = buildResponsesInfo(consultationDetails),
             infoHeader = buildInfoHeader(consultationDetails),
             body = buildBody(consultationDetails),
@@ -37,6 +37,27 @@ class ConsultationDetailsV2JsonMapper(
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
             footer = buildFooter(consultationDetails),
             history = buildHistory(consultationDetails),
+        )
+    }
+
+    fun toUpdateJson(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDetailsV2Json {
+        return ConsultationDetailsV2Json(
+            title = consultationDetails.consultation.title,
+            coverUrl = consultationDetails.consultation.detailsCoverUrl,
+            shareText = buildShareText(consultationDetails),
+            thematique = ThematiqueNoIdJson(
+                label = consultationDetails.thematique.label,
+                picto = consultationDetails.thematique.picto,
+            ),
+            questionsInfo = null,
+            consultationDates = buildConsultationDates(consultationDetails),
+            responsesInfo = buildResponsesInfo(consultationDetails),
+            infoHeader = buildInfoHeader(consultationDetails),
+            body = buildBody(consultationDetails),
+            participationInfo = buildParticipationInfo(consultationDetails),
+            downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
+            footer = buildFooter(consultationDetails),
+            history = null,
         )
     }
 
@@ -54,6 +75,14 @@ class ConsultationDetailsV2JsonMapper(
             estimatedTime = consultationDetails.consultation.estimatedTime,
             participantCount = consultationDetails.participantCount,
             participantCountGoal = consultationDetails.consultation.participantCountGoal,
+        )
+    }
+
+    private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDates? {
+        if (!consultationDetails.update.hasParticipationInfo) return null
+        return ConsultationDates(
+            startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate),
+            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate),
         )
     }
 

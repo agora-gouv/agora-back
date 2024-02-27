@@ -4,10 +4,17 @@ import fr.gouv.agora.domain.ConsultationDetailsV2
 
 interface ConsultationDetailsV2CacheRepository {
     fun getUnansweredUsersConsultationDetails(consultationId: String): ConsultationUpdateCacheResult
-    fun initUnansweredUsersConsultationDetails(consultationId: String, consultationDetails: ConsultationDetailsV2?)
+    fun initUnansweredUsersConsultationDetails(consultationId: String, details: ConsultationDetailsV2?)
 
     fun getLastConsultationDetails(consultationId: String): ConsultationUpdateCacheResult
-    fun initLastConsultationDetails(consultationId: String, consultationDetails: ConsultationDetailsV2?)
+    fun initLastConsultationDetails(consultationId: String, details: ConsultationDetailsV2?)
+
+    fun getConsultationDetails(consultationId: String, consultationUpdateId: String): ConsultationUpdateCacheResult
+    fun initConsultationDetails(
+        consultationId: String,
+        consultationUpdateId: String,
+        details: ConsultationDetailsV2?,
+    )
 
     fun getParticipantCount(consultationId: String): Int?
     fun initParticipantCount(consultationId: String, participantCount: Int)

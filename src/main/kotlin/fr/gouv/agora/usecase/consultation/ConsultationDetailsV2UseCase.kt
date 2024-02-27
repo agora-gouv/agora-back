@@ -34,7 +34,9 @@ class ConsultationDetailsV2UseCase(
                 thematique = details.thematique,
                 update = details.update,
                 history = details.history,
-                participantCount = getParticipantCount(consultationId),
+                participantCount = if (details.update.hasParticipationInfo) {
+                    getParticipantCount(consultationId)
+                } else 0,
             )
         }
     }
