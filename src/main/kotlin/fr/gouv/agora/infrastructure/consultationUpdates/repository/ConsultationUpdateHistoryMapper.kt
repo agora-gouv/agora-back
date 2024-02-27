@@ -82,10 +82,10 @@ class ConsultationUpdateHistoryMapper(
     }
 
     private fun List<ConsultationUpdateHistory>.replaceLastDoneStatusToCurrent(): List<ConsultationUpdateHistory> {
-        val indexOfFirstDoneStatus = this.indexOfLast { it.status == ConsultationUpdateHistoryStatus.DONE }
+        val indexOfLastDoneStatus = this.indexOfLast { it.status == ConsultationUpdateHistoryStatus.DONE }
         return this
             .mapIndexed { index, historyItem ->
-                if (index == indexOfFirstDoneStatus) {
+                if (index == indexOfLastDoneStatus) {
                     historyItem.copy(status = ConsultationUpdateHistoryStatus.CURRENT)
                 } else historyItem
             }

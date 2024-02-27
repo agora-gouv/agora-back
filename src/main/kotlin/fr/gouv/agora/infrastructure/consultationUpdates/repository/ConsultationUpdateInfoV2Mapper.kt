@@ -22,7 +22,7 @@ class ConsultationUpdateInfoV2Mapper {
 
     fun toDomain(
         dto: ConsultationUpdateV2DTO,
-        sectionDTOs: List<ConsultationUpdateSectionDTO>
+        sectionDTOs: List<ConsultationUpdateSectionDTO>,
     ): ConsultationUpdateInfoV2 {
         return ConsultationUpdateInfoV2(
             id = dto.id.toString(),
@@ -72,7 +72,7 @@ class ConsultationUpdateInfoV2Mapper {
 
     private fun buildBody(
         sectionDTOs: List<ConsultationUpdateSectionDTO>,
-        filter: (ConsultationUpdateSectionDTO) -> Boolean = { _ -> true }
+        filter: (ConsultationUpdateSectionDTO) -> Boolean = { _ -> true },
     ): List<Section> {
         return sectionDTOs.filter(filter).mapNotNull { sectionDTO ->
             when (sectionDTO.type) {

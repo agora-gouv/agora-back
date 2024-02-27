@@ -79,7 +79,7 @@ class ConsultationDetailsV2JsonMapper(
     }
 
     private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDates? {
-        if (!consultationDetails.update.hasParticipationInfo) return null
+        if (!consultationDetails.update.hasQuestionsInfo) return null
         return ConsultationDates(
             startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate),
             endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate),
