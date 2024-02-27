@@ -24,14 +24,13 @@ class ConsultationDetailsV2CacheRepositoryImpl(
 ) : ConsultationDetailsV2CacheRepository {
 
     companion object {
+        private const val CONSULTATION_DETAILS_LATEST_CACHE_NAME = "latestConsultationDetailsV2"
         private const val CONSULTATION_DETAILS_CACHE_NAME = "consultationDetailsV2"
-        private const val CONSULTATION_INFO_CACHE_NAME = "consultationDetailsInfoV2"
+
+        private const val HAS_ANSWERED_CACHE_NAME = "hasAnsweredConsultationDetailsV2"
+        private const val PARTICIPANT_COUNT_CACHE_NAME = "participantCountConsultationDetailsV2"
 
         private const val UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX = "unanswered/"
-        private const val LATEST_CONSULTATION_DETAILS_PREFIX = "latest/"
-
-        private const val PARTICIPANT_COUNT_PREFIX = "participantCount/"
-        private const val HAS_ANSWERED_PREFIX = "hasAnswered/"
 
         private const val SECTION_TYPE_TITLE = "title"
         private const val SECTION_TYPE_RICH_TEXT = "richText"
@@ -41,25 +40,37 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         private const val SECTION_TYPE_QUOTE = "quote"
     }
 
-    override fun getUnansweredUsersConsultationDetails(consultationId: String): ConsultationUpdateCacheResult {
-        return getConsultationDetailsCache("$UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX/$consultationId")
-    }
-
-    override fun initUnansweredUsersConsultationDetails(consultationId: String, details: ConsultationDetailsV2?) {
-        initConsultationDetailsCache(
-            "$UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX/$consultationId",
-            details,
-        )
-    }
-
     override fun getLastConsultationDetails(consultationId: String): ConsultationUpdateCacheResult {
-        return getConsultationDetailsCache("$LATEST_CONSULTATION_DETAILS_PREFIX/$consultationId")
+        return getConsultationDetailsCache(
+            cacheName = CONSULTATION_DETAILS_LATEST_CACHE_NAME,
+            cacheKey = consultationId,
+        )
     }
 
     override fun initLastConsultationDetails(consultationId: String, details: ConsultationDetailsV2?) {
         initConsultationDetailsCache(
-            "$LATEST_CONSULTATION_DETAILS_PREFIX/$consultationId",
-            details,
+            cacheName = CONSULTATION_DETAILS_LATEST_CACHE_NAME,
+            cacheKey = consultationId,
+            details = details,
+        )
+    }
+
+    override fun clearLastConsultationDetails() {
+        cacheManager.getCache(CONSULTATION_DETAILS_LATEST_CACHE_NAME)?.clear()
+    }
+
+    override fun getUnansweredUsersConsultationDetails(consultationId: String): ConsultationUpdateCacheResult {
+        return getConsultationDetailsCache(
+            cacheName = CONSULTATION_DETAILS_CACHE_NAME,
+            cacheKey = "$UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX/$consultationId",
+        )
+    }
+
+    override fun initUnansweredUsersConsultationDetails(consultationId: String, details: ConsultationDetailsV2?) {
+        initConsultationDetailsCache(
+            cacheName = CONSULTATION_DETAILS_CACHE_NAME,
+            cacheKey = "$UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX/$consultationId",
+            details = details,
         )
     }
 
@@ -67,7 +78,10 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         consultationId: String,
         consultationUpdateId: String,
     ): ConsultationUpdateCacheResult {
-        return getConsultationDetailsCache("$consultationId/$consultationUpdateId")
+        return getConsultationDetailsCache(
+            cacheName = CONSULTATION_DETAILS_CACHE_NAME,
+            cacheKey = "$consultationId/$consultationUpdateId",
+        )
     }
 
     override fun initConsultationDetails(
@@ -76,15 +90,17 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         details: ConsultationDetailsV2?,
     ) {
         initConsultationDetailsCache(
-            "$consultationId/$consultationUpdateId",
-            details,
+            cacheName = CONSULTATION_DETAILS_CACHE_NAME,
+            cacheKey = "$consultationId/$consultationUpdateId",
+            details = details,
         )
     }
 
     override fun getParticipantCount(consultationId: String): Int? {
         return try {
-            return getShortTermCache()
-                ?.get("$PARTICIPANT_COUNT_PREFIX/$consultationId", String::class.java)
+            return shortTermCacheManager
+                .getCache(PARTICIPANT_COUNT_CACHE_NAME)
+                ?.get(consultationId, String::class.java)
                 ?.toIntOrNull()
         } catch (e: Exception) {
             null
@@ -92,31 +108,33 @@ class ConsultationDetailsV2CacheRepositoryImpl(
     }
 
     override fun initParticipantCount(consultationId: String, participantCount: Int) {
-        getShortTermCache()?.put("$PARTICIPANT_COUNT_PREFIX/$consultationId", participantCount.toString())
+        shortTermCacheManager
+            .getCache(PARTICIPANT_COUNT_CACHE_NAME)
+            ?.put(consultationId, participantCount.toString())
     }
 
     override fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean? {
         return try {
-            getCache()?.get("$HAS_ANSWERED_PREFIX/$consultationId/$userId")?.get().let { it == true }
+            cacheManager.getCache(HAS_ANSWERED_CACHE_NAME)?.get("$consultationId/$userId")?.get().let { it == true }
         } catch (e: Exception) {
             null
         }
     }
 
     override fun initHasAnsweredConsultation(consultationId: String, userId: String, hasAnswered: Boolean) {
-        getCache()?.put("$HAS_ANSWERED_PREFIX/$consultationId/$userId", hasAnswered)
+        cacheManager.getCache(HAS_ANSWERED_CACHE_NAME)?.put("$consultationId/$userId", hasAnswered)
     }
 
     override fun evictHasAnsweredConsultation(consultationId: String, userId: String) {
-        getCache()?.evict("$HAS_ANSWERED_PREFIX/$consultationId/$userId")
+        cacheManager.getCache(HAS_ANSWERED_CACHE_NAME)?.evict("$consultationId/$userId")
     }
 
-    private fun getCache() = cacheManager.getCache(CONSULTATION_DETAILS_CACHE_NAME)
-    private fun getShortTermCache() = shortTermCacheManager.getCache(CONSULTATION_INFO_CACHE_NAME)
-
-    private fun getConsultationDetailsCache(cacheKey: String): ConsultationUpdateCacheResult {
+    private fun getConsultationDetailsCache(
+        cacheName: String,
+        cacheKey: String,
+    ): ConsultationUpdateCacheResult {
         return try {
-            when (val cachedValue = getCache()?.get(cacheKey, String::class.java)) {
+            when (val cachedValue = cacheManager.getCache(cacheName)?.get(cacheKey, String::class.java)) {
                 null -> ConsultationUpdateCacheResult.CacheNotInitialized
                 "" -> ConsultationUpdateCacheResult.ConsultationUpdateNotFound
                 else -> ConsultationUpdateCacheResult.CachedConsultationsDetails(
@@ -133,8 +151,8 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         }
     }
 
-    private fun initConsultationDetailsCache(cacheKey: String, details: ConsultationDetailsV2?) {
-        getCache()?.put(
+    private fun initConsultationDetailsCache(cacheName: String, cacheKey: String, details: ConsultationDetailsV2?) {
+        cacheManager.getCache(cacheName)?.put(
             cacheKey,
             objectMapper.writeValueAsString(details?.let(::toCacheable) ?: ""),
         )

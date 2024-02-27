@@ -3,11 +3,12 @@ package fr.gouv.agora.usecase.consultation.repository
 import fr.gouv.agora.domain.ConsultationDetailsV2
 
 interface ConsultationDetailsV2CacheRepository {
-    fun getUnansweredUsersConsultationDetails(consultationId: String): ConsultationUpdateCacheResult
-    fun initUnansweredUsersConsultationDetails(consultationId: String, details: ConsultationDetailsV2?)
-
     fun getLastConsultationDetails(consultationId: String): ConsultationUpdateCacheResult
     fun initLastConsultationDetails(consultationId: String, details: ConsultationDetailsV2?)
+    fun clearLastConsultationDetails()
+
+    fun getUnansweredUsersConsultationDetails(consultationId: String): ConsultationUpdateCacheResult
+    fun initUnansweredUsersConsultationDetails(consultationId: String, details: ConsultationDetailsV2?)
 
     fun getConsultationDetails(consultationId: String, consultationUpdateId: String): ConsultationUpdateCacheResult
     fun initConsultationDetails(
