@@ -62,10 +62,12 @@ You can also create your owns, but it might be a bit tedious as there are no bac
     <summary>Consultation 1 - Click to expand SQL data</summary>
 
 ```
-INSERT INTO consultations(id, title, end_date, cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
+INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
     'Le petit déjeuner, le rituel sacré de la matinée.',
+    '2023-01-01',
     '2025-01-01',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Breakfast2.jpg/1024px-Breakfast2.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Breakfast2.jpg/1024px-Breakfast2.jpg',
     '6 questions',
     '5 minutes',
@@ -369,7 +371,7 @@ INSERT INTO choixpossible (id, label, ordre, has_open_text_field, question_id, n
     'b8f35a89-0a33-46c4-8601-4136a686a274',
     'Autres',
     11,
-    1
+    1,
     'b16627fa-1a46-43f7-a179-5e72c6105aa6',
     null
 ) ON CONFLICT DO NOTHING;
@@ -1533,100 +1535,100 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     '00000000-0000-0000-0000-000000000000'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     '996436ca-ee69-11ed-a05b-0242ac120003',
     '996436ca-ee69-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-18',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     'f8776dd0-ee69-11ed-a05b-0242ac120003',
     'f8776dd0-ee69-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-20',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     '40c04882-ee6a-11ed-a05b-0242ac120003',
     '40c04882-ee6a-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-20',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     '8171c50e-ee6a-11ed-a05b-0242ac120003',
     '8171c50e-ee6a-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-18',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     '1731a370-ee6b-11ed-a05b-0242ac120003',
     '1731a370-ee6b-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-18',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     '5c5f5460-ee6b-11ed-a05b-0242ac120003',
     '5c5f5460-ee6b-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-18',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     '96e8341c-ee6b-11ed-a05b-0242ac120003',
     '96e8341c-ee6b-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-20',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     'd09f2788-ee6b-11ed-a05b-0242ac120003',
     'd09f2788-ee6b-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-18',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     '1cde43fe-ee6c-11ed-a05b-0242ac120003',
     '1cde43fe-ee6c-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-18',
     null,
     0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO qags_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
+INSERT INTO qag_updates(id, qag_id, user_id, status, moderated_date, reason, should_delete_flag) VALUES (
     '59028e08-ee6c-11ed-a05b-0242ac120003',
     '59028e08-ee6c-11ed-a05b-0242ac120003',
-    '00000000-0000-0000-0000-000000000000'
+    '00000000-0000-0000-0000-000000000000',
     1,
     '2024-02-20',
     null,
