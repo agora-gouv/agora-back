@@ -37,6 +37,7 @@ class ConsultationUpdateHistoryMapper(
                 }
             )
             .replaceLastDoneStatusToCurrent()
+            .reversed()
     }
 
     private fun List<ConsultationUpdateHistoryWithDateDTO>.filterOneItemPerStep(): List<ConsultationUpdateHistoryWithDateDTO> {

@@ -201,9 +201,6 @@ class ConsultationUpdateHistoryMapperTest {
         )
     }
 
-    // When type is update should return type update
-    // When type is response should return type response
-
     @ParameterizedTest(name = "toDomain - {0}")
     @MethodSource("toDomainCases")
     fun `toDomain - should return expected`(
@@ -228,7 +225,7 @@ class ConsultationUpdateHistoryMapperTest {
         val result = mapper.toDomain(historyDTOs)
 
         // Then
-        val expectedResults = historyItems.sortedBy { it.stepNumber }.mapNotNull { historyItem ->
+        val expectedResults = historyItems.sortedByDescending { it.stepNumber }.mapNotNull { historyItem ->
             historyItem.expectedStatus?.let {
                 ConsultationUpdateHistory(
                     stepNumber = historyItem.stepNumber,
