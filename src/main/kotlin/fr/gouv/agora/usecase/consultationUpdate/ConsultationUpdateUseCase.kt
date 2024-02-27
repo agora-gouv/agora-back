@@ -11,6 +11,8 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Service
+@Deprecated("Should use ConsultationUpdateUseCaseV2 instead")
+@Suppress("DEPRECATION")
 class ConsultationUpdateUseCase(
     private val repository: ConsultationUpdateRepository,
     private val clock: Clock,
@@ -40,8 +42,8 @@ class ConsultationUpdateUseCase(
     fun getConsultationInfoUpdates(consultationInfos: List<ConsultationInfo>) =
         consultationInfos.mapNotNull(::getConsultationUpdate)
 
-    fun getConsultationPreviewUpdates(consultatioPreviewInfos: List<ConsultationPreviewInfo>) =
-        consultatioPreviewInfos.mapNotNull(::getConsultationUpdate)
+    fun getConsultationPreviewUpdates(consultationPreviewInfos: List<ConsultationPreviewInfo>) =
+        consultationPreviewInfos.mapNotNull(::getConsultationUpdate)
 
     private fun getConsultationUpdate(
         consultationId: String,

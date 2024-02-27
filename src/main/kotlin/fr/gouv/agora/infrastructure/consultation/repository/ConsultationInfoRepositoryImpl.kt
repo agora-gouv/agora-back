@@ -74,6 +74,7 @@ class ConsultationInfoRepositoryImpl(
         startDate = Date(0),
         endDate = Date(0),
         coverUrl = "",
+        detailsCoverUrl = "",
         questionCount = "",
         estimatedTime = "",
         participantCountGoal = 0,

@@ -36,6 +36,7 @@ internal class ConsultationPreviewOngoingRepositoryImplTest {
         startDate = Date(0),
         endDate = Date(1),
         coverUrl = "dto-cover_url",
+        detailsCoverUrl = "dto-details_cover_url",
         questionCount = "dto-question_count",
         estimatedTime = "dto-estimated_time",
         participantCountGoal = 6401,
