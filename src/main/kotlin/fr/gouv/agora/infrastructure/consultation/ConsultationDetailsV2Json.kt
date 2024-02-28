@@ -114,6 +114,8 @@ data class ConsultationDetailsV2Json(
                 val name: String,
                 @JsonProperty("message")
                 val message: String,
+                @JsonProperty("date")
+                val date: String,
             )
         }
 

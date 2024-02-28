@@ -99,7 +99,7 @@ class ConsultationDetailsV2UseCase(
                     consultation = consultationInfo,
                     thematique = thematique,
                     update = update,
-                    history = emptyList(),
+                    history = null,
                 )
             }
         }.also { details ->

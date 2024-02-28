@@ -120,10 +120,11 @@ class ConsultationUpdateInfoV2Mapper {
     }
 
     private fun buildAuthorInfo(sectionDTO: ConsultationUpdateSectionDTO): Section.Video.AuthorInfo? {
-        if (sectionDTO.authorInfoName == null || sectionDTO.authorInfoMessage == null) return null
+        if (sectionDTO.authorInfoName == null || sectionDTO.authorInfoMessage == null || sectionDTO.videoDate == null) return null
         return Section.Video.AuthorInfo(
             name = sectionDTO.authorInfoName,
             message = sectionDTO.authorInfoMessage,
+            date = sectionDTO.videoDate,
         )
     }
 
