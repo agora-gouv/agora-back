@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
+import fr.gouv.agora.infrastructure.consultation.dto.ConsultationWithUpdateInfoDTO
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -47,5 +48,37 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
         nativeQuery = true
     )
     fun getConsultationAnsweredList(@Param("userId") userId: UUID): List<ConsultationDTO>
+
+    @Query(
+        value = """SELECT id, title, coverUrl, thematiqueId, updateDate, updateLabel
+            FROM (
+                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date) AS consultationRowNumber
+                FROM consultations LEFT JOIN consultation_updates_v2
+                ON consultation_updates_v2.consultation_id = consultations.id
+                WHERE CURRENT_DATE > end_date
+                AND CURRENT_DATE > update_date
+            ) as consultationAndUpdates
+            WHERE consultationRowNumber = 1
+            ORDER BY updateDate DESC
+        """,
+        nativeQuery = true
+    )
+    fun getConsultationFinishedWithUpdateInfo(): List<ConsultationWithUpdateInfoDTO>
+
+    @Query(
+        value = """SELECT id, title, coverUrl, thematiqueId, updateDate, updateLabel
+            FROM (
+                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date) AS consultationRowNumber
+                FROM consultations LEFT JOIN consultation_updates_v2
+                ON consultation_updates_v2.consultation_id = consultations.id
+                AND CURRENT_DATE > update_date
+            ) as consultationAndUpdates
+            WHERE consultationRowNumber = 1
+            AND id IN (SELECT id FROM user_answered_consultation WHERE user_id = :userId)
+            ORDER BY updateDate DESC
+        """,
+        nativeQuery = true
+    )
+    fun getConsultationAnsweredWithUpdateInfo(@Param("userId") userId: UUID): List<ConsultationWithUpdateInfoDTO>
 
 }
