@@ -28,6 +28,7 @@ data class ConsultationUpdateSectionDTO(
     val authorInfoName: String?,
     @Column(columnDefinition = "TEXT")
     val authorInfoMessage: String?,
+    val videoDate: Date?,
     @Column(columnDefinition = "TEXT")
     val videoTranscription: String?,
 ) {
@@ -43,6 +44,6 @@ data class ConsultationUpdateSectionDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , consultationUpdateId = $consultationUpdateId , type = $type , ordre = $ordre , isPreview = $isPreview , title = $title , description = $description , url = $url , videoWidth = $videoWidth , videoHeight = $videoHeight , authorInfoName = $authorInfoName , authorInfoMessage = $authorInfoMessage , videoTranscription = $videoTranscription )"
+        return this::class.simpleName + "(id = $id , consultationUpdateId = $consultationUpdateId , type = $type , ordre = $ordre , isPreview = $isPreview , title = $title , description = $description , url = $url , videoWidth = $videoWidth , videoHeight = $videoHeight , authorInfoName = $authorInfoName , authorInfoMessage = $authorInfoMessage , videoDate = $videoDate , videoTranscription = $videoTranscription )"
     }
 }

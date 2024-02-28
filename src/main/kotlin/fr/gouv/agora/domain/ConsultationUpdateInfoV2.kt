@@ -40,6 +40,7 @@ data class ConsultationUpdateInfoV2(
             data class AuthorInfo(
                 val name: String,
                 val message: String,
+                val date: Date,
             )
         }
 

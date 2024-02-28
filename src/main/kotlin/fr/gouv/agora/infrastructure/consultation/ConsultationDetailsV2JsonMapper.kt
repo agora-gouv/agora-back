@@ -165,6 +165,7 @@ class ConsultationDetailsV2JsonMapper(
                     Section.Video.AuthorInfo(
                         name = authorInfo.name,
                         message = authorInfo.message,
+                        date = dateMapper.toFormattedDate(authorInfo.date),
                     )
                 },
                 transcription = section.transcription,
