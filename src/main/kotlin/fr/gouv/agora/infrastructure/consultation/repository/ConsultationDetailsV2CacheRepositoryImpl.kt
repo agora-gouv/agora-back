@@ -115,7 +115,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
 
     override fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean? {
         return try {
-            cacheManager.getCache(HAS_ANSWERED_CACHE_NAME)?.get("$consultationId/$userId")?.get().let { it == true }
+            cacheManager.getCache(HAS_ANSWERED_CACHE_NAME)?.get("$consultationId/$userId")?.get()?.let { it == true }
         } catch (e: Exception) {
             null
         }

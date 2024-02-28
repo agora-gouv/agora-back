@@ -25,11 +25,10 @@ class UserAnsweredConsultationRepositoryImpl(
                     ?.let { consultationUUID ->
                         databaseRepository.hasAnsweredConsultation(
                             consultationId = consultationUUID,
-                            userId = userUUID
+                            userId = userUUID,
                         ) >= 1
                     } ?: false
-            }
-            ?: false
+            } ?: false
     }
 
     override fun hasAnsweredConsultations(consultationIds: List<String>, userId: String): Map<String, Boolean> {
