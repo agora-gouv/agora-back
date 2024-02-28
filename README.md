@@ -1349,9 +1349,9 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     7,
     0,
     null,
-    '<body><i>Joff-tchoff-tchoffo-tchoffo-tchoff!
+    '<i>Joff-tchoff-tchoffo-tchoffo-tchoff!
     Tchoff-tchoff-tchoffo-tchoffo-tchoff!
-    Joff-tchoff-tchoffo-tchoffo-tchoff!</i> - Serge</body>',
+    Joff-tchoff-tchoffo-tchoffo-tchoff!</i> - Serge',
     null,
     null,
     null,
