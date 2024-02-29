@@ -34,12 +34,24 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 7
+            AND qags.id NOT IN (SELECT DISTINCT qag_id FROM responses_qag)
             GROUP BY qags.id
             ORDER BY postDate DESC
-            LIMIT 6
         """, nativeQuery = true
     )
-    fun getQagResponses(): List<QagWithSupportCountDTO>
+    fun getQagsWithoutResponse(): List<QagWithSupportCountDTO>
+
+    @Query(
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE qags.status = 7
+            AND qags.id IN (SELECT DISTINCT qag_id FROM responses_qag)
+            GROUP BY qags.id
+            ORDER BY postDate DESC
+            LIMIT :qagLimit
+        """, nativeQuery = true
+    )
+    fun getLatestQagsWithResponses(@Param("qagLimit") qagLimit: Int): List<QagWithSupportCountDTO>
 
     @Query(
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
