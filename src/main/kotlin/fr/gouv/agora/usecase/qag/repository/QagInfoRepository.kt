@@ -6,7 +6,8 @@ import java.util.*
 
 interface QagInfoRepository {
     fun getQagInfoToModerateList(): List<QagInfo>
-    fun getQagResponsesWithSupportCount(): List<QagInfoWithSupportCount>
+    fun getQagSelectedWithoutResponsesWithSupportCount(): List<QagInfoWithSupportCount>
+    fun getQagWithResponses(): List<QagInfo>
     fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getLatestQags(thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getSupportedQags(userId: String, thematiqueId: String?): List<QagInfoWithSupportCount>

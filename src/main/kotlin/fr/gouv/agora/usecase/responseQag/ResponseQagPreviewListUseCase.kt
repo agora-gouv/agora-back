@@ -24,21 +24,26 @@ class ResponseQagPreviewListUseCase(
     }
 
     private fun buildResponseQagPreviewList(): ResponseQagPreviewList {
-        val qags = qagInfoRepository.getQagResponsesWithSupportCount()
-        if (qags.isEmpty()) return ResponseQagPreviewList(incomingResponses = emptyList(), responses = emptyList())
+        val qagsWithoutResponses = qagInfoRepository.getQagSelectedWithoutResponsesWithSupportCount()
+        val qagsWithResponses = qagInfoRepository.getQagWithResponses()
+
+        if (qagsWithoutResponses.isEmpty() && qagsWithResponses.isEmpty()) return ResponseQagPreviewList(
+            incomingResponses = emptyList(),
+            responses = emptyList(),
+        )
 
         val thematiques = thematiqueRepository.getThematiqueList()
-        val responses = responseQagRepository.getResponsesQag(qags.map { it.id })
+        val responses = if (qagsWithResponses.isNotEmpty()) {
+            responseQagRepository.getResponsesQag(qagsWithResponses.map { it.id })
+        } else emptyList()
 
         return ResponseQagPreviewList(
-            incomingResponses = qags.mapNotNull { qag ->
+            incomingResponses = qagsWithoutResponses.mapNotNull { qag ->
                 thematiques.find { thematique -> thematique.id == qag.thematiqueId }?.let { thematique ->
-                    if (responses.none { responseQag -> responseQag.qagId == qag.id }) {
-                        mapper.toIncomingResponsePreview(qag = qag, thematique = thematique)
-                    } else null
+                    mapper.toIncomingResponsePreview(qag = qag, thematique = thematique)
                 }
             },
-            responses = qags.mapNotNull { qag ->
+            responses = qagsWithResponses.mapNotNull { qag ->
                 thematiques.find { thematique -> thematique.id == qag.thematiqueId }?.let { thematique ->
                     responses.find { responseQag -> responseQag.qagId == qag.id }?.let { responseQag ->
                         mapper.toResponseQagPreview(qag = qag, thematique = thematique, responseQag = responseQag)
