@@ -14,23 +14,16 @@ class QagInfoRepositoryImpl(
     private val mapper: QagInfoMapper,
 ) : QagInfoRepository {
 
-    companion object {
-        private const val MAX_QAG_RESPONSES_COUNT = 6
-    }
-
     override fun getQagInfoToModerateList(): List<QagInfo> {
         return databaseRepository.getQagToModerateList().map(mapper::toDomain)
     }
 
-    override fun getQagResponsesWithSupportCount(): List<QagInfoWithSupportCount> {
-        val qagsWithoutResponse = databaseRepository.getQagsWithoutResponse()
-        val qagsWithResponse = databaseRepository.getLatestQagsWithResponses(
-            qagLimit = max(
-                1,
-                MAX_QAG_RESPONSES_COUNT - qagsWithoutResponse.size,
-            )
-        )
-        return (qagsWithoutResponse + qagsWithResponse).map(mapper::toDomain)
+    override fun getQagSelectedWithoutResponsesWithSupportCount(): List<QagInfoWithSupportCount> {
+        return databaseRepository.getQagsWithoutResponse().map(mapper::toDomain)
+    }
+
+    override fun getQagWithResponses(): List<QagInfo> {
+        return databaseRepository.getLatestQagsWithResponses().map(mapper::toDomain)
     }
 
     override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
