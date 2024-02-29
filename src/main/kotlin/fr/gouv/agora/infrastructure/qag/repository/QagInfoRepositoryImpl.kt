@@ -6,6 +6,7 @@ import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.qag.repository.*
 import org.springframework.stereotype.Component
 import java.util.*
+import kotlin.math.max
 
 @Component
 class QagInfoRepositoryImpl(
@@ -13,12 +14,23 @@ class QagInfoRepositoryImpl(
     private val mapper: QagInfoMapper,
 ) : QagInfoRepository {
 
+    companion object {
+        private const val MAX_QAG_RESPONSES_COUNT = 6
+    }
+
     override fun getQagInfoToModerateList(): List<QagInfo> {
         return databaseRepository.getQagToModerateList().map(mapper::toDomain)
     }
 
     override fun getQagResponsesWithSupportCount(): List<QagInfoWithSupportCount> {
-        return databaseRepository.getQagResponses().map(mapper::toDomain)
+        val qagsWithoutResponse = databaseRepository.getQagsWithoutResponse()
+        val qagsWithResponse = databaseRepository.getLatestQagsWithResponses(
+            qagLimit = max(
+                1,
+                MAX_QAG_RESPONSES_COUNT - qagsWithoutResponse.size,
+            )
+        )
+        return (qagsWithoutResponse + qagsWithResponse).map(mapper::toDomain)
     }
 
     override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
