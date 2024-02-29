@@ -52,14 +52,14 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     @Query(
         value = """SELECT id, title, coverUrl, thematiqueId, updateDate, updateLabel
             FROM (
-                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date) AS consultationRowNumber
+                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
                 FROM consultations LEFT JOIN consultation_updates_v2
                 ON consultation_updates_v2.consultation_id = consultations.id
                 WHERE CURRENT_DATE > end_date
                 AND CURRENT_DATE > update_date
+                ORDER BY updateDate DESC
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
-            ORDER BY updateDate DESC
         """,
         nativeQuery = true
     )
@@ -68,7 +68,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     @Query(
         value = """SELECT id, title, coverUrl, thematiqueId, updateDate, updateLabel
             FROM (
-                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date) AS consultationRowNumber
+                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
                 FROM consultations LEFT JOIN consultation_updates_v2
                 ON consultation_updates_v2.consultation_id = consultations.id
                 AND CURRENT_DATE > update_date
