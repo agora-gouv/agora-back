@@ -4,30 +4,27 @@ import fr.gouv.agora.domain.ConsultationPreviewAnswered
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.domain.ConsultationPreviewPage
-import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
-import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
+import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
+import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
-import java.time.Clock
-import java.time.LocalDateTime
 
 @Service
 class ConsultationPreviewUseCase(
-    private val clock: Clock,
-    private val consultationListUseCase: ConsultationListUseCase,
+    private val consultationInfoRepository: ConsultationInfoRepository,
+    private val thematiqueRepository: ThematiqueRepository,
     private val ongoingMapper: ConsultationPreviewOngoingMapper,
     private val finishedMapper: ConsultationPreviewFinishedMapper,
-    private val answeredMapper: ConsultationPreviewAnsweredMapper,
-    private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
+    private val cacheRepository: ConsultationPreviewPageRepository,
 ) {
 
     fun getConsultationPreviewPage(userId: String): ConsultationPreviewPage {
-        // TODO: tests
-        val ongoingList = consultationPreviewPageRepository.getConsultationPreviewOngoingList(userId)
-        val finishedList = consultationPreviewPageRepository.getConsultationPreviewFinishedList()
-        val answeredList = consultationPreviewPageRepository.getConsultationPreviewAnsweredList(userId)
+        val ongoingList = cacheRepository.getConsultationPreviewOngoingList()
+        val finishedList = cacheRepository.getConsultationPreviewFinishedList()
+        val answeredList = cacheRepository.getConsultationPreviewAnsweredList(userId)
+            ?: buildAnsweredList(userId)
 
-        if (ongoingList != null && finishedList != null && answeredList != null) {
+        if (ongoingList != null && finishedList != null) {
             return ConsultationPreviewPage(
                 ongoingList = ongoingList,
                 finishedList = finishedList,
@@ -35,91 +32,59 @@ class ConsultationPreviewUseCase(
             )
         }
 
-        val dateNow = LocalDateTime.now(clock)
-        val consultations = consultationListUseCase.getConsultationList(userId)
         return ConsultationPreviewPage(
-            ongoingList = ongoingList ?: buildOngoingList(userId, dateNow, consultations),
-            finishedList = finishedList ?: buildFinishedList(dateNow, consultations).takeIf { it.isNotEmpty() }
-            ?: buildFinishedFromOngoingList(dateNow, consultations),
-            answeredList = answeredList ?: buildAnsweredList(userId, consultations),
+            ongoingList = (ongoingList ?: buildOngoingList()).filterNot { ongoingConsultation ->
+                answeredList.any { answeredConsultation -> answeredConsultation.id == ongoingConsultation.id }
+            },
+            finishedList = finishedList ?: buildFinishedList(),
+            answeredList = answeredList,
         )
     }
 
-    private fun buildOngoingList(
-        userId: String,
-        dateNow: LocalDateTime,
-        consultations: List<ConsultationWithThematiqueUpdateAndAnswered>,
-    ): List<ConsultationPreviewOngoing> {
-        return consultations
-            .filter { consultation -> isOngoing(dateNow, consultation.info) && !consultation.hasAnswered }
-            .map { consultation ->
-                ongoingMapper.toConsultationPreviewOngoing(consultation.info, consultation.thematique)
+    private fun buildOngoingList(): List<ConsultationPreviewOngoing> {
+        val thematiqueList = thematiqueRepository.getThematiqueList()
+        return consultationInfoRepository.getOngoingConsultations()
+            .mapNotNull { consultationInfo ->
+                thematiqueList.find { thematique -> consultationInfo.thematiqueId == thematique.id }
+                    ?.let { thematique ->
+                        ongoingMapper.toConsultationPreviewOngoing(
+                            consultationInfo = consultationInfo,
+                            thematique = thematique,
+                        )
+                    }
+            }.also { ongoingList ->
+                cacheRepository.insertConsultationPreviewOngoingList(ongoingList)
             }
-            .also { consultationPreviewPageRepository.insertConsultationPreviewOngoingList(userId, it) }
     }
 
-    private fun buildFinishedList(
-        dateNow: LocalDateTime,
-        consultations: List<ConsultationWithThematiqueUpdateAndAnswered>,
-    ): List<ConsultationPreviewFinished> {
-        return consultations
-            .filter { consultation -> isFinished(dateNow, consultation.info) }
-            .map { consultation ->
-                finishedMapper.toConsultationPreviewFinished(
-                    consultationInfo = consultation.info,
-                    consultationUpdate = consultation.update,
-                    thematique = consultation.thematique
-                )
-            }
-            .also { consultationPreviewPageRepository.insertConsultationPreviewFinishedList(it) }
+    private fun buildFinishedList(): List<ConsultationPreviewFinished> {
+        val thematiqueList = thematiqueRepository.getThematiqueList()
+        return consultationInfoRepository.getFinishedConsultations().mapNotNull { consultationWithUpdateInfo ->
+            thematiqueList.find { thematique -> consultationWithUpdateInfo.thematiqueId == thematique.id }
+                ?.let { thematique ->
+                    finishedMapper.toConsultationPreviewFinished(
+                        consultationInfo = consultationWithUpdateInfo,
+                        thematique = thematique,
+                    )
+                }
+        }.also { finishedList ->
+            cacheRepository.insertConsultationPreviewFinishedList(finishedList)
+        }
     }
 
-    private fun buildFinishedFromOngoingList(
-        dateNow: LocalDateTime,
-        consultations: List<ConsultationWithThematiqueUpdateAndAnswered>,
-    ): List<ConsultationPreviewFinished> {
-        return consultations
-            .filter { consultation -> isOngoing(dateNow, consultation.info) }
-            .map { consultation ->
-                finishedMapper.toConsultationPreviewFinished(
-                    consultationInfo = consultation.info,
-                    consultationUpdate = consultation.update,
-                    thematique = consultation.thematique,
-                )
-            }
-            .also { consultationPreviewPageRepository.insertConsultationPreviewFinishedList(it) }
+    private fun buildAnsweredList(userId: String): List<ConsultationPreviewAnswered> {
+        val thematiqueList = thematiqueRepository.getThematiqueList()
+        return consultationInfoRepository.getAnsweredConsultations(userId).mapNotNull { consultationWithUpdateInfo ->
+            thematiqueList.find { thematique -> consultationWithUpdateInfo.thematiqueId == thematique.id }
+                ?.let { thematique ->
+                    finishedMapper.toConsultationPreviewAnswered(
+                        consultationInfo = consultationWithUpdateInfo,
+                        thematique = thematique,
+                    )
+                }
+        }.also { answeredList ->
+            cacheRepository.insertConsultationPreviewAnsweredList(userId, answeredList)
+        }
     }
-
-    private fun buildAnsweredList(
-        userId: String,
-        consultations: List<ConsultationWithThematiqueUpdateAndAnswered>,
-    ): List<ConsultationPreviewAnswered> {
-        return consultations
-            .filter { consultation -> consultation.hasAnswered }
-            .map { consultation ->
-                answeredMapper.toConsultationPreviewAnswered(
-                    consultationInfo = consultation.info,
-                    consultationUpdate = consultation.update,
-                    thematique = consultation.thematique,
-                )
-            }
-            .also { consultationPreviewPageRepository.insertConsultationPreviewAnsweredList(userId, it) }
-    }
-
-    private fun isOngoing(dateNow: LocalDateTime, consultationInfo: ConsultationInfo) =
-        isOngoing(
-            dateNow = dateNow,
-            startDate = consultationInfo.startDate.toLocalDateTime(),
-            endDate = consultationInfo.endDate.toLocalDateTime(),
-        )
-
-    private fun isOngoing(dateNow: LocalDateTime, startDate: LocalDateTime, endDate: LocalDateTime) =
-        (dateNow.isAfter(startDate) || dateNow == startDate) && dateNow.isBefore(endDate)
-
-    private fun isFinished(dateNow: LocalDateTime, consultationInfo: ConsultationInfo) =
-        isFinished(dateNow = dateNow, endDate = consultationInfo.endDate.toLocalDateTime())
-
-    private fun isFinished(dateNow: LocalDateTime, endDate: LocalDateTime) =
-        dateNow == endDate || dateNow.isAfter(endDate)
 
 }

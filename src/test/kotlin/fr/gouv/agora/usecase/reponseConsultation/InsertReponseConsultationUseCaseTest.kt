@@ -209,8 +209,7 @@ internal class InsertReponseConsultationUseCaseTest {
             .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
-        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
-        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
+        then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
             consultationResponses = consultationResponsesSanitized,
@@ -290,8 +289,7 @@ internal class InsertReponseConsultationUseCaseTest {
             .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
-        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
-        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
+        then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
             consultationResponses = consultationResponsesSanitized,
@@ -363,8 +361,7 @@ internal class InsertReponseConsultationUseCaseTest {
             .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
-        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewOngoingList(userId = "userId")
-        then(consultationPreviewPageRepository).should(times(1)).evictConsultationPreviewAnsweredList(userId = "userId")
+        then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
             consultationResponses = listOf(addedResponseUniqueChoice),

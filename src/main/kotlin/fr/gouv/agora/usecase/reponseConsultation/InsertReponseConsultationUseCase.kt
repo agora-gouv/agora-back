@@ -63,7 +63,6 @@ class InsertReponseConsultationUseCase(
             questionList = questionList,
         )
         consultationPreviewAnsweredRepository.deleteConsultationAnsweredListFromCache(userId)
-        consultationPreviewPageRepository.evictConsultationPreviewOngoingList(userId)
         consultationPreviewPageRepository.evictConsultationPreviewAnsweredList(userId)
         consultationDetailsV2CacheRepository.evictHasAnsweredConsultation(
             consultationId = consultationId,

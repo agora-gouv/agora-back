@@ -24,6 +24,7 @@ data class ConsultationPreviewFinished(
     override val coverUrl: String,
     override val thematique: Thematique,
     val step: ConsultationStatus,
+    val updateLabel: String?,
 ) : ConsultationPreview()
 
 data class ConsultationPreviewAnswered(
@@ -32,5 +33,6 @@ data class ConsultationPreviewAnswered(
     override val coverUrl: String,
     override val thematique: Thematique,
     val step: ConsultationStatus,
+    val updateLabel: String?,
 ) : ConsultationPreview()
 
