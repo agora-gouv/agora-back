@@ -504,9 +504,9 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
-    null,
     '🙌',
     '<body><b>Merci pour votre participation</b> à cette consultation !</body>',
+    null,
     null,
     1,
     null,
@@ -594,10 +594,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
-    null,
     '🏁',
     '<body><b>Cette consultation est maintenant terminée.</b>
     Merci à tous !</body>',
+    null,
     null,
     1,
     null,
@@ -1031,9 +1031,9 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
-    null,
     '🙌',
     '<body><b>Merci pour votre participation</b> à cette consultation !</body>',
+    null,
     null,
     1,
     null,
@@ -1121,10 +1121,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
-    null,
     '🏁',
     '<body><b>Cette consultation est maintenant terminée.</b>
     Merci à tous !</body>',
+    null,
     null,
     1,
     null,
@@ -1207,8 +1207,8 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'fba95928-dbf4-4456-995c-f423e81da7aa',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
-    'Synthèse disponible',
-    '2023-10-14 23:59:59.999',
+    'Synthèse disponible !',
+    '2024-02-25 18:00:00',
     'Les résultats de la Consultation {title} sont disponibles !
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
