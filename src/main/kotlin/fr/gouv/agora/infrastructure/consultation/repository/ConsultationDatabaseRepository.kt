@@ -74,7 +74,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
                 AND CURRENT_DATE > update_date
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
-            AND id IN (SELECT id FROM user_answered_consultation WHERE user_id = :userId)
+            AND id IN (SELECT consultation_id FROM user_answered_consultation WHERE user_id = :userId)
             ORDER BY updateDate DESC
         """,
         nativeQuery = true
