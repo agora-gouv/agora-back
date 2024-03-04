@@ -1,32 +1,22 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
-import fr.gouv.agora.domain.ConsultationPreviewFinishedInfo
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewFinishedRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.springframework.stereotype.Component
 
 @Component
+@Suppress("unused")
 class ConsultationPreviewFinishedRepositoryImpl(
-    private val cacheRepository: ConsultationFinishedCacheRepository,
     private val databaseRepository: ConsultationDatabaseRepository,
-    private val mapper: ConsultationPreviewFinishedInfoMapper,
+    private val mapper: ConsultationInfoMapper,
 ) : ConsultationPreviewFinishedRepository {
 
-    override fun getConsultationFinishedList(): List<ConsultationPreviewFinishedInfo> {
-        return when (val cacheResult = cacheRepository.getConsultationFinishedList()) {
-            ConsultationFinishedCacheRepository.CacheResult.CacheNotInitialized -> getConsultationFinishedFromDatabase()
-            is ConsultationFinishedCacheRepository.CacheResult.CachedConsultationFinishedList -> cacheResult.consultationFinishedListDTO
-        }.map(mapper::toDomain)
+    override fun getConsultationFinishedCount(): Int {
+        return databaseRepository.getConsultationFinishedCount()
     }
 
-    override fun clearCache() {
-        cacheRepository.clearCache()
-    }
-
-    private fun getConsultationFinishedFromDatabase(): List<ConsultationDTO> {
-        return databaseRepository.getConsultationFinishedList().also { consultationDTOList ->
-            cacheRepository.insertConsultationFinishedList(consultationDTOList)
-        }
+    override fun getConsultationFinishedList(offset: Int): List<ConsultationWithUpdateInfo> {
+        return databaseRepository.getConsultationsFinishedWithUpdateInfo(offset).map(mapper::toDomain)
     }
 
 }

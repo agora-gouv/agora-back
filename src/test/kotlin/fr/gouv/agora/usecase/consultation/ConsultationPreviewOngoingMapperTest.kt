@@ -2,13 +2,14 @@ package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
-import fr.gouv.agora.domain.ConsultationPreviewOngoingInfo
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
+import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -23,15 +24,6 @@ internal class ConsultationPreviewOngoingMapperTest {
 
     @Autowired
     private lateinit var mapper: ConsultationPreviewOngoingMapper
-
-    private val consultationPreviewOngoingInfo = ConsultationPreviewOngoingInfo(
-        id = "consultationId",
-        title = "title",
-        coverUrl = "coverUrl",
-        thematiqueId = "thematiqueId",
-        startDate = Date(0),
-        endDate = Date(1),
-    )
 
     private val thematique = mock(Thematique::class.java)
 
@@ -142,11 +134,11 @@ internal class ConsultationPreviewOngoingMapperTest {
         // Given
         mapper = ConsultationPreviewOngoingMapper(clock = TestUtils.getFixedClock(serverDate))
         val endDate = consultationEndDate.toDate()
-        val consultationPreviewOngoingInfo = consultationPreviewOngoingInfo.copy(endDate = endDate)
+        val consultationInfo = mockConsultationInfo(endDate = endDate)
 
         // When
         val result = mapper.toConsultationPreviewOngoing(
-            consultationPreviewOngoingInfo = consultationPreviewOngoingInfo,
+            consultationInfo = consultationInfo,
             thematique = thematique,
         )
 
@@ -157,6 +149,17 @@ internal class ConsultationPreviewOngoingMapperTest {
                 highlightLabel = expectedHighlightLabel,
             )
         )
+    }
+
+    private fun mockConsultationInfo(endDate: Date): ConsultationInfo {
+        return mock(ConsultationInfo::class.java).also {
+            given(it.id).willReturn("consultationId")
+            given(it.title).willReturn("title")
+            given(it.coverUrl).willReturn("coverUrl")
+            given(it.thematiqueId).willReturn("thematiqueId")
+            given(it.startDate).willReturn(Date(0))
+            given(it.endDate).willReturn(endDate)
+        }
     }
 
 }

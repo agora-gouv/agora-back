@@ -38,6 +38,8 @@ data class ConsultationFinishedJson(
     val thematique: ThematiqueNoIdJson,
     @JsonProperty("step")
     val step: Int,
+    @JsonProperty("updateLabel")
+    val updateLabel: String?,
 )
 
 data class ConsultationAnsweredJson(
@@ -51,4 +53,6 @@ data class ConsultationAnsweredJson(
     val thematique: ThematiqueNoIdJson,
     @JsonProperty("step")
     val step: Int,
+    @JsonProperty("updateLabel")
+    val updateLabel: String?,
 )

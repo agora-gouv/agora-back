@@ -18,6 +18,12 @@ class UserAnsweredConsultationRepositoryImpl(
         } ?: 0
     }
 
+    override fun getAnsweredConsultationIds(userId: String): List<String> {
+        return userId.toUuidOrNull()?.let { userUUID ->
+            databaseRepository.getAnsweredConsultationIds(userUUID).map { it.toString() }
+        } ?: emptyList()
+    }
+
     override fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean {
         return userId.toUuidOrNull()
             ?.let { userUUID ->

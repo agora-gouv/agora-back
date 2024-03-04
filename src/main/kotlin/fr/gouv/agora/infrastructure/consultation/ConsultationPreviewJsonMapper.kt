@@ -37,7 +37,8 @@ class ConsultationPreviewJsonMapper(
                     title = domain.title,
                     coverUrl = domain.coverUrl,
                     thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
-                    step = statusToJson(domain.step)
+                    step = statusToJson(domain.step),
+                    updateLabel = domain.updateLabel,
                 )
             },
             answeredList = domainAnsweredList.map { domain ->
@@ -46,7 +47,8 @@ class ConsultationPreviewJsonMapper(
                     title = domain.title,
                     coverUrl = domain.coverUrl,
                     thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
-                    step = statusToJson(domain.step)
+                    step = statusToJson(domain.step),
+                    updateLabel = domain.updateLabel,
                 )
             }
         )

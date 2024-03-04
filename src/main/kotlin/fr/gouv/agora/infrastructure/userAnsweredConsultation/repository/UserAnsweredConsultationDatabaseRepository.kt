@@ -11,9 +11,18 @@ import java.util.*
 interface UserAnsweredConsultationDatabaseRepository : JpaRepository<UserAnsweredConsultationDTO, UUID> {
 
     @Query(
-        value = "SELECT count(DISTINCT user_id) FROM user_answered_consultation WHERE consultation_id = :consultationId", nativeQuery = true
+        value = "SELECT count(DISTINCT user_id) FROM user_answered_consultation WHERE consultation_id = :consultationId",
+        nativeQuery = true
     )
     fun getParticipantCount(@Param("consultationId") consultationId: UUID): Int
+
+    @Query(
+        value = """SELECT DISTINCT consultation_id FROM user_answered_consultation
+            WHERE user_id = :userId
+        """,
+        nativeQuery = true,
+    )
+    fun getAnsweredConsultationIds(@Param("userId") userId: UUID): List<UUID>
 
     @Query(
         value = """SELECT count(DISTINCT user_id) FROM user_answered_consultation

@@ -5,7 +5,6 @@ import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 @Suppress("unused")
@@ -17,27 +16,27 @@ class ConsultationPreviewPageRepositoryImpl(
     companion object {
         private const val CONSULTATION_PREVIEW_PAGE_CACHE_NAME = "consultationPreviewPage"
 
-        private const val ONGOING_CACHE_PREFIX = "ongoing"
+        private const val ONGOING_CACHE = "ongoing"
         private const val FINISHED_CACHE_KEY = "finished"
         private const val ANSWERED_CACHE_PREFIX = "answered"
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun getConsultationPreviewOngoingList(userId: String): List<ConsultationPreviewOngoing>? {
+    override fun getConsultationPreviewOngoingList(): List<ConsultationPreviewOngoing>? {
         return try {
-            val modelList = getCache()?.get("$ONGOING_CACHE_PREFIX/$userId", List::class.java) as? List<String>
+            val modelList = getCache()?.get(ONGOING_CACHE, List::class.java) as? List<String>
             return modelList?.map { objectMapper.readValue(it, ConsultationPreviewOngoing::class.java) }
         } catch (e: Exception) {
             null
         }
     }
 
-    override fun insertConsultationPreviewOngoingList(userId: String, ongoingList: List<ConsultationPreviewOngoing>) {
-        getCache()?.put("$ONGOING_CACHE_PREFIX/$userId", ongoingList.map { objectMapper.writeValueAsString(it) })
+    override fun insertConsultationPreviewOngoingList(ongoingList: List<ConsultationPreviewOngoing>) {
+        getCache()?.put(ONGOING_CACHE, ongoingList.map { objectMapper.writeValueAsString(it) })
     }
 
-    override fun evictConsultationPreviewOngoingList(userId: String) {
-        getCache()?.evict("$ONGOING_CACHE_PREFIX/$userId")
+    override fun evictConsultationPreviewOngoingList() {
+        getCache()?.evict(ONGOING_CACHE)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -61,7 +60,7 @@ class ConsultationPreviewPageRepositoryImpl(
     @Suppress("UNCHECKED_CAST")
     override fun getConsultationPreviewAnsweredList(userId: String): List<ConsultationPreviewAnswered>? {
         return try {
-            val modelList = getCache()?.get(ANSWERED_CACHE_PREFIX, List::class.java) as? List<String>
+            val modelList = getCache()?.get("$ANSWERED_CACHE_PREFIX$userId", List::class.java) as? List<String>
             return modelList?.map { objectMapper.readValue(it, ConsultationPreviewAnswered::class.java) }
         } catch (e: Exception) {
             null

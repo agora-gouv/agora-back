@@ -1,15 +1,15 @@
 package fr.gouv.agora.usecase.profile
 
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
 import fr.gouv.agora.usecase.profile.AskDemographicInfoState.*
 import fr.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
+import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
 class AskForDemographicInfoUseCase(
-    private val consultationAnsweredRepository: ConsultationPreviewAnsweredRepository,
+    private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val profileRepository: ProfileRepository,
     private val demographicInfoAskDateRepository: DemographicInfoAskDateRepository,
 ) {
@@ -27,10 +27,12 @@ class AskForDemographicInfoUseCase(
                 demographicInfoAskDateRepository.insertDate(userId)
                 true
             }
+
             ASK_DEMOGRAPHIC_INFO_DELAY_FINISHED -> {
                 demographicInfoAskDateRepository.insertDate(userId)
                 true
             }
+
             ASK_DEMOGRAPHIC_INFO_DELAY_UNFINISHED -> false
         }
     }
@@ -39,7 +41,7 @@ class AskForDemographicInfoUseCase(
         if (profileRepository.getProfile(userId) != null) {
             return HAS_DEMOGRAPHIC_INFO
         }
-        if (consultationAnsweredRepository.getConsultationAnsweredList(userId).size < MINIMUM_CONSULTATION_ANSWERED_REQUIREMENT) {
+        if (userAnsweredConsultationRepository.getAnsweredConsultationIds(userId).size < MINIMUM_CONSULTATION_ANSWERED_REQUIREMENT) {
             return HAS_NOT_ANSWERED_ENOUGH_CONSULTATIONS
         }
 

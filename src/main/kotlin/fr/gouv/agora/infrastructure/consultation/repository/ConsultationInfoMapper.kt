@@ -1,7 +1,9 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
+import fr.gouv.agora.infrastructure.consultation.dto.ConsultationWithUpdateInfoDTO
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
+import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.springframework.stereotype.Component
 
 @Component
@@ -20,6 +22,16 @@ class ConsultationInfoMapper {
         description = dto.description,
         tipsDescription = dto.tipsDescription,
         thematiqueId = dto.thematiqueId.toString(),
+    )
+
+    fun toDomain(dto: ConsultationWithUpdateInfoDTO) = ConsultationWithUpdateInfo(
+        id = dto.id.toString(),
+        title = dto.title,
+        coverUrl = dto.coverUrl,
+        thematiqueId = dto.thematiqueId.toString(),
+        endDate = dto.endDate,
+        updateDate = dto.updateDate,
+        updateLabel = dto.updateLabel,
     )
 
 }

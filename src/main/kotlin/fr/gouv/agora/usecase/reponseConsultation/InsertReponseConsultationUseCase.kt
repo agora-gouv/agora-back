@@ -5,7 +5,6 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
@@ -20,7 +19,6 @@ import java.time.LocalDateTime
 class InsertReponseConsultationUseCase(
     private val clock: Clock,
     private val contentSanitizer: ContentSanitizer,
-    private val consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository,
     private val insertReponseConsultationRepository: InsertReponseConsultationRepository,
     private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val questionRepository: QuestionRepository,
@@ -62,8 +60,6 @@ class InsertReponseConsultationUseCase(
             consultationResponses = consultationResponses,
             questionList = questionList,
         )
-        consultationPreviewAnsweredRepository.deleteConsultationAnsweredListFromCache(userId)
-        consultationPreviewPageRepository.evictConsultationPreviewOngoingList(userId)
         consultationPreviewPageRepository.evictConsultationPreviewAnsweredList(userId)
         consultationDetailsV2CacheRepository.evictHasAnsweredConsultation(
             consultationId = consultationId,

@@ -1,16 +1,15 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
-import fr.gouv.agora.infrastructure.consultation.repository.ConsultationInfoRepositoryImpl.Companion.CONSULTATION_CACHE_NAME
+import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.springframework.cache.CacheManager
-import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-@CacheConfig(cacheNames = [CONSULTATION_CACHE_NAME])
 class ConsultationInfoRepositoryImpl(
     private val databaseRepository: ConsultationDatabaseRepository,
     private val consultationInfoMapper: ConsultationInfoMapper,
@@ -22,12 +21,19 @@ class ConsultationInfoRepositoryImpl(
         private const val CONSULTATION_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
-    override fun getConsultations(): List<ConsultationInfo> {
-        return databaseRepository.getConsultations().map(consultationInfoMapper::toDomain)
+    override fun getOngoingConsultations(): List<ConsultationInfo> {
+        return databaseRepository.getConsultationOngoingList().map(consultationInfoMapper::toDomain)
     }
 
-    override fun getConsultationsToAggregate(): List<ConsultationInfo> {
-        return databaseRepository.getConsultationsToAggregate().map(consultationInfoMapper::toDomain)
+    override fun getFinishedConsultations(): List<ConsultationWithUpdateInfo> {
+        return databaseRepository.getConsultationsFinishedPreviewWithUpdateInfo().map(consultationInfoMapper::toDomain)
+    }
+
+    override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {
+        return userId.toUuidOrNull()?.let { userUUID ->
+            databaseRepository.getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
+                .map(consultationInfoMapper::toDomain)
+        } ?: emptyList()
     }
 
     override fun getConsultation(consultationId: String): ConsultationInfo? {
@@ -45,6 +51,10 @@ class ConsultationInfoRepositoryImpl(
         } catch (e: IllegalArgumentException) {
             null
         }
+    }
+
+    override fun getConsultationsToAggregate(): List<ConsultationInfo> {
+        return databaseRepository.getConsultationsToAggregate().map(consultationInfoMapper::toDomain)
     }
 
     private fun getCache() = cacheManager.getCache(CONSULTATION_CACHE_NAME)

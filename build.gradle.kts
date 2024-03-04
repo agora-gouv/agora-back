@@ -8,7 +8,7 @@ plugins {
     kotlin("plugin.jpa") version "1.7.22"
 }
 
-group = "fr.social.gouv.agora"
+group = "fr.gouv.agora"
 version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_17
 

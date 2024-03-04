@@ -95,32 +95,40 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '351fb2dd-8737-49ef-b7a9-7057dbd5920c',
     'Sucré',
     1,
-    '32a4b9b4-e9aa-4930-9983-31f477abc279'
+    '32a4b9b4-e9aa-4930-9983-31f477abc279',
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '35ccc5f3-02d0-4704-a02d-972b777bcb63',
     'Salé',
     2,
-    '32a4b9b4-e9aa-4930-9983-31f477abc279'
+    '32a4b9b4-e9aa-4930-9983-31f477abc279',
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '865b3e7b-1fe8-4c55-b056-3042ca34bc36',
     'Les deux',
     3,
-    '32a4b9b4-e9aa-4930-9983-31f477abc279'
+    '32a4b9b4-e9aa-4930-9983-31f477abc279',
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '3e811511-5aba-4257-9c9f-e371e3c77619',
     'Je ne sais pas',
     4,
-    '32a4b9b4-e9aa-4930-9983-31f477abc279'
+    '32a4b9b4-e9aa-4930-9983-31f477abc279',
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (
@@ -134,28 +142,31 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '865f783c-ece3-4f05-a0a2-39d1e77b39de',
     'Café ☕️',
     1,
     '7bb4b993-6cc1-44d3-adf2-338df840dca0',
-    'e63da297-b427-4713-96c3-e495d95e5dcc'
+    'e63da297-b427-4713-96c3-e495d95e5dcc',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '25a8f600-d71a-409d-b403-e266d1639235',
     'Thé 🍵',
     2,
     '7bb4b993-6cc1-44d3-adf2-338df840dca0',
-    'cde0382a-206d-4d3a-9c4e-665d336fbd21'
+    'cde0382a-206d-4d3a-9c4e-665d336fbd21',
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '054563f4-b40a-4313-82cc-40f28d3a78d7',
     'SBF (Sans Boisson Fixe)',
     3,
     '7bb4b993-6cc1-44d3-adf2-338df840dca0',
-    'b16627fa-1a46-43f7-a179-5e72c6105aa6'
+    'b16627fa-1a46-43f7-a179-5e72c6105aa6',
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
@@ -179,28 +190,31 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '00e1838c-8ba2-4680-bc0d-e5a90f6ac89d',
     'Expresso',
     1,
     'e63da297-b427-4713-96c3-e495d95e5dcc',
-    null
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     'e1f209fd-fd76-45a0-81e4-09e3bb8a34a0',
     'Allongé',
     2,
     'e63da297-b427-4713-96c3-e495d95e5dcc',
-    null
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '8b5daea7-f33e-4932-ab3d-839c1d2a22c1',
     'Café au lait / noisette',
     3,
     'e63da297-b427-4713-96c3-e495d95e5dcc',
-    null
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
@@ -224,36 +238,40 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '695a7d4f-e5d3-49db-b7bd-5a6d29c54314',
     'Vert',
     1,
     'cde0382a-206d-4d3a-9c4e-665d336fbd21',
-    null
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     'b2963501-b70d-4c5d-8a9b-2e7c37e7dec0',
     'Noir',
     2,
     'cde0382a-206d-4d3a-9c4e-665d336fbd21',
-    null
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '4c489d92-2866-4df0-81f1-d44484304d48',
     'Blanc',
     3,
     'cde0382a-206d-4d3a-9c4e-665d336fbd21',
-    null
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id) VALUES (
+INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
     '8497bb69-a0f2-4832-acb6-e8d93fb9f05c',
     'Infusion',
     4,
     'cde0382a-206d-4d3a-9c4e-665d336fbd21',
-    null
+    null,
+    0
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO choixpossible(id, label, ordre, question_id, next_question_id, has_open_text_field) VALUES (
@@ -486,9 +504,9 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
-    null,
     '🙌',
     '<body><b>Merci pour votre participation</b> à cette consultation !</body>',
+    null,
     null,
     1,
     null,
@@ -576,10 +594,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
-    null,
     '🏁',
     '<body><b>Cette consultation est maintenant terminée.</b>
     Merci à tous !</body>',
+    null,
     null,
     1,
     null,
@@ -966,6 +984,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null,
     null,
     null,
+    null,
     null
 ) ON CONFLICT DO NOTHING;
 
@@ -1012,9 +1031,9 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
-    null,
     '🙌',
     '<body><b>Merci pour votre participation</b> à cette consultation !</body>',
+    null,
     null,
     1,
     null,
@@ -1102,10 +1121,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
-    null,
     '🏁',
     '<body><b>Cette consultation est maintenant terminée.</b>
     Merci à tous !</body>',
+    null,
     null,
     1,
     null,
@@ -1188,8 +1207,8 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'fba95928-dbf4-4456-995c-f423e81da7aa',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
-    'Synthèse disponible',
-    '2023-10-14 23:59:59.999',
+    'Synthèse disponible !',
+    '2024-02-25 18:00:00',
     'Les résultats de la Consultation {title} sont disponibles !
     https://agora.beta.gouv.fr/consultations/{id}',
     0,
