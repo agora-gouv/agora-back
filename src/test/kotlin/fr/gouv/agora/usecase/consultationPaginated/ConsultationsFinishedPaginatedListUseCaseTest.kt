@@ -41,25 +41,25 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
     companion object {
         @JvmStatic
         fun getConsultationFinishedPaginatedListTestCases() = arrayOf(
-            pageNumberInput(
+            input(
                 consultationFinishedCount = 1,
                 pageNumber = 1,
                 expectedOffset = 0,
                 expectedMaxPageNumber = 1,
             ),
-            pageNumberInput(
+            input(
                 consultationFinishedCount = 21,
                 pageNumber = 1,
                 expectedOffset = 0,
                 expectedMaxPageNumber = 2,
             ),
-            pageNumberInput(
+            input(
                 consultationFinishedCount = 39,
                 pageNumber = 2,
                 expectedOffset = 20,
                 expectedMaxPageNumber = 2,
             ),
-            pageNumberInput(
+            input(
                 consultationFinishedCount = 80,
                 pageNumber = 3,
                 expectedOffset = 40,
@@ -67,7 +67,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
             ),
         )
 
-        private fun pageNumberInput(
+        private fun input(
             consultationFinishedCount: Int,
             pageNumber: Int,
             expectedOffset: Int,

@@ -21,11 +21,6 @@ class ConsultationInfoRepositoryImpl(
         private const val CONSULTATION_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
-    @Deprecated("Should not be used anymore")
-    override fun getConsultations(): List<ConsultationInfo> {
-        return databaseRepository.getConsultations().map(consultationInfoMapper::toDomain)
-    }
-
     override fun getOngoingConsultations(): List<ConsultationInfo> {
         return databaseRepository.getConsultationOngoingList().map(consultationInfoMapper::toDomain)
     }
@@ -36,7 +31,8 @@ class ConsultationInfoRepositoryImpl(
 
     override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {
         return userId.toUuidOrNull()?.let { userUUID ->
-            databaseRepository.getConsultationsAnsweredPreviewWithUpdateInfo(userUUID).map(consultationInfoMapper::toDomain)
+            databaseRepository.getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
+                .map(consultationInfoMapper::toDomain)
         } ?: emptyList()
     }
 

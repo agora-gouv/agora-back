@@ -123,7 +123,7 @@ class ConsultationPreviewFinishedMapperTest {
         )
     }
 
-    @ParameterizedTest(name = "toConsultationPreviewFinished - {0}")
+    @ParameterizedTest(name = "toConsultationPreviewAnswered - {0}")
     @MethodSource("updateLabelTestCases")
     fun `toConsultationPreviewAnswered - should return expected`(
         testName: String,

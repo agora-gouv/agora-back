@@ -11,10 +11,6 @@ import java.util.*
 @Repository
 interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> {
 
-    // TODO: optimize query when consultations table will grow bigger
-    @Query(value = "SELECT * FROM consultations ORDER BY start_date DESC", nativeQuery = true)
-    fun getConsultations(): List<ConsultationDTO>
-
     @Query(
         value = """
         SELECT * FROM consultations
