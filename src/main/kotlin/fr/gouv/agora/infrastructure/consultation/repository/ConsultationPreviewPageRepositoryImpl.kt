@@ -60,7 +60,7 @@ class ConsultationPreviewPageRepositoryImpl(
     @Suppress("UNCHECKED_CAST")
     override fun getConsultationPreviewAnsweredList(userId: String): List<ConsultationPreviewAnswered>? {
         return try {
-            val modelList = getCache()?.get(ANSWERED_CACHE_PREFIX, List::class.java) as? List<String>
+            val modelList = getCache()?.get("$ANSWERED_CACHE_PREFIX$userId", List::class.java) as? List<String>
             return modelList?.map { objectMapper.readValue(it, ConsultationPreviewAnswered::class.java) }
         } catch (e: Exception) {
             null

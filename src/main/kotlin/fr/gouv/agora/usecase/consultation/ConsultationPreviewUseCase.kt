@@ -26,16 +26,14 @@ class ConsultationPreviewUseCase(
 
         if (ongoingList != null && finishedList != null) {
             return ConsultationPreviewPage(
-                ongoingList = ongoingList,
+                ongoingList = ongoingList.removeAnsweredConsultation(answeredList),
                 finishedList = finishedList,
                 answeredList = answeredList,
             )
         }
 
         return ConsultationPreviewPage(
-            ongoingList = (ongoingList ?: buildOngoingList()).filterNot { ongoingConsultation ->
-                answeredList.any { answeredConsultation -> answeredConsultation.id == ongoingConsultation.id }
-            },
+            ongoingList = (ongoingList ?: buildOngoingList()).removeAnsweredConsultation(answeredList),
             finishedList = finishedList ?: buildFinishedList(),
             answeredList = answeredList,
         )
@@ -84,6 +82,12 @@ class ConsultationPreviewUseCase(
                 }
         }.also { answeredList ->
             cacheRepository.insertConsultationPreviewAnsweredList(userId, answeredList)
+        }
+    }
+
+    private fun List<ConsultationPreviewOngoing>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewAnswered>): List<ConsultationPreviewOngoing> {
+        return this.filterNot { ongoingConsultation ->
+            answeredList.any { answeredConsultation -> answeredConsultation.id == ongoingConsultation.id }
         }
     }
 
