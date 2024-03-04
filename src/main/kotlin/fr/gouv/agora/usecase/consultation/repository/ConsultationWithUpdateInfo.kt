@@ -7,6 +7,7 @@ data class ConsultationWithUpdateInfo(
     val title: String,
     val coverUrl: String,
     val thematiqueId: String,
+    val endDate: Date,
     val updateDate: Date,
     val updateLabel: String?,
 )

@@ -1,6 +1,9 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.ConsultationPreviewAnswered
+import fr.gouv.agora.domain.ConsultationPreviewFinished
+import fr.gouv.agora.domain.ConsultationStatus
+import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.springframework.stereotype.Component
@@ -37,7 +40,11 @@ class ConsultationPreviewFinishedMapper(private val clock: Clock) {
             title = consultationInfo.title,
             coverUrl = consultationInfo.coverUrl,
             thematique = thematique,
-            step = ConsultationStatus.POLITICAL_COMMITMENT,
+            step = if (LocalDateTime.now(clock).isBefore(consultationInfo.endDate.toLocalDateTime())) {
+                ConsultationStatus.COLLECTING_DATA
+            } else {
+                ConsultationStatus.POLITICAL_COMMITMENT
+            },
             updateLabel = buildUpdateLabel(consultationInfo),
         )
     }

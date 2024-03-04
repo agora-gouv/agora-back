@@ -29,6 +29,7 @@ class ConsultationInfoMapper {
         title = dto.title,
         coverUrl = dto.coverUrl,
         thematiqueId = dto.thematiqueId.toString(),
+        endDate = dto.endDate,
         updateDate = dto.updateDate,
         updateLabel = dto.updateLabel,
     )

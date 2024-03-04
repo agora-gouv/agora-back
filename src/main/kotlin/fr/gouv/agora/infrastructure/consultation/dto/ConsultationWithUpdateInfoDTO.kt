@@ -9,6 +9,7 @@ interface ConsultationWithUpdateInfoDTO {
     val title: String
     val coverUrl: String
     val thematiqueId: UUID
+    val endDate: Date
     val updateDate: Date
     val updateLabel: String?
 }

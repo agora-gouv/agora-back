@@ -11,6 +11,17 @@ import java.util.*
 @Repository
 interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> {
 
+    companion object {
+        private const val CONSULTATION_WITH_UPDATE_INFO_PROJECTION =
+            "id, title, coverUrl, thematiqueId, endDate, updateDate, updateLabel"
+
+        private const val CONSULTATION_WITH_UPDATE_INFO_JOIN = """
+             SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
+                FROM consultations LEFT JOIN consultation_updates_v2
+                ON consultation_updates_v2.consultation_id = consultations.id
+        """
+    }
+
     @Query(
         value = """
         SELECT * FROM consultations
@@ -31,16 +42,9 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     fun getConsultationOngoingList(): List<ConsultationDTO>
 
     @Query(
-        value = """SELECT * FROM consultations WHERE id IN 
-            (SELECT DISTINCT consultation_id FROM reponses_consultation WHERE user_id = :userId LIMIT 10)""",
-        nativeQuery = true
-    )
-    fun getConsultationAnsweredList(@Param("userId") userId: UUID): List<ConsultationDTO>
-
-    @Query(
-        value = """SELECT id, title, coverUrl, thematiqueId, updateDate, updateLabel
+        value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
             FROM (
-                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
+                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
                 FROM consultations LEFT JOIN consultation_updates_v2
                 ON consultation_updates_v2.consultation_id = consultations.id
                 WHERE CURRENT_DATE > end_date
@@ -55,12 +59,10 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     fun getConsultationsFinishedPreviewWithUpdateInfo(): List<ConsultationWithUpdateInfoDTO>
 
     @Query(
-        value = """SELECT id, title, coverUrl, thematiqueId, updateDate, updateLabel
+        value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
             FROM (
-                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
-                FROM consultations LEFT JOIN consultation_updates_v2
-                ON consultation_updates_v2.consultation_id = consultations.id
-                AND CURRENT_DATE > update_date
+                $CONSULTATION_WITH_UPDATE_INFO_JOIN
+                WHERE CURRENT_DATE > update_date
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
             AND id IN (SELECT consultation_id FROM user_answered_consultation WHERE user_id = :userId)
@@ -73,9 +75,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     @Query(
         value = """SELECT COUNT(*)
             FROM (
-                SELECT consultations.id AS id, update_date AS updateDate, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
-                FROM consultations LEFT JOIN consultation_updates_v2
-                ON consultation_updates_v2.consultation_id = consultations.id
+                $CONSULTATION_WITH_UPDATE_INFO_JOIN
                 WHERE CURRENT_DATE > end_date
                 AND CURRENT_DATE > update_date
                 ORDER BY updateDate DESC
@@ -87,11 +87,9 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     fun getConsultationFinishedCount(): Int
 
     @Query(
-        value = """SELECT id, title, coverUrl, thematiqueId, updateDate, updateLabel
+        value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
             FROM (
-                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
-                FROM consultations LEFT JOIN consultation_updates_v2
-                ON consultation_updates_v2.consultation_id = consultations.id
+                $CONSULTATION_WITH_UPDATE_INFO_JOIN
                 WHERE CURRENT_DATE > end_date
                 AND CURRENT_DATE > update_date
                 ORDER BY updateDate DESC
