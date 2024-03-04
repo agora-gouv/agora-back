@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ConsultationPreviewOngoingInfoMapper {
+
     fun toDomain(dto: ConsultationDTO) = ConsultationPreviewOngoingInfo(
         id = dto.id.toString(),
         title = dto.title,
@@ -14,4 +15,5 @@ class ConsultationPreviewOngoingInfoMapper {
         startDate = dto.startDate,
         endDate = dto.endDate,
     )
+
 }

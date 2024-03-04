@@ -1,13 +1,13 @@
 package fr.gouv.agora.infrastructure.consultationPaginated
 
-import fr.gouv.agora.usecase.consultationPaginated.GetConsultationFinishedPaginatedListUseCase
+import fr.gouv.agora.usecase.consultationPaginated.ConsultationsFinishedPaginatedListUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
 class ConsultationFinishedPaginatedController(
-    private val getConsultationFinishedPaginatedListUseCase: GetConsultationFinishedPaginatedListUseCase,
+    private val consultationsFinishedPaginatedListUseCase: ConsultationsFinishedPaginatedListUseCase,
     private val consultationFinishedPaginatedJsonMapper: ConsultationFinishedPaginatedJsonMapper,
 ) {
 
@@ -18,7 +18,7 @@ class ConsultationFinishedPaginatedController(
         val usedPageNumber = pageNumber.toIntOrNull()
 
         return usedPageNumber?.let { pageNumberInt ->
-            getConsultationFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumber = pageNumberInt)
+            consultationsFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumber = pageNumberInt)
         }?.let { consultationFinishedPaginatedList ->
             ResponseEntity.ok(consultationFinishedPaginatedJsonMapper.toJson(consultationFinishedPaginatedList))
         } ?: ResponseEntity.badRequest().body(Unit)

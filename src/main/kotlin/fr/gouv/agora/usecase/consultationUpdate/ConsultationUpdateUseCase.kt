@@ -39,12 +39,6 @@ class ConsultationUpdateUseCase(
         )
     }
 
-    fun getConsultationInfoUpdates(consultationInfos: List<ConsultationInfo>) =
-        consultationInfos.mapNotNull(::getConsultationUpdate)
-
-    fun getConsultationPreviewUpdates(consultationPreviewInfos: List<ConsultationPreviewInfo>) =
-        consultationPreviewInfos.mapNotNull(::getConsultationUpdate)
-
     private fun getConsultationUpdate(
         consultationId: String,
         startDate: LocalDateTime,

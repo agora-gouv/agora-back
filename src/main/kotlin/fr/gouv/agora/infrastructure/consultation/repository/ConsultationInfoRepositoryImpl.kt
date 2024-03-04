@@ -31,12 +31,12 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getFinishedConsultations(): List<ConsultationWithUpdateInfo> {
-        return databaseRepository.getConsultationFinishedWithUpdateInfo().map(consultationInfoMapper::toDomain)
+        return databaseRepository.getConsultationsFinishedPreviewWithUpdateInfo().map(consultationInfoMapper::toDomain)
     }
 
     override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {
         return userId.toUuidOrNull()?.let { userUUID ->
-            databaseRepository.getConsultationAnsweredWithUpdateInfo(userUUID).map(consultationInfoMapper::toDomain)
+            databaseRepository.getConsultationsAnsweredPreviewWithUpdateInfo(userUUID).map(consultationInfoMapper::toDomain)
         } ?: emptyList()
     }
 

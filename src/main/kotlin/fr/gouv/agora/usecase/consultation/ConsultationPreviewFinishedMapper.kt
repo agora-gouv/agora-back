@@ -15,21 +15,6 @@ class ConsultationPreviewFinishedMapper(private val clock: Clock) {
     }
 
     fun toConsultationPreviewFinished(
-        consultationPreviewInfo: ConsultationPreviewInfo,
-        consultationUpdate: ConsultationUpdate,
-        thematique: Thematique,
-    ): ConsultationPreviewFinished {
-        return ConsultationPreviewFinished(
-            id = consultationPreviewInfo.id,
-            title = consultationPreviewInfo.title,
-            coverUrl = consultationPreviewInfo.coverUrl,
-            thematique = thematique,
-            step = ConsultationStatus.POLITICAL_COMMITMENT,
-            updateLabel = null, // TODO
-        )
-    }
-
-    fun toConsultationPreviewFinished(
         consultationInfo: ConsultationWithUpdateInfo,
         thematique: Thematique,
     ): ConsultationPreviewFinished {

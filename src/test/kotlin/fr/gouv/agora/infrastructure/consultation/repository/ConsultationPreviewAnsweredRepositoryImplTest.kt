@@ -4,7 +4,6 @@ import fr.gouv.agora.domain.ConsultationPreviewAnsweredInfo
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import fr.gouv.agora.infrastructure.consultation.repository.ConsultationAnsweredCacheRepository.CacheResult
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
