@@ -1,6 +1,5 @@
 package fr.gouv.agora.usecase.consultationUpdate
 
-import fr.gouv.agora.domain.ConsultationPreviewInfo
 import fr.gouv.agora.domain.ConsultationStatus
 import fr.gouv.agora.domain.ConsultationUpdate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
@@ -28,14 +27,6 @@ class ConsultationUpdateUseCase(
             consultationId = consultationInfo.id,
             startDate = consultationInfo.startDate.toLocalDateTime(),
             endDate = consultationInfo.endDate.toLocalDateTime(),
-        )
-    }
-
-    fun getConsultationUpdate(consultationPreviewInfo: ConsultationPreviewInfo): ConsultationUpdate? {
-        return getConsultationUpdate(
-            consultationId = consultationPreviewInfo.id,
-            startDate = consultationPreviewInfo.startDate.toLocalDateTime(),
-            endDate = consultationPreviewInfo.endDate.toLocalDateTime(),
         )
     }
 

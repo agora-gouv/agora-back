@@ -6,7 +6,10 @@ import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.ReponseConsultationInserting
 import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
-import fr.gouv.agora.usecase.consultation.repository.*
+import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
+import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
@@ -29,9 +32,6 @@ import java.util.*
 internal class InsertReponseConsultationUseCaseTest {
 
     private lateinit var useCase: InsertReponseConsultationUseCase
-
-    @MockBean
-    private lateinit var consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository
 
     @MockBean
     private lateinit var insertReponseConsultationRepository: InsertReponseConsultationRepository
@@ -96,7 +96,6 @@ internal class InsertReponseConsultationUseCaseTest {
         assertThat(result).isEqualTo(InsertResult.INSERT_FAILURE)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
         then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
-        then(consultationPreviewAnsweredRepository).shouldHaveNoInteractions()
         then(insertReponseConsultationRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
         then(consultationPreviewPageRepository).shouldHaveNoInteractions()
@@ -130,7 +129,6 @@ internal class InsertReponseConsultationUseCaseTest {
             userId = "userId",
         )
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(consultationPreviewAnsweredRepository).shouldHaveNoInteractions()
         then(insertReponseConsultationRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
         then(consultationPreviewPageRepository).shouldHaveNoInteractions()
@@ -205,8 +203,6 @@ internal class InsertReponseConsultationUseCaseTest {
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
-        then(consultationPreviewAnsweredRepository).should(only())
-            .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
@@ -285,8 +281,6 @@ internal class InsertReponseConsultationUseCaseTest {
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
-        then(consultationPreviewAnsweredRepository).should(only())
-            .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
@@ -357,8 +351,6 @@ internal class InsertReponseConsultationUseCaseTest {
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
-        then(consultationPreviewAnsweredRepository).should(only())
-            .deleteConsultationAnsweredListFromCache(userId = "userId")
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
@@ -373,7 +365,6 @@ internal class InsertReponseConsultationUseCaseTest {
     private fun mockDate(todayDate: LocalDateTime) {
         useCase = InsertReponseConsultationUseCase(
             contentSanitizer = contentSanitizer,
-            consultationPreviewAnsweredRepository = consultationPreviewAnsweredRepository,
             insertReponseConsultationRepository = insertReponseConsultationRepository,
             userAnsweredConsultationRepository = userAnsweredConsultationRepository,
             questionRepository = questionRepository,
