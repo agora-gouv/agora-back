@@ -1,5 +1,6 @@
 package fr.gouv.agora.domain
 
+@Deprecated("Should use ConsultationUpdateV2 instead")
 data class ConsultationUpdate(
     val consultationId: String,
     val status: ConsultationStatus,

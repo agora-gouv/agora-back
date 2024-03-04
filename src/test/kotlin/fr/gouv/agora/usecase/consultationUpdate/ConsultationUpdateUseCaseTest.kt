@@ -1,14 +1,11 @@
 package fr.gouv.agora.usecase.consultationUpdate
 
 import fr.gouv.agora.TestUtils
-import fr.gouv.agora.domain.ConsultationPreviewAnsweredInfo
-import fr.gouv.agora.domain.ConsultationPreviewInfo
 import fr.gouv.agora.domain.ConsultationUpdate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -151,39 +148,6 @@ internal class ConsultationUpdateUseCaseTest {
         }
     }
 
-    @ParameterizedTest(name = "getConsultationUpdate consultationPreviewInfo - {0}")
-    @MethodSource("getConsultationUpdateTestCases")
-    fun `getConsultationUpdate - when consultationPreviewInfo - should return result depending on date`(
-        testCaseName: String,
-        currentDate: LocalDateTime,
-        startDate: LocalDateTime,
-        endDate: LocalDateTime,
-        expectedOngoingUpdate: ConsultationUpdate?,
-        expectedFinishedUpdate: ConsultationUpdate?,
-        expectedFinalResult: ConsultationUpdate?,
-    ) {
-        // Given
-        mockCurrentDate(currentDate)
-        expectedOngoingUpdate?.let {
-            given(repository.getOngoingConsultationUpdate(consultationId = "consultationId")).willReturn(it)
-        }
-        expectedFinishedUpdate?.let {
-            given(repository.getFinishedConsultationUpdate(consultationId = "consultationId")).willReturn(it)
-        }
-
-        // When
-        val result = useCase.getConsultationUpdate(mockConsultationPreview(startDate = startDate, endDate = endDate))
-
-        // Then
-        assertThat(result).isEqualTo(expectedFinalResult)
-        expectedOngoingUpdate?.let {
-            then(repository).should(only()).getOngoingConsultationUpdate(consultationId = "consultationId")
-        }
-        expectedFinishedUpdate?.let {
-            then(repository).should(only()).getFinishedConsultationUpdate(consultationId = "consultationId")
-        }
-    }
-
     private fun mockCurrentDate(currentDate: LocalDateTime) {
         useCase = ConsultationUpdateUseCase(
             repository = repository,
@@ -193,14 +157,6 @@ internal class ConsultationUpdateUseCaseTest {
 
     private fun mockConsultation(startDate: LocalDateTime, endDate: LocalDateTime): ConsultationInfo {
         return mock(ConsultationInfo::class.java).also {
-            given(it.id).willReturn("consultationId")
-            given(it.startDate).willReturn(startDate.toDate())
-            given(it.endDate).willReturn(endDate.toDate())
-        }
-    }
-
-    private fun mockConsultationPreview(startDate: LocalDateTime, endDate: LocalDateTime): ConsultationPreviewInfo {
-        return mock(ConsultationPreviewAnsweredInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.startDate).willReturn(startDate.toDate())
             given(it.endDate).willReturn(endDate.toDate())

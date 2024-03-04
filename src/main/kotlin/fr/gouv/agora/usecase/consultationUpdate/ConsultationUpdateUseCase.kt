@@ -1,6 +1,5 @@
 package fr.gouv.agora.usecase.consultationUpdate
 
-import fr.gouv.agora.domain.ConsultationPreviewInfo
 import fr.gouv.agora.domain.ConsultationStatus
 import fr.gouv.agora.domain.ConsultationUpdate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
@@ -11,6 +10,8 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Service
+@Deprecated("Should use ConsultationUpdateUseCaseV2 instead")
+@Suppress("DEPRECATION")
 class ConsultationUpdateUseCase(
     private val repository: ConsultationUpdateRepository,
     private val clock: Clock,
@@ -28,20 +29,6 @@ class ConsultationUpdateUseCase(
             endDate = consultationInfo.endDate.toLocalDateTime(),
         )
     }
-
-    fun getConsultationUpdate(consultationPreviewInfo: ConsultationPreviewInfo): ConsultationUpdate? {
-        return getConsultationUpdate(
-            consultationId = consultationPreviewInfo.id,
-            startDate = consultationPreviewInfo.startDate.toLocalDateTime(),
-            endDate = consultationPreviewInfo.endDate.toLocalDateTime(),
-        )
-    }
-
-    fun getConsultationInfoUpdates(consultationInfos: List<ConsultationInfo>) =
-        consultationInfos.mapNotNull(::getConsultationUpdate)
-
-    fun getConsultationPreviewUpdates(consultatioPreviewInfos: List<ConsultationPreviewInfo>) =
-        consultatioPreviewInfos.mapNotNull(::getConsultationUpdate)
 
     private fun getConsultationUpdate(
         consultationId: String,

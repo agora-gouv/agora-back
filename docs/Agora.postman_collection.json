@@ -366,6 +366,60 @@
 					"response": []
 				},
 				{
+					"name": "/v2/consultations/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/v2/consultations/{{consultationId}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v2",
+								"consultations",
+								"{{consultationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/v2/consultations/ID/updates/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/v2/consultations/{{consultationId}}/updates/{{consultationUpdateId}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v2",
+								"consultations",
+								"{{consultationId}}",
+								"updates",
+								"{{consultationUpdateId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/consultations/ID/questions",
 					"request": {
 						"method": "GET",

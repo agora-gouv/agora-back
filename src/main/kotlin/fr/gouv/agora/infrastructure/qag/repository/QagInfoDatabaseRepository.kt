@@ -46,7 +46,6 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             FROM responses_qag LEFT JOIN qags 
             ON responses_qag.qag_id = qags.id
             WHERE qags.status = 7
-            AND qags.post_date IS NOT NULL
             ORDER BY responses_qag.response_date DESC
             LIMIT 5
         """, nativeQuery = true

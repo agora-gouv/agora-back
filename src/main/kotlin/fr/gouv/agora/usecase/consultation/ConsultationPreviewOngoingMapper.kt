@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
-import fr.gouv.agora.domain.ConsultationPreviewOngoingInfo
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
@@ -16,20 +15,6 @@ class ConsultationPreviewOngoingMapper(private val clock: Clock) {
 
     companion object {
         private const val MAXIMUM_DAYS_DIFFERENCE_TO_HIGHLIGHT = 6L
-    }
-
-    fun toConsultationPreviewOngoing(
-        consultationPreviewOngoingInfo: ConsultationPreviewOngoingInfo,
-        thematique: Thematique,
-    ): ConsultationPreviewOngoing {
-        return ConsultationPreviewOngoing(
-            id = consultationPreviewOngoingInfo.id,
-            title = consultationPreviewOngoingInfo.title,
-            coverUrl = consultationPreviewOngoingInfo.coverUrl,
-            thematique = thematique,
-            endDate = consultationPreviewOngoingInfo.endDate,
-            highlightLabel = buildHighlightLabel(consultationPreviewOngoingInfo.endDate),
-        )
     }
 
     fun toConsultationPreviewOngoing(

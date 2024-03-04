@@ -3,8 +3,8 @@ package fr.gouv.agora.usecase.reponseConsultation
 import fr.gouv.agora.domain.*
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.infrastructure.utils.UuidUtils
+import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewAnsweredRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
@@ -19,13 +19,13 @@ import java.time.LocalDateTime
 class InsertReponseConsultationUseCase(
     private val clock: Clock,
     private val contentSanitizer: ContentSanitizer,
-    private val consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository,
     private val insertReponseConsultationRepository: InsertReponseConsultationRepository,
     private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val questionRepository: QuestionRepository,
     private val insertConsultationResponseParametersMapper: InsertConsultationResponseParametersMapper,
     private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
     private val consultationInfoRepository: ConsultationInfoRepository,
+    private val consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
@@ -60,9 +60,11 @@ class InsertReponseConsultationUseCase(
             consultationResponses = consultationResponses,
             questionList = questionList,
         )
-        consultationPreviewAnsweredRepository.deleteConsultationAnsweredListFromCache(userId)
-        consultationPreviewPageRepository.evictConsultationPreviewOngoingList(userId)
         consultationPreviewPageRepository.evictConsultationPreviewAnsweredList(userId)
+        consultationDetailsV2CacheRepository.evictHasAnsweredConsultation(
+            consultationId = consultationId,
+            userId = userId,
+        )
 
         val responseInsertResult = insertReponseConsultationRepository.insertConsultationResponses(
             insertParameters = insertConsultationResponseParametersMapper.toInsertParameters(

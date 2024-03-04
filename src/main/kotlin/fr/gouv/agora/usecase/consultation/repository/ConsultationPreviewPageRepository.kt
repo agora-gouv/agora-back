@@ -5,9 +5,9 @@ import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 
 interface ConsultationPreviewPageRepository {
-    fun getConsultationPreviewOngoingList(userId: String): List<ConsultationPreviewOngoing>?
-    fun insertConsultationPreviewOngoingList(userId: String, ongoingList: List<ConsultationPreviewOngoing>)
-    fun evictConsultationPreviewOngoingList(userId: String)
+    fun getConsultationPreviewOngoingList(): List<ConsultationPreviewOngoing>?
+    fun insertConsultationPreviewOngoingList(ongoingList: List<ConsultationPreviewOngoing>)
+    fun evictConsultationPreviewOngoingList()
 
     fun getConsultationPreviewFinishedList(): List<ConsultationPreviewFinished>?
     fun insertConsultationPreviewFinishedList(finishedList: List<ConsultationPreviewFinished>)
