@@ -3,7 +3,7 @@ package fr.gouv.agora.usecase.consultationPaginated
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewFinishedRepository
+import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationFinishedPaginatedListCacheRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
@@ -78,9 +78,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
     @Test
     fun `getConsultationFinishedPaginatedList - when pageNumber is lower or equals 0 - should return null`() {
         // When
-        val result = useCase.getConsultationFinishedPaginatedList(
-            pageNumber = 0,
-        )
+        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 0)
 
         // Then
         assertThat(result).isEqualTo(null)

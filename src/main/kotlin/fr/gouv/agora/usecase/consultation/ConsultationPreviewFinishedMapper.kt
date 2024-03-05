@@ -1,6 +1,5 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.ConsultationPreviewAnswered
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationStatus
 import fr.gouv.agora.domain.Thematique
@@ -22,20 +21,6 @@ class ConsultationPreviewFinishedMapper(private val clock: Clock) {
         thematique: Thematique,
     ): ConsultationPreviewFinished {
         return ConsultationPreviewFinished(
-            id = consultationInfo.id,
-            title = consultationInfo.title,
-            coverUrl = consultationInfo.coverUrl,
-            thematique = thematique,
-            step = ConsultationStatus.POLITICAL_COMMITMENT,
-            updateLabel = buildUpdateLabel(consultationInfo),
-        )
-    }
-
-    fun toConsultationPreviewAnswered(
-        consultationInfo: ConsultationWithUpdateInfo,
-        thematique: Thematique,
-    ): ConsultationPreviewAnswered {
-        return ConsultationPreviewAnswered(
             id = consultationInfo.id,
             title = consultationInfo.title,
             coverUrl = consultationInfo.coverUrl,

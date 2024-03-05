@@ -6,6 +6,7 @@ import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
+import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationAnsweredPaginatedListCacheRepository
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
@@ -26,6 +27,7 @@ class InsertReponseConsultationUseCase(
     private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository,
+    private val consultationAnsweredPaginatedListCacheRepository: ConsultationAnsweredPaginatedListCacheRepository,
 ) {
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
@@ -61,6 +63,7 @@ class InsertReponseConsultationUseCase(
             questionList = questionList,
         )
         consultationPreviewPageRepository.evictConsultationPreviewAnsweredList(userId)
+        consultationAnsweredPaginatedListCacheRepository.clearCache(userId)
         consultationDetailsV2CacheRepository.evictHasAnsweredConsultation(
             consultationId = consultationId,
             userId = userId,

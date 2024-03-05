@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.TestUtils
-import fr.gouv.agora.domain.ConsultationPreviewAnswered
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationStatus
 import fr.gouv.agora.domain.Thematique
@@ -90,7 +89,7 @@ class ConsultationPreviewFinishedMapperTest {
     }
 
     @Test
-    fun `toConsultationPreviewAnswered - when serverDate has not reached endDate - should return status COLLECTING_DATA`() {
+    fun `toConsultationPreviewFinished - when serverDate has not reached endDate - should return status COLLECTING_DATA`() {
         // Given
         mockCurrentDate(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30))
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
@@ -104,11 +103,11 @@ class ConsultationPreviewFinishedMapperTest {
         val thematique = mock(Thematique::class.java)
 
         // When
-        val result = mapper.toConsultationPreviewAnswered(consultationInfo, thematique)
+        val result = mapper.toConsultationPreviewFinished(consultationInfo, thematique)
 
         // Then
         assertThat(result).isEqualTo(
-            ConsultationPreviewAnswered(
+            ConsultationPreviewFinished(
                 id = "consultationId",
                 title = "title",
                 coverUrl = "coverUrl",
@@ -120,7 +119,7 @@ class ConsultationPreviewFinishedMapperTest {
     }
 
     @Test
-    fun `toConsultationPreviewAnswered - when serverDate is greater than endDate - should return status POLITICAL_COMMITMENT`() {
+    fun `toConsultationPreviewFinished - when serverDate is greater than endDate - should return status POLITICAL_COMMITMENT`() {
         // Given
         mockCurrentDate(LocalDateTime.of(2024, Month.JANUARY, 10, 12, 30))
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
@@ -134,11 +133,11 @@ class ConsultationPreviewFinishedMapperTest {
         val thematique = mock(Thematique::class.java)
 
         // When
-        val result = mapper.toConsultationPreviewAnswered(consultationInfo, thematique)
+        val result = mapper.toConsultationPreviewFinished(consultationInfo, thematique)
 
         // Then
         assertThat(result).isEqualTo(
-            ConsultationPreviewAnswered(
+            ConsultationPreviewFinished(
                 id = "consultationId",
                 title = "title",
                 coverUrl = "coverUrl",
@@ -150,7 +149,7 @@ class ConsultationPreviewFinishedMapperTest {
     }
 
     @Test
-    fun `toConsultationPreviewAnswered - when serverDate is equal to endDate - should return status POLITICAL_COMMITMENT`() {
+    fun `toConsultationPreviewFinished - when serverDate is equal to endDate - should return status POLITICAL_COMMITMENT`() {
         // Given
         mockCurrentDate(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30))
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
@@ -164,11 +163,11 @@ class ConsultationPreviewFinishedMapperTest {
         val thematique = mock(Thematique::class.java)
 
         // When
-        val result = mapper.toConsultationPreviewAnswered(consultationInfo, thematique)
+        val result = mapper.toConsultationPreviewFinished(consultationInfo, thematique)
 
         // Then
         assertThat(result).isEqualTo(
-            ConsultationPreviewAnswered(
+            ConsultationPreviewFinished(
                 id = "consultationId",
                 title = "title",
                 coverUrl = "coverUrl",
@@ -206,43 +205,6 @@ class ConsultationPreviewFinishedMapperTest {
         // Then
         assertThat(result).isEqualTo(
             ConsultationPreviewFinished(
-                id = "consultationId",
-                title = "title",
-                coverUrl = "coverUrl",
-                thematique = thematique,
-                step = ConsultationStatus.POLITICAL_COMMITMENT,
-                updateLabel = expectedUpdateLabel,
-            )
-        )
-    }
-
-    @ParameterizedTest(name = "toConsultationPreviewAnswered - {0}")
-    @MethodSource("updateLabelTestCases")
-    fun `toConsultationPreviewAnswered - should return expected`(
-        testName: String,
-        serverDate: LocalDateTime,
-        updateDate: LocalDateTime,
-        updateLabel: String?,
-        expectedUpdateLabel: String?,
-    ) {
-        // Given
-        mockCurrentDate(serverDate)
-        val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
-            given(it.id).willReturn("consultationId")
-            given(it.title).willReturn("title")
-            given(it.coverUrl).willReturn("coverUrl")
-            given(it.endDate).willReturn(Date(0))
-            given(it.updateDate).willReturn(updateDate.toDate())
-            given(it.updateLabel).willReturn(updateLabel)
-        }
-        val thematique = mock(Thematique::class.java)
-
-        // When
-        val result = mapper.toConsultationPreviewAnswered(consultationInfo = consultationInfo, thematique = thematique)
-
-        // Then
-        assertThat(result).isEqualTo(
-            ConsultationPreviewAnswered(
                 id = "consultationId",
                 title = "title",
                 coverUrl = "coverUrl",
