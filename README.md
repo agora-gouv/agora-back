@@ -427,9 +427,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '<body><noa11y>🗣</noa11y> Consultation proposée par le <b>Capitaine P’tit Dej’</b><br/><br/><noa11y>🎯</noa11y><b> Objectif</b> : améliorer la qualité des petits déjeuners apportés à l’équipe AGORA <noa11y>🤤</noa11y>.</body>'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '8d72595b-6def-4cc3-9c2b-32a90f8336f9',
     'aa0180a2-fa10-4cdf-888b-bd58bb6f1709',
+    null,
     'title',
     1,
     1,
@@ -444,9 +445,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '4eb57ee9-190d-4999-94ad-09fd809911ae',
     'aa0180a2-fa10-4cdf-888b-bd58bb6f1709',
+    null,
     'title',
     1,
     0,
@@ -461,9 +463,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '09476a85-5115-4cca-a125-310b6e7b2f27',
     'aa0180a2-fa10-4cdf-888b-bd58bb6f1709',
+    null,
     'richText',
     2,
     1,
@@ -478,9 +481,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     'b3e99d8c-6146-4b54-ae05-3359553b1a42',
     'aa0180a2-fa10-4cdf-888b-bd58bb6f1709',
+    null,
     'richText',
     2,
     0,
@@ -517,9 +521,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '<body>Rendez-vous sur:<br/><ul><li><a href="https://www.mangerbouger.fr/">Manger Bouger.fr</a></li><li>...</li></ul></body>'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '07253fad-bf64-43e1-9585-9b1a7f0c6c4c',
     '86a3356d-7dad-48be-8bff-368279f8be07',
+    null,
     'title',
     1,
     1,
@@ -534,9 +539,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '8f7313dc-8179-4771-a2b7-d96f12ee1ef6',
     '86a3356d-7dad-48be-8bff-368279f8be07',
+    null,
     'title',
     1,
     0,
@@ -551,9 +557,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '07253fad-bf64-43e1-9585-9b1a7f0c6c4c',
     '86a3356d-7dad-48be-8bff-368279f8be07',
+    null,
     'richText',
     2,
     1,
@@ -568,9 +575,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '5f75e508-1430-4944-b84e-2c75e264a539',
     '86a3356d-7dad-48be-8bff-368279f8be07',
+    null,
     'richText',
     2,
     0,
@@ -608,9 +616,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '<body>Rendez-vous sur:<br/><ul><li><a href="https://www.mangerbouger.fr/">Manger Bouger.fr</a></li><li>...</li></ul></body>'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '07253fad-bf64-43e1-9585-9b1a7f0c6c4c',
     '6f372d50-e921-417a-8ed0-684a6c32e820',
+    null,
     'title',
     1,
     1,
@@ -625,9 +634,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '8f7313dc-8179-4771-a2b7-d96f12ee1ef6',
     '6f372d50-e921-417a-8ed0-684a6c32e820',
+    null,
     'title',
     1,
     0,
@@ -642,9 +652,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '07253fad-bf64-43e1-9585-9b1a7f0c6c4c',
     '6f372d50-e921-417a-8ed0-684a6c32e820',
+    null,
     'richText',
     2,
     1,
@@ -659,9 +670,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '5f75e508-1430-4944-b84e-2c75e264a539',
     '6f372d50-e921-417a-8ed0-684a6c32e820',
+    null,
     'richText',
     2,
     0,
@@ -954,9 +966,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '<body>🗣 Consultation proposée par le <b>Ministre des vacances </b><br/><br/>🎯 Objectif : améliorer les vacances de nos concitoynes<br/><br/>🚀 Axe gouvernemental : Planifier et accélérer la transition écologique</body>'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     'ed39b6ec-40c3-4656-83cd-5c1ca2f16441',
     'ccbecde2-52e7-4094-8c2b-0c56cb4d53ce',
+    null,
     'title',
     1,
     1,
@@ -971,9 +984,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '86a10a97-9178-4dbe-b965-e4189b1693a5',
     'ccbecde2-52e7-4094-8c2b-0c56cb4d53ce',
+    null,
     'title',
     1,
     0,
@@ -988,9 +1002,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '23f7672e-f151-495f-a462-e148301328eb',
     'ccbecde2-52e7-4094-8c2b-0c56cb4d53ce',
+    null,
     'richText',
     2,
     1,
@@ -1005,9 +1020,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '6207c968-ae62-4658-9bcd-711f73945519',
     'ccbecde2-52e7-4094-8c2b-0c56cb4d53ce',
+    null,
     'richText',
     2,
     0,
@@ -1044,9 +1060,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '<body><a href="https://www.service-public.fr/particuliers/vosdroits/F31952">Rendez-vous ici pour voir les dates des prochaines vacances.</a></body>'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     'a5159139-2f39-4745-9149-e94d13134888',
     '897369f5-cb04-4b75-960a-62cdfe47422f',
+    null,
     'title',
     1,
     1,
@@ -1061,9 +1078,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     'c642b86f-7662-4445-b69f-8a65878fe68f',
     '897369f5-cb04-4b75-960a-62cdfe47422f',
+    null,
     'title',
     1,
     0,
@@ -1078,9 +1096,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '1fe66260-338c-4fda-9170-90081d6b53d1',
     '897369f5-cb04-4b75-960a-62cdfe47422f',
+    null,
     'richText',
     2,
     1,
@@ -1095,9 +1114,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '6ddb1fee-bd83-4f66-a58f-2664f2aefee4',
     '897369f5-cb04-4b75-960a-62cdfe47422f',
+    null,
     'richText',
     2,
     0,
@@ -1135,9 +1155,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '<body><a href="https://www.service-public.fr/particuliers/vosdroits/F31952">Rendez-vous ici pour voir les dates des prochaines vacances.</a></body>'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '6c05ad2a-0ec4-4025-88b9-16bd4c3cd8ec',
     '2efd7a52-ec78-4fa1-8978-3b1610b23d34',
+    null,
     'title',
     1,
     1,
@@ -1152,9 +1173,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '26e85a92-ed12-48b5-a608-c6c37c6ac1aa',
     '2efd7a52-ec78-4fa1-8978-3b1610b23d34',
+    null,
     'title',
     1,
     0,
@@ -1169,9 +1191,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '451cc0d5-e155-4b7e-96cb-7a9157917fef',
     '2efd7a52-ec78-4fa1-8978-3b1610b23d34',
+    null,
     'richText',
     2,
     1,
@@ -1186,9 +1209,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '0238d7ed-5cc1-4384-a35f-8755a9526bdd',
     '2efd7a52-ec78-4fa1-8978-3b1610b23d34',
+    null,
     'richText',
     2,
     0,
@@ -1225,9 +1249,10 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '4acf6a22-e321-45ba-9ff0-2712de1463fb',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'title',
     1,
     1,
@@ -1242,9 +1267,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     'd27ec1e0-df80-4bcd-af74-894c6421192e',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'title',
     1,
     0,
@@ -1259,9 +1285,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '96567802-6cc9-45e6-8e95-6ac2594ea642',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'richText',
     2,
     1,
@@ -1276,9 +1303,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '9544d622-550d-4d13-95c2-ea514730fad7',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'richText',
     2,
     0,
@@ -1293,9 +1321,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '9075f12a-89b1-45e2-ab75-de19d7f9ddda',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'title',
     3,
     0,
@@ -1310,9 +1339,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     'c5ce49ae-3633-47b5-a0c2-1a1772e2942f',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'focusNumber',
     4,
     0,
@@ -1327,9 +1357,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '2f87dc12-8011-41f6-bb1a-e8b816654810',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'image',
     5,
     0,
@@ -1344,9 +1375,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '9544d622-550d-4d13-95c2-ea514730fad7',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'richText',
     6,
     0,
@@ -1361,9 +1393,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     '500280b5-b5d1-4fb3-a2f0-93e43c6aa928',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'quote',
     7,
     0,
@@ -1380,9 +1413,10 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
     'f35f76b0-89ab-406e-ad13-5740f34dce74',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
     'video',
     8,
     0,
@@ -1395,6 +1429,60 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, type, ordre
     'Ancien ministre du Renouvellement Démocratique et porte parole du gouvernement',
     '2023-06-05',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+    '0015dff2-458a-451c-b0a3-61b7e0511fa8',
+    'fba95928-dbf4-4456-995c-f423e81da7aa',
+    null,
+    'accordion',
+    9,
+    0,
+    'Premières analyses de vos réponses ouvertes',
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+    'ed71caaf-9705-4d10-8c1f-a2d3d2dc4e21',
+    'fba95928-dbf4-4456-995c-f423e81da7aa',
+    '0015dff2-458a-451c-b0a3-61b7e0511fa8',
+    'quote',
+    1,
+    0,
+    null,
+    '<i>La plupart du séjour s‘est plutôt bien passé, par contre la météo s‘est gâtée sur la fin</i> - <b>Un Agoranaute bien malchanceux</b>',
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, is_preview, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
+    '03db3cc1-304c-4e53-9c99-1ce25c2bcb2e',
+    'fba95928-dbf4-4456-995c-f423e81da7aa',
+    '0015dff2-458a-451c-b0a3-61b7e0511fa8',
+    'richText',
+    2,
+    0,
+    null,
+    '<body>Cette phrase résume assez bien la majorité de vos feedbacks pour les personnes ayant <b>passé leur vacances en France</b></body>',
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
 ) ON CONFLICT DO NOTHING;
     
 INSERT INTO consultation_update_history(id, consultation_id, step_number, type, consultation_update_id, title, action_text) VALUES(

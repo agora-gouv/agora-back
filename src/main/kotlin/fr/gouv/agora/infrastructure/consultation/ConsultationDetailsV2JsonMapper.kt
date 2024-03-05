@@ -177,6 +177,11 @@ class ConsultationDetailsV2JsonMapper(
             )
 
             is ConsultationUpdateInfoV2.Section.Quote -> Section.Quote(description = section.description)
+
+            is ConsultationUpdateInfoV2.Section.Accordion -> Section.Accordion(
+                title = section.title,
+                sections = section.sections.map(::buildSection),
+            )
         }
     }
 

@@ -38,6 +38,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         private const val SECTION_TYPE_VIDEO = "video"
         private const val SECTION_TYPE_FOCUS_NUMBER = "focusNumber"
         private const val SECTION_TYPE_QUOTE = "quote"
+        private const val SECTION_TYPE_ACCORDION = "accordion"
     }
 
     override fun getLastConsultationDetails(consultationId: String): ConsultationUpdateCacheResult {
@@ -224,6 +225,12 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             )
 
             is Section.Quote -> CacheableSection(type = SECTION_TYPE_QUOTE, description = section.description)
+
+            is Section.Accordion -> CacheableSection(
+                type = SECTION_TYPE_ACCORDION,
+                title = section.title,
+                subSections = section.sections.map(::toCacheableSection),
+            )
         }
     }
 
@@ -257,6 +264,13 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             ) else null
 
             SECTION_TYPE_QUOTE -> section.description?.let(Section::Quote)
+
+            SECTION_TYPE_ACCORDION -> if (section.title != null && section.subSections != null) {
+                Section.Accordion(
+                    title = section.title,
+                    sections = section.subSections.mapNotNull(::fromCacheableSection),
+                )
+            } else null
 
             else -> null
         }
@@ -294,4 +308,5 @@ private data class CacheableSection(
     val videoHeight: Int? = null,
     val authorInfo: Section.Video.AuthorInfo? = null,
     val videoTranscription: String? = null,
+    val subSections: List<CacheableSection>? = null,
 )
