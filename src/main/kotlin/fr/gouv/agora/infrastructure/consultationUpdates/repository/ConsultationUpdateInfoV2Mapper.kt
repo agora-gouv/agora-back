@@ -18,6 +18,7 @@ class ConsultationUpdateInfoV2Mapper {
         private const val SECTION_TYPE_VIDEO = "video"
         private const val SECTION_TYPE_FOCUS_NUMBER = "focusNumber"
         private const val SECTION_TYPE_QUOTE = "quote"
+        private const val SECTION_TYPE_ACCORDION = "accordion"
     }
 
     fun toDomain(
@@ -32,13 +33,13 @@ class ConsultationUpdateInfoV2Mapper {
             hasParticipationInfo = dto.hasParticipationInfo == TRUE_INT_VALUE,
             responsesInfo = buildResponsesInfo(dto),
             infoHeader = buildInfoHeader(dto),
-            body = buildBody(
+            body = buildSections(
                 sectionDTOs = sectionDTOs,
-                filter = { sectionDTO -> sectionDTO.isPreview != TRUE_INT_VALUE },
+                filter = { sectionDTO -> sectionDTO.isPreview != TRUE_INT_VALUE && sectionDTO.parentSectionId == null },
             ),
-            bodyPreview = buildBody(
+            bodyPreview = buildSections(
                 sectionDTOs = sectionDTOs,
-                filter = { sectionDTO -> sectionDTO.isPreview == TRUE_INT_VALUE },
+                filter = { sectionDTO -> sectionDTO.isPreview == TRUE_INT_VALUE && sectionDTO.parentSectionId == null },
             ),
             downloadAnalysisUrl = dto.downloadAnalysisUrl,
             footer = buildFooter(dto),
@@ -70,7 +71,7 @@ class ConsultationUpdateInfoV2Mapper {
         }
     }
 
-    private fun buildBody(
+    private fun buildSections(
         sectionDTOs: List<ConsultationUpdateSectionDTO>,
         filter: (ConsultationUpdateSectionDTO) -> Boolean = { _ -> true },
     ): List<Section> {
@@ -82,6 +83,7 @@ class ConsultationUpdateInfoV2Mapper {
                 SECTION_TYPE_VIDEO -> buildVideoSection(sectionDTO)
                 SECTION_TYPE_FOCUS_NUMBER -> buildFocusNumberSection(sectionDTO)
                 SECTION_TYPE_QUOTE -> buildQuoteSection(sectionDTO)
+                SECTION_TYPE_ACCORDION -> buildAccordionSection(sectionDTO, sectionDTOs)
                 else -> null
             }
         }
@@ -138,6 +140,21 @@ class ConsultationUpdateInfoV2Mapper {
 
     private fun buildQuoteSection(sectionDTO: ConsultationUpdateSectionDTO): Section.Quote? {
         return sectionDTO.description?.let(Section::Quote)
+    }
+
+    private fun buildAccordionSection(
+        accordionDTO: ConsultationUpdateSectionDTO,
+        sectionDTOs: List<ConsultationUpdateSectionDTO>,
+    ): Section.Accordion? {
+        return accordionDTO.title?.let { title ->
+            Section.Accordion(
+                title = title,
+                sections = buildSections(
+                    sectionDTOs = sectionDTOs,
+                    filter = { sectionDTO -> sectionDTO.parentSectionId == accordionDTO.id && sectionDTO.type != SECTION_TYPE_ACCORDION },
+                )
+            )
+        }
     }
 
 }

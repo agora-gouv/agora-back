@@ -130,6 +130,13 @@ data class ConsultationDetailsV2Json(
             @JsonProperty("description")
             val description: String,
         ) : Section(type = "quote")
+
+        data class Accordion(
+            @JsonProperty("title")
+            val title: String,
+            @JsonProperty("sections")
+            val sections: List<Section>,
+        ): Section(type = "accordion")
     }
 
     data class ParticipationInfo(

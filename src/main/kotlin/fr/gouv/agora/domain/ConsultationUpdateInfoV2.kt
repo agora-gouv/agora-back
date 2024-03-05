@@ -47,8 +47,7 @@ data class ConsultationUpdateInfoV2(
         data class FocusNumber(val title: String, val description: String) : Section()
         data class Quote(val description: String) : Section()
 
-        // TODO Accordion
-        //data class Accordion(val title: String, val description: String) : Section()
+        data class Accordion(val title: String, val sections: List<Section>) : Section()
     }
 
     // TODO Feedback Question & results

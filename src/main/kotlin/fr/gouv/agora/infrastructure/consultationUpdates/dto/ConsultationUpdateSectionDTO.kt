@@ -12,6 +12,7 @@ data class ConsultationUpdateSectionDTO(
     val id: UUID,
     @JoinTable(joinColumns = [JoinColumn(table = "consultation_updates_v2", referencedColumnName = "id")])
     val consultationUpdateId: UUID,
+    val parentSectionId: UUID?,
     @Column(columnDefinition = "TEXT")
     val type: String,
     val ordre: Int,
@@ -44,6 +45,6 @@ data class ConsultationUpdateSectionDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , consultationUpdateId = $consultationUpdateId , type = $type , ordre = $ordre , isPreview = $isPreview , title = $title , description = $description , url = $url , videoWidth = $videoWidth , videoHeight = $videoHeight , authorInfoName = $authorInfoName , authorInfoMessage = $authorInfoMessage , videoDate = $videoDate , videoTranscription = $videoTranscription )"
+        return this::class.simpleName + "(id = $id , consultationUpdateId = $consultationUpdateId , parentSectionId = $parentSectionId , type = $type , ordre = $ordre , isPreview = $isPreview , title = $title , description = $description , url = $url , videoWidth = $videoWidth , videoHeight = $videoHeight , authorInfoName = $authorInfoName , authorInfoMessage = $authorInfoMessage , videoDate = $videoDate , videoTranscription = $videoTranscription )"
     }
 }
