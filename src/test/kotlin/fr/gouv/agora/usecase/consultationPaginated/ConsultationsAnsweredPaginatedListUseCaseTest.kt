@@ -7,7 +7,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationAnsweredPaginatedListCacheRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewAnsweredRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -80,7 +80,7 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
         val result = useCase.getConsultationAnsweredPaginatedList(userId = "userId", pageNumber = 0)
 
         // Then
-        Assertions.assertThat(result).isEqualTo(null)
+        assertThat(result).isEqualTo(null)
         then(consultationPreviewAnsweredRepository).shouldHaveNoInteractions()
         then(thematiqueRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
@@ -96,7 +96,7 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
         val result = useCase.getConsultationAnsweredPaginatedList(userId = "userId", pageNumber = 1)
 
         // Then
-        Assertions.assertThat(result).isEqualTo(pageContent)
+        assertThat(result).isEqualTo(pageContent)
     }
 
     @Test
@@ -108,7 +108,7 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
         val result = useCase.getConsultationAnsweredPaginatedList(userId = "userId", pageNumber = 7)
 
         // Then
-        Assertions.assertThat(result).isEqualTo(null)
+        assertThat(result).isEqualTo(null)
         then(consultationPreviewAnsweredRepository).should(only()).getConsultationAnsweredCount(userId = "userId")
         then(thematiqueRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
@@ -145,7 +145,7 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
             consultationAnsweredList = listOf(consultationPreviewAnswered),
             maxPageNumber = 2,
         )
-        Assertions.assertThat(result).isEqualTo(pageContent)
+        assertThat(result).isEqualTo(pageContent)
 
         then(cacheRepository).should().getConsultationAnsweredPage(userId = "userId", pageNumber = 1)
         then(cacheRepository).should()
@@ -199,7 +199,7 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
             consultationAnsweredList = listOf(consultationPreviewAnswered),
             maxPageNumber = expectedMaxPageNumber,
         )
-        Assertions.assertThat(result).isEqualTo(pageContent)
+        assertThat(result).isEqualTo(pageContent)
 
         then(cacheRepository).should().getConsultationAnsweredPage(userId = "userId", pageNumber = pageNumber)
         then(cacheRepository).should()
