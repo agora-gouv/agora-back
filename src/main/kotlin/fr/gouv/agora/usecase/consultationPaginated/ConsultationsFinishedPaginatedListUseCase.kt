@@ -2,7 +2,7 @@ package fr.gouv.agora.usecase.consultationPaginated
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewFinishedRepository
+import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationFinishedPaginatedListCacheRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service

@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.consultation
 
-import fr.gouv.agora.domain.ConsultationPreviewAnswered
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.domain.ConsultationStatus
@@ -18,7 +17,7 @@ class ConsultationPreviewJsonMapper(
     fun toJson(
         domainOngoingList: List<ConsultationPreviewOngoing>,
         domainFinishedList: List<ConsultationPreviewFinished>,
-        domainAnsweredList: List<ConsultationPreviewAnswered>,
+        domainAnsweredList: List<ConsultationPreviewFinished>,
     ): ConsultationPreviewJson {
         return ConsultationPreviewJson(
             ongoingList = domainOngoingList.map { domain ->
@@ -31,28 +30,20 @@ class ConsultationPreviewJsonMapper(
                     highlightLabel = domain.highlightLabel,
                 )
             },
-            finishedList = domainFinishedList.map { domain ->
-                ConsultationFinishedJson(
-                    id = domain.id,
-                    title = domain.title,
-                    coverUrl = domain.coverUrl,
-                    thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
-                    step = statusToJson(domain.step),
-                    updateLabel = domain.updateLabel,
-                )
-            },
-            answeredList = domainAnsweredList.map { domain ->
-                ConsultationAnsweredJson(
-                    id = domain.id,
-                    title = domain.title,
-                    coverUrl = domain.coverUrl,
-                    thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
-                    step = statusToJson(domain.step),
-                    updateLabel = domain.updateLabel,
-                )
-            }
+            finishedList = domainFinishedList.map(::toJson),
+            answeredList = domainAnsweredList.map(::toJson),
         )
     }
+
+    private fun toJson(domain: ConsultationPreviewFinished) =
+        ConsultationFinishedJson(
+            id = domain.id,
+            title = domain.title,
+            coverUrl = domain.coverUrl,
+            thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
+            step = statusToJson(domain.step),
+            updateLabel = domain.updateLabel,
+        )
 
     private fun statusToJson(step: ConsultationStatus) = when (step) {
         COLLECTING_DATA -> 1

@@ -10,6 +10,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheR
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
+import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationAnsweredPaginatedListCacheRepository
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.reponseConsultation.repository.InsertReponseConsultationRepository
@@ -56,6 +57,9 @@ internal class InsertReponseConsultationUseCaseTest {
 
     @MockBean
     private lateinit var consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository
+
+    @MockBean
+    private lateinit var consultationAnsweredPaginatedListCacheRepository: ConsultationAnsweredPaginatedListCacheRepository
 
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
@@ -206,6 +210,7 @@ internal class InsertReponseConsultationUseCaseTest {
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
+        then(consultationAnsweredPaginatedListCacheRepository).should(only()).clearCache(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
             consultationResponses = consultationResponsesSanitized,
@@ -284,6 +289,7 @@ internal class InsertReponseConsultationUseCaseTest {
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
+        then(consultationAnsweredPaginatedListCacheRepository).should(only()).clearCache(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
             consultationResponses = consultationResponsesSanitized,
@@ -354,6 +360,7 @@ internal class InsertReponseConsultationUseCaseTest {
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
+        then(consultationAnsweredPaginatedListCacheRepository).should(only()).clearCache(userId = "userId")
         then(insertReponseConsultationRepository).should(only()).insertConsultationResponses(
             insertParameters = insertParameters,
             consultationResponses = listOf(addedResponseUniqueChoice),
@@ -372,6 +379,7 @@ internal class InsertReponseConsultationUseCaseTest {
             consultationPreviewPageRepository = consultationPreviewPageRepository,
             consultationInfoRepository = consultationInfoRepository,
             consultationDetailsV2CacheRepository = consultationDetailsV2CacheRepository,
+            consultationAnsweredPaginatedListCacheRepository = consultationAnsweredPaginatedListCacheRepository,
             clock = TestUtils.getFixedClock(todayDate),
         )
     }

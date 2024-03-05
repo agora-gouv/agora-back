@@ -19,13 +19,3 @@ data class ConsultationPreviewFinished(
     val step: ConsultationStatus,
     val updateLabel: String?,
 )
-
-data class ConsultationPreviewAnswered(
-    val id: String,
-    val title: String,
-    val coverUrl: String,
-    val thematique: Thematique,
-    val step: ConsultationStatus,
-    val updateLabel: String?,
-)
-

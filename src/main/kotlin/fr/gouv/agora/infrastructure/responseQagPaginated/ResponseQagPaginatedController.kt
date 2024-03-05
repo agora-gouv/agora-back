@@ -15,9 +15,7 @@ class ResponseQagPaginatedController(
     fun getQagDetails(
         @PathVariable pageNumber: String,
     ): ResponseEntity<*> {
-        val usedPageNumber = pageNumber.toIntOrNull()
-
-        return usedPageNumber?.let { pageNumberInt ->
+        return pageNumber.toIntOrNull()?.let { pageNumberInt ->
             getResponseQagPreviewPaginatedListUseCase.getResponseQagPreviewPaginatedList(pageNumber = pageNumberInt)
         }?.let { responseQagPaginatedList ->
             ResponseEntity.ok(responseQagPaginatedJsonMapper.toJson(responseQagPaginatedList))
