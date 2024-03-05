@@ -23,9 +23,8 @@ class QagPaginatedController(
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val usedFilterType = filterType.takeUnless { it.isNullOrBlank() }
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
-        val usedPageNumber = pageNumber.toIntOrNull()
 
-        return usedPageNumber?.let { pageNumberInt ->
+        return pageNumber.toIntOrNull()?.let { pageNumberInt ->
             when (usedFilterType) {
                 "popular" -> qagPaginatedUseCase.getPopularQagPaginated(
                     userId = userId,

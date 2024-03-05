@@ -24,11 +24,10 @@ class QagHomeV2Controller(
         @RequestParam("filterType") filterType: String,
     ): ResponseEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        val usedPageNumber = pageNumber.toIntOrNull()
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedFilterType = filterType.takeUnless { it.isBlank() }
 
-        return usedPageNumber?.let { pageNumberInt ->
+        return pageNumber.toIntOrNull()?.let { pageNumberInt ->
             when (usedFilterType) {
                 "top" -> qagPaginatedV2UseCase.getPopularQagPaginated(
                     userId = userId,
