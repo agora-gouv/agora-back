@@ -4,9 +4,11 @@ import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
-import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResults.repository.ConsultationResultsCacheRepository
+import fr.gouv.agora.usecase.consultationResults.repository.ConsultationResultsCacheResult
+import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -40,10 +42,13 @@ internal class ConsultationResultsUseCaseTest {
     private lateinit var consultationResultAggregatedRepository: ConsultationResultAggregatedRepository
 
     @MockBean
+    private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
+
+    @MockBean
     private lateinit var mapper: QuestionNoResponseMapper
 
     @MockBean
-    private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
+    private lateinit var cacheRepository: ConsultationResultsCacheRepository
 
     companion object {
         @JvmStatic
@@ -140,8 +145,47 @@ internal class ConsultationResultsUseCaseTest {
     }
 
     @Test
+    fun `getConsultationResults - when has cache - should return cached result`() {
+        // Given
+        val consultationResults = mock(ConsultationResults::class.java)
+        given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
+            .willReturn(ConsultationResultsCacheResult.CachedConsultationResults(consultationResults))
+
+        // When
+        val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+        // THen
+        assertThat(result).isEqualTo(consultationResults)
+        then(consultationInfoRepository).shouldHaveNoInteractions()
+        then(questionRepository).shouldHaveNoInteractions()
+        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+        then(cacheRepository).should(only()).getConsultationResults(consultationId = "consultationId")
+    }
+
+    @Test
+    fun `getConsultationResults - when has cacheNotFound - should return null`() {
+        // Given
+        given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
+            .willReturn(ConsultationResultsCacheResult.ConsultationResultsNotFound)
+
+        // When
+        val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+        // THen
+        assertThat(result).isEqualTo(null)
+        then(consultationInfoRepository).shouldHaveNoInteractions()
+        then(questionRepository).shouldHaveNoInteractions()
+        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(mapper).shouldHaveNoInteractions()
+        then(cacheRepository).should(only()).getConsultationResults(consultationId = "consultationId")
+    }
+
+    @Test
     fun `getConsultationResults - when getConsultation is null - should return null`() {
         // Given
+        given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
+            .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
         given(consultationInfoRepository.getConsultation("consultationId")).willReturn(null)
 
         // When
@@ -153,6 +197,9 @@ internal class ConsultationResultsUseCaseTest {
         then(questionRepository).shouldHaveNoInteractions()
         then(consultationResponseRepository).shouldHaveNoInteractions()
         then(mapper).shouldHaveNoInteractions()
+        then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
+        then(cacheRepository).should().initConsultationResultsNotFound(consultationId = "consultationId")
+        then(cacheRepository).shouldHaveNoMoreInteractions()
     }
 
     @Nested
@@ -168,6 +215,9 @@ internal class ConsultationResultsUseCaseTest {
                 .willReturn(emptyList())
             given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
                 .willReturn(emptyList())
+
+            given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
+                .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
         }
 
         @Test
@@ -182,18 +232,21 @@ internal class ConsultationResultsUseCaseTest {
             val result = useCase.getConsultationResults(consultationId = "consultationId")
 
             // Then
-            assertThat(result).isEqualTo(
-                ConsultationResults(
-                    consultation = consultationInfo,
-                    participantCount = 23,
-                    results = emptyList(),
-                )
+            val expectedResults = ConsultationResults(
+                consultation = consultationInfo,
+                participantCount = 23,
+                results = emptyList(),
             )
+            assertThat(result).isEqualTo(expectedResults)
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
             then(userAnsweredConsultationRepository).should(only())
                 .getParticipantCount(consultationId = "consultationId")
             then(mapper).shouldHaveNoInteractions()
+            then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
+            then(cacheRepository).should()
+                .initConsultationResults(consultationId = "consultationId", results = expectedResults)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
         }
 
         @Test
@@ -208,18 +261,21 @@ internal class ConsultationResultsUseCaseTest {
             val result = useCase.getConsultationResults(consultationId = "consultationId")
 
             // Then
-            assertThat(result).isEqualTo(
-                ConsultationResults(
-                    consultation = consultationInfo,
-                    participantCount = 77,
-                    results = emptyList(),
-                )
+            val expectedResults = ConsultationResults(
+                consultation = consultationInfo,
+                participantCount = 77,
+                results = emptyList(),
             )
+            assertThat(result).isEqualTo(expectedResults)
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
             then(userAnsweredConsultationRepository).should(only())
                 .getParticipantCount(consultationId = "consultationId")
             then(mapper).shouldHaveNoInteractions()
+            then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
+            then(cacheRepository).should()
+                .initConsultationResults(consultationId = "consultationId", results = expectedResults)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
         }
 
         @Test
@@ -236,13 +292,12 @@ internal class ConsultationResultsUseCaseTest {
             val result = useCase.getConsultationResults(consultationId = "consultationId")
 
             // Then
-            assertThat(result).isEqualTo(
-                ConsultationResults(
-                    consultation = consultationInfo,
-                    participantCount = 1337,
-                    results = emptyList(),
-                )
+            val expectedResults = ConsultationResults(
+                consultation = consultationInfo,
+                participantCount = 1337,
+                results = emptyList(),
             )
+            assertThat(result).isEqualTo(expectedResults)
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
             then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
@@ -250,6 +305,10 @@ internal class ConsultationResultsUseCaseTest {
                 .getConsultationResponsesCount(consultationId = "consultationId")
             then(consultationResponseRepository).shouldHaveNoMoreInteractions()
             then(mapper).shouldHaveNoInteractions()
+            then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
+            then(cacheRepository).should()
+                .initConsultationResults(consultationId = "consultationId", results = expectedResults)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
         }
 
         @Test
@@ -268,23 +327,22 @@ internal class ConsultationResultsUseCaseTest {
             val result = useCase.getConsultationResults(consultationId = "consultationId")
 
             // Then
-            assertThat(result).isEqualTo(
-                ConsultationResults(
-                    consultation = consultationInfo,
-                    participantCount = 1,
-                    results = listOf(
-                        QuestionResults(
-                            question = question,
-                            responses = listOf(
-                                ChoiceResults(
-                                    choixPossible = choixPossible,
-                                    ratio = 0.0,
-                                ),
+            val expectedResults = ConsultationResults(
+                consultation = consultationInfo,
+                participantCount = 1,
+                results = listOf(
+                    QuestionResults(
+                        question = question,
+                        responses = listOf(
+                            ChoiceResults(
+                                choixPossible = choixPossible,
+                                ratio = 0.0,
                             ),
                         ),
                     ),
-                )
+                ),
             )
+            assertThat(result).isEqualTo(expectedResults)
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
             then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
             then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
@@ -292,6 +350,10 @@ internal class ConsultationResultsUseCaseTest {
                 .getConsultationResponsesCount(consultationId = "consultationId")
             then(consultationResponseRepository).shouldHaveNoMoreInteractions()
             then(mapper).should(only()).toQuestionNoResponse(question)
+            then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
+            then(cacheRepository).should()
+                .initConsultationResults(consultationId = "consultationId", results = expectedResults)
+            then(cacheRepository).shouldHaveNoMoreInteractions()
         }
 
     }
@@ -304,6 +366,8 @@ internal class ConsultationResultsUseCaseTest {
         inputDataList: List<QuestionInputData>,
     ) {
         // Given
+        given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
+            .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
         val consultationInfo = mock(ConsultationInfo::class.java)
         given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultationInfo)
 
@@ -318,20 +382,19 @@ internal class ConsultationResultsUseCaseTest {
         val result = useCase.getConsultationResults(consultationId = "consultationId")
 
         // Then
-        assertThat(result).isEqualTo(
-            ConsultationResults(
-                consultation = consultationInfo,
-                participantCount = participantCount,
-                results = testDataList.mapNotNull { testData ->
-                    testData.expectedQuestionResultList?.let {
-                        QuestionResults(
-                            question = testData.question,
-                            responses = testData.expectedQuestionResultList,
-                        )
-                    }
-                },
-            )
+        val expectedResults = ConsultationResults(
+            consultation = consultationInfo,
+            participantCount = participantCount,
+            results = testDataList.mapNotNull { testData ->
+                testData.expectedQuestionResultList?.let {
+                    QuestionResults(
+                        question = testData.question,
+                        responses = testData.expectedQuestionResultList,
+                    )
+                }
+            },
         )
+        assertThat(result).isEqualTo(expectedResults)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
         then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
@@ -341,6 +404,10 @@ internal class ConsultationResultsUseCaseTest {
         testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
             then(mapper).should().toQuestionNoResponse(it.question)
         }
+        then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
+        then(cacheRepository).should()
+            .initConsultationResults(consultationId = "consultationId", results = expectedResults)
+        then(cacheRepository).shouldHaveNoMoreInteractions()
     }
 
     @ParameterizedTest(name = "getConsultationResults / consultationResultAggregatedRepository - {0} - should return expected")
@@ -351,9 +418,10 @@ internal class ConsultationResultsUseCaseTest {
         inputDataList: List<QuestionInputData>,
     ) {
         // Given
+        given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
+            .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
         val consultationInfo = mock(ConsultationInfo::class.java)
         given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultationInfo)
-        val consultationUpdate = mock(ConsultationUpdate::class.java)
 
         val testDataList = inputDataList.map(::buildTestData)
         given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
@@ -368,20 +436,19 @@ internal class ConsultationResultsUseCaseTest {
         val result = useCase.getConsultationResults(consultationId = "consultationId")
 
         // Then
-        assertThat(result).isEqualTo(
-            ConsultationResults(
-                consultation = consultationInfo,
-                participantCount = participantCount,
-                results = testDataList.mapNotNull { testData ->
-                    testData.expectedQuestionResultList?.let {
-                        QuestionResults(
-                            question = testData.question,
-                            responses = testData.expectedQuestionResultList,
-                        )
-                    }
-                },
-            )
+        val expectedResults = ConsultationResults(
+            consultation = consultationInfo,
+            participantCount = participantCount,
+            results = testDataList.mapNotNull { testData ->
+                testData.expectedQuestionResultList?.let {
+                    QuestionResults(
+                        question = testData.question,
+                        responses = testData.expectedQuestionResultList,
+                    )
+                }
+            },
         )
+        assertThat(result).isEqualTo(expectedResults)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
         then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
@@ -392,6 +459,10 @@ internal class ConsultationResultsUseCaseTest {
         testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
             then(mapper).should().toQuestionNoResponse(it.question)
         }
+        then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
+        then(cacheRepository).should()
+            .initConsultationResults(consultationId = "consultationId", results = expectedResults)
+        then(cacheRepository).shouldHaveNoMoreInteractions()
     }
 
     private fun buildTestData(testInput: QuestionInputData): TestData {

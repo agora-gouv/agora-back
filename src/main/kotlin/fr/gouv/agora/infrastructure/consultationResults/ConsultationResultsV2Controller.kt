@@ -15,7 +15,7 @@ class ConsultationResultsV2Controller(
 
     @GetMapping("/v2/consultations/{consultationId}/responses")
     fun getConsultationResults(@PathVariable consultationId: String): ResponseEntity<*> {
-        return consultationResultsUseCase.getConsultationResults(consultationId)?.let {results ->
+        return consultationResultsUseCase.getConsultationResults(consultationId)?.let { results ->
             ResponseEntity.ok().body(mapper.toJson(results))
         } ?: ResponseEntity.badRequest().body(Unit)
     }

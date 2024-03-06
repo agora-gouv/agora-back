@@ -7,11 +7,12 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheR
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationAnsweredPaginatedListCacheRepository
-import fr.gouv.agora.usecase.qag.ContentSanitizer
-import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository.InsertResult
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResults.repository.ConsultationResultsCacheRepository
+import fr.gouv.agora.usecase.qag.ContentSanitizer
+import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.LocalDateTime
@@ -28,6 +29,7 @@ class InsertReponseConsultationUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository,
     private val consultationAnsweredPaginatedListCacheRepository: ConsultationAnsweredPaginatedListCacheRepository,
+    private val consultationResultsCacheRepository: ConsultationResultsCacheRepository
 ) {
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
@@ -68,6 +70,7 @@ class InsertReponseConsultationUseCase(
             consultationId = consultationId,
             userId = userId,
         )
+        consultationResultsCacheRepository.evictConsultationResultsCache(consultationId = consultationId)
 
         val responseInsertResult = insertReponseConsultationRepository.insertConsultationResponses(
             insertParameters = insertConsultationResponseParametersMapper.toInsertParameters(

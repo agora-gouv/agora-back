@@ -5,6 +5,8 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResults.repository.ConsultationResultsCacheRepository
+import fr.gouv.agora.usecase.consultationResults.repository.ConsultationResultsCacheResult
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.springframework.stereotype.Service
 
@@ -16,9 +18,24 @@ class ConsultationResultsUseCase(
     private val consultationResultAggregatedRepository: ConsultationResultAggregatedRepository,
     private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val mapper: QuestionNoResponseMapper,
+    private val cacheRepository: ConsultationResultsCacheRepository,
 ) {
 
     fun getConsultationResults(consultationId: String): ConsultationResults? {
+        return when (val cacheResult = cacheRepository.getConsultationResults(consultationId = consultationId)) {
+            is ConsultationResultsCacheResult.CachedConsultationResults -> cacheResult.results
+            ConsultationResultsCacheResult.ConsultationResultsNotFound -> null
+            ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized -> buildConsultationResults(consultationId = consultationId).also { results ->
+                if (results != null) {
+                    cacheRepository.initConsultationResults(consultationId = consultationId, results = results)
+                } else {
+                    cacheRepository.initConsultationResultsNotFound(consultationId = consultationId)
+                }
+            }
+        }
+    }
+
+    fun buildConsultationResults(consultationId: String): ConsultationResults? {
         val consultationInfo = consultationInfoRepository.getConsultation(consultationId = consultationId)
             ?: return null
 
