@@ -6,7 +6,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheR
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Component
 

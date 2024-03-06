@@ -1,6 +1,6 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 
 @Service

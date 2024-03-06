@@ -2,8 +2,8 @@ package fr.gouv.agora.infrastructure.userAnsweredConsultation.repository
 
 import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationResult
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationResult
 import org.springframework.stereotype.Component
 
 @Component

@@ -6,7 +6,7 @@ import fr.gouv.agora.usecase.login.repository.UserRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.GetConsultationResponseRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Component
 
