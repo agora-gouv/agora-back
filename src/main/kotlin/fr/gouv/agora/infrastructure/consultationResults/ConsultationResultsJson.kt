@@ -3,6 +3,17 @@ package fr.gouv.agora.infrastructure.consultationResults
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
+data class ConsultationResultsJson(
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("participantCount")
+    val participantCount: Int,
+    @JsonProperty("resultsUniqueChoice")
+    val resultsUniqueChoice: List<QuestionResultsJson>,
+    @JsonProperty("resultsMultipleChoice")
+    val resultsMultipleChoice: List<QuestionResultsJson>,
+)
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class ConsultationResultsWithUpdateJson(
     @JsonProperty("title")

@@ -16,7 +16,7 @@ class ConsultationResponsesWithUpdateController(
 ) {
 
     @GetMapping("/consultations/{consultationId}/responses")
-    fun getConsultationResults(@PathVariable consultationId: String): ResponseEntity<*> {
+    fun getConsultationResultsWithUpdate(@PathVariable consultationId: String): ResponseEntity<*> {
         val resultJson = cacheRepository.getConsultationResults(consultationId)
             ?: getConsultationResultsFromUseCase(consultationId)
 

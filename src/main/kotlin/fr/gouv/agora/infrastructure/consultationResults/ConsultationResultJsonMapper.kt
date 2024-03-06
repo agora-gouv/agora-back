@@ -8,6 +8,19 @@ import kotlin.math.roundToInt
 @Component
 class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
 
+    fun toJson(domain: ConsultationResults): ConsultationResultsJson {
+        return ConsultationResultsJson(
+            title = domain.consultation.title,
+            participantCount = domain.participantCount,
+            resultsUniqueChoice = domain.results.filter { result ->
+                result.question is QuestionUniqueChoice || result.question is QuestionConditional
+            }.map(::toQuestionResultsJson),
+            resultsMultipleChoice = domain.results.filter { result ->
+                result.question is QuestionMultipleChoices
+            }.map(::toQuestionResultsJson),
+        )
+    }
+
     fun toJson(domain: ConsultationResultsWithUpdate): ConsultationResultsWithUpdateJson {
         return ConsultationResultsWithUpdateJson(
             title = domain.consultation.title,
