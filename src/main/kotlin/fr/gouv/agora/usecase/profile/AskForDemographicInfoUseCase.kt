@@ -3,7 +3,7 @@ package fr.gouv.agora.usecase.profile
 import fr.gouv.agora.usecase.profile.AskDemographicInfoState.*
 import fr.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 

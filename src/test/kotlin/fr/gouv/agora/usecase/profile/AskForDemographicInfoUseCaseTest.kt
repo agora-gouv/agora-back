@@ -3,7 +3,7 @@ package fr.gouv.agora.usecase.profile
 import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

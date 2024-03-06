@@ -1,7 +1,7 @@
 package fr.gouv.agora.oninit
 
 import fr.gouv.agora.usecase.consultation.ConsultationCacheClearUseCase
-import fr.gouv.agora.usecase.consultationResult.PickConsultationsToAggregateUseCase
+import fr.gouv.agora.usecase.consultationAggregate.PickConsultationsToAggregateUseCase
 import org.springframework.stereotype.Component
 
 @Component
