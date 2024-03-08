@@ -10,10 +10,12 @@ class FeedbackConsultationUpdateJsonMapper {
     fun toInserting(
         json: InsertFeedbackConsultationUpdateJson,
         userId: String,
+        consultationId: String,
         consultationUpdateId: String,
     ): FeedbackConsultationUpdateInserting {
         return FeedbackConsultationUpdateInserting(
             userId = userId,
+            consultationId = consultationId,
             consultationUpdateId = consultationUpdateId,
             isPositive = json.isPositive,
         )

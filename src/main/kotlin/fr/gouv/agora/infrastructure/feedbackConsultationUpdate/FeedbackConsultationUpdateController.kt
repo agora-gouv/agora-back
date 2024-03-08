@@ -30,6 +30,7 @@ class FeedbackConsultationUpdateController(
                 val feedbackInserting = mapper.toInserting(
                     json = body,
                     userId = userId,
+                    consultationId = consultationId,
                     consultationUpdateId = consultationUpdateId,
                 )
                 when (val result = useCase.insertFeedback(feedbackInserting)) {

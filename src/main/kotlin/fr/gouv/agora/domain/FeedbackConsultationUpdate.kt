@@ -13,6 +13,7 @@ data class FeedbackConsultationUpdateStats(
 
 data class FeedbackConsultationUpdateInserting(
     val userId: String,
+    val consultationId: String,
     val consultationUpdateId: String,
     val isPositive: Boolean,
 )

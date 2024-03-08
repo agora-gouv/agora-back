@@ -1,11 +1,13 @@
 package fr.gouv.agora.infrastructure.feedbackConsultationUpdate.repository
 
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
+import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
 import fr.gouv.agora.infrastructure.feedbackConsultationUpdate.dto.FeedbackConsultationUpdateDTO
 import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import org.springframework.stereotype.Component
 import java.util.*
+import kotlin.math.roundToInt
 
 @Component
 class FeedbackConsultationUpdateMapper {
@@ -29,6 +31,23 @@ class FeedbackConsultationUpdateMapper {
                 IS_POSITIVE_FALSE_VALUE
             },
             createdDate = Date(),
+        )
+    }
+
+    fun toStats(rawStats: Map<Int, Int>): FeedbackConsultationUpdateStats {
+        val filteredStats =
+            rawStats.filterKeys { key -> key == IS_POSITIVE_TRUE_VALUE || key == IS_POSITIVE_FALSE_VALUE }
+        val responseCount = filteredStats.values.sum()
+
+        val (positiveRatio, negativeRatio) = if (responseCount > 0) {
+            val positiveRatio = ((filteredStats[IS_POSITIVE_TRUE_VALUE] ?: 0) * 100.0 / responseCount).roundToInt()
+            (positiveRatio to (100 - positiveRatio))
+        } else (0 to 0)
+
+        return FeedbackConsultationUpdateStats(
+            positiveRatio = positiveRatio,
+            negativeRatio = negativeRatio,
+            responseCount = responseCount,
         )
     }
 

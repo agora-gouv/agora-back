@@ -35,6 +35,7 @@ class ConsultationDetailsV2JsonMapper(
             body = buildBody(consultationDetails),
             participationInfo = buildParticipationInfo(consultationDetails),
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
+            feedbackQuestion = buildFeedbackQuestion(consultationDetails),
             footer = buildFooter(consultationDetails),
             history = buildHistory(consultationDetails),
         )
@@ -56,6 +57,7 @@ class ConsultationDetailsV2JsonMapper(
             body = buildBody(consultationDetails),
             participationInfo = buildParticipationInfo(consultationDetails),
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
+            feedbackQuestion = buildFeedbackQuestion(consultationDetails),
             footer = buildFooter(consultationDetails),
             history = null,
         )
@@ -110,6 +112,29 @@ class ConsultationDetailsV2JsonMapper(
             participantCount = consultationDetails.participantCount,
             participantCountGoal = consultationDetails.consultation.participantCountGoal,
         )
+    }
+
+    private fun buildFeedbackQuestion(consultationDetails: ConsultationDetailsV2WithInfo): FeedbackQuestion? {
+        return consultationDetails.update.feedbackQuestion?.let { feedbackQuestion ->
+            FeedbackQuestion(
+                consultationUpdateId = feedbackQuestion.consultationUpdateId,
+                title = feedbackQuestion.title,
+                picto = feedbackQuestion.picto,
+                description = feedbackQuestion.description,
+                results = consultationDetails.isUserFeedbackPositive?.let { isUserFeedbackPositive ->
+                    FeedbackQuestion.Results(
+                        isUserFeedbackPositive = isUserFeedbackPositive,
+                        stats = consultationDetails.feedbackStats?.let { stats ->
+                            FeedbackQuestion.Stats(
+                                positiveRatio = stats.positiveRatio,
+                                negativeRatio = stats.negativeRatio,
+                                responseCount = stats.responseCount,
+                            )
+                        }
+                    )
+                }
+            )
+        }
     }
 
     private fun buildFooter(consultationDetails: ConsultationDetailsV2WithInfo): Footer? {

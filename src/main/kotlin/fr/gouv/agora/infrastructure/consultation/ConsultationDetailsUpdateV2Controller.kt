@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.consultation
 
+import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.consultation.ConsultationDetailsUpdateV2UseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,6 +24,7 @@ class ConsultationDetailsUpdateV2Controller(
         return useCase.getConsultationDetailsUpdate(
             consultationId = consultationId,
             consultationUpdateId = consultationUpdateId,
+            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )?.let { consultationDetails ->
             ResponseEntity.ok().body(mapper.toUpdateJson(consultationDetails))
         } ?: ResponseEntity.notFound().build<Unit>()

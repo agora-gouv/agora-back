@@ -32,6 +32,7 @@ class FeatureFlagsRepositoryImpl(
         AgoraFeature.QagArchive -> "IS_QAG_ARCHIVE_ENABLED"
         AgoraFeature.SimilarQag -> "IS_SIMILAR_QAG_ENABLED"
         AgoraFeature.FeedbackResponseQag -> "IS_FEEDBACK_ON_RESPONSE_QAG_ENABLED"
+        AgoraFeature.FeedbackConsultationUpdate -> "IS_FEEDBACK_ON_CONSULTATION_UPDATE_ENABLED"
     }
 
     private fun getCache() = cacheManager.getCache(FEATURE_FLAGS_CACHE_NAME)

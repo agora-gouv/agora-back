@@ -3,17 +3,28 @@ package fr.gouv.agora.usecase.feedbackConsultationUpdate
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateResults
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.repository.FeedbackConsultationUpdateRepository
 import org.springframework.stereotype.Component
 
 @Component
 class FeedbackConsultationUpdateUseCase(
     private val feedbackConsultationUpdateRepository: FeedbackConsultationUpdateRepository,
+    private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
+
+    fun getUserFeedback(consultationUpdateId: String, userId: String): Boolean? {
+        return feedbackConsultationUpdateRepository.getUserFeedback(
+            consultationUpdateId = consultationUpdateId,
+            userId = userId
+        )
+    }
 
     fun insertFeedback(feedbackInserting: FeedbackConsultationUpdateInserting): InsertFeedbackConsultationUpdateResults {
         // TODO: verify if update has feedback
-        return if (feedbackConsultationUpdateRepository.insertFeedback(feedbackInserting)) {
+        //
+        return if (getUserFeedback(feedbackInserting.consultationUpdateId, feedbackInserting.userId) != null) {
+            // TODO update cache
             InsertFeedbackConsultationUpdateResults.Success(
                 FeedbackConsultationUpdateResults(
                     userResponse = feedbackInserting.isPositive,

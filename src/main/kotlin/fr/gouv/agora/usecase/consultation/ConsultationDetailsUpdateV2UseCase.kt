@@ -1,27 +1,32 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.ConsultationDetailsV2
-import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
-import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedbackCacheResult
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
+import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
+import fr.gouv.agora.usecase.feedbackConsultationUpdate.repository.FeedbackConsultationUpdateRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Component
 
 @Component
 class ConsultationDetailsUpdateV2UseCase(
+    private val featureFlagsRepository: FeatureFlagsRepository,
     private val infoRepository: ConsultationInfoRepository,
     private val thematiqueRepository: ThematiqueRepository,
     private val updateRepository: ConsultationUpdateV2Repository,
     private val userAnsweredRepository: UserAnsweredConsultationRepository,
+    private val feedbackRepository: FeedbackConsultationUpdateRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
 
     fun getConsultationDetailsUpdate(
         consultationId: String,
         consultationUpdateId: String,
+        userId: String,
     ): ConsultationDetailsV2WithInfo? {
         val cacheResult = cacheRepository.getConsultationDetails(
             consultationId = consultationId,
@@ -46,10 +51,12 @@ class ConsultationDetailsUpdateV2UseCase(
                 consultation = details.consultation,
                 thematique = details.thematique,
                 update = details.update,
+                feedbackStats = details.feedbackStats,
                 history = details.history,
                 participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
                     getParticipantCount(consultationId)
                 } else 0,
+                isUserFeedbackPositive = getUserFeedback(consultationUpdate = details.update, userId = userId),
             )
         }
     }
@@ -62,6 +69,7 @@ class ConsultationDetailsUpdateV2UseCase(
                         consultation = consultationInfo,
                         thematique = thematique,
                         update = update,
+                        feedbackStats = getFeedbackStats(update),
                         history = null,
                     )
                 }
@@ -69,11 +77,31 @@ class ConsultationDetailsUpdateV2UseCase(
         }
     }
 
+    private fun getFeedbackStats(consultationUpdate: ConsultationUpdateInfoV2): FeedbackConsultationUpdateStats? {
+        if (consultationUpdate.feedbackQuestion == null
+            || !featureFlagsRepository.isFeatureEnabled(AgoraFeature.FeedbackConsultationUpdate)
+        ) return null
+        return feedbackRepository.getFeedbackStats(consultationUpdate.id)
+    }
+
     private fun getParticipantCount(consultationId: String): Int {
         return cacheRepository.getParticipantCount(consultationId) ?: userAnsweredRepository.getParticipantCount(
             consultationId
         ).also { participantCount ->
             cacheRepository.initParticipantCount(consultationId, participantCount)
+        }
+    }
+
+    private fun getUserFeedback(consultationUpdate: ConsultationUpdateInfoV2, userId: String): Boolean? {
+        if (consultationUpdate.feedbackQuestion == null) return null
+
+        val cacheResult = cacheRepository.getUserFeedback(consultationUpdateId = consultationUpdate.id, userId = userId)
+        return when (cacheResult) {
+            is ConsultationUpdateUserFeedbackCacheResult.CachedConsultationUpdateUserFeedback -> cacheResult.isUserFeedbackPositive
+            ConsultationUpdateUserFeedbackCacheResult.ConsultationUpdateUserFeedbackNotFound -> null
+            ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized -> feedbackRepository.getUserFeedback(
+                consultationUpdateId = consultationUpdate.id, userId = userId
+            )
         }
     }
 

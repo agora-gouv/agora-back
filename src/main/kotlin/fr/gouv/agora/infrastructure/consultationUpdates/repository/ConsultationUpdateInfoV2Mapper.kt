@@ -42,6 +42,7 @@ class ConsultationUpdateInfoV2Mapper {
                 filter = { sectionDTO -> sectionDTO.isPreview == TRUE_INT_VALUE && sectionDTO.parentSectionId == null },
             ),
             downloadAnalysisUrl = dto.downloadAnalysisUrl,
+            feedbackQuestion = buildFeedbackQuestion(dto),
             footer = buildFooter(dto),
         )
     }
@@ -59,6 +60,16 @@ class ConsultationUpdateInfoV2Mapper {
         return InfoHeader(
             picto = dto.infoHeaderPicto,
             description = dto.infoHeaderDescription,
+        )
+    }
+
+    private fun buildFeedbackQuestion(dto: ConsultationUpdateV2DTO): FeedbackQuestion? {
+        if (dto.feedbackQuestionTitle == null || dto.feedbackQuestionPicto == null || dto.feedbackQuestionDescription == null) return null
+        return FeedbackQuestion(
+            consultationUpdateId = dto.id.toString(),
+            title = dto.feedbackQuestionTitle,
+            picto = dto.feedbackQuestionPicto,
+            description = dto.feedbackQuestionDescription,
         )
     }
 

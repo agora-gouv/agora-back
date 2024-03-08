@@ -12,14 +12,24 @@ interface FeedbackConsultationUpdateDatabaseRepository : JpaRepository<FeedbackC
 
     @Query(
         value = """SELECT is_positive FROM feedbacks_consultation_update
-            WHERE user_id = :userId
-            AND consultation_update_id = :consultationUpdateId
+            WHERE consultation_update_id = :consultationUpdateId
+            AND user_id = :userId
             LIMIT 1
         """, nativeQuery = true
     )
     fun getUserConsultationUpdateFeedback(
-        @Param("userId") userId: UUID,
         @Param("consultationUpdateId") consultationUpdateId: UUID,
+        @Param("userId") userId: UUID,
     ): List<Int>
+
+    @Query(
+        value = """SELECT is_positive, COUNT(*) FROM feedbacks_consultation_update
+            WHERE consultation_update_id = :consultationUpdateId
+            GROUP BY is_positive
+        """, nativeQuery = true
+    )
+    fun getConsultationUpdateFeedbackStats(
+        @Param("consultationUpdateId") consultationUpdateId: UUID,
+    ): Map<Int, Int>
 
 }
