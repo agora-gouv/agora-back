@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.feedbackConsultationUpdate.repository
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
 import fr.gouv.agora.infrastructure.feedbackConsultationUpdate.dto.FeedbackConsultationUpdateDTO
+import fr.gouv.agora.infrastructure.feedbackConsultationUpdate.dto.FeedbackConsultationUpdateStatsDTO
 import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import org.springframework.stereotype.Component
@@ -34,20 +35,23 @@ class FeedbackConsultationUpdateMapper {
         )
     }
 
-    fun toStats(rawStats: Map<Int, Int>): FeedbackConsultationUpdateStats {
-        val filteredStats =
-            rawStats.filterKeys { key -> key == IS_POSITIVE_TRUE_VALUE || key == IS_POSITIVE_FALSE_VALUE }
-        val responseCount = filteredStats.values.sum()
+    fun toStats(dtos: List<FeedbackConsultationUpdateStatsDTO>): FeedbackConsultationUpdateStats {
+        val positiveStatCount = dtos
+            .filter { dto -> dto.hasPositiveValue == IS_POSITIVE_TRUE_VALUE }
+            .sumOf { it.responseCount }
+        val totalResponseCount = positiveStatCount + dtos
+            .filter { dto -> dto.hasPositiveValue == IS_POSITIVE_FALSE_VALUE }
+            .sumOf { it.responseCount }
 
-        val (positiveRatio, negativeRatio) = if (responseCount > 0) {
-            val positiveRatio = ((filteredStats[IS_POSITIVE_TRUE_VALUE] ?: 0) * 100.0 / responseCount).roundToInt()
+        val (positiveRatio, negativeRatio) = if (totalResponseCount > 0) {
+            val positiveRatio = (positiveStatCount * 100.0 / totalResponseCount).roundToInt()
             (positiveRatio to (100 - positiveRatio))
         } else (0 to 0)
 
         return FeedbackConsultationUpdateStats(
             positiveRatio = positiveRatio,
             negativeRatio = negativeRatio,
-            responseCount = responseCount,
+            responseCount = totalResponseCount,
         )
     }
 

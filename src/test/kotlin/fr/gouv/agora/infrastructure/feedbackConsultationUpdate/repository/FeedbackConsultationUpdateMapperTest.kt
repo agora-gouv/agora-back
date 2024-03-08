@@ -1,11 +1,14 @@
 package fr.gouv.agora.infrastructure.feedbackConsultationUpdate.repository
 
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.infrastructure.feedbackConsultationUpdate.dto.FeedbackConsultationUpdateStatsDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.BDDMockito.given
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -63,9 +66,15 @@ class FeedbackConsultationUpdateMapperTest {
         expectedNegativeRatio: Int,
     ) {
         // Given
-        val rawStats = mapOf(
-            0 to negativeCount,
-            1 to positiveCount,
+        val rawStats = listOf(
+            mock(FeedbackConsultationUpdateStatsDTO::class.java).also {
+                given(it.hasPositiveValue).willReturn(1)
+                given(it.responseCount).willReturn(positiveCount)
+            },
+            mock(FeedbackConsultationUpdateStatsDTO::class.java).also {
+                given(it.hasPositiveValue).willReturn(0)
+                given(it.responseCount).willReturn(negativeCount)
+            },
         )
 
         // When
@@ -76,7 +85,7 @@ class FeedbackConsultationUpdateMapperTest {
             FeedbackConsultationUpdateStats(
                 positiveRatio = expectedPositiveRatio,
                 negativeRatio = expectedNegativeRatio,
-                responseCount = positiveCount + negativeCount,
+                responseCount = (positiveCount + negativeCount),
             )
         )
     }
@@ -84,8 +93,11 @@ class FeedbackConsultationUpdateMapperTest {
     @Test
     fun `toStatsTestCases - when has unknown keys - should ignore them and return expected`() {
         // Given
-        val rawStats = mapOf(
-            42 to 1337,
+        val rawStats = listOf(
+            mock(FeedbackConsultationUpdateStatsDTO::class.java).also {
+                given(it.hasPositiveValue).willReturn(42)
+                given(it.responseCount).willReturn(1337)
+            },
         )
 
         // When

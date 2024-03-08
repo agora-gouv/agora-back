@@ -14,7 +14,6 @@ data class FeedbackConsultationUpdateDTO(
     val userId: UUID,
     @JoinTable(joinColumns = [JoinColumn(table = "consultation_updates_v2", referencedColumnName = "id")])
     val consultationUpdateId: UUID,
-    @Column(columnDefinition = "SMALLINT")
     val isPositive: Int,
     val createdDate: Date,
 ) {
