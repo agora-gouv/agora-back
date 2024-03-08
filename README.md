@@ -1242,9 +1242,9 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     0,
     'https://content.agora.beta.gouv.fr/participation_citoyenne/step2-rapportvdef.pdf',
-    null,
-    null,
-    null,
+    '💬',
+    'Donnez votre avis',
+    'Avez-vous trouver cette synthèse utile ?',
     null,
     null
 ) ON CONFLICT DO NOTHING;
