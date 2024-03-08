@@ -30,7 +30,7 @@ interface ConsultationDetailsV2CacheRepository {
 }
 
 sealed class ConsultationUpdateCacheResult {
-    data class CachedConsultationsDetails(val details: ConsultationDetailsV2?) : ConsultationUpdateCacheResult()
+    data class CachedConsultationsDetails(val details: ConsultationDetailsV2) : ConsultationUpdateCacheResult()
     object ConsultationUpdateNotFound : ConsultationUpdateCacheResult()
     object CacheNotInitialized : ConsultationUpdateCacheResult()
 }
