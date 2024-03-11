@@ -1,14 +1,12 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.agora.domain.ConsultationDetailsV2
-import fr.gouv.agora.domain.ConsultationUpdateHistory
-import fr.gouv.agora.domain.ConsultationUpdateInfoV2
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2.*
-import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
+import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedbackCacheResult
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
@@ -29,6 +27,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
 
         private const val HAS_ANSWERED_CACHE_NAME = "hasAnsweredConsultationDetailsV2"
         private const val PARTICIPANT_COUNT_CACHE_NAME = "participantCountConsultationDetailsV2"
+        private const val HAS_GIVEN_FEEDBACK_CACHE_NAME = "hasGivenFeedbackConsultationUpdateV2"
 
         private const val UNANSWERED_USERS_CONSULTATION_DETAILS_PREFIX = "unanswered/"
 
@@ -130,6 +129,30 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         cacheManager.getCache(HAS_ANSWERED_CACHE_NAME)?.evict("$consultationId/$userId")
     }
 
+    override fun getUserFeedback(
+        consultationUpdateId: String,
+        userId: String,
+    ): ConsultationUpdateUserFeedbackCacheResult {
+        return try {
+            val cachedContent = cacheManager.getCache(HAS_GIVEN_FEEDBACK_CACHE_NAME)
+                ?.get("$consultationUpdateId/$userId", String::class.java)
+            when (cachedContent) {
+                null -> ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized
+                "" -> ConsultationUpdateUserFeedbackCacheResult.ConsultationUpdateUserFeedbackNotFound
+                else -> ConsultationUpdateUserFeedbackCacheResult.CachedConsultationUpdateUserFeedback(
+                    isUserFeedbackPositive = cachedContent.toBooleanStrictOrNull()
+                )
+            }
+        } catch (e: Exception) {
+            ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized
+        }
+    }
+
+    override fun initUserFeedback(consultationUpdateId: String, userId: String, isUserFeedbackPositive: Boolean?) {
+        cacheManager.getCache(HAS_GIVEN_FEEDBACK_CACHE_NAME)
+            ?.put("$consultationUpdateId/$userId", isUserFeedbackPositive?.toString() ?: "null")
+    }
+
     private fun getConsultationDetailsCache(
         cacheName: String,
         cacheKey: String,
@@ -173,8 +196,10 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             body = details.update.body.map(::toCacheableSection),
             bodyPreview = details.update.bodyPreview.map(::toCacheableSection),
             downloadAnalysisUrl = details.update.downloadAnalysisUrl,
+            feedbackQuestion = details.update.feedbackQuestion,
             footer = details.update.footer,
         ),
+        feedbackStats = details.feedbackStats,
         history = details.history,
     )
 
@@ -193,8 +218,10 @@ class ConsultationDetailsV2CacheRepositoryImpl(
                 body = cacheable.update.body.mapNotNull(::fromCacheableSection),
                 bodyPreview = cacheable.update.bodyPreview.mapNotNull(::fromCacheableSection),
                 downloadAnalysisUrl = cacheable.update.downloadAnalysisUrl,
+                feedbackQuestion = cacheable.update.feedbackQuestion,
                 footer = cacheable.update.footer,
             ),
+            feedbackStats = cacheable.feedbackStats,
             history = cacheable.history,
         )
     }
@@ -282,6 +309,7 @@ private data class CacheableConsultationDetails(
     val consultation: ConsultationInfo,
     val thematique: Thematique,
     val update: CacheableConsultationUpdateInfo,
+    val feedbackStats: FeedbackConsultationUpdateStats?,
     val history: List<ConsultationUpdateHistory>?,
 )
 
@@ -296,6 +324,7 @@ private data class CacheableConsultationUpdateInfo(
     val body: List<CacheableSection>,
     val bodyPreview: List<CacheableSection>,
     val downloadAnalysisUrl: String?,
+    val feedbackQuestion: FeedbackQuestion?,
     val footer: Footer?,
 )
 

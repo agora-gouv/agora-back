@@ -13,6 +13,7 @@ data class ConsultationUpdateInfoV2(
     val body: List<Section>,
     val bodyPreview: List<Section>,
     val downloadAnalysisUrl: String?,
+    val feedbackQuestion: FeedbackQuestion?,
     val footer: Footer?,
 ) {
 
@@ -50,24 +51,12 @@ data class ConsultationUpdateInfoV2(
         data class Accordion(val title: String, val sections: List<Section>) : Section()
     }
 
-    // TODO Feedback Question & results
-//    sealed class Feedback {
-//        abstract val title: String
-//        abstract val picto: String
-//        abstract val description: String
-//
-//        data class Question(
-//            override val title: String,
-//            override val picto: String,
-//            override val description: String,
-//        ): Feedback()
-//
-//        data class ResultsWithoutInfo(
-//            override val title: String,
-//            override val picto: String,
-//            override val description: String,
-//        ): Feedback()
-//    }
+    data class FeedbackQuestion(
+        val consultationUpdateId: String,
+        val title: String,
+        val picto: String,
+        val description: String,
+    )
 
     data class Footer(val title: String?, val description: String)
 }

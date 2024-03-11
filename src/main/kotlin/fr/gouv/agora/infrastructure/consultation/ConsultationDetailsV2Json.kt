@@ -28,7 +28,8 @@ data class ConsultationDetailsV2Json(
     val participationInfo: ParticipationInfo?,
     @JsonProperty("downloadAnalysisUrl")
     val downloadAnalysisUrl: String?,
-    // TODO feedbacks
+    @JsonProperty("feedbackQuestion")
+    val feedbackQuestion: FeedbackQuestion?,
     @JsonProperty("footer")
     val footer: Footer?,
     @JsonProperty("history")
@@ -145,6 +146,35 @@ data class ConsultationDetailsV2Json(
         @JsonProperty("participantCountGoal")
         val participantCountGoal: Int,
     )
+
+    data class FeedbackQuestion(
+        @JsonProperty("updateId")
+        val consultationUpdateId: String,
+        @JsonProperty("title")
+        val title: String,
+        @JsonProperty("picto")
+        val picto: String,
+        @JsonProperty("description")
+        val description: String,
+        @JsonProperty("results")
+        val results: Results?,
+    ) {
+        data class Results(
+            @JsonProperty("userResponse")
+            val isUserFeedbackPositive: Boolean?,
+            @JsonProperty("stats")
+            val stats: Stats?,
+        )
+
+        data class Stats(
+            @JsonProperty("positiveRatio")
+            val positiveRatio: Int,
+            @JsonProperty("negativeRatio")
+            val negativeRatio: Int,
+            @JsonProperty("responseCount")
+            val responseCount: Int,
+        )
+    }
 
     data class Footer(
         @JsonProperty("title")

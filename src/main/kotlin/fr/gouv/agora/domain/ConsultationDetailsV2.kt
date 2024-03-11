@@ -6,6 +6,7 @@ data class ConsultationDetailsV2(
     val consultation: ConsultationInfo,
     val thematique: Thematique,
     val update: ConsultationUpdateInfoV2,
+    val feedbackStats: FeedbackConsultationUpdateStats?,
     val history: List<ConsultationUpdateHistory>?,
 )
 
@@ -13,6 +14,8 @@ data class ConsultationDetailsV2WithInfo(
     val consultation: ConsultationInfo,
     val thematique: Thematique,
     val update: ConsultationUpdateInfoV2,
+    val feedbackStats: FeedbackConsultationUpdateStats?,
     val history: List<ConsultationUpdateHistory>?,
     val participantCount: Int,
+    val isUserFeedbackPositive: Boolean?,
 )

@@ -454,7 +454,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/v2/consultations/{{consultationId}}/updates/{{consultationUpdateId}}",
+							"raw": "{{scheme}}://{{baseUrl}}/v2/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{baseUrl}}"
@@ -462,9 +462,100 @@
 							"path": [
 								"v2",
 								"consultations",
-								"{{consultationId}}",
+								"{{consultationId2}}",
 								"updates",
-								"{{consultationUpdateId}}"
+								"{{consultationUpdateId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/updates/ID/feedback",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isPositive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId2}}",
+								"updates",
+								"{{consultationUpdateId2}}",
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/updates/ID/feedback",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId2}}",
+								"updates",
+								"{{consultationUpdateId2}}",
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/responses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId}}",
+								"responses"
 							]
 						}
 					},
@@ -525,32 +616,6 @@
 							"path": [
 								"consultations",
 								"f5fd9c1d-6583-494c-8b0f-78129d6a0382",
-								"responses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/consultations/ID/responses",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"consultations",
-								"{{consultationId}}",
 								"responses"
 							]
 						}

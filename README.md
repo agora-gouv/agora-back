@@ -35,6 +35,7 @@ export IS_LOGIN_ENABLED="true"
 export IS_QAG_ARCHIVE_ENABLED="false"
 export IS_QAG_SELECT_ENABLED="false"
 export IS_FEEDBACK_ON_RESPONSE_QAG_ENABLED="true"
+export IS_FEEDBACK_ON_CONSULTATION_UPDATE_ENABLED="true"
 export ERROR_TEXT_QAG_DISABLED="QaG disabled ¯\_(ツ)_/¯"
 export REQUIRED_IOS_VERSION="12"
 export REQUIRED_ANDROID_VERSION="18"
@@ -1242,9 +1243,9 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     0,
     'https://content.agora.beta.gouv.fr/participation_citoyenne/step2-rapportvdef.pdf',
-    null,
-    null,
-    null,
+    '💬',
+    'Donnez votre avis',
+    'Avez-vous trouver cette synthèse utile ?',
     null,
     null
 ) ON CONFLICT DO NOTHING;
