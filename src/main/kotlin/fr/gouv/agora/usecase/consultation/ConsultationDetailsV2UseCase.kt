@@ -157,7 +157,13 @@ class ConsultationDetailsV2UseCase(
             ConsultationUpdateUserFeedbackCacheResult.ConsultationUpdateUserFeedbackNotFound -> null
             ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized -> feedbackRepository.getUserFeedback(
                 consultationUpdateId = consultationUpdate.id, userId = userId
-            )
+            ).also { userResponse ->
+                cacheRepository.initUserFeedback(
+                    consultationUpdateId = consultationUpdate.id,
+                    userId = userId,
+                    isUserFeedbackPositive = userResponse,
+                )
+            }
         }
     }
 }
