@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.feedbackConsultationUpdate
 
+import fr.gouv.agora.domain.FeedbackConsultationUpdateDeleting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateResults
 import org.springframework.stereotype.Component
@@ -18,6 +19,18 @@ class FeedbackConsultationUpdateJsonMapper {
             consultationId = consultationId,
             consultationUpdateId = consultationUpdateId,
             isPositive = json.isPositive,
+        )
+    }
+
+    fun toDeleting(
+        userId: String,
+        consultationId: String,
+        consultationUpdateId: String,
+    ): FeedbackConsultationUpdateDeleting {
+        return FeedbackConsultationUpdateDeleting(
+            userId = userId,
+            consultationId = consultationId,
+            consultationUpdateId = consultationUpdateId,
         )
     }
 

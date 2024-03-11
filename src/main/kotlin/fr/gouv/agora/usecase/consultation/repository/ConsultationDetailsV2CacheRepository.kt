@@ -26,7 +26,6 @@ interface ConsultationDetailsV2CacheRepository {
 
     fun getUserFeedback(consultationUpdateId: String, userId: String): ConsultationUpdateUserFeedbackCacheResult
     fun initUserFeedback(consultationUpdateId: String, userId: String, isUserFeedbackPositive: Boolean?)
-    fun evictUserFeedback(consultationUpdateId: String, userId: String)
 }
 
 sealed class ConsultationUpdateCacheResult {

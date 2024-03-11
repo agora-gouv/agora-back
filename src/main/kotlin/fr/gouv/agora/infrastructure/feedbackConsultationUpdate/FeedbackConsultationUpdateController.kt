@@ -43,4 +43,29 @@ class FeedbackConsultationUpdateController(
         )
     }
 
+    @DeleteMapping("/consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
+    fun deleteFeedbackConsultationUpdate(
+        @RequestHeader("Authorization") authorizationHeader: String,
+        @PathVariable consultationId: String,
+        @PathVariable consultationUpdateId: String,
+    ): ResponseEntity<*> {
+        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        return queue.executeTask(
+            taskType = TaskType.DeleteFeedback(userId = userId),
+            onTaskRejected = { ResponseEntity.badRequest().body(Unit) },
+            onTaskExecuted = {
+                val feedbackDeleting = mapper.toDeleting(
+                    userId = userId,
+                    consultationId = consultationId,
+                    consultationUpdateId = consultationUpdateId,
+                )
+                if (useCase.deleteFeedback(feedbackDeleting)) {
+                    ResponseEntity.ok().body(Unit)
+                } else {
+                    ResponseEntity.badRequest().body(Unit)
+                }
+            },
+        )
+    }
+
 }

@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.feedbackConsultationUpdate.repository
 
+import fr.gouv.agora.domain.FeedbackConsultationUpdateDeleting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -37,6 +38,14 @@ class FeedbackConsultationUpdateRepositoryImpl(
     override fun getFeedbackStats(consultationUpdateId: String): FeedbackConsultationUpdateStats? {
         return consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
             mapper.toStats(databaseRepository.getConsultationUpdateFeedbackStats(consultationUpdateUUID))
+        }
+    }
+
+    override fun deleteFeedback(feedbackDeleting: FeedbackConsultationUpdateDeleting) {
+        feedbackDeleting.consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
+            feedbackDeleting.userId.toUuidOrNull()?.let { userUUID ->
+                databaseRepository.deleteFeedback(consultationUpdateUUID, userUUID)
+            }
         }
     }
 

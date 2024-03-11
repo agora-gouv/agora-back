@@ -153,10 +153,6 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             ?.put("$consultationUpdateId/$userId", isUserFeedbackPositive?.toString() ?: "null")
     }
 
-    override fun evictUserFeedback(consultationUpdateId: String, userId: String) {
-        cacheManager.getCache(HAS_GIVEN_FEEDBACK_CACHE_NAME)?.evict("$consultationUpdateId/$userId")
-    }
-
     private fun getConsultationDetailsCache(
         cacheName: String,
         cacheKey: String,

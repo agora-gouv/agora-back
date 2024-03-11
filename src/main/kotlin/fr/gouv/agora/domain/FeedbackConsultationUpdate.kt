@@ -17,3 +17,9 @@ data class FeedbackConsultationUpdateInserting(
     val consultationUpdateId: String,
     val isPositive: Boolean,
 )
+
+data class FeedbackConsultationUpdateDeleting(
+    val userId: String,
+    val consultationId: String,
+    val consultationUpdateId: String,
+)

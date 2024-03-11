@@ -1,9 +1,6 @@
 package fr.gouv.agora.usecase.feedbackConsultationUpdate
 
-import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
-import fr.gouv.agora.domain.FeedbackConsultationUpdateResults
-import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
@@ -28,10 +25,16 @@ class FeedbackConsultationUpdateUseCase(
         ) return InsertFeedbackConsultationUpdateResults.Failure
 
         feedbackRepository.insertFeedback(feedbackInserting)
+        cacheRepository.initUserFeedback(
+            consultationUpdateId = feedbackInserting.consultationUpdateId,
+            userId = feedbackInserting.userId,
+            isUserFeedbackPositive = feedbackInserting.isPositive,
+        )
         val newFeedbackStats =
             buildFeedbackStats(consultationUpdateId = feedbackInserting.consultationUpdateId)?.also { feedbackStats ->
-                updateCache(
-                    feedbackInserting = feedbackInserting,
+                updateFeedbackStatsCache(
+                    consultationId = feedbackInserting.consultationId,
+                    consultationUpdateId = feedbackInserting.consultationUpdateId,
                     feedbackStats = feedbackStats,
                 )
             }
@@ -42,6 +45,31 @@ class FeedbackConsultationUpdateUseCase(
                 stats = newFeedbackStats,
             )
         )
+    }
+
+    fun deleteFeedback(feedbackDeleting: FeedbackConsultationUpdateDeleting): Boolean {
+        if (!canAcceptFeedbacks(consultationUpdateId = feedbackDeleting.consultationUpdateId)) return false
+        if (getUserFeedback(
+                consultationUpdateId = feedbackDeleting.consultationUpdateId,
+                userId = feedbackDeleting.userId,
+            ) == null
+        ) return false
+
+        feedbackRepository.deleteFeedback(feedbackDeleting)
+        cacheRepository.initUserFeedback(
+            consultationUpdateId = feedbackDeleting.consultationUpdateId,
+            userId = feedbackDeleting.userId,
+            isUserFeedbackPositive = null,
+        )
+        buildFeedbackStats(consultationUpdateId = feedbackDeleting.consultationUpdateId)?.also { feedbackStats ->
+            updateFeedbackStatsCache(
+                consultationId = feedbackDeleting.consultationId,
+                consultationUpdateId = feedbackDeleting.consultationUpdateId,
+                feedbackStats = feedbackStats,
+            )
+        }
+
+        return true
     }
 
     private fun buildFeedbackStats(consultationUpdateId: String): FeedbackConsultationUpdateStats? {
@@ -58,17 +86,15 @@ class FeedbackConsultationUpdateUseCase(
     private fun getUserFeedback(consultationUpdateId: String, userId: String): Boolean? {
         return feedbackRepository.getUserFeedback(
             consultationUpdateId = consultationUpdateId,
-            userId = userId
+            userId = userId,
         )
     }
 
-    private fun updateCache(
-        feedbackInserting: FeedbackConsultationUpdateInserting,
+    private fun updateFeedbackStatsCache(
+        consultationId: String,
+        consultationUpdateId: String,
         feedbackStats: FeedbackConsultationUpdateStats,
     ) {
-        val consultationId = feedbackInserting.consultationId
-        val consultationUpdateId = feedbackInserting.consultationUpdateId
-
         val cachedLatest = cacheRepository.getLastConsultationDetails(consultationId = consultationId)
         if (cachedLatest is ConsultationUpdateCacheResult.CachedConsultationsDetails && cachedLatest.details.update.id == consultationUpdateId) {
             cacheRepository.initLastConsultationDetails(
