@@ -1529,19 +1529,21 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     'Pourquoi avoir créé l’application Agora ?',
     'Quel est le but de l’application Agora ? A quel besoin des Français et des Françaises espérez-vous qu’elle réponde ? Que signifie son caractère expérimental ?',
     '2023-09-27',
-    1,
+    7,
     'Agora',
     '30671310-ee62-11ed-a05b-0242ac120003',
     '00000000-0000-0000-0000-000000000000'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, transcription, qag_id) VALUES (
+INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, video_width, video_height, transcription, feedback_question, additional_info_title, additional_info_description, qag_id) VALUES (
     '38990baf-b0ed-4db0-99a5-7ec01790720e',
     'Olivier Véran',
     'https://content.agora.incubateur.net/portraits/QaG-OlivierVeran.png',
     'Ministre délégué auprès de la Première ministre, chargé du Renouveau démocratique, porte-parole du Gouvernement',
     '2023-06-05',
     'https://content.agora.incubateur.net/qag_responses/pourquoiCreerAgoraQagResponse.mp4',
+    479,
+    690,
     'Sur votre téléphone, vous avez sans doute des applis pour plein de choses : pour commander un train, pour réserver un hôtel, pour noter un restaurant, pour faire des jeux… Mais jusqu’ici, vous n’aviez pas d’application pour la démocratie !                            
 
 Vous n’aviez pas d’application qui vous permette de donner votre avis sur les sujets qui vous préoccupent : sujets environnementaux, d’emploi, d’immigration, de santé…                                                                                                    
@@ -1562,6 +1564,9 @@ ter pour la ou les meilleures questions qui vous semblent devoir être posées a
 mes collègues pour qu’ils puissent vous répondre directement en vidéo.
 
 Donc on va aussi rapprocher le politique du citoyen et le citoyen du politique. C’est ça, aussi, le Renouveau démocratique !',
+    'Le ministre a-t-il répondu à votre question ?',
+    null,
+    null,
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8'
 ) ON CONFLICT DO NOTHING;
 
