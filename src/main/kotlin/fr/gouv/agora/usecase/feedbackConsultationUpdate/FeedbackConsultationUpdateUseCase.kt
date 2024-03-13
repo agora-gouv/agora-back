@@ -17,7 +17,11 @@ class FeedbackConsultationUpdateUseCase(
 ) {
 
     fun insertFeedback(feedbackInserting: FeedbackConsultationUpdateInserting): InsertFeedbackConsultationUpdateResults {
-        if (!canAcceptFeedbacks(consultationUpdateId = feedbackInserting.consultationUpdateId)) return InsertFeedbackConsultationUpdateResults.Failure
+        if (!canAcceptFeedbacks(
+                consultationId = feedbackInserting.consultationId,
+                consultationUpdateId = feedbackInserting.consultationUpdateId,
+            )
+        ) return InsertFeedbackConsultationUpdateResults.Failure
         if (getUserFeedback(
                 consultationUpdateId = feedbackInserting.consultationUpdateId,
                 userId = feedbackInserting.userId,
@@ -48,7 +52,11 @@ class FeedbackConsultationUpdateUseCase(
     }
 
     fun deleteFeedback(feedbackDeleting: FeedbackConsultationUpdateDeleting): Boolean {
-        if (!canAcceptFeedbacks(consultationUpdateId = feedbackDeleting.consultationUpdateId)) return false
+        if (!canAcceptFeedbacks(
+                consultationId = feedbackDeleting.consultationId,
+                consultationUpdateId = feedbackDeleting.consultationUpdateId,
+            )
+        ) return false
         if (getUserFeedback(
                 consultationUpdateId = feedbackDeleting.consultationUpdateId,
                 userId = feedbackDeleting.userId,
@@ -77,10 +85,11 @@ class FeedbackConsultationUpdateUseCase(
         return feedbackRepository.getFeedbackStats(consultationUpdateId)
     }
 
-    private fun canAcceptFeedbacks(consultationUpdateId: String): Boolean {
-        return consultationUpdateRepository.getConsultationUpdate(consultationUpdateId)?.let { update ->
-            update.feedbackQuestion != null
-        } ?: false
+    private fun canAcceptFeedbacks(consultationId: String, consultationUpdateId: String): Boolean {
+        return consultationUpdateRepository.getConsultationUpdate(
+            consultationId = consultationId,
+            consultationUpdateId = consultationUpdateId,
+        )?.let { update -> update.feedbackQuestion != null } ?: false
     }
 
     private fun getUserFeedback(consultationUpdateId: String, userId: String): Boolean? {

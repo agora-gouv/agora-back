@@ -64,7 +64,10 @@ class ConsultationDetailsUpdateV2UseCase(
     private fun buildConsultationDetails(consultationId: String, consultationUpdateId: String): ConsultationDetailsV2? {
         return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
             thematiqueRepository.getThematique(consultationInfo.thematiqueId)?.let { thematique ->
-                updateRepository.getConsultationUpdate(consultationUpdateId = consultationUpdateId)?.let { update ->
+                updateRepository.getConsultationUpdate(
+                    consultationId = consultationId,
+                    consultationUpdateId = consultationUpdateId,
+                )?.let { update ->
                     ConsultationDetailsV2(
                         consultation = consultationInfo,
                         thematique = thematique,
