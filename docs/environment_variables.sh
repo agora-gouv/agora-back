@@ -15,6 +15,7 @@ export REMOTE_ADDRESS_HASH_ITERATIONS=1000
 export REMOTE_ADDRESS_HASH_KEY_LENGTH=256
 export REMOTE_ADDRESS_HASH_SALT="a9a4ba4b6130c11686faaf6984bc0be5"
 export CONTACT_EMAIL="contact@agora.gouv.fr"
+export UNIVERSAL_LINK_URL="https://agora.beta.gouv.fr"
 export IS_ASK_QUESTION_ENABLED="true"
 export IS_SIGNUP_ENABLED="true"
 export IS_LOGIN_ENABLED="true"

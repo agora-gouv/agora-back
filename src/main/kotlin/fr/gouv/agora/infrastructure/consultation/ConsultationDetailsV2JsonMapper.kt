@@ -16,7 +16,8 @@ class ConsultationDetailsV2JsonMapper(
 
     companion object {
         private const val SHARE_TEXT_REPLACE_TITLE_PATTERN = "{title}"
-        private const val SHARE_TEXT_REPLACE_ID_PATTERN = "{id}"
+        private const val SHARE_TEXT_REPLACE_URL_PATTERN = "{url}"
+        private const val SHARE_TEXT_CONSULTATION_PATH = "/consultations/"
     }
 
     fun toJson(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDetailsV2Json {
@@ -65,7 +66,10 @@ class ConsultationDetailsV2JsonMapper(
 
     private fun buildShareText(consultationDetails: ConsultationDetailsV2WithInfo): String {
         return consultationDetails.update.shareTextTemplate
-            .replace(SHARE_TEXT_REPLACE_ID_PATTERN, consultationDetails.consultation.id)
+            .replace(
+                SHARE_TEXT_REPLACE_URL_PATTERN,
+                System.getenv("UNIVERSAL_LINK_URL") + SHARE_TEXT_CONSULTATION_PATH + consultationDetails.consultation.id,
+            )
             .replace(SHARE_TEXT_REPLACE_TITLE_PATTERN, consultationDetails.consultation.title)
     }
 
