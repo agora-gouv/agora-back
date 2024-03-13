@@ -40,6 +40,19 @@ class ConsultationUpdateHistoryMapperTest {
                 )
             ),
             input(
+                testName = "when has a history item with status INCOMING and actionText - should return null actionText",
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
+                historyItems = listOf(
+                    HistoryMapperTestInput(
+                        stepNumber = 1,
+                        updateDate = null,
+                        actionText = "actionText",
+                        expectedStatus = ConsultationUpdateHistoryStatus.INCOMING,
+                        expectedActionText = null,
+                    ),
+                )
+            ),
+            input(
                 testName = "when has a history item updateDate is after serverDate - should return status INCOMING",
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                 historyItems = listOf(
@@ -58,6 +71,19 @@ class ConsultationUpdateHistoryMapperTest {
                         stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                         expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
+                    ),
+                )
+            ),
+            input(
+                testName = "when has a history item with CURRENT status and actionText - should return same actionText",
+                serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
+                historyItems = listOf(
+                    HistoryMapperTestInput(
+                        stepNumber = 1,
+                        updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
+                        actionText = "actionText",
+                        expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
+                        expectedActionText = "actionText",
                     ),
                 )
             ),
@@ -89,7 +115,9 @@ class ConsultationUpdateHistoryMapperTest {
                     HistoryMapperTestInput(
                         stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
+                        actionText = "actionText",
                         expectedStatus = ConsultationUpdateHistoryStatus.DONE,
+                        expectedActionText = "actionText",
                     ),
                 )
             ),
@@ -210,14 +238,14 @@ class ConsultationUpdateHistoryMapperTest {
     ) {
         // Given
         mockCurrentDate(serverDate)
-        val historyDTOs = historyItems.map { dto ->
+        val historyDTOs = historyItems.map { historyItem ->
             mock(ConsultationUpdateHistoryWithDateDTO::class.java).also {
-                given(it.stepNumber).willReturn(dto.stepNumber)
-                given(it.updateDate).willReturn(dto.updateDate?.toDate())
+                given(it.stepNumber).willReturn(historyItem.stepNumber)
+                given(it.updateDate).willReturn(historyItem.updateDate?.toDate())
                 given(it.type).willReturn("update")
                 given(it.consultationUpdateId).willReturn(null)
                 given(it.title).willReturn("title")
-                given(it.actionText).willReturn("actionText")
+                given(it.actionText).willReturn(historyItem.actionText)
             }
         }
 
@@ -234,7 +262,7 @@ class ConsultationUpdateHistoryMapperTest {
                     status = historyItem.expectedStatus,
                     title = "title",
                     updateDate = historyItem.updateDate?.toDate(),
-                    actionText = "actionText",
+                    actionText = historyItem.expectedActionText,
                 )
             }
         }
@@ -252,5 +280,7 @@ class ConsultationUpdateHistoryMapperTest {
 data class HistoryMapperTestInput(
     val stepNumber: Int,
     val updateDate: LocalDateTime?,
+    val actionText: String? = null,
     val expectedStatus: ConsultationUpdateHistoryStatus?,
+    val expectedActionText: String? = null,
 )

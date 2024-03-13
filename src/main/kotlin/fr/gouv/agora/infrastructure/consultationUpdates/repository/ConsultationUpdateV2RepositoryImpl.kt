@@ -35,13 +35,21 @@ class ConsultationUpdateV2RepositoryImpl(
         }
     }
 
-    override fun getConsultationUpdate(consultationUpdateId: String): ConsultationUpdateInfoV2? {
-        return consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
-            updateDatabaseRepository.getConsultationUpdate(consultationUpdateUUID)?.let { updateDTO ->
-                mapper.toDomain(
-                    updateDTO,
-                    sectionDatabaseRepository.getConsultationUpdateSections(consultationUpdateUUID)
-                )
+    override fun getConsultationUpdate(
+        consultationId: String,
+        consultationUpdateId: String,
+    ): ConsultationUpdateInfoV2? {
+        return consultationId.toUuidOrNull()?.let { consultationUUID ->
+            consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
+                updateDatabaseRepository.getConsultationUpdate(
+                    consultationId = consultationUUID,
+                    consultationUpdateId = consultationUpdateUUID,
+                )?.let { updateDTO ->
+                    mapper.toDomain(
+                        updateDTO,
+                        sectionDatabaseRepository.getConsultationUpdateSections(consultationUpdateUUID),
+                    )
+                }
             }
         }
     }

@@ -44,11 +44,12 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
 
     @Query(
         value = """SELECT * FROM consultation_updates_v2
-            WHERE id = :consultationUpdateId
+            WHERE consultation_id = :consultationId
+            AND id = :consultationUpdateId
             AND CURRENT_TIMESTAMP > update_date
             LIMIT 1""",
         nativeQuery = true
     )
-    fun getConsultationUpdate(@Param("consultationUpdateId") consultationUpdateId: UUID): ConsultationUpdateV2DTO?
+    fun getConsultationUpdate(@Param("consultationId") consultationId: UUID, @Param("consultationUpdateId") consultationUpdateId: UUID): ConsultationUpdateV2DTO?
 
 }
