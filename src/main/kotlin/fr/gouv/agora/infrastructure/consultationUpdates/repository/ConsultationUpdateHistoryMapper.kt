@@ -76,7 +76,7 @@ class ConsultationUpdateHistoryMapper(
                 status = status,
                 title = historyItemDTO.title,
                 updateDate = historyItemDTO.updateDate,
-                actionText = historyItemDTO.actionText,
+                actionText = historyItemDTO.actionText.takeIf { status == ConsultationUpdateHistoryStatus.DONE },
             )
         }
     }
