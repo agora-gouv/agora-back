@@ -402,7 +402,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     '2023-04-01 23:59:59.999',
     'Comme moi, tu peux participer à la Consultation : {title}
-    https://agora.beta.gouv.fr/consultations/{id}',
+{url}',
     1,
     null,
     null,
@@ -496,7 +496,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     '2023-04-01 23:59:59.999',
     'Comme moi, tu peux participer à la Consultation : {title}
-    https://agora.beta.gouv.fr/consultations/{id}',
+{url}',
     0,
     '🙌',
     '<body><b>Merci pour votre participation</b> à cette consultation !</body>',
@@ -590,7 +590,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     '2023-04-01 23:59:59.999',
     'Comme moi, tu peux participer à la Consultation : {title}
-    https://agora.beta.gouv.fr/consultations/{id}',
+{url}',
     0,
     '🏁',
     '<body><b>Cette consultation est maintenant terminée.</b>
