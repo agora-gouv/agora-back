@@ -15,7 +15,7 @@ class AskForDemographicInfoUseCase(
 ) {
 
     companion object {
-        private const val MINIMUM_CONSULTATION_ANSWERED_REQUIREMENT = 2
+        private const val MINIMUM_CONSULTATION_ANSWERED_REQUIREMENT = 1
         private const val DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO = 30
     }
 
