@@ -697,3 +697,23 @@ INSERT INTO consultation_update_history(id, consultation_id, step_number, type, 
     'Fin de la Consultation',
     'Consulter toutes les réponses'
 ) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_update_history(id, consultation_id, step_number, type, consultation_update_id, title, action_text) VALUES(
+    '48b29a32-17d6-4a61-be39-0c62e33c4626',
+    'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
+    4,
+    'update',
+    null,
+    'Réponse du gouvernement',
+    null
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_update_history(id, consultation_id, step_number, type, consultation_update_id, title, action_text) VALUES(
+    'dfef5438-5983-482f-8ee7-8a64c8de2eab',
+    'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
+    5,
+    'update',
+    null,
+    'Mise en oeuvre',
+    null
+) ON CONFLICT DO NOTHING;
