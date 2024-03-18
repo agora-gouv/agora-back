@@ -233,7 +233,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             is Section.Image -> CacheableSection(
                 type = SECTION_TYPE_IMAGE,
                 url = section.url,
-                description = section.contentDescription,
+                title = section.contentDescription,
             )
 
             is Section.Video -> CacheableSection(
@@ -268,7 +268,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             SECTION_TYPE_IMAGE -> section.url?.let {
                 Section.Image(
                     url = section.url,
-                    contentDescription = section.description,
+                    contentDescription = section.title,
                 )
             }
 
