@@ -44,14 +44,14 @@ class SignupController(
 
             AppVersionStatus.AUTHORIZED -> loginUseCase.signUp(
                 SignupRequest(
-                    ipAddress = IpAddressUtils.retrieveIpAddress(request),
+                    ipAddressHash = IpAddressUtils.retrieveIpAddressHash(request),
                     userAgent = userAgent,
                     fcmToken = fcmToken,
                     platform = platform,
                     versionName = versionName ?: "($versionCode)",
                     versionCode = versionCode,
                 )
-            ).let { userInfo ->
+            )?.let { userInfo ->
                 signupInfoJsonMapper.toJson(domain = userInfo)?.let { userInfoJson ->
                     ResponseEntity.ok().body(userInfoJson)
                 }

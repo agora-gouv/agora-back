@@ -49,7 +49,7 @@ class LoginController(
                 is DecodeResult.Success -> loginUseCase.login(
                     loginRequest = LoginRequest(
                         userId = loginTokenResult.loginTokenData.userId,
-                        ipAddress = IpAddressUtils.retrieveIpAddress(request),
+                        ipAddressHash = IpAddressUtils.retrieveIpAddressHash(request),
                         userAgent = userAgent,
                         fcmToken = fcmToken,
                         platform = platform,
