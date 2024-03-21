@@ -1,6 +1,6 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewFinishedRepository
+import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.springframework.stereotype.Component
 

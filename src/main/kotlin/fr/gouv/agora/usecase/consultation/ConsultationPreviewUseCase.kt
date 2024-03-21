@@ -1,6 +1,5 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.ConsultationPreviewAnswered
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.domain.ConsultationPreviewPage
@@ -70,12 +69,12 @@ class ConsultationPreviewUseCase(
         }
     }
 
-    private fun buildAnsweredList(userId: String): List<ConsultationPreviewAnswered> {
+    private fun buildAnsweredList(userId: String): List<ConsultationPreviewFinished> {
         val thematiqueList = thematiqueRepository.getThematiqueList()
         return consultationInfoRepository.getAnsweredConsultations(userId).mapNotNull { consultationWithUpdateInfo ->
             thematiqueList.find { thematique -> consultationWithUpdateInfo.thematiqueId == thematique.id }
                 ?.let { thematique ->
-                    finishedMapper.toConsultationPreviewAnswered(
+                    finishedMapper.toConsultationPreviewFinished(
                         consultationInfo = consultationWithUpdateInfo,
                         thematique = thematique,
                     )
@@ -85,7 +84,7 @@ class ConsultationPreviewUseCase(
         }
     }
 
-    private fun List<ConsultationPreviewOngoing>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewAnswered>): List<ConsultationPreviewOngoing> {
+    private fun List<ConsultationPreviewOngoing>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewFinished>): List<ConsultationPreviewOngoing> {
         return this.filterNot { ongoingConsultation ->
             answeredList.any { answeredConsultation -> answeredConsultation.id == ongoingConsultation.id }
         }

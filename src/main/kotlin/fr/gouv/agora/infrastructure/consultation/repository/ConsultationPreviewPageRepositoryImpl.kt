@@ -1,7 +1,8 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.ConsultationPreviewFinished
+import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
@@ -58,10 +59,10 @@ class ConsultationPreviewPageRepositoryImpl(
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun getConsultationPreviewAnsweredList(userId: String): List<ConsultationPreviewAnswered>? {
+    override fun getConsultationPreviewAnsweredList(userId: String): List<ConsultationPreviewFinished>? {
         return try {
             val modelList = getCache()?.get("$ANSWERED_CACHE_PREFIX$userId", List::class.java) as? List<String>
-            return modelList?.map { objectMapper.readValue(it, ConsultationPreviewAnswered::class.java) }
+            return modelList?.map { objectMapper.readValue(it, ConsultationPreviewFinished::class.java) }
         } catch (e: Exception) {
             null
         }
@@ -69,7 +70,7 @@ class ConsultationPreviewPageRepositoryImpl(
 
     override fun insertConsultationPreviewAnsweredList(
         userId: String,
-        answeredList: List<ConsultationPreviewAnswered>,
+        answeredList: List<ConsultationPreviewFinished>,
     ) {
         getCache()?.put("$ANSWERED_CACHE_PREFIX$userId", answeredList.map { objectMapper.writeValueAsString(it) })
     }

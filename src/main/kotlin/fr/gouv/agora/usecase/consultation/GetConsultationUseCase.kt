@@ -2,7 +2,7 @@ package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.domain.Consultation
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 

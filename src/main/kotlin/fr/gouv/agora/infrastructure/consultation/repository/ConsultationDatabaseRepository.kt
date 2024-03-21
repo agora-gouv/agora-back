@@ -102,4 +102,37 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     )
     fun getConsultationsFinishedWithUpdateInfo(@Param("offset") offset: Int): List<ConsultationWithUpdateInfoDTO>
 
+    @Query(
+        value = """SELECT COUNT(*)
+            FROM (
+                $CONSULTATION_WITH_UPDATE_INFO_JOIN
+                AND CURRENT_DATE > update_date
+                ORDER BY updateDate DESC
+            ) as consultationAndUpdates
+            WHERE consultationRowNumber = 1
+            AND id IN (SELECT consultation_id FROM user_answered_consultation WHERE user_id = :userId)
+        """,
+        nativeQuery = true
+    )
+    fun getConsultationAnsweredCount(@Param("userId") userId: UUID): Int
+
+    @Query(
+        value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
+            FROM (
+                $CONSULTATION_WITH_UPDATE_INFO_JOIN
+                AND CURRENT_DATE > update_date
+                ORDER BY updateDate DESC
+            ) as consultationAndUpdates
+            WHERE consultationRowNumber = 1
+            AND id IN (SELECT consultation_id FROM user_answered_consultation WHERE user_id = :userId)
+            OFFSET :offset
+            LIMIT 20
+        """,
+        nativeQuery = true
+    )
+    fun getConsultationsAnsweredWithUpdateInfo(
+        @Param("userId") userId: UUID,
+        @Param("offset") offset: Int,
+    ): List<ConsultationWithUpdateInfoDTO>
+
 }

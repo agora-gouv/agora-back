@@ -8,7 +8,7 @@ import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.Co
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 
 @Service

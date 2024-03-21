@@ -15,7 +15,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
 
     companion object {
         private const val QAG_WITH_SUPPORT_COUNT_PROJECTION =
-            "qags.id as id, title, description, post_date as postDate, qags.status, username, thematique_id as thematiqueId, qags.user_id as userId, count(*) as supportCount"
+            "qags.id as id, title, description, post_date as postDate, qags.status, username, thematique_id as thematiqueId, qags.user_id as userId, count(DISTINCT supports_qag.user_id) as supportCount"
 
         private const val QAG_WITH_SUPPORT_JOIN = "qags LEFT JOIN supports_qag ON qags.id = supports_qag.qag_id"
     }

@@ -10,7 +10,7 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Service
-@Deprecated("Should use ConsultationUpdateUseCaseV2 instead")
+@Deprecated("Should use ConsultationUpdateV2UseCase instead")
 @Suppress("DEPRECATION")
 class ConsultationUpdateUseCase(
     private val repository: ConsultationUpdateRepository,

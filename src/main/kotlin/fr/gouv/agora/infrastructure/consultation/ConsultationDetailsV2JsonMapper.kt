@@ -16,7 +16,8 @@ class ConsultationDetailsV2JsonMapper(
 
     companion object {
         private const val SHARE_TEXT_REPLACE_TITLE_PATTERN = "{title}"
-        private const val SHARE_TEXT_REPLACE_ID_PATTERN = "{id}"
+        private const val SHARE_TEXT_REPLACE_URL_PATTERN = "{url}"
+        private const val SHARE_TEXT_CONSULTATION_PATH = "/consultations/"
     }
 
     fun toJson(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDetailsV2Json {
@@ -35,6 +36,7 @@ class ConsultationDetailsV2JsonMapper(
             body = buildBody(consultationDetails),
             participationInfo = buildParticipationInfo(consultationDetails),
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
+            feedbackQuestion = buildFeedbackQuestion(consultationDetails),
             footer = buildFooter(consultationDetails),
             history = buildHistory(consultationDetails),
         )
@@ -56,6 +58,7 @@ class ConsultationDetailsV2JsonMapper(
             body = buildBody(consultationDetails),
             participationInfo = buildParticipationInfo(consultationDetails),
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
+            feedbackQuestion = buildFeedbackQuestion(consultationDetails),
             footer = buildFooter(consultationDetails),
             history = null,
         )
@@ -63,7 +66,10 @@ class ConsultationDetailsV2JsonMapper(
 
     private fun buildShareText(consultationDetails: ConsultationDetailsV2WithInfo): String {
         return consultationDetails.update.shareTextTemplate
-            .replace(SHARE_TEXT_REPLACE_ID_PATTERN, consultationDetails.consultation.id)
+            .replace(
+                SHARE_TEXT_REPLACE_URL_PATTERN,
+                System.getenv("UNIVERSAL_LINK_URL") + SHARE_TEXT_CONSULTATION_PATH + consultationDetails.consultation.id,
+            )
             .replace(SHARE_TEXT_REPLACE_TITLE_PATTERN, consultationDetails.consultation.title)
     }
 
@@ -110,6 +116,29 @@ class ConsultationDetailsV2JsonMapper(
             participantCount = consultationDetails.participantCount,
             participantCountGoal = consultationDetails.consultation.participantCountGoal,
         )
+    }
+
+    private fun buildFeedbackQuestion(consultationDetails: ConsultationDetailsV2WithInfo): FeedbackQuestion? {
+        return consultationDetails.update.feedbackQuestion?.let { feedbackQuestion ->
+            FeedbackQuestion(
+                consultationUpdateId = feedbackQuestion.consultationUpdateId,
+                title = feedbackQuestion.title,
+                picto = feedbackQuestion.picto,
+                description = feedbackQuestion.description,
+                results = consultationDetails.isUserFeedbackPositive?.let { isUserFeedbackPositive ->
+                    FeedbackQuestion.Results(
+                        isUserFeedbackPositive = isUserFeedbackPositive,
+                        stats = consultationDetails.feedbackStats?.let { stats ->
+                            FeedbackQuestion.Stats(
+                                positiveRatio = stats.positiveRatio,
+                                negativeRatio = stats.negativeRatio,
+                                responseCount = stats.responseCount,
+                            )
+                        }
+                    )
+                }
+            )
+        }
     }
 
     private fun buildFooter(consultationDetails: ConsultationDetailsV2WithInfo): Footer? {
@@ -177,6 +206,11 @@ class ConsultationDetailsV2JsonMapper(
             )
 
             is ConsultationUpdateInfoV2.Section.Quote -> Section.Quote(description = section.description)
+
+            is ConsultationUpdateInfoV2.Section.Accordion -> Section.Accordion(
+                title = section.title,
+                sections = section.sections.map(::buildSection),
+            )
         }
     }
 

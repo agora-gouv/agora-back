@@ -3,7 +3,7 @@ package fr.gouv.agora.usecase.profile
 import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -57,7 +57,7 @@ internal class AskForDemographicInfoUseCaseTest {
     }
 
     @Test
-    fun `askForDemographicInfo - when profile is null but answered consultation count is lower than 2 - should return false`() {
+    fun `askForDemographicInfo - when profile is null but answered consultation count is lower than 1 - should return false`() {
         // Given
         given(profileRepository.getProfile(userId = "1234")).willReturn(null)
         given(userAnsweredConsultationRepository.getAnsweredConsultationIds(userId = "1234")).willReturn(emptyList())
@@ -73,11 +73,11 @@ internal class AskForDemographicInfoUseCaseTest {
     }
 
     @Test
-    fun `askForDemographicInfo - when profile is null, answered at least 2 consultations and getDate returns null - should return true`() {
+    fun `askForDemographicInfo - when profile is null, answered at least 1 consultation and getDate returns null - should return true`() {
         //Given
         given(profileRepository.getProfile(userId = "1234")).willReturn(null)
         given(userAnsweredConsultationRepository.getAnsweredConsultationIds(userId = "1234"))
-            .willReturn(listOf("consultationId1", "consultationId2"))
+            .willReturn(listOf("consultationId1"))
         given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(null)
 
         // When
@@ -91,12 +91,12 @@ internal class AskForDemographicInfoUseCaseTest {
     }
 
     @Test
-    fun `askForDemographicInfo - when profile is null, answered at least 2 consultations and getDate returns date previous to (SYSDATE - 30) - should return true`() {
+    fun `askForDemographicInfo - when profile is null, answered at least 1 consultation and getDate returns date previous to (SYSDATE - 30) - should return true`() {
         //Given
         val datePreviousSysDateMinusAskPeriod = LocalDate.now().minusDays(30.toLong() + 1)
         given(profileRepository.getProfile(userId = "1234")).willReturn(null)
         given(userAnsweredConsultationRepository.getAnsweredConsultationIds(userId = "1234"))
-            .willReturn(listOf("consultationId1", "consultationId2"))
+            .willReturn(listOf("consultationId1"))
         given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(datePreviousSysDateMinusAskPeriod)
 
         // When
@@ -110,12 +110,12 @@ internal class AskForDemographicInfoUseCaseTest {
     }
 
     @Test
-    fun `askForDemographicInfo - when profile is null, answered at least 2 consultations and getDate returns date in ((SYSDATE - 30), SYSDATE) - should return false`() {
+    fun `askForDemographicInfo - when profile is null, answered at least 1 consultation and getDate returns date in ((SYSDATE - 30), SYSDATE) - should return false`() {
         //Given
         val datePreviousSysDateMinusAskPeriod = LocalDate.now().minusDays(30.toLong() / 2)
         given(profileRepository.getProfile(userId = "1234")).willReturn(null)
         given(userAnsweredConsultationRepository.getAnsweredConsultationIds(userId = "1234"))
-            .willReturn(listOf("consultationId1", "consultationId2"))
+            .willReturn(listOf("consultationId1"))
         given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(datePreviousSysDateMinusAskPeriod)
 
         // When

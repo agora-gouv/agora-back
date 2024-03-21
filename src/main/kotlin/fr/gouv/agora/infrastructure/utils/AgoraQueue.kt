@@ -24,10 +24,10 @@ abstract class AgoraQueue<TaskType> {
         }
     }
 
-    abstract fun shouldAddTask(queuedTasks: Queue<TaskType>, newTask: TaskType): Boolean
+    abstract fun canAddTask(queuedTasks: Queue<TaskType>, newTask: TaskType): Boolean
 
     private fun addToQueue(taskType: TaskType): Boolean {
-        val shouldAddToQueue = shouldAddTask(queue, taskType)
+        val shouldAddToQueue = canAddTask(queue, taskType)
         if (shouldAddToQueue) {
             queue.add(taskType)
         }

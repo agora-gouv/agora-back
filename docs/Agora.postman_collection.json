@@ -229,7 +229,7 @@
 					"response": []
 				},
 				{
-					"name": "/notifications/paginated/<nb>",
+					"name": "/notifications/PAGE",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -240,14 +240,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/notifications/paginated/1",
+							"raw": "{{scheme}}://{{baseUrl}}/notifications/1",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"notifications",
-								"paginated",
 								"1"
 							]
 						}
@@ -341,6 +340,58 @@
 					"response": []
 				},
 				{
+					"name": "/consultations/finished/PAGE",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/finished/1",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"finished",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/answered/PAGE",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/answered/1",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"answered",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/consultations/ID",
 					"request": {
 						"method": "GET",
@@ -403,7 +454,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/v2/consultations/{{consultationId}}/updates/{{consultationUpdateId}}",
+							"raw": "{{scheme}}://{{baseUrl}}/v2/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{baseUrl}}"
@@ -411,9 +462,100 @@
 							"path": [
 								"v2",
 								"consultations",
-								"{{consultationId}}",
+								"{{consultationId2}}",
 								"updates",
-								"{{consultationUpdateId}}"
+								"{{consultationUpdateId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/updates/ID/feedback",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isPositive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId2}}",
+								"updates",
+								"{{consultationUpdateId2}}",
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/updates/ID/feedback",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId2}}",
+								"updates",
+								"{{consultationUpdateId2}}",
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/responses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId}}",
+								"responses"
 							]
 						}
 					},
@@ -446,7 +588,7 @@
 					"response": []
 				},
 				{
-					"name": "/consultations/ID/responses (petit dej)",
+					"name": "/consultations/ID/responses",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -474,102 +616,6 @@
 							"path": [
 								"consultations",
 								"f5fd9c1d-6583-494c-8b0f-78129d6a0382",
-								"responses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/consultations/ID/responses (covoiturage)",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n   \"consultationId\":\"6d85522a-ee71-11ed-a05b-0242ac120003\",\n   \"responses\":[\n      {\n         \"questionId\":\"e271ed7a-ef05-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"f5dd076e-ef05-11ed-a05b-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"48d3c502-ef06-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"84f7f70e-ef08-11ed-a05b-0242ac120011\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"e52c5868-ef08-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"1b52a816-ef09-11ed-a05b-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"867b767a-0905-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"ab7d336e-0905-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"91c3411c-ef0a-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"ac24b428-ef0a-11ed-a05b-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"4c85adfe-0906-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"5f30b336-0906-11ee-be56-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"ac24b428-ef0a-11ed-a05b-0242ac120015\",\n         \"choiceIds\":[\n         ],\n         \"responseText\":\"¯⁠\\\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯\"\n      },\n      {\n         \"questionId\":\"cea510c2-0906-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"6ed88358-0907-11ee-be56-0242ac120033\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"91c3411c-ef0a-11ed-a05b-0242ac120100\",\n         \"choiceIds\":[\n            \"ac24b428-ef0a-11ed-a05b-0242ac121002\",\n            \"ac24b428-ef0a-11ed-a05b-0242ac121000\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"ac24b428-ef0a-11ed-a05b-0242ac120020\",\n         \"choiceIds\":[\n            \n         ],\n         \"responseText\":\"Non déso 😕\"\n      },\n      {\n         \"questionId\":\"9197bab0-0909-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"9f724178-0909-11ee-be56-0242ac120011\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"580bd3c0-090a-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"66bab292-090a-11ee-be56-0242ac120102\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"d6cba992-090a-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"e615de2c-090a-11ee-be56-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"1f0d4940-090b-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"5453e924-090b-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      }\n   ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"consultations",
-								"{{consultationId}}",
-								"responses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/consultations/ID/responses (covoiturage 2)",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n   \"consultationId\":\"6d85522a-ee71-11ed-a05b-0242ac120003\",\n   \"responses\":[\n      {\n         \"questionId\":\"e271ed7a-ef05-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"0fd15904-ef06-11ed-a05b-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"48d3c502-ef06-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"84f7f70e-ef08-11ed-a05b-0242ac120013\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"e52c5868-ef08-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"1b52a816-ef09-12ed-a05b-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"867b767a-0905-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"ab7d336e-0905-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"91c3411c-ef0a-11ed-a05b-0242ac120003\",\n         \"choiceIds\":[\n            \"ac24b428-ef0a-11ed-a05b-0242ac120011\",\n            \"ac24b428-ef0a-11ed-a05b-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"4c85adfe-0906-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"5f30b336-0906-10ee-be56-0242ac120003\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"ac24b428-ef0a-11ed-a05b-0242ac120015\",\n         \"choiceIds\":[\n         ],\n         \"responseText\":\"Aucune idée\"\n      },\n      {\n         \"questionId\":\"cea510c2-0906-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"6ed88358-0907-11ee-be56-0242ac120011\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"ac24b428-ef0a-11ed-a05b-0242ac120020\",\n         \"choiceIds\":[\n            \n         ],\n         \"responseText\":\"Je ne sais pas non plus\"\n      },\n      {\n         \"questionId\":\"9197bab0-0909-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"9f724178-0909-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"580bd3c0-090a-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"66bab292-090a-11ee-be56-0242ac120102\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"d6cba992-090a-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"e615de2c-090a-11ee-be56-0242ac120002\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"1f0d4940-090b-11ee-be56-0242ac120002\",\n         \"choiceIds\":[\n            \"5453e924-090b-11ee-be56-0242ac120010\"\n         ],\n         \"responseText\":\"\"\n      }\n   ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"consultations",
-								"{{consultationId}}",
-								"responses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/consultations/ID/responses",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"consultations",
-								"{{consultationId}}",
 								"responses"
 							]
 						}

@@ -8,19 +8,17 @@ import org.springframework.web.bind.annotation.*
 @Suppress("unused")
 class ConsultationFinishedPaginatedController(
     private val consultationsFinishedPaginatedListUseCase: ConsultationsFinishedPaginatedListUseCase,
-    private val consultationFinishedPaginatedJsonMapper: ConsultationFinishedPaginatedJsonMapper,
+    private val consultationPaginatedJsonMapper: ConsultationPaginatedJsonMapper,
 ) {
 
     @GetMapping("/consultations/finished/{pageNumber}")
     fun getConsultationFinishedList(
         @PathVariable pageNumber: String,
     ): ResponseEntity<*> {
-        val usedPageNumber = pageNumber.toIntOrNull()
-
-        return usedPageNumber?.let { pageNumberInt ->
+        return pageNumber.toIntOrNull()?.let { pageNumberInt ->
             consultationsFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumber = pageNumberInt)
         }?.let { consultationFinishedPaginatedList ->
-            ResponseEntity.ok(consultationFinishedPaginatedJsonMapper.toJson(consultationFinishedPaginatedList))
+            ResponseEntity.ok(consultationPaginatedJsonMapper.toJson(consultationFinishedPaginatedList))
         } ?: ResponseEntity.badRequest().body(Unit)
     }
 }

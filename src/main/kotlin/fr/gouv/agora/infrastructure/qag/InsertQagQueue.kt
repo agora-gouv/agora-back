@@ -11,7 +11,7 @@ class InsertQagQueue : AgoraQueue<InsertQagQueue.TaskType>() {
         data class InsertQag(val userId: String) : TaskType()
     }
 
-    override fun shouldAddTask(queuedTasks: Queue<TaskType>, newTask: TaskType): Boolean {
+    override fun canAddTask(queuedTasks: Queue<TaskType>, newTask: TaskType): Boolean {
         return !queuedTasks.contains(newTask)
     }
 

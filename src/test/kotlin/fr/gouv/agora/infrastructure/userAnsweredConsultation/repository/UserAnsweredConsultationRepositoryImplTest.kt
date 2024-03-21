@@ -2,9 +2,8 @@ package fr.gouv.agora.infrastructure.userAnsweredConsultation.repository
 
 import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.userAnsweredConsultation.dto.UserAnsweredConsultationDTO
-import fr.gouv.agora.usecase.reponseConsultation.repository.UserAnsweredConsultationResult
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationResult
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

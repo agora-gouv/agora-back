@@ -1,7 +1,7 @@
 package fr.gouv.agora.domain
 
 data class SignupRequest(
-    val ipAddress: String,
+    val ipAddressHash: String,
     val userAgent: String,
     val fcmToken: String,
     val platform: String,
