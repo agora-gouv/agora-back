@@ -841,7 +841,7 @@ INSERT INTO consultation_update_history(id, consultation_id, step_number, type, 
     2,
     'results',
     '2efd7a52-ec78-4fa1-8978-3b1610b23d34',
-    'Fin de la Consultation',
+    'Fin de la consultation',
     'Consulter toutes les réponses'
 ) ON CONFLICT DO NOTHING;
 
