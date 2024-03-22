@@ -10,6 +10,7 @@ data class ConsultationUpdateInfoV2(
     val hasParticipationInfo: Boolean,
     val responsesInfo: ResponsesInfo?,
     val infoHeader: InfoHeader?,
+    val sectionsHeader: List<Section>,
     val body: List<Section>,
     val bodyPreview: List<Section>,
     val downloadAnalysisUrl: String?,

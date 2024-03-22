@@ -172,8 +172,9 @@ class ConsultationDetailsV2JsonMapper(
 
     private fun buildBody(consultationDetails: ConsultationDetailsV2WithInfo): Body {
         return Body(
-            sectionsPreview = consultationDetails.update.bodyPreview.map { section -> buildSection(section) },
-            sections = consultationDetails.update.body.map { section -> buildSection(section) },
+            headerSections = consultationDetails.update.sectionsHeader.map(::buildSection),
+            sectionsPreview = consultationDetails.update.bodyPreview.map(::buildSection),
+            sections = consultationDetails.update.body.map(::buildSection),
         )
     }
 

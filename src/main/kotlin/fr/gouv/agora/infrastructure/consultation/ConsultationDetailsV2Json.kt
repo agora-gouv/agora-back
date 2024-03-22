@@ -71,6 +71,8 @@ data class ConsultationDetailsV2Json(
     )
 
     data class Body(
+        @JsonProperty("headerSections")
+        val headerSections: List<Section>,
         @JsonProperty("sectionsPreview")
         val sectionsPreview: List<Section>,
         @JsonProperty("sections")

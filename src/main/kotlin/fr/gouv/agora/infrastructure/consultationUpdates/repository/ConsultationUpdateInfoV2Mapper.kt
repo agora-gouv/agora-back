@@ -12,6 +12,10 @@ class ConsultationUpdateInfoV2Mapper {
     companion object {
         private const val TRUE_INT_VALUE = 1
 
+        private const val VISIBILITY_TYPE_PREVIEW = 1
+        private const val VISIBILITY_TYPE_SHOW_ON_EXPAND = 0
+        private const val VISIBILITY_TYPE_SHOW_AS_HEADER = 2
+
         private const val SECTION_TYPE_TITLE = "title"
         private const val SECTION_TYPE_RICH_TEXT = "richText"
         private const val SECTION_TYPE_IMAGE = "image"
@@ -33,13 +37,17 @@ class ConsultationUpdateInfoV2Mapper {
             hasParticipationInfo = dto.hasParticipationInfo == TRUE_INT_VALUE,
             responsesInfo = buildResponsesInfo(dto),
             infoHeader = buildInfoHeader(dto),
+            sectionsHeader = buildSections(
+                sectionDTOs = sectionDTOs,
+                filter = { sectionDTO -> sectionDTO.visibilityType == VISIBILITY_TYPE_SHOW_AS_HEADER && sectionDTO.parentSectionId == null },
+            ),
             body = buildSections(
                 sectionDTOs = sectionDTOs,
-                filter = { sectionDTO -> sectionDTO.isPreview != TRUE_INT_VALUE && sectionDTO.parentSectionId == null },
+                filter = { sectionDTO -> sectionDTO.visibilityType == VISIBILITY_TYPE_SHOW_ON_EXPAND && sectionDTO.parentSectionId == null },
             ),
             bodyPreview = buildSections(
                 sectionDTOs = sectionDTOs,
-                filter = { sectionDTO -> sectionDTO.isPreview == TRUE_INT_VALUE && sectionDTO.parentSectionId == null },
+                filter = { sectionDTO -> sectionDTO.visibilityType == VISIBILITY_TYPE_PREVIEW && sectionDTO.parentSectionId == null },
             ),
             downloadAnalysisUrl = dto.downloadAnalysisUrl,
             feedbackQuestion = buildFeedbackQuestion(dto),
