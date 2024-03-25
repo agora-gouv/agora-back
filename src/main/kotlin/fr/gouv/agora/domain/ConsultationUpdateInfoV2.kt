@@ -22,6 +22,7 @@ data class ConsultationUpdateInfoV2(
     data class ResponsesInfo(
         val picto: String,
         val description: String,
+        val actionText: String,
     )
 
     data class InfoHeader(

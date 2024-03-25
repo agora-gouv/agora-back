@@ -392,7 +392,7 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, responses_info_action_text,info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     'aa0180a2-fa10-4cdf-888b-bd58bb6f1709',
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
     1,
@@ -401,6 +401,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
 {url}',
     1,
+    null,
     null,
     null,
     null,
@@ -469,7 +470,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, responses_info_action_text,info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     '86a3356d-7dad-48be-8bff-368279f8be07',
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
     0,
@@ -480,6 +481,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     0,
     '🙌',
     '<body><b>Merci pour votre participation</b> à cette consultation !</body>',
+    'Voir les premiers résultats',
     null,
     null,
     1,
@@ -546,7 +548,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, responses_info_action_text,info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     '6f372d50-e921-417a-8ed0-684a6c32e820',
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
     0,
@@ -558,6 +560,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '🏁',
     '<body><b>Cette consultation est maintenant terminée.</b>
     Merci à tous !</body>',
+    'Voir tous les résultats',
     null,
     null,
     1,

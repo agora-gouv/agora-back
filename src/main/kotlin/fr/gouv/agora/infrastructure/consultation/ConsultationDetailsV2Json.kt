@@ -63,6 +63,8 @@ data class ConsultationDetailsV2Json(
         val picto: String,
         @JsonProperty("description")
         val description: String,
+        @JsonProperty("actionText")
+        val actionText: String,
     )
 
     data class InfoHeader(

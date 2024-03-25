@@ -59,10 +59,11 @@ class ConsultationUpdateInfoV2Mapper {
     }
 
     private fun buildResponsesInfo(dto: ConsultationUpdateV2DTO): ResponsesInfo? {
-        if (dto.responsesInfoPicto == null || dto.responsesInfoDescription == null) return null
+        if (dto.responsesInfoPicto == null || dto.responsesInfoDescription == null || dto.responsesInfoActionText == null) return null
         return ResponsesInfo(
             picto = dto.responsesInfoPicto,
             description = dto.responsesInfoDescription,
+            actionText = dto.responsesInfoActionText,
         )
     }
 

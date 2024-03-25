@@ -281,7 +281,7 @@ INSERT INTO choixpossible (id, label, ordre, has_open_text_field, question_id, n
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, responses_info_action_text,info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     'ccbecde2-52e7-4094-8c2b-0c56cb4d53ce',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     1,
@@ -290,6 +290,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Comme moi, tu peux participer à la Consultation : {title}
 {url}',
     1,
+    null,
     null,
     null,
     null,
@@ -358,7 +359,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, responses_info_action_text,info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     '897369f5-cb04-4b75-960a-62cdfe47422f',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
@@ -369,6 +370,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     0,
     '🙌',
     '<body><b>Merci pour votre participation</b> à cette consultation !</body>',
+    'Voir les premiers résultats',
     null,
     null,
     1,
@@ -435,7 +437,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, responses_info_action_text,info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     '2efd7a52-ec78-4fa1-8978-3b1610b23d34',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
@@ -447,6 +449,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '🏁',
     '<body><b>Cette consultation est maintenant terminée.</b>
     Merci à tous !</body>',
+    'Voir tous les résultats',
     null,
     null,
     1,
@@ -513,7 +516,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, responses_info_action_text,info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     'fba95928-dbf4-4456-995c-f423e81da7aa',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
@@ -522,6 +525,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'Les résultats de la Consultation {title} sont disponibles !
 {url}',
     0,
+    null,
     null,
     null,
     null,

@@ -99,6 +99,7 @@ class ConsultationDetailsV2JsonMapper(
             ResponsesInfo(
                 picto = responsesInfo.picto,
                 description = responsesInfo.description,
+                actionText = responsesInfo.actionText,
             )
         }
     }
