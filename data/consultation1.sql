@@ -40,11 +40,11 @@ DELETE FROM consultation_update_sections WHERE id = '09476a85-5115-4cca-a125-310
 DELETE FROM consultation_update_sections WHERE id = 'b3e99d8c-6146-4b54-ae05-3359553b1a42';
 DELETE FROM consultation_updates_v2 WHERE id = '86a3356d-7dad-48be-8bff-368279f8be07';
 DELETE FROM consultation_update_sections WHERE id = '07253fad-bf64-43e1-9585-9b1a7f0c6c4c';
-DELETE FROM consultation_update_sections WHERE id = '07253fad-bf64-43e1-9585-9b1a7f0c6c4c';
+DELETE FROM consultation_update_sections WHERE id = 'e9ba6b6f-e43f-474f-b89d-6f0faf0e2586';
 DELETE FROM consultation_update_sections WHERE id = '5f75e508-1430-4944-b84e-2c75e264a539';
 DELETE FROM consultation_updates_v2 WHERE id = '6f372d50-e921-417a-8ed0-684a6c32e820';
-DELETE FROM consultation_update_sections WHERE id = '07253fad-bf64-43e1-9585-9b1a7f0c6c4c';
-DELETE FROM consultation_update_sections WHERE id = '07253fad-bf64-43e1-9585-9b1a7f0c6c4c';
+DELETE FROM consultation_update_sections WHERE id = '25da8e64-e09e-4cc3-8d8d-01f63233c0f2';
+DELETE FROM consultation_update_sections WHERE id = 'bfcb98ef-e0e8-4a66-b9bc-78db28d75a21';
 DELETE FROM consultation_update_sections WHERE id = '5f75e508-1430-4944-b84e-2c75e264a539';
 DELETE FROM consultation_update_history WHERE id = '08bd2b70-d667-4d5f-b69d-e6056f2fe1a0';
 DELETE FROM consultation_update_history WHERE id = '7aaaec7e-74af-4ae8-b028-3a74864a3dc7';
@@ -513,7 +513,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
-    '07253fad-bf64-43e1-9585-9b1a7f0c6c4c',
+    'e9ba6b6f-e43f-474f-b89d-6f0faf0e2586',
     '86a3356d-7dad-48be-8bff-368279f8be07',
     null,
     'richText',
@@ -574,7 +574,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
-    '07253fad-bf64-43e1-9585-9b1a7f0c6c4c',
+    '25da8e64-e09e-4cc3-8d8d-01f63233c0f2',
     '6f372d50-e921-417a-8ed0-684a6c32e820',
     null,
     'title',
@@ -592,7 +592,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
-    '07253fad-bf64-43e1-9585-9b1a7f0c6c4c',
+    'bfcb98ef-e0e8-4a66-b9bc-78db28d75a21',
     '6f372d50-e921-417a-8ed0-684a6c32e820',
     null,
     'richText',

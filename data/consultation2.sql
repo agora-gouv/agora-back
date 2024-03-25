@@ -40,7 +40,7 @@ DELETE FROM consultation_update_sections WHERE id = '9544d622-550d-4d13-95c2-ea5
 DELETE FROM consultation_update_sections WHERE id = '9075f12a-89b1-45e2-ab75-de19d7f9ddda';
 DELETE FROM consultation_update_sections WHERE id = 'c5ce49ae-3633-47b5-a0c2-1a1772e2942f';
 DELETE FROM consultation_update_sections WHERE id = '2f87dc12-8011-41f6-bb1a-e8b816654810';
-DELETE FROM consultation_update_sections WHERE id = '9544d622-550d-4d13-95c2-ea514730fad7';
+DELETE FROM consultation_update_sections WHERE id = '8ebcd9ef-5606-4ae1-af3b-52bada9758b3';
 DELETE FROM consultation_update_sections WHERE id = '500280b5-b5d1-4fb3-a2f0-93e43c6aa928';
 DELETE FROM consultation_update_sections WHERE id = 'f35f76b0-89ab-406e-ad13-5740f34dce74';
 DELETE FROM consultation_update_sections WHERE id = '0015dff2-458a-451c-b0a3-61b7e0511fa8';
@@ -649,7 +649,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
-    '9544d622-550d-4d13-95c2-ea514730fad7',
+    '8ebcd9ef-5606-4ae1-af3b-52bada9758b3',
     'fba95928-dbf4-4456-995c-f423e81da7aa',
     null,
     'richText',
