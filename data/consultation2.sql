@@ -281,7 +281,7 @@ INSERT INTO choixpossible (id, label, ordre, has_open_text_field, question_id, n
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     'ccbecde2-52e7-4094-8c2b-0c56cb4d53ce',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     1,
@@ -300,7 +300,8 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     null,
     null,
-    '<body>🗣 Consultation proposée par le <b>Ministre des vacances </b><br/><br/>🎯 Objectif : améliorer les vacances de nos concitoynes<br/><br/>🚀 Axe gouvernemental : Planifier et accélérer la transition écologique</body>'
+    null,
+    '🗣<body>Consultation proposée par le <b>Ministre des vacances</b></body>|🎯<body>Objectif : améliorer les vacances de nos concitoyens</body>|🚀<body>Axe gouvernemental : Planifier et accélérer la transition écologique</body>'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
@@ -357,7 +358,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     '897369f5-cb04-4b75-960a-62cdfe47422f',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
@@ -376,7 +377,8 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     null,
     'Envie d’aller plus loin ?',
-    '<body><a href="https://www.service-public.fr/particuliers/vosdroits/F31952">Rendez-vous ici pour voir les dates des prochaines vacances.</a></body>'
+    '<body><a href="https://www.service-public.fr/particuliers/vosdroits/F31952">Rendez-vous ici pour voir les dates des prochaines vacances.</a></body>',
+    null
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
@@ -433,7 +435,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     '2efd7a52-ec78-4fa1-8978-3b1610b23d34',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
@@ -453,7 +455,8 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     null,
     'Envie d’aller plus loin ?',
-    '<body><a href="https://www.service-public.fr/particuliers/vosdroits/F31952">Rendez-vous ici pour voir les dates des prochaines vacances.</a></body>'
+    '<body><a href="https://www.service-public.fr/particuliers/vosdroits/F31952">Rendez-vous ici pour voir les dates des prochaines vacances.</a></body>',
+    null
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
@@ -510,7 +513,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     'fba95928-dbf4-4456-995c-f423e81da7aa',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
@@ -528,6 +531,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     '💬',
     'Donnez votre avis',
     'Avez-vous trouver cette synthèse utile ?',
+    null,
     null,
     null
 ) ON CONFLICT DO NOTHING;

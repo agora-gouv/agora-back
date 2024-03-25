@@ -199,6 +199,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             downloadAnalysisUrl = details.update.downloadAnalysisUrl,
             feedbackQuestion = details.update.feedbackQuestion,
             footer = details.update.footer,
+            goals = details.update.goals,
         ),
         feedbackStats = details.feedbackStats,
         history = details.history,
@@ -221,6 +222,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
                 bodyPreview = cacheable.update.bodyPreview.mapNotNull(::fromCacheableSection),
                 downloadAnalysisUrl = cacheable.update.downloadAnalysisUrl,
                 feedbackQuestion = cacheable.update.feedbackQuestion,
+                goals = cacheable.update.goals,
                 footer = cacheable.update.footer,
             ),
             feedbackStats = cacheable.feedbackStats,
@@ -329,6 +331,7 @@ private data class CacheableConsultationUpdateInfo(
     val downloadAnalysisUrl: String?,
     val feedbackQuestion: FeedbackQuestion?,
     val footer: Footer?,
+    val goals: List<Goal>?,
 )
 
 private data class CacheableSection(

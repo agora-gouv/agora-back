@@ -38,6 +38,7 @@ class ConsultationDetailsV2JsonMapper(
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
             feedbackQuestion = buildFeedbackQuestion(consultationDetails),
             footer = buildFooter(consultationDetails),
+            goals = buildGoals(consultationDetails),
             history = buildHistory(consultationDetails),
         )
     }
@@ -54,12 +55,13 @@ class ConsultationDetailsV2JsonMapper(
             questionsInfo = null,
             consultationDates = buildConsultationDates(consultationDetails),
             responsesInfo = buildResponsesInfo(consultationDetails),
-            infoHeader = buildInfoHeader(consultationDetails),
+            infoHeader = null,
             body = buildBody(consultationDetails),
             participationInfo = buildParticipationInfo(consultationDetails),
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
             feedbackQuestion = buildFeedbackQuestion(consultationDetails),
             footer = buildFooter(consultationDetails),
+            goals = buildGoals(consultationDetails),
             history = null,
         )
     }
@@ -146,6 +148,15 @@ class ConsultationDetailsV2JsonMapper(
             Footer(
                 title = footer.title,
                 description = footer.description,
+            )
+        }
+    }
+
+    private fun buildGoals(consultationDetails: ConsultationDetailsV2WithInfo): List<Goal>? {
+        return consultationDetails.update.goals?.map { goal ->
+            Goal(
+                picto = goal.picto,
+                description = goal.description,
             )
         }
     }

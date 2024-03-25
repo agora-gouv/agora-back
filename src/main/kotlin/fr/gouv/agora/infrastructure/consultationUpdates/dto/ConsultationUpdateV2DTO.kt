@@ -40,6 +40,8 @@ data class ConsultationUpdateV2DTO(
     val footerTitle: String?,
     @Column(columnDefinition = "TEXT")
     val footerDescription: String?,
+    @Column(columnDefinition = "TEXT")
+    val goals: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -52,7 +54,7 @@ data class ConsultationUpdateV2DTO(
     override fun hashCode(): Int = javaClass.hashCode()
 
     override fun toString(): String {
-        return this::class.simpleName + "(id=$id, consultationId=$consultationId, isVisibleToUnansweredUsersOnly=$isVisibleToUnansweredUsersOnly, updateLabel=$updateLabel, updateDate=$updateDate, hasQuestionsInfo=$hasQuestionsInfo, responsesInfoPicto=$responsesInfoPicto, responsesInfoDescription=$responsesInfoDescription, infoHeaderPicto=$infoHeaderPicto, infoHeaderDescription=$infoHeaderDescription, hasParticipationInfo=$hasParticipationInfo, downloadAnalysisUrl=$downloadAnalysisUrl, feedbackQuestionPicto=$feedbackQuestionPicto, feedbackQuestionTitle=$feedbackQuestionTitle, feedbackQuestionDescription=$feedbackQuestionDescription, footerTitle=$footerTitle, footerDescription=$footerDescription)"
+        return this::class.simpleName + "(id=$id, consultationId=$consultationId, isVisibleToUnansweredUsersOnly=$isVisibleToUnansweredUsersOnly, updateLabel=$updateLabel, updateDate=$updateDate, hasQuestionsInfo=$hasQuestionsInfo, responsesInfoPicto=$responsesInfoPicto, responsesInfoDescription=$responsesInfoDescription, infoHeaderPicto=$infoHeaderPicto, infoHeaderDescription=$infoHeaderDescription, hasParticipationInfo=$hasParticipationInfo, downloadAnalysisUrl=$downloadAnalysisUrl, feedbackQuestionPicto=$feedbackQuestionPicto, feedbackQuestionTitle=$feedbackQuestionTitle, feedbackQuestionDescription=$feedbackQuestionDescription, footerTitle=$footerTitle, footerDescription=$footerDescription, goals=$goals)"
     }
 
 }

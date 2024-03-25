@@ -16,6 +16,7 @@ data class ConsultationUpdateInfoV2(
     val downloadAnalysisUrl: String?,
     val feedbackQuestion: FeedbackQuestion?,
     val footer: Footer?,
+    val goals: List<Goal>?,
 ) {
 
     data class ResponsesInfo(
@@ -60,4 +61,6 @@ data class ConsultationUpdateInfoV2(
     )
 
     data class Footer(val title: String?, val description: String)
+
+    data class Goal(val picto: String, val description: String)
 }

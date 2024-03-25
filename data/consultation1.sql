@@ -392,7 +392,7 @@ INSERT INTO questions(id, title, popup_description, ordre, type, description, ma
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382'
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     'aa0180a2-fa10-4cdf-888b-bd58bb6f1709',
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
     1,
@@ -411,7 +411,8 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     null,
     null,
-    '<body><noa11y>🗣</noa11y> Consultation proposée par le <b>Capitaine P’tit Dej’</b><br/><br/><noa11y>🎯</noa11y><b> Objectif</b> : améliorer la qualité des petits déjeuners apportés à l’équipe AGORA <noa11y>🤤</noa11y>.</body>'
+    null,
+    '🗣<body>Consultation proposée par le <b>Capitaine P’tit Dej’</b></body>|🎯<body><b>Objectif</b> : améliorer la qualité des petits déjeuners apportés à l’équipe AGORA <noa11y>🤤</noa11y>.</body>'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
@@ -468,7 +469,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     '86a3356d-7dad-48be-8bff-368279f8be07',
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
     0,
@@ -487,7 +488,8 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     null,
     'Envie d’aller plus loin ?',
-    '<body>Rendez-vous sur:<br/><ul><li><a href="https://www.mangerbouger.fr/">Manger Bouger.fr</a></li><li>...</li></ul></body>'
+    '<body>Rendez-vous sur:<br/><ul><li><a href="https://www.mangerbouger.fr/">Manger Bouger.fr</a></li><li>...</li></ul></body>',
+    null
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
@@ -544,7 +546,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
     null
 ) ON CONFLICT DO NOTHING;
 
-INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description) VALUES(
+INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswered_users_only, update_label, update_date, share_text_template, has_questions_info, responses_info_picto, responses_info_description, info_header_picto, info_header_description, has_participation_info, download_analysis_url, feedback_question_picto, feedback_question_title, feedback_question_description, footer_title, footer_description, goals) VALUES(
     '6f372d50-e921-417a-8ed0-684a6c32e820',
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
     0,
@@ -564,7 +566,8 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     null,
     null,
     'Envie d’aller plus loin ?',
-    '<body>Rendez-vous sur:<br/><ul><li><a href="https://www.mangerbouger.fr/">Manger Bouger.fr</a></li><li>...</li></ul></body>'
+    '<body>Rendez-vous sur:<br/><ul><li><a href="https://www.mangerbouger.fr/">Manger Bouger.fr</a></li><li>...</li></ul></body>',
+    null
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(

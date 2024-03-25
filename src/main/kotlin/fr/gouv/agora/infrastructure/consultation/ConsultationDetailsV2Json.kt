@@ -32,6 +32,8 @@ data class ConsultationDetailsV2Json(
     val feedbackQuestion: FeedbackQuestion?,
     @JsonProperty("footer")
     val footer: Footer?,
+    @JsonProperty("goals")
+    val goals: List<Goal>?,
     @JsonProperty("history")
     val history: List<History>?,
 ) {
@@ -181,6 +183,13 @@ data class ConsultationDetailsV2Json(
     data class Footer(
         @JsonProperty("title")
         val title: String?,
+        @JsonProperty("description")
+        val description: String,
+    )
+
+    data class Goal(
+        @JsonProperty("picto")
+        val picto: String,
         @JsonProperty("description")
         val description: String,
     )

@@ -23,6 +23,8 @@ class ConsultationUpdateInfoV2Mapper {
         private const val SECTION_TYPE_FOCUS_NUMBER = "focusNumber"
         private const val SECTION_TYPE_QUOTE = "quote"
         private const val SECTION_TYPE_ACCORDION = "accordion"
+
+        private const val GOALS_SEPARATOR = "|"
     }
 
     fun toDomain(
@@ -52,6 +54,7 @@ class ConsultationUpdateInfoV2Mapper {
             downloadAnalysisUrl = dto.downloadAnalysisUrl,
             feedbackQuestion = buildFeedbackQuestion(dto),
             footer = buildFooter(dto),
+            goals = buildGoals(dto),
         )
     }
 
@@ -88,6 +91,18 @@ class ConsultationUpdateInfoV2Mapper {
                 description = dto.footerDescription,
             )
         }
+    }
+
+    private fun buildGoals(dto: ConsultationUpdateV2DTO): List<Goal>? {
+        return dto.goals?.let { goals ->
+            goals.split(GOALS_SEPARATOR).map { goal ->
+                val picto = String(Character.toChars(goal.codePointAt(0)))
+                Goal(
+                    picto = picto,
+                    description = goal.replace(picto, ""),
+                )
+            }
+        }?.takeIf { it.isNotEmpty() }
     }
 
     private fun buildSections(
