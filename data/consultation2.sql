@@ -520,7 +520,7 @@ INSERT INTO consultation_updates_v2(id, consultation_id, is_visible_to_unanswere
     'fba95928-dbf4-4456-995c-f423e81da7aa',
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     0,
-    'Synthèse disponible !',
+    '🔥 Synthèse disponible !',
     '2024-02-25 18:00:00',
     'Les résultats de la Consultation {title} sont disponibles !
 {url}',
