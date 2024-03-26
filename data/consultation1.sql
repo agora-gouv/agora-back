@@ -45,9 +45,12 @@ DELETE FROM consultation_update_sections WHERE id = '5f75e508-1430-4944-b84e-2c7
 DELETE FROM consultation_updates_v2 WHERE id = '6f372d50-e921-417a-8ed0-684a6c32e820';
 DELETE FROM consultation_update_sections WHERE id = '25da8e64-e09e-4cc3-8d8d-01f63233c0f2';
 DELETE FROM consultation_update_sections WHERE id = 'bfcb98ef-e0e8-4a66-b9bc-78db28d75a21';
-DELETE FROM consultation_update_sections WHERE id = '5f75e508-1430-4944-b84e-2c75e264a539';
+DELETE FROM consultation_update_sections WHERE id = 'b5a43637-8679-496d-9d5b-e4534e53cdc3';
 DELETE FROM consultation_update_history WHERE id = '08bd2b70-d667-4d5f-b69d-e6056f2fe1a0';
 DELETE FROM consultation_update_history WHERE id = '7aaaec7e-74af-4ae8-b028-3a74864a3dc7';
+DELETE FROM consultation_update_history WHERE id = '00fd84e6-a601-4778-8e80-f77a2d6c8c2f';
+DELETE FROM consultation_update_history WHERE id = '48b29a32-17d6-4a61-be39-0c62e33c4626';
+DELETE FROM consultation_update_history WHERE id = 'dfef5438-5983-482f-8ee7-8a64c8de2eab';
 
 INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
@@ -610,7 +613,7 @@ INSERT INTO consultation_update_sections(id, consultation_update_id, parent_sect
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_sections(id, consultation_update_id, parent_section_id, type, ordre, visibility_type, title, description, url, video_width, video_height, author_info_name, author_info_message, video_date, video_transcription) VALUES(
-    '5f75e508-1430-4944-b84e-2c75e264a539',
+    'b5a43637-8679-496d-9d5b-e4534e53cdc3',
     '6f372d50-e921-417a-8ed0-684a6c32e820',
     null,
     'richText',
@@ -645,6 +648,16 @@ INSERT INTO consultation_update_history(id, consultation_id, step_number, type, 
     '6f372d50-e921-417a-8ed0-684a6c32e820',
     'Fin de la consultation',
     'Consulter toutes les réponses'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO consultation_update_history(id, consultation_id, step_number, type, consultation_update_id, title, action_text) VALUES(
+    '00fd84e6-a601-4778-8e80-f77a2d6c8c2f',
+    'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
+    3,
+    'update',
+    null,
+    'Synthèse des données',
+    null
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO consultation_update_history(id, consultation_id, step_number, type, consultation_update_id, title, action_text) VALUES(
