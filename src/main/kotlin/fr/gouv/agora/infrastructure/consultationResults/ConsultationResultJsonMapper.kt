@@ -11,6 +11,7 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
     fun toJson(domain: ConsultationResults): ConsultationResultsJson {
         return ConsultationResultsJson(
             title = domain.consultation.title,
+            coverUrl = domain.consultation.coverUrl,
             participantCount = domain.participantCount,
             resultsUniqueChoice = domain.results.filter { result ->
                 result.question is QuestionUniqueChoice || result.question is QuestionConditional
