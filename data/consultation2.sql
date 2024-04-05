@@ -784,7 +784,7 @@ INSERT INTO consultation_update_history(id, consultation_id, step_number, type, 
     3,
     'update',
     null,
-    'Synthèse des données',
+    'Analyse des réponses',
     null
 ) ON CONFLICT DO NOTHING;
 
