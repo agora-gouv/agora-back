@@ -1,52 +1,52 @@
 package fr.gouv.agora.usecase.responseQag
 
-import fr.gouv.agora.domain.IncomingResponsePreview
-import fr.gouv.agora.domain.ResponseQag
-import fr.gouv.agora.domain.ResponseQagPreview
-import fr.gouv.agora.domain.Thematique
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.qag.repository.QagInfo
-import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import org.springframework.stereotype.Component
 
 @Component
 class ResponseQagPreviewListMapper {
 
     fun toResponseQagPreview(
-        qag: QagInfo,
+        qagWithResponseAndOrder: QagWithResponseAndOrder,
         thematique: Thematique,
-        responseQag: ResponseQag,
     ): ResponseQagPreview {
         return ResponseQagPreview(
-            qagId = responseQag.qagId,
+            qagId = qagWithResponseAndOrder.qagInfo.id,
             thematique = thematique,
-            title = qag.title,
+            title = qagWithResponseAndOrder.qagInfo.title,
+            author = qagWithResponseAndOrder.response.author,
+            authorPortraitUrl = qagWithResponseAndOrder.response.authorPortraitUrl,
+            responseDate = qagWithResponseAndOrder.response.responseDate,
+            order = qagWithResponseAndOrder.order,
+        )
+    }
+
+    fun toResponseQagPreviewWithoutOrder(
+        qagInfo: QagInfo,
+        responseQag: ResponseQag,
+        thematique: Thematique,
+    ): ResponseQagPreviewWithoutOrder {
+        return ResponseQagPreviewWithoutOrder(
+            qagId = qagInfo.id,
+            thematique = thematique,
+            title = qagInfo.title,
             author = responseQag.author,
             authorPortraitUrl = responseQag.authorPortraitUrl,
             responseDate = responseQag.responseDate,
         )
     }
 
-    fun toResponseQagPreview(
-        qag: QagInfoWithSupportCount,
+    fun toIncomingResponsePreview(
+        qagWithSupportCountAndOrder: QagWithSupportCountAndOrder,
         thematique: Thematique,
-        responseQag: ResponseQag,
-    ): ResponseQagPreview {
-        return ResponseQagPreview(
-            qagId = responseQag.qagId,
-            thematique = thematique,
-            title = qag.title,
-            author = responseQag.author,
-            authorPortraitUrl = responseQag.authorPortraitUrl,
-            responseDate = responseQag.responseDate,
-        )
-    }
-
-    fun toIncomingResponsePreview(qag: QagInfoWithSupportCount, thematique: Thematique): IncomingResponsePreview {
+    ): IncomingResponsePreview {
         return IncomingResponsePreview(
-            id = qag.id,
+            id = qagWithSupportCountAndOrder.qagWithSupportCount.id,
             thematique = thematique,
-            title = qag.title,
-            supportCount = qag.supportCount,
+            title = qagWithSupportCountAndOrder.qagWithSupportCount.title,
+            supportCount = qagWithSupportCountAndOrder.qagWithSupportCount.supportCount,
+            order = qagWithSupportCountAndOrder.order,
         )
     }
 

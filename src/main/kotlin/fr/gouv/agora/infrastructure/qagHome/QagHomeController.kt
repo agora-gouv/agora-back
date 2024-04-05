@@ -43,13 +43,8 @@ class QagHomeController(
     fun getQagResponses(
         @RequestHeader("Authorization") authorizationHeader: String,
     ): ResponseEntity<QagResponsesJson> {
-        val responseQagPreviewList = responseQagPreviewListUseCase.getResponseQagPreviewList()
-
         return ResponseEntity.ok().body(
-            qagHomeJsonMapper.toResponsesJson(
-                incomingResponses = responseQagPreviewList.incomingResponses,
-                responses = responseQagPreviewList.responses,
-            )
+            qagHomeJsonMapper.toResponsesJson(responseQagPreviewListUseCase.getResponseQagPreviewList())
         )
     }
 }

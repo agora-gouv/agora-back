@@ -1,8 +1,8 @@
 package fr.gouv.agora.infrastructure.responseQagPaginated
 
-import fr.gouv.agora.domain.ResponseQagPreview
+import fr.gouv.agora.domain.ResponseQagPreviewWithoutOrder
 import fr.gouv.agora.infrastructure.profile.repository.DateMapper
-import fr.gouv.agora.infrastructure.qagHome.ResponseQagPreviewJson
+import fr.gouv.agora.infrastructure.qagHome.ResponseQagPreviewWithoutOrderJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.usecase.responseQag.ResponseQagPaginatedList
 import org.springframework.stereotype.Component
@@ -20,8 +20,8 @@ class ResponseQagPaginatedJsonMapper(
         )
     }
 
-    private fun toJson(domain: ResponseQagPreview): ResponseQagPreviewJson {
-        return ResponseQagPreviewJson(
+    private fun toJson(domain: ResponseQagPreviewWithoutOrder): ResponseQagPreviewWithoutOrderJson {
+        return ResponseQagPreviewWithoutOrderJson(
             qagId = domain.qagId,
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
             title = domain.title,

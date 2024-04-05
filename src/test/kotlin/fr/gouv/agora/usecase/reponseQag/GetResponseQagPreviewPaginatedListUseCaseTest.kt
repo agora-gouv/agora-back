@@ -1,8 +1,8 @@
 package fr.gouv.agora.usecase.reponseQag
 
-import fr.gouv.agora.domain.ResponseQagPreview
-import fr.gouv.agora.domain.ResponseQagVideo
+import fr.gouv.agora.domain.ResponseQagPreviewWithoutOrder
 import fr.gouv.agora.domain.ResponseQagText
+import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
@@ -12,7 +12,6 @@ import fr.gouv.agora.usecase.responseQag.ResponseQagPreviewListMapper
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -154,8 +152,14 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
         }
         given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
 
-        val responseQagPreview = mock(ResponseQagPreview::class.java)
-        given(mapper.toResponseQagPreview(qag = qag, thematique = thematique, responseQag = responseQag))
+        val responseQagPreview = mock(ResponseQagPreviewWithoutOrder::class.java)
+        given(
+            mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qag,
+                thematique = thematique,
+                responseQag = responseQag
+            )
+        )
             .willReturn(responseQagPreview)
 
         // When

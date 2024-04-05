@@ -5,4 +5,5 @@ data class IncomingResponsePreview(
     val thematique: Thematique,
     val title: String,
     val supportCount: Int,
+    val order: Int,
 )

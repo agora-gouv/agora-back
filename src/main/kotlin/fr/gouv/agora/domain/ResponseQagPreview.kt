@@ -9,4 +9,14 @@ data class ResponseQagPreview(
     val author: String,
     val authorPortraitUrl: String,
     val responseDate: Date,
+    val order: Int,
+)
+
+data class ResponseQagPreviewWithoutOrder(
+    val qagId: String,
+    val thematique: Thematique,
+    val title: String,
+    val author: String,
+    val authorPortraitUrl: String,
+    val responseDate: Date,
 )
