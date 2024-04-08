@@ -133,7 +133,7 @@ class ConsultationUpdateInfoV2Mapper {
     }
 
     private fun buildImageSection(sectionDTO: ConsultationUpdateSectionDTO): Section.Image? {
-        if (sectionDTO.url == null || sectionDTO.title == null) return null
+        if (sectionDTO.url == null) return null
         return Section.Image(
             url = sectionDTO.url,
             contentDescription = sectionDTO.title,
