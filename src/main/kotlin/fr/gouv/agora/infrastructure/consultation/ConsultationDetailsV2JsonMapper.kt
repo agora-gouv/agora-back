@@ -38,6 +38,7 @@ class ConsultationDetailsV2JsonMapper(
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
             feedbackQuestion = buildFeedbackQuestion(consultationDetails),
             footer = buildFooter(consultationDetails),
+            goals = buildGoals(consultationDetails),
             history = buildHistory(consultationDetails),
         )
     }
@@ -54,12 +55,13 @@ class ConsultationDetailsV2JsonMapper(
             questionsInfo = null,
             consultationDates = buildConsultationDates(consultationDetails),
             responsesInfo = buildResponsesInfo(consultationDetails),
-            infoHeader = buildInfoHeader(consultationDetails),
+            infoHeader = null,
             body = buildBody(consultationDetails),
             participationInfo = buildParticipationInfo(consultationDetails),
             downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
             feedbackQuestion = buildFeedbackQuestion(consultationDetails),
             footer = buildFooter(consultationDetails),
+            goals = buildGoals(consultationDetails),
             history = null,
         )
     }
@@ -97,6 +99,7 @@ class ConsultationDetailsV2JsonMapper(
             ResponsesInfo(
                 picto = responsesInfo.picto,
                 description = responsesInfo.description,
+                actionText = responsesInfo.actionText,
             )
         }
     }
@@ -150,6 +153,15 @@ class ConsultationDetailsV2JsonMapper(
         }
     }
 
+    private fun buildGoals(consultationDetails: ConsultationDetailsV2WithInfo): List<Goal>? {
+        return consultationDetails.update.goals?.map { goal ->
+            Goal(
+                picto = goal.picto,
+                description = goal.description,
+            )
+        }
+    }
+
     private fun buildHistory(consultationDetails: ConsultationDetailsV2WithInfo): List<History>? {
         return consultationDetails.history?.map { historyItem ->
             History(
@@ -172,8 +184,9 @@ class ConsultationDetailsV2JsonMapper(
 
     private fun buildBody(consultationDetails: ConsultationDetailsV2WithInfo): Body {
         return Body(
-            sectionsPreview = consultationDetails.update.bodyPreview.map { section -> buildSection(section) },
-            sections = consultationDetails.update.body.map { section -> buildSection(section) },
+            headerSections = consultationDetails.update.sectionsHeader.map(::buildSection),
+            sectionsPreview = consultationDetails.update.bodyPreview.map(::buildSection),
+            sections = consultationDetails.update.body.map(::buildSection),
         )
     }
 

@@ -31,9 +31,28 @@ data class IncomingResponseQagPreviewJson(
     val title: String,
     @JsonProperty("support")
     val support: SupportQagJson,
+    @JsonProperty("order")
+    val order: Int,
 )
 
 data class ResponseQagPreviewJson(
+    @JsonProperty("qagId")
+    val qagId: String,
+    @JsonProperty("thematique")
+    val thematique: ThematiqueNoIdJson,
+    @JsonProperty("title")
+    val title: String,
+    @JsonProperty("author")
+    val author: String,
+    @JsonProperty("authorPortraitUrl")
+    val authorPortraitUrl: String,
+    @JsonProperty("responseDate")
+    val responseDate: String,
+    @JsonProperty("order")
+    val order: Int,
+)
+
+data class ResponseQagPreviewWithoutOrderJson(
     @JsonProperty("qagId")
     val qagId: String,
     @JsonProperty("thematique")

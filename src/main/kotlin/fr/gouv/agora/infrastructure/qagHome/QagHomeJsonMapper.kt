@@ -1,11 +1,10 @@
 package fr.gouv.agora.infrastructure.qagHome
 
-import fr.gouv.agora.domain.IncomingResponsePreview
 import fr.gouv.agora.domain.QagPreview
-import fr.gouv.agora.domain.ResponseQagPreview
 import fr.gouv.agora.infrastructure.profile.repository.DateMapper
 import fr.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
+import fr.gouv.agora.usecase.responseQag.ResponseQagPreviewList
 import org.springframework.stereotype.Component
 
 @Component
@@ -39,11 +38,10 @@ class QagHomeJsonMapper(
     }
 
     fun toResponsesJson(
-        incomingResponses: List<IncomingResponsePreview>,
-        responses: List<ResponseQagPreview>,
+        previewList: ResponseQagPreviewList,
     ): QagResponsesJson {
         return QagResponsesJson(
-            incomingResponses = incomingResponses.map { qag ->
+            incomingResponses = previewList.incomingResponses.map { qag ->
                 IncomingResponseQagPreviewJson(
                     qagId = qag.id,
                     thematique = thematiqueJsonMapper.toNoIdJson(qag.thematique),
@@ -51,10 +49,11 @@ class QagHomeJsonMapper(
                     support = SupportQagJson(
                         supportCount = qag.supportCount,
                         isSupportedByUser = true,
-                    )
+                    ),
+                    order = qag.order,
                 )
             },
-            responsesList = responses.map { responseQag ->
+            responsesList = previewList.responses.map { responseQag ->
                 ResponseQagPreviewJson(
                     qagId = responseQag.qagId,
                     thematique = thematiqueJsonMapper.toNoIdJson(responseQag.thematique),
@@ -62,6 +61,7 @@ class QagHomeJsonMapper(
                     author = responseQag.author,
                     authorPortraitUrl = responseQag.authorPortraitUrl,
                     responseDate = dateMapper.toFormattedDate(responseQag.responseDate),
+                    order = responseQag.order,
                 )
             },
         )

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class ConsultationResultsJson(
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("coverUrl")
+    val coverUrl: String,
     @JsonProperty("participantCount")
     val participantCount: Int,
     @JsonProperty("resultsUniqueChoice")

@@ -12,6 +12,10 @@ class ConsultationUpdateInfoV2Mapper {
     companion object {
         private const val TRUE_INT_VALUE = 1
 
+        private const val VISIBILITY_TYPE_PREVIEW = 1
+        private const val VISIBILITY_TYPE_SHOW_ON_EXPAND = 0
+        private const val VISIBILITY_TYPE_SHOW_AS_HEADER = 2
+
         private const val SECTION_TYPE_TITLE = "title"
         private const val SECTION_TYPE_RICH_TEXT = "richText"
         private const val SECTION_TYPE_IMAGE = "image"
@@ -19,6 +23,8 @@ class ConsultationUpdateInfoV2Mapper {
         private const val SECTION_TYPE_FOCUS_NUMBER = "focusNumber"
         private const val SECTION_TYPE_QUOTE = "quote"
         private const val SECTION_TYPE_ACCORDION = "accordion"
+
+        private const val GOALS_SEPARATOR = "|"
     }
 
     fun toDomain(
@@ -33,25 +39,31 @@ class ConsultationUpdateInfoV2Mapper {
             hasParticipationInfo = dto.hasParticipationInfo == TRUE_INT_VALUE,
             responsesInfo = buildResponsesInfo(dto),
             infoHeader = buildInfoHeader(dto),
+            sectionsHeader = buildSections(
+                sectionDTOs = sectionDTOs,
+                filter = { sectionDTO -> sectionDTO.visibilityType == VISIBILITY_TYPE_SHOW_AS_HEADER && sectionDTO.parentSectionId == null },
+            ),
             body = buildSections(
                 sectionDTOs = sectionDTOs,
-                filter = { sectionDTO -> sectionDTO.isPreview != TRUE_INT_VALUE && sectionDTO.parentSectionId == null },
+                filter = { sectionDTO -> sectionDTO.visibilityType == VISIBILITY_TYPE_SHOW_ON_EXPAND && sectionDTO.parentSectionId == null },
             ),
             bodyPreview = buildSections(
                 sectionDTOs = sectionDTOs,
-                filter = { sectionDTO -> sectionDTO.isPreview == TRUE_INT_VALUE && sectionDTO.parentSectionId == null },
+                filter = { sectionDTO -> sectionDTO.visibilityType == VISIBILITY_TYPE_PREVIEW && sectionDTO.parentSectionId == null },
             ),
             downloadAnalysisUrl = dto.downloadAnalysisUrl,
             feedbackQuestion = buildFeedbackQuestion(dto),
             footer = buildFooter(dto),
+            goals = buildGoals(dto),
         )
     }
 
     private fun buildResponsesInfo(dto: ConsultationUpdateV2DTO): ResponsesInfo? {
-        if (dto.responsesInfoPicto == null || dto.responsesInfoDescription == null) return null
+        if (dto.responsesInfoPicto == null || dto.responsesInfoDescription == null || dto.responsesInfoActionText == null) return null
         return ResponsesInfo(
             picto = dto.responsesInfoPicto,
             description = dto.responsesInfoDescription,
+            actionText = dto.responsesInfoActionText,
         )
     }
 
@@ -82,6 +94,18 @@ class ConsultationUpdateInfoV2Mapper {
         }
     }
 
+    private fun buildGoals(dto: ConsultationUpdateV2DTO): List<Goal>? {
+        return dto.goals?.let { goals ->
+            goals.split(GOALS_SEPARATOR).map { goal ->
+                val picto = String(Character.toChars(goal.codePointAt(0)))
+                Goal(
+                    picto = picto,
+                    description = goal.replace(picto, ""),
+                )
+            }
+        }?.takeIf { it.isNotEmpty() }
+    }
+
     private fun buildSections(
         sectionDTOs: List<ConsultationUpdateSectionDTO>,
         filter: (ConsultationUpdateSectionDTO) -> Boolean = { _ -> true },
@@ -109,7 +133,7 @@ class ConsultationUpdateInfoV2Mapper {
     }
 
     private fun buildImageSection(sectionDTO: ConsultationUpdateSectionDTO): Section.Image? {
-        if (sectionDTO.url == null || sectionDTO.title == null) return null
+        if (sectionDTO.url == null) return null
         return Section.Image(
             url = sectionDTO.url,
             contentDescription = sectionDTO.title,

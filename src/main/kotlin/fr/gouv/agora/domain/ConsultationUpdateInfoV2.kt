@@ -10,16 +10,19 @@ data class ConsultationUpdateInfoV2(
     val hasParticipationInfo: Boolean,
     val responsesInfo: ResponsesInfo?,
     val infoHeader: InfoHeader?,
+    val sectionsHeader: List<Section>,
     val body: List<Section>,
     val bodyPreview: List<Section>,
     val downloadAnalysisUrl: String?,
     val feedbackQuestion: FeedbackQuestion?,
     val footer: Footer?,
+    val goals: List<Goal>?,
 ) {
 
     data class ResponsesInfo(
         val picto: String,
         val description: String,
+        val actionText: String,
     )
 
     data class InfoHeader(
@@ -59,4 +62,6 @@ data class ConsultationUpdateInfoV2(
     )
 
     data class Footer(val title: String?, val description: String)
+
+    data class Goal(val picto: String, val description: String)
 }

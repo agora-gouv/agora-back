@@ -1,7 +1,7 @@
 package fr.gouv.agora.usecase.responseQag
 
 import fr.gouv.agora.domain.ResponseQag
-import fr.gouv.agora.domain.ResponseQagPreview
+import fr.gouv.agora.domain.ResponseQagPreviewWithoutOrder
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
@@ -32,15 +32,15 @@ class GetResponseQagPreviewPaginatedListUseCase(
         )
     }
 
-    private fun toResponseQagPreview(responsesQag: List<ResponseQag>): List<ResponseQagPreview> {
+    private fun toResponseQagPreview(responsesQag: List<ResponseQag>): List<ResponseQagPreviewWithoutOrder> {
         val qags = qagInfoRepository.getQagsInfo(responsesQag.map { it.qagId })
         val thematiques = thematiqueRepository.getThematiqueList()
 
         return responsesQag.mapNotNull { responseQag ->
             qags.find { qagInfo -> qagInfo.id == responseQag.qagId }?.let { qagInfo ->
                 thematiques.find { thematique -> thematique.id == qagInfo.thematiqueId }?.let { thematique ->
-                    mapper.toResponseQagPreview(
-                        qag = qagInfo,
+                    mapper.toResponseQagPreviewWithoutOrder(
+                        qagInfo = qagInfo,
                         responseQag = responseQag,
                         thematique = thematique,
                     )
@@ -51,6 +51,6 @@ class GetResponseQagPreviewPaginatedListUseCase(
 }
 
 data class ResponseQagPaginatedList(
-    val responsesQag: List<ResponseQagPreview>,
+    val responsesQag: List<ResponseQagPreviewWithoutOrder>,
     val maxPageNumber: Int,
 )
