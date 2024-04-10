@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 class ConsultationPreviewFinishedMapper(private val clock: Clock) {
 
     companion object {
-        private const val MAX_UPDATE_LABEL_DURATION_IN_DAYS = 14L
+        private const val MAX_UPDATE_LABEL_DURATION_IN_DAYS = 30L
     }
 
     fun toConsultationPreviewFinished(
