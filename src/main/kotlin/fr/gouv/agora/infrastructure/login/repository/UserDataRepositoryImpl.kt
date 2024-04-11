@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.login.repository
 
 import fr.gouv.agora.domain.LoginRequest
+import fr.gouv.agora.domain.SignupHistoryCount
 import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.usecase.login.repository.UserDataRepository
 import org.springframework.stereotype.Component
@@ -22,6 +23,15 @@ class UserDataRepositoryImpl(
 
     override fun deleteUsersData(userIDs: List<String>) {
         databaseRepository.deleteUsersData(userIDs)
+    }
+
+    override fun getSignupHistory(ipAddressHash: String): List<SignupHistoryCount> {
+        return databaseRepository.getIpHashSignupHistory(ipAddressHash).map { signupEntry ->
+            SignupHistoryCount(
+                date = signupEntry.date,
+                signupCount = signupEntry.signupCount,
+            )
+        }
     }
 
 }
