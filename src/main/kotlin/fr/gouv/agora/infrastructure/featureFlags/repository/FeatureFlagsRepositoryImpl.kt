@@ -33,6 +33,7 @@ class FeatureFlagsRepositoryImpl(
         AgoraFeature.SimilarQag -> "IS_SIMILAR_QAG_ENABLED"
         AgoraFeature.FeedbackResponseQag -> "IS_FEEDBACK_ON_RESPONSE_QAG_ENABLED"
         AgoraFeature.FeedbackConsultationUpdate -> "IS_FEEDBACK_ON_CONSULTATION_UPDATE_ENABLED"
+        AgoraFeature.SuspiciousUserDetection -> "IS_SUSPICIOUS_USER_DETECTION_ENABLED"
     }
 
     private fun getCache() = cacheManager.getCache(FEATURE_FLAGS_CACHE_NAME)

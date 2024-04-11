@@ -1,6 +1,8 @@
 package fr.gouv.agora.usecase.suspiciousUser
 
+import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.SignupHistoryCount
+import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.login.repository.UserDataRepository
 import fr.gouv.agora.usecase.suspiciousUser.repository.SignupCountRepository
 import org.springframework.stereotype.Component
@@ -10,6 +12,7 @@ import java.time.LocalDate
 @Component
 class IsSuspiciousUserUseCase(
     private val clock: Clock,
+    private val featureFlagsRepository: FeatureFlagsRepository,
     private val signupCountRepository: SignupCountRepository,
     private val userDataRepository: UserDataRepository,
 ) {
@@ -19,11 +22,13 @@ class IsSuspiciousUserUseCase(
     }
 
     fun isSuspiciousUser(ipAddressHash: String): Boolean {
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)) return false
         return (signupCountRepository.getTodaySignupCount(ipAddressHash)
             ?: buildTodaySignupCount(ipAddressHash)) >= SOFT_BAN_SIGNUP_COUNT
     }
 
     fun notifySignup(ipAddressHash: String) {
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)) return
         signupCountRepository.getTodaySignupCount(ipAddressHash)?.let { signupCount ->
             signupCountRepository.initTodaySignupCount(
                 ipAddressHash = ipAddressHash,

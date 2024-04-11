@@ -1,7 +1,9 @@
 package fr.gouv.agora.usecase.suspiciousUser
 
 import fr.gouv.agora.TestUtils
+import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.SignupHistoryCount
+import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.login.repository.UserDataRepository
 import fr.gouv.agora.usecase.suspiciousUser.repository.SignupCountRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -20,6 +22,9 @@ class IsSuspiciousUserUseCaseTest {
     private lateinit var useCase: IsSuspiciousUserUseCase
 
     @MockBean
+    private lateinit var featureFlagsRepository: FeatureFlagsRepository
+
+    @MockBean
     private lateinit var signupCountRepository: SignupCountRepository
 
     @MockBean
@@ -27,11 +32,29 @@ class IsSuspiciousUserUseCaseTest {
 
     @BeforeEach
     fun setUp() {
+        reset(featureFlagsRepository)
         useCase = IsSuspiciousUserUseCase(
             clock = TestUtils.getFixedClock(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30, 59)),
+            featureFlagsRepository = featureFlagsRepository,
             signupCountRepository = signupCountRepository,
             userDataRepository = userDataRepository,
         )
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)).willReturn(true)
+    }
+
+    @Test
+    fun `isSuspiciousUser - when feature is disabled - should return false`() {
+        // Given
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)).willReturn(false)
+
+        // When
+        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash")
+
+        // Then
+        assertThat(result).isEqualTo(false)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
+        then(signupCountRepository).shouldHaveNoInteractions()
+        then(userDataRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -44,6 +67,7 @@ class IsSuspiciousUserUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(false)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
         then(signupCountRepository).should(only()).getTodaySignupCount(ipAddressHash = "ipHash")
         then(userDataRepository).shouldHaveNoInteractions()
     }
@@ -58,6 +82,7 @@ class IsSuspiciousUserUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(true)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
         then(signupCountRepository).should(only()).getTodaySignupCount(ipAddressHash = "ipHash")
         then(userDataRepository).shouldHaveNoInteractions()
     }
@@ -73,13 +98,14 @@ class IsSuspiciousUserUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(false)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
         then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash")
         then(signupCountRepository).should().initTodaySignupCount(ipAddressHash = "ipHash", todaySignupCount = 0)
         then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash")
     }
 
     @Test
-    fun `isSuspiciousUser - when getTodaySignupCount is null and has a SignupHistoryCount with count greater or equal 10 - should init todaySignupCount to 10 and return true`() {
+    fun `isSuspiciousUser - when getTodaySignupCount is null and has a SignupHistoryCount with count greater or equal 10 - should init todaySignupCount to count and return true`() {
         // Given
         given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash")).willReturn(null)
         given(userDataRepository.getSignupHistory(ipAddressHash = "ipHash")).willReturn(
@@ -96,6 +122,7 @@ class IsSuspiciousUserUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(true)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
         then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash")
         then(signupCountRepository).should().initTodaySignupCount(ipAddressHash = "ipHash", todaySignupCount = 14)
         then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash")
@@ -106,6 +133,7 @@ class IsSuspiciousUserUseCaseTest {
         // Given
         useCase = IsSuspiciousUserUseCase(
             clock = TestUtils.getFixedClock(LocalDateTime.of(2024, Month.JANUARY, 15, 12, 30, 59)),
+            featureFlagsRepository = featureFlagsRepository,
             signupCountRepository = signupCountRepository,
             userDataRepository = userDataRepository,
         )
@@ -124,9 +152,24 @@ class IsSuspiciousUserUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(false)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
         then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash")
         then(signupCountRepository).should().initTodaySignupCount(ipAddressHash = "ipHash", todaySignupCount = 8)
         then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash")
+    }
+
+    @Test
+    fun `isSuspiciousUser - when feature is disabled - should do nothing`() {
+        // Given
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)).willReturn(false)
+
+        // When
+        useCase.notifySignup(ipAddressHash = "ipHash")
+
+        // Then
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
+        then(signupCountRepository).shouldHaveNoInteractions()
+        then(userDataRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -138,6 +181,7 @@ class IsSuspiciousUserUseCaseTest {
         useCase.notifySignup(ipAddressHash = "ipHash")
 
         // Then
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
         then(signupCountRepository).should(only()).getTodaySignupCount(ipAddressHash = "ipHash")
         then(userDataRepository).shouldHaveNoInteractions()
     }
@@ -151,6 +195,7 @@ class IsSuspiciousUserUseCaseTest {
         useCase.notifySignup(ipAddressHash = "ipHash")
 
         // Then
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
         then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash")
         then(signupCountRepository).should().initTodaySignupCount(ipAddressHash = "ipHash", todaySignupCount = 20)
         then(userDataRepository).shouldHaveNoInteractions()
