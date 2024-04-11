@@ -3,11 +3,10 @@ package fr.gouv.agora.usecase.login
 import fr.gouv.agora.domain.LoginRequest
 import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.domain.UserInfo
-import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.usecase.login.repository.UserDataRepository
 import fr.gouv.agora.usecase.login.repository.UserRepository
+import fr.gouv.agora.usecase.suspiciousUser.IsSuspiciousUserUseCase
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -29,6 +28,9 @@ internal class LoginUseCaseTest {
     @MockBean
     private lateinit var userDataRepository: UserDataRepository
 
+    @MockBean
+    private lateinit var isSuspiciousUserUseCase: IsSuspiciousUserUseCase
+
     private val loginRequest = mock(LoginRequest::class.java).also {
         given(it.userId).willReturn("userId")
         given(it.ipAddressHash).willReturn("ipAddressHash")
@@ -47,6 +49,7 @@ internal class LoginUseCaseTest {
         assertThat(result).isEqualTo(userInfo)
         then(userRepository).should(only()).getUserById(userId = "userId")
         then(userDataRepository).shouldHaveNoInteractions()
+        then(isSuspiciousUserUseCase).shouldHaveNoInteractions()
     }
 
     @Test
@@ -61,6 +64,7 @@ internal class LoginUseCaseTest {
         assertThat(result).isEqualTo(null)
         then(userRepository).should(only()).getUserById(userId = "userId")
         then(userDataRepository).shouldHaveNoInteractions()
+        then(isSuspiciousUserUseCase).shouldHaveNoInteractions()
     }
 
     @Test
@@ -81,12 +85,15 @@ internal class LoginUseCaseTest {
         then(userRepository).should().updateUser(loginRequest = loginRequest)
         then(userRepository).shouldHaveNoMoreInteractions()
         then(userDataRepository).should(only()).addUserData(loginRequest = loginRequest)
+        then(isSuspiciousUserUseCase).shouldHaveNoInteractions()
     }
 
     @Test
     fun `signUp - should add userData and return result from repository`() {
         // Given
-        val signupRequest = mock(SignupRequest::class.java)
+        val signupRequest = mock(SignupRequest::class.java).also {
+            given(it.ipAddressHash).willReturn("ipHash")
+        }
         val userInfo = mock(UserInfo::class.java).also {
             given(it.userId).willReturn("userId")
         }
@@ -99,6 +106,7 @@ internal class LoginUseCaseTest {
         assertThat(result).isEqualTo(userInfo)
         then(userRepository).should(only()).generateUser(signupRequest = signupRequest)
         then(userDataRepository).should(only()).addUserData(signupRequest = signupRequest, generatedUserId = "userId")
+        then(isSuspiciousUserUseCase).should(only()).notifySignup(ipAddressHash = "ipHash")
     }
 
 }

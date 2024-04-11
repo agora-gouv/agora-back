@@ -3,9 +3,11 @@ package fr.gouv.agora.usecase.suspiciousUser
 import fr.gouv.agora.domain.SignupHistoryCount
 import fr.gouv.agora.usecase.login.repository.UserDataRepository
 import fr.gouv.agora.usecase.suspiciousUser.repository.SignupCountRepository
+import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.LocalDate
 
+@Component
 class IsSuspiciousUserUseCase(
     private val clock: Clock,
     private val signupCountRepository: SignupCountRepository,

@@ -17,7 +17,11 @@ class SignupCountCacheRepository(
     }
 
     override fun getTodaySignupCount(ipAddressHash: String): Int? {
-        return getCache()?.get(ipAddressHash, Int::class.java)
+        return try {
+            getCache()?.get(ipAddressHash)?.get() as? Int
+        } catch (e: Exception) {
+            null
+        }
     }
 
     override fun initTodaySignupCount(ipAddressHash: String, todaySignupCount: Int) {
