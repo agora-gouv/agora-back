@@ -1,38 +1,35 @@
 package fr.gouv.agora.usecase.qag
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.QagPreview
+import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.util.*
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class GetQagByKeywordsUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: GetQagByKeywordsUseCase
 
-    @MockBean
+    @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var thematiqueRepository: ThematiqueRepository
 
-    @MockBean
+    @Mock
     private lateinit var supportQagUseCase: SupportQagUseCase
 
-    @MockBean
+    @Mock
     private lateinit var mapper: QagPreviewMapper
 
     @Test

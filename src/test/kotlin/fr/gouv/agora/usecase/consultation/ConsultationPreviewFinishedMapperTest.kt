@@ -13,14 +13,12 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.time.Month
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 class ConsultationPreviewFinishedMapperTest {
 
     private lateinit var mapper: ConsultationPreviewFinishedMapper

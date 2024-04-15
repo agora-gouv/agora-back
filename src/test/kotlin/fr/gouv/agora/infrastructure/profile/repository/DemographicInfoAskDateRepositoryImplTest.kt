@@ -3,32 +3,29 @@ package fr.gouv.agora.infrastructure.profile.repository
 import fr.gouv.agora.infrastructure.profile.dto.DemographicInfoAskDateDTO
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
 import java.time.Month
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class DemographicInfoAskDateRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: DemographicInfoAskDateRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: DemographicInfoAskDateCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var databaseRepository: DemographicInfoAskDateDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: DemographicInfoAskDateMapper
 
     private val userId = UUID.randomUUID()

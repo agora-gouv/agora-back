@@ -7,26 +7,23 @@ import fr.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class LockModeratusQagListUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: LockModeratusQagListUseCase
 
-    @MockBean
+    @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var moderatusQagLockRepository: ModeratusQagLockRepository
 
     @Test

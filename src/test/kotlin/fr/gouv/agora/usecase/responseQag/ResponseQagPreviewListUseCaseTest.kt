@@ -15,37 +15,35 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ResponseQagPreviewListUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ResponseQagPreviewListUseCase
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: ResponseQagPreviewCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var responseQagRepository: ResponseQagRepository
 
-    @MockBean
+    @Mock
     private lateinit var thematiqueRepository: ThematiqueRepository
 
-    @MockBean
+    @Mock
     private lateinit var lowPriorityQagRepository: LowPriorityQagRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: ResponseQagPreviewListMapper
 
-    @MockBean
+    @Mock
     private lateinit var orderMapper: ResponseQagPreviewOrderMapper
 
     @Test

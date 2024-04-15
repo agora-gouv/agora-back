@@ -14,27 +14,25 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.time.Month
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class GetAskQagStatusUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: GetAskQagStatusUseCase
 
-    @MockBean
+    @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var featureFlagsRepository: FeatureFlagsRepository
 
-    @MockBean
+    @Mock
     private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
 
     private val userId = "userId"

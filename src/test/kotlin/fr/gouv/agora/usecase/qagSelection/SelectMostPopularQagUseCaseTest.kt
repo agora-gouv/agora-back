@@ -4,30 +4,27 @@ import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class SelectMostPopularQagUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: SelectMostPopularQagUseCase
 
-    @MockBean
+    @Mock
     private lateinit var featureFlagsRepository: FeatureFlagsRepository
 
-    @MockBean
+    @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var randomQagSelector: RandomQagSelector
 
     @BeforeEach

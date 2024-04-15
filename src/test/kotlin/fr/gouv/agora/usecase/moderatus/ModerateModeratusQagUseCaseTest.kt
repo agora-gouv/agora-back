@@ -7,39 +7,36 @@ import fr.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
 import fr.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.gouv.agora.usecase.qag.repository.QagUpdateResult
 import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
+import fr.gouv.agora.usecase.qag.repository.QagUpdateResult
 import fr.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ModerateModeratusQagUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ModerateModeratusQagUseCase
 
-    @MockBean
+    @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var sendNotificationdUseCase: SendQagNotificationUseCase
 
-    @MockBean
+    @Mock
     private lateinit var qagUpdatesRepository: QagUpdatesRepository
 
-    @MockBean
+    @Mock
     private lateinit var moderatusQagLockRepository: ModeratusQagLockRepository
 
-    @MockBean
+    @Mock
     @Suppress("unused")
     private lateinit var previewPageRepository: QagPreviewCacheRepository
 

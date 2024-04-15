@@ -3,9 +3,9 @@ package fr.gouv.agora.usecase.consultationPaginated
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
-import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationFinishedPaginatedListCacheRepository
+import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,29 +13,27 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.*
+import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.Mockito.mock
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ConsultationsFinishedPaginatedListUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ConsultationsFinishedPaginatedListUseCase
 
-    @MockBean
+    @Mock
     private lateinit var consultationPreviewFinishedRepository: ConsultationPreviewFinishedRepository
 
-    @MockBean
+    @Mock
     private lateinit var thematiqueRepository: ThematiqueRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: ConsultationPreviewFinishedMapper
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: ConsultationFinishedPaginatedListCacheRepository
 
     companion object {

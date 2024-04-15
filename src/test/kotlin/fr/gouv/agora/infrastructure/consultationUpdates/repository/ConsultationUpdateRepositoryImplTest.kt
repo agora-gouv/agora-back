@@ -6,38 +6,35 @@ import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateDT
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ExplanationDTO
 import fr.gouv.agora.infrastructure.utils.UuidUtils.NOT_FOUND_UUID
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ConsultationUpdateRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: ConsultationUpdateRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var updateDatabaseRepository: ConsultationUpdateDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var updatesCacheRepository: ConsultationUpdateCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var explanationCacheRepository: ExplanationCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var explanationDatabaseRepository: ExplanationDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: ConsultationUpdateMapper
 
     private val consultationUpdateDTO = ConsultationUpdateDTO(

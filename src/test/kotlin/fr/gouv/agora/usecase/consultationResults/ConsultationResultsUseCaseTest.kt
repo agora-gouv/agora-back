@@ -28,37 +28,35 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.mock
 import org.mockito.BDDMockito.only
 import org.mockito.BDDMockito.then
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ConsultationResultsUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ConsultationResultsUseCase
 
-    @MockBean
+    @Mock
     private lateinit var consultationInfoRepository: ConsultationInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var questionRepository: QuestionRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationResponseRepository: GetConsultationResponseRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationResultAggregatedRepository: ConsultationResultAggregatedRepository
 
-    @MockBean
+    @Mock
     private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: QuestionNoResponseMapper
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: ConsultationResultsCacheRepository
 
     companion object {

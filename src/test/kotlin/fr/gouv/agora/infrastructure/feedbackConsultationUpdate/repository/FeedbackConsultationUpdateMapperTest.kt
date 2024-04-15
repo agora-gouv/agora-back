@@ -8,16 +8,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
+import org.mockito.InjectMocks
 import org.mockito.Mockito.mock
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 class FeedbackConsultationUpdateMapperTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var mapper: FeedbackConsultationUpdateMapper
 
     companion object {

@@ -7,40 +7,37 @@ import fr.gouv.agora.usecase.qag.repository.*
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class InsertQagUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: InsertQagUseCase
 
-    @MockBean
+    @Mock
     private lateinit var contentSanitizer: ContentSanitizer
 
-    @MockBean
+    @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var qagPreviewCacheRepository: QagPreviewCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var supportQagRepository: SupportQagRepository
 
-    @MockBean
+    @Mock
     private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var supportQagCacheRepository: SupportQagCacheRepository
 
     private val qagInserting = QagInserting(

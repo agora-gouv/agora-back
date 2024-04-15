@@ -3,19 +3,15 @@ package fr.gouv.agora.infrastructure.moderatus
 import fr.gouv.agora.infrastructure.moderatus.ModerateQagOptionsMapper.Result
 import fr.gouv.agora.usecase.moderatus.ModerateQagOptions
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ModerateQagOptionsMapperTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var mapper: ModerateQagOptionsMapper
 
     private val expectedModerateQagOptions = ModerateQagOptions(
