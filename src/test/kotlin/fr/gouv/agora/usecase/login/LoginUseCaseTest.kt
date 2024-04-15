@@ -3,12 +3,10 @@ package fr.gouv.agora.usecase.login
 import fr.gouv.agora.domain.LoginRequest
 import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.domain.UserInfo
-import fr.gouv.agora.infrastructure.utils.UuidUtils
-import fr.gouv.agora.usecase.login.repository.BannedIpAddressHashRepository
 import fr.gouv.agora.usecase.login.repository.UserDataRepository
 import fr.gouv.agora.usecase.login.repository.UserRepository
+import fr.gouv.agora.usecase.suspiciousUser.IsSuspiciousUserUseCase
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
@@ -31,16 +29,11 @@ internal class LoginUseCaseTest {
     private lateinit var userDataRepository: UserDataRepository
 
     @MockBean
-    private lateinit var bannedIpAddressHashRepository: BannedIpAddressHashRepository
+    private lateinit var isSuspiciousUserUseCase: IsSuspiciousUserUseCase
 
     private val loginRequest = mock(LoginRequest::class.java).also {
         given(it.userId).willReturn("userId")
         given(it.ipAddressHash).willReturn("ipAddressHash")
-    }
-
-    @BeforeEach
-    fun setUp() {
-        given(bannedIpAddressHashRepository.getBannedIpAddressesHash()).willReturn(emptyList())
     }
 
     @Test
@@ -56,23 +49,7 @@ internal class LoginUseCaseTest {
         assertThat(result).isEqualTo(userInfo)
         then(userRepository).should(only()).getUserById(userId = "userId")
         then(userDataRepository).shouldHaveNoInteractions()
-        then(bannedIpAddressHashRepository).shouldHaveNoInteractions()
-    }
-
-    @Test
-    fun `login - when from banned IP address hash - should return null`() {
-        // Given
-        given(bannedIpAddressHashRepository.getBannedIpAddressesHash()).willReturn(listOf("bannedIpAddressHash"))
-        given(loginRequest.ipAddressHash).willReturn("bannedIpAddressHash")
-
-        // When
-        val result = useCase.login(loginRequest)
-
-        // Then
-        assertThat(result).isEqualTo(null)
-        then(bannedIpAddressHashRepository).should(only()).getBannedIpAddressesHash()
-        then(userRepository).shouldHaveNoInteractions()
-        then(userDataRepository).should(only()).addUserData(loginRequest)
+        then(isSuspiciousUserUseCase).shouldHaveNoInteractions()
     }
 
     @Test
@@ -87,7 +64,7 @@ internal class LoginUseCaseTest {
         assertThat(result).isEqualTo(null)
         then(userRepository).should(only()).getUserById(userId = "userId")
         then(userDataRepository).shouldHaveNoInteractions()
-        then(bannedIpAddressHashRepository).should(only()).getBannedIpAddressesHash()
+        then(isSuspiciousUserUseCase).shouldHaveNoInteractions()
     }
 
     @Test
@@ -108,34 +85,15 @@ internal class LoginUseCaseTest {
         then(userRepository).should().updateUser(loginRequest = loginRequest)
         then(userRepository).shouldHaveNoMoreInteractions()
         then(userDataRepository).should(only()).addUserData(loginRequest = loginRequest)
-        then(bannedIpAddressHashRepository).should(only()).getBannedIpAddressesHash()
-    }
-
-    @Test
-    fun `signUp - when from banned IP address hash - should return null`() {
-        // Given
-        given(bannedIpAddressHashRepository.getBannedIpAddressesHash()).willReturn(listOf("bannedIpAddressHash"))
-        val signupRequest = mock(SignupRequest::class.java).also {
-            given(it.ipAddressHash).willReturn("bannedIpAddressHash")
-        }
-
-        // When
-        val result = useCase.signUp(signupRequest)
-
-        // Then
-        assertThat(result).isEqualTo(null)
-        then(bannedIpAddressHashRepository).should(only()).getBannedIpAddressesHash()
-        then(userRepository).shouldHaveNoInteractions()
-        then(userDataRepository).should(only()).addUserData(
-            signupRequest = signupRequest,
-            generatedUserId = UuidUtils.NOT_FOUND_UUID_STRING,
-        )
+        then(isSuspiciousUserUseCase).shouldHaveNoInteractions()
     }
 
     @Test
     fun `signUp - should add userData and return result from repository`() {
         // Given
-        val signupRequest = mock(SignupRequest::class.java)
+        val signupRequest = mock(SignupRequest::class.java).also {
+            given(it.ipAddressHash).willReturn("ipHash")
+        }
         val userInfo = mock(UserInfo::class.java).also {
             given(it.userId).willReturn("userId")
         }
@@ -148,7 +106,7 @@ internal class LoginUseCaseTest {
         assertThat(result).isEqualTo(userInfo)
         then(userRepository).should(only()).generateUser(signupRequest = signupRequest)
         then(userDataRepository).should(only()).addUserData(signupRequest = signupRequest, generatedUserId = "userId")
-        then(bannedIpAddressHashRepository).should(only()).getBannedIpAddressesHash()
+        then(isSuspiciousUserUseCase).should(only()).notifySignup(ipAddressHash = "ipHash")
     }
 
 }

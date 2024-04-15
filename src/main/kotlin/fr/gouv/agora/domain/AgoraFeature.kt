@@ -9,4 +9,5 @@ enum class AgoraFeature {
     SimilarQag,
     FeedbackResponseQag,
     FeedbackConsultationUpdate,
+    SuspiciousUserDetection,
 }
