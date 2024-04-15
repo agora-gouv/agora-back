@@ -20,32 +20,27 @@ class InsertFeedbackQagUseCase(
 ) {
 
     fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagListResult {
-        return if (hasAlreadyGivenFeedback(userId = feedbackQagInserting.userId, qagId = feedbackQagInserting.qagId)) {
-            FeedbackQagListResult.Failure
-        } else {
-            when (repository.insertFeedbackQag(feedbackQagInserting)) {
-                FeedbackQagResult.SUCCESS -> {
-                    userFeedbackCacheRepository.addUserFeedbackQagId(
-                        userId = feedbackQagInserting.userId,
-                        qagId = feedbackQagInserting.qagId,
-                    )
-                    if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)) {
-                        feedbackResultsCacheRepository.evictFeedbackResults(qagId = feedbackQagInserting.qagId)
-                        feedbackQagUseCase.getFeedbackResults(qagId = feedbackQagInserting.qagId)
-                            ?.let { feedbackResults ->
-                                FeedbackQagListResult.Success(feedbackResults)
-                            } ?: FeedbackQagListResult.SuccessFeedbackDisabled
-                    } else FeedbackQagListResult.SuccessFeedbackDisabled
-                }
-                else -> FeedbackQagListResult.Failure
+        val insertFeedbackQag = repository.insertFeedbackQag(feedbackQagInserting)
+
+        return when (insertFeedbackQag) {
+            FeedbackQagResult.SUCCESS -> {
+                userFeedbackCacheRepository.addUserFeedbackQagId(
+                    userId = feedbackQagInserting.userId,
+                    qagId = feedbackQagInserting.qagId,
+                )
+                if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)) {
+                    feedbackResultsCacheRepository.evictFeedbackResults(qagId = feedbackQagInserting.qagId)
+                    feedbackQagUseCase.getFeedbackResults(qagId = feedbackQagInserting.qagId)
+                        ?.let { feedbackResults ->
+                            FeedbackQagListResult.Success(feedbackResults)
+                        } ?: FeedbackQagListResult.SuccessFeedbackDisabled
+                } else FeedbackQagListResult.SuccessFeedbackDisabled
             }
+
+            else -> FeedbackQagListResult.Failure
         }
     }
 
-    private fun hasAlreadyGivenFeedback(userId: String, qagId: String): Boolean {
-        return feedbackQagUseCase.getUserFeedbackQagIds(userId = userId)
-            .any { userFeedbackQag -> userFeedbackQag == qagId }
-    }
 }
 
 sealed class FeedbackQagListResult {
