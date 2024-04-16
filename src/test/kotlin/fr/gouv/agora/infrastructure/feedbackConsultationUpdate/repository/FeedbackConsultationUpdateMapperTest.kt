@@ -94,7 +94,6 @@ class FeedbackConsultationUpdateMapperTest {
         val rawStats = listOf(
             mock(FeedbackConsultationUpdateStatsDTO::class.java).also {
                 given(it.hasPositiveValue).willReturn(42)
-                given(it.responseCount).willReturn(1337)
             },
         )
 

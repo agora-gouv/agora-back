@@ -1,5 +1,7 @@
 package fr.gouv.agora.usecase.consultationResults
 
+import fr.gouv.agora.TestUtils.lenientGiven
+import fr.gouv.agora.TestUtils.willReturn
 import fr.gouv.agora.domain.ChoiceResults
 import fr.gouv.agora.domain.ChoixPossibleDefault
 import fr.gouv.agora.domain.ConsultationResultAggregated
@@ -220,11 +222,6 @@ internal class ConsultationResultsUseCaseTest {
         fun setUp() {
             given(consultationInfoRepository.getConsultation(consultationId = "consultationId"))
                 .willReturn(consultationInfo)
-            given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
-                .willReturn(emptyList())
-            given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
-                .willReturn(emptyList())
-
             given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
                 .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
         }
@@ -482,22 +479,22 @@ internal class ConsultationResultsUseCaseTest {
         }
 
         val question = mock(QuestionWithChoices::class.java).also {
-            given(it.id).willReturn(testInput.questionId)
+            lenientGiven(it.id).willReturn(testInput.questionId)
             given(it.choixPossibleList).willReturn(choices)
         }
 
         val responseConsultationList = testInput.choices.map { choiceInput ->
             mock(ResponseConsultationCount::class.java).also {
-                given(it.questionId).willReturn(testInput.questionId)
-                given(it.choiceId).willReturn(choiceInput.choiceId)
-                given(it.responseCount).willReturn(choiceInput.responseCount)
+                lenientGiven(it.questionId).willReturn(testInput.questionId)
+                lenientGiven(it.choiceId).willReturn(choiceInput.choiceId)
+                lenientGiven(it.responseCount).willReturn(choiceInput.responseCount)
             }
         }
         val consultationResultAggregated = testInput.choices.map { choiceInput ->
             mock(ConsultationResultAggregated::class.java).also {
-                given(it.questionId).willReturn(testInput.questionId)
-                given(it.choiceId).willReturn(choiceInput.choiceId)
-                given(it.responseCount).willReturn(choiceInput.responseCount)
+                lenientGiven(it.questionId).willReturn(testInput.questionId)
+                lenientGiven(it.choiceId).willReturn(choiceInput.choiceId)
+                lenientGiven(it.responseCount).willReturn(choiceInput.responseCount)
             }
         }
 
@@ -508,7 +505,7 @@ internal class ConsultationResultsUseCaseTest {
             )
         }.takeIf { it.isNotEmpty() }
 
-        given(mapper.toQuestionNoResponse(question)).willReturn(question)
+        lenientGiven(mapper.toQuestionNoResponse(question)).willReturn(question)
         return TestData(question, responseConsultationList, consultationResultAggregated, expectedQuestionResultList)
     }
 

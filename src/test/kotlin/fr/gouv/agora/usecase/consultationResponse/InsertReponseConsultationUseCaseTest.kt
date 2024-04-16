@@ -312,18 +312,15 @@ internal class InsertReponseConsultationUseCaseTest {
         given(
             userAnsweredConsultationRepository.hasAnsweredConsultation(
                 consultationId = "consultId",
-                userId = "userId"
+                userId = "userId",
             )
         )
             .willReturn(false)
 
         val questionList = listOf(
             mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") },
-            mock(QuestionOpen::class.java).also { given(it.id).willReturn("question2") }
         )
-        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(
-            questionList
-        )
+        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(questionList)
 
         val insertParameters = mock(InsertParameters::class.java)
         given(

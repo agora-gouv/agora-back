@@ -1,11 +1,13 @@
 package fr.gouv.agora.infrastructure.profile.repository
 
 import fr.gouv.agora.infrastructure.profile.dto.DemographicInfoAskDateDTO
-import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -62,9 +64,7 @@ internal class DemographicInfoAskDateRepositoryImplTest {
     fun `getDate - when is not initialized - should get data from database, insert to cache then return date`() {
         // Given
         given(cacheRepository.getDate(userId = userId)).willReturn(null)
-        val demographicAskDateDTO = mock(DemographicInfoAskDateDTO::class.java).also {
-            given(it.askDate).willReturn(askLocalDate.toDate())
-        }
+        val demographicAskDateDTO = mock(DemographicInfoAskDateDTO::class.java)
         given(databaseRepository.getAskDate(userId = userId)).willReturn(demographicAskDateDTO)
 
         given(mapper.toDate(dto = demographicAskDateDTO)).willReturn(askLocalDate)

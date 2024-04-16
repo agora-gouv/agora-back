@@ -1,6 +1,8 @@
 package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.TestUtils
+import fr.gouv.agora.TestUtils.lenientGiven
+import fr.gouv.agora.TestUtils.willReturn
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationStatus
 import fr.gouv.agora.domain.Thematique
@@ -95,7 +97,6 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.title).willReturn("title")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 30, 18, 45).toDate())
-            given(it.updateDate).willReturn(Date(1))
             given(it.updateLabel).willReturn(null)
         }
         val thematique = mock(Thematique::class.java)
@@ -125,7 +126,6 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.title).willReturn("title")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 1, 4, 15).toDate())
-            given(it.updateDate).willReturn(Date(1))
             given(it.updateLabel).willReturn(null)
         }
         val thematique = mock(Thematique::class.java)
@@ -155,7 +155,6 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.title).willReturn("title")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30).toDate())
-            given(it.updateDate).willReturn(Date(1))
             given(it.updateLabel).willReturn(null)
         }
         val thematique = mock(Thematique::class.java)
@@ -192,7 +191,7 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.title).willReturn("title")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(Date(1))
-            given(it.updateDate).willReturn(updateDate.toDate())
+            lenientGiven(it.updateDate).willReturn(updateDate.toDate())
             given(it.updateLabel).willReturn(updateLabel)
         }
         val thematique = mock(Thematique::class.java)

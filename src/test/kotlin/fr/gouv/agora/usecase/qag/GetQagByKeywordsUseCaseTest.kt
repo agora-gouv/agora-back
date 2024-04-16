@@ -53,12 +53,11 @@ internal class GetQagByKeywordsUseCaseTest {
         // Given
         val thematique = mock(Thematique::class.java).also {
             given(it.id).willReturn("thematiqueId")
-            given(it.label).willReturn("label")
-            given(it.picto).willReturn("picto")
         }
         given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
-        val qagInfoWithSupportCount =
-            mock(QagInfoWithSupportCount::class.java).also { given(it.thematiqueId).willReturn("thematiqueId2") }
+        val qagInfoWithSupportCount = mock(QagInfoWithSupportCount::class.java).also {
+            given(it.thematiqueId).willReturn("thematiqueId2")
+        }
         given(qagInfoRepository.getQagByKeywordsList(listOf("keywords"))).willReturn(listOf(qagInfoWithSupportCount))
 
         // When

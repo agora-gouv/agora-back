@@ -102,7 +102,6 @@ internal class ResponseQagPreviewListUseCaseTest {
         given(qagInfoRepository.getQagSelectedWithoutResponsesWithSupportCount()).willReturn(listOf(qagWithSupportCount))
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.id).willReturn("qagId2")
-            given(it.thematiqueId).willReturn("unknownThematiqueId")
         }
         given(qagInfoRepository.getQagWithResponses()).willReturn(listOf(qagInfo))
         given(responseQagRepository.getResponsesQag(listOf("qagId2"))).willReturn(emptyList())

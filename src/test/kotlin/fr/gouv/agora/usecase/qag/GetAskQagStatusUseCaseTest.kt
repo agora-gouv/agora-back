@@ -13,17 +13,20 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.BDDMockito.*
-import org.mockito.InjectMocks
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.reset
+import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.Clock
 import java.time.LocalDateTime
 import java.time.Month
 
 @ExtendWith(MockitoExtension::class)
 internal class GetAskQagStatusUseCaseTest {
 
-    @InjectMocks
     private lateinit var useCase: GetAskQagStatusUseCase
 
     @Mock
@@ -115,6 +118,12 @@ internal class GetAskQagStatusUseCaseTest {
     @Test
     fun `getAskQagStatus - when feature disabled - should return DISABLED`() {
         // Given
+        useCase = GetAskQagStatusUseCase(
+            qagInfoRepository = qagInfoRepository,
+            featureFlagsRepository = featureFlagsRepository,
+            clock = mock(Clock::class.java),
+            askQagStatusCacheRepository = askQagStatusCacheRepository,
+        )
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(false)
 
         // When
@@ -130,8 +139,13 @@ internal class GetAskQagStatusUseCaseTest {
     @Test
     fun `getAskQagStatus - when feature enabled and has cached value - should return cached value`() {
         // Given
+        useCase = GetAskQagStatusUseCase(
+            qagInfoRepository = qagInfoRepository,
+            featureFlagsRepository = featureFlagsRepository,
+            clock = mock(Clock::class.java),
+            askQagStatusCacheRepository = askQagStatusCacheRepository,
+        )
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(true)
-        given(qagInfoRepository.getUserLastQagInfo(userId = userId)).willReturn(null)
         given(askQagStatusCacheRepository.getAskQagStatus(userId = userId)).willReturn(AskQagStatus.WEEKLY_LIMIT_REACHED)
 
         // When
@@ -147,6 +161,12 @@ internal class GetAskQagStatusUseCaseTest {
     @Test
     fun `getAskQagStatus - when feature enabled, no cached value and user didn't have Qag - should return ENABLED and put it to cache`() {
         // Given
+        useCase = GetAskQagStatusUseCase(
+            qagInfoRepository = qagInfoRepository,
+            featureFlagsRepository = featureFlagsRepository,
+            clock = mock(Clock::class.java),
+            askQagStatusCacheRepository = askQagStatusCacheRepository,
+        )
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(true)
         given(qagInfoRepository.getUserLastQagInfo(userId = userId)).willReturn(null)
         given(askQagStatusCacheRepository.getAskQagStatus(userId = userId)).willReturn(null)

@@ -32,7 +32,6 @@ internal class ModeratusLoginUseCaseTest {
         // Given
         given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
             .willReturn(DecodeResult.Failure)
-        given(userRepository.getUserById(userId = "userId")).willReturn(null)
 
         // When
         val result = useCase.login(loginToken = "loginToken")

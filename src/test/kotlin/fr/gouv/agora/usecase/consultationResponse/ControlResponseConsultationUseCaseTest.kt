@@ -33,12 +33,7 @@ internal class ControlResponseConsultationUseCaseTest {
     @Test
     fun `isResponseConsultationValid - when response has duplicated questionId - should return false`() {
         // Given
-        val questionList = listOf(
-            mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") },
-            mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question2") }
-        )
-        given(questionRepository.getConsultationQuestionList(consultationId = "consultId"))
-            .willReturn(questionList)
+        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(emptyList())
 
         // When
         val result = useCase.isResponseConsultationValid(

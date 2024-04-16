@@ -12,7 +12,6 @@ class GetQagByKeywordsUseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val supportQagUseCase: SupportQagUseCase,
     private val qagPreviewMapper: QagPreviewMapper,
-    private val qagDetailsMapper: QagDetailsMapper,
 ) {
     fun getQagByKeywordsUseCase(userId: String, keywords: List<String>): List<QagPreview> {
         return qagInfoRepository.getQagByKeywordsList(keywords).mapNotNull { qagInfo ->

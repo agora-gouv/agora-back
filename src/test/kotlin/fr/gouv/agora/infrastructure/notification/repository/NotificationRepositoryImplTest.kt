@@ -105,20 +105,12 @@ internal class NotificationRepositoryImplTest {
         @Test
         fun `getUserNotificationList - when cache is initialized and has result - should return mapped result`() {
             // Given
-            val notificationId = UUID.randomUUID()
             val userId = UUID.randomUUID()
             val notificationDTO = mock(NotificationDTO::class.java).also {
-                given(it.id).willReturn(notificationId)
                 given(it.userId).willReturn(userId)
             }
-            // val allNotificationDTO = listOf(notificationDTO)
-            given(cacheRepository.getAllNotificationList()).willReturn(
-                CacheResult.CachedNotificationList(
-                    listOf(
-                        notificationDTO
-                    )
-                )
-            )
+            given(cacheRepository.getAllNotificationList())
+                .willReturn(CacheResult.CachedNotificationList(listOf(notificationDTO)))
 
             val notification = mock(Notification::class.java)
             given(mapper.toDomain(notificationDTO)).willReturn(notification)

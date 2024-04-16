@@ -92,9 +92,7 @@ internal class QagPaginatedUseCaseTest {
             given(dateFreezeRepository.initQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
                 .willReturn(dateFreeze)
 
-            val qag = mock(QagInfoWithSupportCount::class.java).also {
-                given(it.thematiqueId).willReturn(thematiqueId)
-            }
+            val qag = mock(QagInfoWithSupportCount::class.java)
             given(
                 qagInfoRepository.getPopularQagsPaginated(
                     thematiqueId = thematiqueId,
@@ -242,9 +240,7 @@ internal class QagPaginatedUseCaseTest {
             given(dateFreezeRepository.initQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
                 .willReturn(dateFreeze)
 
-            val qag = mock(QagInfoWithSupportCount::class.java).also {
-                given(it.thematiqueId).willReturn(thematiqueId)
-            }
+            val qag = mock(QagInfoWithSupportCount::class.java)
             given(
                 qagInfoRepository.getLatestQagsPaginated(
                     thematiqueId = thematiqueId,
@@ -392,9 +388,7 @@ internal class QagPaginatedUseCaseTest {
             given(dateFreezeRepository.initQagDateFreeze(userId = userId, thematiqueId = thematiqueId))
                 .willReturn(dateFreeze)
 
-            val qag = mock(QagInfoWithSupportCount::class.java).also {
-                given(it.thematiqueId).willReturn(thematiqueId)
-            }
+            val qag = mock(QagInfoWithSupportCount::class.java)
             given(
                 qagInfoRepository.getSupportedQagsPaginated(
                     userId = userId,

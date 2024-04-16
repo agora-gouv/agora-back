@@ -1,6 +1,5 @@
 package fr.gouv.agora.usecase.qag
 
-import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.QagDetails
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.domain.QagWithUserData

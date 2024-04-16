@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.QagInserting
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.domain.SupportQagInserting
 import fr.gouv.agora.usecase.qag.repository.*
+import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -30,6 +31,9 @@ internal class InsertQagUseCaseTest {
 
     @Mock
     private lateinit var qagPreviewCacheRepository: QagPreviewCacheRepository
+
+    @Mock
+    private lateinit var qagListsCacheRepository: QagListsCacheRepository
 
     @Mock
     private lateinit var supportQagRepository: SupportQagRepository
@@ -83,6 +87,7 @@ internal class InsertQagUseCaseTest {
         then(contentSanitizer).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).insertQagInfo(sanitizedQagInserting)
         then(qagPreviewCacheRepository).shouldHaveNoInteractions()
+        then(qagListsCacheRepository).shouldHaveNoInteractions()
         then(askQagStatusCacheRepository).shouldHaveNoInteractions()
     }
 
@@ -113,6 +118,13 @@ internal class InsertQagUseCaseTest {
         then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = null)
         then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = "thematiqueId")
         then(qagPreviewCacheRepository).shouldHaveNoMoreInteractions()
+        then(qagListsCacheRepository).should().evictQagSupportedList(
+            userId = "userId", thematiqueId = null, pageNumber = 1
+        )
+        then(qagListsCacheRepository).should().evictQagSupportedList(
+            userId = "userId", thematiqueId = "thematiqueId", pageNumber = 1
+        )
+        then(qagListsCacheRepository).shouldHaveNoMoreInteractions()
         then(askQagStatusCacheRepository).should(only()).evictAskQagStatus(userId = "userId")
         then(supportQagCacheRepository).should(only()).addSupportedQagIds(userId = "userId", qagId = "qagId")
     }
