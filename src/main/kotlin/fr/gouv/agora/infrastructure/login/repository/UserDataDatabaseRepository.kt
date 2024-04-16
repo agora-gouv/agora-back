@@ -20,6 +20,7 @@ interface UserDataDatabaseRepository : JpaRepository<UserDataDTO, UUID> {
         value = """SELECT DISTINCT DATE(event_date) as date, count(*) as signupCount
             FROM users_data
             WHERE ip_address_hash = :ipAddressHash
+            AND event_type = 'signup'
             GROUP BY ip_address_hash, DATE(event_date)""",
         nativeQuery = true,
     )
