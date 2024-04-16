@@ -1,6 +1,8 @@
 package fr.gouv.agora.infrastructure.consultationUpdates.repository
 
 import fr.gouv.agora.TestUtils
+import fr.gouv.agora.TestUtils.lenientGiven
+import fr.gouv.agora.TestUtils.willReturn
 import fr.gouv.agora.domain.ConsultationUpdateHistory
 import fr.gouv.agora.domain.ConsultationUpdateHistoryStatus
 import fr.gouv.agora.domain.ConsultationUpdateHistoryType
@@ -240,10 +242,10 @@ class ConsultationUpdateHistoryMapperTest {
             mock(ConsultationUpdateHistoryWithDateDTO::class.java).also {
                 given(it.stepNumber).willReturn(historyItem.stepNumber)
                 given(it.updateDate).willReturn(historyItem.updateDate?.toDate())
-                given(it.type).willReturn("update")
-                given(it.consultationUpdateId).willReturn(null)
-                given(it.title).willReturn("title")
-                given(it.actionText).willReturn(historyItem.actionText)
+                lenientGiven(it.type).willReturn("update")
+                lenientGiven(it.consultationUpdateId).willReturn(null)
+                lenientGiven(it.title).willReturn("title")
+                lenientGiven(it.actionText).willReturn(historyItem.actionText)
             }
         }
 
