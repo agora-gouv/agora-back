@@ -20,24 +20,29 @@ class GetQagDetailsUseCase(
             when (qag.status) {
                 QagStatus.ARCHIVED -> QagResult.QagNotFound
                 QagStatus.MODERATED_REJECTED -> QagResult.QagRejectedStatus
-                QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED, QagStatus.SELECTED_FOR_RESPONSE -> if (qag.status == QagStatus.OPEN && userId != qag.userId) {
-                    QagResult.QagNotFound
-                } else {
-                    val hasGivenFeedback = hasGivenFeedback(qagDetails = qag, userId = userId)
-                    QagResult.Success(
-                        QagWithUserData(
-                            qagDetails = if (!hasGivenFeedback) {
-                                mapper.toQagWithoutFeedbackResults(qag)
-                            } else qag,
-                            canShare = qag.status == QagStatus.MODERATED_ACCEPTED || qag.status == QagStatus.SELECTED_FOR_RESPONSE,
-                            canSupport = qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED,
-                            canDelete = qag.userId == userId && qag.status != QagStatus.SELECTED_FOR_RESPONSE,
-                            isAuthor = qag.userId == userId,
-                            isSupportedByUser = isSupportedByUser(qagDetails = qag, userId = userId),
-                            hasGivenFeedback = hasGivenFeedback,
+                QagStatus.OPEN,
+                QagStatus.MODERATED_ACCEPTED,
+                QagStatus.SELECTED_FOR_RESPONSE ->
+                    if (qag.status == QagStatus.OPEN && userId != qag.userId) {
+                        QagResult.QagNotFound
+                    } else {
+                        val hasGivenFeedback = hasGivenFeedback(qagDetails = qag, userId = userId)
+
+                        QagResult.Success(
+                            QagWithUserData(
+                                qagDetails =
+                                    if (!hasGivenFeedback) {
+                                        mapper.toQagWithoutFeedbackResults(qag)
+                                    } else qag,
+                                canShare = qag.status == QagStatus.MODERATED_ACCEPTED || qag.status == QagStatus.SELECTED_FOR_RESPONSE,
+                                canSupport = qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED,
+                                canDelete = qag.userId == userId && qag.status != QagStatus.SELECTED_FOR_RESPONSE,
+                                isAuthor = qag.userId == userId,
+                                isSupportedByUser = isSupportedByUser(qagDetails = qag, userId = userId),
+                                hasGivenFeedback = hasGivenFeedback,
+                            )
                         )
-                    )
-                }
+                    }
             }
         } ?: QagResult.QagNotFound
     }

@@ -6,32 +6,32 @@ import fr.gouv.agora.domain.QagWithUserData
 import fr.gouv.agora.usecase.feedbackQag.FeedbackQagUseCase
 import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.then
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.only
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class GetQagDetailsUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: GetQagDetailsUseCase
 
-    @MockBean
+    @Mock
     private lateinit var qagDetailsAggregate: QagDetailsAggregate
 
-    @MockBean
+    @Mock
     private lateinit var supportQagUseCase: SupportQagUseCase
 
-    @MockBean
+    @Mock
     private lateinit var feedbackQagUseCase: FeedbackQagUseCase
 
-    @MockBean
+    @Mock
     private lateinit var mapper: QagDetailsMapper
 
     @Test
@@ -52,7 +52,9 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status ARCHIVED - should return QagNotFound`() {
         // Given
-        val qag = mockQag(status = QagStatus.ARCHIVED)
+        val qag = mock(QagDetails::class.java).also { details ->
+            given(details.status).willReturn(QagStatus.ARCHIVED)
+        }
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
@@ -68,7 +70,9 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status MODERATED_REJECTED - should return QagNotFound`() {
         // Given
-        val qag = mockQag(status = QagStatus.MODERATED_REJECTED)
+        val qag = mock(QagDetails::class.java).also { details ->
+            given(details.status).willReturn(QagStatus.MODERATED_REJECTED)
+        }
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
@@ -84,7 +88,11 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status OPEN but userId is not the same as QaG author - should return QagNotFound`() {
         // Given
-        val qag = mockQag(status = QagStatus.OPEN, userId = "anotherUserId")
+        val qag = mock(QagDetails::class.java).also { details ->
+            given(details.status).willReturn(QagStatus.OPEN)
+            given(details.userId).willReturn("anotherUserId")
+        }
+
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
@@ -100,7 +108,12 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status OPEN and userId is the same as QaG author - should return Success`() {
         // Given
-        val qag = mockQag(status = QagStatus.OPEN, userId = "userId")
+        val qag = mock(QagDetails::class.java).also { details ->
+            given(details.status).willReturn(QagStatus.OPEN)
+            given(details.userId).willReturn("userId")
+        }
+
+        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
@@ -128,7 +141,12 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status MODERATED_ACCEPTED and not supported by user - should return Success`() {
         // Given
-        val qag = mockQag(status = QagStatus.MODERATED_ACCEPTED, userId = "anotherUserId")
+        val qag = mock(QagDetails::class.java).also { details ->
+            given(details.status).willReturn(QagStatus.MODERATED_ACCEPTED)
+            given(details.userId).willReturn("anotherUserId")
+        }
+        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
+
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
         given(supportQagUseCase.getUserSupportedQagIds(userId = "userId")).willReturn(emptyList())
 
@@ -157,7 +175,13 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status MODERATED_ACCEPTED and supported by user - should return Success`() {
         // Given
-        val qag = mockQag(status = QagStatus.MODERATED_ACCEPTED, userId = "userId")
+        val qag1 = mock(QagDetails::class.java).also { details ->
+            given(details.id).willReturn("qagId")
+            given(details.status).willReturn(QagStatus.MODERATED_ACCEPTED)
+            given(details.userId).willReturn("userId")
+        }
+        given(mapper.toQagWithoutFeedbackResults(qag1)).willReturn(qag1)
+        val qag = qag1
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
         given(supportQagUseCase.getUserSupportedQagIds(userId = "userId")).willReturn(listOf("qagId"))
 
@@ -186,7 +210,12 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status SELECTED_FOR_RESPONSE and has not given feedback - should remove feedbackResults from qag and return Success`() {
         // Given
-        val qag = mockQag(status = QagStatus.SELECTED_FOR_RESPONSE, userId = "anotherUserId")
+        val qag = mock(QagDetails::class.java).also { details ->
+            given(details.status).willReturn(QagStatus.SELECTED_FOR_RESPONSE)
+            given(details.userId).willReturn("anotherUserId")
+        }
+
+        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
         given(feedbackQagUseCase.getUserFeedbackQagIds(userId = "userId")).willReturn(emptyList())
 
@@ -218,7 +247,12 @@ internal class GetQagDetailsUseCaseTest {
     @Test
     fun `getQag - when status SELECTED_FOR_RESPONSE and has given feedback - should return Success`() {
         // Given
-        val qag = mockQag(status = QagStatus.SELECTED_FOR_RESPONSE, userId = "userId")
+        val qag = mock(QagDetails::class.java).also { details ->
+            given(details.id).willReturn("qagId")
+            given(details.status).willReturn(QagStatus.SELECTED_FOR_RESPONSE)
+            given(details.userId).willReturn("userId")
+        }
+
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
         given(feedbackQagUseCase.getUserFeedbackQagIds(userId = "userId")).willReturn(listOf("qagId"))
 
@@ -243,18 +277,4 @@ internal class GetQagDetailsUseCaseTest {
         then(supportQagUseCase).shouldHaveNoInteractions()
         then(feedbackQagUseCase).should(only()).getUserFeedbackQagIds(userId = "userId")
     }
-
-    private fun mockQag(
-        status: QagStatus,
-        userId: String = "userId",
-    ): QagDetails {
-        val qag = mock(QagDetails::class.java).also {
-            given(it.id).willReturn("qagId")
-            given(it.status).willReturn(status)
-            given(it.userId).willReturn(userId)
-        }
-        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
-        return qag
-    }
-
 }
