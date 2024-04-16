@@ -4,23 +4,27 @@ import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.FeedbackResults
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
-import fr.gouv.agora.usecase.feedbackQag.repository.*
+import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheResult
+import fr.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.then
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.only
+import org.mockito.Mockito.reset
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
-internal class FeedbackQagUseCaseTest {
+@ExtendWith(MockitoExtension::class)
+class FeedbackQagUseCaseTest {
 
     companion object {
         @JvmStatic
@@ -59,20 +63,20 @@ internal class FeedbackQagUseCaseTest {
         ) = arrayOf(helpfulFeedbackCount, notHelpfulFeedbackCount, expectedPositiveRatio, expectedNegativeRatio)
     }
 
-    @Autowired
-    private lateinit var useCase: FeedbackQagUseCase
+    @InjectMocks
+    lateinit var useCase: FeedbackQagUseCase
 
-    @MockBean
-    private lateinit var featureFlagsRepository: FeatureFlagsRepository
+    @Mock
+    lateinit var featureFlagsRepository: FeatureFlagsRepository
 
-    @MockBean
-    private lateinit var feedbackQagRepository: GetFeedbackQagRepository
+    @Mock
+    lateinit var feedbackQagRepository: GetFeedbackQagRepository
 
-    @MockBean
-    private lateinit var resultsCacheRepository: FeedbackResultsCacheRepository
+    @Mock
+    lateinit var resultsCacheRepository: FeedbackResultsCacheRepository
 
-    @MockBean
-    private lateinit var userFeedbackCacheRepository: UserFeedbackQagCacheRepository
+    @Mock
+    lateinit var userFeedbackCacheRepository: UserFeedbackQagCacheRepository
 
     @BeforeEach
     fun setUp() {
@@ -150,47 +154,7 @@ internal class FeedbackQagUseCaseTest {
         then(feedbackQagRepository).should(only()).getFeedbackQagList(qagId = "qagId")
     }
 
-
-    @Test
-    fun `getUserFeedbackQagIds - when has CachedUserFeedback - should return result from cache`() {
-        // Given
-        val userFeedbackQagIds = listOf("qagId")
-        given(userFeedbackCacheRepository.getUserFeedbackQagIds(userId = "userId"))
-            .willReturn(UserFeedbackQagCacheResult.CachedUserFeedback(userFeedbackQagIds = userFeedbackQagIds))
-
-        // When
-        val result = useCase.getUserFeedbackQagIds(userId = "userId")
-
-        // Then
-        assertThat(result).isEqualTo(userFeedbackQagIds)
-        then(resultsCacheRepository).shouldHaveNoInteractions()
-        then(userFeedbackCacheRepository).should(only()).getUserFeedbackQagIds(userId = "userId")
-        then(feedbackQagRepository).shouldHaveNoInteractions()
-    }
-
-    @Test
-    fun `getUserFeedbackQagIds - when has UserFeedbackCacheNotInitialized - should return result from repository and init cache`() {
-        // Given
-        given(userFeedbackCacheRepository.getUserFeedbackQagIds(userId = "userId"))
-            .willReturn(UserFeedbackQagCacheResult.UserFeedbackCacheNotInitialized)
-        val userFeedbackQagIds = listOf("qagId")
-        given(feedbackQagRepository.getUserFeedbackQagIds(userId = "userId")).willReturn(userFeedbackQagIds)
-
-        // When
-        val result = useCase.getUserFeedbackQagIds(userId = "userId")
-
-        // Then
-        assertThat(result).isEqualTo(userFeedbackQagIds)
-        then(resultsCacheRepository).shouldHaveNoInteractions()
-        then(userFeedbackCacheRepository).should().getUserFeedbackQagIds(userId = "userId")
-        then(userFeedbackCacheRepository).should()
-            .initUserFeedbackQagIds(userId = "userId", qagIds = userFeedbackQagIds)
-        then(userFeedbackCacheRepository).shouldHaveNoMoreInteractions()
-        then(feedbackQagRepository).should(only()).getUserFeedbackQagIds(userId = "userId")
-    }
-
     private fun mockFeedbackQag(isHelpful: Boolean) = mock(FeedbackQag::class.java).also {
         given(it.isHelpful).willReturn(isHelpful)
     }
-
 }

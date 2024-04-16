@@ -26,7 +26,8 @@ class GetQagDetailsUseCase(
                     if (qag.status == QagStatus.OPEN && userId != qag.userId) {
                         QagResult.QagNotFound
                     } else {
-                        val hasGivenFeedback = hasGivenFeedback(qagDetails = qag, userId = userId)
+                        val isHelpFul = isHelpFul(qagId, userId)
+                        val hasGivenFeedback = isHelpFul != null
 
                         QagResult.Success(
                             QagWithUserData(
@@ -40,6 +41,7 @@ class GetQagDetailsUseCase(
                                 isAuthor = qag.userId == userId,
                                 isSupportedByUser = isSupportedByUser(qagDetails = qag, userId = userId),
                                 hasGivenFeedback = hasGivenFeedback,
+                                isHelpful = isHelpFul
                             )
                         )
                     }
@@ -56,12 +58,8 @@ class GetQagDetailsUseCase(
         }
     }
 
-    private fun hasGivenFeedback(qagDetails: QagDetails, userId: String): Boolean {
-        return when (qagDetails.status) {
-            QagStatus.SELECTED_FOR_RESPONSE -> feedbackQagUseCase.getUserFeedbackQagIds(userId = userId)
-                .any { userFeedbackQagId -> userFeedbackQagId == qagDetails.id }
-            else -> false
-        }
+    private fun isHelpFul(qagId: String, userId: String): Boolean? {
+        return feedbackQagUseCase.getFeedbackForQagAndUser(qagId, userId)?.isHelpful
     }
 }
 

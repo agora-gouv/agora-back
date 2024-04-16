@@ -1,25 +1,16 @@
 package fr.gouv.agora.infrastructure.feedbackQag.repository
 
-import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheResult
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class UserFeedbackQagCacheRepositoryImpl(
     private val cacheManager: CacheManager,
 ) : UserFeedbackQagCacheRepository {
 
     companion object {
         private const val USER_FEEDBACK_QAG_CACHE = "userFeedbackQags"
-    }
-
-    override fun getUserFeedbackQagIds(userId: String): UserFeedbackQagCacheResult {
-        return when (val userFeedbackQagIds = getCacheContent(userId = userId)) {
-            null -> UserFeedbackQagCacheResult.UserFeedbackCacheNotInitialized
-            else -> UserFeedbackQagCacheResult.CachedUserFeedback(userFeedbackQagIds)
-        }
     }
 
     override fun initUserFeedbackQagIds(userId: String, qagIds: List<String>) {

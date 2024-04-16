@@ -17,9 +17,14 @@ class GetFeedbackQagRepositoryImpl(
         } ?: emptyList()
     }
 
-    override fun getUserFeedbackQagIds(userId: String): List<String> {
-        return userId.toUuidOrNull()?.let { userUUID ->
-            databaseRepository.getUserFeedbackQagIds(userUUID).map { it.toString() }
-        } ?: emptyList()
+    override fun getFeedbackForQagAndUser(qagId: String, userId: String): FeedbackQag? {
+        val qagUuid = qagId.toUuidOrNull()
+        val userUuid = userId.toUuidOrNull()
+
+        if (userUuid == null || qagUuid == null) {
+            return null;
+        }
+
+        return databaseRepository.getFeedbackForQagAndUser(qagUuid, userUuid).map(mapper::toDomain).firstOrNull()
     }
 }

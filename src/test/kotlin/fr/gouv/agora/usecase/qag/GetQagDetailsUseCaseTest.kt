@@ -1,5 +1,6 @@
 package fr.gouv.agora.usecase.qag
 
+import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.QagDetails
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.domain.QagWithUserData
@@ -17,22 +18,22 @@ import org.mockito.Mockito.only
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class GetQagDetailsUseCaseTest {
+class GetQagDetailsUseCaseTest {
 
     @InjectMocks
-    private lateinit var useCase: GetQagDetailsUseCase
+    lateinit var useCase: GetQagDetailsUseCase
 
     @Mock
-    private lateinit var qagDetailsAggregate: QagDetailsAggregate
+    lateinit var qagDetailsAggregate: QagDetailsAggregate
 
     @Mock
-    private lateinit var supportQagUseCase: SupportQagUseCase
+    lateinit var supportQagUseCase: SupportQagUseCase
 
     @Mock
-    private lateinit var feedbackQagUseCase: FeedbackQagUseCase
+    lateinit var feedbackQagUseCase: FeedbackQagUseCase
 
     @Mock
-    private lateinit var mapper: QagDetailsMapper
+    lateinit var mapper: QagDetailsMapper
 
     @Test
     fun `getQag - when qag is null - should return QagNotFound`() {
@@ -55,6 +56,7 @@ internal class GetQagDetailsUseCaseTest {
         val qag = mock(QagDetails::class.java).also { details ->
             given(details.status).willReturn(QagStatus.ARCHIVED)
         }
+
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
@@ -73,6 +75,7 @@ internal class GetQagDetailsUseCaseTest {
         val qag = mock(QagDetails::class.java).also { details ->
             given(details.status).willReturn(QagStatus.MODERATED_REJECTED)
         }
+
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When
@@ -113,6 +116,8 @@ internal class GetQagDetailsUseCaseTest {
             given(details.userId).willReturn("userId")
         }
 
+        given(feedbackQagUseCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId"))
+            .willReturn(null)
         given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
@@ -130,12 +135,13 @@ internal class GetQagDetailsUseCaseTest {
                     isAuthor = true,
                     isSupportedByUser = false,
                     hasGivenFeedback = false,
+                    isHelpful = null
                 )
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
         then(supportQagUseCase).should(only()).getUserSupportedQagIds(userId = "userId")
-        then(feedbackQagUseCase).shouldHaveNoInteractions()
+        then(feedbackQagUseCase).should(only()).getFeedbackForQagAndUser("qagId", "userId")
     }
 
     @Test
@@ -145,8 +151,10 @@ internal class GetQagDetailsUseCaseTest {
             given(details.status).willReturn(QagStatus.MODERATED_ACCEPTED)
             given(details.userId).willReturn("anotherUserId")
         }
-        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
 
+        given(feedbackQagUseCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId"))
+            .willReturn(null)
+        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
         given(supportQagUseCase.getUserSupportedQagIds(userId = "userId")).willReturn(emptyList())
 
@@ -164,26 +172,29 @@ internal class GetQagDetailsUseCaseTest {
                     isAuthor = false,
                     isSupportedByUser = false,
                     hasGivenFeedback = false,
+                    isHelpful = null
                 )
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
         then(supportQagUseCase).should(only()).getUserSupportedQagIds(userId = "userId")
-        then(feedbackQagUseCase).shouldHaveNoInteractions()
+        then(feedbackQagUseCase).should(only()).getFeedbackForQagAndUser("qagId", "userId")
     }
 
     @Test
     fun `getQag - when status MODERATED_ACCEPTED and supported by user - should return Success`() {
         // Given
-        val qag1 = mock(QagDetails::class.java).also { details ->
+        val qag = mock(QagDetails::class.java).also { details ->
             given(details.id).willReturn("qagId")
             given(details.status).willReturn(QagStatus.MODERATED_ACCEPTED)
             given(details.userId).willReturn("userId")
         }
-        given(mapper.toQagWithoutFeedbackResults(qag1)).willReturn(qag1)
-        val qag = qag1
+
+        given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
         given(supportQagUseCase.getUserSupportedQagIds(userId = "userId")).willReturn(listOf("qagId"))
+        given(feedbackQagUseCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId"))
+            .willReturn(null)
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
@@ -199,12 +210,13 @@ internal class GetQagDetailsUseCaseTest {
                     isAuthor = true,
                     isSupportedByUser = true,
                     hasGivenFeedback = false,
+                    isHelpful = null
                 )
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
         then(supportQagUseCase).should(only()).getUserSupportedQagIds(userId = "userId")
-        then(feedbackQagUseCase).shouldHaveNoInteractions()
+        then(feedbackQagUseCase).should(only()).getFeedbackForQagAndUser("qagId", "userId")
     }
 
     @Test
@@ -217,10 +229,12 @@ internal class GetQagDetailsUseCaseTest {
 
         given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qag)
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
-        given(feedbackQagUseCase.getUserFeedbackQagIds(userId = "userId")).willReturn(emptyList())
 
         val qagWithoutFeedbackResults = mock(QagDetails::class.java)
         given(mapper.toQagWithoutFeedbackResults(qag)).willReturn(qagWithoutFeedbackResults)
+
+        given(feedbackQagUseCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId"))
+            .willReturn(null)
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
@@ -236,25 +250,26 @@ internal class GetQagDetailsUseCaseTest {
                     isAuthor = false,
                     isSupportedByUser = true,
                     hasGivenFeedback = false,
+                    isHelpful = null
                 )
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
+        then(feedbackQagUseCase).should(only()).getFeedbackForQagAndUser("qagId", "userId")
         then(supportQagUseCase).shouldHaveNoInteractions()
-        then(feedbackQagUseCase).should(only()).getUserFeedbackQagIds(userId = "userId")
     }
 
     @Test
     fun `getQag - when status SELECTED_FOR_RESPONSE and has given feedback - should return Success`() {
         // Given
         val qag = mock(QagDetails::class.java).also { details ->
-            given(details.id).willReturn("qagId")
             given(details.status).willReturn(QagStatus.SELECTED_FOR_RESPONSE)
             given(details.userId).willReturn("userId")
         }
 
+        given(feedbackQagUseCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId"))
+            .willReturn(FeedbackQag(qagId = "qagId", userId = "userId", isHelpful = false))
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
-        given(feedbackQagUseCase.getUserFeedbackQagIds(userId = "userId")).willReturn(listOf("qagId"))
 
         // When
         val result = useCase.getQagDetails(qagId = "qagId", userId = "userId")
@@ -270,11 +285,12 @@ internal class GetQagDetailsUseCaseTest {
                     isAuthor = true,
                     isSupportedByUser = true,
                     hasGivenFeedback = true,
+                    isHelpful = false
                 )
             )
         )
         then(qagDetailsAggregate).should(only()).getQag(qagId = "qagId")
+        then(feedbackQagUseCase).should(only()).getFeedbackForQagAndUser("qagId", "userId")
         then(supportQagUseCase).shouldHaveNoInteractions()
-        then(feedbackQagUseCase).should(only()).getUserFeedbackQagIds(userId = "userId")
     }
 }

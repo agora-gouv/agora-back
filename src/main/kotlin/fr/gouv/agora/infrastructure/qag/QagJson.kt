@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.qag
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
-import java.util.*
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class QagJson(
@@ -76,8 +75,14 @@ data class ResponseQagTextJson(
     val responseText: String,
     @JsonProperty("feedbackQuestion")
     val feedbackQuestion: String,
+
     @JsonProperty("feedbackStatus")
+    @Deprecated("Because property [feedbackUserResponse] is now returned, it is no longer necessary to return a [feedbackStatus]")
     val feedbackStatus: Boolean,
+
+    @JsonProperty("feedbackUserResponse")
+    val feedbackUserResponse: Boolean?,
+
     @JsonProperty("feedbackResults")
     val feedbackResults: FeedbackResultsJson?,
 )
