@@ -4,7 +4,7 @@ import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.FeedbackQagInserting
 import fr.gouv.agora.infrastructure.feedbackQag.dto.FeedbackQagDTO
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 @Component
 class FeedbackQagMapper {
@@ -15,13 +15,16 @@ class FeedbackQagMapper {
     }
 
     fun toDto(domain: FeedbackQagInserting): FeedbackQagDTO? {
+        return toDto(domain, UUID.randomUUID())
+    }
+
+    fun toDto(domain: FeedbackQagInserting, feedbackId: UUID): FeedbackQagDTO? {
         return try {
             FeedbackQagDTO(
-                id = UUID.randomUUID(),
-                userId = UUID.fromString(domain.userId),
+                id = feedbackId,
                 qagId = UUID.fromString(domain.qagId),
-                isHelpful = if (domain.isHelpful) IS_HELPFUL_TRUE_VALUE
-                else IS_HELPFUL_FALSE_VALUE,
+                userId = UUID.fromString(domain.userId),
+                isHelpful = if (domain.isHelpful) IS_HELPFUL_TRUE_VALUE else IS_HELPFUL_FALSE_VALUE,
             )
         } catch (e: IllegalArgumentException) {
             null

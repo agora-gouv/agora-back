@@ -20,9 +20,9 @@ class InsertFeedbackQagUseCase(
 ) {
 
     fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagListResult {
-        val insertFeedbackQag = repository.insertFeedbackQag(feedbackQagInserting)
+        val feedbackQagResult = repository.insertOrUpdateFeedbackQag(feedbackQagInserting)
 
-        return when (insertFeedbackQag) {
+        return when (feedbackQagResult) {
             FeedbackQagResult.SUCCESS -> {
                 userFeedbackCacheRepository.addUserFeedbackQagId(
                     userId = feedbackQagInserting.userId,
