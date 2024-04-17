@@ -21,6 +21,7 @@ class PickConsultationsToAggregateUseCase(
                         !aggregatedConsultationIds.contains(consultationInfo.id)
                     }
                     .forEach { consultationsToAggregate ->
+                        println("🧮 Aggregate results for consultation: ${consultationsToAggregate.title}")
                         aggregateConsultationResultUseCase.aggregateConsultationResults(consultationsToAggregate.id)
                     }
             }

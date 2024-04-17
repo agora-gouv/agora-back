@@ -30,7 +30,10 @@ class GetConsultationResponseRepositoryImpl(
     }
 
     override fun deleteConsultationResponses(consultationId: String) {
-        consultationId.toUuidOrNull()?.let(databaseRepository::deleteConsultationResponses)
+        consultationId.toUuidOrNull()?.let { consultationUUID ->
+            databaseRepository.deleteConsultationResponsesWithoutText(consultationUUID)
+            databaseRepository.anonymizeConsultationResponsesWithText(consultationUUID)
+        }
     }
 
     override fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount {

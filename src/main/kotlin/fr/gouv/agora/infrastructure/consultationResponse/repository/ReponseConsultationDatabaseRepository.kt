@@ -1,8 +1,8 @@
 package fr.gouv.agora.infrastructure.consultationResponse.repository
 
+import fr.gouv.agora.infrastructure.consultationResponse.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.consultationResults.dto.DemographicInfoCountByChoiceDTO
 import fr.gouv.agora.infrastructure.consultationResults.dto.DemographicInfoCountDTO
-import fr.gouv.agora.infrastructure.consultationResponse.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.consultationResults.dto.ResponseConsultationCountDTO
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -240,10 +240,25 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     @Modifying
     @Transactional
     @Query(
-        value = "DELETE from reponses_consultation WHERE consultation_id = :consultationId",
+        value = """DELETE from reponses_consultation 
+            WHERE consultation_id = :consultationId
+            AND (response_text IS NULL OR response_text LIKE '')
+            """,
         nativeQuery = true
     )
-    fun deleteConsultationResponses(@Param("consultationId") consultationId: UUID)
+    fun deleteConsultationResponsesWithoutText(@Param("consultationId") consultationId: UUID)
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """UPDATE reponses_consultation
+            SET user_id = '00000000-0000-0000-0000-000000000000', participation_id = '00000000-0000-0000-0000-000000000000'
+            WHERE consultation_id = :consultationId
+            AND LENGTH(response_text) > 0
+            """,
+        nativeQuery = true
+    )
+    fun anonymizeConsultationResponsesWithText(@Param("consultationId") consultationId: UUID)
 
     @Modifying
     @Transactional
