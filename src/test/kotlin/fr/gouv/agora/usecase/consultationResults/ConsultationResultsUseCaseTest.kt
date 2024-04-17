@@ -1,6 +1,14 @@
 package fr.gouv.agora.usecase.consultationResults
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.ChoiceResults
+import fr.gouv.agora.domain.ChoixPossibleDefault
+import fr.gouv.agora.domain.ConsultationResultAggregated
+import fr.gouv.agora.domain.ConsultationResults
+import fr.gouv.agora.domain.QuestionOpen
+import fr.gouv.agora.domain.QuestionResults
+import fr.gouv.agora.domain.QuestionUniqueChoice
+import fr.gouv.agora.domain.QuestionWithChoices
+import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
@@ -16,7 +24,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -375,6 +386,8 @@ internal class ConsultationResultsUseCaseTest {
         given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
         given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
             .willReturn(participantCount)
+        given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
+            .willReturn(emptyList())
         given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
             .willReturn(testDataList.flatMap { it.responsesConsultationList })
 
@@ -400,7 +413,8 @@ internal class ConsultationResultsUseCaseTest {
         then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
         then(consultationResponseRepository).should(only())
             .getConsultationResponsesCount(consultationId = "consultationId")
-        then(consultationResultAggregatedRepository).shouldHaveNoInteractions()
+        then(consultationResultAggregatedRepository).should(only())
+            .getConsultationResultAggregated(consultationId = "consultationId")
         testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
             then(mapper).should().toQuestionNoResponse(it.question)
         }
@@ -427,8 +441,6 @@ internal class ConsultationResultsUseCaseTest {
         given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
         given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
             .willReturn(participantCount)
-        given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
-            .willReturn(emptyList())
         given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
             .willReturn(testDataList.flatMap { it.consultationResultAggregated })
 
@@ -452,8 +464,7 @@ internal class ConsultationResultsUseCaseTest {
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
         then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
         then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
-        then(consultationResponseRepository).should(only())
-            .getConsultationResponsesCount(consultationId = "consultationId")
+        then(consultationResponseRepository).shouldHaveNoInteractions()
         then(consultationResultAggregatedRepository).should(only())
             .getConsultationResultAggregated(consultationId = "consultationId")
         testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
