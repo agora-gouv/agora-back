@@ -8,7 +8,6 @@ import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -16,7 +15,6 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.mock
 import org.mockito.BDDMockito.only
-import org.mockito.BDDMockito.reset
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -108,11 +106,6 @@ internal class GetAskQagStatusUseCaseTest {
             expectedStatus: AskQagStatus,
         ) = arrayOf(testWhenDescription, qagPostDate, serverDate, expectedStatus)
 
-    }
-
-    @BeforeEach
-    fun setUp() {
-        reset(featureFlagsRepository)
     }
 
     @Test

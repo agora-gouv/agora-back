@@ -33,7 +33,6 @@ internal class SelectMostPopularQagUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        reset(featureFlagsRepository)
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(true)
     }
 

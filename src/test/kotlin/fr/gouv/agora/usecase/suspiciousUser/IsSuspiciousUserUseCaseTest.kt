@@ -33,7 +33,6 @@ class IsSuspiciousUserUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        reset(featureFlagsRepository)
         useCase = IsSuspiciousUserUseCase(
             clock = TestUtils.getFixedClock(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30, 59)),
             featureFlagsRepository = featureFlagsRepository,

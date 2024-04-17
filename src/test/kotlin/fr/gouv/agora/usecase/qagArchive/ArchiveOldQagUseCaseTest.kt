@@ -9,10 +9,11 @@ import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
@@ -37,11 +38,6 @@ internal class ArchiveOldQagUseCaseTest {
 
     @Mock
     private lateinit var qagPreviewCacheRepository: QagPreviewCacheRepository
-
-    @BeforeEach
-    fun setUp() {
-        reset(featureFlagsRepository)
-    }
 
     @Test
     fun `archiveOldQag - when feature disabled - should do nothing and return FAILURE`() {
