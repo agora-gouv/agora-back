@@ -12,6 +12,13 @@ import java.util.UUID
 @Repository
 interface FeedbackQagDatabaseRepository : JpaRepository<FeedbackQagDTO, UUID> {
 
+    @Modifying
+    @Transactional
+    @Query(
+        value = "DELETE FROM feedbacks_qag WHERE user_id IN :userIDs", nativeQuery = true
+    )
+    fun deleteUsersFeedbackQag(@Param("userIDs") userIDs: List<UUID>)
+
     @Query(
         value = "SELECT * FROM feedbacks_qag WHERE qag_id = :qagId and user_id = :userId",
         nativeQuery = true
@@ -23,11 +30,4 @@ interface FeedbackQagDatabaseRepository : JpaRepository<FeedbackQagDTO, UUID> {
         nativeQuery = true
     )
     fun getFeedbackQagList(@Param("qagId") qagId: UUID): List<FeedbackQagDTO>
-
-    @Modifying
-    @Transactional
-    @Query(
-        value = "DELETE FROM feedbacks_qag WHERE user_id IN :userIDs", nativeQuery = true
-    )
-    fun deleteUsersFeedbackQag(@Param("userIDs") userIDs: List<UUID>)
 }

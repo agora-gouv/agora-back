@@ -14,14 +14,19 @@ class FeedbackQagMapper {
         private const val IS_HELPFUL_FALSE_VALUE = 0
     }
 
-    fun toDto(domain: FeedbackQagInserting): FeedbackQagDTO? {
-        return toDto(domain, UUID.randomUUID())
+    fun modifyIsHelpful(dto: FeedbackQagDTO, isHelpful: Boolean): FeedbackQagDTO {
+        return FeedbackQagDTO(
+            id = dto.id,
+            qagId = dto.qagId,
+            userId = dto.userId,
+            isHelpful = if (isHelpful) IS_HELPFUL_TRUE_VALUE else IS_HELPFUL_FALSE_VALUE
+        )
     }
 
-    fun toDto(domain: FeedbackQagInserting, feedbackId: UUID): FeedbackQagDTO? {
+    fun toDto(domain: FeedbackQagInserting): FeedbackQagDTO? {
         return try {
             FeedbackQagDTO(
-                id = feedbackId,
+                id = UUID.randomUUID(),
                 qagId = UUID.fromString(domain.qagId),
                 userId = UUID.fromString(domain.userId),
                 isHelpful = if (domain.isHelpful) IS_HELPFUL_TRUE_VALUE else IS_HELPFUL_FALSE_VALUE,

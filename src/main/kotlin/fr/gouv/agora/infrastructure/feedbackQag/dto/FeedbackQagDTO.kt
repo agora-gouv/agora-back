@@ -5,6 +5,7 @@ import org.hibernate.Hibernate
 import java.util.*
 
 @Entity(name = "feedbacks_qag")
+@Table(uniqueConstraints = [UniqueConstraint(name = "uk_feedbacks_qag_qagid_userid", columnNames = ["qagId", "userId"])])
 data class FeedbackQagDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -9,6 +9,7 @@ import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagResult
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class InsertFeedbackQagUseCase(
@@ -20,7 +21,16 @@ class InsertFeedbackQagUseCase(
 ) {
 
     fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagListResult {
-        val feedbackQagResult = repository.insertOrUpdateFeedbackQag(feedbackQagInserting)
+        val qagId = UUID.fromString(feedbackQagInserting.qagId) ?: return FeedbackQagListResult.Failure
+        val userId = UUID.fromString(feedbackQagInserting.userId) ?: return FeedbackQagListResult.Failure
+
+        val feedbackQag = repository.getFeedbackForQagAndUser(qagId, userId)
+
+        val feedbackQagResult =
+            if (feedbackQag == null)
+                repository.insertFeedbackQag(feedbackQagInserting)
+            else
+                repository.updateFeedbackQag(qagId = qagId, userId = userId, feedbackQagInserting.isHelpful)
 
         return when (feedbackQagResult) {
             FeedbackQagResult.SUCCESS -> {
@@ -30,8 +40,7 @@ class InsertFeedbackQagUseCase(
                 )
                 if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)) {
                     feedbackResultsCacheRepository.evictFeedbackResults(qagId = feedbackQagInserting.qagId)
-                    feedbackQagUseCase.getFeedbackResults(qagId = feedbackQagInserting.qagId)
-                        ?.let { feedbackResults ->
+                    feedbackQagUseCase.getFeedbackResults(qagId = feedbackQagInserting.qagId)?.let { feedbackResults ->
                             FeedbackQagListResult.Success(feedbackResults)
                         } ?: FeedbackQagListResult.SuccessFeedbackDisabled
                 } else FeedbackQagListResult.SuccessFeedbackDisabled
@@ -40,7 +49,6 @@ class InsertFeedbackQagUseCase(
             else -> FeedbackQagListResult.Failure
         }
     }
-
 }
 
 sealed class FeedbackQagListResult {

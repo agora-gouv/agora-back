@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.feedbackQag.repository
 
+import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.FeedbackQagInserting
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagRepository
@@ -13,20 +14,28 @@ class FeedbackQagRepositoryImpl(
     private val mapper: FeedbackQagMapper,
 ) : FeedbackQagRepository {
 
-    override fun insertOrUpdateFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagResult {
-        val qagId = UUID.fromString(feedbackQagInserting.qagId) ?: return FeedbackQagResult.FAILURE
-        val userId = UUID.fromString(feedbackQagInserting.userId) ?: return FeedbackQagResult.FAILURE
+    override fun deleteUsersFeedbackQag(userIDs: List<String>) {
+        databaseRepository.deleteUsersFeedbackQag(userIDs.mapNotNull { it.toUuidOrNull() })
+    }
 
-        val feedbackId = databaseRepository.getFeedbackForQagAndUser(qagId, userId).firstOrNull()?.id ?: UUID.randomUUID()
+    override fun getFeedbackForQagAndUser(qagId: UUID, userId: UUID): FeedbackQag? {
+        return databaseRepository.getFeedbackForQagAndUser(qagId, userId).firstOrNull()?.let { f -> mapper.toDomain(f) }
+    }
 
-        val dto = mapper.toDto(feedbackQagInserting, feedbackId) ?: return FeedbackQagResult.FAILURE
+    override fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagResult {
+        return mapper.toDto(feedbackQagInserting)?.let { feedbackQagDTO ->
+            databaseRepository.save(feedbackQagDTO)
+            FeedbackQagResult.SUCCESS
+        } ?: FeedbackQagResult.FAILURE
+    }
+
+    override fun updateFeedbackQag(qagId: UUID, userId: UUID, isHelpful: Boolean): FeedbackQagResult {
+        var dto = databaseRepository.getFeedbackForQagAndUser(qagId, userId).firstOrNull() ?: return FeedbackQagResult.FAILURE
+
+        dto = mapper.modifyIsHelpful(dto, isHelpful)
 
         databaseRepository.save(dto)
 
         return FeedbackQagResult.SUCCESS
-    }
-
-    override fun deleteUsersFeedbackQag(userIDs: List<String>) {
-        databaseRepository.deleteUsersFeedbackQag(userIDs.mapNotNull { it.toUuidOrNull() })
     }
 }

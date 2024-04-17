@@ -20,8 +20,6 @@ class FeedbackQagController(
     private val mapper: FeedbackJsonMapper,
 ) {
 
-    // XXX : path for feedback insertion should be "POST /qags/{qagId}/feedbacks" because a qag could have many feedbacks
-    // XXX : feedback modification should be done with "PUT /qags/{qagId}/feedbacks/{feedbackId}"
     @PostMapping("/qags/{qagId}/feedback")
     fun insertFeedbackQag(
         @RequestHeader("Authorization") authorizationHeader: String,
