@@ -21,13 +21,15 @@ class InsertFeedbackQagUseCase(
 ) {
 
     fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): InsertFeedbackQagResult {
-        val qagId = UUID.fromString(feedbackQagInserting.qagId) ?: return InsertFeedbackQagResult.Failure
-        val userId = UUID.fromString(feedbackQagInserting.userId) ?: return InsertFeedbackQagResult.Failure
-
-        val userFeedbackResponse = repository.getFeedbackForQagAndUser(qagId, userId)
+        val userFeedbackResponse =
+            repository.getFeedbackResponseForUser(feedbackQagInserting.qagId, feedbackQagInserting.userId)
         val feedbackQagResult = if (userFeedbackResponse == null) {
             repository.insertFeedbackQag(feedbackQagInserting)
-        } else repository.updateFeedbackQag(qagId = qagId, userId = userId, feedbackQagInserting.isHelpful)
+        } else repository.updateFeedbackQag(
+            qagId = feedbackQagInserting.qagId,
+            userId = feedbackQagInserting.userId,
+            feedbackQagInserting.isHelpful
+        )
 
         return when (feedbackQagResult) {
             FeedbackQagResult.SUCCESS -> {
@@ -39,8 +41,8 @@ class InsertFeedbackQagUseCase(
                 if (featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)) {
                     feedbackResultsCacheRepository.evictFeedbackResults(qagId = feedbackQagInserting.qagId)
                     feedbackQagUseCase.getFeedbackResults(qagId = feedbackQagInserting.qagId)?.let { feedbackResults ->
-                            InsertFeedbackQagResult.Success(feedbackResults)
-                        } ?: InsertFeedbackQagResult.SuccessFeedbackDisabled
+                        InsertFeedbackQagResult.Success(feedbackResults)
+                    } ?: InsertFeedbackQagResult.SuccessFeedbackDisabled
                 } else InsertFeedbackQagResult.SuccessFeedbackDisabled
             }
 

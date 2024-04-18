@@ -4,9 +4,9 @@ import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.FeedbackResults
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheResult
-import fr.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheResult
 import org.assertj.core.api.Assertions.assertThat
@@ -71,7 +71,7 @@ class FeedbackQagUseCaseTest {
     lateinit var featureFlagsRepository: FeatureFlagsRepository
 
     @Mock
-    lateinit var feedbackQagRepository: GetFeedbackQagRepository
+    lateinit var feedbackQagRepository: FeedbackQagRepository
 
     @Mock
     lateinit var resultsCacheRepository: FeedbackResultsCacheRepository
@@ -192,7 +192,7 @@ class FeedbackQagUseCaseTest {
         // Given
         given(userFeedbackCacheRepository.getUserFeedbackResponse(userId = "userId", qagId = "qagId"))
             .willReturn(UserFeedbackQagCacheResult.CacheNotInitialized)
-        given(feedbackQagRepository.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId"))
+        given(feedbackQagRepository.getFeedbackResponseForUser(qagId = "qagId", userId = "userId"))
             .willReturn(true)
 
         // When
@@ -204,7 +204,7 @@ class FeedbackQagUseCaseTest {
         then(userFeedbackCacheRepository).should().getUserFeedbackResponse(userId = "userId", qagId = "qagId")
         then(userFeedbackCacheRepository).should().initUserFeedbackResponse(userId = "userId", qagId = "qagId", userFeedbackResponse = true)
         then(userFeedbackCacheRepository).shouldHaveNoMoreInteractions()
-        then(feedbackQagRepository).should(only()).getFeedbackForQagAndUser(userId = "userId", qagId = "qagId")
+        then(feedbackQagRepository).should(only()).getFeedbackResponseForUser(userId = "userId", qagId = "qagId")
     }
 
     private fun mockFeedbackQag(isHelpful: Boolean) = mock(FeedbackQag::class.java).also {

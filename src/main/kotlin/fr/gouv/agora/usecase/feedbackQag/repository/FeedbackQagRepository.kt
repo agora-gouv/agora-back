@@ -1,13 +1,14 @@
 package fr.gouv.agora.usecase.feedbackQag.repository
 
+import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.FeedbackQagInserting
-import java.util.UUID
 
 interface FeedbackQagRepository {
     fun deleteUsersFeedbackQag(userIDs: List<String>)
-    fun getFeedbackForQagAndUser(qagId: UUID, userId: UUID): Boolean?
+    fun getFeedbackResponseForUser(qagId: String, userId: String): Boolean?
+    fun getFeedbackQagList(qagId: String): List<FeedbackQag>
     fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagResult
-    fun updateFeedbackQag(qagId: UUID, userId: UUID, isHelpful: Boolean): FeedbackQagResult
+    fun updateFeedbackQag(qagId: String, userId: String, isHelpful: Boolean): FeedbackQagResult
 }
 
 enum class FeedbackQagResult {

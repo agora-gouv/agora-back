@@ -1,12 +1,11 @@
 package fr.gouv.agora.usecase.feedbackQag
 
 import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.domain.FeedbackQag
 import fr.gouv.agora.domain.FeedbackResults
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheResult
-import fr.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheResult
 import org.springframework.stereotype.Service
@@ -15,7 +14,7 @@ import kotlin.math.roundToInt
 @Service
 class FeedbackQagUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
-    private val feedbackQagRepository: GetFeedbackQagRepository,
+    private val feedbackQagRepository: FeedbackQagRepository,
     private val resultsCacheRepository: FeedbackResultsCacheRepository,
     private val userFeedbackQagCacheRepository: UserFeedbackQagCacheRepository,
 ) {
@@ -34,7 +33,7 @@ class FeedbackQagUseCase(
         return when(val cacheResult = userFeedbackQagCacheRepository.getUserFeedbackResponse(qagId = qagId, userId = userId)) {
             is UserFeedbackQagCacheResult.CachedUserFeedbackQag -> cacheResult.userFeedbackResponse
             UserFeedbackQagCacheResult.CachedUserFeedbackQagNotAnswered -> null
-            UserFeedbackQagCacheResult.CacheNotInitialized -> feedbackQagRepository.getFeedbackForQagAndUser(qagId = qagId, userId = userId).also {
+            UserFeedbackQagCacheResult.CacheNotInitialized -> feedbackQagRepository.getFeedbackResponseForUser(qagId = qagId, userId = userId).also {
                 userFeedbackQagCacheRepository.initUserFeedbackResponse(
                     userId = userId,
                     qagId = qagId,

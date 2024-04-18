@@ -20,7 +20,6 @@ import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.only
 import org.mockito.junit.jupiter.MockitoExtension
-import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 internal class InsertFeedbackQagUseCaseTest {
@@ -43,11 +42,9 @@ internal class InsertFeedbackQagUseCaseTest {
     @Mock
     private lateinit var feedbackResultsCacheRepository: FeedbackResultsCacheRepository
 
-    private val qagId = UUID.randomUUID()
-    private val userId = UUID.randomUUID()
     private val feedbackQagInserting = FeedbackQagInserting(
-        qagId = qagId.toString(),
-        userId = userId.toString(),
+        qagId = "qagId",
+        userId = "userId",
         isHelpful = false,
     )
 
@@ -57,7 +54,7 @@ internal class InsertFeedbackQagUseCaseTest {
         @Test
         fun `insertFeedbackQag - when insertFeedbackQag fails - should return failure`() {
             // Given
-            given(repository.getFeedbackForQagAndUser(qagId = qagId, userId = userId)).willReturn(null)
+            given(repository.getFeedbackResponseForUser(qagId = "qagId", userId = "userId")).willReturn(null)
             given(repository.insertFeedbackQag(feedbackQagInserting)).willReturn(FeedbackQagResult.FAILURE)
 
             // When
@@ -65,7 +62,7 @@ internal class InsertFeedbackQagUseCaseTest {
 
             // Then
             assertThat(result).isEqualTo(InsertFeedbackQagResult.Failure)
-            then(repository).should().getFeedbackForQagAndUser(qagId = qagId, userId = userId)
+            then(repository).should().getFeedbackResponseForUser(qagId = "qagId", userId = "userId")
             then(repository).should().insertFeedbackQag(feedbackQagInserting)
             then(repository).shouldHaveNoMoreInteractions()
             then(featureFlagsUseCase).shouldHaveNoInteractions()
@@ -76,7 +73,7 @@ internal class InsertFeedbackQagUseCaseTest {
         @Test
         fun `insertFeedbackQag - when insertFeedbackQag returns success and feature disabled - should return FeedbackDisabled`() {
             // Given
-            given(repository.getFeedbackForQagAndUser(qagId = qagId, userId = userId)).willReturn(null)
+            given(repository.getFeedbackResponseForUser(qagId = "qagId", userId = "userId")).willReturn(null)
             given(repository.insertFeedbackQag(feedbackQagInserting)).willReturn(FeedbackQagResult.SUCCESS)
             given(featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)).willReturn(false)
 
@@ -85,7 +82,7 @@ internal class InsertFeedbackQagUseCaseTest {
 
             // Then
             assertThat(result).isEqualTo(InsertFeedbackQagResult.SuccessFeedbackDisabled)
-            then(repository).should().getFeedbackForQagAndUser(qagId = qagId, userId = userId)
+            then(repository).should().getFeedbackResponseForUser(qagId = "qagId", userId = "userId")
             then(repository).should().insertFeedbackQag(feedbackQagInserting)
             then(repository).shouldHaveNoMoreInteractions()
             then(featureFlagsUseCase).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
@@ -100,7 +97,7 @@ internal class InsertFeedbackQagUseCaseTest {
         @Test
         fun `insertFeedbackQag - when insertFeedbackQag returns success, feature enabled but return null feedbackResult - should update caches then return SuccessFeedbackDisabled`() {
             // Given
-            given(repository.getFeedbackForQagAndUser(qagId = qagId, userId = userId)).willReturn(null)
+            given(repository.getFeedbackResponseForUser(qagId = "qagId", userId = "userId")).willReturn(null)
             given(repository.insertFeedbackQag(feedbackQagInserting)).willReturn(FeedbackQagResult.SUCCESS)
             given(featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)).willReturn(true)
             given(feedbackQagUseCase.getFeedbackResults(qagId = feedbackQagInserting.qagId)).willReturn(null)
@@ -110,7 +107,7 @@ internal class InsertFeedbackQagUseCaseTest {
 
             // Then
             assertThat(result).isEqualTo(InsertFeedbackQagResult.SuccessFeedbackDisabled)
-            then(repository).should().getFeedbackForQagAndUser(qagId = qagId, userId = userId)
+            then(repository).should().getFeedbackResponseForUser(qagId = "qagId", userId = "userId")
             then(repository).should().insertFeedbackQag(feedbackQagInserting)
             then(repository).shouldHaveNoMoreInteractions()
             then(featureFlagsUseCase).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
@@ -129,7 +126,7 @@ internal class InsertFeedbackQagUseCaseTest {
         @Test
         fun `insertFeedbackQag - when insertFeedbackQag returns success, feature enabled and return non-null feedbackResult - should update caches then return Success with new feedback results`() {
             // Given
-            given(repository.getFeedbackForQagAndUser(qagId = qagId, userId = userId)).willReturn(null)
+            given(repository.getFeedbackResponseForUser(qagId = "qagId", userId = "userId")).willReturn(null)
             given(repository.insertFeedbackQag(feedbackQagInserting)).willReturn(FeedbackQagResult.SUCCESS)
             given(featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)).willReturn(true)
             val feedbackResults = mock(FeedbackResults::class.java)
@@ -140,7 +137,7 @@ internal class InsertFeedbackQagUseCaseTest {
 
             // Then
             assertThat(result).isEqualTo(InsertFeedbackQagResult.Success(feedbackResults))
-            then(repository).should().getFeedbackForQagAndUser(qagId = qagId, userId = userId)
+            then(repository).should().getFeedbackResponseForUser(qagId = "qagId", userId = "userId")
             then(repository).should().insertFeedbackQag(feedbackQagInserting)
             then(repository).shouldHaveNoMoreInteractions()
             then(featureFlagsUseCase).should(only()).isFeatureEnabled(AgoraFeature.FeedbackResponseQag)
@@ -164,8 +161,8 @@ internal class InsertFeedbackQagUseCaseTest {
         @Test
         fun `insertFeedbackQag - when feedback already submitted - should update existing feedback`() {
             // Given
-            given(repository.getFeedbackForQagAndUser(qagId = qagId, userId = userId)).willReturn(true)
-            given(repository.updateFeedbackQag(qagId = qagId, userId = userId, isHelpful = false))
+            given(repository.getFeedbackResponseForUser(qagId = "qagId", userId = "userId")).willReturn(true)
+            given(repository.updateFeedbackQag(qagId = "qagId", userId = "userId", isHelpful = false))
                 .willReturn(FeedbackQagResult.SUCCESS)
             given(featureFlagsUseCase.isFeatureEnabled(AgoraFeature.FeedbackResponseQag)).willReturn(false)
 
@@ -174,8 +171,8 @@ internal class InsertFeedbackQagUseCaseTest {
 
             // Then
             assertThat(result).isEqualTo(InsertFeedbackQagResult.SuccessFeedbackDisabled)
-            then(repository).should().getFeedbackForQagAndUser(qagId = qagId, userId = userId)
-            then(repository).should().updateFeedbackQag(qagId = qagId, userId = userId, isHelpful = false)
+            then(repository).should().getFeedbackResponseForUser(qagId = "qagId", userId = "userId")
+            then(repository).should().updateFeedbackQag(qagId = "qagId", userId = "userId", isHelpful = false)
             then(repository).shouldHaveNoMoreInteractions()
         }
 
