@@ -64,7 +64,7 @@ class QagJsonMapper(
                     transcription = StringUtils.unescapeLineBreaks(response.transcription),
                     feedbackQuestion = response.feedbackQuestion,
                     feedbackStatus = qagWithUserData.hasGivenFeedback,
-
+                    feedbackUserResponse = qagWithUserData.isHelpful,
                     feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
                         FeedbackResultsJson(
                             positiveRatio = feedbackResults.positiveRatio,
