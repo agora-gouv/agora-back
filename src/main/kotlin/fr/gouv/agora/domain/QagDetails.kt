@@ -1,6 +1,6 @@
 package fr.gouv.agora.domain
 
-import java.util.*
+import java.util.Date
 
 data class QagDetails(
     val id: String,
@@ -13,7 +13,7 @@ data class QagDetails(
     val userId: String,
     val supportCount: Int,
     val response: ResponseQag?,
-    val feedbackResults: FeedbackResults?,
+    val feedbackResults: FeedbackResults?
 )
 
 data class QagWithUserData(
@@ -23,5 +23,9 @@ data class QagWithUserData(
     val canDelete: Boolean,
     val isAuthor: Boolean,
     val isSupportedByUser: Boolean,
+
+    @Deprecated("Should use [isHelpful] instead")
     val hasGivenFeedback: Boolean,
+
+    val isHelpful: Boolean?
 )

@@ -1,12 +1,12 @@
 package fr.gouv.agora.usecase.feedbackQag.repository
 
 interface UserFeedbackQagCacheRepository {
-    fun getUserFeedbackQagIds(userId: String): UserFeedbackQagCacheResult
-    fun initUserFeedbackQagIds(userId: String, qagIds: List<String>)
-    fun addUserFeedbackQagId(userId: String, qagId: String)
+    fun getUserFeedbackResponse(userId: String, qagId: String): UserFeedbackQagCacheResult
+    fun initUserFeedbackResponse(userId: String, qagId: String, userFeedbackResponse: Boolean?)
 }
 
 sealed class UserFeedbackQagCacheResult {
-    data class CachedUserFeedback(val userFeedbackQagIds: List<String>) : UserFeedbackQagCacheResult()
-    object UserFeedbackCacheNotInitialized : UserFeedbackQagCacheResult()
+    object CacheNotInitialized : UserFeedbackQagCacheResult()
+    data class CachedUserFeedbackQag(val userFeedbackResponse: Boolean) : UserFeedbackQagCacheResult()
+    object CachedUserFeedbackQagNotAnswered : UserFeedbackQagCacheResult()
 }

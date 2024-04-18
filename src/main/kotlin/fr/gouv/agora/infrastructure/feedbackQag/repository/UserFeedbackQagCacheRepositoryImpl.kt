@@ -1,44 +1,39 @@
 package fr.gouv.agora.infrastructure.feedbackQag.repository
 
-import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheResult
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheResult
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class UserFeedbackQagCacheRepositoryImpl(
     private val cacheManager: CacheManager,
 ) : UserFeedbackQagCacheRepository {
 
     companion object {
         private const val USER_FEEDBACK_QAG_CACHE = "userFeedbackQags"
+        private const val USER_FEEDBACK_ANSWERED_YES = "true"
+        private const val USER_FEEDBACK_ANSWERED_NO = "false"
+        private const val USER_FEEDBACK_NOT_ANSWERED = ""
     }
 
-    override fun getUserFeedbackQagIds(userId: String): UserFeedbackQagCacheResult {
-        return when (val userFeedbackQagIds = getCacheContent(userId = userId)) {
-            null -> UserFeedbackQagCacheResult.UserFeedbackCacheNotInitialized
-            else -> UserFeedbackQagCacheResult.CachedUserFeedback(userFeedbackQagIds)
+    override fun getUserFeedbackResponse(userId: String, qagId: String): UserFeedbackQagCacheResult {
+        return try {
+            when(getCache()?.get("$userId/$qagId", String::class.java)) {
+                USER_FEEDBACK_ANSWERED_YES -> UserFeedbackQagCacheResult.CachedUserFeedbackQag(userFeedbackResponse = true)
+                USER_FEEDBACK_ANSWERED_NO -> UserFeedbackQagCacheResult.CachedUserFeedbackQag(userFeedbackResponse = false)
+                USER_FEEDBACK_NOT_ANSWERED -> UserFeedbackQagCacheResult.CachedUserFeedbackQagNotAnswered
+                else -> UserFeedbackQagCacheResult.CacheNotInitialized
+            }
+        } catch (e: Exception) {
+            UserFeedbackQagCacheResult.CacheNotInitialized
         }
     }
 
-    override fun initUserFeedbackQagIds(userId: String, qagIds: List<String>) {
-        getCache()?.put(userId, qagIds)
-    }
-
-    override fun addUserFeedbackQagId(userId: String, qagId: String) {
-        getCacheContent(userId = userId)?.let { userFeedbackQagIds ->
-            initUserFeedbackQagIds(userId, userFeedbackQagIds + qagId)
-        }
+    override fun initUserFeedbackResponse(userId: String, qagId: String, userFeedbackResponse: Boolean?) {
+        getCache()?.put("$userId/$qagId", userFeedbackResponse?.toString() ?: USER_FEEDBACK_NOT_ANSWERED)
     }
 
     private fun getCache() = cacheManager.getCache(USER_FEEDBACK_QAG_CACHE)
-
-    @Suppress("UNCHECKED_CAST")
-    private fun getCacheContent(userId: String) = try {
-        getCache()?.get(userId, List::class.java) as? List<String>
-    } catch (e: IllegalStateException) {
-        null
-    }
 
 }
