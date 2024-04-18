@@ -10,23 +10,21 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
+import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.Mockito.mock
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ModeratusLoginUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ModeratusLoginUseCase
 
-    @MockBean
+    @Mock
     private lateinit var loginTokenGenerator: LoginTokenGenerator
 
-    @MockBean
+    @Mock
     private lateinit var userRepository: UserRepository
 
     @Test
@@ -34,7 +32,6 @@ internal class ModeratusLoginUseCaseTest {
         // Given
         given(loginTokenGenerator.decodeLoginToken(encryptedMessage = "loginToken"))
             .willReturn(DecodeResult.Failure)
-        given(userRepository.getUserById(userId = "userId")).willReturn(null)
 
         // When
         val result = useCase.login(loginToken = "loginToken")

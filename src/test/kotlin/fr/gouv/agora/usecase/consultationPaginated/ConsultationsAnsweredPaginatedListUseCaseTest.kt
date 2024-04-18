@@ -13,28 +13,26 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ConsultationsAnsweredPaginatedListUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ConsultationsAnsweredPaginatedListUseCase
 
-    @MockBean
+    @Mock
     private lateinit var consultationPreviewAnsweredRepository: ConsultationPreviewAnsweredRepository
 
-    @MockBean
+    @Mock
     private lateinit var thematiqueRepository: ThematiqueRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: ConsultationPreviewFinishedMapper
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: ConsultationAnsweredPaginatedListCacheRepository
 
     companion object {

@@ -4,25 +4,23 @@ import fr.gouv.agora.domain.*
 import fr.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.gouv.agora.infrastructure.question.dto.QuestionDTO
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class QuestionMapperTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var questionMapper: QuestionMapper
 
-    @MockBean
+    @Mock
     private lateinit var choixPossibleMapper: ChoixPossibleMapper
 
     private val questionUUID = UUID.randomUUID()

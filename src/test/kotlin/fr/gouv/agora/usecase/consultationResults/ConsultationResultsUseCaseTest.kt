@@ -1,5 +1,7 @@
 package fr.gouv.agora.usecase.consultationResults
 
+import fr.gouv.agora.TestUtils.lenientGiven
+import fr.gouv.agora.TestUtils.willReturn
 import fr.gouv.agora.domain.ChoiceResults
 import fr.gouv.agora.domain.ChoixPossibleDefault
 import fr.gouv.agora.domain.ConsultationResultAggregated
@@ -28,37 +30,35 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.mock
 import org.mockito.BDDMockito.only
 import org.mockito.BDDMockito.then
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ConsultationResultsUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ConsultationResultsUseCase
 
-    @MockBean
+    @Mock
     private lateinit var consultationInfoRepository: ConsultationInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var questionRepository: QuestionRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationResponseRepository: GetConsultationResponseRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationResultAggregatedRepository: ConsultationResultAggregatedRepository
 
-    @MockBean
+    @Mock
     private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: QuestionNoResponseMapper
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: ConsultationResultsCacheRepository
 
     companion object {
@@ -222,11 +222,6 @@ internal class ConsultationResultsUseCaseTest {
         fun setUp() {
             given(consultationInfoRepository.getConsultation(consultationId = "consultationId"))
                 .willReturn(consultationInfo)
-            given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
-                .willReturn(emptyList())
-            given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
-                .willReturn(emptyList())
-
             given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
                 .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
         }
@@ -484,22 +479,22 @@ internal class ConsultationResultsUseCaseTest {
         }
 
         val question = mock(QuestionWithChoices::class.java).also {
-            given(it.id).willReturn(testInput.questionId)
+            lenientGiven(it.id).willReturn(testInput.questionId)
             given(it.choixPossibleList).willReturn(choices)
         }
 
         val responseConsultationList = testInput.choices.map { choiceInput ->
             mock(ResponseConsultationCount::class.java).also {
-                given(it.questionId).willReturn(testInput.questionId)
-                given(it.choiceId).willReturn(choiceInput.choiceId)
-                given(it.responseCount).willReturn(choiceInput.responseCount)
+                lenientGiven(it.questionId).willReturn(testInput.questionId)
+                lenientGiven(it.choiceId).willReturn(choiceInput.choiceId)
+                lenientGiven(it.responseCount).willReturn(choiceInput.responseCount)
             }
         }
         val consultationResultAggregated = testInput.choices.map { choiceInput ->
             mock(ConsultationResultAggregated::class.java).also {
-                given(it.questionId).willReturn(testInput.questionId)
-                given(it.choiceId).willReturn(choiceInput.choiceId)
-                given(it.responseCount).willReturn(choiceInput.responseCount)
+                lenientGiven(it.questionId).willReturn(testInput.questionId)
+                lenientGiven(it.choiceId).willReturn(choiceInput.choiceId)
+                lenientGiven(it.responseCount).willReturn(choiceInput.responseCount)
             }
         }
 
@@ -510,7 +505,7 @@ internal class ConsultationResultsUseCaseTest {
             )
         }.takeIf { it.isNotEmpty() }
 
-        given(mapper.toQuestionNoResponse(question)).willReturn(question)
+        lenientGiven(mapper.toQuestionNoResponse(question)).willReturn(question)
         return TestData(question, responseConsultationList, consultationResultAggregated, expectedQuestionResultList)
     }
 

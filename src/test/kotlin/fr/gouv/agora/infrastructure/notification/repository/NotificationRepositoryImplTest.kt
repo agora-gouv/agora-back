@@ -6,31 +6,28 @@ import fr.gouv.agora.infrastructure.notification.dto.NotificationDTO
 import fr.gouv.agora.infrastructure.notification.repository.NotificationCacheRepository.CacheResult
 import fr.gouv.agora.usecase.notification.repository.NotificationInsertionResult
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class NotificationRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: NotificationRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var databaseRepository: NotificationDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: NotificationCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: NotificationMapper
 
     @Nested
@@ -108,20 +105,12 @@ internal class NotificationRepositoryImplTest {
         @Test
         fun `getUserNotificationList - when cache is initialized and has result - should return mapped result`() {
             // Given
-            val notificationId = UUID.randomUUID()
             val userId = UUID.randomUUID()
             val notificationDTO = mock(NotificationDTO::class.java).also {
-                given(it.id).willReturn(notificationId)
                 given(it.userId).willReturn(userId)
             }
-            // val allNotificationDTO = listOf(notificationDTO)
-            given(cacheRepository.getAllNotificationList()).willReturn(
-                CacheResult.CachedNotificationList(
-                    listOf(
-                        notificationDTO
-                    )
-                )
-            )
+            given(cacheRepository.getAllNotificationList())
+                .willReturn(CacheResult.CachedNotificationList(listOf(notificationDTO)))
 
             val notification = mock(Notification::class.java)
             given(mapper.toDomain(notificationDTO)).willReturn(notification)

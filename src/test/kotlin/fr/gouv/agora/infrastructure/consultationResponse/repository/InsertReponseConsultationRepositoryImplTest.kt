@@ -8,29 +8,24 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.cache.annotation.EnableCaching
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
-@EnableCaching
-
+@ExtendWith(MockitoExtension::class)
 internal class InsertReponseConsultationRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: InsertReponseConsultationRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: ReponseConsultationCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var databaseRepository: ReponseConsultationDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: ReponseConsultationMapper
 
     private val consultationId = UUID.randomUUID()

@@ -1,33 +1,31 @@
 package fr.gouv.agora.usecase.profile
 
 import fr.gouv.agora.domain.*
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
-import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class AskForDemographicInfoUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: AskForDemographicInfoUseCase
 
-    @MockBean
+    @Mock
     private lateinit var profileRepository: ProfileRepository
 
-    @MockBean
+    @Mock
     private lateinit var demographicInfoAskDateRepository: DemographicInfoAskDateRepository
 
-    @MockBean
+    @Mock
     private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
     private val profile = Profile(

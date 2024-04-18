@@ -9,40 +9,35 @@ import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import java.time.LocalDateTime
+import java.time.Month
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ArchiveOldQagUseCaseTest {
 
     private lateinit var useCase: ArchiveOldQagUseCase
 
-    @MockBean
+    @Mock
     private lateinit var featureFlagsRepository: FeatureFlagsRepository
 
-    @MockBean
+    @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var qagUpdatesRepository: QagUpdatesRepository
 
-    @MockBean
+    @Mock
     private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var qagPreviewCacheRepository: QagPreviewCacheRepository
-
-    @BeforeEach
-    fun setUp() {
-        reset(featureFlagsRepository)
-    }
 
     @Test
     fun `archiveOldQag - when feature disabled - should do nothing and return FAILURE`() {

@@ -5,31 +5,28 @@ import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueDTO
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueCacheRepository.CacheListResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ThematiqueRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: ThematiqueRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: ThematiqueCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var databaseRepository: ThematiqueDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: ThematiqueMapper
 
     @Nested

@@ -8,23 +8,21 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class UserAnsweredConsultationRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: UserAnsweredConsultationRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var databaseRepository: UserAnsweredConsultationDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: UserAnsweredConsultationMapper
 
     @Nested
@@ -221,7 +219,7 @@ internal class UserAnsweredConsultationRepositoryImplTest {
     @Nested
     inner class InsertUserAnsweredConsultationTestCases {
         @Test
-        fun `insertUserAnsweredConsultation - when mapper returns null - should return Failure`(){
+        fun `insertUserAnsweredConsultation - when mapper returns null - should return Failure`() {
             //Given
             val userAnsweredConsultation = mock(UserAnsweredConsultation::class.java)
             given(mapper.toDto(userAnsweredConsultation)).willReturn(null)
@@ -235,7 +233,7 @@ internal class UserAnsweredConsultationRepositoryImplTest {
         }
 
         @Test
-        fun `insertUserAnsweredConsultation - when mapper returns DTO - should return Success`(){
+        fun `insertUserAnsweredConsultation - when mapper returns DTO - should return Success`() {
             //Given
             val userAnsweredConsultation = mock(UserAnsweredConsultation::class.java)
             val userAnsweredConsultationDTO = mock(UserAnsweredConsultationDTO::class.java)
