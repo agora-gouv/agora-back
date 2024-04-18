@@ -267,8 +267,7 @@ class GetQagDetailsUseCaseTest {
             given(details.userId).willReturn("userId")
         }
 
-        given(feedbackQagUseCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId"))
-            .willReturn(FeedbackQag(qagId = "qagId", userId = "userId", isHelpful = false))
+        given(feedbackQagUseCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId")).willReturn(false)
         given(qagDetailsAggregate.getQag(qagId = "qagId")).willReturn(qag)
 
         // When

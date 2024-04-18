@@ -2,7 +2,7 @@ package fr.gouv.agora.infrastructure.feedbackQag
 
 import fr.gouv.agora.domain.FeedbackQagInserting
 import fr.gouv.agora.security.jwt.JwtTokenUtils
-import fr.gouv.agora.usecase.feedbackQag.FeedbackQagListResult
+import fr.gouv.agora.usecase.feedbackQag.InsertFeedbackQagResult
 import fr.gouv.agora.usecase.feedbackQag.InsertFeedbackQagUseCase
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
@@ -38,9 +38,9 @@ class FeedbackQagController(
                     )
                 )
                 when (insertResult) {
-                    is FeedbackQagListResult.Success -> ResponseEntity.ok()
+                    is InsertFeedbackQagResult.Success -> ResponseEntity.ok()
                         .body(mapper.toJson(insertResult.feedbackResults))
-                    FeedbackQagListResult.SuccessFeedbackDisabled -> ResponseEntity.ok().body(Unit)
+                    InsertFeedbackQagResult.SuccessFeedbackDisabled -> ResponseEntity.ok().body(Unit)
                     else -> ResponseEntity.badRequest().body(Unit)
                 }
             },

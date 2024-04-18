@@ -7,6 +7,8 @@ import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheResult
 import fr.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheResult
 import org.springframework.stereotype.Service
 import kotlin.math.roundToInt
 
@@ -14,7 +16,8 @@ import kotlin.math.roundToInt
 class FeedbackQagUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val feedbackQagRepository: GetFeedbackQagRepository,
-    private val resultsCacheRepository: FeedbackResultsCacheRepository
+    private val resultsCacheRepository: FeedbackResultsCacheRepository,
+    private val userFeedbackQagCacheRepository: UserFeedbackQagCacheRepository,
 ) {
 
     fun getFeedbackResults(qagId: String): FeedbackResults? {
@@ -27,8 +30,18 @@ class FeedbackQagUseCase(
         }
     }
 
-    fun getFeedbackForQagAndUser(qagId: String, userId: String): FeedbackQag? {
-        return feedbackQagRepository.getFeedbackForQagAndUser(qagId = qagId, userId = userId)
+    fun getFeedbackForQagAndUser(qagId: String, userId: String): Boolean? {
+        return when(val cacheResult = userFeedbackQagCacheRepository.getUserFeedbackResponse(qagId = qagId, userId = userId)) {
+            is UserFeedbackQagCacheResult.CachedUserFeedbackQag -> cacheResult.userFeedbackResponse
+            UserFeedbackQagCacheResult.CachedUserFeedbackQagNotAnswered -> null
+            UserFeedbackQagCacheResult.CacheNotInitialized -> feedbackQagRepository.getFeedbackForQagAndUser(qagId = qagId, userId = userId).also {
+                userFeedbackQagCacheRepository.initUserFeedbackResponse(
+                    userId = userId,
+                    qagId = qagId,
+                    userFeedbackResponse = it,
+                )
+            }
+        }
     }
 
     private fun buildResults(qagId: String): FeedbackResults {

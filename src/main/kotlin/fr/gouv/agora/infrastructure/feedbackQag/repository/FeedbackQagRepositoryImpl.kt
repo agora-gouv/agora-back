@@ -19,8 +19,8 @@ class FeedbackQagRepositoryImpl(
         databaseRepository.deleteUsersFeedbackQag(userIDs.mapNotNull { it.toUuidOrNull() })
     }
 
-    override fun getFeedbackForQagAndUser(qagId: UUID, userId: UUID): FeedbackQag? {
-        return databaseRepository.getFeedbackForQagAndUser(qagId, userId).firstOrNull()?.let { f -> mapper.toDomain(f) }
+    override fun getFeedbackForQagAndUser(qagId: UUID, userId: UUID): Boolean? {
+        return databaseRepository.getFeedbackForQagAndUser(qagId, userId).firstOrNull()?.let(mapper::toDomain)?.isHelpful
     }
 
     override fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagResult {

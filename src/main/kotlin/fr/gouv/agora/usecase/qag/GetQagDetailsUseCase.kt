@@ -59,7 +59,7 @@ class GetQagDetailsUseCase(
     }
 
     private fun isHelpFul(qagId: String, userId: String): Boolean? {
-        return feedbackQagUseCase.getFeedbackForQagAndUser(qagId, userId)?.isHelpful
+        return feedbackQagUseCase.getFeedbackForQagAndUser(qagId, userId)
     }
 }
 

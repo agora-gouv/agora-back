@@ -8,6 +8,7 @@ import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheReposito
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheResult
 import fr.gouv.agora.usecase.feedbackQag.repository.GetFeedbackQagRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -152,6 +153,58 @@ class FeedbackQagUseCaseTest {
         then(resultsCacheRepository).should().initFeedbackResults(qagId = "qagId", results = expectedResults)
         then(userFeedbackCacheRepository).shouldHaveNoInteractions()
         then(feedbackQagRepository).should(only()).getFeedbackQagList(qagId = "qagId")
+    }
+
+    @Test
+    fun `getFeedbackForQagAndUser - when has CachedUserFeedbackQag - should return result from cache`() {
+        // Given
+        given(userFeedbackCacheRepository.getUserFeedbackResponse(userId = "userId", qagId = "qagId"))
+            .willReturn(UserFeedbackQagCacheResult.CachedUserFeedbackQag(userFeedbackResponse = true))
+
+        // When
+        val result = useCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(true)
+        then(resultsCacheRepository).shouldHaveNoInteractions()
+        then(userFeedbackCacheRepository).should(only()).getUserFeedbackResponse(userId = "userId", qagId = "qagId")
+        then(feedbackQagRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getFeedbackForQagAndUser - when has CachedUserFeedbackQagNotAnswered - should return result from cache`() {
+        // Given
+        given(userFeedbackCacheRepository.getUserFeedbackResponse(userId = "userId", qagId = "qagId"))
+            .willReturn(UserFeedbackQagCacheResult.CachedUserFeedbackQagNotAnswered)
+
+        // When
+        val result = useCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(null)
+        then(resultsCacheRepository).shouldHaveNoInteractions()
+        then(userFeedbackCacheRepository).should(only()).getUserFeedbackResponse(userId = "userId", qagId = "qagId")
+        then(feedbackQagRepository).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getFeedbackForQagAndUser - when has CacheNotInitialized - should return result from repository and init cache`() {
+        // Given
+        given(userFeedbackCacheRepository.getUserFeedbackResponse(userId = "userId", qagId = "qagId"))
+            .willReturn(UserFeedbackQagCacheResult.CacheNotInitialized)
+        given(feedbackQagRepository.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId"))
+            .willReturn(true)
+
+        // When
+        val result = useCase.getFeedbackForQagAndUser(qagId = "qagId", userId = "userId")
+
+        // Then
+        assertThat(result).isEqualTo(true)
+        then(resultsCacheRepository).shouldHaveNoInteractions()
+        then(userFeedbackCacheRepository).should().getUserFeedbackResponse(userId = "userId", qagId = "qagId")
+        then(userFeedbackCacheRepository).should().initUserFeedbackResponse(userId = "userId", qagId = "qagId", userFeedbackResponse = true)
+        then(userFeedbackCacheRepository).shouldHaveNoMoreInteractions()
+        then(feedbackQagRepository).should(only()).getFeedbackForQagAndUser(userId = "userId", qagId = "qagId")
     }
 
     private fun mockFeedbackQag(isHelpful: Boolean) = mock(FeedbackQag::class.java).also {

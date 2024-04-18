@@ -10,12 +10,12 @@ import java.util.UUID
 class FeedbackQagMapper {
 
     companion object {
-        private const val IS_HELPFUL_TRUE_VALUE = 1
-        private const val IS_HELPFUL_FALSE_VALUE = 0
+        private const val BOOLEAN_INT_TRUE_VALUE = 1
+        private const val BOOLEAN_INT_FALSE_VALUE = 0
     }
 
     fun modifyIsHelpful(dto: FeedbackQagDTO, isHelpful: Boolean): FeedbackQagDTO {
-        return dto.copy(isHelpful = if (isHelpful) IS_HELPFUL_TRUE_VALUE else IS_HELPFUL_FALSE_VALUE)
+        return dto.copy(isHelpful = if (isHelpful) BOOLEAN_INT_TRUE_VALUE else BOOLEAN_INT_FALSE_VALUE)
     }
 
     fun toDto(domain: FeedbackQagInserting): FeedbackQagDTO? {
@@ -24,7 +24,7 @@ class FeedbackQagMapper {
                 id = UUID.randomUUID(),
                 qagId = UUID.fromString(domain.qagId),
                 userId = UUID.fromString(domain.userId),
-                isHelpful = if (domain.isHelpful) IS_HELPFUL_TRUE_VALUE else IS_HELPFUL_FALSE_VALUE,
+                isHelpful = if (domain.isHelpful) BOOLEAN_INT_TRUE_VALUE else BOOLEAN_INT_FALSE_VALUE,
             )
         } catch (e: IllegalArgumentException) {
             null
@@ -35,7 +35,11 @@ class FeedbackQagMapper {
         return FeedbackQag(
             qagId = dto.qagId.toString(),
             userId = dto.userId.toString(),
-            isHelpful = dto.isHelpful == IS_HELPFUL_TRUE_VALUE,
+            isHelpful = toBoolean(dto.isHelpful),
         )
+    }
+
+    fun toBoolean(boolIntValue: Int): Boolean {
+        return boolIntValue == BOOLEAN_INT_TRUE_VALUE
     }
 }
