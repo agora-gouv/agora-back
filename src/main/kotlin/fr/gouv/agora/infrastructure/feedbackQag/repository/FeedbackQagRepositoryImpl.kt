@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 import java.util.UUID
 
 @Component
+@Suppress("unused")
 class FeedbackQagRepositoryImpl(
     private val databaseRepository: FeedbackQagDatabaseRepository,
     private val mapper: FeedbackQagMapper,
@@ -30,12 +31,9 @@ class FeedbackQagRepositoryImpl(
     }
 
     override fun updateFeedbackQag(qagId: UUID, userId: UUID, isHelpful: Boolean): FeedbackQagResult {
-        var dto = databaseRepository.getFeedbackForQagAndUser(qagId, userId).firstOrNull() ?: return FeedbackQagResult.FAILURE
-
-        dto = mapper.modifyIsHelpful(dto, isHelpful)
-
-        databaseRepository.save(dto)
-
-        return FeedbackQagResult.SUCCESS
+        return databaseRepository.getFeedbackForQagAndUser(qagId, userId).firstOrNull()?.let { dto ->
+            databaseRepository.save(mapper.modifyIsHelpful(dto, isHelpful))
+            FeedbackQagResult.SUCCESS
+        } ?: FeedbackQagResult.FAILURE
     }
 }

@@ -25,6 +25,7 @@ class GetFeedbackQagRepositoryImpl(
             return null;
         }
 
-        return databaseRepository.getFeedbackForQagAndUser(qagUuid, userUuid).map(mapper::toDomain).firstOrNull()
+        return databaseRepository.getFeedbackForQagAndUser(qagId = qagUuid, userId = userUuid).map(mapper::toDomain)
+            .firstOrNull()
     }
 }

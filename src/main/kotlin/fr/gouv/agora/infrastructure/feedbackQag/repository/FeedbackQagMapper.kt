@@ -15,12 +15,7 @@ class FeedbackQagMapper {
     }
 
     fun modifyIsHelpful(dto: FeedbackQagDTO, isHelpful: Boolean): FeedbackQagDTO {
-        return FeedbackQagDTO(
-            id = dto.id,
-            qagId = dto.qagId,
-            userId = dto.userId,
-            isHelpful = if (isHelpful) IS_HELPFUL_TRUE_VALUE else IS_HELPFUL_FALSE_VALUE
-        )
+        return dto.copy(isHelpful = if (isHelpful) IS_HELPFUL_TRUE_VALUE else IS_HELPFUL_FALSE_VALUE)
     }
 
     fun toDto(domain: FeedbackQagInserting): FeedbackQagDTO? {
