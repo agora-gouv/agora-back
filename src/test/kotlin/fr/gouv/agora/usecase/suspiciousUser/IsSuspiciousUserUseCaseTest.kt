@@ -9,30 +9,30 @@ import fr.gouv.agora.usecase.suspiciousUser.repository.SignupCountRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
 
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 class IsSuspiciousUserUseCaseTest {
 
     private lateinit var useCase: IsSuspiciousUserUseCase
 
-    @MockBean
+    @Mock
     private lateinit var featureFlagsRepository: FeatureFlagsRepository
 
-    @MockBean
+    @Mock
     private lateinit var signupCountRepository: SignupCountRepository
 
-    @MockBean
+    @Mock
     private lateinit var userDataRepository: UserDataRepository
 
     @BeforeEach
     fun setUp() {
-        reset(featureFlagsRepository)
         useCase = IsSuspiciousUserUseCase(
             clock = TestUtils.getFixedClock(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30, 59)),
             featureFlagsRepository = featureFlagsRepository,

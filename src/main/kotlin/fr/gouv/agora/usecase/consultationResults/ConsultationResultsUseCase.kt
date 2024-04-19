@@ -1,6 +1,12 @@
 package fr.gouv.agora.usecase.consultationResults
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.ChoiceResults
+import fr.gouv.agora.domain.ChoixPossible
+import fr.gouv.agora.domain.ConsultationResults
+import fr.gouv.agora.domain.Question
+import fr.gouv.agora.domain.QuestionResults
+import fr.gouv.agora.domain.QuestionWithChoices
+import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
@@ -25,7 +31,9 @@ class ConsultationResultsUseCase(
         return when (val cacheResult = cacheRepository.getConsultationResults(consultationId = consultationId)) {
             is ConsultationResultsCacheResult.CachedConsultationResults -> cacheResult.results
             ConsultationResultsCacheResult.ConsultationResultsNotFound -> null
-            ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized -> buildConsultationResults(consultationId = consultationId).also { results ->
+            ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized -> buildConsultationResults(
+                consultationId = consultationId
+            ).also { results ->
                 if (results != null) {
                     cacheRepository.initConsultationResults(consultationId = consultationId, results = results)
                 } else {
@@ -43,16 +51,16 @@ class ConsultationResultsUseCase(
             .filterIsInstance<QuestionWithChoices>()
         val participantCount = userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
         val consultationResponseList = if (questionList.isNotEmpty()) {
-            consultationResponseRepository.getConsultationResponsesCount(consultationId = consultationId).ifEmpty {
-                consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = consultationId)
-                    .map { consultationResultAggregated ->
-                        ResponseConsultationCount(
-                            questionId = consultationResultAggregated.questionId,
-                            choiceId = consultationResultAggregated.choiceId,
-                            responseCount = consultationResultAggregated.responseCount,
-                        )
-                    }
-            }
+            consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = consultationId)
+                .map { consultationResultAggregated ->
+                    ResponseConsultationCount(
+                        questionId = consultationResultAggregated.questionId,
+                        choiceId = consultationResultAggregated.choiceId,
+                        responseCount = consultationResultAggregated.responseCount,
+                    )
+                }.ifEmpty {
+                    consultationResponseRepository.getConsultationResponsesCount(consultationId = consultationId)
+                }
         } else emptyList()
 
         return ConsultationResults(

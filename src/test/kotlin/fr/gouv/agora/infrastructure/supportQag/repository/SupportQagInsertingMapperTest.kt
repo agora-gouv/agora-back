@@ -2,20 +2,16 @@ package fr.gouv.agora.infrastructure.supportQag.repository
 
 import fr.gouv.agora.domain.SupportQagInserting
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class SupportQagInsertingMapperTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var mapper: SupportQagMapper
 
     @Test

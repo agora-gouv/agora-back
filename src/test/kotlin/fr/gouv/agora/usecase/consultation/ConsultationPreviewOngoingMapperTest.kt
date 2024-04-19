@@ -11,18 +11,14 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.mock
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.time.Month
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ConsultationPreviewOngoingMapperTest {
 
-    @Autowired
     private lateinit var mapper: ConsultationPreviewOngoingMapper
 
     private val thematique = mock(Thematique::class.java)
@@ -37,7 +33,6 @@ internal class ConsultationPreviewOngoingMapperTest {
     )
 
     companion object {
-
         @JvmStatic
         fun toConsultationPreviewOngoingCases() = arrayOf(
             input(
@@ -156,8 +151,6 @@ internal class ConsultationPreviewOngoingMapperTest {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
             given(it.coverUrl).willReturn("coverUrl")
-            given(it.thematiqueId).willReturn("thematiqueId")
-            given(it.startDate).willReturn(Date(0))
             given(it.endDate).willReturn(endDate)
         }
     }

@@ -1,6 +1,16 @@
 package fr.gouv.agora.usecase.consultationResults
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.TestUtils.lenientGiven
+import fr.gouv.agora.TestUtils.willReturn
+import fr.gouv.agora.domain.ChoiceResults
+import fr.gouv.agora.domain.ChoixPossibleDefault
+import fr.gouv.agora.domain.ConsultationResultAggregated
+import fr.gouv.agora.domain.ConsultationResults
+import fr.gouv.agora.domain.QuestionOpen
+import fr.gouv.agora.domain.QuestionResults
+import fr.gouv.agora.domain.QuestionUniqueChoice
+import fr.gouv.agora.domain.QuestionWithChoices
+import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
@@ -16,38 +26,39 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ConsultationResultsUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ConsultationResultsUseCase
 
-    @MockBean
+    @Mock
     private lateinit var consultationInfoRepository: ConsultationInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var questionRepository: QuestionRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationResponseRepository: GetConsultationResponseRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationResultAggregatedRepository: ConsultationResultAggregatedRepository
 
-    @MockBean
+    @Mock
     private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: QuestionNoResponseMapper
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: ConsultationResultsCacheRepository
 
     companion object {
@@ -211,11 +222,6 @@ internal class ConsultationResultsUseCaseTest {
         fun setUp() {
             given(consultationInfoRepository.getConsultation(consultationId = "consultationId"))
                 .willReturn(consultationInfo)
-            given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
-                .willReturn(emptyList())
-            given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
-                .willReturn(emptyList())
-
             given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
                 .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
         }
@@ -375,62 +381,10 @@ internal class ConsultationResultsUseCaseTest {
         given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
         given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
             .willReturn(participantCount)
+        given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
+            .willReturn(emptyList())
         given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
             .willReturn(testDataList.flatMap { it.responsesConsultationList })
-
-        // When
-        val result = useCase.getConsultationResults(consultationId = "consultationId")
-
-        // Then
-        val expectedResults = ConsultationResults(
-            consultation = consultationInfo,
-            participantCount = participantCount,
-            results = testDataList.mapNotNull { testData ->
-                testData.expectedQuestionResultList?.let {
-                    QuestionResults(
-                        question = testData.question,
-                        responses = testData.expectedQuestionResultList,
-                    )
-                }
-            },
-        )
-        assertThat(result).isEqualTo(expectedResults)
-        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
-        then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
-        then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
-        then(consultationResponseRepository).should(only())
-            .getConsultationResponsesCount(consultationId = "consultationId")
-        then(consultationResultAggregatedRepository).shouldHaveNoInteractions()
-        testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
-            then(mapper).should().toQuestionNoResponse(it.question)
-        }
-        then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
-        then(cacheRepository).should()
-            .initConsultationResults(consultationId = "consultationId", results = expectedResults)
-        then(cacheRepository).shouldHaveNoMoreInteractions()
-    }
-
-    @ParameterizedTest(name = "getConsultationResults / consultationResultAggregatedRepository - {0} - should return expected")
-    @MethodSource("getConsultationResultsParameters")
-    fun `getConsultationResults - when given inputs returned by consultationResultAggregatedRepository - should return expected`(
-        testDescription: String,
-        participantCount: Int,
-        inputDataList: List<QuestionInputData>,
-    ) {
-        // Given
-        given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
-            .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
-        val consultationInfo = mock(ConsultationInfo::class.java)
-        given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultationInfo)
-
-        val testDataList = inputDataList.map(::buildTestData)
-        given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
-        given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
-            .willReturn(participantCount)
-        given(consultationResponseRepository.getConsultationResponsesCount(consultationId = "consultationId"))
-            .willReturn(emptyList())
-        given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
-            .willReturn(testDataList.flatMap { it.consultationResultAggregated })
 
         // When
         val result = useCase.getConsultationResults(consultationId = "consultationId")
@@ -465,6 +419,58 @@ internal class ConsultationResultsUseCaseTest {
         then(cacheRepository).shouldHaveNoMoreInteractions()
     }
 
+    @ParameterizedTest(name = "getConsultationResults / consultationResultAggregatedRepository - {0} - should return expected")
+    @MethodSource("getConsultationResultsParameters")
+    fun `getConsultationResults - when given inputs returned by consultationResultAggregatedRepository - should return expected`(
+        testDescription: String,
+        participantCount: Int,
+        inputDataList: List<QuestionInputData>,
+    ) {
+        // Given
+        given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
+            .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
+        val consultationInfo = mock(ConsultationInfo::class.java)
+        given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultationInfo)
+
+        val testDataList = inputDataList.map(::buildTestData)
+        given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(testDataList.map { it.question })
+        given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
+            .willReturn(participantCount)
+        given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
+            .willReturn(testDataList.flatMap { it.consultationResultAggregated })
+
+        // When
+        val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+        // Then
+        val expectedResults = ConsultationResults(
+            consultation = consultationInfo,
+            participantCount = participantCount,
+            results = testDataList.mapNotNull { testData ->
+                testData.expectedQuestionResultList?.let {
+                    QuestionResults(
+                        question = testData.question,
+                        responses = testData.expectedQuestionResultList,
+                    )
+                }
+            },
+        )
+        assertThat(result).isEqualTo(expectedResults)
+        then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
+        then(questionRepository).should(only()).getConsultationQuestionList(consultationId = "consultationId")
+        then(userAnsweredConsultationRepository).should().getParticipantCount(consultationId = "consultationId")
+        then(consultationResponseRepository).shouldHaveNoInteractions()
+        then(consultationResultAggregatedRepository).should(only())
+            .getConsultationResultAggregated(consultationId = "consultationId")
+        testDataList.filter { it.question.choixPossibleList.isNotEmpty() }.forEach {
+            then(mapper).should().toQuestionNoResponse(it.question)
+        }
+        then(cacheRepository).should().getConsultationResults(consultationId = "consultationId")
+        then(cacheRepository).should()
+            .initConsultationResults(consultationId = "consultationId", results = expectedResults)
+        then(cacheRepository).shouldHaveNoMoreInteractions()
+    }
+
     private fun buildTestData(testInput: QuestionInputData): TestData {
         val choices = testInput.choices.map { choiceInput ->
             mock(ChoixPossibleDefault::class.java).also {
@@ -473,22 +479,22 @@ internal class ConsultationResultsUseCaseTest {
         }
 
         val question = mock(QuestionWithChoices::class.java).also {
-            given(it.id).willReturn(testInput.questionId)
+            lenientGiven(it.id).willReturn(testInput.questionId)
             given(it.choixPossibleList).willReturn(choices)
         }
 
         val responseConsultationList = testInput.choices.map { choiceInput ->
             mock(ResponseConsultationCount::class.java).also {
-                given(it.questionId).willReturn(testInput.questionId)
-                given(it.choiceId).willReturn(choiceInput.choiceId)
-                given(it.responseCount).willReturn(choiceInput.responseCount)
+                lenientGiven(it.questionId).willReturn(testInput.questionId)
+                lenientGiven(it.choiceId).willReturn(choiceInput.choiceId)
+                lenientGiven(it.responseCount).willReturn(choiceInput.responseCount)
             }
         }
         val consultationResultAggregated = testInput.choices.map { choiceInput ->
             mock(ConsultationResultAggregated::class.java).also {
-                given(it.questionId).willReturn(testInput.questionId)
-                given(it.choiceId).willReturn(choiceInput.choiceId)
-                given(it.responseCount).willReturn(choiceInput.responseCount)
+                lenientGiven(it.questionId).willReturn(testInput.questionId)
+                lenientGiven(it.choiceId).willReturn(choiceInput.choiceId)
+                lenientGiven(it.responseCount).willReturn(choiceInput.responseCount)
             }
         }
 
@@ -499,7 +505,7 @@ internal class ConsultationResultsUseCaseTest {
             )
         }.takeIf { it.isNotEmpty() }
 
-        given(mapper.toQuestionNoResponse(question)).willReturn(question)
+        lenientGiven(mapper.toQuestionNoResponse(question)).willReturn(question)
         return TestData(question, responseConsultationList, consultationResultAggregated, expectedQuestionResultList)
     }
 

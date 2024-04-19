@@ -22,47 +22,45 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.time.Month
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class InsertReponseConsultationUseCaseTest {
 
     private lateinit var useCase: InsertReponseConsultationUseCase
 
-    @MockBean
+    @Mock
     private lateinit var insertReponseConsultationRepository: InsertReponseConsultationRepository
 
-    @MockBean
+    @Mock
     private lateinit var userAnsweredConsultationRepository: UserAnsweredConsultationRepository
 
-    @MockBean
+    @Mock
     private lateinit var questionRepository: QuestionRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationPreviewPageRepository: ConsultationPreviewPageRepository
 
-    @MockBean
+    @Mock
     private lateinit var insertConsultationResponseParametersMapper: InsertConsultationResponseParametersMapper
 
-    @MockBean
+    @Mock
     private lateinit var contentSanitizer: ContentSanitizer
 
-    @MockBean
+    @Mock
     private lateinit var consultationInfoRepository: ConsultationInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationAnsweredPaginatedListCacheRepository: ConsultationAnsweredPaginatedListCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationResultsCacheRepository: ConsultationResultsCacheRepository
 
     companion object {
@@ -314,18 +312,15 @@ internal class InsertReponseConsultationUseCaseTest {
         given(
             userAnsweredConsultationRepository.hasAnsweredConsultation(
                 consultationId = "consultId",
-                userId = "userId"
+                userId = "userId",
             )
         )
             .willReturn(false)
 
         val questionList = listOf(
             mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") },
-            mock(QuestionOpen::class.java).also { given(it.id).willReturn("question2") }
         )
-        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(
-            questionList
-        )
+        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(questionList)
 
         val insertParameters = mock(InsertParameters::class.java)
         given(

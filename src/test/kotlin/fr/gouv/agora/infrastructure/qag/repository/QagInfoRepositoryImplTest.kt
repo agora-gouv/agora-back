@@ -6,27 +6,24 @@ import fr.gouv.agora.infrastructure.qag.dto.QagDTO
 import fr.gouv.agora.infrastructure.qag.dto.QagWithSupportCountDTO
 import fr.gouv.agora.usecase.qag.repository.*
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class QagInfoRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: QagInfoRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var databaseRepository: QagInfoDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: QagInfoMapper
 
     @Test

@@ -10,25 +10,23 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class LoginUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: LoginUseCase
 
-    @MockBean
+    @Mock
     private lateinit var userRepository: UserRepository
 
-    @MockBean
+    @Mock
     private lateinit var userDataRepository: UserDataRepository
 
-    @MockBean
+    @Mock
     private lateinit var isSuspiciousUserUseCase: IsSuspiciousUserUseCase
 
     private val loginRequest = mock(LoginRequest::class.java).also {

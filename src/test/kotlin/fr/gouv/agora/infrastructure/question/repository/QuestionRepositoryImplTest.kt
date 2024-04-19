@@ -6,36 +6,33 @@ import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.gouv.agora.infrastructure.question.dto.QuestionDTO
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class QuestionRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: QuestionRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var questionCacheRepository: QuestionCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var questionDatabaseRepository: QuestionDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var choixPossibleCacheRepository: ChoixPossibleCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var choixPossibleDatabaseRepository: ChoixPossibleDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: QuestionMapper
 
     @Test

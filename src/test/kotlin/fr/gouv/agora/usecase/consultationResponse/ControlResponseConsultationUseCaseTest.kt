@@ -8,39 +8,32 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class ControlResponseConsultationUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: ControlResponseConsultationUseCase
 
-    @MockBean
+    @Mock
     private lateinit var questionRepository: QuestionRepository
 
-    @MockBean
+    @Mock
     private lateinit var questionMultipleChoicesValidator: QuestionMultipleChoicesValidator
 
-    @MockBean
+    @Mock
     private lateinit var questionUniqueChoiceAndConditionalValidator: QuestionUniqueChoiceAndConditionalValidator
 
-    @MockBean
+    @Mock
     private lateinit var questionOpenValidator: QuestionOpenValidator
 
     @Test
     fun `isResponseConsultationValid - when response has duplicated questionId - should return false`() {
         // Given
-        val questionList = listOf(
-            mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") },
-            mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question2") }
-        )
-        given(questionRepository.getConsultationQuestionList(consultationId = "consultId"))
-            .willReturn(questionList)
+        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(emptyList())
 
         // When
         val result = useCase.isResponseConsultationValid(

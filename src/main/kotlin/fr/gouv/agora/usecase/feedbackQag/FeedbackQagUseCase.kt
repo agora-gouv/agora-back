@@ -3,16 +3,20 @@ package fr.gouv.agora.usecase.feedbackQag
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.FeedbackResults
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
-import fr.gouv.agora.usecase.feedbackQag.repository.*
+import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheResult
+import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
+import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheResult
 import org.springframework.stereotype.Service
 import kotlin.math.roundToInt
 
 @Service
 class FeedbackQagUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
-    private val feedbackQagRepository: GetFeedbackQagRepository,
+    private val feedbackQagRepository: FeedbackQagRepository,
     private val resultsCacheRepository: FeedbackResultsCacheRepository,
-    private val userFeedbackCacheRepository: UserFeedbackQagCacheRepository,
+    private val userFeedbackQagCacheRepository: UserFeedbackQagCacheRepository,
 ) {
 
     fun getFeedbackResults(qagId: String): FeedbackResults? {
@@ -25,13 +29,17 @@ class FeedbackQagUseCase(
         }
     }
 
-    fun getUserFeedbackQagIds(userId: String): List<String> {
-        return when (val cacheResult = userFeedbackCacheRepository.getUserFeedbackQagIds(userId = userId)) {
-            is UserFeedbackQagCacheResult.CachedUserFeedback -> cacheResult.userFeedbackQagIds
-            UserFeedbackQagCacheResult.UserFeedbackCacheNotInitialized -> feedbackQagRepository
-                .getUserFeedbackQagIds(userId = userId).also {
-                    userFeedbackCacheRepository.initUserFeedbackQagIds(userId = userId, qagIds = it)
-                }
+    fun getFeedbackForQagAndUser(qagId: String, userId: String): Boolean? {
+        return when(val cacheResult = userFeedbackQagCacheRepository.getUserFeedbackResponse(qagId = qagId, userId = userId)) {
+            is UserFeedbackQagCacheResult.CachedUserFeedbackQag -> cacheResult.userFeedbackResponse
+            UserFeedbackQagCacheResult.CachedUserFeedbackQagNotAnswered -> null
+            UserFeedbackQagCacheResult.CacheNotInitialized -> feedbackQagRepository.getFeedbackResponseForUser(qagId = qagId, userId = userId).also {
+                userFeedbackQagCacheRepository.initUserFeedbackResponse(
+                    userId = userId,
+                    qagId = qagId,
+                    userFeedbackResponse = it,
+                )
+            }
         }
     }
 

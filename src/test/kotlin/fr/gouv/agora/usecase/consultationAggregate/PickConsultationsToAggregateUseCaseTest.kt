@@ -6,25 +6,23 @@ import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResult
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 class PickConsultationsToAggregateUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: PickConsultationsToAggregateUseCase
 
-    @MockBean
+    @Mock
     private lateinit var consultationInfoRepository: ConsultationInfoRepository
 
-    @MockBean
+    @Mock
     private lateinit var consultationAggregatedRepository: ConsultationResultAggregatedRepository
 
-    @MockBean
+    @Mock
     private lateinit var aggregateConsultationResultUseCase: AggregateConsultationResultUseCase
 
     @Test

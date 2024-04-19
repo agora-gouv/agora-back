@@ -6,31 +6,28 @@ import fr.gouv.agora.domain.UserInfo
 import fr.gouv.agora.infrastructure.login.dto.UserDTO
 import fr.gouv.agora.infrastructure.login.repository.LoginCacheRepository.CacheResult
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class UserRepositoryImplTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var repository: UserRepositoryImpl
 
-    @MockBean
+    @Mock
     private lateinit var databaseRepository: LoginDatabaseRepository
 
-    @MockBean
+    @Mock
     private lateinit var cacheRepository: LoginCacheRepository
 
-    @MockBean
+    @Mock
     private lateinit var mapper: UserInfoMapper
 
     @Test
@@ -249,7 +246,7 @@ internal class UserRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(userInfo)
         inOrder(cacheRepository, databaseRepository, mapper).also { inOrder ->
-            then(mapper).should(inOrder).generateDto(signupRequest= signupRequest)
+            then(mapper).should(inOrder).generateDto(signupRequest = signupRequest)
             then(databaseRepository).should(inOrder).save(userDTO)
             then(cacheRepository).should(inOrder).insertUser(userDTO = savedUserDTO)
             then(mapper).should(inOrder).toDomain(dto = savedUserDTO)

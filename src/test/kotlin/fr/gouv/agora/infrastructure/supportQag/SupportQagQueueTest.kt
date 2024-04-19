@@ -5,17 +5,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.concurrent.CompletableFuture
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@Suppress("JUnitMalformedDeclaration")
+@ExtendWith(MockitoExtension::class)
 internal class SupportQagQueueTest {
 
     private lateinit var queue: SupportQagQueue

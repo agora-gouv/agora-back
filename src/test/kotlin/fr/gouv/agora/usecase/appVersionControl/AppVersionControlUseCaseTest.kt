@@ -3,23 +3,20 @@ package fr.gouv.agora.usecase.appVersionControl
 import fr.gouv.agora.domain.AppPlatform
 import fr.gouv.agora.usecase.appVersionControl.repository.MinimalAppVersionRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.BDDMockito.given
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class AppVersionControlUseCaseTest {
 
-    @Autowired
+    @InjectMocks
     private lateinit var useCase: AppVersionControlUseCase
 
-    @MockBean
+    @Mock
     private lateinit var minimalAppVersionRepository: MinimalAppVersionRepository
 
     @Test
