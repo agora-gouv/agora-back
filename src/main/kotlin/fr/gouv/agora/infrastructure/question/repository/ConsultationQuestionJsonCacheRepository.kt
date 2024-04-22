@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.question.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.agora.infrastructure.question.QuestionsJson
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
@@ -13,6 +14,7 @@ interface ConsultationQuestionJsonCacheRepository {
 @Component
 @Suppress("unused")
 class ConsultationQuestionJsonCacheRepositoryImpl(
+    @Qualifier("longTermCacheManager")
     private val cacheManager: CacheManager,
     private val objectMapper: ObjectMapper,
 ) : ConsultationQuestionJsonCacheRepository {
