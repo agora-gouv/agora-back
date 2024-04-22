@@ -1,5 +1,10 @@
 package fr.gouv.agora.domain
 
+data class Questions(
+    val questionCount: Int,
+    val questions: List<Question>,
+)
+
 sealed class Question {
     abstract val id: String
     abstract val title: String

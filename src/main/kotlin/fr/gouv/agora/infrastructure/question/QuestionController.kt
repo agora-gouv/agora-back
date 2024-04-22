@@ -23,7 +23,7 @@ class QuestionController(
     }
 
     private fun getQuestionsFromUseCase(consultationId: String): QuestionsJson {
-        return jsonMapper.toJson(listQuestionConsultationUseCase.getConsultationQuestionList(consultationId))
+        return jsonMapper.toJson(listQuestionConsultationUseCase.getConsultationQuestions(consultationId))
             .also { cacheRepository.insertConsultationQuestions(consultationId, it) }
     }
 }

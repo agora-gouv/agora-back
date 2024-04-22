@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
+@Suppress("unused")
 class ConsultationInfoRepositoryImpl(
     private val databaseRepository: ConsultationDatabaseRepository,
     private val consultationInfoMapper: ConsultationInfoMapper,
@@ -85,6 +86,7 @@ class ConsultationInfoRepositoryImpl(
         endDate = Date(0),
         coverUrl = "",
         detailsCoverUrl = "",
+        questionCountNumber = 0,
         questionCount = "",
         estimatedTime = "",
         participantCountGoal = 0,

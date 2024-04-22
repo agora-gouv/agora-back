@@ -1,6 +1,13 @@
 package fr.gouv.agora.infrastructure.question
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.ChoixPossibleConditional
+import fr.gouv.agora.domain.ChoixPossibleDefault
+import fr.gouv.agora.domain.QuestionChapter
+import fr.gouv.agora.domain.QuestionConditional
+import fr.gouv.agora.domain.QuestionMultipleChoices
+import fr.gouv.agora.domain.QuestionOpen
+import fr.gouv.agora.domain.QuestionUniqueChoice
+import fr.gouv.agora.domain.Questions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -151,11 +158,17 @@ class QuestionJsonMapperTest {
     @Test
     fun `toJson - when QuestionUniqueChoice - should return QuestionUniqueChoiceJson only`() {
         // When
-        val result = questionJsonMapper.toJson(listOf(questionUniqueChoice))
+        val result = questionJsonMapper.toJson(
+            Questions(
+                questionCount = 10,
+                questions = listOf(questionUniqueChoice)
+            ),
+        )
 
         // Then
         assertThat(result).isEqualTo(
             QuestionsJson(
+                questionCount = 10,
                 chapters = emptyList(),
                 questionsMultipleChoices = emptyList(),
                 questionsOpened = emptyList(),
@@ -168,7 +181,10 @@ class QuestionJsonMapperTest {
     @Test
     fun `toJson - when QuestionChoixMultiple - should return QuestionMultipleChoicesJson only`() {
         // Given
-        val questionsMultipleChoice = listOf(questionChoixMultiple.copy(order = 1))
+        val questionsMultipleChoice = Questions(
+            questionCount = 10,
+            questions = listOf(questionChoixMultiple.copy(order = 1)),
+        )
 
         // When
         val result = questionJsonMapper.toJson(questionsMultipleChoice)
@@ -176,6 +192,7 @@ class QuestionJsonMapperTest {
         // Then
         assertThat(result).isEqualTo(
             QuestionsJson(
+                questionCount = 10,
                 chapters = emptyList(),
                 questionsUniqueChoice = emptyList(),
                 questionsOpened = emptyList(),
@@ -188,11 +205,17 @@ class QuestionJsonMapperTest {
     @Test
     fun `toJson - when QuestionOpen - should return QuestionOpenedJson only`() {
         // When
-        val result = questionJsonMapper.toJson(listOf(questionOpen))
+        val result = questionJsonMapper.toJson(
+            Questions(
+                questionCount = 11,
+                questions = listOf(questionOpen),
+            ),
+        )
 
         // Then
         assertThat(result).isEqualTo(
             QuestionsJson(
+                questionCount = 11,
                 questionsMultipleChoices = emptyList(),
                 questionsUniqueChoice = emptyList(),
                 chapters = emptyList(),
@@ -205,11 +228,17 @@ class QuestionJsonMapperTest {
     @Test
     fun `toJson - when QuestionChapter - should return QuestionChapterJson only`() {
         // When
-        val result = questionJsonMapper.toJson(listOf(questionChapter))
+        val result = questionJsonMapper.toJson(
+            Questions(
+                questionCount = 12,
+                questions = listOf(questionChapter),
+            ),
+        )
 
         // Then
         assertThat(result).isEqualTo(
             QuestionsJson(
+                questionCount = 12,
                 questionsMultipleChoices = emptyList(),
                 questionsUniqueChoice = emptyList(),
                 questionsOpened = emptyList(),
@@ -222,11 +251,17 @@ class QuestionJsonMapperTest {
     @Test
     fun `toJson - when QuestionConditional - should return QuestionConditionalJson only`() {
         // When
-        val result = questionJsonMapper.toJson(listOf(questionConditional))
+        val result = questionJsonMapper.toJson(
+            Questions(
+                questionCount = 13,
+                questions = listOf(questionConditional),
+            ),
+        )
 
         // Then
         assertThat(result).isEqualTo(
             QuestionsJson(
+                questionCount = 13,
                 questionsMultipleChoices = emptyList(),
                 questionsUniqueChoice = emptyList(),
                 chapters = emptyList(),
@@ -238,17 +273,19 @@ class QuestionJsonMapperTest {
 
     @Test
     fun `toJson - should return the correct question Progress`() {
-        // Given
-        val questions = listOf(
-            questionOpen.copy(order = 1),
-            questionChapter.copy(order = 2),
-            questionChoixMultiple.copy(order = 3),
-            questionChapter.copy(order = 4),
-            questionUniqueChoice.copy(order = 5),
-        )
-
         // When
-        val result = questionJsonMapper.toJson(questions)
+        val result = questionJsonMapper.toJson(
+            Questions(
+                questionCount = 10,
+                questions = listOf(
+                    questionOpen.copy(order = 1),
+                    questionChapter.copy(order = 2),
+                    questionChoixMultiple.copy(order = 3),
+                    questionChapter.copy(order = 4),
+                    questionUniqueChoice.copy(order = 5),
+                )
+            )
+        )
 
         // Then
         assertThat(result.questionsOpened[0].questionProgress).isEqualTo("Question 1/3")

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class QuestionsJson(
+    @JsonProperty("questionCount")
+    val questionCount: Int,
     @JsonProperty("questionsUniqueChoice")
     val questionsUniqueChoice: List<QuestionUniqueChoiceJson>,
     @JsonProperty("questionsOpened")

@@ -52,15 +52,16 @@ DELETE FROM consultation_update_history WHERE id = '8e57bea1-c7e4-49c6-a3c1-8558
 DELETE FROM consultation_update_history WHERE id = '7fbdf691-90f4-42b7-a376-930a4f26b8d8';
 DELETE FROM consultation_update_history WHERE id = '104958ed-23f9-4ae5-b8e2-d95c46748adf';
 
-INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
+INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_cover_url, question_count_number, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     'b7454b2e-74b9-454c-9cc5-afc411f962f1',
     'Des vacances pour tous !',
     '2023-7-1 23:59:59.999',
     '2023-9-30 23:59:59.999',
     'https://img.freepik.com/photos-gratuite/plage-parapluie-ete-concept-vacances-generative-ai_60438-2518.jpg',
     'https://img.freepik.com/photos-gratuite/plage-parapluie-ete-concept-vacances-generative-ai_60438-2518.jpg',
-    '7',
-    '10',
+    7,
+    '7 questions',
+    '10 minutes',
     10000,
     '<body>Ca y est, c’est l’heure de la rentrée ! Faisons le bilan <i>collectif </i>sur nos vacances, afin de savoir si celles-ci se sont bien déroulées pour nos concitoyens.<br/><br/>En effet c’est particulièrement important pour le <b>Ministre des vacances</b> d’être au courant afin d’ : <br/><ul><li>Améliorer l’<b>offre des prochaines vacances d’été</b><br/></li><li>Partir sur le bon <b>pied pour la rentrée</b>. <br/></li></ul><br/>Nous comptons sur vous pour tout nous dire !</body>',
     '<body>🗣 Consultation proposée par le <b>Ministre des vacances </b><br/><br/>🎯 Objectif : améliorer les vacances de nos concitoynes<br/><br/>🚀 Axe gouvernemental : Planifier et accélérer la transition écologique</body>',

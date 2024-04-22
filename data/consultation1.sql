@@ -52,13 +52,14 @@ DELETE FROM consultation_update_history WHERE id = '00fd84e6-a601-4778-8e80-f77a
 DELETE FROM consultation_update_history WHERE id = '48b29a32-17d6-4a61-be39-0c62e33c4626';
 DELETE FROM consultation_update_history WHERE id = 'dfef5438-5983-482f-8ee7-8a64c8de2eab';
 
-INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_cover_url, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
+INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_cover_url, question_count_number, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
     'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
     'Le petit déjeuner, le rituel sacré de la matinée.',
     '2023-01-01',
     '2025-01-01',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Breakfast2.jpg/1024px-Breakfast2.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Breakfast2.jpg/1024px-Breakfast2.jpg',
+    6,
     '6 questions',
     '5 minutes',
     100,
