@@ -56,7 +56,7 @@ class SendQagNotificationUseCase(
     }
 
     fun sendNotificationQagAccepted(qagId: String): NotificationResult {
-        val notificationMessage = notificationMessageRepository.getQagAccepted()
+        val notificationMessage = notificationMessageRepository.findAllByStatusAccepted().random()
 
         return sendNotification(
             qagId = qagId,

@@ -6,7 +6,7 @@ interface NotificationMessageRepository {
 
     fun getQagRejected(): NotificationMessageDTO
 
-    fun getQagAccepted(): NotificationMessageDTO
+    fun findAllByStatusAccepted(): Set<NotificationMessageDTO>
 
     fun getQagAcceptedAfterReject(): NotificationMessageDTO
 }
