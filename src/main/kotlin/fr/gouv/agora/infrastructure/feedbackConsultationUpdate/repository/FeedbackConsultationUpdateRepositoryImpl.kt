@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.feedbackConsultationUpdate.repository
 import fr.gouv.agora.domain.FeedbackConsultationUpdateDeleting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.infrastructure.feedbackConsultationUpdate.dto.FeedbackConsultationUpdateDTO
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.repository.FeedbackConsultationUpdateRepository
 import org.springframework.stereotype.Component
@@ -24,15 +25,18 @@ class FeedbackConsultationUpdateRepositoryImpl(
         }
     }
 
+    override fun updateFeedback(consultationUpdateId: String, userId: String, isPositive: Boolean): Boolean {
+        return getUserFeedbackDto(consultationUpdateId = consultationUpdateId, userId = userId)?.let { dto ->
+            databaseRepository.save(mapper.updateFeedback(dto, isPositive))
+            true
+        } ?: false
+    }
+
     override fun getUserFeedback(consultationUpdateId: String, userId: String): Boolean? {
-        return consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
-            userId.toUuidOrNull()?.let { userUUID ->
-                databaseRepository.getUserConsultationUpdateFeedback(
-                    consultationUpdateId = consultationUpdateUUID,
-                    userId = userUUID,
-                ).firstOrNull()?.let { isPositiveValue -> isPositiveValue == IS_POSITIVE_TRUE_VALUE }
-            }
-        }
+        return getUserFeedbackDto(
+            consultationUpdateId = consultationUpdateId,
+            userId = userId,
+        )?.isPositive == IS_POSITIVE_TRUE_VALUE
     }
 
     override fun getFeedbackStats(consultationUpdateId: String): FeedbackConsultationUpdateStats? {
@@ -45,6 +49,17 @@ class FeedbackConsultationUpdateRepositoryImpl(
         feedbackDeleting.consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
             feedbackDeleting.userId.toUuidOrNull()?.let { userUUID ->
                 databaseRepository.deleteFeedback(consultationUpdateUUID, userUUID)
+            }
+        }
+    }
+
+    private fun getUserFeedbackDto(consultationUpdateId: String, userId: String): FeedbackConsultationUpdateDTO? {
+        return consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
+            userId.toUuidOrNull()?.let { userUUID ->
+                databaseRepository.getUserConsultationUpdateFeedback(
+                    consultationUpdateId = consultationUpdateUUID,
+                    userId = userUUID,
+                )
             }
         }
     }

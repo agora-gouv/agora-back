@@ -14,7 +14,7 @@ import java.util.*
 interface FeedbackConsultationUpdateDatabaseRepository : JpaRepository<FeedbackConsultationUpdateDTO, UUID> {
 
     @Query(
-        value = """SELECT is_positive FROM feedbacks_consultation_update
+        value = """SELECT * FROM feedbacks_consultation_update
             WHERE consultation_update_id = :consultationUpdateId
             AND user_id = :userId
             LIMIT 1
@@ -23,7 +23,7 @@ interface FeedbackConsultationUpdateDatabaseRepository : JpaRepository<FeedbackC
     fun getUserConsultationUpdateFeedback(
         @Param("consultationUpdateId") consultationUpdateId: UUID,
         @Param("userId") userId: UUID,
-    ): List<Int>
+    ): FeedbackConsultationUpdateDTO?
 
     @Query(
         value = """SELECT is_positive as hasPositiveValue, COUNT(*) as responseCount FROM feedbacks_consultation_update

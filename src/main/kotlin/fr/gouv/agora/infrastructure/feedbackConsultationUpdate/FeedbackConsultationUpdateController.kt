@@ -43,6 +43,7 @@ class FeedbackConsultationUpdateController(
         )
     }
 
+    @Deprecated("Should use POST /consultations/{consultationId}/updates/{consultationUpdateId}/feedback to change feedback instead")
     @DeleteMapping("/consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
     fun deleteFeedbackConsultationUpdate(
         @RequestHeader("Authorization") authorizationHeader: String,
