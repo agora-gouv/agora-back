@@ -19,6 +19,7 @@ class QagHomeController(
     private val qagHomeJsonMapper: QagHomeJsonMapper,
 ) {
     @GetMapping("/qags")
+    @Deprecated("Should use GET /v2/qags instead")
     fun getQagPreviews(
         @RequestHeader("Authorization") authorizationHeader: String,
         @RequestParam("thematiqueId") thematiqueId: String?,

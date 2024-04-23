@@ -16,7 +16,7 @@ class FeedbackQagMapper {
 
     fun modifyIsHelpful(dto: FeedbackQagDTO, isHelpful: Boolean): FeedbackQagDTO {
         return dto.copy(
-            isHelpful = if (isHelpful) BOOLEAN_INT_TRUE_VALUE else BOOLEAN_INT_FALSE_VALUE,
+            isHelpful = toInt(isHelpful),
             updatedDate = Date(),
         )
     }
@@ -28,7 +28,7 @@ class FeedbackQagMapper {
                 id = UUID.randomUUID(),
                 qagId = UUID.fromString(domain.qagId),
                 userId = UUID.fromString(domain.userId),
-                isHelpful = if (domain.isHelpful) BOOLEAN_INT_TRUE_VALUE else BOOLEAN_INT_FALSE_VALUE,
+                isHelpful = toInt(domain.isHelpful),
                 createdDate = createdDate,
                 updatedDate = createdDate,
             )
@@ -45,7 +45,11 @@ class FeedbackQagMapper {
         )
     }
 
-    fun toBoolean(boolIntValue: Int): Boolean {
+    private fun toBoolean(boolIntValue: Int): Boolean {
         return boolIntValue == BOOLEAN_INT_TRUE_VALUE
+    }
+
+    private fun toInt(isHelpful: Boolean): Int {
+        return if (isHelpful) BOOLEAN_INT_TRUE_VALUE else BOOLEAN_INT_FALSE_VALUE
     }
 }
