@@ -1,11 +1,13 @@
 package fr.gouv.agora.usecase.notification.repository
 
+import fr.gouv.agora.infrastructure.notification.dto.NotificationMessageDTO
+
 interface NotificationMessageRepository {
-    fun getQagRejectedTitle(): String
-    fun getQagRejectedMessage(): String
-    fun getQagAcceptedTitle(): String
-    fun getQagAcceptedMessage(): String
-    fun getQagAcceptedAfterRejectTitle(): String
-    fun getQagAcceptedAfterRejectMessage(): String
+
+    fun getQagRejected(): NotificationMessageDTO
+
+    fun findAllByStatusAccepted(): Set<NotificationMessageDTO>
+
+    fun getQagAcceptedAfterReject(): NotificationMessageDTO
 }
 

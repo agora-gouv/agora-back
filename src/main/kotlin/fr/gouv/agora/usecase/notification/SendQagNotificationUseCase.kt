@@ -3,7 +3,12 @@ package fr.gouv.agora.usecase.notification
 import fr.gouv.agora.domain.NotificationInserting
 import fr.gouv.agora.domain.NotificationType
 import fr.gouv.agora.usecase.login.repository.UserRepository
-import fr.gouv.agora.usecase.notification.repository.*
+import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest
+import fr.gouv.agora.usecase.notification.repository.NotificationMessageRepository
+import fr.gouv.agora.usecase.notification.repository.NotificationRepository
+import fr.gouv.agora.usecase.notification.repository.NotificationResult
+import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
+import fr.gouv.agora.usecase.notification.repository.QagNotificationRequest
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 
@@ -41,26 +46,32 @@ class SendQagNotificationUseCase(
     }
 
     fun sendNotificationQagRejected(qagId: String): NotificationResult {
+        val notificationMessage = notificationMessageRepository.getQagRejected()
+
         return sendNotification(
             qagId = qagId,
-            title = notificationMessageRepository.getQagRejectedTitle(),
-            description = notificationMessageRepository.getQagRejectedMessage(),
+            title = notificationMessage.title,
+            description = notificationMessage.message,
         )
     }
 
     fun sendNotificationQagAccepted(qagId: String): NotificationResult {
+        val notificationMessage = notificationMessageRepository.findAllByStatusAccepted().random()
+
         return sendNotification(
             qagId = qagId,
-            title = notificationMessageRepository.getQagAcceptedTitle(),
-            description = notificationMessageRepository.getQagAcceptedMessage(),
+            title = notificationMessage.title,
+            description = notificationMessage.message,
         )
     }
 
     fun sendNotificationQagAcceptedAfterReject(qagId: String): NotificationResult {
+        val notificationMessage = notificationMessageRepository.getQagAcceptedAfterReject()
+
         return sendNotification(
             qagId = qagId,
-            title = notificationMessageRepository.getQagAcceptedAfterRejectTitle(),
-            description = notificationMessageRepository.getQagAcceptedAfterRejectTitle(),
+            title = notificationMessage.title,
+            description = notificationMessage.message,
         )
     }
 
