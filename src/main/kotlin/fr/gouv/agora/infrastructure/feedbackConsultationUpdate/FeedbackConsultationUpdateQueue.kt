@@ -11,7 +11,6 @@ class FeedbackConsultationUpdateQueue : AgoraQueue<FeedbackConsultationUpdateQue
         abstract val userId: String
 
         data class AddFeedback(override val userId: String) : TaskType()
-        data class DeleteFeedback(override val userId: String) : TaskType()
     }
 
     override fun canAddTask(queuedTasks: Queue<TaskType>, newTask: TaskType): Boolean {

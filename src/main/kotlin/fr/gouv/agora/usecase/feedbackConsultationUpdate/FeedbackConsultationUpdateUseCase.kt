@@ -1,6 +1,10 @@
 package fr.gouv.agora.usecase.feedbackConsultationUpdate
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.domain.FeedbackConsultationUpdateDeleting
+import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
+import fr.gouv.agora.domain.FeedbackConsultationUpdateResults
+import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
@@ -22,13 +26,16 @@ class FeedbackConsultationUpdateUseCase(
                 consultationUpdateId = feedbackInserting.consultationUpdateId,
             )
         ) return InsertFeedbackConsultationUpdateResults.Failure
-        if (getUserFeedback(
+
+        if (!feedbackRepository.updateFeedback(
                 consultationUpdateId = feedbackInserting.consultationUpdateId,
                 userId = feedbackInserting.userId,
-            ) != null
-        ) return InsertFeedbackConsultationUpdateResults.Failure
+                isPositive = feedbackInserting.isPositive,
+            )
+        ) {
+            feedbackRepository.insertFeedback(feedbackInserting)
+        }
 
-        feedbackRepository.insertFeedback(feedbackInserting)
         cacheRepository.initUserFeedback(
             consultationUpdateId = feedbackInserting.consultationUpdateId,
             userId = feedbackInserting.userId,

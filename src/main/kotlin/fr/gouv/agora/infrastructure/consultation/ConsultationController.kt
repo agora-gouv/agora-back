@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 
 @RestController
 @Suppress("unused")
@@ -20,6 +19,7 @@ class ConsultationController(
 ) {
 
     @GetMapping("/consultations/{consultationId}")
+    @Deprecated("Should use GET /v2/consultations/{consultationId} instead")
     fun getConsultationDetails(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable consultationId: String,

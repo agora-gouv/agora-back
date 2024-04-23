@@ -14,6 +14,7 @@ class QagPaginatedController(
 ) {
 
     @GetMapping("/qags/page/{pageNumber}")
+    @Deprecated("Should use GET /v2/qags instead")
     fun getQagDetails(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable pageNumber: String,
