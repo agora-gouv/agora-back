@@ -1,6 +1,6 @@
 package fr.gouv.agora.usecase.notification.repository
 
-import fr.gouv.agora.infrastructure.notificationmessage.dto.NotificationMessageDTO
+import fr.gouv.agora.infrastructure.notification.dto.NotificationMessageDTO
 
 interface NotificationMessageRepository {
 
