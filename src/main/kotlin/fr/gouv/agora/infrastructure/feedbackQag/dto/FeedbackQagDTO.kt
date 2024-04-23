@@ -17,6 +17,8 @@ data class FeedbackQagDTO(
     val qagId: UUID,
     @Column(columnDefinition = "SMALLINT")
     val isHelpful: Int,
+    val createdDate: Date,
+    val updatedDate: Date,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -30,6 +32,6 @@ data class FeedbackQagDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , userId = $userId , qagId = $qagId , isHelpful = $isHelpful )"
+        return this::class.simpleName + "(id = $id , userId = $userId , qagId = $qagId , isHelpful = $isHelpful, createdDate = $createdDate, updatedDate = $updatedDate)"
     }
 }
