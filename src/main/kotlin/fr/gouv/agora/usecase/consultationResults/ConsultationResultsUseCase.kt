@@ -66,7 +66,7 @@ class ConsultationResultsUseCase(
         return ConsultationResults(
             consultation = consultationInfo,
             participantCount = participantCount,
-            results = questionList
+            resultsWithChoices = questionList
                 .filter { question -> question.choixPossibleList.isNotEmpty() }
                 .map { question -> mapper.toQuestionNoResponse(question) }
                 .map { question ->
@@ -75,7 +75,8 @@ class ConsultationResultsUseCase(
                         participantCount = participantCount,
                         consultationResponseList = consultationResponseList,
                     )
-                }
+                },
+            openQuestions = emptyList(), // TODO
         )
     }
 

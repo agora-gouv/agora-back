@@ -241,7 +241,8 @@ internal class ConsultationResultsUseCaseTest {
             val expectedResults = ConsultationResults(
                 consultation = consultationInfo,
                 participantCount = 23,
-                results = emptyList(),
+                resultsWithChoices = emptyList(),
+                openQuestions = emptyList(),
             )
             assertThat(result).isEqualTo(expectedResults)
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
@@ -270,7 +271,8 @@ internal class ConsultationResultsUseCaseTest {
             val expectedResults = ConsultationResults(
                 consultation = consultationInfo,
                 participantCount = 77,
-                results = emptyList(),
+                resultsWithChoices = emptyList(),
+                openQuestions = emptyList(),
             )
             assertThat(result).isEqualTo(expectedResults)
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
@@ -301,7 +303,8 @@ internal class ConsultationResultsUseCaseTest {
             val expectedResults = ConsultationResults(
                 consultation = consultationInfo,
                 participantCount = 1337,
-                results = emptyList(),
+                resultsWithChoices = emptyList(),
+                openQuestions = emptyList(),
             )
             assertThat(result).isEqualTo(expectedResults)
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
@@ -336,7 +339,7 @@ internal class ConsultationResultsUseCaseTest {
             val expectedResults = ConsultationResults(
                 consultation = consultationInfo,
                 participantCount = 1,
-                results = listOf(
+                resultsWithChoices = listOf(
                     QuestionResults(
                         question = question,
                         responses = listOf(
@@ -347,6 +350,7 @@ internal class ConsultationResultsUseCaseTest {
                         ),
                     ),
                 ),
+                openQuestions = emptyList(),
             )
             assertThat(result).isEqualTo(expectedResults)
             then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
@@ -393,7 +397,7 @@ internal class ConsultationResultsUseCaseTest {
         val expectedResults = ConsultationResults(
             consultation = consultationInfo,
             participantCount = participantCount,
-            results = testDataList.mapNotNull { testData ->
+            resultsWithChoices = testDataList.mapNotNull { testData ->
                 testData.expectedQuestionResultList?.let {
                     QuestionResults(
                         question = testData.question,
@@ -401,6 +405,7 @@ internal class ConsultationResultsUseCaseTest {
                     )
                 }
             },
+            openQuestions = emptyList(),
         )
         assertThat(result).isEqualTo(expectedResults)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")
@@ -446,7 +451,7 @@ internal class ConsultationResultsUseCaseTest {
         val expectedResults = ConsultationResults(
             consultation = consultationInfo,
             participantCount = participantCount,
-            results = testDataList.mapNotNull { testData ->
+            resultsWithChoices = testDataList.mapNotNull { testData ->
                 testData.expectedQuestionResultList?.let {
                     QuestionResults(
                         question = testData.question,
@@ -454,6 +459,7 @@ internal class ConsultationResultsUseCaseTest {
                     )
                 }
             },
+            openQuestions = emptyList(),
         )
         assertThat(result).isEqualTo(expectedResults)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultationId")

@@ -1,6 +1,16 @@
 package fr.gouv.agora.infrastructure.consultationResults
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.ChoiceResults
+import fr.gouv.agora.domain.Conclusion
+import fr.gouv.agora.domain.ConsultationResults
+import fr.gouv.agora.domain.ConsultationResultsWithUpdate
+import fr.gouv.agora.domain.ConsultationStatus
+import fr.gouv.agora.domain.Explanation
+import fr.gouv.agora.domain.QuestionConditional
+import fr.gouv.agora.domain.QuestionMultipleChoices
+import fr.gouv.agora.domain.QuestionResults
+import fr.gouv.agora.domain.QuestionUniqueChoice
+import fr.gouv.agora.domain.Video
 import fr.gouv.agora.infrastructure.profile.repository.DateMapper
 import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
@@ -13,12 +23,18 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
             title = domain.consultation.title,
             coverUrl = domain.consultation.coverUrl,
             participantCount = domain.participantCount,
-            resultsUniqueChoice = domain.results.filter { result ->
+            resultsUniqueChoice = domain.resultsWithChoices.filter { result ->
                 result.question is QuestionUniqueChoice || result.question is QuestionConditional
             }.map(::toQuestionResultsJson),
-            resultsMultipleChoice = domain.results.filter { result ->
+            resultsMultipleChoice = domain.resultsWithChoices.filter { result ->
                 result.question is QuestionMultipleChoices
             }.map(::toQuestionResultsJson),
+            resultsOpen = domain.openQuestions.map { questionOpen ->
+                QuestionOpenResultsJson(
+                    questionId = questionOpen.id,
+                    questionTitle = questionOpen.title,
+                )
+            },
         )
     }
 
