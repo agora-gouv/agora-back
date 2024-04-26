@@ -6,6 +6,7 @@ import fr.gouv.agora.domain.ChoiceResults
 import fr.gouv.agora.domain.ChoixPossibleDefault
 import fr.gouv.agora.domain.ConsultationResultAggregated
 import fr.gouv.agora.domain.ConsultationResults
+import fr.gouv.agora.domain.QuestionChapter
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionResults
 import fr.gouv.agora.domain.QuestionUniqueChoice
@@ -259,7 +260,7 @@ internal class ConsultationResultsUseCaseTest {
         @Test
         fun `getConsultationResults - when getConsultationQuestionList return question but not with choices - should return object without results`() {
             // Given
-            val question = mock(QuestionOpen::class.java)
+            val question = mock(QuestionChapter::class.java)
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
             given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
                 .willReturn(77)
@@ -475,6 +476,39 @@ internal class ConsultationResultsUseCaseTest {
         then(cacheRepository).should()
             .initConsultationResults(consultationId = "consultationId", results = expectedResults)
         then(cacheRepository).shouldHaveNoMoreInteractions()
+    }
+
+    @Test
+    fun `getConsultationResults - when there is open questions - should return open questions`() {
+        // Given
+        val questionsOpen = listOf(
+            mock(QuestionOpen::class.java),
+            mock(QuestionOpen::class.java)
+        )
+
+        val consultationInfo = mock(ConsultationInfo::class.java)
+        given(consultationInfoRepository.getConsultation("consultationId")).willReturn(consultationInfo)
+        given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
+            .willReturn(8)
+        given(consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = "consultationId"))
+            .willReturn(emptyList())
+        given(questionRepository.getConsultationQuestionList(consultationId = "consultationId"))
+            .willReturn(questionsOpen)
+        given(cacheRepository.getConsultationResults(consultationId = "consultationId"))
+            .willReturn(ConsultationResultsCacheResult.ConsultationResultsCacheNotInitialized)
+
+        // When
+        val result = useCase.getConsultationResults(consultationId = "consultationId")
+
+        // Then
+        assertThat(result).isEqualTo(
+            ConsultationResults(
+                consultation = consultationInfo,
+                participantCount = 8,
+                resultsWithChoices = emptyList(),
+                openQuestions = questionsOpen
+            )
+        )
     }
 
     private fun buildTestData(testInput: QuestionInputData): TestData {

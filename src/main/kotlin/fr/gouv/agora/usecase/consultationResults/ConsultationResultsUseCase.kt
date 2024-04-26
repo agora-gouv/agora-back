@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.ChoiceResults
 import fr.gouv.agora.domain.ChoixPossible
 import fr.gouv.agora.domain.ConsultationResults
 import fr.gouv.agora.domain.Question
+import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionResults
 import fr.gouv.agora.domain.QuestionWithChoices
 import fr.gouv.agora.domain.ResponseConsultationCount
@@ -48,7 +49,6 @@ class ConsultationResultsUseCase(
             ?: return null
 
         val questionList = questionRepository.getConsultationQuestionList(consultationId = consultationId)
-            .filterIsInstance<QuestionWithChoices>()
         val participantCount = userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
         val consultationResponseList = if (questionList.isNotEmpty()) {
             consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = consultationId)
@@ -66,7 +66,7 @@ class ConsultationResultsUseCase(
         return ConsultationResults(
             consultation = consultationInfo,
             participantCount = participantCount,
-            resultsWithChoices = questionList
+            resultsWithChoices = questionList.filterIsInstance<QuestionWithChoices>()
                 .filter { question -> question.choixPossibleList.isNotEmpty() }
                 .map { question -> mapper.toQuestionNoResponse(question) }
                 .map { question ->
@@ -76,7 +76,7 @@ class ConsultationResultsUseCase(
                         consultationResponseList = consultationResponseList,
                     )
                 },
-            openQuestions = emptyList(), // TODO
+            openQuestions = questionList.filterIsInstance<QuestionOpen>(),
         )
     }
 
