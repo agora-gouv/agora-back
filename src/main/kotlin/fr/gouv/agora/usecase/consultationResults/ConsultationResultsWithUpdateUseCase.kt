@@ -17,7 +17,7 @@ class ConsultationResultsWithUpdateUseCase(
                     consultation = results.consultation,
                     lastUpdate = update,
                     participantCount = results.participantCount,
-                    results = results.results,
+                    results = results.resultsWithChoices,
                 )
             }
         }
