@@ -9,7 +9,7 @@ class ContentSanitizer {
 
     fun sanitize(content: String, maxLength: Int): String {
         val policyFactory = HtmlPolicyBuilder().toFactory()
-        return HtmlUtils.htmlUnescape(policyFactory.sanitize(content).take(maxLength))
+        return HtmlUtils.htmlUnescape(policyFactory.sanitize(content)).take(maxLength)
     }
 
 }
