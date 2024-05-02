@@ -20,10 +20,11 @@ interface UserDataDatabaseRepository : JpaRepository<UserDataDTO, UUID> {
         value = """SELECT DISTINCT DATE(event_date) as date, count(*) as signupCount
             FROM users_data
             WHERE ip_address_hash = :ipAddressHash
+            AND user_agent = :userAgent
             AND event_type = 'signup'
             GROUP BY ip_address_hash, DATE(event_date)""",
         nativeQuery = true,
     )
-    fun getIpHashSignupHistory(@Param("ipAddressHash") ipAddressHash: String): List<SignupHistoryCountDTO>
+    fun getIpHashSignupHistory(@Param("ipAddressHash") ipAddressHash: String, @Param("userAgent") userAgent: String): List<SignupHistoryCountDTO>
 
 }

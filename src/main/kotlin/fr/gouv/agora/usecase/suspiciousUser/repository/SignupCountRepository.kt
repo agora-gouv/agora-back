@@ -1,6 +1,6 @@
 package fr.gouv.agora.usecase.suspiciousUser.repository
 
 interface SignupCountRepository {
-    fun getTodaySignupCount(ipAddressHash: String): Int?
-    fun initTodaySignupCount(ipAddressHash: String, todaySignupCount: Int)
+    fun getTodaySignupCount(ipAddressHash: String, userAgent: String): Int?
+    fun initTodaySignupCount(ipAddressHash: String, userAgent: String, todaySignupCount: Int)
 }

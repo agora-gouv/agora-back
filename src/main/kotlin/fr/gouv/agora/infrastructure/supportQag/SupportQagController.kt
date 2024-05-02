@@ -12,7 +12,11 @@ import fr.gouv.agora.usecase.suspiciousUser.IsSuspiciousUserUseCase
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
@@ -24,6 +28,7 @@ class SupportQagController(
 ) {
     @PostMapping("/qags/{qagId}/support")
     fun insertSupportQag(
+        @RequestHeader("User-Agent") userAgent: String,
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable qagId: String,
         request: HttpServletRequest,
@@ -32,7 +37,11 @@ class SupportQagController(
         return queue.executeTask(
             taskType = TaskType.AddSupport(userId = userId),
             onTaskExecuted = {
-                if (isSuspiciousUserUseCase.isSuspiciousUser(IpAddressUtils.retrieveIpAddressHash(request))) {
+                if (isSuspiciousUserUseCase.isSuspiciousUser(
+                        ipAddressHash = IpAddressUtils.retrieveIpAddressHash(request),
+                        userAgent = userAgent,
+                    )
+                ) {
                     ResponseEntity.ok().body(Unit)
                 } else {
                     val insertResult = insertSupportQagUseCase.insertSupportQag(
