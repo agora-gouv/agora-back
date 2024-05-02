@@ -418,18 +418,31 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     fun getMostPopularQags(): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT id, title, description, postDate, status, username, thematiqueId, userId, supportCount
-                 FROM (
+        value = """
+            (
+                SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION, 1 as columnOrder
+                FROM $QAG_WITH_SUPPORT_JOIN
+                WHERE qags.status = 1
+                GROUP BY qags.id
+                ORDER BY post_date DESC
+                LIMIT 1
+            )
+            UNION
+            (
+                SELECT id, title, description, postDate, status, username, thematiqueId, userId, supportCount, 2 as columnOrder
+                FROM (
                     SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION, ROW_NUMBER() OVER (PARTITION BY thematique_id ORDER BY count(*) DESC) as thematiqueRowNumber
                     FROM (qags LEFT JOIN qag_updates ON qags.id = qag_updates.qag_id) LEFT JOIN supports_qag ON qags.id = supports_qag.qag_id
                     WHERE qags.status = 1
                     AND qag_updates.status = 1
-                    AND moderated_date >= (CURRENT_TIMESTAMP - INTERVAL '48 HOUR')
+                    AND moderated_date >= (CURRENT_TIMESTAMP - INTERVAL '24 HOUR')
                     GROUP BY qags.id
                     ORDER BY supportCount DESC
                 ) as rowNumber
                 WHERE thematiqueRowNumber < 3
                 LIMIT 20
+            )
+            ORDER BY columnOrder ASC, supportCount DESC
         """, nativeQuery = true
     )
     fun getTrendingQags(): List<QagWithSupportCountDTO>
