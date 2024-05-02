@@ -48,4 +48,13 @@ internal class ContentSanitizerTest {
         assertThat(result).isEqualTo("123")
     }
 
+    @Test
+    fun `sanitize - when has HTML entities - should trim after htmlUnescape`() {
+        // When
+        val result = contentSanitizer.sanitize("You're welcome !", 16)
+
+        // Then
+        assertThat(result).isEqualTo("You're welcome !")
+    }
+
 }
