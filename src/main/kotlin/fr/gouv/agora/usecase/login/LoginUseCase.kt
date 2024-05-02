@@ -29,7 +29,10 @@ class LoginUseCase(
     fun signUp(signupRequest: SignupRequest): UserInfo? {
         return userRepository.generateUser(signupRequest = signupRequest).also { userInfo ->
             userDataRepository.addUserData(signupRequest = signupRequest, generatedUserId = userInfo.userId)
-            isSuspiciousUserUseCase.notifySignup(signupRequest.ipAddressHash)
+            isSuspiciousUserUseCase.notifySignup(
+                ipAddressHash = signupRequest.ipAddressHash,
+                userAgent = signupRequest.userAgent,
+            )
         }
     }
 

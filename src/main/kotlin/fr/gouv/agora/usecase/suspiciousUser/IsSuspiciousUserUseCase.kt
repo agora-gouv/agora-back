@@ -21,25 +21,29 @@ class IsSuspiciousUserUseCase(
         private const val SOFT_BAN_SIGNUP_COUNT = 10
     }
 
-    fun isSuspiciousUser(ipAddressHash: String): Boolean {
+    fun isSuspiciousUser(ipAddressHash: String, userAgent: String): Boolean {
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)) return false
-        return (signupCountRepository.getTodaySignupCount(ipAddressHash)
-            ?: buildTodaySignupCount(ipAddressHash)) >= SOFT_BAN_SIGNUP_COUNT
+        return (signupCountRepository.getTodaySignupCount(ipAddressHash = ipAddressHash, userAgent = userAgent)
+            ?: buildTodaySignupCount(ipAddressHash = ipAddressHash, userAgent = userAgent)) >= SOFT_BAN_SIGNUP_COUNT
     }
 
-    fun notifySignup(ipAddressHash: String) {
+    fun notifySignup(ipAddressHash: String, userAgent: String) {
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)) return
-        signupCountRepository.getTodaySignupCount(ipAddressHash)?.let { signupCount ->
+        signupCountRepository.getTodaySignupCount(
+            ipAddressHash = ipAddressHash,
+            userAgent = userAgent,
+        )?.let { signupCount ->
             signupCountRepository.initTodaySignupCount(
                 ipAddressHash = ipAddressHash,
+                userAgent = userAgent,
                 todaySignupCount = signupCount + 1,
             )
         }
     }
 
-    private fun buildTodaySignupCount(ipAddressHash: String): Int {
+    private fun buildTodaySignupCount(ipAddressHash: String, userAgent: String): Int {
         val dateNow = LocalDate.now(clock)
-        val signupHistory = userDataRepository.getSignupHistory(ipAddressHash)
+        val signupHistory = userDataRepository.getSignupHistory(ipAddressHash = ipAddressHash, userAgent = userAgent)
 
         return (signupHistory.find { historyEntry -> historyEntry.signupCount >= SOFT_BAN_SIGNUP_COUNT }
             ?: signupHistory.find { historyEntry -> historyEntry.date == dateNow }
@@ -47,6 +51,7 @@ class IsSuspiciousUserUseCase(
             .let { historyEntry ->
                 signupCountRepository.initTodaySignupCount(
                     ipAddressHash = ipAddressHash,
+                    userAgent = userAgent,
                     todaySignupCount = historyEntry.signupCount,
                 )
                 historyEntry.signupCount

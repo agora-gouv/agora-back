@@ -48,7 +48,7 @@ class IsSuspiciousUserUseCaseTest {
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)).willReturn(false)
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash")
+        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -60,55 +60,67 @@ class IsSuspiciousUserUseCaseTest {
     @Test
     fun `isSuspiciousUser - when getTodaySignupCount is lower than 10 - should return false`() {
         // Given
-        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash")).willReturn(8)
+        given(
+            signupCountRepository.getTodaySignupCount(
+                ipAddressHash = "ipHash",
+                userAgent = "userAgent",
+            )
+        ).willReturn(8)
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash")
+        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(false)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
-        then(signupCountRepository).should(only()).getTodaySignupCount(ipAddressHash = "ipHash")
+        then(signupCountRepository).should(only())
+            .getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent")
         then(userDataRepository).shouldHaveNoInteractions()
     }
 
     @Test
     fun `isSuspiciousUser - when todaySignupCount is greater or equal 10 - should return true`() {
         // Given
-        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash")).willReturn(10)
+        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent"))
+            .willReturn(10)
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash")
+        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(true)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
-        then(signupCountRepository).should(only()).getTodaySignupCount(ipAddressHash = "ipHash")
+        then(signupCountRepository).should(only())
+            .getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent")
         then(userDataRepository).shouldHaveNoInteractions()
     }
 
     @Test
     fun `isSuspiciousUser - when getTodaySignupCount is null but has no SignupHistoryCount - should init todaySignupCount to 0 and return false`() {
         // Given
-        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash")).willReturn(null)
-        given(userDataRepository.getSignupHistory(ipAddressHash = "ipHash")).willReturn(emptyList())
+        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent"))
+            .willReturn(null)
+        given(userDataRepository.getSignupHistory(ipAddressHash = "ipHash", userAgent = "userAgent"))
+            .willReturn(emptyList())
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash")
+        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(false)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
-        then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash")
-        then(signupCountRepository).should().initTodaySignupCount(ipAddressHash = "ipHash", todaySignupCount = 0)
-        then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash")
+        then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent")
+        then(signupCountRepository).should()
+            .initTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent", todaySignupCount = 0)
+        then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash", userAgent = "userAgent")
     }
 
     @Test
     fun `isSuspiciousUser - when getTodaySignupCount is null and has a SignupHistoryCount with count greater or equal 10 - should init todaySignupCount to count and return true`() {
         // Given
-        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash")).willReturn(null)
-        given(userDataRepository.getSignupHistory(ipAddressHash = "ipHash")).willReturn(
+        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent"))
+            .willReturn(null)
+        given(userDataRepository.getSignupHistory(ipAddressHash = "ipHash", userAgent = "userAgent")).willReturn(
             listOf(
                 SignupHistoryCount(
                     date = LocalDate.MIN,
@@ -118,14 +130,15 @@ class IsSuspiciousUserUseCaseTest {
         )
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash")
+        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(true)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
-        then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash")
-        then(signupCountRepository).should().initTodaySignupCount(ipAddressHash = "ipHash", todaySignupCount = 14)
-        then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash")
+        then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent")
+        then(signupCountRepository).should()
+            .initTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent", todaySignupCount = 14)
+        then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash", userAgent = "userAgent")
     }
 
     @Test
@@ -137,8 +150,9 @@ class IsSuspiciousUserUseCaseTest {
             signupCountRepository = signupCountRepository,
             userDataRepository = userDataRepository,
         )
-        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash")).willReturn(null)
-        given(userDataRepository.getSignupHistory(ipAddressHash = "ipHash")).willReturn(
+        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent"))
+            .willReturn(null)
+        given(userDataRepository.getSignupHistory(ipAddressHash = "ipHash", userAgent = "userAgent")).willReturn(
             listOf(
                 SignupHistoryCount(
                     date = LocalDate.of(2024, Month.JANUARY, 15),
@@ -148,14 +162,15 @@ class IsSuspiciousUserUseCaseTest {
         )
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash")
+        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(false)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
-        then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash")
-        then(signupCountRepository).should().initTodaySignupCount(ipAddressHash = "ipHash", todaySignupCount = 8)
-        then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash")
+        then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent")
+        then(signupCountRepository).should()
+            .initTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent", todaySignupCount = 8)
+        then(userDataRepository).should(only()).getSignupHistory(ipAddressHash = "ipHash", userAgent = "userAgent")
     }
 
     @Test
@@ -164,7 +179,7 @@ class IsSuspiciousUserUseCaseTest {
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)).willReturn(false)
 
         // When
-        useCase.notifySignup(ipAddressHash = "ipHash")
+        useCase.notifySignup(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
@@ -175,29 +190,33 @@ class IsSuspiciousUserUseCaseTest {
     @Test
     fun `notifySignup - when getTodaySignupCount is null - should do nothing`() {
         // Given
-        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash")).willReturn(null)
+        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent"))
+            .willReturn(null)
 
         // When
-        useCase.notifySignup(ipAddressHash = "ipHash")
+        useCase.notifySignup(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
-        then(signupCountRepository).should(only()).getTodaySignupCount(ipAddressHash = "ipHash")
+        then(signupCountRepository).should(only())
+            .getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent")
         then(userDataRepository).shouldHaveNoInteractions()
     }
 
     @Test
     fun `notifySignup - when getTodaySignupCount is not null - should init with value + 1`() {
         // Given
-        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash")).willReturn(19)
+        given(signupCountRepository.getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent"))
+            .willReturn(19)
 
         // When
-        useCase.notifySignup(ipAddressHash = "ipHash")
+        useCase.notifySignup(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)
-        then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash")
-        then(signupCountRepository).should().initTodaySignupCount(ipAddressHash = "ipHash", todaySignupCount = 20)
+        then(signupCountRepository).should().getTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent")
+        then(signupCountRepository).should()
+            .initTodaySignupCount(ipAddressHash = "ipHash", userAgent = "userAgent", todaySignupCount = 20)
         then(userDataRepository).shouldHaveNoInteractions()
     }
 

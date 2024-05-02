@@ -91,6 +91,7 @@ internal class LoginUseCaseTest {
         // Given
         val signupRequest = mock(SignupRequest::class.java).also {
             given(it.ipAddressHash).willReturn("ipHash")
+            given(it.userAgent).willReturn("userAgent")
         }
         val userInfo = mock(UserInfo::class.java).also {
             given(it.userId).willReturn("userId")
@@ -104,7 +105,7 @@ internal class LoginUseCaseTest {
         assertThat(result).isEqualTo(userInfo)
         then(userRepository).should(only()).generateUser(signupRequest = signupRequest)
         then(userDataRepository).should(only()).addUserData(signupRequest = signupRequest, generatedUserId = "userId")
-        then(isSuspiciousUserUseCase).should(only()).notifySignup(ipAddressHash = "ipHash")
+        then(isSuspiciousUserUseCase).should(only()).notifySignup(ipAddressHash = "ipHash", userAgent = "userAgent")
     }
 
 }

@@ -16,16 +16,16 @@ class SignupCountCacheRepository(
         private const val SIGNUP_COUNT_CACHE_NAME = "signupCount"
     }
 
-    override fun getTodaySignupCount(ipAddressHash: String): Int? {
+    override fun getTodaySignupCount(ipAddressHash: String, userAgent: String): Int? {
         return try {
-            getCache()?.get(ipAddressHash)?.get() as? Int
+            getCache()?.get("$ipAddressHash/$userAgent")?.get() as? Int
         } catch (e: Exception) {
             null
         }
     }
 
-    override fun initTodaySignupCount(ipAddressHash: String, todaySignupCount: Int) {
-        getCache()?.put(ipAddressHash, todaySignupCount)
+    override fun initTodaySignupCount(ipAddressHash: String, userAgent: String, todaySignupCount: Int) {
+        getCache()?.put("$ipAddressHash/$userAgent", todaySignupCount)
     }
 
     private fun getCache() = cacheManager.getCache(SIGNUP_COUNT_CACHE_NAME)
