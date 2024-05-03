@@ -50,6 +50,8 @@ data class QuestionOpenResultsJson(
     val questionId: String,
     @JsonProperty("questionTitle")
     val questionTitle: String,
+    @JsonProperty("order")
+    val order: Int,
 )
 
 data class ChoiceResultsJson(

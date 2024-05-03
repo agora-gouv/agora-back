@@ -33,6 +33,7 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
                 QuestionOpenResultsJson(
                     questionId = questionOpen.id,
                     questionTitle = questionOpen.title,
+                    order = questionOpen.order,
                 )
             },
         )
