@@ -14,6 +14,8 @@ import fr.gouv.agora.domain.Video
 import fr.gouv.agora.infrastructure.profile.repository.DateMapper
 import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @Component
 class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
@@ -75,6 +77,7 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
             questionId = domain.question.id,
             questionTitle = domain.question.title,
             order = domain.question.order,
+            seenRatio = if (Random.nextInt(0..100) <= 50) Random.nextInt(0 until 100) else 100, // TODO: real implementation
             responses = domain.responses.map(::toChoiceResultsJson),
         )
     }
