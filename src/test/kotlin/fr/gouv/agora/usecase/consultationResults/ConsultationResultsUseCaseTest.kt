@@ -12,6 +12,7 @@ import fr.gouv.agora.domain.QuestionResults
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.QuestionWithChoices
 import fr.gouv.agora.domain.ResponseConsultationCount
+import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
@@ -73,6 +74,8 @@ internal class ConsultationResultsUseCaseTest {
                         choices = listOf(
                             ChoiceInputData(choiceId = "q1c1", responseCount = 1, expectedRatio = 1.0),
                         ),
+                        notApplicableCount = 0,
+                        expectedSeenRatio = 1.0,
                     ),
                 ),
                 participantCount = 1,
@@ -85,7 +88,9 @@ internal class ConsultationResultsUseCaseTest {
                         choices = listOf(
                             ChoiceInputData(choiceId = "q1c1", responseCount = 2, expectedRatio = 0.6666666666666666),
                             ChoiceInputData(choiceId = "q2c2", responseCount = 1, expectedRatio = 0.3333333333333333),
-                        )
+                        ),
+                        notApplicableCount = 0,
+                        expectedSeenRatio = 1.0,
                     ),
                 ),
                 participantCount = 3,
@@ -98,14 +103,18 @@ internal class ConsultationResultsUseCaseTest {
                         choices = listOf(
                             ChoiceInputData(choiceId = "q1c1", responseCount = 8, expectedRatio = 0.8),
                             ChoiceInputData(choiceId = "q1c2", responseCount = 2, expectedRatio = 0.2),
-                        )
+                        ),
+                        notApplicableCount = 0,
+                        expectedSeenRatio = 1.0,
                     ),
                     QuestionInputData(
                         questionId = "question2",
                         choices = listOf(
                             ChoiceInputData(choiceId = "q2c1", responseCount = 4, expectedRatio = 0.4),
                             ChoiceInputData(choiceId = "q2c2", responseCount = 6, expectedRatio = 0.6),
-                        )
+                        ),
+                        notApplicableCount = 0,
+                        expectedSeenRatio = 1.0,
                     ),
                 ),
                 participantCount = 10,
@@ -118,18 +127,24 @@ internal class ConsultationResultsUseCaseTest {
                         choices = listOf(
                             ChoiceInputData(choiceId = "q1c1", responseCount = 8, expectedRatio = 0.8),
                             ChoiceInputData(choiceId = "q1c2", responseCount = 2, expectedRatio = 0.2),
-                        )
+                        ),
+                        notApplicableCount = 0,
+                        expectedSeenRatio = 1.0,
                     ),
                     QuestionInputData(
                         questionId = "question2",
                         choices = listOf(
                             ChoiceInputData(choiceId = "q1c1", responseCount = 4, expectedRatio = 0.4),
                             ChoiceInputData(choiceId = "q2c2", responseCount = 6, expectedRatio = 0.6),
-                        )
+                        ),
+                        notApplicableCount = 0,
+                        expectedSeenRatio = 1.0,
                     ),
                     QuestionInputData(
                         questionId = "question3",
                         choices = emptyList(),
+                        notApplicableCount = 0,
+                        expectedSeenRatio = 1.0,
                     ),
                 ),
                 participantCount = 10,
@@ -142,7 +157,38 @@ internal class ConsultationResultsUseCaseTest {
                         choices = listOf(
                             ChoiceInputData(choiceId = "q1c1", responseCount = 10, expectedRatio = 1.0),
                             ChoiceInputData(choiceId = "q1c2", responseCount = 6, expectedRatio = 0.6),
-                        )
+                        ),
+                        notApplicableCount = 0,
+                        expectedSeenRatio = 1.0,
+                    ),
+                ),
+                participantCount = 10,
+            ),
+            input(
+                testDescription = "when 1 question with 1 choice, 1 response and 1 N/A",
+                questionDataList = listOf(
+                    QuestionInputData(
+                        questionId = "question1",
+                        choices = listOf(
+                            ChoiceInputData(choiceId = "q1c1", responseCount = 1, expectedRatio = 1.0),
+                        ),
+                        notApplicableCount = 1,
+                        expectedSeenRatio = 0.5,
+                    ),
+                ),
+                participantCount = 2,
+            ),
+            input(
+                testDescription = "when 1 question with multiple choices and some N/A",
+                questionDataList = listOf(
+                    QuestionInputData(
+                        questionId = "question1",
+                        choices = listOf(
+                            ChoiceInputData(choiceId = "q1c1", responseCount = 8, expectedRatio = 1.0),
+                            ChoiceInputData(choiceId = "q1c2", responseCount = 4, expectedRatio = 0.5),
+                        ),
+                        notApplicableCount = 2,
+                        expectedSeenRatio = 0.8,
                     ),
                 ),
                 participantCount = 10,
@@ -330,7 +376,7 @@ internal class ConsultationResultsUseCaseTest {
             }
             given(questionRepository.getConsultationQuestionList("consultationId")).willReturn(listOf(question))
             given(userAnsweredConsultationRepository.getParticipantCount(consultationId = "consultationId"))
-                .willReturn(1)
+                .willReturn(0)
             given(mapper.toQuestionNoResponse(question)).willReturn(question)
 
             // When
@@ -339,10 +385,11 @@ internal class ConsultationResultsUseCaseTest {
             // Then
             val expectedResults = ConsultationResults(
                 consultation = consultationInfo,
-                participantCount = 1,
+                participantCount = 0,
                 resultsWithChoices = listOf(
                     QuestionResults(
                         question = question,
+                        seenRatio = 0.0,
                         responses = listOf(
                             ChoiceResults(
                                 choixPossible = choixPossible,
@@ -402,6 +449,7 @@ internal class ConsultationResultsUseCaseTest {
                 testData.expectedQuestionResultList?.let {
                     QuestionResults(
                         question = testData.question,
+                        seenRatio = testData.expectedSeenRatio,
                         responses = testData.expectedQuestionResultList,
                     )
                 }
@@ -456,6 +504,7 @@ internal class ConsultationResultsUseCaseTest {
                 testData.expectedQuestionResultList?.let {
                     QuestionResults(
                         question = testData.question,
+                        seenRatio = testData.expectedSeenRatio,
                         responses = testData.expectedQuestionResultList,
                     )
                 }
@@ -523,20 +572,32 @@ internal class ConsultationResultsUseCaseTest {
             given(it.choixPossibleList).willReturn(choices)
         }
 
+        val (notApplicableResponses, notApplicableAggregatedResponse) = if (testInput.notApplicableCount > 0) {
+            mock(ResponseConsultationCount::class.java).also {
+                lenientGiven(it.questionId).willReturn(testInput.questionId)
+                lenientGiven(it.choiceId).willReturn(UuidUtils.NOT_APPLICABLE_CHOICE_UUID)
+                lenientGiven(it.responseCount).willReturn(testInput.notApplicableCount)
+            } to mock(ConsultationResultAggregated::class.java).also {
+                lenientGiven(it.questionId).willReturn(testInput.questionId)
+                lenientGiven(it.choiceId).willReturn(UuidUtils.NOT_APPLICABLE_CHOICE_UUID)
+                lenientGiven(it.responseCount).willReturn(testInput.notApplicableCount)
+            }
+        } else null to null
+
         val responseConsultationList = testInput.choices.map { choiceInput ->
             mock(ResponseConsultationCount::class.java).also {
                 lenientGiven(it.questionId).willReturn(testInput.questionId)
                 lenientGiven(it.choiceId).willReturn(choiceInput.choiceId)
                 lenientGiven(it.responseCount).willReturn(choiceInput.responseCount)
             }
-        }
+        } + notApplicableResponses
         val consultationResultAggregated = testInput.choices.map { choiceInput ->
             mock(ConsultationResultAggregated::class.java).also {
                 lenientGiven(it.questionId).willReturn(testInput.questionId)
                 lenientGiven(it.choiceId).willReturn(choiceInput.choiceId)
                 lenientGiven(it.responseCount).willReturn(choiceInput.responseCount)
             }
-        }
+        } + notApplicableAggregatedResponse
 
         val expectedQuestionResultList = testInput.choices.map { choiceInput ->
             ChoiceResults(
@@ -546,7 +607,13 @@ internal class ConsultationResultsUseCaseTest {
         }.takeIf { it.isNotEmpty() }
 
         lenientGiven(mapper.toQuestionNoResponse(question)).willReturn(question)
-        return TestData(question, responseConsultationList, consultationResultAggregated, expectedQuestionResultList)
+        return TestData(
+            question = question,
+            responsesConsultationList = responseConsultationList.filterNotNull(),
+            consultationResultAggregated = consultationResultAggregated.filterNotNull(),
+            expectedQuestionResultList = expectedQuestionResultList,
+            expectedSeenRatio = testInput.expectedSeenRatio,
+        )
     }
 
     private data class TestData(
@@ -554,6 +621,7 @@ internal class ConsultationResultsUseCaseTest {
         val responsesConsultationList: List<ResponseConsultationCount>,
         val consultationResultAggregated: List<ConsultationResultAggregated>,
         val expectedQuestionResultList: List<ChoiceResults>?,
+        val expectedSeenRatio: Double,
     )
 
 }
@@ -561,6 +629,8 @@ internal class ConsultationResultsUseCaseTest {
 internal data class QuestionInputData(
     val questionId: String,
     val choices: List<ChoiceInputData>,
+    val notApplicableCount: Int,
+    val expectedSeenRatio: Double,
 )
 
 internal data class ChoiceInputData(

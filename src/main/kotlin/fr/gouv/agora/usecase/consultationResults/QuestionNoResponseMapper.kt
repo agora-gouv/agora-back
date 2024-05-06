@@ -1,8 +1,10 @@
 package fr.gouv.agora.usecase.consultationResults
 
-import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.utils.UuidUtils.NOT_APPLICABLE_CHOICE_UUID
-import fr.gouv.agora.infrastructure.utils.UuidUtils.NOT_FOUND_UUID_STRING
+import fr.gouv.agora.domain.ChoixPossibleDefault
+import fr.gouv.agora.domain.QuestionConditional
+import fr.gouv.agora.domain.QuestionMultipleChoices
+import fr.gouv.agora.domain.QuestionUniqueChoice
+import fr.gouv.agora.domain.QuestionWithChoices
 import fr.gouv.agora.infrastructure.utils.UuidUtils.SKIP_QUESTION_CHOICE_UUID
 import org.springframework.stereotype.Component
 
@@ -21,9 +23,6 @@ class QuestionNoResponseMapper {
                 choixPossibleList = questionWithChoices.choixPossibleList + createNoResponseChoice(
                     ordre = questionWithChoices.choixPossibleList.size + 1,
                     questionId = questionWithChoices.id
-                ) + createNotApplicableResponseChoice(
-                    ordre = questionWithChoices.choixPossibleList.size + 2,
-                    questionId = questionWithChoices.id,
                 ),
             )
 
@@ -37,9 +36,6 @@ class QuestionNoResponseMapper {
                 choixPossibleList = questionWithChoices.choixPossibleList + createNoResponseChoice(
                     ordre = questionWithChoices.choixPossibleList.size + 1,
                     questionId = questionWithChoices.id,
-                ) + createNotApplicableResponseChoice(
-                    ordre = questionWithChoices.choixPossibleList.size + 2,
-                    questionId = questionWithChoices.id,
                 ),
                 maxChoices = questionWithChoices.maxChoices
             )
@@ -51,10 +47,7 @@ class QuestionNoResponseMapper {
                 order = questionWithChoices.order,
                 nextQuestionId = questionWithChoices.nextQuestionId,
                 consultationId = questionWithChoices.consultationId,
-                choixPossibleList = questionWithChoices.choixPossibleList + createNotApplicableResponseConditionalChoice(
-                    ordre = questionWithChoices.choixPossibleList.size + 1,
-                    questionId = questionWithChoices.id,
-                ),
+                choixPossibleList = questionWithChoices.choixPossibleList,
             )
 
             else -> questionWithChoices
@@ -69,23 +62,4 @@ class QuestionNoResponseMapper {
         hasOpenTextField = false,
     )
 
-    private fun createNotApplicableResponseChoice(ordre: Int, questionId: String) = ChoixPossibleDefault(
-        id = NOT_APPLICABLE_CHOICE_UUID,
-        label = "Non applicable",
-        ordre = ordre,
-        questionId = questionId,
-        hasOpenTextField = false,
-    )
-
-    private fun createNotApplicableResponseConditionalChoice(ordre: Int, questionId: String) =
-        createNotApplicableResponseChoice(ordre, questionId).let {
-            ChoixPossibleConditional(
-                id = it.id,
-                label = it.label,
-                ordre = it.ordre,
-                questionId = it.questionId,
-                nextQuestionId = NOT_FOUND_UUID_STRING,
-                hasOpenTextField = it.hasOpenTextField,
-            )
-        }
 }
