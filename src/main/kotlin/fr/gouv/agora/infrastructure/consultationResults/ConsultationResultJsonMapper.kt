@@ -75,6 +75,7 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
             questionId = domain.question.id,
             questionTitle = domain.question.title,
             order = domain.question.order,
+            seenRatio = (domain.seenRatio * 100).roundToInt(),
             responses = domain.responses.map(::toChoiceResultsJson),
         )
     }

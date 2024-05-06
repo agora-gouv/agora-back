@@ -19,6 +19,7 @@ data class ConsultationResultsWithUpdate(
 data class QuestionResults(
     val question: QuestionWithChoices,
     val responses: List<ChoiceResults>,
+    val seenRatio: Double,
 )
 
 data class ChoiceResults(

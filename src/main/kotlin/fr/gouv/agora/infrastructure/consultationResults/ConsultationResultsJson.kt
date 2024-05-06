@@ -41,6 +41,8 @@ data class QuestionResultsJson(
     val questionTitle: String,
     @JsonProperty("order")
     val order: Int,
+    @JsonProperty("seenRatio")
+    val seenRatio: Int,
     @JsonProperty("responses")
     val responses: List<ChoiceResultsJson>,
 )
