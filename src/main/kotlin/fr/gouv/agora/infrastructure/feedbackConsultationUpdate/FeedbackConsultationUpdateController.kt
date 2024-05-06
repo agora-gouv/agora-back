@@ -5,7 +5,12 @@ import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.FeedbackConsultationUpdateUseCase
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.InsertFeedbackConsultationUpdateResults
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
@@ -43,29 +48,15 @@ class FeedbackConsultationUpdateController(
         )
     }
 
+    @Suppress("DeprecatedCallableAddReplaceWith")
     @DeleteMapping("/consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
+    @Deprecated("DELETE feedback is not needed anymore to change feedback using POST /consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
     fun deleteFeedbackConsultationUpdate(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable consultationId: String,
         @PathVariable consultationUpdateId: String,
     ): ResponseEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        return queue.executeTask(
-            taskType = TaskType.DeleteFeedback(userId = userId),
-            onTaskRejected = { ResponseEntity.badRequest().body(Unit) },
-            onTaskExecuted = {
-                val feedbackDeleting = mapper.toDeleting(
-                    userId = userId,
-                    consultationId = consultationId,
-                    consultationUpdateId = consultationUpdateId,
-                )
-                if (useCase.deleteFeedback(feedbackDeleting)) {
-                    ResponseEntity.ok().body(Unit)
-                } else {
-                    ResponseEntity.badRequest().body(Unit)
-                }
-            },
-        )
+        return ResponseEntity.ok().body(Unit)
     }
 
 }

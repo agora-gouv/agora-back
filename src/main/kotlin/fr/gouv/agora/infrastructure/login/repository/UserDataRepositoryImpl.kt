@@ -25,8 +25,11 @@ class UserDataRepositoryImpl(
         databaseRepository.deleteUsersData(userIDs)
     }
 
-    override fun getSignupHistory(ipAddressHash: String): List<SignupHistoryCount> {
-        return databaseRepository.getIpHashSignupHistory(ipAddressHash).map { signupEntry ->
+    override fun getSignupHistory(ipAddressHash: String, userAgent: String): List<SignupHistoryCount> {
+        return databaseRepository.getIpHashSignupHistory(
+            ipAddressHash = ipAddressHash,
+            userAgent = userAgent,
+        ).map { signupEntry ->
             SignupHistoryCount(
                 date = signupEntry.date,
                 signupCount = signupEntry.signupCount,

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class ModerateModeratusQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
-    private val sendNotificationUseCase: SendQagNotificationUseCase,
+    private val sendQagNotificationUseCase: SendQagNotificationUseCase,
     private val qagUpdatesRepository: QagUpdatesRepository,
     private val moderatusQagLockRepository: ModeratusQagLockRepository,
     private val qagPreviewCacheRepository: QagPreviewCacheRepository,
@@ -70,16 +70,16 @@ class ModerateModeratusQagUseCase(
         when (qagInfo.status) {
             QagStatus.OPEN -> {
                 if (isAccepted) {
-                    sendNotificationUseCase.sendNotificationQagAccepted(qagInfo.id)
+                    sendQagNotificationUseCase.sendNotificationQagAccepted(qagInfo.id)
                     updateCache(qagInfo)
                 } else {
-                    sendNotificationUseCase.sendNotificationQagRejected(qagInfo.id)
+                    sendQagNotificationUseCase.sendNotificationQagRejected(qagInfo.id)
                 }
                 moderatusQagLockRepository.removeLockedQagId(qagInfo.id)
             }
 
             QagStatus.MODERATED_ACCEPTED -> if (!isAccepted) {
-                sendNotificationUseCase.sendNotificationQagRejected(qagInfo.id)
+                sendQagNotificationUseCase.sendNotificationQagRejected(qagInfo.id)
                 qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
                 qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
                 qagDetailsCacheRepository.evictQag(qagId = qagInfo.id)
@@ -89,7 +89,7 @@ class ModerateModeratusQagUseCase(
             }
 
             QagStatus.MODERATED_REJECTED -> if (isAccepted) {
-                sendNotificationUseCase.sendNotificationQagAcceptedAfterReject(qagInfo.id)
+                sendQagNotificationUseCase.sendNotificationQagAcceptedAfterReject(qagInfo.id)
                 updateCache(qagInfo)
             }
 

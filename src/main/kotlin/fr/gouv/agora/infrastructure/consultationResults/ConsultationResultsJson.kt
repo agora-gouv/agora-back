@@ -14,6 +14,8 @@ data class ConsultationResultsJson(
     val resultsUniqueChoice: List<QuestionResultsJson>,
     @JsonProperty("resultsMultipleChoice")
     val resultsMultipleChoice: List<QuestionResultsJson>,
+    @JsonProperty("resultsOpen")
+    val resultsOpen: List<QuestionOpenResultsJson>,
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -41,6 +43,15 @@ data class QuestionResultsJson(
     val order: Int,
     @JsonProperty("responses")
     val responses: List<ChoiceResultsJson>,
+)
+
+data class QuestionOpenResultsJson(
+    @JsonProperty("questionId")
+    val questionId: String,
+    @JsonProperty("questionTitle")
+    val questionTitle: String,
+    @JsonProperty("order")
+    val order: Int,
 )
 
 data class ChoiceResultsJson(

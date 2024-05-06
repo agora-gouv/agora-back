@@ -1,0 +1,13 @@
+services:
+  redis:
+    image: redis:5.0.7-alpine
+    ports:
+      - 6379:6379
+  postgres:
+    image: postgres:12.3-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=agora_password
+      - POSTGRES_USER=backend
+      - POSTGRES_DB=agora

@@ -6,28 +6,29 @@ import org.springframework.stereotype.Component
 @Component
 class QuestionJsonMapper {
 
-    fun toJson(domainList: List<Question>): QuestionsJson {
-        val chapterList = domainList.filterIsInstance<QuestionChapter>()
-        val questionsNumber = domainList.size - chapterList.size
+    fun toJson(domain: Questions): QuestionsJson {
+        val chapterList = domain.questions.filterIsInstance<QuestionChapter>()
+        val questionsNumber = domain.questions.size - chapterList.size
         return QuestionsJson(
+            questionCount = domain.questionCount,
             questionsUniqueChoice = buildQuestionUniqueChoiceJsonList(
-                domainList.filterIsInstance<QuestionUniqueChoice>(),
+                domain.questions.filterIsInstance<QuestionUniqueChoice>(),
                 chapterList,
                 questionsNumber,
             ),
             questionsMultipleChoices = buildQuestionMultipleChoicesJsonList(
-                domainList.filterIsInstance<QuestionMultipleChoices>(),
+                domain.questions.filterIsInstance<QuestionMultipleChoices>(),
                 chapterList,
                 questionsNumber,
             ),
             questionsOpened = buildQuestionOpenedJsonList(
-                domainList.filterIsInstance<QuestionOpen>(),
+                domain.questions.filterIsInstance<QuestionOpen>(),
                 chapterList,
                 questionsNumber,
             ),
             chapters = buildChapterJsonList(chapterList),
             questionsWithCondition = buildQuestionConditionalJsonList(
-                domainList.filterIsInstance<QuestionConditional>(),
+                domain.questions.filterIsInstance<QuestionConditional>(),
                 chapterList,
                 questionsNumber,
             ),

@@ -21,17 +21,15 @@ class FeedbackConsultationUpdateMapper {
     fun toDto(feedbackInserting: FeedbackConsultationUpdateInserting): FeedbackConsultationUpdateDTO? {
         val userId = feedbackInserting.userId.toUuidOrNull() ?: return null
         val consultationUpdateId = feedbackInserting.consultationUpdateId.toUuidOrNull() ?: return null
+        val createdDate = Date()
 
         return FeedbackConsultationUpdateDTO(
             id = UuidUtils.NOT_FOUND_UUID,
             userId = userId,
             consultationUpdateId = consultationUpdateId,
-            isPositive = if (feedbackInserting.isPositive) {
-                IS_POSITIVE_TRUE_VALUE
-            } else {
-                IS_POSITIVE_FALSE_VALUE
-            },
-            createdDate = Date(),
+            isPositive = toInt(feedbackInserting.isPositive),
+            createdDate = createdDate,
+            updatedDate = createdDate,
         )
     }
 
@@ -53,6 +51,19 @@ class FeedbackConsultationUpdateMapper {
             negativeRatio = negativeRatio,
             responseCount = totalResponseCount,
         )
+    }
+
+    fun updateFeedback(dto: FeedbackConsultationUpdateDTO, isPositive: Boolean): FeedbackConsultationUpdateDTO {
+        return dto.copy(
+            isPositive = toInt(isPositive),
+            updatedDate = Date(),
+        )
+    }
+
+    private fun toInt(isPositive: Boolean) = if (isPositive) {
+        IS_POSITIVE_TRUE_VALUE
+    } else {
+        IS_POSITIVE_FALSE_VALUE
     }
 
 }
