@@ -11,3 +11,5 @@ services:
       - POSTGRES_PASSWORD=agora_password
       - POSTGRES_USER=backend
       - POSTGRES_DB=agora
+    volumes:
+      - ./.docker:/docker-entrypoint-initdb.d
