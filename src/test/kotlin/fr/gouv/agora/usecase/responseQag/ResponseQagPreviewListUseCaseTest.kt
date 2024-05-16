@@ -93,7 +93,7 @@ internal class ResponseQagPreviewListUseCaseTest {
             given(it.thematiqueId).willReturn("unknownThematiqueId")
         }
         given(qagInfoRepository.getQagsSelectedForResponse()).willReturn(listOf(qagWithSupportCount))
-        given(responseQagRepository.getResponsesQag(20)).willReturn(emptyList())
+        given(responseQagRepository.getResponsesQag(listOf("qagId1"))).willReturn(emptyList())
 
         val thematique = mock(Thematique::class.java).also {
             given(it.id).willReturn("thematiqueId")
@@ -194,7 +194,7 @@ internal class ResponseQagPreviewListUseCaseTest {
         val response = mock(ResponseQagText::class.java).also {
             given(it.qagId).willReturn("qagId")
         }
-        given(responseQagRepository.getResponsesQag(20)).willReturn(listOf(response))
+        given(responseQagRepository.getResponsesQag(listOf("qagId"))).willReturn(listOf(response))
 
         given(lowPriorityQagRepository.getLowPriorityQagIds(listOf("qagId"))).willReturn(listOf("qagIdWithLowPriority"))
         val qagWithOrder = mock(QagWithResponseAndOrder::class.java).also {

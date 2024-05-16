@@ -42,24 +42,14 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     fun getQagsWithoutResponse(): List<QagWithSupportCountDTO>
 
     @Query(
-        value = """SELECT qags.id AS id, title, description, qags.post_date AS post_date, status, username, thematique_id, user_id
-            FROM responses_qag LEFT JOIN qags 
-            ON responses_qag.qag_id = qags.id
+        value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 7
-            ORDER BY responses_qag.response_date DESC
-            LIMIT 5
+            ORDER BY qags.post_date DESC
+            LIMIT 100
         """, nativeQuery = true
     )
-    fun getLatestQagsWithResponses(): List<QagDTO>
-
-    @Query(
-        value = """SELECT id, title, description, post_date, status, username, thematique_id, user_id
-            FROM qags 
-            WHERE qags.status = 7
-            ORDER BY responses_qag.response_date DESC
-        """, nativeQuery = true
-    )
-    fun getQagsSelectedForResponse(): List<QagDTO>
+    fun getQagsSelectedForResponse(): List<QagWithSupportCountDTO>
 
     @Query(
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION

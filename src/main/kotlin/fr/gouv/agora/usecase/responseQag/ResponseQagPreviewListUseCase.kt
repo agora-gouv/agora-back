@@ -16,9 +16,6 @@ import org.springframework.stereotype.Service
 class ResponseQagPreviewListUseCase(
     private val cacheRepository: ResponseQagPreviewCacheRepository,
     private val qagInfoRepository: QagInfoRepository,
-//    @Qualifier("cmsResponseQagRepository")
-//    private val cmsResponseQagRepository: ResponseQagRepository,
-//    @Qualifier("databaseResponseQagRepository")
     private val databaseResponseQagRepository: ResponseQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
     private val lowPriorityQagRepository: LowPriorityQagRepository,
@@ -34,7 +31,7 @@ class ResponseQagPreviewListUseCase(
 
     private fun buildResponseQagPreviewList(): ResponseQagPreviewList {
         val qagsSelectedForResponse = qagInfoRepository.getQagsSelectedForResponse()
-        val qagsResponses = databaseResponseQagRepository.getResponsesQag(20)
+        val qagsResponses = databaseResponseQagRepository.getResponsesQag(qagsSelectedForResponse.map { it.id })
 
         val qagAndResponseList = qagsSelectedForResponse
             .fold(emptyList<Pair<QagInfoWithSupportCount, ResponseQag?>>()) { acc, qagSelectedForResponse ->
