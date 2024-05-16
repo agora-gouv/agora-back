@@ -3,10 +3,12 @@ package fr.gouv.agora.infrastructure.responseQag.repository
 import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
+@Qualifier("databaseResponseQagRepository")
 class ResponseQagRepositoryImpl(
     private val databaseRepository: ResponseQagDatabaseRepository,
     private val mapper: ResponseQagMapper,

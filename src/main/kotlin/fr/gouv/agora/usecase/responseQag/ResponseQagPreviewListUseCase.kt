@@ -10,13 +10,17 @@ import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagPreviewCacheRepository
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 
 @Service
 class ResponseQagPreviewListUseCase(
     private val cacheRepository: ResponseQagPreviewCacheRepository,
     private val qagInfoRepository: QagInfoRepository,
-    private val responseQagRepository: ResponseQagRepository,
+    @Qualifier("cmsResponseQagRepository")
+    private val cmsResponseQagRepository: ResponseQagRepository,
+    @Qualifier("databaseResponseQagRepository")
+    private val databaseResponseQagRepository: ResponseQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
     private val lowPriorityQagRepository: LowPriorityQagRepository,
     private val mapper: ResponseQagPreviewListMapper,
@@ -39,7 +43,7 @@ class ResponseQagPreviewListUseCase(
         )
 
         val qagAndResponses = if (qagsWithResponses.isNotEmpty()) {
-            val responses = responseQagRepository.getResponsesQag(qagsWithResponses.map { it.id })
+            val responses = databaseResponseQagRepository.getResponsesQag(qagsWithResponses.map { it.id }) + cmsResponseQagRepository.getResponsesQag(qagsWithResponses.map { it.id })
             qagsWithResponses.mapNotNull { qag ->
                 responses.find { response -> response.qagId == qag.id }?.let { response -> qag to response }
             }
