@@ -10,16 +10,15 @@ import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagPreviewCacheRepository
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 
 @Service
 class ResponseQagPreviewListUseCase(
     private val cacheRepository: ResponseQagPreviewCacheRepository,
     private val qagInfoRepository: QagInfoRepository,
-    @Qualifier("cmsResponseQagRepository")
-    private val cmsResponseQagRepository: ResponseQagRepository,
-    @Qualifier("databaseResponseQagRepository")
+//    @Qualifier("cmsResponseQagRepository")
+//    private val cmsResponseQagRepository: ResponseQagRepository,
+//    @Qualifier("databaseResponseQagRepository")
     private val databaseResponseQagRepository: ResponseQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
     private val lowPriorityQagRepository: LowPriorityQagRepository,
@@ -34,32 +33,28 @@ class ResponseQagPreviewListUseCase(
     }
 
     private fun buildResponseQagPreviewList(): ResponseQagPreviewList {
-        val qagsWithoutResponses = qagInfoRepository.getQagSelectedWithoutResponsesWithSupportCount()
-        val qagsWithResponses = qagInfoRepository.getQagWithResponses()
+        val qagsSelectedForResponse = qagInfoRepository.getQagsSelectedForResponse()
+        val qagsResponses = databaseResponseQagRepository.getResponsesQag(20)
 
-        if (qagsWithoutResponses.isEmpty() && qagsWithResponses.isEmpty()) return ResponseQagPreviewList(
-            incomingResponses = emptyList(),
-            responses = emptyList(),
-        )
-
-        val qagAndResponses = if (qagsWithResponses.isNotEmpty()) {
-            val responses = databaseResponseQagRepository.getResponsesQag(qagsWithResponses.map { it.id }) + cmsResponseQagRepository.getResponsesQag(qagsWithResponses.map { it.id })
-            qagsWithResponses.mapNotNull { qag ->
-                responses.find { response -> response.qagId == qag.id }?.let { response -> qag to response }
+        val qagAndResponseList = qagsSelectedForResponse
+            .fold(emptyList<Pair<QagInfoWithSupportCount, ResponseQag?>>()) { acc, qagSelectedForResponse ->
+                acc + Pair(qagSelectedForResponse, qagsResponses.find { it.qagId == qagSelectedForResponse.id })
             }
-        } else emptyList()
 
-        val orderResult = orderMapper.buildOrderResult(
-            lowPriorityQagIds = (qagsWithoutResponses.map { it.id } + qagsWithResponses.map { it.id })
-                .takeIf { it.isNotEmpty() }
-                ?.let(lowPriorityQagRepository::getLowPriorityQagIds) ?: emptyList(),
-            incomingResponses = qagsWithoutResponses,
-            responses = qagAndResponses,
+        val qagWithResponseList = qagAndResponseList.filter { it.second != null } as List<Pair<QagInfoWithSupportCount, ResponseQag>>
+        val qagWithoutResponseList = qagAndResponseList.filter { it.second == null }.map { it.first }
+
+        if (qagAndResponseList.isEmpty()) return ResponseQagPreviewList(emptyList(), emptyList())
+
+        val orderedQags = orderMapper.buildOrderResult(
+            lowPriorityQagIds = lowPriorityQagRepository.getLowPriorityQagIds(qagAndResponseList.map { it.first.id }),
+            incomingResponses = qagWithoutResponseList,
+            responses = qagWithResponseList,
         )
 
         val thematiques = thematiqueRepository.getThematiqueList()
         return ResponseQagPreviewList(
-            incomingResponses = orderResult.incomingResponses.mapNotNull { qagWithOrder ->
+            incomingResponses = orderedQags.incomingResponses.mapNotNull { qagWithOrder ->
                 thematiques.find { thematique -> thematique.id == qagWithOrder.qagWithSupportCount.thematiqueId }
                     ?.let { thematique ->
                         mapper.toIncomingResponsePreview(
@@ -68,7 +63,7 @@ class ResponseQagPreviewListUseCase(
                         )
                     }
             },
-            responses = orderResult.responses.mapNotNull { qagWithOrder ->
+            responses = orderedQags.responses.mapNotNull { qagWithOrder ->
                 thematiques.find { thematique -> thematique.id == qagWithOrder.qagInfo.thematiqueId }
                     ?.let { thematique ->
                         mapper.toResponseQagPreview(
@@ -79,7 +74,6 @@ class ResponseQagPreviewListUseCase(
             },
         )
     }
-
 }
 
 data class QagWithSupportCountAndOrder(
@@ -88,7 +82,7 @@ data class QagWithSupportCountAndOrder(
 )
 
 data class QagWithResponseAndOrder(
-    val qagInfo: QagInfo,
+    val qagInfo: QagInfoWithSupportCount,
     val response: ResponseQag,
     val order: Int,
 )
