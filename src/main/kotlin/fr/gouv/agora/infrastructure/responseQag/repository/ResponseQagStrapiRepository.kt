@@ -1,28 +1,39 @@
 package fr.gouv.agora.infrastructure.responseQag.repository
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.agora.domain.ResponseQag
+import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
+import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.time.Duration
+import java.time.LocalDate
+import java.util.UUID
 
 @Repository
-interface ResponseQagDatabaseRepository : JpaRepository<ResponseQagDTO, UUID> {
+class ResponseQagStrapiRepository(
+    private val objectMapper: ObjectMapper,
+) {
+    fun getResponsesQag(@Param("qagIds") qagIds: List<UUID>): List<ResponseQagDTO> {
+        TODO()
+    }
 
-    @Query(value = "SELECT * FROM responses_qag WHERE qag_id in :qagIds ORDER BY response_date DESC", nativeQuery = true)
-    fun getResponsesQag(@Param("qagIds") qagIds: List<UUID>): List<ResponseQagDTO>
+    fun getResponseQag(@Param("qagId") qagId: UUID): ResponseQagDTO? {
+        TODO()
+    }
 
-    @Query(
-        value = "SELECT * FROM responses_qag WHERE qag_id = :qagId ORDER BY response_date DESC LIMIT 1",
-        nativeQuery = true
-    )
-    fun getResponseQag(@Param("qagId") qagId: UUID): ResponseQagDTO?
+    fun getResponsesQagCount(): Int {
+        TODO()
+    }
 
-    @Query(value = "SELECT count(*) FROM responses_qag", nativeQuery = true)
-    fun getResponsesQagCount(): Int
-
-    @Query(value = "SELECT * FROM responses_qag ORDER BY response_date DESC LIMIT 20 OFFSET :offset", nativeQuery = true)
-    fun getResponsesQag(@Param("offset") offset: Int): List<ResponseQagDTO>
-
+    fun getResponsesQag(@Param("offset") offset: Int): List<ResponseQag> {
+        TODO()
+    }
 }
