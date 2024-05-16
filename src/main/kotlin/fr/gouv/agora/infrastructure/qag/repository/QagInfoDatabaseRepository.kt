@@ -45,7 +45,8 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
             FROM $QAG_WITH_SUPPORT_JOIN
             WHERE qags.status = 7
-            ORDER BY qags.post_date DESC
+            GROUP BY qags.id
+            ORDER BY postDate DESC
             LIMIT 100
         """, nativeQuery = true
     )
