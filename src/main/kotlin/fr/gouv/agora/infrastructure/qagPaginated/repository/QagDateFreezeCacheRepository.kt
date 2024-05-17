@@ -1,6 +1,6 @@
 package fr.gouv.agora.infrastructure.qagPaginated.repository
 
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime

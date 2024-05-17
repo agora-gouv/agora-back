@@ -1,7 +1,7 @@
 package fr.gouv.agora.infrastructure.qag
 
 import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.infrastructure.utils.StringUtils
 import fr.gouv.agora.usecase.qag.repository.QagInsertionResult

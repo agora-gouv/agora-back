@@ -3,8 +3,10 @@ package fr.gouv.agora.infrastructure.consultation
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.domain.ConsultationStatus
-import fr.gouv.agora.domain.ConsultationStatus.*
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.domain.ConsultationStatus.COLLECTING_DATA
+import fr.gouv.agora.domain.ConsultationStatus.EXECUTION
+import fr.gouv.agora.domain.ConsultationStatus.POLITICAL_COMMITMENT
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 

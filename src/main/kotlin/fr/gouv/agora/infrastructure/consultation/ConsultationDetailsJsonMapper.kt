@@ -1,7 +1,7 @@
 package fr.gouv.agora.infrastructure.consultation
 
 import fr.gouv.agora.domain.Consultation
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 

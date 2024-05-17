@@ -11,7 +11,7 @@ import fr.gouv.agora.domain.QuestionMultipleChoices
 import fr.gouv.agora.domain.QuestionResults
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.Video
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
 
