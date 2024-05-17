@@ -5,6 +5,8 @@ import fr.gouv.agora.domain.ResponseQagAdditionalInfo
 import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
+import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseDTO
+import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.springframework.stereotype.Component
 
 @Component
@@ -39,5 +41,20 @@ class ResponseQagMapper {
                 qagId = dto.qagId.toString(),
             )
         else null
+    }
+
+    fun toDomain(responseBody: StrapiResponseDTO): List<ResponseQag> {
+        return responseBody.data.map {
+            val response = it.attributes
+            ResponseQagText(
+                author = response.auteur,
+                authorPortraitUrl = response.auteurPortraitUrl,
+                responseDate = response.reponseDate.toDate(),
+                feedbackQuestion = response.feedbackQuestion,
+                qagId = response.questionId,
+                responseText = response.reponseType.first().text,
+                responseLabel = response.reponseType.first().label,
+            )
+        }
     }
 }

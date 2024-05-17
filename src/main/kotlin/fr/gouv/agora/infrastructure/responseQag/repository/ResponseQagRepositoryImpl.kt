@@ -1,20 +1,32 @@
 package fr.gouv.agora.infrastructure.responseQag.repository
 
+import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
+import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
 class ResponseQagRepositoryImpl(
     private val databaseRepository: ResponseQagDatabaseRepository,
+    private val strapiRepository: ResponseQagStrapiRepository,
+    private val featureFlagsRepository: FeatureFlagsRepository,
     private val mapper: ResponseQagMapper,
 ) : ResponseQagRepository {
 
     override fun getResponsesQag(qagIds: List<String>): List<ResponseQag> {
-        return databaseRepository.getResponsesQag(qagIds.mapNotNull { it.toUuidOrNull() }).mapNotNull(mapper::toDomain)
+        val qagUUIDs = qagIds.mapNotNull { it.toUuidOrNull() }
+
+        val databaseResponses = databaseRepository.getResponsesQag(qagUUIDs).mapNotNull(mapper::toDomain)
+
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
+            val strapiResponses = strapiRepository.getResponsesQag(qagUUIDs)
+            return databaseResponses + strapiResponses
+        }
+
+        return databaseResponses
     }
 
     override fun getResponseQag(qagId: String): ResponseQag? {
