@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component
 
 @Component
 @Suppress("unused")
-@Qualifier("databaseResponseQagRepository")
 class ResponseQagRepositoryImpl(
     private val databaseRepository: ResponseQagDatabaseRepository,
     private val mapper: ResponseQagMapper,

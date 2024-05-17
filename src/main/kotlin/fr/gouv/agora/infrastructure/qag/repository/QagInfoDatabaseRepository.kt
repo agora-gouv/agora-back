@@ -50,7 +50,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             LIMIT 100
         """, nativeQuery = true
     )
-    fun getQagsSelectedForResponse(): List<QagWithSupportCountDTO>
+    fun getLatestQagsSelectedForResponse(): List<QagWithSupportCountDTO>
 
     @Query(
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION

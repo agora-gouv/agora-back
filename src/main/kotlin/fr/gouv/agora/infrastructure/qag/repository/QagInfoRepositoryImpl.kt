@@ -56,7 +56,7 @@ class QagInfoRepositoryImpl(
     }
 
     override fun getQagsSelectedForResponse(): List<QagInfoWithSupportCount> {
-        val qagsSelectedForResponse = databaseRepository.getQagsSelectedForResponse()
+        val qagsSelectedForResponse = databaseRepository.getLatestQagsSelectedForResponse()
 
         return qagsSelectedForResponse.map(mapper::toDomain)
     }

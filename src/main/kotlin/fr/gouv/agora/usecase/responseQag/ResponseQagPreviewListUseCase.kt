@@ -4,7 +4,6 @@ import fr.gouv.agora.domain.IncomingResponsePreview
 import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.domain.ResponseQagPreview
 import fr.gouv.agora.usecase.qag.repository.LowPriorityQagRepository
-import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagPreviewCacheRepository
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service
 class ResponseQagPreviewListUseCase(
     private val cacheRepository: ResponseQagPreviewCacheRepository,
     private val qagInfoRepository: QagInfoRepository,
-    private val databaseResponseQagRepository: ResponseQagRepository,
+    private val responseQagRepository: ResponseQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
     private val lowPriorityQagRepository: LowPriorityQagRepository,
     private val mapper: ResponseQagPreviewListMapper,
@@ -31,17 +30,17 @@ class ResponseQagPreviewListUseCase(
 
     private fun buildResponseQagPreviewList(): ResponseQagPreviewList {
         val qagsSelectedForResponse = qagInfoRepository.getQagsSelectedForResponse()
-        val qagsResponses = databaseResponseQagRepository.getResponsesQag(qagsSelectedForResponse.map { it.id })
+        val qagsResponses = responseQagRepository.getResponsesQag(qagsSelectedForResponse.map { it.id })
 
         val qagAndResponseList = qagsSelectedForResponse
             .fold(emptyList<Pair<QagInfoWithSupportCount, ResponseQag?>>()) { acc, qagSelectedForResponse ->
                 acc + Pair(qagSelectedForResponse, qagsResponses.find { it.qagId == qagSelectedForResponse.id })
             }
 
+        if (qagAndResponseList.isEmpty()) return ResponseQagPreviewList(emptyList(), emptyList())
+
         val qagWithResponseList = qagAndResponseList.filter { it.second != null } as List<Pair<QagInfoWithSupportCount, ResponseQag>>
         val qagWithoutResponseList = qagAndResponseList.filter { it.second == null }.map { it.first }
-
-        if (qagAndResponseList.isEmpty()) return ResponseQagPreviewList(emptyList(), emptyList())
 
         val orderedQags = orderMapper.buildOrderResult(
             lowPriorityQagIds = lowPriorityQagRepository.getLowPriorityQagIds(qagAndResponseList.map { it.first.id }),
