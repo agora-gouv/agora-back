@@ -17,7 +17,7 @@ class CmsStrapiHttpClient(
     fun getByIds(cmsModel: String, idField: String, ids: List<String>): String {
         if (ids.size > 100) logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url")
 
-        val idsFilter = ids.map { "&filters[$idField][\$in]=$it" }
+        val idsFilter = ids.map { "&filters[$idField][\$in]=$it" }.joinToString("")
         val uri = "${cmsModel}?populate=*$idsFilter"
 
         val request = getClientRequest(uri).GET().build()
