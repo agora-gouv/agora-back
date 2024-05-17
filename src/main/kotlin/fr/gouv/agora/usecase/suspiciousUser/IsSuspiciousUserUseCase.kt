@@ -2,11 +2,9 @@ package fr.gouv.agora.usecase.suspiciousUser
 
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.SignupHistoryCount
-import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.login.repository.UserDataRepository
 import fr.gouv.agora.usecase.suspiciousUser.repository.SignupCountRepository
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.LocalDate
@@ -22,8 +20,6 @@ class IsSuspiciousUserUseCase(
     companion object {
         private const val SOFT_BAN_SIGNUP_COUNT = 10
     }
-
-    private val logger = LoggerFactory.getLogger(this::class.java)
 
     fun isSuspiciousActivity(ipAddressHash: String, userAgent: String): Boolean {
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)) return false
@@ -43,20 +39,6 @@ class IsSuspiciousUserUseCase(
                 todaySignupCount = signupCount + 1,
             )
         }
-    }
-
-    fun flagSuspiciousUsers() {
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)) return
-        logger.info("🏴 Flag users with suspicious activity")
-        val dateNow = LocalDate.now(clock)
-        val dateYesterday = dateNow.minusDays(1)
-
-        val suspiciousUsersFlaggedCount = userDataRepository.flagUsersWithSuspiciousActivity(
-            SOFT_BAN_SIGNUP_COUNT,
-            dateYesterday.toDate(),
-            dateNow.toDate(),
-        )
-        logger.info("🏴 $suspiciousUsersFlaggedCount users has been flagged for suspicious activity")
     }
 
     private fun buildTodaySignupCount(ipAddressHash: String, userAgent: String): Int {
