@@ -27,4 +27,33 @@ interface UserDataDatabaseRepository : JpaRepository<UserDataDTO, UUID> {
     )
     fun getIpHashSignupHistory(@Param("ipAddressHash") ipAddressHash: String, @Param("userAgent") userAgent: String): List<SignupHistoryCountDTO>
 
+    @Modifying
+    @Transactional
+    @Query(value = """WITH 
+        suspiciousIpAndUserAgent AS (
+            SELECT ip_address_hash, user_agent, count(*) AS signupCount FROM users_data 
+            WHERE event_type = 'signup' 
+            AND ip_address_hash != ''
+            AND event_date > :startDate
+            AND event_date < :endDate
+            GROUP BY ip_address_hash, user_agent, DATE(event_date)
+            HAVING count(*) >= :softBanSignupCount
+        ),
+        suspiciousUserId AS (
+            SELECT DISTINCT user_id FROM users_data
+            WHERE ip_address_hash IN (SELECT ip_address_hash FROM suspiciousIpAndUserAgent)
+            AND user_agent IN (SELECT user_agent FROM suspiciousIpAndUserAgent)
+            AND event_type = 'signup'
+        )
+        UPDATE agora_users 
+        SET is_banned = 1 
+        WHERE CAST(id AS TEXT) IN (SELECT user_id FROM suspiciousUserId)
+        AND is_banned = 0
+    """)
+    fun flagUsersWithSuspiciousActivity(
+        @Param("softBanSignupCount") softBanSignupCount: Int,
+        @Param("startDate") startDate: Date,
+        @Param("endDate") endDate: Date,
+    ): Int
+
 }

@@ -5,6 +5,7 @@ import fr.gouv.agora.domain.SignupHistoryCount
 import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.usecase.login.repository.UserDataRepository
 import org.springframework.stereotype.Component
+import java.util.Date
 
 @Component
 @Suppress("unused")
@@ -35,6 +36,14 @@ class UserDataRepositoryImpl(
                 signupCount = signupEntry.signupCount,
             )
         }
+    }
+
+    override fun flagUsersWithSuspiciousActivity(softBanSignupCount: Int, startDate: Date, endDate: Date): Int {
+        return databaseRepository.flagUsersWithSuspiciousActivity(
+            softBanSignupCount = softBanSignupCount,
+            startDate = startDate,
+            endDate = endDate,
+        )
     }
 
 }
