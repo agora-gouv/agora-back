@@ -49,7 +49,7 @@ interface UserDataDatabaseRepository : JpaRepository<UserDataDTO, UUID> {
         SET is_banned = 1 
         WHERE CAST(id AS TEXT) IN (SELECT user_id FROM suspiciousUserId)
         AND is_banned = 0
-    """)
+    """, nativeQuery = true)
     fun flagUsersWithSuspiciousActivity(
         @Param("softBanSignupCount") softBanSignupCount: Int,
         @Param("startDate") startDate: Date,
