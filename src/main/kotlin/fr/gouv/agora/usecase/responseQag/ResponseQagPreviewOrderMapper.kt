@@ -12,7 +12,7 @@ class ResponseQagPreviewOrderMapper {
     fun buildOrderResult(
         lowPriorityQagIds: List<String>,
         incomingResponses: List<QagInfoWithSupportCount>,
-        responses: List<Pair<QagInfo, ResponseQag>>,
+        responses: List<Pair<QagInfoWithSupportCount, ResponseQag>>,
     ): ResponseQagPreviewOrderResult {
         val orderDataList = (incomingResponses.map {
             buildOrderData(
@@ -38,7 +38,7 @@ class ResponseQagPreviewOrderMapper {
             responses = orderDataList.mapIndexedNotNull { index, orderData ->
                 if (orderData.data is Pair<*, *>) {
                     QagWithResponseAndOrder(
-                        qagInfo = orderData.data.first as QagInfo,
+                        qagInfo = orderData.data.first as QagInfoWithSupportCount,
                         response = orderData.data.second as ResponseQag,
                         order = index,
                     )
@@ -59,7 +59,7 @@ class ResponseQagPreviewOrderMapper {
     }
 
     private fun buildOrderData(
-        qagAndResponse: Pair<QagInfo, ResponseQag>,
+        qagAndResponse: Pair<QagInfoWithSupportCount, ResponseQag>,
         lowPriorityQagIds: List<String>,
     ): BuildOrderData<*> {
         return BuildOrderData(

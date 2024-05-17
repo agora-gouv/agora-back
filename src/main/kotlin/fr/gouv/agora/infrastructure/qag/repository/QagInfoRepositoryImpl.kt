@@ -26,10 +26,6 @@ class QagInfoRepositoryImpl(
         return databaseRepository.getQagsWithoutResponse().map(mapper::toDomain)
     }
 
-    override fun getQagWithResponses(): List<QagInfo> {
-        return databaseRepository.getLatestQagsWithResponses().map(mapper::toDomain)
-    }
-
     override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
         val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
             databaseRepository.getPopularQags(thematiqueId = thematiqueUUID)
@@ -57,6 +53,12 @@ class QagInfoRepositoryImpl(
         return userId.toUuidOrNull()?.let { userUUID ->
             databaseRepository.getLastUserQag(userId = userUUID)?.let(mapper::toDomain)
         }
+    }
+
+    override fun getQagsSelectedForResponse(): List<QagInfoWithSupportCount> {
+        val qagsSelectedForResponse = databaseRepository.getLatestQagsSelectedForResponse()
+
+        return qagsSelectedForResponse.map(mapper::toDomain)
     }
 
     override fun getPopularQagsPaginated(
@@ -274,6 +276,3 @@ class QagInfoRepositoryImpl(
         }
     )
 }
-
-
-
