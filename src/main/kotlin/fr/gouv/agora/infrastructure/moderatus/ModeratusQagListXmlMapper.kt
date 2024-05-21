@@ -1,7 +1,7 @@
 package fr.gouv.agora.infrastructure.moderatus
 
 import fr.gouv.agora.domain.ModeratusQag
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import org.springframework.stereotype.Component
 
 @Component

@@ -31,10 +31,9 @@ class GetQagDetailsUseCase(
 
                         QagResult.Success(
                             QagWithUserData(
-                                qagDetails =
-                                    if (!hasGivenFeedback) {
-                                        mapper.toQagWithoutFeedbackResults(qag)
-                                    } else qag,
+                                qagDetails = if (!hasGivenFeedback) {
+                                    mapper.toQagWithoutFeedbackResults(qag)
+                                } else qag,
                                 canShare = qag.status == QagStatus.MODERATED_ACCEPTED || qag.status == QagStatus.SELECTED_FOR_RESPONSE,
                                 canSupport = qag.status == QagStatus.OPEN || qag.status == QagStatus.MODERATED_ACCEPTED,
                                 canDelete = qag.userId == userId && qag.status != QagStatus.SELECTED_FOR_RESPONSE,

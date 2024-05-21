@@ -1,4 +1,4 @@
-package fr.gouv.agora.infrastructure.profile.repository
+package fr.gouv.agora.infrastructure.common
 
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component

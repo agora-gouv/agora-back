@@ -2,7 +2,7 @@ package fr.gouv.agora.infrastructure.notification
 
 import fr.gouv.agora.domain.Notification
 import fr.gouv.agora.domain.NotificationType
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.usecase.notification.NotificationListAndHasMoreNotificationsFlag
 import org.springframework.stereotype.Component
 

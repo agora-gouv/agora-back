@@ -2,7 +2,7 @@ package fr.gouv.agora.infrastructure.qagPaginated
 
 import fr.gouv.agora.domain.HeaderQag
 import fr.gouv.agora.domain.QagPreview
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.gouv.agora.infrastructure.qagHome.HeaderQagJson
 import fr.gouv.agora.infrastructure.qagHome.QagPreviewJson
