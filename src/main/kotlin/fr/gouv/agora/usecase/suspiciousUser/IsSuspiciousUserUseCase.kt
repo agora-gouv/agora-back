@@ -21,7 +21,7 @@ class IsSuspiciousUserUseCase(
         private const val SOFT_BAN_SIGNUP_COUNT = 10
     }
 
-    fun isSuspiciousUser(ipAddressHash: String, userAgent: String): Boolean {
+    fun isSuspiciousActivity(ipAddressHash: String, userAgent: String): Boolean {
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)) return false
         return (signupCountRepository.getTodaySignupCount(ipAddressHash = ipAddressHash, userAgent = userAgent)
             ?: buildTodaySignupCount(ipAddressHash = ipAddressHash, userAgent = userAgent)) >= SOFT_BAN_SIGNUP_COUNT

@@ -48,7 +48,7 @@ class IsSuspiciousUserUseCaseTest {
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)).willReturn(false)
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
+        val result = useCase.isSuspiciousActivity(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -68,7 +68,7 @@ class IsSuspiciousUserUseCaseTest {
         ).willReturn(8)
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
+        val result = useCase.isSuspiciousActivity(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -85,7 +85,7 @@ class IsSuspiciousUserUseCaseTest {
             .willReturn(10)
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
+        val result = useCase.isSuspiciousActivity(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(true)
@@ -104,7 +104,7 @@ class IsSuspiciousUserUseCaseTest {
             .willReturn(emptyList())
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
+        val result = useCase.isSuspiciousActivity(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -130,7 +130,7 @@ class IsSuspiciousUserUseCaseTest {
         )
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
+        val result = useCase.isSuspiciousActivity(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(true)
@@ -162,7 +162,7 @@ class IsSuspiciousUserUseCaseTest {
         )
 
         // When
-        val result = useCase.isSuspiciousUser(ipAddressHash = "ipHash", userAgent = "userAgent")
+        val result = useCase.isSuspiciousActivity(ipAddressHash = "ipHash", userAgent = "userAgent")
 
         // Then
         assertThat(result).isEqualTo(false)

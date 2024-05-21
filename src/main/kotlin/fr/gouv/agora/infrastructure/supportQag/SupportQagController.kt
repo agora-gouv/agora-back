@@ -37,7 +37,7 @@ class SupportQagController(
         return queue.executeTask(
             taskType = TaskType.AddSupport(userId = userId),
             onTaskExecuted = {
-                if (isSuspiciousUserUseCase.isSuspiciousUser(
+                if (isSuspiciousUserUseCase.isSuspiciousActivity(
                         ipAddressHash = IpAddressUtils.retrieveIpAddressHash(request),
                         userAgent = userAgent,
                     )
