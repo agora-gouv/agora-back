@@ -3,7 +3,7 @@ package fr.gouv.agora.infrastructure.responseQag.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 
-data class StrapiResponseDTO(
+data class StrapiResponseQagDTO(
     @JsonProperty("data")
     val data: List<StrapiModelAttributes>,
 )
