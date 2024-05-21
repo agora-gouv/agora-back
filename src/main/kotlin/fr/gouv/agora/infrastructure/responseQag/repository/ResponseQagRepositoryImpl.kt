@@ -22,7 +22,8 @@ class ResponseQagRepositoryImpl(
         val databaseResponses = databaseRepository.getResponsesQag(qagUUIDs).mapNotNull(mapper::toDomain)
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
-            val strapiResponses = strapiRepository.getResponsesQag(qagUUIDs)
+            val strapiResponses = strapiRepository.getResponsesQag(qagUUIDs).let(mapper::toDomain)
+
             return databaseResponses + strapiResponses
         }
 

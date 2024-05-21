@@ -11,16 +11,12 @@ import java.util.UUID
 @Repository
 class ResponseQagStrapiRepository(
     private val objectMapper: ObjectMapper,
-    private val responseQagMapper: ResponseQagMapper,
     private val cmsStrapiHttpClient: CmsStrapiHttpClient,
 ) {
-    fun getResponsesQag(@Param("qagIds") qagIds: List<UUID>): List<ResponseQag> {
+    fun getResponsesQag(@Param("qagIds") qagIds: List<UUID>): StrapiResponseQagDTO {
         val allResponsesQag = cmsStrapiHttpClient
             .getByIds("reponse-du-gouvernements", "questionId", qagIds.map { it.toString() })
 
-        val responseQagFromStrapi = objectMapper
-            .readValue(allResponsesQag, StrapiResponseQagDTO::class.java)
-
-        return responseQagMapper.toDomain(responseQagFromStrapi)
+        return objectMapper.readValue(allResponsesQag, StrapiResponseQagDTO::class.java)
     }
 }
