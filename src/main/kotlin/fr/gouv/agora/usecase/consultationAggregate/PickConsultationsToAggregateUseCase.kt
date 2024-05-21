@@ -2,6 +2,8 @@ package fr.gouv.agora.usecase.consultationAggregate
 
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
@@ -10,6 +12,7 @@ class PickConsultationsToAggregateUseCase(
     private val consultationAggregatedRepository: ConsultationResultAggregatedRepository,
     private val aggregateConsultationResultUseCase: AggregateConsultationResultUseCase,
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(PickConsultationsToAggregateUseCase::class.java)
 
     fun aggregateConsultations() {
         consultationInfoRepository.getConsultationsToAggregate()
@@ -21,7 +24,7 @@ class PickConsultationsToAggregateUseCase(
                         !aggregatedConsultationIds.contains(consultationInfo.id)
                     }
                     .forEach { consultationsToAggregate ->
-                        println("🧮 Aggregate results for consultation: ${consultationsToAggregate.title}")
+                        logger.info("🧮 Aggregate results for consultation: ${consultationsToAggregate.title}")
                         aggregateConsultationResultUseCase.aggregateConsultationResults(consultationsToAggregate.id)
                     }
             }

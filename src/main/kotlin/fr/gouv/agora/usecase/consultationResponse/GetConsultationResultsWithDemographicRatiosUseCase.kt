@@ -6,6 +6,8 @@ import fr.gouv.agora.usecase.consultationResults.QuestionNoResponseMapper
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,9 +18,10 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
     private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val mapper: QuestionNoResponseMapper,
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(GetConsultationResultsWithDemographicRatiosUseCase::class.java)
 
     fun getConsultationResults(consultationId: String): ConsultationResultWithDemographicInfo? {
-        println("📊 Building consultation results for consultationId: $consultationId...")
+        logger.info("📊 Building consultation results for consultationId: $consultationId...")
         val consultationInfo = consultationInfoRepository.getConsultation(consultationId = consultationId)
             ?: return null
 

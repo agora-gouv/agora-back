@@ -1,6 +1,8 @@
 package fr.gouv.agora.oninit
 
 import fr.gouv.agora.AgoraCustomCommandHelper
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.boot.SpringApplication
 import org.springframework.context.ApplicationContext
@@ -13,6 +15,7 @@ class AgoraCustomCommandHandler(
     private val dailyTasksHandler: DailyTasksHandler,
     private val weeklyTasksHandler: WeeklyTasksHandler,
 ) : InitializingBean {
+    private val logger: Logger = LoggerFactory.getLogger(AgoraCustomCommandHandler::class.java)
 
     companion object {
         private const val DAILY_TASKS = "dailyTasks"
@@ -22,13 +25,13 @@ class AgoraCustomCommandHandler(
     override fun afterPropertiesSet() {
         if (handleCustomCommand()) {
             SpringApplication.exit(applicationContext, { 0 })
-            println("⚙️ Run custom command finished")
+            logger.info("⚙️ Run custom command finished")
         }
     }
 
     private fun handleCustomCommand(): Boolean {
         return AgoraCustomCommandHelper.getStoredCustomCommandAndClear()?.let { customCommand ->
-            println("⚙️ Run custom command = ${customCommand.command} / argument = ${customCommand.arguments}")
+            logger.info("⚙️ Run custom command = ${customCommand.command} / argument = ${customCommand.arguments}")
             getHandler(customCommand.command)?.handleTask(customCommand.arguments)
             true
         } ?: false
