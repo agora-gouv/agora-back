@@ -48,15 +48,6 @@ class GetQagDetailsUseCase(
         } ?: QagResult.QagNotFound
     }
 
-    fun getQagDetails(qagId: String): QagDetails? {
-        return qagDetailsAggregate.getQag(qagId = qagId)?.let { qag ->
-            when (qag.status) {
-                QagStatus.OPEN, QagStatus.ARCHIVED, QagStatus.MODERATED_REJECTED -> null
-                QagStatus.MODERATED_ACCEPTED, QagStatus.SELECTED_FOR_RESPONSE -> qag
-            }
-        }
-    }
-
     private fun isSupportedByUser(qagDetails: QagDetails, userId: String): Boolean {
         return when (qagDetails.status) {
             QagStatus.ARCHIVED, QagStatus.MODERATED_REJECTED -> false

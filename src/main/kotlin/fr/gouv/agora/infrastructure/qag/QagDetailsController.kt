@@ -1,10 +1,9 @@
 package fr.gouv.agora.infrastructure.qag
 
 import fr.gouv.agora.security.jwt.JwtTokenUtils
-import fr.gouv.agora.usecase.feedbackQag.FeedbackQagUseCase
+import fr.gouv.agora.usecase.qag.GetPublicQagDetailsUseCase
 import fr.gouv.agora.usecase.qag.GetQagDetailsUseCase
 import fr.gouv.agora.usecase.qag.QagResult
-import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,9 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 @Suppress("unused")
 class QagDetailsController(
     private val getQagDetailsUseCase: GetQagDetailsUseCase,
-    private val supportQagUseCase: SupportQagUseCase,
-    private val feedbackQagUseCase: FeedbackQagUseCase,
     private val mapper: QagJsonMapper,
+    private val getPublicQagDetailsUseCase: GetPublicQagDetailsUseCase,
     private val publicQagJsonMapper: PublicQagJsonMapper,
 ) {
 
@@ -42,7 +40,7 @@ class QagDetailsController(
     fun getPublicQagDetails(
         @PathVariable qagId: String,
     ): ResponseEntity<*> {
-        return getQagDetailsUseCase.getQagDetails(qagId = qagId)?.let { qag ->
+        return getPublicQagDetailsUseCase.getQagDetails(qagId = qagId)?.let { qag ->
             ResponseEntity.ok(publicQagJsonMapper.toJson(qag))
         } ?: ResponseEntity.status(HttpStatus.NOT_FOUND).body(Unit)
     }
