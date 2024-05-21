@@ -4,6 +4,8 @@ import com.google.firebase.messaging.*
 import fr.gouv.agora.usecase.notification.repository.*
 import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.ConsultationMultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.QagMultiNotificationRequest
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.stereotype.Component
 import java.time.*
@@ -15,6 +17,7 @@ class NotificationSendingRepositoryImpl(
     private val taskScheduler: ThreadPoolTaskScheduler,
     private val clock: Clock,
 ) : NotificationSendingRepository {
+    private val logger: Logger = LoggerFactory.getLogger(NotificationSendingRepositoryImpl::class.java)
 
     companion object {
         private const val NOTIFICATION_TYPE_KEY = "type"
@@ -38,27 +41,27 @@ class NotificationSendingRepositoryImpl(
                     .build()
             )
         } catch (e: IllegalArgumentException) {
-            println("⚠️ Send notification error: ${e.message}")
+            logger.error("⚠️ Send notification error: ${e.message}")
             NotificationResult.FAILURE
         }
     }
 
     override fun sendQagDetailsMultiNotification(request: QagMultiNotificationRequest) {
-        println("📩 Sending multi-notification: ${request.title}")
+        logger.info("📩 Sending multi-notification: ${request.title}")
         sendMultiNotifications(
             createMultiMessage(request = request, type = QAG_DETAILS_NOTIFICATION_TYPE)
         )
     }
 
     override fun sendConsultationDetailsMultiNotification(request: ConsultationMultiNotificationRequest) {
-        println("📩 Sending multi-notification: ${request.title}")
+        logger.info("📩 Sending multi-notification: ${request.title}")
         sendMultiNotifications(
             createMultiMessage(request = request, type = CONSULTATION_DETAILS_NOTIFICATION_TYPE)
         )
     }
 
     override fun sendConsultationUpdateMultiNotification(request: ConsultationMultiNotificationRequest) {
-        println("📩 Sending multi-notification: ${request.title}")
+        logger.info("📩 Sending multi-notification: ${request.title}")
         sendMultiNotifications(
             createMultiMessage(request = request, type = CONSULTATION_RESULTS_NOTIFICATION_TYPE)
         )
@@ -105,7 +108,7 @@ class NotificationSendingRepositoryImpl(
                 }
                 messageBuilder.build()
             } catch (e: IllegalArgumentException) {
-                println("⚠️ Build multi-notification error on batch n°${index + 1}/${chunkedFcmTokenList.size}: ${e.message}")
+                logger.error("⚠️ Build multi-notification error on batch n°${index + 1}/${chunkedFcmTokenList.size}: ${e.message}")
                 null
             }
         }
@@ -118,7 +121,7 @@ class NotificationSendingRepositoryImpl(
                 NotificationResult.FAILURE
             else NotificationResult.SUCCESS
         } catch (e: Exception) {
-            println("⚠️ Send notification error: ${e.message}")
+            logger.error("⚠️ Send notification error: ${e.message}")
             NotificationResult.FAILURE
         }
     }
@@ -136,7 +139,7 @@ class NotificationSendingRepositoryImpl(
                     dateNow.plusMinutes(index.toLong()).atZone(ZoneId.systemDefault()).toInstant(),
                 )
             } catch (e: RejectedExecutionException) {
-                println("⚠️ Send notification error when sending batch n°${index + 1}/${notificationMessages.size}: ${e.message}")
+                logger.error("⚠️ Send notification error when sending batch n°${index + 1}/${notificationMessages.size}: ${e.message}")
             }
         }
     }
@@ -148,13 +151,14 @@ class SendNotificationTask(
     private val batchIndex: Int,
     private val batchCount: Int,
 ) : Runnable {
+    private val logger: Logger = LoggerFactory.getLogger(SendNotificationTask::class.java)
 
     override fun run() {
         try {
             val response = FirebaseMessaging.getInstance().sendMulticast(notificationMessage)
-            println("📩 Send multi-notification n°${batchIndex + 1}/$batchCount results:\n- ${response.responses.size} total responses\n- ${response.successCount} successes\n- ${response.failureCount} failures")
+            logger.info("📩 Send multi-notification n°${batchIndex + 1}/$batchCount results:\n- ${response.responses.size} total responses\n- ${response.successCount} successes\n- ${response.failureCount} failures")
         } catch (e: FirebaseMessagingException) {
-            println("⚠️ Send multi-notification error on batch n°${batchIndex + 1}/$batchCount ${e.message}")
+            logger.error("⚠️ Send multi-notification error on batch n°${batchIndex + 1}/$batchCount ${e.message}")
         }
     }
 

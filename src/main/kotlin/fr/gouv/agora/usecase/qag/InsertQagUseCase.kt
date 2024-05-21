@@ -9,6 +9,8 @@ import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,6 +23,7 @@ class InsertQagUseCase(
     private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
     private val supportQagCacheRepository: SupportQagCacheRepository,
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(InsertQagUseCase::class.java)
 
     companion object {
         private const val TITLE_MAX_LENGTH = 200
@@ -64,10 +67,9 @@ class InsertQagUseCase(
             )
             askQagStatusCacheRepository.evictAskQagStatus(userId = qagInserting.userId)
         } else {
-            println("⚠️ Insert QaG error")
+            logger.error("⚠️ Insert QaG error")
         }
         return qagInsertionResult
     }
 
 }
-
