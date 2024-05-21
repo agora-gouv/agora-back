@@ -15,7 +15,6 @@ class CrossOriginConfig : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {
         val allowedOrigins = System.getenv("ALLOWED_ORIGINS").split("\n")
-        logger.debug("allowedOrigins = {}", allowedOrigins)
         registry
             .addMapping("/**")
             .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE")
