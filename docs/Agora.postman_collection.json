@@ -907,6 +907,27 @@
 					"response": []
 				},
 				{
+					"name": "/public/qags/ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/api/public/qags/{{qagId}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"qags",
+								"{{qagId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/qags/ID (with response)",
 					"request": {
 						"method": "GET",
