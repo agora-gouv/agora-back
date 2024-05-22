@@ -36,7 +36,7 @@ class QagDetailsController(
         }
     }
 
-    @GetMapping("/public/qags/{qagId}")
+    @GetMapping("/api/public/qags/{qagId}")
     fun getPublicQagDetails(
         @PathVariable qagId: String,
     ): ResponseEntity<*> {
