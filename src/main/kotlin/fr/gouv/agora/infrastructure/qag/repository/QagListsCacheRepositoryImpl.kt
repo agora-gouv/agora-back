@@ -1,8 +1,8 @@
 package fr.gouv.agora.infrastructure.qag.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.agora.domain.QagWithSupportCount
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
-import fr.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
@@ -112,25 +112,25 @@ class QagListsCacheRepositoryImpl(
         getCache()?.clear()
     }
 
-    override fun getQagTrendingList() = getQagList(key = "$TRENDING_PREFIX_KEY")
+    override fun getQagTrendingList() = getQagList(key = TRENDING_PREFIX_KEY)
 
     override fun initQagTrendingList(qagListWithMaxPageCount: QagListWithMaxPageCount) {
         initQagList(
-            key = "$TRENDING_PREFIX_KEY",
+            key = TRENDING_PREFIX_KEY,
             qagListWithMaxPageCount = qagListWithMaxPageCount
         )
     }
 
     override fun incrementTrendingSupportCount(qagId: String) {
-        incrementSupportCount(key = "$TRENDING_PREFIX_KEY", qagId = qagId)
+        incrementSupportCount(key = TRENDING_PREFIX_KEY, qagId = qagId)
     }
 
     override fun decrementTrendingSupportCount(qagId: String) {
-        decrementSupportCount(key = "$TRENDING_PREFIX_KEY", qagId = qagId)
+        decrementSupportCount(key = TRENDING_PREFIX_KEY, qagId = qagId)
     }
 
     override fun evictQagTrendingList() {
-        getCache()?.evict("$TRENDING_PREFIX_KEY")
+        getCache()?.evict(TRENDING_PREFIX_KEY)
     }
 
     private fun getCache() = cacheManager.getCache(QAG_LISTS_PAGINATED_CACHE_NAME)

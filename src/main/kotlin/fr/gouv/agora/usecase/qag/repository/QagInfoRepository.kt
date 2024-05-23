@@ -6,30 +6,11 @@ import java.util.*
 
 interface QagInfoRepository {
     fun getQagInfoToModerateList(): List<QagInfo>
-    fun getQagSelectedWithoutResponsesWithSupportCount(): List<QagInfoWithSupportCount>
     fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getLatestQags(thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getSupportedQags(userId: String, thematiqueId: String?): List<QagInfoWithSupportCount>
     fun getUserLastQagInfo(userId: String): QagInfo?
     fun getQagsSelectedForResponse(): List<QagInfoWithSupportCount>
-    fun getPopularQagsPaginated(
-        maxDate: Date,
-        offset: Int,
-        thematiqueId: String?,
-    ): List<QagInfoWithSupportCount>
-
-    fun getLatestQagsPaginated(
-        maxDate: Date,
-        offset: Int,
-        thematiqueId: String?,
-    ): List<QagInfoWithSupportCount>
-
-    fun getSupportedQagsPaginated(
-        userId: String,
-        maxDate: Date,
-        offset: Int,
-        thematiqueId: String?,
-    ): List<QagInfoWithSupportCount>
 
     fun getPopularQagsPaginatedV2(
         offset: Int,
@@ -51,7 +32,6 @@ interface QagInfoRepository {
     fun getQagInfo(qagId: String): QagInfo?
     fun getQagsInfo(qagIds: List<String>): List<QagInfo>
     fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?
-    fun getQagsWithSupportCount(qagIds: List<String>): List<QagInfoWithSupportCount>
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun getMostPopularQags(): List<QagInfoWithSupportCount>

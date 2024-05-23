@@ -1,9 +1,9 @@
 package fr.gouv.agora.usecase.qag
 
 import fr.gouv.agora.domain.QagPreview
+import fr.gouv.agora.domain.QagWithSupportCount
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
-import fr.gouv.agora.usecase.qagPreview.QagWithSupportCount
 import org.springframework.stereotype.Component
 
 @Component

@@ -30,9 +30,6 @@ internal class InsertQagUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @Mock
-    private lateinit var qagPreviewCacheRepository: QagPreviewCacheRepository
-
-    @Mock
     private lateinit var qagListsCacheRepository: QagListsCacheRepository
 
     @Mock
@@ -86,7 +83,6 @@ internal class InsertQagUseCaseTest {
         then(contentSanitizer).should().sanitize("username", 50)
         then(contentSanitizer).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).insertQagInfo(sanitizedQagInserting)
-        then(qagPreviewCacheRepository).shouldHaveNoInteractions()
         then(qagListsCacheRepository).shouldHaveNoInteractions()
         then(askQagStatusCacheRepository).shouldHaveNoInteractions()
     }
@@ -115,9 +111,6 @@ internal class InsertQagUseCaseTest {
                 userId = "userId",
             )
         )
-        then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = null)
-        then(qagPreviewCacheRepository).should().evictQagSupportedList(userId = "userId", thematiqueId = "thematiqueId")
-        then(qagPreviewCacheRepository).shouldHaveNoMoreInteractions()
         then(qagListsCacheRepository).should().evictQagSupportedList(
             userId = "userId", thematiqueId = null, pageNumber = 1
         )

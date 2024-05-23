@@ -7,7 +7,6 @@ import fr.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.gouv.agora.infrastructure.qagHome.HeaderQagJson
 import fr.gouv.agora.infrastructure.qagHome.QagPreviewJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
-import fr.gouv.agora.usecase.qagPaginated.QagsAndMaxPageCount
 import fr.gouv.agora.usecase.qagPaginated.QagsAndMaxPageCountV2
 import org.springframework.stereotype.Component
 
@@ -16,13 +15,6 @@ class QagPaginatedJsonMapper(
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
     private val dateMapper: DateMapper,
 ) {
-
-    fun toJson(qagsAndMaxPageCount: QagsAndMaxPageCount): QagPaginatedJson {
-        return QagPaginatedJson(
-            maxPageNumber = qagsAndMaxPageCount.maxPageCount,
-            qags = qagsAndMaxPageCount.qags.map { domain -> toJson(domain) },
-        )
-    }
 
     fun toJson(qagsAndMaxPageCount: QagsAndMaxPageCountV2): QagPaginatedJsonV2 {
         return QagPaginatedJsonV2(
