@@ -9,13 +9,6 @@ data class ConsultationResults(
     val openQuestions: List<QuestionOpen>,
 )
 
-data class ConsultationResultsWithUpdate(
-    val consultation: ConsultationInfo,
-    val lastUpdate: ConsultationUpdate,
-    val participantCount: Int,
-    val results: List<QuestionResults>,
-)
-
 data class QuestionResults(
     val question: QuestionWithChoices,
     val responses: List<ChoiceResults>,
