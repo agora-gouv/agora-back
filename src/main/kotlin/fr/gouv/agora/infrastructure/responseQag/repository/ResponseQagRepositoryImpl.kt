@@ -5,6 +5,7 @@ import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
@@ -15,6 +16,7 @@ class ResponseQagRepositoryImpl(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val mapper: ResponseQagMapper,
 ) : ResponseQagRepository {
+    private val logger = LoggerFactory.getLogger(ResponseQagRepositoryImpl::class.java)
 
     override fun getResponsesQag(qagIds: List<String>): List<ResponseQag> {
         val qagUUIDs = qagIds.mapNotNull { it.toUuidOrNull() }
@@ -22,9 +24,13 @@ class ResponseQagRepositoryImpl(
         val databaseResponses = databaseRepository.getResponsesQag(qagUUIDs).mapNotNull(mapper::toDomain)
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
-            val strapiResponses = strapiRepository.getResponsesQag(qagUUIDs).let(mapper::toDomain)
-
-            return databaseResponses + strapiResponses
+            try {
+                val strapiResponses = strapiRepository.getResponsesQag(qagUUIDs).let(mapper::toDomain)
+                return databaseResponses + strapiResponses
+            } catch (e: Exception) {
+                logger.error("Erreur lors de la récupération des réponses QaG Strapi : ", e)
+                return databaseResponses
+            }
         }
 
         return databaseResponses
