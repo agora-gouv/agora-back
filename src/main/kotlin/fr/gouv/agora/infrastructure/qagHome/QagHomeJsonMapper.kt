@@ -1,7 +1,7 @@
 package fr.gouv.agora.infrastructure.qagHome
 
 import fr.gouv.agora.domain.QagPreview
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.usecase.responseQag.ResponseQagPreviewList

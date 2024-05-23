@@ -4,7 +4,6 @@ import fr.gouv.agora.domain.IncomingResponsePreview
 import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.domain.ResponseQagPreview
 import fr.gouv.agora.usecase.qag.repository.LowPriorityQagRepository
-import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagPreviewCacheRepository
@@ -30,32 +29,28 @@ class ResponseQagPreviewListUseCase(
     }
 
     private fun buildResponseQagPreviewList(): ResponseQagPreviewList {
-        val qagsWithoutResponses = qagInfoRepository.getQagSelectedWithoutResponsesWithSupportCount()
-        val qagsWithResponses = qagInfoRepository.getQagWithResponses()
+        val qagsSelectedForResponse = qagInfoRepository.getQagsSelectedForResponse()
+        val qagsResponses = responseQagRepository.getResponsesQag(qagsSelectedForResponse.map { it.id })
 
-        if (qagsWithoutResponses.isEmpty() && qagsWithResponses.isEmpty()) return ResponseQagPreviewList(
-            incomingResponses = emptyList(),
-            responses = emptyList(),
-        )
-
-        val qagAndResponses = if (qagsWithResponses.isNotEmpty()) {
-            val responses = responseQagRepository.getResponsesQag(qagsWithResponses.map { it.id })
-            qagsWithResponses.mapNotNull { qag ->
-                responses.find { response -> response.qagId == qag.id }?.let { response -> qag to response }
+        val qagAndResponseList = qagsSelectedForResponse
+            .fold(emptyList<Pair<QagInfoWithSupportCount, ResponseQag?>>()) { acc, qagSelectedForResponse ->
+                acc + Pair(qagSelectedForResponse, qagsResponses.find { it.qagId == qagSelectedForResponse.id })
             }
-        } else emptyList()
 
-        val orderResult = orderMapper.buildOrderResult(
-            lowPriorityQagIds = (qagsWithoutResponses.map { it.id } + qagsWithResponses.map { it.id })
-                .takeIf { it.isNotEmpty() }
-                ?.let(lowPriorityQagRepository::getLowPriorityQagIds) ?: emptyList(),
-            incomingResponses = qagsWithoutResponses,
-            responses = qagAndResponses,
+        if (qagAndResponseList.isEmpty()) return ResponseQagPreviewList(emptyList(), emptyList())
+
+        val qagWithResponseList = qagAndResponseList.filter { it.second != null } as List<Pair<QagInfoWithSupportCount, ResponseQag>>
+        val qagWithoutResponseList = qagAndResponseList.filter { it.second == null }.map { it.first }
+
+        val orderedQags = orderMapper.buildOrderResult(
+            lowPriorityQagIds = lowPriorityQagRepository.getLowPriorityQagIds(qagAndResponseList.map { it.first.id }),
+            incomingResponses = qagWithoutResponseList,
+            responses = qagWithResponseList,
         )
 
         val thematiques = thematiqueRepository.getThematiqueList()
         return ResponseQagPreviewList(
-            incomingResponses = orderResult.incomingResponses.mapNotNull { qagWithOrder ->
+            incomingResponses = orderedQags.incomingResponses.mapNotNull { qagWithOrder ->
                 thematiques.find { thematique -> thematique.id == qagWithOrder.qagWithSupportCount.thematiqueId }
                     ?.let { thematique ->
                         mapper.toIncomingResponsePreview(
@@ -64,7 +59,7 @@ class ResponseQagPreviewListUseCase(
                         )
                     }
             },
-            responses = orderResult.responses.mapNotNull { qagWithOrder ->
+            responses = orderedQags.responses.mapNotNull { qagWithOrder ->
                 thematiques.find { thematique -> thematique.id == qagWithOrder.qagInfo.thematiqueId }
                     ?.let { thematique ->
                         mapper.toResponseQagPreview(
@@ -75,7 +70,6 @@ class ResponseQagPreviewListUseCase(
             },
         )
     }
-
 }
 
 data class QagWithSupportCountAndOrder(
@@ -84,7 +78,7 @@ data class QagWithSupportCountAndOrder(
 )
 
 data class QagWithResponseAndOrder(
-    val qagInfo: QagInfo,
+    val qagInfo: QagInfoWithSupportCount,
     val response: ResponseQag,
     val order: Int,
 )

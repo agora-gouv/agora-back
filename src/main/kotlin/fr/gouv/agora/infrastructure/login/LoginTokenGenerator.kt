@@ -4,13 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fr.gouv.agora.domain.LoginTokenData
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
+import kotlin.math.log
 
 @Component
 class LoginTokenGenerator {
+    private val logger: Logger = LoggerFactory.getLogger(LoginTokenGenerator::class.java)
 
     fun buildLoginToken(loginTokenData: LoginTokenData): BuildResult {
         return try {
@@ -22,7 +26,7 @@ class LoginTokenGenerator {
 
             BuildResult.Success(loginToken = Base64.getEncoder().encodeToString(byteArrayResult))
         } catch (e: Exception) {
-            println("Exception while buildLoginToken: $e")
+            logger.error("Exception while buildLoginToken: $e")
             BuildResult.Failure
         }
     }
@@ -37,7 +41,7 @@ class LoginTokenGenerator {
 
             DecodeResult.Success(LoginTokenData(userId = loginTokenDataJson.userId))
         } catch (e: Exception) {
-            println("Exception while decodeLoginToken: $e")
+            logger.error("Exception while decodeLoginToken: $e")
             DecodeResult.Failure
         }
     }

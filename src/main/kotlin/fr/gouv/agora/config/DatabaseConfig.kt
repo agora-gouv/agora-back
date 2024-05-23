@@ -2,6 +2,8 @@ package fr.gouv.agora.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.net.URI
@@ -10,6 +12,7 @@ import javax.sql.DataSource
 @Configuration
 @Suppress("unused")
 class DatabaseConfig {
+    private val logger: Logger = LoggerFactory.getLogger(DatabaseConfig::class.java)
 
     companion object {
         private const val DEFAULT_DB_MAX_POOL_SIZE = 5
@@ -31,7 +34,7 @@ class DatabaseConfig {
                     username = userInfo[0]
                     password = userInfo[1]
                 } catch (e: IllegalArgumentException) {
-                    println("Invalid Database URL: $databaseUrl")
+                    logger.error("Invalid Database URL: $databaseUrl")
                 }
                 maximumPoolSize = System.getenv("DATABASE_MAX_POOL_SIZE").toIntOrNull() ?: DEFAULT_DB_MAX_POOL_SIZE
             }

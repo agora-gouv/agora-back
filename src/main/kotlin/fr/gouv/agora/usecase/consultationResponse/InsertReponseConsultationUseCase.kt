@@ -13,6 +13,8 @@ import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsult
 import fr.gouv.agora.usecase.consultationResults.repository.ConsultationResultsCacheRepository
 import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.LocalDateTime
@@ -31,6 +33,8 @@ class InsertReponseConsultationUseCase(
     private val consultationAnsweredPaginatedListCacheRepository: ConsultationAnsweredPaginatedListCacheRepository,
     private val consultationResultsCacheRepository: ConsultationResultsCacheRepository
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(InsertReponseConsultationUseCase::class.java)
+
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
         private const val OPEN_QUESTION_MAX_LENGTH = 400
@@ -45,7 +49,7 @@ class InsertReponseConsultationUseCase(
                 LocalDateTime.now(clock).toDate()
             ) == true
         ) {
-            println("⚠️ Insert response consultation error: this consultation is already finished")
+            logger.error("⚠️ Insert response consultation error: this consultation is already finished")
             return InsertResult.INSERT_FAILURE
         }
 
@@ -54,7 +58,7 @@ class InsertReponseConsultationUseCase(
                 userId = userId
             )
         ) {
-            println("⚠️ Insert response consultation error: user has already answered this consultation")
+            logger.error("⚠️ Insert response consultation error: user has already answered this consultation")
             return InsertResult.INSERT_FAILURE
         }
 
@@ -80,7 +84,7 @@ class InsertReponseConsultationUseCase(
             consultationResponses = sanitizeConsultationResponse(filledConsultationResponses, questionList),
         )
         if (responseInsertResult == InsertResult.INSERT_FAILURE)
-            println("⚠️ Insert response consultation error")
+            logger.error("⚠️ Insert response consultation error")
         else userAnsweredConsultationRepository.insertUserAnsweredConsultation(
             UserAnsweredConsultation(
                 userId = userId,

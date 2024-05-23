@@ -3,10 +3,14 @@ package fr.gouv.agora.infrastructure.qag.repository
 import fr.gouv.agora.domain.QagInserting
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
-import fr.gouv.agora.usecase.qag.repository.*
+import fr.gouv.agora.usecase.qag.repository.QagDeleteResult
+import fr.gouv.agora.usecase.qag.repository.QagInfo
+import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
+import fr.gouv.agora.usecase.qag.repository.QagInsertionResult
+import fr.gouv.agora.usecase.qag.repository.QagUpdateResult
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.math.max
 
 @Component
 class QagInfoRepositoryImpl(
@@ -20,10 +24,6 @@ class QagInfoRepositoryImpl(
 
     override fun getQagSelectedWithoutResponsesWithSupportCount(): List<QagInfoWithSupportCount> {
         return databaseRepository.getQagsWithoutResponse().map(mapper::toDomain)
-    }
-
-    override fun getQagWithResponses(): List<QagInfo> {
-        return databaseRepository.getLatestQagsWithResponses().map(mapper::toDomain)
     }
 
     override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
@@ -53,6 +53,12 @@ class QagInfoRepositoryImpl(
         return userId.toUuidOrNull()?.let { userUUID ->
             databaseRepository.getLastUserQag(userId = userUUID)?.let(mapper::toDomain)
         }
+    }
+
+    override fun getQagsSelectedForResponse(): List<QagInfoWithSupportCount> {
+        val qagsSelectedForResponse = databaseRepository.getLatestQagsSelectedForResponse()
+
+        return qagsSelectedForResponse.map(mapper::toDomain)
     }
 
     override fun getPopularQagsPaginated(
@@ -220,7 +226,10 @@ class QagInfoRepositoryImpl(
     }
 
     override fun getTrendingQags(): List<QagInfoWithSupportCount> {
-        return databaseRepository.getTrendingQags().map(mapper::toDomain)
+        return databaseRepository
+            .getTrendingQags()
+            .map(mapper::toDomain)
+            .removeDuplicates()
     }
 
     override fun selectQagForResponse(qagId: String): QagUpdateResult {
@@ -257,7 +266,13 @@ class QagInfoRepositoryImpl(
     override fun deleteUsersQag(userIDs: List<String>) {
         databaseRepository.deleteUsersQags(userIDs.mapNotNull { it.toUuidOrNull() })
     }
+
+    private fun List<QagInfoWithSupportCount>.removeDuplicates() = this.fold(
+        initial = emptyList<QagInfoWithSupportCount>(),
+        operation = { buildingList, qag ->
+            if (!buildingList.contains(qag)) {
+                buildingList.plus(qag)
+            } else buildingList
+        }
+    )
 }
-
-
-

@@ -1,7 +1,7 @@
 package fr.gouv.agora.infrastructure.responseQagPaginated
 
 import fr.gouv.agora.domain.ResponseQagPreviewWithoutOrder
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.qagHome.ResponseQagPreviewWithoutOrderJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.usecase.responseQag.ResponseQagPaginatedList

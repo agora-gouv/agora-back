@@ -3,11 +3,11 @@ package fr.gouv.agora.usecase.consultationResults
 import fr.gouv.agora.domain.ChoiceResults
 import fr.gouv.agora.domain.ChoixPossible
 import fr.gouv.agora.domain.ConsultationResults
-import fr.gouv.agora.domain.Question
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionResults
 import fr.gouv.agora.domain.QuestionWithChoices
 import fr.gouv.agora.domain.ResponseConsultationCount
+import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
@@ -84,31 +84,39 @@ class ConsultationResultsUseCase(
         question: QuestionWithChoices,
         participantCount: Int,
         consultationResponseList: List<ResponseConsultationCount>,
-    ) = QuestionResults(
-        question = question,
-        responses = question.choixPossibleList.map { choix ->
-            buildChoiceResults(
-                question = question,
-                choix = choix,
-                participantCount = participantCount,
-                consultationResponseList = consultationResponseList,
-            )
-        }
-    )
+    ): QuestionResults {
+        val notApplicableCount = if (participantCount > 0) {
+            consultationResponseList
+                .filter { it.questionId == question.id && it.choiceId == UuidUtils.NOT_APPLICABLE_CHOICE_UUID }
+                .sumOf { it.responseCount }
+        } else 0
+        val participantCountWithoutNotApplicable = participantCount - notApplicableCount
+
+        return QuestionResults(
+            question = question,
+            seenRatio = if (participantCount > 0) {
+                1 - (notApplicableCount.toDouble() / participantCount)
+            } else 0.0,
+            responses = question.choixPossibleList.map { choix ->
+                buildChoiceResults(
+                    choix = choix,
+                    participantCount = participantCountWithoutNotApplicable,
+                    choiceCount = consultationResponseList
+                        .filter { it.questionId == question.id && it.choiceId == choix.id }
+                        .sumOf { it.responseCount },
+                )
+            }
+        )
+    }
 
     private fun buildChoiceResults(
-        question: Question,
         choix: ChoixPossible,
         participantCount: Int,
-        consultationResponseList: List<ResponseConsultationCount>,
+        choiceCount: Int,
     ): ChoiceResults {
-        val choixCount = consultationResponseList
-            .filter { it.questionId == question.id && it.choiceId == choix.id }
-            .sumOf { it.responseCount }
-
         return ChoiceResults(
             choixPossible = choix,
-            ratio = (choixCount.toDouble() / participantCount).takeUnless { it.isNaN() } ?: 0.0,
+            ratio = (choiceCount.toDouble() / participantCount).takeUnless { it.isNaN() } ?: 0.0,
         )
     }
 }

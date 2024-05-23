@@ -8,6 +8,8 @@ import fr.gouv.agora.usecase.profile.repository.ProfileRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
@@ -21,9 +23,10 @@ class DeleteUsersUseCase(
     private val userDataRepository: UserDataRepository,
     private val userRepository: UserRepository,
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(DeleteUsersUseCase::class.java)
 
     fun deleteUsers(userIdsToDelete: List<String>) {
-        println("💁❌ Delete ${userIdsToDelete.size} user(s) with ID:\n${userIdsToDelete.joinToString("\n")}")
+        logger.info("💁❌ Delete ${userIdsToDelete.size} user(s) with ID:\n${userIdsToDelete.joinToString("\n")}")
         if (userIdsToDelete.isEmpty()) return
         notificationRepository.deleteUsersNotifications(userIdsToDelete)
         consultationResponseRepository.deleteUserConsultationResponses(userIdsToDelete)

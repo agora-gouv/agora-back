@@ -10,4 +10,5 @@ enum class AgoraFeature {
     FeedbackResponseQag,
     FeedbackConsultationUpdate,
     SuspiciousUserDetection,
+    Strapi,
 }

@@ -4,15 +4,23 @@ import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
 import fr.gouv.agora.domain.ConsultationUpdateHistoryStatus
 import fr.gouv.agora.domain.ConsultationUpdateHistoryType
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
-import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.*
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.Body
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.ConsultationDates
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.FeedbackQuestion
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.Footer
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.Goal
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.History
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.InfoHeader
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.ParticipationInfo
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.QuestionsInfo
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.ResponsesInfo
+import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.Section
 import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationDetailsV2JsonMapper(
-    private val dateMapper: DateMapper,
-) {
+class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
 
     companion object {
         private const val SHARE_TEXT_REPLACE_TITLE_PATTERN = "{title}"

@@ -6,6 +6,8 @@ import io.jsonwebtoken.JwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -16,6 +18,7 @@ class AuthenticationTokenFilter(
     private val loginUseCase: LoginUseCase,
     private val userJwtMapper: UserJwtMapper,
 ) : OncePerRequestFilter() {
+    private val loggerSl4j: Logger = LoggerFactory.getLogger(AuthenticationTokenFilter::class.java)
 
     companion object {
         private const val JWT_HEADER_KEY = "Authorization"
@@ -32,7 +35,7 @@ class AuthenticationTokenFilter(
                     loginWithUserId(JwtTokenUtils.extractUserId(jwtToken))
                 }
             } catch (e: JwtException) {
-                println("JwtException: $e")
+                loggerSl4j.error("JwtException: $e")
             }
         }
 

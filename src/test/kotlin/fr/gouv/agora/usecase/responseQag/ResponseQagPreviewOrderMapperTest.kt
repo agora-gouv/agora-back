@@ -38,7 +38,7 @@ internal class ResponseQagPreviewOrderMapperTest {
                 responses = emptyList(),
             ),
             input(
-                testName = "when no lowPriorityQags and incomingResponses only - should return incomingResponses ordered by date DESC",
+                testName = "when no lowPriorityQags and multiple incomingResponses only - should return incomingResponses ordered by date DESC",
                 lowPriorityQagIds = emptyList(),
                 incomingResponses = listOf(
                     BuildOrderTestInput(
@@ -67,7 +67,7 @@ internal class ResponseQagPreviewOrderMapperTest {
                 ),
             ),
             input(
-                testName = "when no lowPriorityQags and response only - should return response ordered by responseDate DESC",
+                testName = "when no lowPriorityQags and multiple responses only - should return response ordered by responseDate DESC",
                 lowPriorityQagIds = emptyList(),
                 incomingResponses = emptyList(),
                 responses = listOf(
@@ -96,7 +96,7 @@ internal class ResponseQagPreviewOrderMapperTest {
                 responses = emptyList(),
             ),
             input(
-                testName = "when only lowPriorityQags and incomingResponses only - should return incomingResponses ordered by date DESC",
+                testName = "when only lowPriorityQags and multiple incomingResponses only - should return incomingResponses ordered by date DESC",
                 lowPriorityQagIds = listOf("qagId0", "qagId1"),
                 incomingResponses = listOf(
                     BuildOrderTestInput(
@@ -293,7 +293,7 @@ internal class ResponseQagPreviewOrderMapperTest {
     }
 
     private fun mockResponse(testInput: BuildOrderTestInput): ResponseMockData {
-        val qagInfo = mock(QagInfo::class.java).also {
+        val qagInfo = mock(QagInfoWithSupportCount::class.java).also {
             given(it.id).willReturn(testInput.qagId)
         }
 
@@ -315,7 +315,7 @@ private data class IncomingResponseMockData(
 )
 
 private data class ResponseMockData(
-    val qagInfo: QagInfo,
+    val qagInfo: QagInfoWithSupportCount,
     val responseQag: ResponseQag,
     val expectedOrder: Int,
 )

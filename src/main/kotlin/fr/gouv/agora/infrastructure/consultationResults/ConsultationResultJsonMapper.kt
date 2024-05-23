@@ -11,7 +11,7 @@ import fr.gouv.agora.domain.QuestionMultipleChoices
 import fr.gouv.agora.domain.QuestionResults
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.Video
-import fr.gouv.agora.infrastructure.profile.repository.DateMapper
+import fr.gouv.agora.infrastructure.common.DateMapper
 import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
 
@@ -75,6 +75,7 @@ class ConsultationResultJsonMapper(private val dateMapper: DateMapper) {
             questionId = domain.question.id,
             questionTitle = domain.question.title,
             order = domain.question.order,
+            seenRatio = (domain.seenRatio * 100).roundToInt(),
             responses = domain.responses.map(::toChoiceResultsJson),
         )
     }

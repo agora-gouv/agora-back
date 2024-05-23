@@ -5,7 +5,6 @@ import fr.gouv.agora.domain.ResponseQagPreview
 import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.qag.repository.LowPriorityQagRepository
-import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagPreviewCacheRepository
@@ -68,8 +67,6 @@ internal class ResponseQagPreviewListUseCaseTest {
     fun `getResponseQagPreviewList - when has no Qags - should return 2x emptyList and put it to cache`() {
         // Given
         given(cacheRepository.getResponseQagPreviewList()).willReturn(null)
-        given(qagInfoRepository.getQagSelectedWithoutResponsesWithSupportCount()).willReturn(emptyList())
-        given(qagInfoRepository.getQagWithResponses()).willReturn(emptyList())
 
         // When
         val result = useCase.getResponseQagPreviewList()
@@ -83,10 +80,6 @@ internal class ResponseQagPreviewListUseCaseTest {
         then(cacheRepository).should().getResponseQagPreviewList()
         then(cacheRepository).should().initResponseQagPreviewList(expectedResponseQagPreviewList)
         then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(qagInfoRepository).should().getQagSelectedWithoutResponsesWithSupportCount()
-        then(qagInfoRepository).should().getQagWithResponses()
-        then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(responseQagRepository).shouldHaveNoInteractions()
         then(thematiqueRepository).shouldHaveNoInteractions()
         then(lowPriorityQagRepository).shouldHaveNoInteractions()
     }
@@ -99,19 +92,15 @@ internal class ResponseQagPreviewListUseCaseTest {
             given(it.id).willReturn("qagId1")
             given(it.thematiqueId).willReturn("unknownThematiqueId")
         }
-        given(qagInfoRepository.getQagSelectedWithoutResponsesWithSupportCount()).willReturn(listOf(qagWithSupportCount))
-        val qagInfo = mock(QagInfo::class.java).also {
-            given(it.id).willReturn("qagId2")
-        }
-        given(qagInfoRepository.getQagWithResponses()).willReturn(listOf(qagInfo))
-        given(responseQagRepository.getResponsesQag(listOf("qagId2"))).willReturn(emptyList())
+        given(qagInfoRepository.getQagsSelectedForResponse()).willReturn(listOf(qagWithSupportCount))
+        given(responseQagRepository.getResponsesQag(listOf("qagId1"))).willReturn(emptyList())
 
         val thematique = mock(Thematique::class.java).also {
             given(it.id).willReturn("thematiqueId")
         }
         given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
 
-        given(lowPriorityQagRepository.getLowPriorityQagIds(listOf("qagId1", "qagId2")))
+        given(lowPriorityQagRepository.getLowPriorityQagIds(listOf("qagId1")))
             .willReturn(listOf("qagIdWithLowPriority"))
         val qagWithOrder = mock(QagWithSupportCountAndOrder::class.java).also {
             given(it.qagWithSupportCount).willReturn(qagWithSupportCount)
@@ -136,24 +125,18 @@ internal class ResponseQagPreviewListUseCaseTest {
         then(cacheRepository).should().getResponseQagPreviewList()
         then(cacheRepository).should().initResponseQagPreviewList(expectedResponseQagPreviewList)
         then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(qagInfoRepository).should().getQagSelectedWithoutResponsesWithSupportCount()
-        then(qagInfoRepository).should().getQagWithResponses()
-        then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(responseQagRepository).should(only()).getResponsesQag(listOf("qagId2"))
-        then(thematiqueRepository).should(only()).getThematiqueList()
-        then(lowPriorityQagRepository).should(only()).getLowPriorityQagIds(listOf("qagId1", "qagId2"))
     }
 
     @Test
     fun `getResponseQagPreviewList - when has qags without responses - should return mapped incomingResponse`() {
         // Given
         given(cacheRepository.getResponseQagPreviewList()).willReturn(null)
-        val qag = mock(QagInfoWithSupportCount::class.java).also {
+        val qagInfoWithSupportCount= mock(QagInfoWithSupportCount::class.java).also {
             given(it.id).willReturn("qagId")
             given(it.thematiqueId).willReturn("thematiqueId")
         }
-        given(qagInfoRepository.getQagSelectedWithoutResponsesWithSupportCount()).willReturn(listOf(qag))
-        given(qagInfoRepository.getQagWithResponses()).willReturn(emptyList())
+
+        given(qagInfoRepository.getQagsSelectedForResponse()).willReturn(listOf(qagInfoWithSupportCount))
 
         val thematique = mock(Thematique::class.java).also {
             given(it.id).willReturn("thematiqueId")
@@ -162,12 +145,12 @@ internal class ResponseQagPreviewListUseCaseTest {
 
         given(lowPriorityQagRepository.getLowPriorityQagIds(listOf("qagId"))).willReturn(listOf("qagIdWithLowPriority"))
         val qagWithOrder = mock(QagWithSupportCountAndOrder::class.java).also {
-            given(it.qagWithSupportCount).willReturn(qag)
+            given(it.qagWithSupportCount).willReturn(qagInfoWithSupportCount)
         }
         given(
             orderMapper.buildOrderResult(
                 lowPriorityQagIds = listOf("qagIdWithLowPriority"),
-                incomingResponses = listOf(qag),
+                incomingResponses = listOf(qagInfoWithSupportCount),
                 responses = emptyList(),
             )
         ).willReturn(ResponseQagPreviewOrderResult(incomingResponses = listOf(qagWithOrder), responses = emptyList()))
@@ -187,10 +170,6 @@ internal class ResponseQagPreviewListUseCaseTest {
         then(cacheRepository).should().getResponseQagPreviewList()
         then(cacheRepository).should().initResponseQagPreviewList(expectedResponseQagPreviewList)
         then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(qagInfoRepository).should().getQagSelectedWithoutResponsesWithSupportCount()
-        then(qagInfoRepository).should().getQagWithResponses()
-        then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(responseQagRepository).shouldHaveNoInteractions()
         then(thematiqueRepository).should(only()).getThematiqueList()
         then(lowPriorityQagRepository).should(only()).getLowPriorityQagIds(listOf("qagId"))
     }
@@ -199,12 +178,13 @@ internal class ResponseQagPreviewListUseCaseTest {
     fun `getResponseQagPreviewList - when has qags with responses - should return mapped response`() {
         // Given
         given(cacheRepository.getResponseQagPreviewList()).willReturn(null)
-        given(qagInfoRepository.getQagSelectedWithoutResponsesWithSupportCount()).willReturn(emptyList())
-        val qagInfo = mock(QagInfo::class.java).also {
+        val qagInfoWithSupportCount = mock(QagInfoWithSupportCount::class.java).also {
             given(it.id).willReturn("qagId")
+        }
+        val qagInfo = mock(QagInfoWithSupportCount::class.java).also {
             given(it.thematiqueId).willReturn("thematiqueId")
         }
-        given(qagInfoRepository.getQagWithResponses()).willReturn(listOf(qagInfo))
+        given(qagInfoRepository.getQagsSelectedForResponse()).willReturn(listOf(qagInfoWithSupportCount))
 
         val thematique = mock(Thematique::class.java).also {
             given(it.id).willReturn("thematiqueId")
@@ -224,7 +204,7 @@ internal class ResponseQagPreviewListUseCaseTest {
             orderMapper.buildOrderResult(
                 lowPriorityQagIds = listOf("qagIdWithLowPriority"),
                 incomingResponses = emptyList(),
-                responses = listOf(qagInfo to response),
+                responses = listOf(qagInfoWithSupportCount to response),
             )
         ).willReturn(ResponseQagPreviewOrderResult(incomingResponses = emptyList(), responses = listOf(qagWithOrder)))
 
@@ -243,10 +223,7 @@ internal class ResponseQagPreviewListUseCaseTest {
         then(cacheRepository).should().getResponseQagPreviewList()
         then(cacheRepository).should().initResponseQagPreviewList(expectedResponseQagPreviewList)
         then(cacheRepository).shouldHaveNoMoreInteractions()
-        then(qagInfoRepository).should().getQagSelectedWithoutResponsesWithSupportCount()
-        then(qagInfoRepository).should().getQagWithResponses()
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
-        then(responseQagRepository).should(only()).getResponsesQag(listOf("qagId"))
         then(thematiqueRepository).should(only()).getThematiqueList()
         then(lowPriorityQagRepository).should(only()).getLowPriorityQagIds(listOf("qagId"))
     }

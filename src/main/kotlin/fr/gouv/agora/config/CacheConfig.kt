@@ -1,5 +1,7 @@
 package fr.gouv.agora.config
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
@@ -21,6 +23,8 @@ import java.time.Duration
 @Suppress("unused")
 @EnableCaching
 class CacheConfig {
+    private val logger: Logger = LoggerFactory.getLogger(CacheConfig::class.java)
+
     companion object {
         const val DEFAULT_REDIS_USER = "default"
         const val DEFAULT_REDIS_PORT = 6379
@@ -38,7 +42,7 @@ class CacheConfig {
                 config.hostName = redisURI.host
                 config.port = redisURI.port
             } catch (e: IllegalArgumentException) {
-                println("Invalid Redis URL: $redisUrl")
+                logger.error("Invalid Redis URL: $redisUrl")
             }
         }
         return JedisConnectionFactory(config)

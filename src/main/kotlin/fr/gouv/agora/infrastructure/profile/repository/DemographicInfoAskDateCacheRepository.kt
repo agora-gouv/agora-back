@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.profile.repository
 
+import fr.gouv.agora.infrastructure.common.DateMapper
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
