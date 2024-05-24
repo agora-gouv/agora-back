@@ -6,6 +6,7 @@ import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import org.springframework.stereotype.Component
+import kotlin.math.min
 
 @Component
 @Suppress("unused")
@@ -48,12 +49,18 @@ class ResponseQagRepositoryImpl(
     override fun getResponsesQag(offset: Int): List<ResponseQag> {
         val databaseResponses = databaseRepository.getResponsesQag().mapNotNull(mapper::toDomain)
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) return databaseResponses.subList(offset, offset + 20)
+        val databaseToIndex = min(databaseResponses.size - offset, offset + 20)
+
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) return databaseResponses.subList(offset, databaseToIndex)
 
         val strapiResponses = strapiRepository.getResponsesQag().let(mapper::toDomain)
 
-        return (databaseResponses + strapiResponses)
+        val responsesQag = databaseResponses + strapiResponses
+
+        val toIndex = min(responsesQag.size - offset, offset + 20)
+
+        return responsesQag
             .sortedByDescending { it.responseDate }
-            .subList(offset, offset + 20)
+            .subList(offset, toIndex)
     }
 }

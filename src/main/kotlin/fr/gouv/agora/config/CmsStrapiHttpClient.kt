@@ -39,7 +39,7 @@ class CmsStrapiHttpClient(
     }
 
     fun count(cmsModel: String): String {
-        val uri = "${cmsModel}?pagination[pageSize]=1&populate=0"
+        val uri = "${cmsModel}?pagination[pageSize]=1&populate=*"
 
         val request = getClientRequest(uri).GET().build()
 
@@ -51,6 +51,7 @@ class CmsStrapiHttpClient(
     private fun getClientRequest(uri: String): HttpRequest.Builder {
         val authToken = System.getenv("CMS_AUTH_TOKEN")
         val apiUrl = System.getenv("CMS_API_URL")
+        logger.debug("Requête Strapi vers l'URI : $uri")
 
         return HttpRequest.newBuilder()
             .uri(URI("$apiUrl$uri"))

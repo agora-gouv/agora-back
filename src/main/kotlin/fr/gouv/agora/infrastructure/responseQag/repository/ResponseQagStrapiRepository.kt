@@ -16,8 +16,6 @@ class ResponseQagStrapiRepository(
     private val logger = LoggerFactory.getLogger(ResponseQagRepositoryImpl::class.java)
 
     fun getResponsesQag(@Param("qagIds") qagIds: List<UUID>): StrapiResponseQagDTO {
-        logger.debug("Récupération des réponses de QaG via Strapi pour les ids {}", qagIds)
-
         return try {
             val allResponsesQag = cmsStrapiHttpClient
                 .getByIds("reponse-du-gouvernements", "questionId", qagIds.map { it.toString() })
@@ -31,11 +29,9 @@ class ResponseQagStrapiRepository(
     }
 
     fun getResponsesQag(): StrapiResponseQagDTO {
-        logger.debug("Récupération des réponses de QaG via Strapi")
-
         return try {
             val allResponsesQag = cmsStrapiHttpClient
-                .getAllSortedBy("reponse-du-gouvernements", "response_date", true)
+                .getAllSortedBy("reponse-du-gouvernements", "reponseDate", true)
 
             objectMapper.readValue(allResponsesQag, StrapiResponseQagDTO::class.java)
         } catch (e: Exception) {
@@ -46,8 +42,6 @@ class ResponseQagStrapiRepository(
     }
 
     fun getResponsesCount(): Int {
-        logger.debug("Récupération du nombre de réponses de QaG via Strapi")
-
         return try {
             val allResponsesQag = cmsStrapiHttpClient.count("reponse-du-gouvernements")
 
