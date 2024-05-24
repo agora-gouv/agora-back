@@ -27,6 +27,27 @@ class CmsStrapiHttpClient(
         return httpResponse.body()
     }
 
+    fun getAllSortedBy(cmsModel: String, sortField: String, sortByDesc: Boolean = true): String {
+        val sortDirection = if (sortByDesc) "desc" else "asc"
+        val uri = "${cmsModel}?populate=*&sort[0]=$sortField:$sortDirection&pagination[pageSize]=100"
+
+        val request = getClientRequest(uri).GET().build()
+
+        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        return httpResponse.body()
+    }
+
+    fun count(cmsModel: String): String {
+        val uri = "${cmsModel}?pagination[pageSize]=1&populate=0"
+
+        val request = getClientRequest(uri).GET().build()
+
+        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        return httpResponse.body()
+    }
+
     private fun getClientRequest(uri: String): HttpRequest.Builder {
         val authToken = System.getenv("CMS_AUTH_TOKEN")
         val apiUrl = System.getenv("CMS_API_URL")
