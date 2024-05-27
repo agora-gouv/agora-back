@@ -39,7 +39,10 @@ class ResponseQagPreviewListUseCase(
 
         if (qagAndResponseList.isEmpty()) return ResponseQagPreviewList(emptyList(), emptyList())
 
-        val qagWithResponseList = qagAndResponseList.filter { it.second != null } as List<Pair<QagInfoWithSupportCount, ResponseQag>>
+        val qagWithResponseList = qagAndResponseList
+            .filter { it.second != null }
+            .sortedByDescending { it.second!!.responseDate }
+            .take(5) as List<Pair<QagInfoWithSupportCount, ResponseQag>>
         val qagWithoutResponseList = qagAndResponseList.filter { it.second == null }.map { it.first }
 
         val orderedQags = orderMapper.buildOrderResult(

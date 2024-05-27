@@ -49,9 +49,13 @@ class ResponseQagRepositoryImpl(
     override fun getResponsesQag(offset: Int): List<ResponseQag> {
         val databaseResponses = databaseRepository.getResponsesQag().mapNotNull(mapper::toDomain)
 
-        val databaseToIndex = min(databaseResponses.size - offset, offset + 20)
-
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) return databaseResponses.subList(offset, databaseToIndex)
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
+            val databaseToIndex = min(databaseResponses.size - offset, offset + 20)
+            return databaseResponses.subList(
+                offset,
+                databaseToIndex
+            )
+        }
 
         val strapiResponses = strapiRepository.getResponsesQag().let(mapper::toDomain)
 
