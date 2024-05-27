@@ -36,7 +36,7 @@ class FeedbackConsultationUpdateRepositoryImpl(
         return getUserFeedbackDto(
             consultationUpdateId = consultationUpdateId,
             userId = userId,
-        )?.isPositive == IS_POSITIVE_TRUE_VALUE
+        )?.let{feedbackDto -> feedbackDto.isPositive == IS_POSITIVE_TRUE_VALUE}
     }
 
     override fun getFeedbackStats(consultationUpdateId: String): FeedbackConsultationUpdateStats? {
