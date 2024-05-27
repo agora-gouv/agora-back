@@ -6,7 +6,15 @@ import java.time.LocalDate
 data class StrapiResponseQagDTO(
     @JsonProperty("data")
     val data: List<StrapiModelAttributes>,
-)
+    @JsonProperty("meta")
+    val meta: StrapiMetaInformations,
+) {
+    companion object {
+        fun ofEmpty(): StrapiResponseQagDTO {
+            return StrapiResponseQagDTO(emptyList(), StrapiMetaInformations(StrapiMetaPagination(0, 0, 0 , 0)))
+        }
+    }
+}
 
 data class StrapiModelAttributes(
     @JsonProperty(value = "attributes")
@@ -33,4 +41,20 @@ data class StrapiResponseQagType(
     val label: String,
     @JsonProperty("text")
     val text: String,
+)
+
+data class StrapiMetaInformations(
+    @JsonProperty("pagination")
+    val pagination: StrapiMetaPagination,
+)
+
+data class StrapiMetaPagination(
+    @JsonProperty("page")
+    val page: Int,
+    @JsonProperty("pageSize")
+    val pageSize: Int,
+    @JsonProperty("pageCount")
+    val pageCount: Int,
+    @JsonProperty("total")
+    val total: Int,
 )
