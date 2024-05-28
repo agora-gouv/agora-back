@@ -41,6 +41,7 @@ class ResponseQagRepositoryImplTest {
         val strapiResponse = mock(StrapiResponseQagDTO::class.java)
         val responseQag = mock(ResponseQagText::class.java)
 
+        val from = 2
         val threeResponses = listOf(responseQag, responseQag, responseQag)
 
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
@@ -50,7 +51,7 @@ class ResponseQagRepositoryImplTest {
         given(responseQagStrapiRepository.getResponsesQag()).willReturn(strapiResponse)
 
         // When
-        val actual = responseQagRepositoryImpl.getResponsesQag(2)
+        val actual = responseQagRepositoryImpl.getResponsesQag(from)
 
         // Then
         assertThat(actual).hasSize(2)
@@ -59,6 +60,7 @@ class ResponseQagRepositoryImplTest {
     @Test
     fun `when the from and number of responses are equals, returns emptyList`() {
         // Given
+        val from = 2
         val databaseResponse = mock(ResponseQagDTO::class.java)
         val strapiResponse = mock(StrapiResponseQagDTO::class.java)
         val responseQag = mock(ResponseQagText::class.java)
@@ -70,7 +72,7 @@ class ResponseQagRepositoryImplTest {
         given(responseQagStrapiRepository.getResponsesQag()).willReturn(strapiResponse)
 
         // When
-        val actual = responseQagRepositoryImpl.getResponsesQag(2)
+        val actual = responseQagRepositoryImpl.getResponsesQag(from)
 
         // Then
         assertThat(actual).isEmpty()
@@ -79,6 +81,7 @@ class ResponseQagRepositoryImplTest {
     @Test
     fun `when the from is superior to number of responses, returns emptyList`() {
         // Given
+        val from = 20
         val databaseResponse = mock(ResponseQagDTO::class.java)
         val strapiResponse = mock(StrapiResponseQagDTO::class.java)
         val responseQag = mock(ResponseQagText::class.java)
@@ -90,7 +93,7 @@ class ResponseQagRepositoryImplTest {
         given(responseQagStrapiRepository.getResponsesQag()).willReturn(strapiResponse)
 
         // When
-        val actual = responseQagRepositoryImpl.getResponsesQag(20)
+        val actual = responseQagRepositoryImpl.getResponsesQag(from)
 
         // Then
         assertThat(actual).isEmpty()
