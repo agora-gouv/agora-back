@@ -6,6 +6,8 @@ import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagDTO
+import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagText
+import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagVideo
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.springframework.stereotype.Component
 
@@ -46,15 +48,47 @@ class ResponseQagMapper {
     fun toDomain(responseBody: StrapiResponseQagDTO): List<ResponseQag> {
         return responseBody.data.map {
             val response = it.attributes
-            ResponseQagText(
-                author = response.auteur,
-                authorPortraitUrl = response.auteurPortraitUrl,
-                responseDate = response.reponseDate.toDate(),
-                feedbackQuestion = response.feedbackQuestion,
-                qagId = response.questionId,
-                responseText = response.reponseType.first().text,
-                responseLabel = response.reponseType.first().label,
-            )
+            val responseContent = response.reponseType.first()
+
+            when (responseContent) {
+                is StrapiResponseQagText -> {
+                    val strapiResponseQagText = response.reponseType.first() as StrapiResponseQagText
+                    ResponseQagText(
+                        author = response.auteur,
+                        authorPortraitUrl = response.auteurPortraitUrl,
+                        responseDate = response.reponseDate.toDate(),
+                        feedbackQuestion = response.feedbackQuestion,
+                        qagId = response.questionId,
+                        responseText = strapiResponseQagText.text,
+                        responseLabel = strapiResponseQagText.label,
+                    )
+                }
+
+                is StrapiResponseQagVideo -> {
+                    val strapiResponseQagVideo = response.reponseType.first() as StrapiResponseQagVideo
+                    val thereIsAdditionalInfo = strapiResponseQagVideo.informationAdditionnelleTitre != null
+                            && strapiResponseQagVideo.informationAdditionnelleDescription != null
+
+                    ResponseQagVideo(
+                        author = response.auteur,
+                        authorPortraitUrl = response.auteurPortraitUrl,
+                        responseDate = response.reponseDate.toDate(),
+                        feedbackQuestion = response.feedbackQuestion,
+                        qagId = response.questionId,
+                        authorDescription = strapiResponseQagVideo.auteurDescription,
+                        videoUrl = strapiResponseQagVideo.urlVideo,
+                        videoWidth = strapiResponseQagVideo.videoWidth,
+                        videoHeight = strapiResponseQagVideo.videoHeight,
+                        transcription = strapiResponseQagVideo.transcription.toString(),
+                        additionalInfo = if (thereIsAdditionalInfo) {
+                            ResponseQagAdditionalInfo(
+                                strapiResponseQagVideo.informationAdditionnelleTitre!!,
+                                strapiResponseQagVideo.informationAdditionnelleDescription!!
+                            )
+                        } else null
+                    )
+                }
+            }
         }
     }
 }
