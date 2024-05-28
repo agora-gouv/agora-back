@@ -48,6 +48,7 @@ class ResponseQagRepositoryImpl(
 
     override fun getResponsesQag(from: Int, pageSize: Int): List<ResponseQag> {
         val databaseResponses = databaseRepository.getResponsesQag().mapNotNull(mapper::toDomain)
+        
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
             val databaseToIndex = min(databaseResponses.size, from + pageSize)
             if (from > databaseToIndex) return emptyList()
