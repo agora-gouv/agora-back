@@ -52,7 +52,7 @@ class ResponseQagRepositoryImpl(
             strapiRepository.getResponsesQag().let(mapper::toDomain)
         } else emptyList()
 
-        val responsesQag = databaseResponses + strapiResponses
+        val responsesQag = (databaseResponses + strapiResponses).sortedByDescending { it.responseDate }
         val toIndex = min(responsesQag.size, from + pageSize)
         if (from > toIndex) return emptyList()
 
