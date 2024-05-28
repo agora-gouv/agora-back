@@ -46,25 +46,16 @@ class ResponseQagRepositoryImpl(
         return strapiRepository.getResponsesCount() + responsesQagCountOnDatabase
     }
 
-    override fun getResponsesQag(offset: Int): List<ResponseQag> {
+    override fun getResponsesQag(from: Int, pageSize: Int): List<ResponseQag> {
         val databaseResponses = databaseRepository.getResponsesQag().mapNotNull(mapper::toDomain)
-
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
-            val databaseToIndex = min(databaseResponses.size - offset, offset + 20)
-            return databaseResponses.subList(
-                offset,
-                databaseToIndex
-            )
-        }
-
-        val strapiResponses = strapiRepository.getResponsesQag().let(mapper::toDomain)
+        val strapiResponses = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
+            strapiRepository.getResponsesQag().let(mapper::toDomain)
+        } else emptyList()
 
         val responsesQag = databaseResponses + strapiResponses
+        val toIndex = min(responsesQag.size, from + pageSize)
+        if (from > toIndex) return emptyList()
 
-        val toIndex = min(responsesQag.size - offset, offset + 20)
-
-        return responsesQag
-            .sortedByDescending { it.responseDate }
-            .subList(offset, toIndex)
+        return responsesQag.subList(from, toIndex)
     }
 }
