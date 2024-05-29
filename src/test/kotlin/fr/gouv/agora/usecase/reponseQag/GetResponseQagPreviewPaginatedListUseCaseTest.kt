@@ -14,7 +14,10 @@ import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -176,5 +179,4 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
         then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
         then(thematiqueRepository).should(only()).getThematiqueList()
     }
-
 }

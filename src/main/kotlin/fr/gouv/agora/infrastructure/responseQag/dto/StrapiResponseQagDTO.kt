@@ -1,6 +1,8 @@
 package fr.gouv.agora.infrastructure.responseQag.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import java.time.LocalDate
 
 data class StrapiResponseQagDTO(
@@ -11,7 +13,7 @@ data class StrapiResponseQagDTO(
 ) {
     companion object {
         fun ofEmpty(): StrapiResponseQagDTO {
-            return StrapiResponseQagDTO(emptyList(), StrapiMetaInformations(StrapiMetaPagination(0, 0, 0 , 0)))
+            return StrapiResponseQagDTO(emptyList(), StrapiMetaInformations(StrapiMetaPagination(0, 0, 0, 0)))
         }
     }
 }
@@ -36,12 +38,37 @@ data class StrapiResponseQag(
     val reponseType: List<StrapiResponseQagType>
 )
 
-data class StrapiResponseQagType(
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "__component", visible = true)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = StrapiResponseQagText::class, name = "reponse.reponsetextuelle"),
+    JsonSubTypes.Type(value = StrapiResponseQagVideo::class, name = "reponse.reponse-video")
+)
+sealed interface StrapiResponseQagType
+
+
+data class StrapiResponseQagText(
     @JsonProperty("label")
     val label: String,
     @JsonProperty("text")
-    val text: String,
-)
+    val text: List<StrapiRichText>?,
+) : StrapiResponseQagType
+
+data class StrapiResponseQagVideo(
+    @JsonProperty("auteurDescription")
+    val auteurDescription: String,
+    @JsonProperty("urlVideo")
+    val urlVideo: String,
+    @JsonProperty("videoWidth")
+    val videoWidth: Int,
+    @JsonProperty("videoHeight")
+    val videoHeight: Int,
+    @JsonProperty("transcription")
+    val transcription: String,
+    @JsonProperty("informationAdditionnelleTitre")
+    val informationAdditionnelleTitre: String?,
+    @JsonProperty("informationAdditionnelleDescription")
+    val informationAdditionnelleDescription: List<StrapiRichText>?,
+) : StrapiResponseQagType
 
 data class StrapiMetaInformations(
     @JsonProperty("pagination")
@@ -57,4 +84,25 @@ data class StrapiMetaPagination(
     val pageCount: Int,
     @JsonProperty("total")
     val total: Int,
+)
+
+data class StrapiRichText(
+    @JsonProperty("text")
+    val text: String?,
+    @JsonProperty("type")
+    val type: String,
+    @JsonProperty("bold")
+    val bold: Boolean?,
+    @JsonProperty("underline")
+    val underline: Boolean?,
+    @JsonProperty("strikethrough")
+    val strikethrough: Boolean?,
+    @JsonProperty("children")
+    val children: List<StrapiRichText>?,
+    @JsonProperty("format")
+    val format: String?,
+    @JsonProperty("code")
+    val code: Boolean?,
+    @JsonProperty("level")
+    val level: Int?,
 )
