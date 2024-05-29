@@ -39,7 +39,6 @@ class GetQagDetailsUseCase(
                                 canDelete = qag.userId == userId && qag.status != QagStatus.SELECTED_FOR_RESPONSE,
                                 isAuthor = qag.userId == userId,
                                 isSupportedByUser = isSupportedByUser(qagDetails = qag, userId = userId),
-                                hasGivenFeedback = hasGivenFeedback,
                                 isHelpful = isHelpFul
                             )
                         )

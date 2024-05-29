@@ -5,7 +5,10 @@ import fr.gouv.agora.domain.QagInsertingUpdates
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
 import fr.gouv.agora.usecase.notification.SendQagNotificationUseCase
-import fr.gouv.agora.usecase.qag.repository.*
+import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
+import fr.gouv.agora.usecase.qag.repository.QagInfo
+import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
+import fr.gouv.agora.usecase.qag.repository.QagUpdateResult
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.springframework.stereotype.Service
@@ -16,7 +19,6 @@ class ModerateModeratusQagUseCase(
     private val sendQagNotificationUseCase: SendQagNotificationUseCase,
     private val qagUpdatesRepository: QagUpdatesRepository,
     private val moderatusQagLockRepository: ModeratusQagLockRepository,
-    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagDetailsCacheRepository: QagDetailsCacheRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
 ) {
@@ -80,8 +82,6 @@ class ModerateModeratusQagUseCase(
 
             QagStatus.MODERATED_ACCEPTED -> if (!isAccepted) {
                 sendQagNotificationUseCase.sendNotificationQagRejected(qagInfo.id)
-                qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
-                qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
                 qagDetailsCacheRepository.evictQag(qagId = qagInfo.id)
                 qagListsCacheRepository.evictQagLatestList(thematiqueId = null, pageNumber = 1)
                 qagListsCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
@@ -98,15 +98,6 @@ class ModerateModeratusQagUseCase(
     }
 
     private fun updateCache(qagInfo: QagInfo) {
-        val popularQagsNoThematique = qagPreviewCacheRepository.getQagPopularList(thematiqueId = null)
-        if (popularQagsNoThematique != null && popularQagsNoThematique.size < MAX_PREVIEW_LIST_SIZE) {
-            qagPreviewCacheRepository.evictQagPopularList(thematiqueId = null)
-        }
-        val popularQagsWithThematique =
-            qagPreviewCacheRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId)
-        if (popularQagsWithThematique != null && popularQagsWithThematique.size < MAX_PREVIEW_LIST_SIZE) {
-            qagPreviewCacheRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId)
-        }
         val popularQagListNoThematique = qagListsCacheRepository.getQagPopularList(thematiqueId = null, pageNumber = 1)
         if (popularQagListNoThematique != null && popularQagListNoThematique.qags.size < MAX_PREVIEW_LIST_SIZE) {
             qagListsCacheRepository.evictQagPopularList(thematiqueId = null, pageNumber = 1)
@@ -117,8 +108,6 @@ class ModerateModeratusQagUseCase(
             qagListsCacheRepository.getQagPopularList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
         }
         qagListsCacheRepository.evictQagPopularList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)
-        qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
-        qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
         qagDetailsCacheRepository.evictQag(qagId = qagInfo.id)
         qagListsCacheRepository.evictQagLatestList(thematiqueId = null, pageNumber = 1)
         qagListsCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId, pageNumber = 1)

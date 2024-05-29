@@ -22,10 +22,6 @@ class QagInfoRepositoryImpl(
         return databaseRepository.getQagToModerateList().map(mapper::toDomain)
     }
 
-    override fun getQagSelectedWithoutResponsesWithSupportCount(): List<QagInfoWithSupportCount> {
-        return databaseRepository.getQagsWithoutResponse().map(mapper::toDomain)
-    }
-
     override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
         val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
             databaseRepository.getPopularQags(thematiqueId = thematiqueUUID)
@@ -59,65 +55,6 @@ class QagInfoRepositoryImpl(
         val qagsSelectedForResponse = databaseRepository.getLatestQagsSelectedForResponse()
 
         return qagsSelectedForResponse.map(mapper::toDomain)
-    }
-
-    override fun getPopularQagsPaginated(
-        maxDate: Date,
-        offset: Int,
-        thematiqueId: String?,
-    ): List<QagInfoWithSupportCount> {
-        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-            databaseRepository.getPopularQagsPaginated(
-                maxDate = maxDate,
-                offset = offset,
-                thematiqueId = thematiqueUUID,
-            )
-        } ?: databaseRepository.getPopularQagsPaginated(
-            maxDate = maxDate,
-            offset = offset,
-        )
-        return qagList.map(mapper::toDomain)
-    }
-
-    override fun getLatestQagsPaginated(
-        maxDate: Date,
-        offset: Int,
-        thematiqueId: String?,
-    ): List<QagInfoWithSupportCount> {
-        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-            databaseRepository.getLatestQagsPaginated(
-                maxDate = maxDate,
-                offset = offset,
-                thematiqueId = thematiqueUUID,
-            )
-        } ?: databaseRepository.getLatestQagsPaginated(
-            maxDate = maxDate,
-            offset = offset,
-        )
-        return qagList.map(mapper::toDomain)
-    }
-
-    override fun getSupportedQagsPaginated(
-        userId: String,
-        maxDate: Date,
-        offset: Int,
-        thematiqueId: String?,
-    ): List<QagInfoWithSupportCount> {
-        val qagList = userId.toUuidOrNull()?.let { userUUID ->
-            thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-                databaseRepository.getSupportedQagsPaginated(
-                    userId = userUUID,
-                    maxDate = maxDate,
-                    offset = offset,
-                    thematiqueId = thematiqueUUID,
-                )
-            } ?: databaseRepository.getSupportedQagsPaginated(
-                userId = userUUID,
-                maxDate = maxDate,
-                offset = offset,
-            )
-        } ?: emptyList()
-        return qagList.map(mapper::toDomain)
     }
 
     override fun getPopularQagsPaginatedV2(
@@ -192,12 +129,6 @@ class QagInfoRepositoryImpl(
         return qagId.toUuidOrNull()?.let { qagUUID ->
             databaseRepository.getQagWithSupportCount(qagId = qagUUID)?.let(mapper::toDomain)
         }
-    }
-
-    override fun getQagsWithSupportCount(qagIds: List<String>): List<QagInfoWithSupportCount> {
-        return databaseRepository.getQagsWithSupportCount(
-            qagIds = qagIds.mapNotNull { it.toUuidOrNull() }
-        ).map(mapper::toDomain)
     }
 
     override fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult {

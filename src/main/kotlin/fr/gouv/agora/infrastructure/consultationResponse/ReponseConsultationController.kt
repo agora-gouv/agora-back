@@ -1,15 +1,18 @@
 package fr.gouv.agora.infrastructure.consultationResponse
 
 import fr.gouv.agora.infrastructure.consultationResponse.InsertResponseConsultationQueue.TaskType
-import fr.gouv.agora.infrastructure.consultationResponse.repository.ConsultationResponseResultJsonCacheRepository
 import fr.gouv.agora.security.jwt.JwtTokenUtils
-import fr.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
 import fr.gouv.agora.usecase.consultationResponse.ControlResponseConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.InsertReponseConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository.InsertResult
+import fr.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
@@ -17,7 +20,6 @@ class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,
     private val controlResponseConsultationUseCase: ControlResponseConsultationUseCase,
     private val askForDemographicInfoUseCase: AskForDemographicInfoUseCase,
-    private val cacheRepository: ConsultationResponseResultJsonCacheRepository,
     private val jsonMapper: ReponseConsultationJsonMapper,
     private val queue: InsertResponseConsultationQueue,
 ) {
@@ -48,7 +50,6 @@ class ReponseConsultationController(
                         InsertResult.INSERT_SUCCESS -> {
                             val askDemographicInfo =
                                 askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
-                            cacheRepository.evictConsultationResults(consultationId)
                             ResponseEntity.ok()
                                 .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
                         }

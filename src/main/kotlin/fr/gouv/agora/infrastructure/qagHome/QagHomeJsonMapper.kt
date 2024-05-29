@@ -12,30 +12,6 @@ class QagHomeJsonMapper(
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
     private val dateMapper: DateMapper,
 ) {
-    fun toJson(
-        qagPopularList: List<QagPreview>,
-        qagLatestList: List<QagPreview>,
-        qagSupportedList: List<QagPreview>,
-        qagErrorText: String?,
-    ): QagPreviewsJson {
-        val qagHomePopupTitle = System.getenv("QAG_HOME_POPUP_TITLE")?.takeIf { it.isNotBlank() }
-        val qagHomePopupDescription = System.getenv("QAG_HOME_POPUP_DESCRIPTION")?.takeIf { it.isNotBlank() }
-
-        return QagPreviewsJson(
-            qagList = QagListJson(
-                popular = qagPopularList.map { qag -> qagToJson(qag) },
-                latest = qagLatestList.map { qag -> qagToJson(qag) },
-                supporting = qagSupportedList.map { qag -> qagToJson(qag) },
-            ),
-            askQagErrorText = qagErrorText,
-            qagPopup = if (qagHomePopupTitle != null && qagHomePopupDescription != null) {
-                QagPopupJson(
-                    title = qagHomePopupTitle,
-                    description = qagHomePopupDescription,
-                )
-            } else null,
-        )
-    }
 
     fun toResponsesJson(
         previewList: ResponseQagPreviewList,

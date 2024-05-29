@@ -5,7 +5,6 @@ import fr.gouv.agora.domain.SupportQagDeleting
 import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
@@ -20,7 +19,6 @@ class DeleteSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagDetailsCacheRepository: QagDetailsCacheRepository,
     private val supportQagCacheRepository: SupportQagCacheRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
@@ -57,26 +55,6 @@ class DeleteSupportQagUseCase(
     }
 
     private fun updateCache(qagInfo: QagInfo, userId: String) {
-        qagPreviewCacheRepository.decrementQagPopularSupportCount(thematiqueId = null, qagId = qagInfo.id)
-        qagPreviewCacheRepository.decrementQagPopularSupportCount(
-            thematiqueId = qagInfo.thematiqueId,
-            qagId = qagInfo.id,
-        )
-        qagPreviewCacheRepository.decrementQagLatestSupportCount(thematiqueId = null, qagId = qagInfo.id)
-        qagPreviewCacheRepository.decrementQagLatestSupportCount(
-            thematiqueId = qagInfo.thematiqueId,
-            qagId = qagInfo.id,
-        )
-        qagPreviewCacheRepository.decrementSupportedSupportCount(
-            thematiqueId = null,
-            qagId = qagInfo.id,
-            userId = userId,
-        )
-        qagPreviewCacheRepository.decrementSupportedSupportCount(
-            thematiqueId = qagInfo.thematiqueId,
-            qagId = qagInfo.id,
-            userId = userId,
-        )
         qagDetailsCacheRepository.decrementSupportCount(qagInfo.id)
         supportQagCacheRepository.removeSupportedQagIds(userId = userId, qagId = qagInfo.id)
         qagListsCacheRepository.decrementQagPopularSupportCount(thematiqueId = null, pageNumber = 1, qagId = qagInfo.id)

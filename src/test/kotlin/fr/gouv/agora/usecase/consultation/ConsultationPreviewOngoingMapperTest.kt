@@ -121,6 +121,7 @@ internal class ConsultationPreviewOngoingMapperTest {
     @ParameterizedTest(name = "toConsultationPreviewOngoing - when {0} - should return expected")
     @MethodSource("toConsultationPreviewOngoingCases")
     fun `toConsultationPreviewOngoing - should return expected`(
+        @Suppress("UNUSED_PARAMETER")
         whenTestDescription: String,
         serverDate: LocalDateTime,
         consultationEndDate: LocalDateTime,

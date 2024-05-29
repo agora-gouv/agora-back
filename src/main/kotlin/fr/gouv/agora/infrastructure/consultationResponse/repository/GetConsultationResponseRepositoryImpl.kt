@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.consultationResponse.repository
 
 import fr.gouv.agora.domain.DemographicInfoCount
 import fr.gouv.agora.domain.DemographicInfoCountByChoices
-import fr.gouv.agora.domain.ReponseConsultation
 import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.infrastructure.consultationResponse.dto.ReponseConsultationDTO
 import fr.gouv.agora.infrastructure.consultationResponse.repository.ReponseConsultationCacheRepository.CacheResult
@@ -12,16 +11,12 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
+@Suppress("unused")
 class GetConsultationResponseRepositoryImpl(
     private val databaseRepository: ReponseConsultationDatabaseRepository,
     private val cacheRepository: ReponseConsultationCacheRepository,
     private val mapper: ReponseConsultationMapper,
 ) : GetConsultationResponseRepository {
-
-    @Deprecated("Should use getConsultationResponsesCount instead for better performances")
-    override fun getConsultationResponses(consultationId: String): List<ReponseConsultation> {
-        return getConsultationResponseDTOList(consultationId).map(mapper::toDomain)
-    }
 
     override fun getConsultationResponsesCount(consultationId: String): List<ResponseConsultationCount> {
         return consultationId.toUuidOrNull()?.let { consultationUUID ->

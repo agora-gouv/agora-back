@@ -419,6 +419,7 @@ internal class ConsultationResultsUseCaseTest {
     @ParameterizedTest(name = "getConsultationResults / consultationResponseRepository - {0} - should return expected")
     @MethodSource("getConsultationResultsParameters")
     fun `getConsultationResults - when given inputs returned by consultationResponseRepository - should return expected`(
+        @Suppress("UNUSED_PARAMETER")
         testDescription: String,
         participantCount: Int,
         inputDataList: List<QuestionInputData>,
@@ -476,6 +477,7 @@ internal class ConsultationResultsUseCaseTest {
     @ParameterizedTest(name = "getConsultationResults / consultationResultAggregatedRepository - {0} - should return expected")
     @MethodSource("getConsultationResultsParameters")
     fun `getConsultationResults - when given inputs returned by consultationResultAggregatedRepository - should return expected`(
+        @Suppress("UNUSED_PARAMETER")
         testDescription: String,
         participantCount: Int,
         inputDataList: List<QuestionInputData>,

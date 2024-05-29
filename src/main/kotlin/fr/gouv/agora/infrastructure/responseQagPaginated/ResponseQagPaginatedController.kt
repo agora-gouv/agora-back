@@ -22,7 +22,7 @@ class ResponseQagPaginatedController(
         } ?: ResponseEntity.badRequest().body(Unit)
     }
 
-    @Deprecated("Should use GET /qags/responses/{pageNumber} instead")
+    @Deprecated("Should use GET /qags/responses/{pageNumber} instead, can be deleted once required app version is <TBD> (development not started yet)")
     @GetMapping("/qags/responses/page/{pageNumber}")
     fun getQagResponsesPaginated(
         @PathVariable pageNumber: String,

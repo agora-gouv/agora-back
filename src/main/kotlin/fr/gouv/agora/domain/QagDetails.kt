@@ -23,9 +23,5 @@ data class QagWithUserData(
     val canDelete: Boolean,
     val isAuthor: Boolean,
     val isSupportedByUser: Boolean,
-
-    @Deprecated("Should use [isHelpful] instead")
-    val hasGivenFeedback: Boolean,
-
     val isHelpful: Boolean?
 )
