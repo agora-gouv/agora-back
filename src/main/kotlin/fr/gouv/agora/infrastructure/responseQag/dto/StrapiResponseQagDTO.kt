@@ -50,7 +50,7 @@ data class StrapiResponseQagText(
     @JsonProperty("label")
     val label: String,
     @JsonProperty("text")
-    val text: String,
+    val text: List<StrapiRichText>?,
 ) : StrapiResponseQagType
 
 data class StrapiResponseQagVideo(
@@ -63,11 +63,11 @@ data class StrapiResponseQagVideo(
     @JsonProperty("videoHeight")
     val videoHeight: Int,
     @JsonProperty("transcription")
-    val transcription: List<StrapiRichText>?,
+    val transcription: String?,
     @JsonProperty("informationAdditionnelleTitre")
     val informationAdditionnelleTitre: String?,
     @JsonProperty("informationAdditionnelleDescription")
-    val informationAdditionnelleDescription: String?,
+    val informationAdditionnelleDescription: List<StrapiRichText>?,
 ) : StrapiResponseQagType
 
 data class StrapiMetaInformations(

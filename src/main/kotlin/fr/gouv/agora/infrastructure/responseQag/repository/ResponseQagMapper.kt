@@ -48,26 +48,23 @@ class ResponseQagMapper {
     fun toDomain(responseBody: StrapiResponseQagDTO): List<ResponseQag> {
         return responseBody.data.map {
             val response = it.attributes
-            val responseContent = response.reponseType.first()
 
-            when (responseContent) {
+            when (val responseContent = response.reponseType.first()) {
                 is StrapiResponseQagText -> {
-                    val strapiResponseQagText = response.reponseType.first() as StrapiResponseQagText
                     ResponseQagText(
                         author = response.auteur,
                         authorPortraitUrl = response.auteurPortraitUrl,
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
-                        responseText = strapiResponseQagText.text,
-                        responseLabel = strapiResponseQagText.label,
+                        responseText = responseContent.text.toString(),
+                        responseLabel = responseContent.label,
                     )
                 }
 
                 is StrapiResponseQagVideo -> {
-                    val strapiResponseQagVideo = response.reponseType.first() as StrapiResponseQagVideo
-                    val thereIsAdditionalInfo = strapiResponseQagVideo.informationAdditionnelleTitre != null
-                            && strapiResponseQagVideo.informationAdditionnelleDescription != null
+                    val thereIsAdditionalInfo = responseContent.informationAdditionnelleTitre != null
+                            && responseContent.informationAdditionnelleDescription != null
 
                     ResponseQagVideo(
                         author = response.auteur,
@@ -75,15 +72,15 @@ class ResponseQagMapper {
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
-                        authorDescription = strapiResponseQagVideo.auteurDescription,
-                        videoUrl = strapiResponseQagVideo.urlVideo,
-                        videoWidth = strapiResponseQagVideo.videoWidth,
-                        videoHeight = strapiResponseQagVideo.videoHeight,
-                        transcription = strapiResponseQagVideo.transcription.toString(),
+                        authorDescription = responseContent.auteurDescription,
+                        videoUrl = responseContent.urlVideo,
+                        videoWidth = responseContent.videoWidth,
+                        videoHeight = responseContent.videoHeight,
+                        transcription = responseContent.transcription ?: "",
                         additionalInfo = if (thereIsAdditionalInfo) {
                             ResponseQagAdditionalInfo(
-                                strapiResponseQagVideo.informationAdditionnelleTitre!!,
-                                strapiResponseQagVideo.informationAdditionnelleDescription!!
+                                responseContent.informationAdditionnelleTitre!!,
+                                responseContent.informationAdditionnelleDescription.toString()
                             )
                         } else null
                     )
