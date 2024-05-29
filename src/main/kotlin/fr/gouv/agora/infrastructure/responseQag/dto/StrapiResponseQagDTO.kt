@@ -63,7 +63,7 @@ data class StrapiResponseQagVideo(
     @JsonProperty("videoHeight")
     val videoHeight: Int,
     @JsonProperty("transcription")
-    val transcription: String?,
+    val transcription: String,
     @JsonProperty("informationAdditionnelleTitre")
     val informationAdditionnelleTitre: String?,
     @JsonProperty("informationAdditionnelleDescription")

@@ -76,7 +76,7 @@ class ResponseQagMapper {
                         videoUrl = responseContent.urlVideo,
                         videoWidth = responseContent.videoWidth,
                         videoHeight = responseContent.videoHeight,
-                        transcription = responseContent.transcription ?: "",
+                        transcription = responseContent.transcription,
                         additionalInfo = if (thereIsAdditionalInfo) {
                             ResponseQagAdditionalInfo(
                                 responseContent.informationAdditionnelleTitre!!,
