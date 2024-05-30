@@ -147,8 +147,6 @@ class QagPaginatedV2UseCase(
 
         if (offset > qagsCount) return null
 
-        val thematiques = thematiqueRepository.getThematiqueList()
-
         val qags = when (getQagMethod) {
             is RetrieveQagMethod.WithUserId -> {
                 getQagMethod.method.invoke(
@@ -170,7 +168,7 @@ class QagPaginatedV2UseCase(
             is RetrieveQagMethod.WithoutParams -> getQagMethod.method.invoke(qagInfoRepository)
         }
         val qagWithSupportCountList = qags.mapNotNull { qagInfoWithSupportCount ->
-            thematiques.find { thematique -> thematique.id == qagInfoWithSupportCount.thematiqueId }
+            thematiqueRepository.getThematique(qagInfoWithSupportCount.thematiqueId)
                 ?.let { QagWithSupportCount(qagInfo = qagInfoWithSupportCount, thematique = it) }
         }
         val maxPageCount = when (getQagMethod) {
@@ -236,4 +234,3 @@ private sealed class RetrieveQagMethod {
         val method: QagInfoRepository.() -> List<QagInfoWithSupportCount>,
     ) : RetrieveQagMethod()
 }
-

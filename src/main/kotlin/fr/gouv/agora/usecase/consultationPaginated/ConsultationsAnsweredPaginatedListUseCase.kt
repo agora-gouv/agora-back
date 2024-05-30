@@ -37,10 +37,9 @@ class ConsultationsAnsweredPaginatedListUseCase(
     }
 
     private fun buildConsultationAnsweredPreviewList(userId: String, offset: Int): List<ConsultationPreviewFinished> {
-        val thematiqueList = thematiqueRepository.getThematiqueList()
         return consultationPreviewFinishedRepository.getConsultationAnsweredList(userId = userId, offset = offset)
             .mapNotNull { consultationInfo ->
-                thematiqueList.find { thematique -> consultationInfo.thematiqueId == thematique.id }
+                thematiqueRepository.getThematique(consultationInfo.thematiqueId)
                     ?.let { thematique ->
                         mapper.toConsultationPreviewFinished(
                             consultationInfo = consultationInfo,

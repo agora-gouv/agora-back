@@ -12,6 +12,9 @@ class ListThematiqueUseCase(private val thematiqueRepository: ThematiqueReposito
 
     fun getThematiqueList(): List<Thematique> {
         val listThematiqueBeforeSort = thematiqueRepository.getThematiqueList()
+
+        // todo supprimer la moitié ici ? -> faire la migration des ids de thématiques de la db ?
+        // todo -> si les ids de thématiques sont les mêmes dans les relations, on est booooon
         return listThematiqueBeforeSort.sortedWith(compareBy({ it.id == ID_THEMATIQUE_AUTRE }, { it.label }))
     }
 }

@@ -80,7 +80,6 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
         given(responseQagRepository.getResponsesQag(from = 0)).willReturn(listOf(responseQag))
 
         given(qagInfoRepository.getQagsInfo(qagIds = listOf("qagId"))).willReturn(emptyList())
-        given(thematiqueRepository.getThematiqueList()).willReturn(emptyList())
 
         // When
         val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 1)
@@ -96,7 +95,6 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
         then(responseQagRepository).should().getResponsesQag(from = 0)
         then(responseQagRepository).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
-        then(thematiqueRepository).should(only()).getThematiqueList()
     }
 
     @Test
@@ -113,7 +111,6 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
             given(it.id).willReturn("qagId")
         }
         given(qagInfoRepository.getQagsInfo(qagIds = listOf("qagId"))).willReturn(listOf(qag))
-        given(thematiqueRepository.getThematiqueList()).willReturn(emptyList())
 
         // When
         val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 2)
@@ -129,7 +126,6 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
         then(responseQagRepository).should().getResponsesQag(from = 20)
         then(responseQagRepository).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
-        then(thematiqueRepository).should(only()).getThematiqueList()
     }
 
     @Test
@@ -148,10 +144,8 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
         }
         given(qagInfoRepository.getQagsInfo(qagIds = listOf("qagId"))).willReturn(listOf(qag))
 
-        val thematique = mock(Thematique::class.java).also {
-            given(it.id).willReturn("thematiqueId")
-        }
-        given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
+        val thematique = mock(Thematique::class.java)
+        given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
 
         val responseQagPreview = mock(ResponseQagPreviewWithoutOrder::class.java)
         given(
@@ -177,6 +171,5 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
         then(responseQagRepository).should().getResponsesQag(from = 80)
         then(responseQagRepository).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
-        then(thematiqueRepository).should(only()).getThematiqueList()
     }
 }
