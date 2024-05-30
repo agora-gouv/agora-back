@@ -5,24 +5,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import java.time.LocalDate
 
-data class StrapiResponseQagDTO(
-    @JsonProperty("data")
-    val data: List<StrapiModelAttributes>,
-    @JsonProperty("meta")
-    val meta: StrapiMetaInformations,
-) {
-    companion object {
-        fun ofEmpty(): StrapiResponseQagDTO {
-            return StrapiResponseQagDTO(emptyList(), StrapiMetaInformations(StrapiMetaPagination(0, 0, 0, 0)))
-        }
-    }
-}
-
-data class StrapiModelAttributes(
-    @JsonProperty(value = "attributes")
-    val attributes: StrapiResponseQag
-)
-
 data class StrapiResponseQag(
     @JsonProperty(value = "auteur")
     val auteur: String,
@@ -69,22 +51,6 @@ data class StrapiResponseQagVideo(
     @JsonProperty("informationAdditionnelleDescription")
     val informationAdditionnelleDescription: List<StrapiRichText>?,
 ) : StrapiResponseQagType
-
-data class StrapiMetaInformations(
-    @JsonProperty("pagination")
-    val pagination: StrapiMetaPagination,
-)
-
-data class StrapiMetaPagination(
-    @JsonProperty("page")
-    val page: Int,
-    @JsonProperty("pageSize")
-    val pageSize: Int,
-    @JsonProperty("pageCount")
-    val pageCount: Int,
-    @JsonProperty("total")
-    val total: Int,
-)
 
 data class StrapiRichText(
     @JsonProperty("text")
