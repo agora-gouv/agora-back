@@ -446,6 +446,50 @@
 					"response": []
 				},
 				{
+					"name": "/public/consultations/ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/api/public/consultations/{{consultationId}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"consultations",
+								"{{consultationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/public/consultations/ID/updates/ID Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/api/public/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"consultations",
+								"{{consultationId2}}",
+								"updates",
+								"{{consultationUpdateId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/consultations/ID/questions",
 					"request": {
 						"method": "GET",
