@@ -55,4 +55,19 @@ class GetLastNewsUseCaseTest {
         // THEN
         then(newsJsonMapper).should().toJson(todayNews)
     }
+
+    @Test
+    fun `when there is no news before today, it returns null`() {
+        // GIVEN
+        val futureNews = mock(NewsDTO::class.java).also {
+            given(it.beginDate).willReturn(today.plusDays(1))
+        }
+        given(newsDatabaseRepository.getNewsList()).willReturn(listOf(futureNews))
+
+        // WHEN
+        val actual = getLastNewsUseCase.execute()
+
+        // THEN
+        assertThat(actual).isNull()
+    }
 }

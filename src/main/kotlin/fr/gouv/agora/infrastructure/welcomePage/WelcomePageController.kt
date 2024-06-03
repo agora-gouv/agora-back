@@ -13,6 +13,9 @@ class WelcomePageController(
 ) {
     @GetMapping("/last_news")
     fun getLastNews(): ResponseEntity<NewsJson> {
-        return ResponseEntity.ok().body(getLastNewsUseCase.execute())
+        val lastNews = getLastNewsUseCase.execute()
+            ?: return ResponseEntity.notFound().build()
+
+        return ResponseEntity.ok().body(lastNews)
     }
 }

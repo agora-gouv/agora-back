@@ -12,12 +12,13 @@ class GetLastNewsUseCase(
     private val clock: Clock,
     private val newsJsonMapper: NewsJsonMapper,
 ) {
-    fun execute(): NewsJson {
+    fun execute(): NewsJson? {
         val allNews = newsDatabaseRepository.getNewsList()
 
         val lastNewsBeforeToday = allNews
             .filter { it.beginDate <= LocalDate.now(clock) }
-            .maxBy { it.beginDate }
+            .maxByOrNull { it.beginDate }
+            ?: return null
 
         return newsJsonMapper.toJson(lastNewsBeforeToday)
     }
