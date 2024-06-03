@@ -38,7 +38,9 @@ class ThematiqueRepositoryImpl(
 
         val thematiqueList = databaseRepository.getThematiqueList()
             .map(mapper::toDomain)
+
         cacheRepository.insertThematiqueList(thematiqueList + strapiThematiques)
+
         return thematiqueList + strapiThematiques
     }
 }

@@ -35,6 +35,7 @@ class ResponseQagStrapiRepository(
             val allResponsesQag = cmsStrapiHttpClient
                 .getAllSortedBy("reponse-du-gouvernements", "reponseDate", true)
 
+            // todo : ne pas faire le cast et remplacer *
             val ref: TypeReference<*> = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
             objectMapper.readValue(allResponsesQag, ref) as StrapiDTO<StrapiResponseQag>
         } catch (e: Exception) {

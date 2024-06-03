@@ -27,7 +27,6 @@ data class StrapiResponseQag(
 )
 sealed interface StrapiResponseQagType
 
-
 data class StrapiResponseQagText(
     @JsonProperty("label")
     val label: String,

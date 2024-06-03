@@ -160,16 +160,18 @@ internal class ThematiqueRepositoryImplTest {
         @Test
         fun `getThematique - when cache returns CacheNotInitialized and database return a matching thematique - should insert dto to cache then return mapped dto from database`() {
             // Given
-            val thematiqueId = UUID.randomUUID()
-            val thematiqueDTO = mock(ThematiqueDTO::class.java).also {
-                given(it.id).willReturn(thematiqueId)
-            }
+            val thematiqueId = UUID.randomUUID().toString()
+            val thematiqueDTO = mock(ThematiqueDTO::class.java)
+
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
+
             given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDTO))
             val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<StrapiThematiqueDTO>
             given(strapiRepository.getThematiques()).willReturn(thematiqueStrapiDTO)
 
-            val thematique = mock(Thematique::class.java)
+            val thematique = mock(Thematique::class.java).also {
+                given(it.id).willReturn(thematiqueId)
+            }
             given(mapper.toDomain(thematiqueDTO)).willReturn(thematique)
 
             // When
