@@ -8,6 +8,6 @@ import java.util.UUID
 @Repository
 interface NewsDatabaseRepository : JpaRepository<NewsDTO, UUID> {
 
-    @Query(value = "SELECT * FROM last_news", nativeQuery = true)
+    @Query(value = "SELECT * FROM news", nativeQuery = true)
     fun getNewsList(): List<NewsDTO>
 }
