@@ -3,8 +3,8 @@ package fr.gouv.agora.infrastructure.responseQag.repository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.agora.config.CmsStrapiHttpClient
-import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQag
 import fr.gouv.agora.infrastructure.common.StrapiDTO
+import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQag
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
