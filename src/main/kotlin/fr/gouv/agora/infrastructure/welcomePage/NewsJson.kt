@@ -1,8 +1,8 @@
 package fr.gouv.agora.infrastructure.welcomePage
 
-data class LastNewsJson(
+data class NewsJson(
     val description: String,
     val callToActionText: String,
     val routeName: String,
-    val routeArgument: String,
+    val routeArgument: String?,
 )
