@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
 import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
-import kotlin.math.log
 
 @Component
 class LoginTokenGenerator {

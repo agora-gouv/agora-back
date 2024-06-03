@@ -1,6 +1,5 @@
 package fr.gouv.agora.usecase.welcomePage
 
-import com.google.api.client.json.Json
 import fr.gouv.agora.infrastructure.welcomePage.NewsJson
 import fr.gouv.agora.infrastructure.welcomePage.repository.NewsDTO
 import org.springframework.stereotype.Component
