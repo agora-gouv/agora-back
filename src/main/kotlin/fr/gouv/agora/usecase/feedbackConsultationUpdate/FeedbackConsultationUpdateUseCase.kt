@@ -70,13 +70,6 @@ class FeedbackConsultationUpdateUseCase(
         )?.let { update -> update.feedbackQuestion != null } ?: false
     }
 
-    private fun getUserFeedback(consultationUpdateId: String, userId: String): Boolean? {
-        return feedbackRepository.getUserFeedback(
-            consultationUpdateId = consultationUpdateId,
-            userId = userId,
-        )
-    }
-
     private fun updateFeedbackStatsCache(
         consultationId: String,
         consultationUpdateId: String,

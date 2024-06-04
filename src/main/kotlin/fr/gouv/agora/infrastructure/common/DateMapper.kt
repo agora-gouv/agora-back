@@ -16,19 +16,12 @@ class DateMapper {
     }
 
     fun toFormattedDate(date: Date): String = DEFAULT_FORMAT.format(date.toLocalDateTime())
+    fun toFormattedDate(date: LocalDate): String = DEFAULT_FORMAT.format(date.atStartOfDay())
 
     fun toLocalDate(dateString: String): LocalDate? {
         return try {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             LocalDate.parse(dateString, formatter)
-        } catch (e: DateTimeParseException) {
-            null
-        }
-    }
-
-    fun toLocalDateTime(dateTimeString: String): LocalDateTime? {
-        return try {
-            LocalDateTime.parse(dateTimeString, DateTimeFormatter.ISO_DATE_TIME)
         } catch (e: DateTimeParseException) {
             null
         }

@@ -10,5 +10,5 @@ data class ConcertationJson(
     val externalLink: String,
     val thematique: ThematiqueNoIdJson,
     val updateLabel: String?,
-    val lastUpdateDate: LocalDate,
+    val lastUpdateDate: String,
 )
