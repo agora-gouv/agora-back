@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.7.22"
     kotlin("plugin.spring") version "1.7.22"
     kotlin("plugin.jpa") version "1.7.22"
+    id("io.sentry.jvm.gradle") version "4.7.0"
 }
 
 group = "fr.gouv.agora"
@@ -32,6 +33,10 @@ dependencies {
     implementation("redis.clients:jedis")
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20220608.1")
+    // Sentry
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:6.16.0")
+    implementation("io.sentry:sentry-logback:6.16.0")
+
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")

@@ -1,0 +1,23 @@
+<configuration>
+    <!-- Configure the Console appender -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="Sentry" class="io.sentry.logback.SentryAppender">
+        <options>
+            <dsn>${SENTRY_DSN}</dsn>
+        </options>
+        <minimumEventLevel>WARN</minimumEventLevel>
+        <minimumBreadcrumbLevel>INFO</minimumBreadcrumbLevel>
+    </appender>
+
+    <!-- Enable the Console and Sentry appenders, Console is provided as an example
+ of a non-Sentry logger that is set to a different logging threshold -->
+    <root level="INFO">
+        <appender-ref ref="Console" />
+        <appender-ref ref="Sentry" />
+    </root>
+</configuration>

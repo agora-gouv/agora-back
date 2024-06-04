@@ -8,7 +8,7 @@ import fr.gouv.agora.infrastructure.login.repository.LoginCacheRepository.CacheR
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.login.repository.UserRepository
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 @Component
 class UserRepositoryImpl(
