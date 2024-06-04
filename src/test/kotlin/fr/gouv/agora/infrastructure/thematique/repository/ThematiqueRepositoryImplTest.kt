@@ -60,7 +60,10 @@ internal class ThematiqueRepositoryImplTest {
             // Given
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
             given(databaseRepository.getThematiqueList()).willReturn(emptyList())
-            given(strapiRepository.getThematiques()).willReturn(StrapiDTO.ofEmpty())
+
+            val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<StrapiThematiqueDTO>
+            given(strapiRepository.getThematiques()).willReturn(thematiqueStrapiDTO)
+            given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(emptyList())
 
             // When
             val result = repository.getThematiqueList()
@@ -71,7 +74,6 @@ internal class ThematiqueRepositoryImplTest {
             then(cacheRepository).should().insertThematiqueList(emptyList())
             then(cacheRepository).shouldHaveNoMoreInteractions()
             then(databaseRepository).should(only()).getThematiqueList()
-            then(mapper).shouldHaveNoInteractions()
         }
 
         @Test
@@ -85,17 +87,17 @@ internal class ThematiqueRepositoryImplTest {
             given(strapiRepository.getThematiques()).willReturn(strapiThematiqueDTO)
 
             given(mapper.toDomain(databaseThematiqueDTO)).willReturn(thematique)
+            given(mapper.toDomain(strapiThematiqueDTO)).willReturn(listOf(thematique))
 
             // When
             val result = repository.getThematiqueList()
 
             // Then
-            assertThat(result).isEqualTo(listOf(thematique))
+            assertThat(result).isEqualTo(listOf(thematique, thematique))
             then(cacheRepository).should().getThematiqueList()
-            then(cacheRepository).should().insertThematiqueList(listOf(thematique))
+            then(cacheRepository).should().insertThematiqueList(listOf(thematique, thematique))
             then(cacheRepository).shouldHaveNoMoreInteractions()
             then(databaseRepository).should(only()).getThematiqueList()
-            then(mapper).should(only()).toDomain(databaseThematiqueDTO)
         }
 
     }
@@ -104,29 +106,15 @@ internal class ThematiqueRepositoryImplTest {
     inner class GetThematiqueCases {
 
         @Test
-        fun `getThematique - when invalid thematique UUID - should return null without checking neither cache nor database`() {
-            // When
-            val result = repository.getThematique("invalid thematiqueId")
-
-            // Then
-            assertThat(result).isEqualTo(null)
-            then(cacheRepository).shouldHaveNoInteractions()
-            then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).shouldHaveNoInteractions()
-        }
-
-        @Test
         fun `getThematique - when cache returns CachedThematiqueList and has matching thematique - should return mapped dto from cache`() {
             // Given
             val thematiqueId = UUID.randomUUID()
-            val thematiqueDTO = mock(ThematiqueDTO::class.java).also {
-                given(it.id).willReturn(thematiqueId)
-            }
 
-            val thematique = mock(Thematique::class.java)
+            val thematique = mock(Thematique::class.java).also {
+                given(it.id).willReturn(thematiqueId.toString())
+            }
             given(cacheRepository.getThematiqueList())
                 .willReturn(CacheListResult.CachedThematiqueList(listOf(thematique)))
-            given(mapper.toDomain(thematiqueDTO)).willReturn(thematique)
 
             // When
             val result = repository.getThematique(thematiqueId.toString())
@@ -135,7 +123,6 @@ internal class ThematiqueRepositoryImplTest {
             assertThat(result).isEqualTo(thematique)
             then(cacheRepository).should(only()).getThematiqueList()
             then(databaseRepository).shouldHaveNoInteractions()
-            then(mapper).should(only()).toDomain(thematiqueDTO)
         }
 
         @Test
@@ -173,26 +160,31 @@ internal class ThematiqueRepositoryImplTest {
                 given(it.id).willReturn(thematiqueId)
             }
             given(mapper.toDomain(thematiqueDTO)).willReturn(thematique)
+            given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(listOf(thematique))
 
             // When
-            val result = repository.getThematique(thematiqueId.toString())
+            val result = repository.getThematique(thematiqueId)
 
             // Then
             assertThat(result).isEqualTo(thematique)
-            then(cacheRepository).should().insertThematiqueList(listOf(thematique))
+            then(cacheRepository).should().insertThematiqueList(listOf(thematique, thematique))
             then(databaseRepository).should(only()).getThematiqueList()
-            then(mapper).should(only()).toDomain(thematiqueDTO)
         }
 
         @Test
         fun `getThematique - when cache returns CacheNotInitialized and database return no matching thematique - should insert dto to cache then return mapped dto from database`() {
             // Given
-            val thematiqueDTO = mock(ThematiqueDTO::class.java).also {
-                given(it.id).willReturn(NOT_FOUND_UUID)
-            }
-            given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
-            given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDTO))
+            val thematiqueDTO = mock(ThematiqueDTO::class.java)
+            val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<StrapiThematiqueDTO>
             val thematique = mock(Thematique::class.java)
+
+            given(databaseRepository.getThematiqueList()).willReturn(listOf(thematiqueDTO))
+            given(mapper.toDomain(thematiqueDTO)).willReturn(thematique)
+
+            given(strapiRepository.getThematiques()).willReturn(thematiqueStrapiDTO)
+            given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(emptyList())
+
+            given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
 
             // When
             val result = repository.getThematique(UUID.randomUUID().toString())
@@ -203,7 +195,6 @@ internal class ThematiqueRepositoryImplTest {
             then(cacheRepository).should().insertThematiqueList(listOf(thematique))
             then(cacheRepository).shouldHaveNoMoreInteractions()
             then(databaseRepository).should(only()).getThematiqueList()
-            then(mapper).shouldHaveNoInteractions()
         }
     }
 }

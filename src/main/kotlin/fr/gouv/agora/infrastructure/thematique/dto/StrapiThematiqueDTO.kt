@@ -7,4 +7,6 @@ data class StrapiThematiqueDTO(
     val label: String,
     @JsonProperty(value = "pictogramme")
     val pictogramme: String,
+    @JsonProperty(value = "id_base_de_donnees")
+    val databaseId: String,
 )

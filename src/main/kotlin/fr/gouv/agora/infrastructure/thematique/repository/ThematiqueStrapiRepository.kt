@@ -19,10 +19,10 @@ class ThematiqueStrapiRepository(
         return try {
             val allThematiques = cmsStrapiHttpClient.getAll("thematiques")
 
-             val ref: TypeReference<*> = object : TypeReference<StrapiDTO<StrapiThematiqueDTO>>() {}
-            objectMapper.readValue(allThematiques, ref) as StrapiDTO<StrapiThematiqueDTO>
+            val ref = object : TypeReference<StrapiDTO<StrapiThematiqueDTO>>() {}
+            objectMapper.readValue(allThematiques, ref)
         } catch (e: Exception) {
-            logger.error("Erreur lors de la récupération des réponses QaG Strapi : ", e)
+            logger.error("Erreur lors de la récupération des thématiques Strapi : ", e)
 
             StrapiDTO.ofEmpty()
         }
