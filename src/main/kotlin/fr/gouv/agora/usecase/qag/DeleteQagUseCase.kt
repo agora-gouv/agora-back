@@ -2,7 +2,11 @@ package fr.gouv.agora.usecase.qag
 
 import fr.gouv.agora.domain.QagDeleteLog
 import fr.gouv.agora.domain.QagStatus
-import fr.gouv.agora.usecase.qag.repository.*
+import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
+import fr.gouv.agora.usecase.qag.repository.QagDeleteLogRepository
+import fr.gouv.agora.usecase.qag.repository.QagDeleteResult
+import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
+import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Service
 
@@ -11,7 +15,6 @@ class DeleteQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val supportQagRepository: SupportQagRepository,
     private val qagDeleteLogRepository: QagDeleteLogRepository,
-    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagDetailsCacheRepository: QagDetailsCacheRepository,
     private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
 ) {
@@ -29,20 +32,15 @@ class DeleteQagUseCase(
                                 qagId = qagId,
                             )
                         )
-                        qagPreviewCacheRepository.evictQagLatestList(thematiqueId = null)
-                        qagPreviewCacheRepository.evictQagLatestList(thematiqueId = qagInfo.thematiqueId)
-                        qagPreviewCacheRepository.evictQagSupportedList(userId = userId, thematiqueId = null)
-                        qagPreviewCacheRepository.evictQagSupportedList(
-                            userId = userId,
-                            thematiqueId = qagInfo.thematiqueId,
-                        )
                         qagDetailsCacheRepository.evictQag(qagId = qagId)
                         askQagStatusCacheRepository.evictAskQagStatus(userId = userId)
                     }
+
                     QagDeleteResult.Failure -> {} // Do nothing
                 }
                 return deleteResult
             }
+
             else -> QagDeleteResult.Failure
         }
     }

@@ -446,6 +446,50 @@
 					"response": []
 				},
 				{
+					"name": "/public/consultations/ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/api/public/consultations/{{consultationId}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"consultations",
+								"{{consultationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/public/consultations/ID/updates/ID Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/api/public/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"consultations",
+								"{{consultationId2}}",
+								"updates",
+								"{{consultationUpdateId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/consultations/ID/questions",
 					"request": {
 						"method": "GET",
@@ -478,8 +522,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -526,34 +569,6 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"consultations",
-								"{{consultationId2}}",
-								"updates",
-								"{{consultationUpdateId2}}",
-								"feedback"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/consultations/ID/updates/ID/feedback",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
 						"url": {
 							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
 							"protocol": "{{scheme}}",
@@ -625,34 +640,6 @@
 								"consultations",
 								"{{consultationId}}",
 								"responses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/admin/consultations/ID/responses/open",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/admin/consultations/{{consultationId}}/responses/open",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"consultations",
-								"{{consultationId}}",
-								"responses",
-								"open"
 							]
 						}
 					},
@@ -1376,9 +1363,9 @@
 			"name": "Deprecated",
 			"item": [
 				{
-					"name": "/admin/testNotification",
+					"name": "/consultations/ID/updates/ID/feedback",
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [
 							{
 								"key": "Authorization",
@@ -1387,200 +1374,17 @@
 							}
 						],
 						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/admin/testNotification?userId=&title=Titre !&description=Description de la notification&type=qagDetails&qagId=f29c5d6f-9838-4c57-a7ec-0612145bb0c8&consultationId=6d85522a-ee71-11ed-a05b-0242ac120003&step=1",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"testNotification"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": ""
-								},
-								{
-									"key": "title",
-									"value": "Titre !"
-								},
-								{
-									"key": "description",
-									"value": "Description de la notification"
-								},
-								{
-									"key": "type",
-									"value": "qagDetails",
-									"description": "qagDetails\nconsultationDetails\nconsultationResults"
-								},
-								{
-									"key": "qagId",
-									"value": "f29c5d6f-9838-4c57-a7ec-0612145bb0c8"
-								},
-								{
-									"key": "consultationId",
-									"value": "6d85522a-ee71-11ed-a05b-0242ac120003"
-								},
-								{
-									"key": "step",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/consultations/ID",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}",
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"consultations",
-								"{{consultationId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/consultations/ID/responses",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"consultations",
-								"{{consultationId}}",
-								"responses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/qags",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/qags?thematiqueId",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"qags"
-							],
-							"query": [
-								{
-									"key": "thematiqueId",
-									"value": "1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15",
-									"description": "Travail & emploi",
-									"disabled": true
-								},
-								{
-									"key": "thematiqueId",
-									"value": "bb051bf2-644b-47b6-9488-7759fa727dc0",
-									"description": "Transition écologique",
-									"disabled": true
-								},
-								{
-									"key": "thematiqueId",
-									"value": null
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/qags/page/<nb>",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/qags/page/1?filterType=popular&thematiqueId&keywords=",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"qags",
-								"page",
-								"1"
-							],
-							"query": [
-								{
-									"key": "filterType",
-									"value": "popular"
-								},
-								{
-									"key": "filterType",
-									"value": "latest",
-									"disabled": true
-								},
-								{
-									"key": "filterType",
-									"value": "supporting",
-									"disabled": true
-								},
-								{
-									"key": "thematiqueId",
-									"value": "1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15",
-									"description": "Travail & emploi",
-									"disabled": true
-								},
-								{
-									"key": "thematiqueId",
-									"value": "bb051bf2-644b-47b6-9488-7759fa727dc0",
-									"description": "Transition écologique",
-									"disabled": true
-								},
-								{
-									"key": "thematiqueId",
-									"value": null
-								},
-								{
-									"key": "keywords",
-									"value": ""
-								}
+								"{{consultationId2}}",
+								"updates",
+								"{{consultationUpdateId2}}",
+								"feedback"
 							]
 						}
 					},

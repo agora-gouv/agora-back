@@ -59,14 +59,8 @@ data class ResponseQagVideoJson(
     val transcription: String,
     @JsonProperty("feedbackQuestion")
     val feedbackQuestion: String,
-
-    @JsonProperty("feedbackStatus")
-    @Deprecated("Because property [feedbackUserResponse] is now returned, it is no longer necessary to return a [feedbackStatus]")
-    val feedbackStatus: Boolean,
-
     @JsonProperty("feedbackUserResponse")
     val feedbackUserResponse: Boolean?,
-
     @JsonProperty("feedbackResults")
     val feedbackResults: FeedbackResultsJson?,
     @JsonProperty("additionalInfo")
@@ -81,14 +75,8 @@ data class ResponseQagTextJson(
     val responseText: String,
     @JsonProperty("feedbackQuestion")
     val feedbackQuestion: String,
-
-    @JsonProperty("feedbackStatus")
-    @Deprecated("Because property [feedbackUserResponse] is now returned, it is no longer necessary to return a [feedbackStatus]")
-    val feedbackStatus: Boolean,
-
     @JsonProperty("feedbackUserResponse")
     val feedbackUserResponse: Boolean?,
-
     @JsonProperty("feedbackResults")
     val feedbackResults: FeedbackResultsJson?,
 )

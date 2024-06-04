@@ -178,6 +178,7 @@ class ConsultationPreviewFinishedMapperTest {
     @ParameterizedTest(name = "toConsultationPreviewFinished - {0}")
     @MethodSource("updateLabelTestCases")
     fun `toConsultationPreviewFinished - should return expected`(
+        @Suppress("UNUSED_PARAMETER")
         testName: String,
         serverDate: LocalDateTime,
         updateDate: LocalDateTime,

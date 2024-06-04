@@ -133,7 +133,6 @@ class GetQagDetailsUseCaseTest {
                     canDelete = true,
                     isAuthor = true,
                     isSupportedByUser = false,
-                    hasGivenFeedback = false,
                     isHelpful = null
                 )
             )
@@ -170,7 +169,6 @@ class GetQagDetailsUseCaseTest {
                     canDelete = false,
                     isAuthor = false,
                     isSupportedByUser = false,
-                    hasGivenFeedback = false,
                     isHelpful = null
                 )
             )
@@ -208,7 +206,6 @@ class GetQagDetailsUseCaseTest {
                     canDelete = true,
                     isAuthor = true,
                     isSupportedByUser = true,
-                    hasGivenFeedback = false,
                     isHelpful = null
                 )
             )
@@ -248,7 +245,6 @@ class GetQagDetailsUseCaseTest {
                     canDelete = false,
                     isAuthor = false,
                     isSupportedByUser = true,
-                    hasGivenFeedback = false,
                     isHelpful = null
                 )
             )
@@ -282,7 +278,6 @@ class GetQagDetailsUseCaseTest {
                     canDelete = false,
                     isAuthor = true,
                     isSupportedByUser = true,
-                    hasGivenFeedback = true,
                     isHelpful = false
                 )
             )

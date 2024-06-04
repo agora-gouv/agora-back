@@ -3,7 +3,6 @@ package fr.gouv.agora.usecase.responseQag
 import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
-import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
@@ -244,6 +243,7 @@ internal class ResponseQagPreviewOrderMapperTest {
     @ParameterizedTest(name = "buildOrderResult - {0}")
     @MethodSource("buildOrderTestCases")
     fun `buildOrderResult - should return expected`(
+        @Suppress("UNUSED_PARAMETER")
         testName: String,
         lowPriorityQagIds: List<String>,
         incomingResponses: List<BuildOrderTestInput>,

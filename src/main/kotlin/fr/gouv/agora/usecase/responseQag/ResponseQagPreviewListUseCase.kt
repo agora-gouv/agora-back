@@ -28,6 +28,7 @@ class ResponseQagPreviewListUseCase(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun buildResponseQagPreviewList(): ResponseQagPreviewList {
         val qagsSelectedForResponse = qagInfoRepository.getQagsSelectedForResponse()
         val qagsResponses = responseQagRepository.getResponsesQag(qagsSelectedForResponse.map { it.id })

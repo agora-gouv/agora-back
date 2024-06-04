@@ -1,19 +1,8 @@
 package fr.gouv.agora.infrastructure.qagHome
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.agora.infrastructure.qag.SupportQagJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class QagPreviewsJson(
-    @JsonProperty("qags")
-    val qagList: QagListJson,
-    @JsonProperty("askQagErrorText")
-    val askQagErrorText: String?,
-    @JsonProperty("popup")
-    val qagPopup: QagPopupJson?,
-)
 
 data class QagResponsesJson(
     @JsonProperty("incomingResponses")
@@ -67,15 +56,6 @@ data class ResponseQagPreviewWithoutOrderJson(
     val responseDate: String,
 )
 
-data class QagListJson(
-    @JsonProperty("popular")
-    val popular: List<QagPreviewJson>,
-    @JsonProperty("latest")
-    val latest: List<QagPreviewJson>,
-    @JsonProperty("supporting")
-    val supporting: List<QagPreviewJson>,
-)
-
 data class QagPreviewJson(
     @JsonProperty("qagId")
     val qagId: String,
@@ -96,13 +76,6 @@ data class QagPreviewJson(
 data class QagPreviewListJson(
     @JsonProperty("results")
     val results: List<QagPreviewJson>,
-)
-
-data class QagPopupJson(
-    @JsonProperty("title")
-    val title: String,
-    @JsonProperty("description")
-    val description: String,
 )
 
 data class HeaderQagJson(

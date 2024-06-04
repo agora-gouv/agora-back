@@ -1,11 +1,21 @@
 package fr.gouv.agora.usecase.consultationResponse
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.ChoiceResultWithDemographicInfo
+import fr.gouv.agora.domain.ChoixPossible
+import fr.gouv.agora.domain.ConsultationResultWithDemographicInfo
+import fr.gouv.agora.domain.CountAndRatio
+import fr.gouv.agora.domain.DemographicInfo
+import fr.gouv.agora.domain.DemographicInfoCount
+import fr.gouv.agora.domain.DemographicInfoCountByChoices
+import fr.gouv.agora.domain.Question
+import fr.gouv.agora.domain.QuestionResultWithDemographicInfo
+import fr.gouv.agora.domain.QuestionWithChoices
+import fr.gouv.agora.domain.ResponseConsultationCount
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultationResults.QuestionNoResponseMapper
-import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationResults.QuestionNoResponseMapper
+import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -44,6 +54,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
                         question = question,
                         participantCount = participantCount,
                         consultationResponseList = consultationResponseList,
+                        totalDemographicInfo = demographicInfo,
                     )
                 },
             demographicInfo = buildDemographicInfo(
@@ -57,6 +68,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
         question: QuestionWithChoices,
         participantCount: Int,
         consultationResponseList: List<ResponseConsultationCount>,
+        totalDemographicInfo: DemographicInfoCount,
     ): QuestionResultWithDemographicInfo {
         val questionDemographicInfo =
             consultationResponseRepository.getParticipantDemographicInfoByChoices(questionId = question.id)
@@ -67,10 +79,9 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
                     question = question,
                     choix = choix,
                     participantCount = participantCount,
-                    questionCount = consultationResponseList.filter { it.questionId == question.id }
-                        .sumOf { it.responseCount },
                     consultationResponseList = consultationResponseList,
                     questionDemographicInfo = questionDemographicInfo,
+                    totalDemographicInfo = totalDemographicInfo,
                 )
             }
         )
@@ -80,9 +91,9 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
         question: Question,
         choix: ChoixPossible,
         participantCount: Int,
-        questionCount: Int,
         consultationResponseList: List<ResponseConsultationCount>,
         questionDemographicInfo: DemographicInfoCountByChoices,
+        totalDemographicInfo: DemographicInfoCount,
     ): ChoiceResultWithDemographicInfo {
         val choiceCount = consultationResponseList
             .filter { it.questionId == question.id && it.choiceId == choix.id }
@@ -106,8 +117,7 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
                         publicMeetingFrequencyCount = emptyMap(),
                         consultationFrequencyCount = emptyMap(),
                     ),
-                questionDemographicInfo = questionDemographicInfo,
-                questionCount = questionCount,
+                totalDemographicInfo = totalDemographicInfo,
                 choiceCount = choiceCount,
             ),
         )
@@ -154,105 +164,70 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
 
     private fun buildChoicesDemographicInfo(
         choiceDemographicInfo: DemographicInfoCount,
-        questionDemographicInfo: DemographicInfoCountByChoices,
-        questionCount: Int,
+        totalDemographicInfo: DemographicInfoCount,
         choiceCount: Int,
     ): DemographicInfo {
         return DemographicInfo(
-            genderCount = buildDataMap(
+            genderCount = buildChoicesDataMap(
                 choiceDemographicInfo,
-                questionDemographicInfo,
-                questionCount,
+                totalDemographicInfo,
                 choiceCount,
             ) { it.genderCount },
-            ageRangeCount = buildDataMap(
+            ageRangeCount = buildChoicesDataMap(
                 choiceDemographicInfo,
-                questionDemographicInfo,
-                questionCount,
+                totalDemographicInfo,
                 choiceCount,
             ) { it.ageRangeCount },
-            departmentCount = buildDataMap(
+            departmentCount = buildChoicesDataMap(
                 choiceDemographicInfo,
-                questionDemographicInfo,
-                questionCount,
+                totalDemographicInfo,
                 choiceCount,
             ) { it.departmentCount },
-            cityTypeCount = buildDataMap(
+            cityTypeCount = buildChoicesDataMap(
                 choiceDemographicInfo,
-                questionDemographicInfo,
-                questionCount,
+                totalDemographicInfo,
                 choiceCount,
             ) { it.cityTypeCount },
-            jobCategoryCount = buildDataMap(
+            jobCategoryCount = buildChoicesDataMap(
                 choiceDemographicInfo,
-                questionDemographicInfo,
-                questionCount,
+                totalDemographicInfo,
                 choiceCount,
             ) { it.jobCategoryCount },
-            voteFrequencyCount = buildDataMap(
+            voteFrequencyCount = buildChoicesDataMap(
                 choiceDemographicInfo,
-                questionDemographicInfo,
-                questionCount,
+                totalDemographicInfo,
                 choiceCount,
             ) { it.voteFrequencyCount },
-            publicMeetingFrequencyCount = buildDataMap(
+            publicMeetingFrequencyCount = buildChoicesDataMap(
                 choiceDemographicInfo,
-                questionDemographicInfo,
-                questionCount,
+                totalDemographicInfo,
                 choiceCount,
             ) { it.publicMeetingFrequencyCount },
-            consultationFrequencyCount = buildDataMap(
+            consultationFrequencyCount = buildChoicesDataMap(
                 choiceDemographicInfo,
-                questionDemographicInfo,
-                questionCount,
+                totalDemographicInfo,
                 choiceCount,
             ) { it.consultationFrequencyCount },
         )
     }
 
-    private fun <K> buildDataMap(
-        demographicInfoCount: DemographicInfoCount,
-        questionDemographicInfo: DemographicInfoCountByChoices,
-        questionCount: Int,
+    private fun <K> buildChoicesDataMap(
+        choiceDemographicInfoCount: DemographicInfoCount,
+        totalDemographicInfoCount: DemographicInfoCount,
         choiceCount: Int,
         keySelector: (DemographicInfoCount) -> Map<K?, Int>,
     ): Map<K?, CountAndRatio> {
-        val demographicInfoMap = keySelector.invoke(demographicInfoCount)
+        val demographicInfoMap = keySelector.invoke(choiceDemographicInfoCount)
+        val totalDemographicInfoMap = keySelector.invoke(totalDemographicInfoCount)
         return demographicInfoMap.map { (key, count) ->
             key to getCountAndRatio(
                 count = if (key == null) {
                     val nonNullCount = demographicInfoMap.entries.sumOf { (key, count) -> key?.let { count } ?: 0 }
                     choiceCount - nonNullCount
                 } else count,
-                allCount = if (key == null) {
-                    buildNAQuestionDemographicKeyCount<K>(questionCount, questionDemographicInfo, keySelector)
-                } else {
-                    buildQuestionDemographicKeyCount(questionDemographicInfo, keySelector, key)
-                }
+                allCount = totalDemographicInfoMap[key] ?: 0,
             )
         }.toMap()
-    }
-
-    private fun <K> buildQuestionDemographicKeyCount(
-        questionDemographicInfo: DemographicInfoCountByChoices,
-        keySelector: (DemographicInfoCount) -> Map<K?, Int>,
-        key: K
-    ) = questionDemographicInfo.choiceDemographicInfoMap.values.fold(
-        initial = 0,
-    ) { demographicInfoQuestionCount, demographicInfo ->
-        demographicInfoQuestionCount + (keySelector.invoke(demographicInfo)[key] ?: 0)
-    }
-
-    private fun <K> buildNAQuestionDemographicKeyCount(
-        questionCount: Int,
-        questionDemographicInfo: DemographicInfoCountByChoices,
-        keySelector: (DemographicInfoCount) -> Map<K?, Int>
-    ) = questionCount - questionDemographicInfo.choiceDemographicInfoMap.values.fold(
-        initial = 0,
-    ) { demographicInfoQuestionCount, demographicInfo ->
-        demographicInfoQuestionCount + (keySelector.invoke(demographicInfo).entries.sumOf { (key, count) ->
-            count.takeIf { key != null } ?: 0
-        })
     }
 
     private fun getCountAndRatio(count: Int, allCount: Int): CountAndRatio {

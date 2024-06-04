@@ -232,6 +232,7 @@ class ConsultationUpdateHistoryMapperTest {
     @ParameterizedTest(name = "toDomain - {0}")
     @MethodSource("toDomainCases")
     fun `toDomain - should return expected`(
+        @Suppress("UNUSED_PARAMETER")
         testName: String,
         serverDate: LocalDateTime,
         historyItems: List<HistoryMapperTestInput>,

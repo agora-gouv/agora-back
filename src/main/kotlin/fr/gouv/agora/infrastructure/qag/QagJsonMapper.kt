@@ -1,6 +1,10 @@
 package fr.gouv.agora.infrastructure.qag
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.QagInserting
+import fr.gouv.agora.domain.QagStatus
+import fr.gouv.agora.domain.QagWithUserData
+import fr.gouv.agora.domain.ResponseQagText
+import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.infrastructure.utils.StringUtils
@@ -63,7 +67,6 @@ class QagJsonMapper(
                     videoHeight = response.videoHeight,
                     transcription = StringUtils.unescapeLineBreaks(response.transcription),
                     feedbackQuestion = response.feedbackQuestion,
-                    feedbackStatus = qagWithUserData.hasGivenFeedback,
                     feedbackUserResponse = qagWithUserData.isHelpful,
                     feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let { feedbackResults ->
                         FeedbackResultsJson(
@@ -90,7 +93,6 @@ class QagJsonMapper(
                     responseLabel = response.responseLabel,
                     responseText = response.responseText,
                     feedbackQuestion = response.feedbackQuestion,
-                    feedbackStatus = qagWithUserData.hasGivenFeedback,
                     feedbackUserResponse = qagWithUserData.isHelpful,
                     feedbackResults = qagWithUserData.qagDetails.feedbackResults?.let
                     { feedbackResults ->

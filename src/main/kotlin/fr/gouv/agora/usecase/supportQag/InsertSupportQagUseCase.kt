@@ -5,7 +5,6 @@ import fr.gouv.agora.domain.SupportQagInserting
 import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.gouv.agora.usecase.qag.repository.QagPreviewCacheRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
@@ -20,7 +19,6 @@ class InsertSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val qagPreviewCacheRepository: QagPreviewCacheRepository,
     private val qagDetailsCacheRepository: QagDetailsCacheRepository,
     private val supportQagCacheRepository: SupportQagCacheRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
@@ -57,26 +55,6 @@ class InsertSupportQagUseCase(
     }
 
     private fun updateCache(qagInfo: QagInfo, userId: String) {
-        qagPreviewCacheRepository.incrementQagPopularSupportCount(thematiqueId = null, qagId = qagInfo.id)
-        qagPreviewCacheRepository.incrementQagPopularSupportCount(
-            thematiqueId = qagInfo.thematiqueId,
-            qagId = qagInfo.id,
-        )
-        qagPreviewCacheRepository.incrementQagLatestSupportCount(thematiqueId = null, qagId = qagInfo.id)
-        qagPreviewCacheRepository.incrementQagLatestSupportCount(
-            thematiqueId = qagInfo.thematiqueId,
-            qagId = qagInfo.id,
-        )
-        qagPreviewCacheRepository.incrementSupportedSupportCount(
-            thematiqueId = null,
-            qagId = qagInfo.id,
-            userId = userId,
-        )
-        qagPreviewCacheRepository.incrementSupportedSupportCount(
-            thematiqueId = qagInfo.thematiqueId,
-            qagId = qagInfo.id,
-            userId = userId,
-        )
         qagDetailsCacheRepository.incrementSupportCount(qagInfo.id)
         supportQagCacheRepository.addSupportedQagIds(userId = userId, qagId = qagInfo.id)
         qagListsCacheRepository.incrementQagPopularSupportCount(thematiqueId = null, pageNumber = 1, qagId = qagInfo.id)

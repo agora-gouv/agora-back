@@ -50,7 +50,7 @@ class FeedbackConsultationUpdateController(
 
     @Suppress("DeprecatedCallableAddReplaceWith")
     @DeleteMapping("/consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
-    @Deprecated("DELETE feedback is not needed anymore to change feedback using POST /consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
+    @Deprecated("DELETE feedback is not needed anymore to change feedback using POST /consultations/{consultationId}/updates/{consultationUpdateId}/feedback, can be deleted once required app version is <TBD> (development not started yet)")
     fun deleteFeedbackConsultationUpdate(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable consultationId: String,

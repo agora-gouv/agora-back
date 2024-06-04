@@ -6,6 +6,8 @@ import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagDTO
+import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagText
+import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagVideo
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.springframework.stereotype.Component
 
@@ -46,15 +48,44 @@ class ResponseQagMapper {
     fun toDomain(responseBody: StrapiResponseQagDTO): List<ResponseQag> {
         return responseBody.data.map {
             val response = it.attributes
-            ResponseQagText(
-                author = response.auteur,
-                authorPortraitUrl = response.auteurPortraitUrl,
-                responseDate = response.reponseDate.toDate(),
-                feedbackQuestion = response.feedbackQuestion,
-                qagId = response.questionId,
-                responseText = response.reponseType.first().text,
-                responseLabel = response.reponseType.first().label,
-            )
+
+            when (val responseContent = response.reponseType.first()) {
+                is StrapiResponseQagText -> {
+                    ResponseQagText(
+                        author = response.auteur,
+                        authorPortraitUrl = response.auteurPortraitUrl,
+                        responseDate = response.reponseDate.toDate(),
+                        feedbackQuestion = response.feedbackQuestion,
+                        qagId = response.questionId,
+                        responseText = responseContent.text.toString(),
+                        responseLabel = responseContent.label,
+                    )
+                }
+
+                is StrapiResponseQagVideo -> {
+                    val thereIsAdditionalInfo = responseContent.informationAdditionnelleTitre != null
+                            && responseContent.informationAdditionnelleDescription != null
+
+                    ResponseQagVideo(
+                        author = response.auteur,
+                        authorPortraitUrl = response.auteurPortraitUrl,
+                        responseDate = response.reponseDate.toDate(),
+                        feedbackQuestion = response.feedbackQuestion,
+                        qagId = response.questionId,
+                        authorDescription = responseContent.auteurDescription,
+                        videoUrl = responseContent.urlVideo,
+                        videoWidth = responseContent.videoWidth,
+                        videoHeight = responseContent.videoHeight,
+                        transcription = responseContent.transcription,
+                        additionalInfo = if (thereIsAdditionalInfo) {
+                            ResponseQagAdditionalInfo(
+                                responseContent.informationAdditionnelleTitre!!,
+                                responseContent.informationAdditionnelleDescription.toString()
+                            )
+                        } else null
+                    )
+                }
+            }
         }
     }
 }

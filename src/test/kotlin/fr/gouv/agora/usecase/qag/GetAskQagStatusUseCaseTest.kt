@@ -179,6 +179,7 @@ internal class GetAskQagStatusUseCaseTest {
     @ParameterizedTest(name = "getAskQagStatus - when {0} - should return {3}")
     @MethodSource("getAskQagStatusDateTestCases")
     fun `getAskQagStatus - should return expected`(
+        @Suppress("UNUSED_PARAMETER")
         testWhenDescription: String,
         qagPostDate: LocalDateTime,
         serverDate: LocalDateTime,
