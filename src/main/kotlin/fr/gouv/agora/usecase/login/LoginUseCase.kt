@@ -14,7 +14,6 @@ class LoginUseCase(
     private val userDataRepository: UserDataRepository,
     private val isSuspiciousUserUseCase: IsSuspiciousUserUseCase,
 ) {
-
     fun findUser(userId: String): UserInfo? {
         return userRepository.getUserById(userId = userId)
     }
