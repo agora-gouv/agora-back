@@ -84,7 +84,7 @@ class NotificationSendingRepositoryImpl(
             .filter { it.isNotBlank() }
             .distinct()
             .chunked(MAX_SIMULTANEOUS_NOTIFICATIONS)
-        return chunkedFcmTokenList.mapIndexedNotNull() { index, fcmTokenSubList ->
+        return chunkedFcmTokenList.mapIndexedNotNull { index, fcmTokenSubList ->
             try {
                 val messageBuilder = MulticastMessage.builder()
                     .setNotification(

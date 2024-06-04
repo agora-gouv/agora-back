@@ -1,0 +1,8 @@
+package fr.gouv.agora.infrastructure.concertations
+
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
+import java.util.UUID
+
+@Repository
+interface ConcertationDatabaseRepository: JpaRepository<ConcertationDTO, UUID>

@@ -9,7 +9,6 @@ import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagResult
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackResultsCacheRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.UserFeedbackQagCacheRepository
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class InsertFeedbackQagUseCase(

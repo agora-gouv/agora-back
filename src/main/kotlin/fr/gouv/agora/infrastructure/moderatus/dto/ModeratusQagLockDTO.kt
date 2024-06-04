@@ -21,9 +21,7 @@ data class ModeratusQagLockDTO(
 
         other as ModeratusQagLockDTO
 
-        if (qagId != other.qagId) return false
-
-        return true
+        return qagId == other.qagId
     }
 
     override fun hashCode(): Int {

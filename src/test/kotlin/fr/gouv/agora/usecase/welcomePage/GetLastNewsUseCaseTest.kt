@@ -9,11 +9,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.Clock
 import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class)
@@ -27,7 +25,7 @@ class GetLastNewsUseCaseTest {
     @Mock
     private lateinit var newsJsonMapper: NewsJsonMapper
 
-    val today = LocalDate.of(2024, 12, 25)
+    private val today = LocalDate.of(2024, 12, 25)
 
     @BeforeEach
     fun setUp() {
@@ -50,7 +48,7 @@ class GetLastNewsUseCaseTest {
         given(newsDatabaseRepository.getNewsList()).willReturn(listOf(todayNews, futureNews, pastNews))
 
         // WHEN
-        val actual = getLastNewsUseCase.execute()
+        getLastNewsUseCase.execute()
 
         // THEN
         then(newsJsonMapper).should().toJson(todayNews)

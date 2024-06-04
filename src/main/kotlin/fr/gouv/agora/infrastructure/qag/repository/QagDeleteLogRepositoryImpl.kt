@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.qag.repository
 import fr.gouv.agora.domain.QagDeleteLog
 import fr.gouv.agora.usecase.qag.repository.QagDeleteLogRepository
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 @Suppress("unused")

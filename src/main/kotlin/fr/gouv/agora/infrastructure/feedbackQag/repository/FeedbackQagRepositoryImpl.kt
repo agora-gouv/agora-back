@@ -6,7 +6,6 @@ import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagRepository
 import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagResult
 import org.springframework.stereotype.Component
-import java.util.UUID
 
 @Component
 @Suppress("unused")

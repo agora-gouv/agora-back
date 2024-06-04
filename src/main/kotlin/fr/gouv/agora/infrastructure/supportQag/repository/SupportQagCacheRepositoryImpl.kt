@@ -4,7 +4,6 @@ import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 @Suppress("unused")
