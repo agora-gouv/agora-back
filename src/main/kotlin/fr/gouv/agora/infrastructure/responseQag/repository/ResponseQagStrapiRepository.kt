@@ -22,8 +22,8 @@ class ResponseQagStrapiRepository(
             val allResponsesQag = cmsStrapiHttpClient
                 .getByIds("reponse-du-gouvernements", "questionId", qagIds.map { it.toString() })
 
-            val ref: TypeReference<*> = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
-            objectMapper.readValue(allResponsesQag, ref) as StrapiDTO<StrapiResponseQag>
+            val ref = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
+            objectMapper.readValue(allResponsesQag, ref)
         } catch (e: Exception) {
             logger.error("Erreur lors de la récupération des réponses QaG Strapi via ids : ", e)
             StrapiDTO.ofEmpty()
@@ -35,9 +35,8 @@ class ResponseQagStrapiRepository(
             val allResponsesQag = cmsStrapiHttpClient
                 .getAllSortedBy("reponse-du-gouvernements", "reponseDate", true)
 
-            // todo : ne pas faire le cast et remplacer *
-            val ref: TypeReference<*> = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
-            objectMapper.readValue(allResponsesQag, ref) as StrapiDTO<StrapiResponseQag>
+            val ref = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
+            objectMapper.readValue(allResponsesQag, ref)
         } catch (e: Exception) {
             logger.error("Erreur lors de la récupération des réponses QaG Strapi : ", e)
             StrapiDTO.ofEmpty()
@@ -48,8 +47,8 @@ class ResponseQagStrapiRepository(
         return try {
             val allResponsesQag = cmsStrapiHttpClient.count("reponse-du-gouvernements")
 
-            val ref: TypeReference<*> = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
-            val responseQagDTO = objectMapper.readValue(allResponsesQag, ref) as StrapiDTO<StrapiResponseQag>
+            val ref = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
+            val responseQagDTO = objectMapper.readValue(allResponsesQag, ref)
 
             return responseQagDTO.meta.pagination.total
         } catch (e: Exception) {
