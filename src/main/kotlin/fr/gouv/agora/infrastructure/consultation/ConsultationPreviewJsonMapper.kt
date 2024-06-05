@@ -8,6 +8,7 @@ import fr.gouv.agora.domain.ConsultationStatus.EXECUTION
 import fr.gouv.agora.domain.ConsultationStatus.POLITICAL_COMMITMENT
 import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
+import fr.gouv.agora.infrastructure.utils.DateUtils
 import org.springframework.stereotype.Component
 
 @Component
@@ -45,6 +46,7 @@ class ConsultationPreviewJsonMapper(
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
             step = statusToJson(domain.step),
             updateLabel = domain.updateLabel,
+            updateDate = dateMapper.toFormattedDate(domain.updateDate),
         )
 
     private fun statusToJson(step: ConsultationStatus) = when (step) {

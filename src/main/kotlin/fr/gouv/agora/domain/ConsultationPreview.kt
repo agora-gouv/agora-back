@@ -1,5 +1,6 @@
 package fr.gouv.agora.domain
 
+import java.time.LocalDate
 import java.util.*
 
 data class ConsultationPreviewOngoing(
@@ -18,4 +19,5 @@ data class ConsultationPreviewFinished(
     val thematique: Thematique,
     val step: ConsultationStatus,
     val updateLabel: String?,
+    val updateDate: LocalDate,
 )
