@@ -33,10 +33,6 @@ dependencies {
     implementation("redis.clients:jedis")
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20220608.1")
-    // Sentry
-    implementation("io.sentry:sentry-spring-boot-starter-jakarta:6.16.0")
-    implementation("io.sentry:sentry-logback:6.16.0")
-
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")

@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
 import java.util.*
@@ -92,12 +93,14 @@ class ConsultationPreviewFinishedMapperTest {
     fun `toConsultationPreviewFinished - when serverDate has not reached endDate - should return status COLLECTING_DATA`() {
         // Given
         mockCurrentDate(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30))
+        val updateDate = LocalDate.of(2024, 12, 23)
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 30, 18, 45).toDate())
             given(it.updateLabel).willReturn(null)
+            given(it.updateDate).willReturn(updateDate.toDate())
         }
         val thematique = mock(Thematique::class.java)
 
@@ -113,6 +116,7 @@ class ConsultationPreviewFinishedMapperTest {
                 thematique = thematique,
                 step = ConsultationStatus.COLLECTING_DATA,
                 updateLabel = null,
+                updateDate = updateDate,
             )
         )
     }
@@ -121,12 +125,14 @@ class ConsultationPreviewFinishedMapperTest {
     fun `toConsultationPreviewFinished - when serverDate is greater than endDate - should return status POLITICAL_COMMITMENT`() {
         // Given
         mockCurrentDate(LocalDateTime.of(2024, Month.JANUARY, 10, 12, 30))
+        val updateDate = LocalDate.of(2024, 12, 23)
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 1, 4, 15).toDate())
             given(it.updateLabel).willReturn(null)
+            given(it.updateDate).willReturn(updateDate.toDate())
         }
         val thematique = mock(Thematique::class.java)
 
@@ -142,6 +148,7 @@ class ConsultationPreviewFinishedMapperTest {
                 thematique = thematique,
                 step = ConsultationStatus.POLITICAL_COMMITMENT,
                 updateLabel = null,
+                updateDate = updateDate,
             )
         )
     }
@@ -150,12 +157,14 @@ class ConsultationPreviewFinishedMapperTest {
     fun `toConsultationPreviewFinished - when serverDate is equal to endDate - should return status POLITICAL_COMMITMENT`() {
         // Given
         mockCurrentDate(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30))
+        val updateDate = LocalDate.of(2024, 12, 23)
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30).toDate())
             given(it.updateLabel).willReturn(null)
+            given(it.updateDate).willReturn(updateDate.toDate())
         }
         val thematique = mock(Thematique::class.java)
 
@@ -171,6 +180,7 @@ class ConsultationPreviewFinishedMapperTest {
                 thematique = thematique,
                 step = ConsultationStatus.POLITICAL_COMMITMENT,
                 updateLabel = null,
+                updateDate = updateDate,
             )
         )
     }
@@ -209,6 +219,7 @@ class ConsultationPreviewFinishedMapperTest {
                 thematique = thematique,
                 step = ConsultationStatus.POLITICAL_COMMITMENT,
                 updateLabel = expectedUpdateLabel,
+                updateDate = updateDate.toLocalDate(),
             )
         )
     }
