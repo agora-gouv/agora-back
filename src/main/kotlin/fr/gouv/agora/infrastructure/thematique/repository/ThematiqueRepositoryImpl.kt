@@ -26,6 +26,7 @@ class ThematiqueRepositoryImpl(
     }
 
     internal fun getThematiqueListAndCacheIt(): List<Thematique> {
+        // todo : ou ne pas faire de feature flag et faire un .unique sur l'id ?
         val thematiques = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
             strapiRepository.getThematiques().let(mapper::toDomain)
         } else {
