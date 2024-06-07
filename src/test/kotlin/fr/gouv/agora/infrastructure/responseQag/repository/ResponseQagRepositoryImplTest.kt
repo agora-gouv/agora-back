@@ -1,16 +1,13 @@
 package fr.gouv.agora.infrastructure.responseQag.repository
 
 import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagDTO
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock

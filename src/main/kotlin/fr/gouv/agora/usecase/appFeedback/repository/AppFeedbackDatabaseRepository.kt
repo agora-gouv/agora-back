@@ -6,4 +6,4 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface AppFeedbackDatabaseRepository : JpaRepository<AppFeedbackDTO, UUID> {}
+interface AppFeedbackDatabaseRepository : JpaRepository<AppFeedbackDTO, UUID>

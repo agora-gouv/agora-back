@@ -40,4 +40,6 @@ data class ConsultationFinishedJson(
     val step: Int,
     @JsonProperty("updateLabel")
     val updateLabel: String?,
+    @JsonProperty("updateDate")
+    val updateDate: String,
 )

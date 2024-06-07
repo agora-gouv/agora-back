@@ -58,35 +58,6 @@ class FeedbackConsultationUpdateUseCase(
         )
     }
 
-    fun deleteFeedback(feedbackDeleting: FeedbackConsultationUpdateDeleting): Boolean {
-        if (!canAcceptFeedbacks(
-                consultationId = feedbackDeleting.consultationId,
-                consultationUpdateId = feedbackDeleting.consultationUpdateId,
-            )
-        ) return false
-        if (getUserFeedback(
-                consultationUpdateId = feedbackDeleting.consultationUpdateId,
-                userId = feedbackDeleting.userId,
-            ) == null
-        ) return false
-
-        feedbackRepository.deleteFeedback(feedbackDeleting)
-        cacheRepository.initUserFeedback(
-            consultationUpdateId = feedbackDeleting.consultationUpdateId,
-            userId = feedbackDeleting.userId,
-            isUserFeedbackPositive = null,
-        )
-        buildFeedbackStats(consultationUpdateId = feedbackDeleting.consultationUpdateId)?.also { feedbackStats ->
-            updateFeedbackStatsCache(
-                consultationId = feedbackDeleting.consultationId,
-                consultationUpdateId = feedbackDeleting.consultationUpdateId,
-                feedbackStats = feedbackStats,
-            )
-        }
-
-        return true
-    }
-
     private fun buildFeedbackStats(consultationUpdateId: String): FeedbackConsultationUpdateStats? {
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.FeedbackConsultationUpdate)) return null
         return feedbackRepository.getFeedbackStats(consultationUpdateId)
@@ -97,13 +68,6 @@ class FeedbackConsultationUpdateUseCase(
             consultationId = consultationId,
             consultationUpdateId = consultationUpdateId,
         )?.let { update -> update.feedbackQuestion != null } ?: false
-    }
-
-    private fun getUserFeedback(consultationUpdateId: String, userId: String): Boolean? {
-        return feedbackRepository.getUserFeedback(
-            consultationUpdateId = consultationUpdateId,
-            userId = userId,
-        )
     }
 
     private fun updateFeedbackStatsCache(

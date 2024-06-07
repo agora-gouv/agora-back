@@ -22,18 +22,6 @@ class FeedbackConsultationUpdateJsonMapper {
         )
     }
 
-    fun toDeleting(
-        userId: String,
-        consultationId: String,
-        consultationUpdateId: String,
-    ): FeedbackConsultationUpdateDeleting {
-        return FeedbackConsultationUpdateDeleting(
-            userId = userId,
-            consultationId = consultationId,
-            consultationUpdateId = consultationUpdateId,
-        )
-    }
-
     fun toJson(results: FeedbackConsultationUpdateResults): FeedbackConsultationUpdateResultsJson {
         return FeedbackConsultationUpdateResultsJson(
             userResponse = results.userResponse,

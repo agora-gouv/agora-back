@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.notification.repository
 import fr.gouv.agora.infrastructure.notification.dto.NotificationDTO
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 class NotificationCacheRepository(private val cacheManager: CacheManager) {

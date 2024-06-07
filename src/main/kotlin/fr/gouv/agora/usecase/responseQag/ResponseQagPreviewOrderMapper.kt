@@ -1,10 +1,9 @@
 package fr.gouv.agora.usecase.responseQag
 
 import fr.gouv.agora.domain.ResponseQag
-import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Date
 
 @Component
 class ResponseQagPreviewOrderMapper {

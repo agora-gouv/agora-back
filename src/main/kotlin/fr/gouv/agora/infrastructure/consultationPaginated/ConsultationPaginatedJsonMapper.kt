@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.consultationPaginated
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationStatus
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.consultation.ConsultationFinishedJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.usecase.consultationPaginated.ConsultationAnsweredPaginatedList
@@ -9,7 +10,10 @@ import fr.gouv.agora.usecase.consultationPaginated.ConsultationFinishedPaginated
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationPaginatedJsonMapper(private val thematiqueJsonMapper: ThematiqueJsonMapper) {
+class ConsultationPaginatedJsonMapper(
+    private val thematiqueJsonMapper: ThematiqueJsonMapper,
+    private val dateMapper: DateMapper,
+) {
 
     fun toJson(consultationFinishedPaginatedList: ConsultationFinishedPaginatedList): ConsultationPaginatedJson {
         return ConsultationPaginatedJson(
@@ -33,6 +37,7 @@ class ConsultationPaginatedJsonMapper(private val thematiqueJsonMapper: Thematiq
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
             step = statusToJson(domain.step),
             updateLabel = domain.updateLabel,
+            updateDate = dateMapper.toFormattedDate(domain.updateDate),
         )
     }
 
