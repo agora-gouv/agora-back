@@ -50,7 +50,10 @@ class ResponseQagPreviewListMapper {
     ): IncomingResponsePreview {
         val qagDate = qagWithSupportCountAndOrder.qagWithSupportCount.date
         val dateLundiPrecedent = qagDate.toLocalDate().with(TemporalAdjusters.previous(DayOfWeek.MONDAY))
-        val dateLundiSuivant = qagDate.toLocalDate().with(TemporalAdjusters.next(DayOfWeek.MONDAY))
+        var dateLundiSuivant = qagDate.toLocalDate().with(TemporalAdjusters.next(DayOfWeek.MONDAY))
+        if(qagDate.toLocalDate().dayOfWeek == DayOfWeek.MONDAY) {
+            dateLundiSuivant = qagDate.toLocalDate()
+        }
         return IncomingResponsePreview(
             id = qagWithSupportCountAndOrder.qagWithSupportCount.id,
             thematique = thematique,
