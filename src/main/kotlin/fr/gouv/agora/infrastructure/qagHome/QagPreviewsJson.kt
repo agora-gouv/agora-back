@@ -22,6 +22,10 @@ data class IncomingResponseQagPreviewJson(
     val support: SupportQagJson,
     @JsonProperty("order")
     val order: Int,
+    @JsonProperty("previousMondayDate")
+    val previousMondayDate: String,
+    @JsonProperty("nextMondayDate")
+    val nextMondayDate: String,
 )
 
 data class ResponseQagPreviewJson(

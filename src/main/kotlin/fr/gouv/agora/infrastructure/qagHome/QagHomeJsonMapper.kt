@@ -27,6 +27,8 @@ class QagHomeJsonMapper(
                         isSupportedByUser = true,
                     ),
                     order = qag.order,
+                    previousMondayDate = dateMapper.toFormattedDate(qag.dateLundiPrecedent),
+                    nextMondayDate = dateMapper.toFormattedDate(qag.dateLundiSuivant),
                 )
             },
             responsesList = previewList.responses.map { responseQag ->
