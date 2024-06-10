@@ -48,7 +48,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
                 FROM consultations LEFT JOIN consultation_updates_v2
                 ON consultation_updates_v2.consultation_id = consultations.id
                 WHERE CURRENT_DATE > end_date
-                AND CURRENT_DATE > update_date
+                AND CURRENT_DATE >= update_date
                 ORDER BY updateDate DESC
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
