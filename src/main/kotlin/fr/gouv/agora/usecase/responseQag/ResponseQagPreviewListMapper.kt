@@ -1,8 +1,15 @@
 package fr.gouv.agora.usecase.responseQag
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.IncomingResponsePreview
+import fr.gouv.agora.domain.ResponseQag
+import fr.gouv.agora.domain.ResponseQagPreview
+import fr.gouv.agora.domain.ResponseQagPreviewWithoutOrder
+import fr.gouv.agora.domain.Thematique
+import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import org.springframework.stereotype.Component
+import java.time.DayOfWeek
+import java.time.temporal.TemporalAdjusters
 
 @Component
 class ResponseQagPreviewListMapper {
@@ -41,11 +48,16 @@ class ResponseQagPreviewListMapper {
         qagWithSupportCountAndOrder: QagWithSupportCountAndOrder,
         thematique: Thematique,
     ): IncomingResponsePreview {
+        val qagDate = qagWithSupportCountAndOrder.qagWithSupportCount.date
+        val dateLundiPrecedent = qagDate.toLocalDate().with(TemporalAdjusters.previous(DayOfWeek.MONDAY))
+        val dateLundiSuivant = qagDate.toLocalDate().with(TemporalAdjusters.next(DayOfWeek.MONDAY))
         return IncomingResponsePreview(
             id = qagWithSupportCountAndOrder.qagWithSupportCount.id,
             thematique = thematique,
             title = qagWithSupportCountAndOrder.qagWithSupportCount.title,
             supportCount = qagWithSupportCountAndOrder.qagWithSupportCount.supportCount,
+            dateLundiPrecedent = dateLundiPrecedent,
+            dateLundiSuivant = dateLundiSuivant,
             order = qagWithSupportCountAndOrder.order,
         )
     }
