@@ -16,7 +16,7 @@ class GetResponseQagPreviewPaginatedListUseCase(
     private val mapper: ResponseQagPreviewListMapper,
 ) {
     companion object {
-        private const val MAX_PAGE_LIST_SIZE = 20
+        private const val MAX_PAGE_LIST_SIZE = 5
     }
 
     fun getResponseQagPreviewPaginatedList(pageNumber: Int): ResponseQagPaginatedList? {
@@ -27,7 +27,7 @@ class GetResponseQagPreviewPaginatedListUseCase(
         if (offset > responsesCount) return null
 
         return ResponseQagPaginatedList(
-            responsesQag = toResponseQagPreview(responseQagRepository.getResponsesQag(offset))
+            responsesQag = toResponseQagPreview(responseQagRepository.getResponsesQag(offset, MAX_PAGE_LIST_SIZE))
                 .sortedByDescending { it.responseDate },
             maxPageNumber = ceil(responsesCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
         )
