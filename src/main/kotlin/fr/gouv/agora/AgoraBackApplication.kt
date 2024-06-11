@@ -6,7 +6,9 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.server.ConfigurableWebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.stereotype.Component
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 @SpringBootApplication(
     exclude = [
