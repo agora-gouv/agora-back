@@ -85,8 +85,8 @@ class ResponseQagPreviewListMapperTest {
                 thematique = thematique,
                 title = "title",
                 supportCount = 0,
-                dateLundiPrecedent = LocalDate.of(2024, 6, 3),
-                dateLundiSuivant = LocalDate.of(2024, 6, 10),
+                dateLundiPrecedent = LocalDate.of(2024, 6, 10),
+                dateLundiSuivant = LocalDate.of(2024, 6, 17),
                 order = 0,
             )
         )
