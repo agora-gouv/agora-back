@@ -1,14 +1,14 @@
 package fr.gouv.agora
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.servers.Server
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.server.ConfigurableWebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.stereotype.Component
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 @SpringBootApplication(
     exclude = [
@@ -16,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
         RepositoryRestMvcAutoConfiguration::class
     ]
 )
+@OpenAPIDefinition(servers = [Server(url = "/", description = "Default Server URL")])
 class AgoraBackApplication
 
 fun main(args: Array<String>) {
