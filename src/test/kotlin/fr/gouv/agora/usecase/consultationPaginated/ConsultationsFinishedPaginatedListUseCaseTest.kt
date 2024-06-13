@@ -122,13 +122,13 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         val consultationInfoWithoutThematique = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.thematiqueId).willReturn("unknownThematiqueId")
         }
-        val thematique = mock(Thematique::class.java).also { given(it.id).willReturn("thematiqueId") }
+        val thematique = mock(Thematique::class.java)
         val consultationPreviewFinished = mock(ConsultationPreviewFinished::class.java)
 
         given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(34)
         given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = 0))
             .willReturn(listOf(consultationInfo, consultationInfoWithoutThematique))
-        given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
+        given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
         given(
             mapper.toConsultationPreviewFinished(
                 consultationInfo = consultationInfo,
@@ -152,7 +152,6 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = 0)
         then(consultationPreviewFinishedRepository).shouldHaveNoMoreInteractions()
-        then(thematiqueRepository).should().getThematiqueList()
         then(mapper).should(only())
             .toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)
         then(mapper).shouldHaveNoMoreInteractions()
@@ -170,13 +169,13 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.thematiqueId).willReturn("thematiqueId")
         }
-        val thematique = mock(Thematique::class.java).also { given(it.id).willReturn("thematiqueId") }
+        val thematique = mock(Thematique::class.java)
         val consultationPreviewFinished = mock(ConsultationPreviewFinished::class.java)
 
         given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(consultationFinishedCount)
         given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = expectedOffset))
             .willReturn(listOf(consultationInfo))
-        given(thematiqueRepository.getThematiqueList()).willReturn(listOf(thematique))
+        given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
         given(
             mapper.toConsultationPreviewFinished(
                 consultationInfo = consultationInfo,
@@ -200,7 +199,6 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = expectedOffset)
         then(consultationPreviewFinishedRepository).shouldHaveNoMoreInteractions()
-        then(thematiqueRepository).should().getThematiqueList()
         then(mapper).should(only())
             .toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)
         then(mapper).shouldHaveNoMoreInteractions()

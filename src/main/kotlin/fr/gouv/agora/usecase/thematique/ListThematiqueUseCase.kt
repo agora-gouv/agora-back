@@ -12,6 +12,7 @@ class ListThematiqueUseCase(private val thematiqueRepository: ThematiqueReposito
 
     fun getThematiqueList(): List<Thematique> {
         val listThematiqueBeforeSort = thematiqueRepository.getThematiqueList()
+
         return listThematiqueBeforeSort.sortedWith(compareBy({ it.id == ID_THEMATIQUE_AUTRE }, { it.label }))
     }
 }

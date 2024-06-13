@@ -2,8 +2,9 @@ package fr.gouv.agora.infrastructure.responseQag.repository
 
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.ResponseQagText
+import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
-import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagDTO
+import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQag
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -35,7 +36,7 @@ class ResponseQagRepositoryImplTest {
     fun `when there is more responses than the from, returns responses`() {
         // Given
         val databaseResponse = mock(ResponseQagDTO::class.java)
-        val strapiResponse = mock(StrapiResponseQagDTO::class.java)
+        val strapiResponse = mock(StrapiDTO::class.java) as StrapiDTO<StrapiResponseQag>
         val responseQag = mock(ResponseQagText::class.java)
 
         val from = 2
@@ -59,7 +60,7 @@ class ResponseQagRepositoryImplTest {
         // Given
         val from = 2
         val databaseResponse = mock(ResponseQagDTO::class.java)
-        val strapiResponse = mock(StrapiResponseQagDTO::class.java)
+        val strapiResponse = mock(StrapiDTO::class.java) as StrapiDTO<StrapiResponseQag>
         val responseQag = mock(ResponseQagText::class.java)
 
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
@@ -80,7 +81,7 @@ class ResponseQagRepositoryImplTest {
         // Given
         val from = 20
         val databaseResponse = mock(ResponseQagDTO::class.java)
-        val strapiResponse = mock(StrapiResponseQagDTO::class.java)
+        val strapiResponse = mock(StrapiDTO::class.java) as StrapiDTO<StrapiResponseQag>
         val responseQag = mock(ResponseQagText::class.java)
 
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)

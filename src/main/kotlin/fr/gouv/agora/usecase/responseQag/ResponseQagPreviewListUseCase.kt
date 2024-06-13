@@ -52,10 +52,9 @@ class ResponseQagPreviewListUseCase(
             responses = qagWithResponseList,
         )
 
-        val thematiques = thematiqueRepository.getThematiqueList()
         return ResponseQagPreviewList(
             incomingResponses = orderedQags.incomingResponses.mapNotNull { qagWithOrder ->
-                thematiques.find { thematique -> thematique.id == qagWithOrder.qagWithSupportCount.thematiqueId }
+                thematiqueRepository.getThematique(qagWithOrder.qagWithSupportCount.thematiqueId)
                     ?.let { thematique ->
                         mapper.toIncomingResponsePreview(
                             qagWithSupportCountAndOrder = qagWithOrder,
@@ -64,7 +63,7 @@ class ResponseQagPreviewListUseCase(
                     }
             },
             responses = orderedQags.responses.mapNotNull { qagWithOrder ->
-                thematiques.find { thematique -> thematique.id == qagWithOrder.qagInfo.thematiqueId }
+                thematiqueRepository.getThematique(qagWithOrder.qagInfo.thematiqueId)
                     ?.let { thematique ->
                         mapper.toResponseQagPreview(
                             qagWithResponseAndOrder = qagWithOrder,

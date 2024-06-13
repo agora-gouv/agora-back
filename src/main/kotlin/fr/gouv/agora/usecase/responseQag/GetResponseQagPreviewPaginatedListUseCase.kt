@@ -35,11 +35,11 @@ class GetResponseQagPreviewPaginatedListUseCase(
 
     private fun toResponseQagPreview(responsesQag: List<ResponseQag>): List<ResponseQagPreviewWithoutOrder> {
         val qags = qagInfoRepository.getQagsInfo(responsesQag.map { it.qagId })
-        val thematiques = thematiqueRepository.getThematiqueList()
 
         return responsesQag.mapNotNull { responseQag ->
             qags.find { qagInfo -> qagInfo.id == responseQag.qagId }?.let { qagInfo ->
-                thematiques.find { thematique -> thematique.id == qagInfo.thematiqueId }?.let { thematique ->
+                thematiqueRepository.getThematique(qagInfo.thematiqueId)
+                    ?.let { thematique ->
                     mapper.toResponseQagPreviewWithoutOrder(
                         qagInfo = qagInfo,
                         responseQag = responseQag,
