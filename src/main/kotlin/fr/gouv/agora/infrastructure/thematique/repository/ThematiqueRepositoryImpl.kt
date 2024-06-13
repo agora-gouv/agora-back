@@ -19,7 +19,7 @@ class ThematiqueRepositoryImpl(
     private val mapper: ThematiqueMapper,
     private val featureFlagsRepository: FeatureFlagsRepository,
 ) : ThematiqueRepository {
-    private val logger: Logger = LoggerFactory.getLogger(CacheConfig::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(ThematiqueRepositoryImpl::class.java)
 
     override fun getThematique(thematiqueId: String): Thematique? {
         val thematique = getThematiqueList().find { it.id == thematiqueId }

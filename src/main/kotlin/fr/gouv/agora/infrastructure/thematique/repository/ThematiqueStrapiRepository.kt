@@ -13,7 +13,7 @@ class ThematiqueStrapiRepository(
     private val objectMapper: ObjectMapper,
     private val cmsStrapiHttpClient: CmsStrapiHttpClient,
 ) {
-    private val logger = LoggerFactory.getLogger(ResponseQagRepositoryImpl::class.java)
+    private val logger = LoggerFactory.getLogger(ThematiqueStrapiRepository::class.java)
 
     fun getThematiques(): StrapiDTO<StrapiThematiqueDTO> {
         return try {
