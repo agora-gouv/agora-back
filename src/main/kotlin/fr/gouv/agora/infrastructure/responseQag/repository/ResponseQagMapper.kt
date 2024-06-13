@@ -59,7 +59,7 @@ class ResponseQagMapper {
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
-                        responseText = responseContent.text.toString(),
+                        responseText = responseContent.text.toHtml(),
                         responseLabel = responseContent.label,
                     )
                 }

@@ -38,7 +38,7 @@ data class StrapiResponseQagText(
     @JsonProperty("label")
     val label: String,
     @JsonProperty("text")
-    val text: List<StrapiRichText>?,
+    val text: List<StrapiRichText>,
 ) : StrapiResponseQagType
 
 data class StrapiResponseQagVideo(
@@ -163,7 +163,7 @@ data class StrapiRichListNode(
     @JsonProperty("format")
     val format: String, // 'unordered' | 'ordered'
     @JsonProperty("children")
-    val children: List<StrapiRichListItemNode>,
+    val children: List<StrapiRichText>,
 ) : StrapiRichText {
     override fun toHtml(): String {
         if (format == "ordered") {
