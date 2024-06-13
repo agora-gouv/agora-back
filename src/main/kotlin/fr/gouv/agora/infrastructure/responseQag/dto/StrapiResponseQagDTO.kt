@@ -78,10 +78,6 @@ data class StrapiResponseQagVideo(
 )
 sealed interface StrapiRichText {
     fun toHtml(): String
-
-    fun List<StrapiRichText>.toHtml(): String {
-        return this.joinToString("") { it.toHtml() }
-    }
 }
 
 data class StrapiRichTextNode(
@@ -194,4 +190,8 @@ data class StrapiRichQuoteNode(
     override fun toHtml(): String {
         return "<blockquote>${children.toHtml()}</blockquote>"
     }
+}
+
+fun List<StrapiRichText>.toHtml(): String {
+    return this.joinToString("") { it.toHtml() }
 }

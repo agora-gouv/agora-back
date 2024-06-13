@@ -9,6 +9,7 @@ import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQag
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagText
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagVideo
 import fr.gouv.agora.infrastructure.common.StrapiDTO
+import fr.gouv.agora.infrastructure.responseQag.dto.toHtml
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.springframework.stereotype.Component
 
@@ -81,7 +82,7 @@ class ResponseQagMapper {
                         additionalInfo = if (thereIsAdditionalInfo) {
                             ResponseQagAdditionalInfo(
                                 responseContent.informationAdditionnelleTitre!!,
-                                responseContent.informationAdditionnelleDescription.toString()
+                                responseContent.informationAdditionnelleDescription!!.toHtml()
                             )
                         } else null
                     )
