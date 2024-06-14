@@ -1,17 +1,21 @@
 package fr.gouv.agora.infrastructure.notification.repository
 
+import fr.gouv.agora.domain.Notification
 import fr.gouv.agora.infrastructure.notification.dto.NotificationDTO
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 
 @Repository
-class NotificationCacheRepository(private val cacheManager: CacheManager) {
+class NotificationCacheRepository(
+    @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager
+) {
     companion object {
         private const val NOTIFICATION_CACHE_NAME = "notificationCache"
         private const val ALL_NOTIFICATION_CACHE_KEY = "notificationCacheList"
     }
 
-    fun getCacheForUser(userId: String): List<NotificationDTO>? {
+    fun getCachedNotificationsForUser(userId: String): List<NotificationDTO>? {
         return try {
             getCache()?.get("$ALL_NOTIFICATION_CACHE_KEY.$userId", List::class.java) as? List<NotificationDTO>
         } catch (e: IllegalStateException) {
@@ -19,7 +23,7 @@ class NotificationCacheRepository(private val cacheManager: CacheManager) {
         }
     }
 
-    fun insertCacheForUser(userNotifications: List<NotificationDTO>, userId: String) {
+    fun insertNotificationsToCacheForUser(userNotifications: List<NotificationDTO>, userId: String) {
         getCache()?.put("$ALL_NOTIFICATION_CACHE_KEY.$userId", userNotifications)
     }
 
