@@ -11,36 +11,17 @@ class NotificationCacheRepository(private val cacheManager: CacheManager) {
         private const val ALL_NOTIFICATION_CACHE_KEY = "notificationCacheList"
     }
 
-    sealed class CacheResult {
-        data class CachedNotificationList(val allNotificationDTO: List<NotificationDTO>) : CacheResult()
-        object CacheNotInitialized : CacheResult()
-    }
-
-    fun initializeCache(allNotificationDTO: List<NotificationDTO>) {
-        getCache()?.put(ALL_NOTIFICATION_CACHE_KEY, allNotificationDTO)
-    }
-
-    fun getAllNotificationList(): CacheResult {
-        return when (val allNotificationDTO = getAllNotificationDTOFromCache()) {
-            null -> CacheResult.CacheNotInitialized
-            else -> CacheResult.CachedNotificationList(allNotificationDTO)
-        }
-    }
-
-    fun insertNotification(notificationDTOList: List<NotificationDTO>) {
-        getAllNotificationDTOFromCache()?.let { allNotificationDTO ->
-            initializeCache(allNotificationDTO + notificationDTOList)
-        }
-    }
-
-    private fun getCache() = cacheManager.getCache(NOTIFICATION_CACHE_NAME)
-
-    @Suppress("UNCHECKED_CAST")
-    private fun getAllNotificationDTOFromCache(): List<NotificationDTO>? {
+    fun getCacheForUser(userId: String): List<NotificationDTO>? {
         return try {
-            getCache()?.get(ALL_NOTIFICATION_CACHE_KEY, List::class.java) as? List<NotificationDTO>
+            getCache()?.get("$ALL_NOTIFICATION_CACHE_KEY.$userId", List::class.java) as? List<NotificationDTO>
         } catch (e: IllegalStateException) {
             null
         }
     }
+
+    fun insertCacheForUser(userNotifications: List<NotificationDTO>, userId: String) {
+        getCache()?.put("$ALL_NOTIFICATION_CACHE_KEY.$userId", userNotifications)
+    }
+
+    private fun getCache() = cacheManager.getCache(NOTIFICATION_CACHE_NAME)
 }

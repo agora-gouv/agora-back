@@ -17,6 +17,9 @@ class NotificationRepositoryImpl(
     private val mapper: NotificationMapper,
 ) : NotificationRepository {
 
+
+
+
     override fun insertNotifications(notification: NotificationInserting): NotificationInsertionResult {
         return mapper.toDto(notification).takeUnless { it.isEmpty() }
             ?.let { notificationDTOList ->
@@ -51,6 +54,3 @@ class NotificationRepositoryImpl(
             cacheRepository.initializeCache(allNotificationDTO as List<NotificationDTO>)
         }
 }
-
-
-
