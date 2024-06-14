@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.responseQag.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
@@ -65,7 +66,8 @@ data class StrapiResponseQagVideo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.EXISTING_PROPERTY,
     property = "type",
-    visible = true
+    visible = true,
+    defaultImpl = StrapiRichUnknownNode::class
 )
 @JsonSubTypes(
     JsonSubTypes.Type(value = StrapiRichTextNode::class, name = "text"),
@@ -76,6 +78,7 @@ data class StrapiResponseQagVideo(
     JsonSubTypes.Type(value = StrapiRichListNode::class, name = "list"),
     JsonSubTypes.Type(value = StrapiRichQuoteNode::class, name = "quote"),
 )
+@JsonIgnoreProperties(ignoreUnknown = true)
 sealed interface StrapiRichText {
     fun toHtml(): String
 }
@@ -189,6 +192,15 @@ data class StrapiRichQuoteNode(
 ) : StrapiRichText {
     override fun toHtml(): String {
         return "<blockquote>${children.toHtml()}</blockquote>"
+    }
+}
+
+data class StrapiRichUnknownNode(
+    @JsonProperty("children")
+    val children: List<StrapiRichText>,
+) : StrapiRichText {
+    override fun toHtml(): String {
+        return children.toHtml()
     }
 }
 
