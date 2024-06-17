@@ -57,7 +57,11 @@ data class StrapiResponseQagVideo(
     val informationAdditionnelleTitre: String?,
     @JsonProperty("informationAdditionnelleDescription")
     val informationAdditionnelleDescription: List<StrapiRichText>?,
-) : StrapiResponseQagType
+) : StrapiResponseQagType {
+    fun hasInformationAdditionnelle(): Boolean {
+        return informationAdditionnelleTitre != null && informationAdditionnelleDescription != null
+    }
+}
 
 // Pour définir les types,
 // je me suis inspiré du thread https://forum.strapi.io/t/blocks-rich-text-editor/32588/5 sur le forum Strapi

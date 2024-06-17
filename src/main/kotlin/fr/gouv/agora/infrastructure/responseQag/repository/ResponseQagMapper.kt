@@ -59,15 +59,12 @@ class ResponseQagMapper {
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
-                        responseText = responseContent.text.toHtml(),
+                        responseText = "<body>${responseContent.text.toHtml()}</body>",
                         responseLabel = responseContent.label,
                     )
                 }
 
                 is StrapiResponseQagVideo -> {
-                    val thereIsAdditionalInfo = responseContent.informationAdditionnelleTitre != null
-                            && responseContent.informationAdditionnelleDescription != null
-
                     ResponseQagVideo(
                         author = response.auteur,
                         authorPortraitUrl = response.auteurPortraitUrl,
@@ -79,10 +76,10 @@ class ResponseQagMapper {
                         videoWidth = responseContent.videoWidth,
                         videoHeight = responseContent.videoHeight,
                         transcription = responseContent.transcription,
-                        additionalInfo = if (thereIsAdditionalInfo) {
+                        additionalInfo = if (responseContent.hasInformationAdditionnelle()) {
                             ResponseQagAdditionalInfo(
                                 responseContent.informationAdditionnelleTitre!!,
-                                responseContent.informationAdditionnelleDescription!!.toHtml()
+                                "<body>${responseContent.informationAdditionnelleDescription!!.toHtml()}</body>"
                             )
                         } else null
                     )

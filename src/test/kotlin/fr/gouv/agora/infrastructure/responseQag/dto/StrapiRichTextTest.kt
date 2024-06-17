@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.responseQag.dto
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 
 class StrapiRichTextTest {
@@ -397,9 +398,11 @@ class StrapiRichTextTest {
         val ref = object : TypeReference<List<StrapiRichText>>() {}
         val actual = objectMapper
             .readValue(richTextFromStrapi, ref)
+            .toHtml()
 
         // THEN
-        assertThat(actual.toHtml()).isEqualToIgnoringWhitespace("""
+        @Language("HTML")
+        val expected = """
             <h1>titre 1</h1>
             <h2>titre 2</h2>
             <h3>titre 3</h3>
@@ -440,6 +443,7 @@ class StrapiRichTextTest {
                 <li>liste ordonnée 3 avec du <b>gras </b>et un<b> </b><a href="http://localhost-gras/"><b>lien gras</b></a></li>
             </ol>
             <blockquote>Je suis un citation avec du <b>gras</b></blockquote>Je suis un block de code <b>gras</b>.
-        """.trimIndent())
+        """.trimIndent()
+        assertThat(actual).isEqualToIgnoringWhitespace(expected)
     }
 }
