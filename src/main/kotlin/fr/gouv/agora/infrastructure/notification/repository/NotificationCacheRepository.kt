@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.notification.repository
 
 import fr.gouv.agora.domain.Notification
 import fr.gouv.agora.infrastructure.notification.dto.NotificationDTO
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Repository
 class NotificationCacheRepository(
     @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager
 ) {
+    val logger = LoggerFactory.getLogger(NotificationCacheRepository::class.java)
+
     companion object {
         private const val NOTIFICATION_CACHE_NAME = "notificationCache"
         private const val ALL_NOTIFICATION_CACHE_KEY = "notificationCacheList"
@@ -19,6 +22,7 @@ class NotificationCacheRepository(
         return try {
             getCache()?.get("$ALL_NOTIFICATION_CACHE_KEY.$userId", List::class.java) as? List<NotificationDTO>
         } catch (e: IllegalStateException) {
+            logger.warn("getCachedNotificationsForUser - impossible de récupéer le cache de l'utilisateur '$userId'")
             null
         }
     }
