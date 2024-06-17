@@ -3,17 +3,19 @@ package fr.gouv.agora.infrastructure.notification.repository
 import fr.gouv.agora.domain.Notification
 import fr.gouv.agora.domain.NotificationInserting
 import fr.gouv.agora.infrastructure.notification.dto.NotificationDTO
-import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
-import fr.gouv.agora.usecase.notification.repository.NotificationInsertionResult
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.inOrder
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 internal class NotificationRepositoryImplTest {
