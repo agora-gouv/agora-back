@@ -25,7 +25,6 @@ class NotificationRepositoryImpl(
         }
 
         databaseRepository.saveAll(notifications)
-        // todo : est-ce que l'on ne récupérerait pas toutes les notifs de l'user pour remettre le cache à jour ?
     }
 
     override fun getUserNotificationList(userId: String): List<Notification> {

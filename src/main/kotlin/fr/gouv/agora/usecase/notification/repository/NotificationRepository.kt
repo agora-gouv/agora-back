@@ -8,7 +8,3 @@ interface NotificationRepository {
     fun getUserNotificationList(userId: String): List<Notification>
     fun deleteUsersNotifications(userIDs: List<String>)
 }
-
-enum class NotificationInsertionResult {
-    SUCCESS, FAILURE
-}
