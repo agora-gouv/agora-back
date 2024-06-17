@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.responseQag.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import fr.gouv.agora.infrastructure.common.StrapiRichText
 import java.time.LocalDate
 
 data class StrapiResponseQag(
@@ -20,7 +21,12 @@ data class StrapiResponseQag(
     val reponseType: List<StrapiResponseQagType>
 )
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "__component", visible = true)
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "__component",
+    visible = true
+)
 @JsonSubTypes(
     JsonSubTypes.Type(value = StrapiResponseQagText::class, name = "reponse.reponsetextuelle"),
     JsonSubTypes.Type(value = StrapiResponseQagVideo::class, name = "reponse.reponse-video")
@@ -31,7 +37,7 @@ data class StrapiResponseQagText(
     @JsonProperty("label")
     val label: String,
     @JsonProperty("text")
-    val text: List<StrapiRichText>?,
+    val text: List<StrapiRichText>,
 ) : StrapiResponseQagType
 
 data class StrapiResponseQagVideo(
@@ -49,25 +55,8 @@ data class StrapiResponseQagVideo(
     val informationAdditionnelleTitre: String?,
     @JsonProperty("informationAdditionnelleDescription")
     val informationAdditionnelleDescription: List<StrapiRichText>?,
-) : StrapiResponseQagType
-
-data class StrapiRichText(
-    @JsonProperty("text")
-    val text: String?,
-    @JsonProperty("type")
-    val type: String,
-    @JsonProperty("bold")
-    val bold: Boolean?,
-    @JsonProperty("underline")
-    val underline: Boolean?,
-    @JsonProperty("strikethrough")
-    val strikethrough: Boolean?,
-    @JsonProperty("children")
-    val children: List<StrapiRichText>?,
-    @JsonProperty("format")
-    val format: String?,
-    @JsonProperty("code")
-    val code: Boolean?,
-    @JsonProperty("level")
-    val level: Int?,
-)
+) : StrapiResponseQagType {
+    fun hasInformationAdditionnelle(): Boolean {
+        return informationAdditionnelleTitre != null && informationAdditionnelleDescription != null
+    }
+}
