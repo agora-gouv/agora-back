@@ -85,7 +85,6 @@ internal class NotificationRepositoryImplTest {
             val userIdUUID = UUID.randomUUID()
             val userId = userIdUUID.toString()
             given(cacheRepository.getCachedNotificationsForUser(userId)).willReturn(null)
-            given(databaseRepository.findAll()).willReturn(emptyList())
 
             // When
             val result = repository.getUserNotificationList(userId = userId)
