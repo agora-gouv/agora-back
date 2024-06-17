@@ -19,22 +19,25 @@ class NotificationRepositoryImpl(
     override fun insertNotifications(notificationsToInsert: NotificationInserting) {
         val notifications = notificationsToInsert.let(mapper::toDto)
 
-        if (notifications.isEmpty()) logger.warn("insertNotifications - pas de notifications à insérer")
+        if (notifications.isEmpty()) {
+            logger.warn("insertNotifications - pas de notifications à insérer")
+            return
+        }
 
         databaseRepository.saveAll(notifications)
+        // todo : est-ce que l'on ne récupérerait pas toutes les notifs de l'user pour remettre le cache à jour ?
     }
 
     override fun getUserNotificationList(userId: String): List<Notification> {
-        val cachedNotifications = cacheRepository.getCachedNotificationsForUser(userId)
-
-        if (cachedNotifications != null) return cachedNotifications.map(mapper::toDomain)
-
-        val userUUID = try {
-            UUID.fromString(userId)
-        } catch (e: IllegalArgumentException) {
+        val userUUID = userId.toUuidOrNull()
+        if (userUUID == null) {
             logger.error("getUserNotificationList - impossible de convertir l'id '$userId' en UUID")
             return emptyList()
         }
+
+        val cachedNotifications = cacheRepository.getCachedNotificationsForUser(userId)
+
+        if (cachedNotifications != null) return cachedNotifications.map(mapper::toDomain)
 
         val databaseNotifications = databaseRepository.findAllByUserId(userUUID)
 
