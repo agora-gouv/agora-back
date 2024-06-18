@@ -34,7 +34,9 @@ class FeatureFlagsRepositoryImpl(
         AgoraFeature.FeedbackResponseQag -> "IS_FEEDBACK_ON_RESPONSE_QAG_ENABLED"
         AgoraFeature.FeedbackConsultationUpdate -> "IS_FEEDBACK_ON_CONSULTATION_UPDATE_ENABLED"
         AgoraFeature.SuspiciousUserDetection -> "IS_SUSPICIOUS_USER_DETECTION_ENABLED"
-        AgoraFeature.Strapi -> "IS_STRAPI_ENABLED"
+        AgoraFeature.StrapiConsultations -> "IS_STRAPI_CONSULTATIONS_ENABLED"
+        AgoraFeature.StrapiReponsesQag -> "IS_STRAPI_REPONSEs_QAG_ENABLED"
+        AgoraFeature.StrapiThematiques -> "IS_STRAPI_THEMATIQUES_ENABLED"
     }
 
     private fun getCache() = cacheManager.getCache(FEATURE_FLAGS_CACHE_NAME)

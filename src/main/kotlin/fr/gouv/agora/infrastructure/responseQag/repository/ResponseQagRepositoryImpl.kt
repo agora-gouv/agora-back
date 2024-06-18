@@ -21,7 +21,7 @@ class ResponseQagRepositoryImpl(
 
         val databaseResponses = databaseRepository.getResponsesQag(qagUUIDs).mapNotNull(mapper::toDomain)
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) return databaseResponses
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiReponsesQag)) return databaseResponses
 
         val strapiResponses = strapiRepository.getResponsesQag(qagUUIDs).let(mapper::toDomain)
 
@@ -33,7 +33,7 @@ class ResponseQagRepositoryImpl(
 
         val databaseResponse = databaseRepository.getResponseQag(qagId = qagUUID)?.let(mapper::toDomain)
 
-        if (databaseResponse != null || !featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) return databaseResponse
+        if (databaseResponse != null || !featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiReponsesQag)) return databaseResponse
 
         return strapiRepository.getResponsesQag(listOf(qagUUID)).let(mapper::toDomain).firstOrNull()
     }
@@ -41,14 +41,14 @@ class ResponseQagRepositoryImpl(
     override fun getResponsesQagCount(): Int {
         val responsesQagCountOnDatabase = databaseRepository.getResponsesQagCount()
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) return responsesQagCountOnDatabase
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiReponsesQag)) return responsesQagCountOnDatabase
 
         return strapiRepository.getResponsesCount() + responsesQagCountOnDatabase
     }
 
     override fun getResponsesQag(from: Int, pageSize: Int): List<ResponseQag> {
         val databaseResponses = databaseRepository.getResponsesQag().mapNotNull(mapper::toDomain)
-        val strapiResponses = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
+        val strapiResponses = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiReponsesQag)) {
             strapiRepository.getResponsesQag().let(mapper::toDomain)
         } else emptyList()
 
