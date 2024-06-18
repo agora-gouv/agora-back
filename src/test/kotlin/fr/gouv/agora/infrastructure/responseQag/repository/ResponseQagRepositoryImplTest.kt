@@ -42,7 +42,7 @@ class ResponseQagRepositoryImplTest {
         val from = 2
         val threeResponses = listOf(responseQag, responseQag, responseQag)
 
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiReponsesQag)).willReturn(true)
         given(responseQagMapper.toDomain(databaseResponse)).willReturn(responseQag)
         given(responseQagMapper.toDomain(strapiResponse)).willReturn(threeResponses)
         given(responseQagDatabaseRepository.getResponsesQag()).willReturn(listOf(databaseResponse))
@@ -63,7 +63,7 @@ class ResponseQagRepositoryImplTest {
         val strapiResponse = mock(StrapiDTO::class.java) as StrapiDTO<StrapiResponseQag>
         val responseQag = mock(ResponseQagText::class.java)
 
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiReponsesQag)).willReturn(true)
         given(responseQagMapper.toDomain(databaseResponse)).willReturn(responseQag)
         given(responseQagMapper.toDomain(strapiResponse)).willReturn(listOf(responseQag))
         given(responseQagDatabaseRepository.getResponsesQag()).willReturn(listOf(databaseResponse))
@@ -84,7 +84,7 @@ class ResponseQagRepositoryImplTest {
         val strapiResponse = mock(StrapiDTO::class.java) as StrapiDTO<StrapiResponseQag>
         val responseQag = mock(ResponseQagText::class.java)
 
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiReponsesQag)).willReturn(true)
         given(responseQagMapper.toDomain(databaseResponse)).willReturn(responseQag)
         given(responseQagMapper.toDomain(strapiResponse)).willReturn(listOf(responseQag))
         given(responseQagDatabaseRepository.getResponsesQag()).willReturn(listOf(databaseResponse))

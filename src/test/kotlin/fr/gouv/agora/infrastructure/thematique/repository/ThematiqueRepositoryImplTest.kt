@@ -69,7 +69,7 @@ internal class ThematiqueRepositoryImplTest {
             val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<StrapiThematiqueDTO>
             given(strapiRepository.getThematiques()).willReturn(thematiqueStrapiDTO)
             given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(emptyList())
-            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
+            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
 
             // When
             val result = repository.getThematiqueList()
@@ -88,7 +88,7 @@ internal class ThematiqueRepositoryImplTest {
             val thematique = mock(Thematique::class.java)
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
             given(strapiRepository.getThematiques()).willReturn(strapiThematiqueDTO)
-            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
+            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
 
             given(mapper.toDomain(strapiThematiqueDTO)).willReturn(listOf(thematique))
 
@@ -161,7 +161,7 @@ internal class ThematiqueRepositoryImplTest {
             }
             given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(listOf(thematique))
 
-            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
+            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
 
             // When
             val result = repository.getThematique(thematiqueId)
@@ -181,7 +181,7 @@ internal class ThematiqueRepositoryImplTest {
             given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(listOf(thematique))
 
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
-            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)).willReturn(true)
+            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
 
             // When
             val result = repository.getThematique(UUID.randomUUID().toString())
