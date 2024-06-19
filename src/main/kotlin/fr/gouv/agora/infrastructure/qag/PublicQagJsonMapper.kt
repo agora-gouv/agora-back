@@ -57,17 +57,13 @@ class PublicQagJsonMapper(private val dateMapper: DateMapper) {
     }
 
     private fun toResponseStatusJson(qagDetails: QagDetails): String{
-        if(qagDetails.status ===QagStatus.OPEN){
-            return "openForSupport";
-        }else if (qagDetails.status=== QagStatus.SELECTED_FOR_RESPONSE) {
-            if(qagDetails.response === null){
-                return "selectedForResponse";
-            }
-            else{
-                return "responseAvailable";
-            }
-        }
+        if (qagDetails.response != null)
+            return "responseAvailable"
+        if (qagDetails.status == QagStatus.SELECTED_FOR_RESPONSE)
+            return "selectedForResponse"
+
         return "openForSupport";
     }
+
 
 }
