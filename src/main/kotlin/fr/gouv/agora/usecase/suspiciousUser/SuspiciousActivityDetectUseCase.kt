@@ -15,22 +15,17 @@ class SuspiciousActivityDetectUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val userDataRepository: UserDataRepository,
 ) {
-
-    companion object {
-        private const val SOFT_BAN_SIGNUP_COUNT = 10
-    }
-
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     fun flagSuspiciousUsers() {
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.SuspiciousUserDetection)) return
         logger.info("🏴 Flag users with suspicious activity")
         val dateNow = LocalDate.now(clock)
-        val dateYesterday = dateNow.minusDays(1)
+        val twoWeeksAgo = dateNow.minusWeeks(2)
 
         val suspiciousUsersFlaggedCount = userDataRepository.flagUsersWithSuspiciousActivity(
-            softBanSignupCount = SOFT_BAN_SIGNUP_COUNT,
-            startDate = dateYesterday.toDate(),
+            softBanSignupCount = 3,
+            startDate = twoWeeksAgo.toDate(),
             endDate = dateNow.toDate(),
         )
         logger.info("🏴 $suspiciousUsersFlaggedCount users has been flagged for suspicious activity")
