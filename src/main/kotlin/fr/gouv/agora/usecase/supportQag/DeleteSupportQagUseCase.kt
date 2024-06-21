@@ -31,7 +31,7 @@ class DeleteSupportQagUseCase(
                 userId = supportQagDeleting.userId,
             )
         ) {
-            logger.error("⚠️ Remove support error: already unsupported")
+            logger.debug("⚠️ Remove support error: already unsupported")
             return SupportQagResult.FAILURE
         }
 

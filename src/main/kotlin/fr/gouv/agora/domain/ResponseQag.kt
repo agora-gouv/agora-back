@@ -1,6 +1,6 @@
 package fr.gouv.agora.domain
 
-import java.util.*
+import java.util.Date
 
 sealed class ResponseQag {
     abstract val author: String

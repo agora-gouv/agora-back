@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class GetPublicQagDetailsUseCase(private val qagDetailsAggregate: QagDetailsAggregate) {
-
     fun getQagDetails(qagId: String): QagDetails? {
         return qagDetailsAggregate.getQag(qagId = qagId)?.let { qag ->
             when (qag.status) {

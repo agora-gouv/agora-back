@@ -35,7 +35,7 @@ class ThematiqueRepositoryImpl(
     }
 
     internal fun getThematiqueListAndCacheIt(): List<Thematique> {
-        val thematiques = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.Strapi)) {
+        val thematiques = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)) {
             strapiRepository.getThematiques().let(mapper::toDomain)
         } else {
             databaseRepository.getThematiqueList().map(mapper::toDomain)

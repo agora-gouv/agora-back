@@ -8,6 +8,8 @@ import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 data class PublicQagJson(
     @JsonProperty("id")
     val id: String,
+    @JsonProperty("status")
+    val status: String,
     @JsonProperty("thematique")
     val thematique: ThematiqueNoIdJson,
     @JsonProperty("title")
