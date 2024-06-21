@@ -11,4 +11,5 @@ enum class AgoraFeature {
     FeedbackConsultationUpdate,
     SuspiciousUserDetection,
     Strapi,
+    DeleteBannedUsersSupports,
 }
