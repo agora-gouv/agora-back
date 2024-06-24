@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.agora.config.CmsStrapiHttpClient
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
-import fr.gouv.agora.infrastructure.responseQag.repository.ThematiqueStrapiRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 
 @Repository
 class ConsultationStrapiRepository(
@@ -16,9 +16,10 @@ class ConsultationStrapiRepository(
 ) {
     private val logger = LoggerFactory.getLogger(ConsultationStrapiRepository::class.java)
 
-    fun getConsultations(): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationsWithEndDateBeforeOrEqual(date: LocalDate): StrapiDTO<ConsultationStrapiDTO> {
         return try {
-            val consultations = cmsStrapiHttpClient.getAll("consultation-avant-reponse")
+            val consultations = cmsStrapiHttpClient
+                .getAllBeforeOrEqual("consultations", "date_de_fin", date)
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)

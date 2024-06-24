@@ -17,6 +17,7 @@ class DateMapper {
 
     fun toFormattedDate(date: Date): String = DEFAULT_FORMAT.format(date.toLocalDateTime())
     fun toFormattedDate(date: LocalDate): String = DEFAULT_FORMAT.format(date.atStartOfDay())
+    fun toFormattedDate(date: LocalDateTime): String = DEFAULT_FORMAT.format(date)
 
     fun toLocalDate(dateString: String): LocalDate? {
         return try {

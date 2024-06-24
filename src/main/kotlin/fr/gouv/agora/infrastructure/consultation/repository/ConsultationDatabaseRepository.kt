@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.util.*
 
 @Repository
@@ -34,12 +35,12 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
 
     @Query(
         value = """SELECT * FROM consultations 
-            WHERE CURRENT_DATE < end_date
-            AND (start_date IS NULL OR CURRENT_DATE >= start_date) 
+            WHERE :today < end_date
+            AND (start_date IS NULL OR :today >= start_date) 
             ORDER BY end_date ASC""",
         nativeQuery = true
     )
-    fun getConsultationOngoingList(): List<ConsultationDTO>
+    fun getConsultationOngoingList(@Param("today") today: LocalDate): List<ConsultationDTO>
 
     @Query(
         value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION

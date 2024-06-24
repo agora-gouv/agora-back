@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
 import java.util.*
@@ -28,8 +29,7 @@ internal class ConsultationPreviewOngoingMapperTest {
         title = "title",
         coverUrl = "coverUrl",
         thematique = thematique,
-        endDate = Date(1),
-        highlightLabel = null,
+        endDate = LocalDate.ofEpochDay(1),
     )
 
     companion object {
@@ -128,8 +128,8 @@ internal class ConsultationPreviewOngoingMapperTest {
         expectedHighlightLabel: String?,
     ) {
         // Given
-        mapper = ConsultationPreviewOngoingMapper(clock = TestUtils.getFixedClock(serverDate))
-        val endDate = consultationEndDate.toDate()
+        mapper = ConsultationPreviewOngoingMapper()
+        val endDate = consultationEndDate
         val consultationInfo = mockConsultationInfo(endDate = endDate)
 
         // When
@@ -139,15 +139,10 @@ internal class ConsultationPreviewOngoingMapperTest {
         )
 
         // Then
-        assertThat(result).isEqualTo(
-            expectedConsultationPreviewOngoing.copy(
-                endDate = endDate,
-                highlightLabel = expectedHighlightLabel,
-            )
-        )
+        assertThat(result).isEqualTo(expectedConsultationPreviewOngoing.copy(endDate = endDate.toLocalDate()))
     }
 
-    private fun mockConsultationInfo(endDate: Date): ConsultationInfo {
+    private fun mockConsultationInfo(endDate: LocalDateTime): ConsultationInfo {
         return mock(ConsultationInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")

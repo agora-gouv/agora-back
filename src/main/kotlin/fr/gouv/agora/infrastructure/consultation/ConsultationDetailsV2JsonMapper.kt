@@ -86,7 +86,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
     private fun buildQuestionsInfo(consultationDetails: ConsultationDetailsV2WithInfo): QuestionsInfo? {
         if (!consultationDetails.update.hasQuestionsInfo) return null
         return QuestionsInfo(
-            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate),
+            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate.toLocalDate()),
             questionCount = consultationDetails.consultation.questionCount,
             estimatedTime = consultationDetails.consultation.estimatedTime,
             participantCount = consultationDetails.participantCount,
@@ -97,8 +97,8 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
     private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDates? {
         if (!consultationDetails.update.hasQuestionsInfo) return null
         return ConsultationDates(
-            startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate),
-            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate),
+            startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate.toLocalDate()),
+            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate.toLocalDate()),
         )
     }
 

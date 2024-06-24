@@ -18,34 +18,32 @@ class ConsultationPreviewUseCase(
 ) {
 
     fun getConsultationPreviewPage(userId: String): ConsultationPreviewPage {
-        val ongoingList = cacheRepository.getConsultationPreviewOngoingList()
-        val finishedList = cacheRepository.getConsultationPreviewFinishedList()
+        val cachedOngoingConsultations = cacheRepository.getConsultationPreviewOngoingList()
+        val cachedFinishedConsultations = cacheRepository.getConsultationPreviewFinishedList()
         val answeredList = cacheRepository.getConsultationPreviewAnsweredList(userId)
             ?: buildAnsweredList(userId)
 
-        if (ongoingList != null && finishedList != null) {
+        if (cachedOngoingConsultations != null && cachedFinishedConsultations != null) {
             return ConsultationPreviewPage(
-                ongoingList = ongoingList.removeAnsweredConsultation(answeredList),
-                finishedList = finishedList,
+                ongoingList = cachedOngoingConsultations.removeAnsweredConsultation(answeredList),
+                finishedList = cachedFinishedConsultations,
                 answeredList = answeredList,
             )
         }
 
         return ConsultationPreviewPage(
-            ongoingList = (ongoingList ?: buildOngoingList()).removeAnsweredConsultation(answeredList),
-            finishedList = finishedList ?: buildFinishedList(),
+            ongoingList = (cachedOngoingConsultations ?: getOngoingConsultationsAndCacheThem()).removeAnsweredConsultation(answeredList),
+            finishedList = cachedFinishedConsultations ?: buildFinishedList(),
             answeredList = answeredList,
         )
     }
 
-    private fun buildOngoingList(): List<ConsultationPreviewOngoing> {
-        return consultationInfoRepository.getOngoingConsultations()
-            .mapNotNull { consultationInfo ->
-                thematiqueRepository.getThematique(consultationInfo.thematiqueId)
-                    ?.let { ongoingMapper.toConsultationPreviewOngoing(consultationInfo, it) }
-            }.also { ongoingList ->
-                cacheRepository.insertConsultationPreviewOngoingList(ongoingList)
-            }
+    private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreviewOngoing> {
+        val consultations = consultationInfoRepository.getOngoingConsultations()
+
+        cacheRepository.insertConsultationPreviewOngoingList(consultations)
+
+        return consultations
     }
 
     private fun buildFinishedList(): List<ConsultationPreviewFinished> {

@@ -15,13 +15,15 @@ class ThematiqueMapper {
         picto = dto.picto,
     )
 
+    fun toDomain(dto: StrapiThematiqueDTO) = Thematique(
+        id = dto.databaseId,
+        label = dto.label,
+        picto = dto.pictogramme,
+    )
+
     fun toDomain(strapiDTO: StrapiDTO<StrapiThematiqueDTO>): List<Thematique> {
         return strapiDTO.data.map { thematique ->
-            Thematique(
-                thematique.attributes.databaseId,
-                thematique.attributes.label,
-                thematique.attributes.pictogramme
-            )
+            toDomain(thematique.attributes)
         }
     }
 }
