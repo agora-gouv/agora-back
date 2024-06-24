@@ -43,15 +43,33 @@ class ConsultationInfoRepositoryImpl(
             return databaseOngoingConsultations
         }
 
-        val strapiOngoingConsultations = strapiRepository
-            .getConsultationsWithEndDateAfter(today.toLocalDate())
+        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoing(today)
             .let { consultationInfoMapper.toDomain(it, thematiques) }
 
         return databaseOngoingConsultations + strapiOngoingConsultations
     }
 
     override fun getFinishedConsultations(): List<ConsultationWithUpdateInfo> {
-        return databaseRepository.getConsultationsFinishedPreviewWithUpdateInfo().map(consultationInfoMapper::toDomain)
+        val today = LocalDateTime.now(clock)
+        val databaseConsultations = databaseRepository
+            .getConsultationsFinishedPreviewWithUpdateInfo(today)
+            .map(consultationInfoMapper::toDomain)
+
+        strapiRepository.getConsultationsFinished(today)
+//        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            return databaseConsultations
+//        }
+
+        // consultations endDate < today AND update_date => today AND l'update la plus récente
+
+        // consultations avec une endDate avant aujourd'hui
+        // AND une date d'update après ou égale à aujourd'hui
+        // AND l'update la plus récente
+//        val strapiOngoingConsultations = strapiRepository
+//            .getConsultationsOngoing(today.toLocalDate())
+//            .let { consultationInfoMapper.toDomain(it, thematiques) }
+
+
     }
 
     override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {

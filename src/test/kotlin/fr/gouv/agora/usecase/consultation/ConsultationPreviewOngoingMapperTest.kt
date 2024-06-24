@@ -1,9 +1,7 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.domain.Thematique
-import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
@@ -12,10 +10,8 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
-import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 internal class ConsultationPreviewOngoingMapperTest {
@@ -29,7 +25,7 @@ internal class ConsultationPreviewOngoingMapperTest {
         title = "title",
         coverUrl = "coverUrl",
         thematique = thematique,
-        endDate = LocalDate.ofEpochDay(1),
+        endDate = LocalDateTime.MIN,
     )
 
     companion object {
@@ -129,8 +125,7 @@ internal class ConsultationPreviewOngoingMapperTest {
     ) {
         // Given
         mapper = ConsultationPreviewOngoingMapper()
-        val endDate = consultationEndDate
-        val consultationInfo = mockConsultationInfo(endDate = endDate)
+        val consultationInfo = mockConsultationInfo(endDate = consultationEndDate)
 
         // When
         val result = mapper.toConsultationPreviewOngoing(
@@ -139,7 +134,7 @@ internal class ConsultationPreviewOngoingMapperTest {
         )
 
         // Then
-        assertThat(result).isEqualTo(expectedConsultationPreviewOngoing.copy(endDate = endDate.toLocalDate()))
+        assertThat(result).isEqualTo(expectedConsultationPreviewOngoing.copy(endDate = consultationEndDate))
     }
 
     private fun mockConsultationInfo(endDate: LocalDateTime): ConsultationInfo {

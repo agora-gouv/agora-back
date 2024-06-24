@@ -6,7 +6,6 @@ import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationWithUpdateInfoDTO
-import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
@@ -49,7 +48,7 @@ class ConsultationInfoMapper {
                 title = consultation.title,
                 coverUrl = consultation.coverUrl,
                 thematique = thematique,
-                endDate = consultation.endDate.toLocalDate(),
+                endDate = consultation.endDate.toLocalDateTime(),
             )
         }
     }
@@ -59,10 +58,10 @@ class ConsultationInfoMapper {
         thematiques: List<Thematique>
     ): List<ConsultationPreviewOngoing> {
         return consultations.data.mapNotNull { consultation ->
-            val thematique = thematiques.find { it.id == consultation.attributes.thematique.attributes.databaseId }
+            val thematique = thematiques.find { it.id == consultation.attributes.thematique.data.attributes.databaseId }
 
             if (thematique == null) {
-                logger.error("ConsultationPreviewOngoing - Thematique id '${consultation.attributes.thematique.attributes.databaseId}' non trouvée")
+                logger.error("ConsultationPreviewOngoing - Thematique id '${consultation.attributes.thematique.data.attributes.databaseId}' non trouvée")
                 return@mapNotNull null
             }
 
@@ -71,7 +70,7 @@ class ConsultationInfoMapper {
                 title = consultation.attributes.titre,
                 coverUrl = consultation.attributes.urlImageDeCouverture,
                 thematique = thematique,
-                endDate = consultation.attributes.dateDeFin,
+                endDate = consultation.attributes.dateDeFin.atTime(23, 59, 59),
             )
         }
     }

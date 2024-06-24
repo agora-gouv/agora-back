@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
+import fr.gouv.agora.infrastructure.common.StrapiDTOX
+import fr.gouv.agora.infrastructure.common.StrapiDTOXX
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
 import java.time.LocalDate
@@ -34,18 +36,18 @@ data class ConsultationStrapiDTO(
     val updatedAt: LocalDateTime,
     @JsonProperty(value = "publishedAt")
     val publishedAt: LocalDateTime,
-    @JsonProperty(value = "thematique.data")
-    val thematique: StrapiAttributes<StrapiThematiqueDTO>,
+    @JsonProperty(value = "thematique")
+    val thematique: StrapiDTOXX<StrapiThematiqueDTO>,
     @JsonProperty(value = "questions")
     val questions: List<StrapiConsultationQuestion>,
-    @JsonProperty(value = "consultation_avant_reponse.data")
-    val contenuAvantReponse: StrapiAttributes<StrapiConsultationContenuAvantReponse>,
-    @JsonProperty(value = "consultation_apres_reponse_ou_terminee.data")
-    val contenuApresReponseOuTerminee: StrapiAttributes<StrapiConsultationContenuApresReponse>,
+    @JsonProperty(value = "consultation_avant_reponse")
+    val contenuAvantReponse: StrapiDTOXX<StrapiConsultationContenuAvantReponse>?,
+    @JsonProperty(value = "consultation_apres_reponse_ou_terminee")
+    val contenuApresReponseOuTerminee: StrapiDTOXX<StrapiConsultationContenuApresReponse>?,
     @JsonProperty("consultation_contenu_autres")
-    val consultationContenuAutres : StrapiAttributes<StrapiConsultationContenuAutre>,
+    val consultationContenuAutres : StrapiDTOX<StrapiConsultationContenuAutre>,
     @JsonProperty("consultation_contenu_a_venir")
-    val consultationContenuAVenir : StrapiAttributes<StrapiConsultationAVenir>,
+    val consultationContenuAVenir : StrapiDTOXX<StrapiConsultationAVenir>?,
 )
 
 @JsonTypeInfo(
@@ -82,7 +84,7 @@ data class StrapiConsultationQuestionChoixMultiples(
     @JsonProperty("nombre_maximum_de_choix")
     val nombreMaximumDeChoix: String,
     @JsonProperty("popup_explication")
-    val popupExplication: String,
+    val popupExplication: String?,
     // todo : ajouter les choix
 ) : StrapiConsultationQuestion
 
@@ -92,7 +94,7 @@ data class StrapiConsultationQuestionChoixUnique(
     @JsonProperty("numero")
     val numero: String,
     @JsonProperty("popup_explication")
-    val popupExplication: String,
+    val popupExplication: String?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionOuverte(
@@ -101,7 +103,7 @@ data class StrapiConsultationQuestionOuverte(
     @JsonProperty("numero")
     val numero: String,
     @JsonProperty("popup_explication")
-    val popupExplication: String,
+    val popupExplication: String?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionDescription(

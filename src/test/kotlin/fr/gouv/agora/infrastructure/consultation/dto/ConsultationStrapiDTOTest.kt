@@ -1,12 +1,26 @@
 package fr.gouv.agora.infrastructure.consultation.dto
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import fr.gouv.agora.infrastructure.common.StrapiDTO
+import org.assertj.core.api.Assertions.assertThat
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 
 class ConsultationStrapiDTOTest {
+    private val objectMapper = jacksonObjectMapper()
+        .registerKotlinModule()
+        .registerModules(JavaTimeModule())
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @Test
     fun `t `() {
         // GIVEN
+        @Language("JSON")
         val xx = """
             {
               "data": [
@@ -457,7 +471,11 @@ class ConsultationStrapiDTOTest {
         """.trimIndent()
 
         // WHEN
+        val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
+        val actual = objectMapper
+            .readValue(xx, ref)
 
-        // TODO THEN
+        // THEN
+        assertThat("").isEqualToIgnoringWhitespace("")
     }
 }
