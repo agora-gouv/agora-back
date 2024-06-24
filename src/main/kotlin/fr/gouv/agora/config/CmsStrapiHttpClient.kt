@@ -28,10 +28,11 @@ class CmsStrapiHttpClient(
         return httpResponse.body()
     }
 
-    fun getAllBeforeOrEqual(cmsModel: String, dateField: String, dateValue: LocalDate): String {
+    fun getAllAfterOrEqual(cmsModel: String, dateField: String, dateValue: LocalDate): String {
         val formattedDate = dateValue.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-        val filter = "&filters[$dateField][\$lte]=$formattedDate"
+        // todo est-ce que l'on récupère les consultations qui se terminent aujourd'hui ?
+        val filter = "&filters[$dateField][\$gte]=$formattedDate"
         val uri = "${cmsModel}?pagination[pageSize]=100&populate=*$filter"
 
         val request = getClientRequest(uri).GET().build()

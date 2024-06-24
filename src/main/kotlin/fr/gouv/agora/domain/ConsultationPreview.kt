@@ -3,26 +3,29 @@ package fr.gouv.agora.domain
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 data class ConsultationPreviewOngoing(
     val id: String,
     val title: String,
     val coverUrl: String,
     val thematique: Thematique,
-    val endDate: LocalDate,
+    val endDate: LocalDateTime,
 ) {
-    fun highlightLabel(today: LocalDate): String? {
-        val consultationEndDate = endDate.atStartOfDay()
+    fun highlightLabel(today: LocalDateTime): String? {
+        val consultationEndDate = endDate
         val daysDifference = ChronoUnit.DAYS.between(today, endDate)
 
-        return if (consultationEndDate.isAfter(today.atStartOfDay())) {
-            when (daysDifference) {
-                0L -> "Dernier jour !"
-                in 1L..6 -> "Plus que ${daysDifference + 1} jours !"
-                else -> null
-            }
-        } else null
+        // TODO relire les dates pour éviter les changements de comportement
+
+        if (consultationEndDate.isBefore(today)) {
+            return null
+        }
+
+        return when (daysDifference) {
+            0L -> "Dernier jour !"
+            in 1L..6 -> "Plus que ${daysDifference + 1} jours !"
+            else -> null
+        }
     }
 }
 

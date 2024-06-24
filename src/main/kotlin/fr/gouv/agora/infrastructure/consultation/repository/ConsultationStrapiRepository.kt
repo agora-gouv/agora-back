@@ -16,10 +16,10 @@ class ConsultationStrapiRepository(
 ) {
     private val logger = LoggerFactory.getLogger(ConsultationStrapiRepository::class.java)
 
-    fun getConsultationsWithEndDateBeforeOrEqual(date: LocalDate): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationsWithEndDateAfter(date: LocalDate): StrapiDTO<ConsultationStrapiDTO> {
         return try {
             val consultations = cmsStrapiHttpClient
-                .getAllBeforeOrEqual("consultations", "date_de_fin", date)
+                .getAllAfterOrEqual("consultations", "date_de_fin", date)
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)

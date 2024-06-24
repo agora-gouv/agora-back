@@ -16,7 +16,7 @@ class ConsultationPreviewOngoingMapper {
             title = consultationInfo.title,
             coverUrl = consultationInfo.coverUrl,
             thematique = thematique,
-            endDate = consultationInfo.endDate.toLocalDate(),
+            endDate = consultationInfo.endDate,
         )
     }
 }

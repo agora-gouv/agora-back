@@ -33,7 +33,7 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getOngoingConsultations(): List<ConsultationPreviewOngoing> {
-        val today = LocalDateTime.now(clock).toLocalDate()
+        val today = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
         val databaseOngoingConsultations = databaseRepository.getConsultationOngoingList(today)
@@ -44,7 +44,7 @@ class ConsultationInfoRepositoryImpl(
         }
 
         val strapiOngoingConsultations = strapiRepository
-            .getConsultationsWithEndDateBeforeOrEqual(today)
+            .getConsultationsWithEndDateAfter(today.toLocalDate())
             .let { consultationInfoMapper.toDomain(it, thematiques) }
 
         return databaseOngoingConsultations + strapiOngoingConsultations

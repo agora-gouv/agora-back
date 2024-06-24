@@ -83,7 +83,7 @@ data class StrapiConsultationQuestionChoixMultiples(
     val nombreMaximumDeChoix: String,
     @JsonProperty("popup_explication")
     val popupExplication: String,
-    // ajouter les choix
+    // todo : ajouter les choix
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionChoixUnique(

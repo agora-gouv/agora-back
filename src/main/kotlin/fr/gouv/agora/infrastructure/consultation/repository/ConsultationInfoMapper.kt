@@ -6,7 +6,6 @@ import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationWithUpdateInfoDTO
-import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueMapper
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
@@ -33,7 +32,10 @@ class ConsultationInfoMapper {
         thematiqueId = dto.thematiqueId.toString(),
     )
 
-    fun toDomain(consultations: List<ConsultationDTO>, thematiques: List<Thematique>): List<ConsultationPreviewOngoing> {
+    fun toDomain(
+        consultations: List<ConsultationDTO>,
+        thematiques: List<Thematique>
+    ): List<ConsultationPreviewOngoing> {
         return consultations.mapNotNull { consultation ->
             val thematique = thematiques.find { it.id == consultation.thematiqueId.toString() }
 
@@ -52,7 +54,10 @@ class ConsultationInfoMapper {
         }
     }
 
-    fun toDomain(consultations: StrapiDTO<ConsultationStrapiDTO>, thematiques: List<Thematique>): List<ConsultationPreviewOngoing> {
+    fun toDomain(
+        consultations: StrapiDTO<ConsultationStrapiDTO>,
+        thematiques: List<Thematique>
+    ): List<ConsultationPreviewOngoing> {
         return consultations.data.mapNotNull { consultation ->
             val thematique = thematiques.find { it.id == consultation.attributes.thematique.attributes.databaseId }
 

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service
 class ConsultationPreviewUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val thematiqueRepository: ThematiqueRepository,
-    private val ongoingMapper: ConsultationPreviewOngoingMapper,
     private val finishedMapper: ConsultationPreviewFinishedMapper,
     private val cacheRepository: ConsultationPreviewPageRepository,
 ) {
@@ -40,6 +39,7 @@ class ConsultationPreviewUseCase(
 
     private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreviewOngoing> {
         val consultations = consultationInfoRepository.getOngoingConsultations()
+            .sortedBy { it.endDate }
 
         cacheRepository.insertConsultationPreviewOngoingList(consultations)
 
