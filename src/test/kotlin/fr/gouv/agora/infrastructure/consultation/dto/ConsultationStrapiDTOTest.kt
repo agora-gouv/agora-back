@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.consultation.dto
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
@@ -18,10 +17,10 @@ class ConsultationStrapiDTOTest {
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @Test
-    fun `t `() {
+    fun `parse ConsultationStrapiDTO`() {
         // GIVEN
         @Language("JSON")
-        val xx = """
+        val jsonConsultation = """
             {
               "data": [
                 {
@@ -472,10 +471,9 @@ class ConsultationStrapiDTOTest {
 
         // WHEN
         val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
-        val actual = objectMapper
-            .readValue(xx, ref)
+        val actual = objectMapper.readValue(jsonConsultation, ref)
 
         // THEN
-        assertThat("").isEqualToIgnoringWhitespace("")
+        assertThat(actual.data[0].attributes.titre).isEqualTo("Mieux rémunérer les agriculteurs : quels leviers pour le consommateur ?")
     }
 }

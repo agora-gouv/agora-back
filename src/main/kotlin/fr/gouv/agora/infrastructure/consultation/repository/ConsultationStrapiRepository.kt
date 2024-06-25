@@ -45,7 +45,6 @@ class ConsultationStrapiRepository(
 //                    it.attributes.datePublication
 //                }
 //            }
-             // TODO
 //            return consultationss
         } catch (e: Exception) {
             logger.error("Erreur lors de la récupération des consultations Strapi : ", e)

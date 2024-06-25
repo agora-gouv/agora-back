@@ -3,9 +3,8 @@ package fr.gouv.agora.infrastructure.consultation.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
-import fr.gouv.agora.infrastructure.common.StrapiDTOX
-import fr.gouv.agora.infrastructure.common.StrapiDTOXX
+import fr.gouv.agora.infrastructure.common.StrapiDataList
+import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
 import java.time.LocalDate
@@ -37,17 +36,17 @@ data class ConsultationStrapiDTO(
     @JsonProperty(value = "publishedAt")
     val publishedAt: LocalDateTime,
     @JsonProperty(value = "thematique")
-    val thematique: StrapiDTOXX<StrapiThematiqueDTO>,
+    val thematique: StrapiData<StrapiThematiqueDTO>,
     @JsonProperty(value = "questions")
     val questions: List<StrapiConsultationQuestion>,
     @JsonProperty(value = "consultation_avant_reponse")
-    val contenuAvantReponse: StrapiDTOXX<StrapiConsultationContenuAvantReponse>?,
+    val contenuAvantReponse: StrapiData<StrapiConsultationContenuAvantReponse>?,
     @JsonProperty(value = "consultation_apres_reponse_ou_terminee")
-    val contenuApresReponseOuTerminee: StrapiDTOXX<StrapiConsultationContenuApresReponse>?,
+    val contenuApresReponseOuTerminee: StrapiData<StrapiConsultationContenuApresReponse>?,
     @JsonProperty("consultation_contenu_autres")
-    val consultationContenuAutres : StrapiDTOX<StrapiConsultationContenuAutre>,
+    val consultationContenuAutres : StrapiDataList<StrapiConsultationContenuAutre>,
     @JsonProperty("consultation_contenu_a_venir")
-    val consultationContenuAVenir : StrapiDTOXX<StrapiConsultationAVenir>?,
+    val consultationContenuAVenir : StrapiData<StrapiConsultationAVenir>?,
 )
 
 @JsonTypeInfo(
