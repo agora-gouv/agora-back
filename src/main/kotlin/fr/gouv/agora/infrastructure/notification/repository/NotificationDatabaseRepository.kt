@@ -17,4 +17,5 @@ interface NotificationDatabaseRepository : JpaRepository<NotificationDTO, UUID> 
     @Query(value = "DELETE FROM notifications WHERE user_id IN :userIDs", nativeQuery = true)
     fun deleteUsersNotifications(@Param("userIDs") userIDs: List<UUID>)
 
+    fun findAllByUserId(userID: UUID): List<NotificationDTO>
 }

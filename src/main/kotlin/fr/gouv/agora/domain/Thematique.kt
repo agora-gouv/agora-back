@@ -4,4 +4,6 @@ data class Thematique(
     val id: String,
     val label: String,
     val picto: String,
-)
+) {
+    constructor(): this("", "", "")
+}

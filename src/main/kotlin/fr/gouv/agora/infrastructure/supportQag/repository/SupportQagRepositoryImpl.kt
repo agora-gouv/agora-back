@@ -6,12 +6,15 @@ import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagResult
 import org.springframework.stereotype.Component
+import java.time.Clock
+import java.time.LocalDateTime
 
 @Component
 @Suppress("unused")
 class SupportQagRepositoryImpl(
     private val databaseRepository: SupportQagDatabaseRepository,
     private val mapper: SupportQagMapper,
+    private val clock: Clock,
 ) : SupportQagRepository {
 
     override fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
@@ -52,4 +55,8 @@ class SupportQagRepositoryImpl(
         databaseRepository.deleteSupportsOnDeletedUsersQags(userUUIDs)
     }
 
+    override fun deleteBannedUsersLastWeekSupportsOnUnselectedQags(): Int {
+        val lastWeek = LocalDateTime.now(clock).minusWeeks(1)
+        return databaseRepository.deleteBannedUsersSupportsOnUnselectedQags(lastWeek.toLocalDate())
+    }
 }

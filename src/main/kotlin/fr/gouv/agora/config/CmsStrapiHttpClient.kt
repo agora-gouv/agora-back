@@ -38,6 +38,16 @@ class CmsStrapiHttpClient(
         return httpResponse.body()
     }
 
+    fun getAll(cmsModel: String): String {
+        val uri = "${cmsModel}?populate=*&pagination[pageSize]=100"
+
+        val request = getClientRequest(uri).GET().build()
+
+        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        return httpResponse.body()
+    }
+
     fun count(cmsModel: String): String {
         val uri = "${cmsModel}?pagination[pageSize]=1&populate=*"
 

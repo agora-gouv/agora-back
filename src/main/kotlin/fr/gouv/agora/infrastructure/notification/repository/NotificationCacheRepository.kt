@@ -1,46 +1,35 @@
 package fr.gouv.agora.infrastructure.notification.repository
 
+import fr.gouv.agora.domain.Notification
 import fr.gouv.agora.infrastructure.notification.dto.NotificationDTO
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 
 @Repository
-class NotificationCacheRepository(private val cacheManager: CacheManager) {
+class NotificationCacheRepository(
+    @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager
+) {
+    val logger = LoggerFactory.getLogger(NotificationCacheRepository::class.java)
+
     companion object {
         private const val NOTIFICATION_CACHE_NAME = "notificationCache"
         private const val ALL_NOTIFICATION_CACHE_KEY = "notificationCacheList"
     }
 
-    sealed class CacheResult {
-        data class CachedNotificationList(val allNotificationDTO: List<NotificationDTO>) : CacheResult()
-        object CacheNotInitialized : CacheResult()
-    }
-
-    fun initializeCache(allNotificationDTO: List<NotificationDTO>) {
-        getCache()?.put(ALL_NOTIFICATION_CACHE_KEY, allNotificationDTO)
-    }
-
-    fun getAllNotificationList(): CacheResult {
-        return when (val allNotificationDTO = getAllNotificationDTOFromCache()) {
-            null -> CacheResult.CacheNotInitialized
-            else -> CacheResult.CachedNotificationList(allNotificationDTO)
-        }
-    }
-
-    fun insertNotification(notificationDTOList: List<NotificationDTO>) {
-        getAllNotificationDTOFromCache()?.let { allNotificationDTO ->
-            initializeCache(allNotificationDTO + notificationDTOList)
-        }
-    }
-
-    private fun getCache() = cacheManager.getCache(NOTIFICATION_CACHE_NAME)
-
-    @Suppress("UNCHECKED_CAST")
-    private fun getAllNotificationDTOFromCache(): List<NotificationDTO>? {
+    fun getCachedNotificationsForUser(userId: String): List<NotificationDTO>? {
         return try {
-            getCache()?.get(ALL_NOTIFICATION_CACHE_KEY, List::class.java) as? List<NotificationDTO>
+            getCache()?.get("$ALL_NOTIFICATION_CACHE_KEY.$userId", List::class.java) as? List<NotificationDTO>
         } catch (e: IllegalStateException) {
+            logger.warn("getCachedNotificationsForUser - impossible de récupéer le cache de l'utilisateur '$userId'")
             null
         }
     }
+
+    fun insertNotificationsToCacheForUser(userNotifications: List<NotificationDTO>, userId: String) {
+        getCache()?.put("$ALL_NOTIFICATION_CACHE_KEY.$userId", userNotifications)
+    }
+
+    private fun getCache() = cacheManager.getCache(NOTIFICATION_CACHE_NAME)
 }

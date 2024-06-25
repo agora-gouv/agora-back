@@ -1,9 +1,6 @@
 package fr.gouv.agora.infrastructure.qag
 
-import fr.gouv.agora.domain.QagDetails
-import fr.gouv.agora.domain.ResponseQag
-import fr.gouv.agora.domain.ResponseQagText
-import fr.gouv.agora.domain.ResponseQagVideo
+import fr.gouv.agora.domain.*
 import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 import org.springframework.stereotype.Component
@@ -14,6 +11,7 @@ class PublicQagJsonMapper(private val dateMapper: DateMapper) {
     fun toJson(qagDetails: QagDetails): PublicQagJson {
         return PublicQagJson(
             id = qagDetails.id,
+            status = toResponseStatusJson(qagDetails),
             thematique = ThematiqueNoIdJson(
                 label = qagDetails.thematique.label,
                 picto = qagDetails.thematique.picto,
@@ -57,5 +55,15 @@ class PublicQagJsonMapper(private val dateMapper: DateMapper) {
             feedbackQuestion = responseQag.feedbackQuestion,
         )
     }
+
+    private fun toResponseStatusJson(qagDetails: QagDetails): String{
+        if (qagDetails.response != null)
+            return "responseAvailable"
+        if (qagDetails.status == QagStatus.SELECTED_FOR_RESPONSE)
+            return "selectedForResponse"
+
+        return "openForSupport";
+    }
+
 
 }

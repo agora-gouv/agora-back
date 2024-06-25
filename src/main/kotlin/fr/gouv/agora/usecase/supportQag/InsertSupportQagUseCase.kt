@@ -31,7 +31,7 @@ class InsertSupportQagUseCase(
                 userId = supportQagInserting.userId,
             )
         ) {
-            logger.error("⚠️ Add support error: already supported")
+            logger.debug("⚠️ Add support error: already supported")
             return SupportQagResult.FAILURE
         }
 

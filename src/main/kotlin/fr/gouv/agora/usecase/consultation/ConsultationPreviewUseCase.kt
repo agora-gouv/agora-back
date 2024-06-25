@@ -39,25 +39,18 @@ class ConsultationPreviewUseCase(
     }
 
     private fun buildOngoingList(): List<ConsultationPreviewOngoing> {
-        val thematiqueList = thematiqueRepository.getThematiqueList()
         return consultationInfoRepository.getOngoingConsultations()
             .mapNotNull { consultationInfo ->
-                thematiqueList.find { thematique -> consultationInfo.thematiqueId == thematique.id }
-                    ?.let { thematique ->
-                        ongoingMapper.toConsultationPreviewOngoing(
-                            consultationInfo = consultationInfo,
-                            thematique = thematique,
-                        )
-                    }
+                thematiqueRepository.getThematique(consultationInfo.thematiqueId)
+                    ?.let { ongoingMapper.toConsultationPreviewOngoing(consultationInfo, it) }
             }.also { ongoingList ->
                 cacheRepository.insertConsultationPreviewOngoingList(ongoingList)
             }
     }
 
     private fun buildFinishedList(): List<ConsultationPreviewFinished> {
-        val thematiqueList = thematiqueRepository.getThematiqueList()
         return consultationInfoRepository.getFinishedConsultations().mapNotNull { consultationWithUpdateInfo ->
-            thematiqueList.find { thematique -> consultationWithUpdateInfo.thematiqueId == thematique.id }
+            thematiqueRepository.getThematique(consultationWithUpdateInfo.thematiqueId)
                 ?.let { thematique ->
                     finishedMapper.toConsultationPreviewFinished(
                         consultationInfo = consultationWithUpdateInfo,
@@ -70,18 +63,14 @@ class ConsultationPreviewUseCase(
     }
 
     private fun buildAnsweredList(userId: String): List<ConsultationPreviewFinished> {
-        val thematiqueList = thematiqueRepository.getThematiqueList()
-        return consultationInfoRepository.getAnsweredConsultations(userId).mapNotNull { consultationWithUpdateInfo ->
-            thematiqueList.find { thematique -> consultationWithUpdateInfo.thematiqueId == thematique.id }
-                ?.let { thematique ->
-                    finishedMapper.toConsultationPreviewFinished(
-                        consultationInfo = consultationWithUpdateInfo,
-                        thematique = thematique,
-                    )
-                }
-        }.also { answeredList ->
-            cacheRepository.insertConsultationPreviewAnsweredList(userId, answeredList)
-        }
+        val answeredConsultationsWithThematique = consultationInfoRepository.getAnsweredConsultations(userId)
+            .mapNotNull { consultationWithUpdateInfo ->
+                thematiqueRepository.getThematique(consultationWithUpdateInfo.thematiqueId)
+                    ?.let { finishedMapper.toConsultationPreviewFinished(consultationWithUpdateInfo, it) }
+            }
+        cacheRepository.insertConsultationPreviewAnsweredList(userId, answeredConsultationsWithThematique)
+
+        return answeredConsultationsWithThematique
     }
 
     private fun List<ConsultationPreviewOngoing>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewFinished>): List<ConsultationPreviewOngoing> {

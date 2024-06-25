@@ -5,9 +5,11 @@ import fr.gouv.agora.domain.ResponseQagAdditionalInfo
 import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.infrastructure.responseQag.dto.ResponseQagDTO
-import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagDTO
+import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQag
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagText
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagVideo
+import fr.gouv.agora.infrastructure.common.StrapiDTO
+import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.springframework.stereotype.Component
 
@@ -45,7 +47,7 @@ class ResponseQagMapper {
         else null
     }
 
-    fun toDomain(responseBody: StrapiResponseQagDTO): List<ResponseQag> {
+    fun toDomain(responseBody: StrapiDTO<StrapiResponseQag>): List<ResponseQag> {
         return responseBody.data.map {
             val response = it.attributes
 
@@ -57,15 +59,12 @@ class ResponseQagMapper {
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
-                        responseText = responseContent.text.toString(),
+                        responseText = "<body>${responseContent.text.toHtml()}</body>",
                         responseLabel = responseContent.label,
                     )
                 }
 
                 is StrapiResponseQagVideo -> {
-                    val thereIsAdditionalInfo = responseContent.informationAdditionnelleTitre != null
-                            && responseContent.informationAdditionnelleDescription != null
-
                     ResponseQagVideo(
                         author = response.auteur,
                         authorPortraitUrl = response.auteurPortraitUrl,
@@ -77,10 +76,10 @@ class ResponseQagMapper {
                         videoWidth = responseContent.videoWidth,
                         videoHeight = responseContent.videoHeight,
                         transcription = responseContent.transcription,
-                        additionalInfo = if (thereIsAdditionalInfo) {
+                        additionalInfo = if (responseContent.hasInformationAdditionnelle()) {
                             ResponseQagAdditionalInfo(
                                 responseContent.informationAdditionnelleTitre!!,
-                                responseContent.informationAdditionnelleDescription.toString()
+                                "<body>${responseContent.informationAdditionnelleDescription!!.toHtml()}</body>"
                             )
                         } else null
                     )

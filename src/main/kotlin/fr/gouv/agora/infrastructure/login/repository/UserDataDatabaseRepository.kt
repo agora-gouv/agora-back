@@ -29,8 +29,8 @@ interface UserDataDatabaseRepository : JpaRepository<UserDataDTO, UUID> {
 
     @Modifying
     @Transactional
-    @Query(value = """WITH 
-        suspiciousIpAndUserAgent AS (
+    @Query(value = """
+        WITH suspiciousIpAndUserAgent AS (
             SELECT ip_address_hash, user_agent, count(*) AS signupCount FROM users_data 
             WHERE event_type = 'signup' 
             AND ip_address_hash != ''
@@ -41,8 +41,7 @@ interface UserDataDatabaseRepository : JpaRepository<UserDataDTO, UUID> {
         ),
         suspiciousUserId AS (
             SELECT DISTINCT user_id FROM users_data
-            WHERE ip_address_hash IN (SELECT ip_address_hash FROM suspiciousIpAndUserAgent)
-            AND user_agent IN (SELECT user_agent FROM suspiciousIpAndUserAgent)
+            WHERE CONCAT(ip_address_hash, user_agent) IN (SELECT CONCAT(ip_address_hash, user_agent) FROM suspiciousIpAndUserAgent)
             AND event_type = 'signup'
         )
         UPDATE agora_users 

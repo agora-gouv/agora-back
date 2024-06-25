@@ -181,7 +181,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
                 status = when (historyItem.status) {
                     ConsultationUpdateHistoryStatus.DONE -> "done"
                     ConsultationUpdateHistoryStatus.CURRENT -> "current"
-                    ConsultationUpdateHistoryStatus.INCOMING -> "incoming'"
+                    ConsultationUpdateHistoryStatus.INCOMING -> "incoming"
                 },
                 title = historyItem.title,
                 date = historyItem.updateDate?.let(dateMapper::toFormattedDate),

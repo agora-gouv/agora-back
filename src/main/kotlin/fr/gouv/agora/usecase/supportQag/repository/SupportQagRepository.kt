@@ -8,6 +8,7 @@ interface SupportQagRepository {
     fun deleteSupportQag(supportQagDeleting: SupportQagDeleting): SupportQagResult
     fun deleteSupportListByQagId(qagId: String): SupportQagResult
     fun deleteUsersSupportQag(userIDs: List<String>)
+    fun deleteBannedUsersLastWeekSupportsOnUnselectedQags(): Int
 }
 
 enum class SupportQagResult {
