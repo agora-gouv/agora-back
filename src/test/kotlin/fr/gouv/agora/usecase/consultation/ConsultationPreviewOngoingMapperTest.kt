@@ -86,12 +86,6 @@ internal class ConsultationPreviewOngoingMapperTest {
                 expectedHighlightLabel = "Dernier jour !",
             ),
             input(
-                whenTestDescription = "consultationEndDate is today at same hour",
-                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 16, 45, 0),
-                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 1, 16, 45, 0),
-                expectedHighlightLabel = null,
-            ),
-            input(
                 whenTestDescription = "consultationEndDate is in the near past",
                 serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
                 consultationEndDate = LocalDateTime.of(1999, Month.DECEMBER, 25, 16, 45, 0),
@@ -135,6 +129,7 @@ internal class ConsultationPreviewOngoingMapperTest {
 
         // Then
         assertThat(result).isEqualTo(expectedConsultationPreviewOngoing.copy(endDate = consultationEndDate))
+        assertThat(result.highlightLabel(serverDate)).isEqualTo(expectedHighlightLabel)
     }
 
     private fun mockConsultationInfo(endDate: LocalDateTime): ConsultationInfo {

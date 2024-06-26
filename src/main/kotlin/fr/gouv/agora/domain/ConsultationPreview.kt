@@ -12,12 +12,9 @@ data class ConsultationPreviewOngoing(
     val endDate: LocalDateTime,
 ) {
     fun highlightLabel(today: LocalDateTime): String? {
-        val consultationEndDate = endDate
         val daysDifference = ChronoUnit.DAYS.between(today, endDate)
 
-        // TODO relire les dates pour éviter les changements de comportement
-
-        if (consultationEndDate.isBefore(today)) {
+        if (endDate.isBefore(today)) {
             return null
         }
 

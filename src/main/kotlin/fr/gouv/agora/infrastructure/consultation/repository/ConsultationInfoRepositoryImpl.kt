@@ -13,7 +13,8 @@ import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 @Component
 @Suppress("unused")
@@ -55,24 +56,16 @@ class ConsultationInfoRepositoryImpl(
             .getConsultationsFinishedPreviewWithUpdateInfo(today)
             .map(consultationInfoMapper::toDomain)
 
-        strapiRepository.getConsultationsFinished(today)
-//        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return databaseConsultations
-//        }
+        // TODO 34 : récupérer les consultation terminées via Strapi
+        // TODO 34 : consultations endDate < today AND update_date => today AND l'update la plus récente
 
-        // consultations endDate < today AND update_date => today AND l'update la plus récente
-
-        // consultations avec une endDate avant aujourd'hui
-        // AND une date d'update après ou égale à aujourd'hui
-        // AND l'update la plus récente
-//        val strapiOngoingConsultations = strapiRepository
-//            .getConsultationsOngoing(today.toLocalDate())
-//            .let { consultationInfoMapper.toDomain(it, thematiques) }
-
-
+        return databaseConsultations
     }
 
     override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {
+        // TODO 33 : récupérer les consultations répondues par l'utilisateur avec
+        // TODO 33 : les informations update les + récentes mais avec un update date < à la date actuelle
+        // TODO 33 : via Strapi
         return userId.toUuidOrNull()?.let { userUUID ->
             databaseRepository.getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
                 .map(consultationInfoMapper::toDomain)

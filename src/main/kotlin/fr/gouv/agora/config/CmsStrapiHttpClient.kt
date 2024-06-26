@@ -7,7 +7,6 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -29,11 +28,10 @@ class CmsStrapiHttpClient(
         return httpResponse.body()
     }
 
-    fun getAllAfterOrEqual(cmsModel: String, dateField: String, dateValue: LocalDateTime): String {
-        val formattedDate = dateValue.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    fun getAllBetweenDates(cmsModel: String, beginField: String, endField: String, dateBetween: LocalDateTime): String {
+        val formattedBetweenDate = dateBetween.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-        // todo est-ce que l'on récupère les consultations qui se terminent aujourd'hui ?
-        val filter = "&filters[$dateField][\$gte]=$formattedDate"
+        val filter = "&filters[$beginField][\$lt]=$formattedBetweenDate&filters[$endField][\$gt]=$formattedBetweenDate"
         val uri = "${cmsModel}?pagination[pageSize]=100&populate=*$filter"
 
         val request = getClientRequest(uri).GET().build()
@@ -45,7 +43,6 @@ class CmsStrapiHttpClient(
     fun getAllBefore(cmsModel: String, dateField: String, dateValue: LocalDateTime): String {
         val formattedDate = dateValue.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-        // todo est-ce que l'on récupère les consultations qui se terminent aujourd'hui ?
         val filter = "&filters[$dateField][\$lt]=$formattedDate"
         val uri = "${cmsModel}?pagination[pageSize]=100&populate=*$filter"
 
