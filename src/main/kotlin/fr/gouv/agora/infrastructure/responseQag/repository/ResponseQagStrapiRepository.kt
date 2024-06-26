@@ -20,7 +20,7 @@ class ResponseQagStrapiRepository(
     fun getResponsesQag(@Param("qagIds") qagIds: List<UUID>): StrapiDTO<StrapiResponseQag> {
         return try {
             val allResponsesQag = cmsStrapiHttpClient
-                .getByIds("reponse-du-gouvernements", "questionId", qagIds.map { it.toString() })
+                .getBy("reponse-du-gouvernements", "questionId", qagIds.map { it.toString() })
 
             val ref = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
             objectMapper.readValue(allResponsesQag, ref)

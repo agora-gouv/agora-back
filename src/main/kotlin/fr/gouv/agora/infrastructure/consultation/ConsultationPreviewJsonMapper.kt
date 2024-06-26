@@ -10,11 +10,15 @@ import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.infrastructure.utils.DateUtils
 import org.springframework.stereotype.Component
+import java.time.Clock
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Component
 class ConsultationPreviewJsonMapper(
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
     private val dateMapper: DateMapper,
+    private val clock: Clock,
 ) {
 
     fun toJson(
@@ -30,7 +34,7 @@ class ConsultationPreviewJsonMapper(
                     coverUrl = domain.coverUrl,
                     endDate = dateMapper.toFormattedDate(domain.endDate),
                     thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
-                    highlightLabel = domain.highlightLabel,
+                    highlightLabel = domain.highlightLabel(LocalDateTime.now(clock)),
                 )
             },
             finishedList = domainFinishedList.map(::toJson),

@@ -15,6 +15,16 @@ data class StrapiDTO <T>(
     }
 }
 
+data class StrapiDataList <T>(
+    @JsonProperty("data")
+    val data: List<StrapiAttributes<T>>,
+)
+
+data class StrapiData <T>(
+    @JsonProperty("data")
+    val data: StrapiAttributes<T>,
+)
+
 data class StrapiAttributes<T>(
     @JsonProperty(value = "attributes")
     val attributes: T,

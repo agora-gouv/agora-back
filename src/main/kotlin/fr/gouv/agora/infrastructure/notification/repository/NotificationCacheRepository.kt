@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.notification.repository
 
-import fr.gouv.agora.domain.Notification
 import fr.gouv.agora.infrastructure.notification.dto.NotificationDTO
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier

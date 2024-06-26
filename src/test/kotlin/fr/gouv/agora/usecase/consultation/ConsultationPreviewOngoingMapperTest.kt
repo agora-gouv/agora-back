@@ -1,9 +1,7 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.domain.Thematique
-import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,7 +12,6 @@ import org.mockito.BDDMockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.time.Month
-import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 internal class ConsultationPreviewOngoingMapperTest {
@@ -28,8 +25,7 @@ internal class ConsultationPreviewOngoingMapperTest {
         title = "title",
         coverUrl = "coverUrl",
         thematique = thematique,
-        endDate = Date(1),
-        highlightLabel = null,
+        endDate = LocalDateTime.MIN,
     )
 
     companion object {
@@ -90,12 +86,6 @@ internal class ConsultationPreviewOngoingMapperTest {
                 expectedHighlightLabel = "Dernier jour !",
             ),
             input(
-                whenTestDescription = "consultationEndDate is today at same hour",
-                serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 16, 45, 0),
-                consultationEndDate = LocalDateTime.of(2000, Month.JANUARY, 1, 16, 45, 0),
-                expectedHighlightLabel = null,
-            ),
-            input(
                 whenTestDescription = "consultationEndDate is in the near past",
                 serverDate = LocalDateTime.of(2000, Month.JANUARY, 1, 9, 30, 0),
                 consultationEndDate = LocalDateTime.of(1999, Month.DECEMBER, 25, 16, 45, 0),
@@ -128,9 +118,8 @@ internal class ConsultationPreviewOngoingMapperTest {
         expectedHighlightLabel: String?,
     ) {
         // Given
-        mapper = ConsultationPreviewOngoingMapper(clock = TestUtils.getFixedClock(serverDate))
-        val endDate = consultationEndDate.toDate()
-        val consultationInfo = mockConsultationInfo(endDate = endDate)
+        mapper = ConsultationPreviewOngoingMapper()
+        val consultationInfo = mockConsultationInfo(endDate = consultationEndDate)
 
         // When
         val result = mapper.toConsultationPreviewOngoing(
@@ -139,15 +128,11 @@ internal class ConsultationPreviewOngoingMapperTest {
         )
 
         // Then
-        assertThat(result).isEqualTo(
-            expectedConsultationPreviewOngoing.copy(
-                endDate = endDate,
-                highlightLabel = expectedHighlightLabel,
-            )
-        )
+        assertThat(result).isEqualTo(expectedConsultationPreviewOngoing.copy(endDate = consultationEndDate))
+        assertThat(result.highlightLabel(serverDate)).isEqualTo(expectedHighlightLabel)
     }
 
-    private fun mockConsultationInfo(endDate: Date): ConsultationInfo {
+    private fun mockConsultationInfo(endDate: LocalDateTime): ConsultationInfo {
         return mock(ConsultationInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")

@@ -1,18 +1,29 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
+import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
+import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
+import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
-import java.util.*
+import java.time.Clock
+import java.time.LocalDateTime
+import java.util.Date
+import java.util.UUID
 
 @Component
 @Suppress("unused")
 class ConsultationInfoRepositoryImpl(
     private val databaseRepository: ConsultationDatabaseRepository,
+    private val strapiRepository: ConsultationStrapiRepository,
+    private val thematiqueRepository: ThematiqueRepository,
+    private val featureFlagsRepository: FeatureFlagsRepository,
+    private val clock: Clock,
     private val consultationInfoMapper: ConsultationInfoMapper,
     private val cacheManager: CacheManager,
 ) : ConsultationInfoRepository {
@@ -22,15 +33,39 @@ class ConsultationInfoRepositoryImpl(
         private const val CONSULTATION_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
     }
 
-    override fun getOngoingConsultations(): List<ConsultationInfo> {
-        return databaseRepository.getConsultationOngoingList().map(consultationInfoMapper::toDomain)
+    override fun getOngoingConsultations(): List<ConsultationPreviewOngoing> {
+        val today = LocalDateTime.now(clock)
+        val thematiques = thematiqueRepository.getThematiqueList()
+
+        val databaseOngoingConsultations = databaseRepository.getConsultationOngoingList(today)
+            .let { consultationInfoMapper.toDomain(it, thematiques) }
+
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            return databaseOngoingConsultations
+        }
+
+        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoing(today)
+            .let { consultationInfoMapper.toDomain(it, thematiques) }
+
+        return databaseOngoingConsultations + strapiOngoingConsultations
     }
 
     override fun getFinishedConsultations(): List<ConsultationWithUpdateInfo> {
-        return databaseRepository.getConsultationsFinishedPreviewWithUpdateInfo().map(consultationInfoMapper::toDomain)
+        val today = LocalDateTime.now(clock)
+        val databaseConsultations = databaseRepository
+            .getConsultationsFinishedPreviewWithUpdateInfo(today)
+            .map(consultationInfoMapper::toDomain)
+
+        // TODO 34 : récupérer les consultation terminées via Strapi
+        // TODO 34 : consultations endDate < today AND update_date => today AND l'update la plus récente
+
+        return databaseConsultations
     }
 
     override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {
+        // TODO 33 : récupérer les consultations répondues par l'utilisateur avec
+        // TODO 33 : les informations update les + récentes mais avec un update date < à la date actuelle
+        // TODO 33 : via Strapi
         return userId.toUuidOrNull()?.let { userUUID ->
             databaseRepository.getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
                 .map(consultationInfoMapper::toDomain)

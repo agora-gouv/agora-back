@@ -12,17 +12,6 @@ import java.util.*
 @Component
 class ReponseConsultationMapper {
 
-    fun toDomain(dto: ReponseConsultationDTO): ReponseConsultation {
-        return ReponseConsultation(
-            id = dto.id.toString(),
-            questionId = dto.questionId.toString(),
-            choiceId = dto.choiceId.toString(),
-            participationId = dto.participationId.toString(),
-            userId = dto.userId.toString(),
-            responseText = dto.responseText,
-        )
-    }
-
     fun toDomain(dto: ResponseConsultationCountDTO): ResponseConsultationCount {
         return ResponseConsultationCount(
             questionId = dto.questionId.toString(),

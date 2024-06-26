@@ -65,7 +65,7 @@ class PublicConsultationDetailsUseCase(
     }
 
     private fun isConsultationOngoing(consultationInfo: ConsultationInfo): Boolean {
-        return LocalDateTime.now(clock).isBefore(consultationInfo.endDate.toLocalDateTime())
+        return LocalDateTime.now(clock).isBefore(consultationInfo.endDate)
     }
 
     private fun getOngoingConsultationDetails(

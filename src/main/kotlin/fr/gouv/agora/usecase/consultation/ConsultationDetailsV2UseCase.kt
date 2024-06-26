@@ -65,7 +65,7 @@ class ConsultationDetailsV2UseCase(
     }
 
     private fun shouldUseUnansweredUsersUpdate(consultationInfo: ConsultationInfo, userId: String): Boolean {
-        val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate.toLocalDateTime())
+        val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate)
         return isConsultationOngoing && !hasUserAnsweredConsultation(
             consultationId = consultationInfo.id,
             userId = userId,
