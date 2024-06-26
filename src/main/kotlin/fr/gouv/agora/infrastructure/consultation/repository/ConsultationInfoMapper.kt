@@ -70,7 +70,7 @@ class ConsultationInfoMapper {
                 title = consultation.attributes.titre,
                 coverUrl = consultation.attributes.urlImageDeCouverture,
                 thematique = thematique,
-                endDate = consultation.attributes.dateDeFin.atTime(23, 59, 59),
+                endDate = consultation.attributes.dateDeFin,
             )
         }
     }

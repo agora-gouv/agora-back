@@ -13,10 +13,10 @@ import java.time.LocalDateTime
 data class ConsultationStrapiDTO(
     @JsonProperty(value = "titre")
     val titre: String,
-    @JsonProperty(value = "date_de_debut")
-    val dateDeDebut: LocalDate,
-    @JsonProperty(value = "date_de_fin")
-    val dateDeFin: LocalDate,
+    @JsonProperty(value = "datetime_de_debut")
+    val dateDeDebut: LocalDateTime,
+    @JsonProperty(value = "datetime_de_fin")
+    val dateDeFin: LocalDateTime,
     @JsonProperty(value = "url_image_de_couverture")
     val urlImageDeCouverture: String,
     @JsonProperty(value = "url_image_page_de_contenu")
@@ -29,6 +29,8 @@ data class ConsultationStrapiDTO(
     val estimationTemps: String,
     @JsonProperty(value = "nombre_participants_cible")
     val nombreParticipantsCible: String,
+    @JsonProperty(value = "flamme_label")
+    val flammeLabel: String,
     @JsonProperty(value = "createdAt")
     val createdAt: LocalDateTime,
     @JsonProperty(value = "updatedAt")

@@ -27,8 +27,6 @@ class ConsultationStrapiDTOTest {
                   "id": 2,
                   "attributes": {
                     "titre": "Mieux rémunérer les agriculteurs : quels leviers pour le consommateur ?",
-                    "date_de_debut": "2024-04-15",
-                    "date_de_fin": "2024-05-13",
                     "url_image_de_couverture": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
                     "url_image_page_de_contenu": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
                     "nombre_de_questions": 8,
@@ -36,8 +34,11 @@ class ConsultationStrapiDTOTest {
                     "estimation_temps": "5 minutes",
                     "nombre_participants_cible": 5000,
                     "createdAt": "2024-06-21T12:56:18.914Z",
-                    "updatedAt": "2024-06-21T14:40:42.089Z",
+                    "updatedAt": "2024-06-26T14:25:44.309Z",
                     "publishedAt": "2024-06-21T13:22:52.004Z",
+                    "flamme_label": "Gogogo !",
+                    "datetime_de_debut": "2024-06-25T23:00:00.000Z",
+                    "datetime_de_fin": "2024-06-27T04:45:00.000Z",
                     "thematique": {
                       "data": {
                         "id": 11,
