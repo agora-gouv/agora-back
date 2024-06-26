@@ -29,7 +29,4 @@ class ConsultationStrapiRepository(
             StrapiDTO.ofEmpty()
         }
     }
-    // consultations avec une endDate avant aujourd'hui
-    //        // AND une date d'update après ou égale à aujourd'hui
-    //        // AND l'update la plus récente
 }
