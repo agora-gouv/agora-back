@@ -31,7 +31,8 @@ class ConsultationPreviewUseCase(
         }
 
         return ConsultationPreviewPage(
-            ongoingList = (cachedOngoingConsultations ?: getOngoingConsultationsAndCacheThem()).removeAnsweredConsultation(answeredList),
+            ongoingList = (cachedOngoingConsultations
+                ?: getOngoingConsultationsAndCacheThem()).removeAnsweredConsultation(answeredList),
             finishedList = cachedFinishedConsultations ?: buildFinishedList(),
             answeredList = answeredList,
         )
@@ -47,15 +48,7 @@ class ConsultationPreviewUseCase(
     }
 
     private fun buildFinishedList(): List<ConsultationPreviewFinished> {
-        return consultationInfoRepository.getFinishedConsultations().mapNotNull { consultationWithUpdateInfo ->
-            thematiqueRepository.getThematique(consultationWithUpdateInfo.thematiqueId)
-                ?.let { thematique ->
-                    finishedMapper.toConsultationPreviewFinished(
-                        consultationInfo = consultationWithUpdateInfo,
-                        thematique = thematique,
-                    )
-                }
-        }.also { finishedList ->
+        return consultationInfoRepository.getFinishedConsultations().also { finishedList ->
             cacheRepository.insertConsultationPreviewFinishedList(finishedList)
         }
     }

@@ -40,8 +40,8 @@ class CmsStrapiHttpClient(
         return httpResponse.body()
     }
 
-    fun getAllBefore(cmsModel: String, dateField: String, dateValue: LocalDateTime): String {
-        val formattedDate = dateValue.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    fun getAllBeforeDate(cmsModel: String, dateField: String, dateAfter: LocalDateTime): String {
+        val formattedDate = dateAfter.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
         val filter = "&filters[$dateField][\$lt]=$formattedDate"
         val uri = "${cmsModel}?pagination[pageSize]=100&populate=*$filter"

@@ -8,6 +8,7 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.springframework.stereotype.Component
 import java.time.Clock
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Component
@@ -26,27 +27,20 @@ class ConsultationPreviewFinishedMapper(private val clock: Clock) {
             title = consultationInfo.title,
             coverUrl = consultationInfo.coverUrl,
             thematique = thematique,
-            step = if (LocalDateTime.now(clock).isBefore(consultationInfo.endDate.toLocalDateTime())) {
-                ConsultationStatus.COLLECTING_DATA
-            } else {
-                ConsultationStatus.POLITICAL_COMMITMENT
-            },
             updateLabel = buildUpdateLabel(consultationInfo),
-            updateDate = consultationInfo.updateDate.toLocalDate(),
+            endDate = consultationInfo.endDate,
+            updateDate = consultationInfo.updateDate,
         )
     }
 
     private fun buildUpdateLabel(consultationInfo: ConsultationWithUpdateInfo): String? {
         return consultationInfo.updateLabel?.let { updateLabel ->
             val dateNow = LocalDateTime.now(clock)
-            val updateDate = consultationInfo.updateDate.toLocalDateTime()
+            val updateDate = consultationInfo.updateDate
             val maxUpdateDateLabel = updateDate.plusDays(MAX_UPDATE_LABEL_DURATION_IN_DAYS)
-            if (updateDate == dateNow
-                || maxUpdateDateLabel == dateNow
-                || (updateDate.isBefore(dateNow) && dateNow.isBefore(maxUpdateDateLabel))
-            ) {
-                updateLabel
-            } else null
+            if (dateNow.isBefore(updateDate) || dateNow.isAfter(maxUpdateDateLabel)) return null
+
+            return updateLabel
         }
     }
 

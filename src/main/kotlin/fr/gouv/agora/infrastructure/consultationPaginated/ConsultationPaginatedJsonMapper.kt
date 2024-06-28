@@ -8,11 +8,14 @@ import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.usecase.consultationPaginated.ConsultationAnsweredPaginatedList
 import fr.gouv.agora.usecase.consultationPaginated.ConsultationFinishedPaginatedList
 import org.springframework.stereotype.Component
+import java.time.Clock
+import java.time.LocalDateTime
 
 @Component
 class ConsultationPaginatedJsonMapper(
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
     private val dateMapper: DateMapper,
+    private val clock: Clock,
 ) {
 
     fun toJson(consultationFinishedPaginatedList: ConsultationFinishedPaginatedList): ConsultationPaginatedJson {
@@ -30,13 +33,14 @@ class ConsultationPaginatedJsonMapper(
     }
 
     private fun toJson(domain: ConsultationPreviewFinished): ConsultationFinishedJson {
+        val now = LocalDateTime.now(clock)
         return ConsultationFinishedJson(
             id = domain.id,
             title = domain.title,
             coverUrl = domain.coverUrl,
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
-            step = statusToJson(domain.step),
-            updateLabel = domain.updateLabel,
+            step = statusToJson(domain.getStep(now)),
+            updateLabel = domain.getUpdateLabel(now),
             updateDate = dateMapper.toFormattedDate(domain.updateDate),
         )
     }

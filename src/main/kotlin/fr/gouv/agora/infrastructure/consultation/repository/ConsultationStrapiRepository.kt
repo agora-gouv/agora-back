@@ -29,4 +29,22 @@ class ConsultationStrapiRepository(
             StrapiDTO.ofEmpty()
         }
     }
+
+    fun getConsultationsFinished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
+        // TODO : idée : si on utilise le builder, on pourrait l'instancier ici, le filer au Client
+        // TODO : et le client pourrait même nous retourner des objets DTOs
+        // TODO : ce qui nous permettrait de faire un filtre ici aussi
+
+        return try {
+            val consultations = cmsStrapiHttpClient
+                .getAllBeforeDate("consultations", "date_de_fin", date)
+
+            val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
+            objectMapper.readValue(consultations, ref)
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la récupération des consultations ongoing Strapi : ", e)
+
+            StrapiDTO.ofEmpty()
+        }
+    }
 }
