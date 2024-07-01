@@ -1,9 +1,7 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.TestUtils
 import fr.gouv.agora.TestUtils.lenientGiven
 import fr.gouv.agora.TestUtils.willReturn
-import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationStatus
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
