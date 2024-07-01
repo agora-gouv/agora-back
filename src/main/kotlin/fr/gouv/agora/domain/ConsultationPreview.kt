@@ -42,7 +42,6 @@ data class ConsultationPreviewFinished(
         }
     }
 
-    // todo test
     fun getUpdateLabel(now: LocalDateTime): String? {
         if (updateLabel == null) return null
 

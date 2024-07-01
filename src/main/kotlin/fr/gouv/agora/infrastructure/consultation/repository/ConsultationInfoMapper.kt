@@ -104,24 +104,26 @@ class ConsultationInfoMapper {
     fun toDomainFinished(
         consultations: StrapiDTO<ConsultationStrapiDTO>,
         thematiques: List<Thematique>,
-        updateDate: LocalDateTime,
+        now: LocalDateTime,
     ): List<ConsultationPreviewFinished> {
         return consultations.data.mapNotNull { consultation ->
-            val thematique = thematiques.find { it.id == consultation.attributes.thematique.data.attributes.databaseId }
+            val consultationFields = consultation.attributes
+
+            val thematique = thematiques.find { it.id == consultationFields.thematique.data.attributes.databaseId }
 
             if (thematique == null) {
-                logger.error("ConsultationPreviewFinished - Thematique id '${consultation.attributes.thematique.data.attributes.databaseId}' non trouvée")
+                logger.error("ConsultationPreviewFinished - Thematique id '${consultationFields.thematique.data.attributes.databaseId}' non trouvée")
                 return@mapNotNull null
             }
 
             ConsultationPreviewFinished(
                 id = consultation.id,
-                title = consultation.attributes.titre,
-                coverUrl = consultation.attributes.urlImageDeCouverture,
+                title = consultationFields.titre,
+                coverUrl = consultationFields.urlImageDeCouverture,
                 thematique = thematique,
-                updateLabel = consultation.attributes.flammeLabel,
-                updateDate = updateDate,
-                endDate = consultation.attributes.dateDeFin,
+                updateLabel = consultationFields.flammeLabel,
+                updateDate = consultationFields.getLatestUpdateDate(now),
+                endDate = consultationFields.dateDeFin,
             )
         }
     }

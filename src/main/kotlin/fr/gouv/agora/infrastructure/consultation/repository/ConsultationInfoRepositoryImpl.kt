@@ -52,26 +52,21 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getFinishedConsultations(): List<ConsultationPreviewFinished> {
-        val today = LocalDateTime.now(clock)
+        val now = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
-        val databaseConsultations = databaseRepository
-            .getConsultationsFinishedPreviewWithUpdateInfo(today)
-            .let { consultationInfoMapper.toDomainFinished(it, thematiques) }
 
+        val databaseConsultations = databaseRepository
+            .getConsultationsFinishedPreviewWithUpdateInfo(now)
+            .let { consultationInfoMapper.toDomainFinished(it, thematiques) }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             return databaseConsultations
         }
-////////////////////////
-        val updateDate = LocalDateTime.now(clock) // TODO : à changer
-        val strapiConsultations = strapiRepository.getConsultationsFinished(today)
-            .let { consultationInfoMapper.toDomainFinished(it, thematiques, updateDate) }
+        val consultationsStrapi = strapiRepository.getConsultationsFinished(now)
+        val strapiConsultations = consultationsStrapi
+            .let { consultationInfoMapper.toDomainFinished(it, thematiques, now) }
 
         return strapiConsultations + databaseConsultations
-
-        // TODO 34 : récupérer les consultation terminées via Strapi
-        // TODO 34 : consultations endDate < today AND l'update la plus récente avec today >= update_date
-
     }
 
     override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {
