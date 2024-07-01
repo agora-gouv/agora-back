@@ -24,6 +24,8 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .and()
             .securityMatcher("/**")
             .authorizeHttpRequests()
+            .requestMatchers("/swagger-ui/**").permitAll()
+            .requestMatchers("/v3/api-docs/**").permitAll()
             .requestMatchers("/admin/**").hasAuthority(UserAuthorizationJWT.ADMIN_APIS.authority)
             .requestMatchers("/moderate/**").hasAuthority(UserAuthorizationJWT.MODERATE_QAG.authority)
             .requestMatchers("/signup", "/login").permitAll()
@@ -35,5 +37,4 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
 
         return http.build()
     }
-
 }
