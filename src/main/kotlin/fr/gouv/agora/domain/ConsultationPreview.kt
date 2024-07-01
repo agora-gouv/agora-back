@@ -42,16 +42,14 @@ data class ConsultationPreviewFinished(
         }
     }
 
+    // todo test
     fun getUpdateLabel(now: LocalDateTime): String? {
-        return updateLabel?.let { updateLabel ->
-            val updateDate = updateDate
-            val maxUpdateDateLabel = updateDate.plusDays(90)
-            if (updateDate == now
-                || maxUpdateDateLabel == now
-                || (updateDate.isBefore(now) && now.isBefore(maxUpdateDateLabel))
-            ) {
-                updateLabel
-            } else null
-        }
+        if (updateLabel == null) return null
+
+        val maxUpdateDateLabel = updateDate.plusDays(90)
+
+        if (now.isBefore(updateDate) || now.isAfter(maxUpdateDateLabel)) return null
+
+        return updateLabel
     }
 }

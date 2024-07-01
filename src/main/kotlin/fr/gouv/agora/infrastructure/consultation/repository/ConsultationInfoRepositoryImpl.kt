@@ -62,7 +62,7 @@ class ConsultationInfoRepositoryImpl(
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             return databaseConsultations
         }
-
+////////////////////////
         val updateDate = LocalDateTime.now(clock) // TODO : à changer
         val strapiConsultations = strapiRepository.getConsultationsFinished(today)
             .let { consultationInfoMapper.toDomainFinished(it, thematiques, updateDate) }

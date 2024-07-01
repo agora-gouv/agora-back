@@ -29,7 +29,7 @@ class CmsStrapiHttpClient(
     }
 
     fun getAllBetweenDates(cmsModel: String, beginField: String, endField: String, dateBetween: LocalDateTime): String {
-        val formattedBetweenDate = dateBetween.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val formattedBetweenDate = dateBetween.format(DateTimeFormatter.ISO_DATE_TIME)
 
         val filter = "&filters[$beginField][\$lt]=$formattedBetweenDate&filters[$endField][\$gt]=$formattedBetweenDate"
         val uri = "${cmsModel}?pagination[pageSize]=100&populate=*$filter"
@@ -41,7 +41,7 @@ class CmsStrapiHttpClient(
     }
 
     fun getAllBeforeDate(cmsModel: String, dateField: String, dateAfter: LocalDateTime): String {
-        val formattedDate = dateAfter.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val formattedDate = dateAfter.format(DateTimeFormatter.ISO_DATE_TIME)
 
         val filter = "&filters[$dateField][\$lt]=$formattedDate"
         val uri = "${cmsModel}?pagination[pageSize]=100&populate=*$filter"

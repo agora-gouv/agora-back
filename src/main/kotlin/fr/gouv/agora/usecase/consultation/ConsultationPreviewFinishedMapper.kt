@@ -12,12 +12,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Component
-class ConsultationPreviewFinishedMapper(private val clock: Clock) {
-
-    companion object {
-        private const val MAX_UPDATE_LABEL_DURATION_IN_DAYS = 90L
-    }
-
+class ConsultationPreviewFinishedMapper {
     fun toConsultationPreviewFinished(
         consultationInfo: ConsultationWithUpdateInfo,
         thematique: Thematique,
@@ -27,21 +22,9 @@ class ConsultationPreviewFinishedMapper(private val clock: Clock) {
             title = consultationInfo.title,
             coverUrl = consultationInfo.coverUrl,
             thematique = thematique,
-            updateLabel = buildUpdateLabel(consultationInfo),
+            updateLabel = consultationInfo.updateLabel,
             endDate = consultationInfo.endDate,
             updateDate = consultationInfo.updateDate,
         )
     }
-
-    private fun buildUpdateLabel(consultationInfo: ConsultationWithUpdateInfo): String? {
-        return consultationInfo.updateLabel?.let { updateLabel ->
-            val dateNow = LocalDateTime.now(clock)
-            val updateDate = consultationInfo.updateDate
-            val maxUpdateDateLabel = updateDate.plusDays(MAX_UPDATE_LABEL_DURATION_IN_DAYS)
-            if (dateNow.isBefore(updateDate) || dateNow.isAfter(maxUpdateDateLabel)) return null
-
-            return updateLabel
-        }
-    }
-
 }

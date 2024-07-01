@@ -20,7 +20,7 @@ import java.time.Month
 
 @ExtendWith(MockitoExtension::class)
 class ConsultationPreviewFinishedMapperTest {
-    private lateinit var mapper: ConsultationPreviewFinishedMapper
+    private var mapper: ConsultationPreviewFinishedMapper = ConsultationPreviewFinishedMapper()
 
     companion object {
         @JvmStatic
@@ -97,7 +97,6 @@ class ConsultationPreviewFinishedMapperTest {
     fun `toConsultationPreviewFinished - when serverDate has not reached endDate - should return status COLLECTING_DATA`() {
         // Given
         val now = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30)
-        mockCurrentDate(now)
         val updateDate = LocalDateTime.of(2024, 12, 23, 12, 0)
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
@@ -121,7 +120,6 @@ class ConsultationPreviewFinishedMapperTest {
     fun `toConsultationPreviewFinished - when serverDate is greater than endDate - should return status POLITICAL_COMMITMENT`() {
         // Given
         val now = LocalDateTime.of(2024, Month.JANUARY, 10, 12, 30)
-        mockCurrentDate(now)
         val updateDate = LocalDateTime.of(2024, 12, 23, 12, 0)
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
@@ -145,7 +143,6 @@ class ConsultationPreviewFinishedMapperTest {
     fun `toConsultationPreviewFinished - when serverDate is equal to endDate - should return status POLITICAL_COMMITMENT`() {
         // Given
         val now = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30)
-        mockCurrentDate(now)
         val updateDate = LocalDateTime.of(2024, 12, 23, 12, 0)
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
@@ -167,7 +164,7 @@ class ConsultationPreviewFinishedMapperTest {
 
     @ParameterizedTest(name = "toConsultationPreviewFinished - {0}")
     @MethodSource("updateLabelTestCases")
-    fun `toConsultationPreviewFinished - should return expected`(
+    fun `toConsultationPreviewFinished - should return expected updateLabel`(
         @Suppress("UNUSED_PARAMETER")
         testName: String,
         serverDate: LocalDateTime,
@@ -177,7 +174,6 @@ class ConsultationPreviewFinishedMapperTest {
         expectedUpdateLabel: String?,
     ) {
         // Given
-        mockCurrentDate(serverDate)
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
@@ -192,20 +188,6 @@ class ConsultationPreviewFinishedMapperTest {
         val result = mapper.toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)
 
         // Then
-        assertThat(result).isEqualTo(
-            ConsultationPreviewFinished(
-                id = "consultationId",
-                title = "title",
-                coverUrl = "coverUrl",
-                thematique = thematique,
-                updateLabel = expectedUpdateLabel,
-                updateDate = updateDate,
-                endDate = LocalDateTime.MIN,
-            )
-        )
-    }
-
-    private fun mockCurrentDate(serverDate: LocalDateTime) {
-        mapper = ConsultationPreviewFinishedMapper(clock = TestUtils.getFixedClock(serverDate))
+        assertThat(result.getUpdateLabel(serverDate)).isEqualTo(expectedUpdateLabel)
     }
 }
