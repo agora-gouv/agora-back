@@ -3,11 +3,10 @@ package fr.gouv.agora.infrastructure.consultation.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import fr.gouv.agora.infrastructure.common.StrapiDataList
 import fr.gouv.agora.infrastructure.common.StrapiData
+import fr.gouv.agora.infrastructure.common.StrapiDataList
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class ConsultationStrapiDTO(
@@ -31,25 +30,27 @@ data class ConsultationStrapiDTO(
     val nombreParticipantsCible: String,
     @JsonProperty(value = "flamme_label")
     val flammeLabel: String,
-    @JsonProperty(value = "createdAt")
-    val createdAt: LocalDateTime,
-    @JsonProperty(value = "updatedAt")
-    val updatedAt: LocalDateTime,
-    @JsonProperty(value = "publishedAt")
-    val publishedAt: LocalDateTime,
     @JsonProperty(value = "thematique")
     val thematique: StrapiData<StrapiThematiqueDTO>,
     @JsonProperty(value = "questions")
     val questions: List<StrapiConsultationQuestion>,
     @JsonProperty(value = "consultation_avant_reponse")
-    val contenuAvantReponse: StrapiData<StrapiConsultationContenuAvantReponse>?,
+    val contenuAvantReponse: StrapiData<StrapiConsultationContenuAvantReponse>,
     @JsonProperty(value = "consultation_apres_reponse_ou_terminee")
-    val contenuApresReponseOuTerminee: StrapiData<StrapiConsultationContenuApresReponse>?,
+    val contenuApresReponseOuTerminee: StrapiData<StrapiConsultationContenuApresReponse>,
     @JsonProperty("consultation_contenu_autres")
-    val consultationContenuAutres : StrapiDataList<StrapiConsultationContenuAutre>,
+    val consultationContenuAutres: StrapiDataList<StrapiConsultationContenuAutre>,
     @JsonProperty("consultation_contenu_a_venir")
-    val consultationContenuAVenir : StrapiData<StrapiConsultationAVenir>?,
-)
+    val consultationContenuAVenir: StrapiData<StrapiConsultationAVenir>?,
+) {
+    fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime {
+        return listOfNotNull(
+            *consultationContenuAutres.data.map { it.attributes.datetimePublication }.toTypedArray(),
+            contenuApresReponseOuTerminee.data.attributes.datetimePublication,
+            contenuAvantReponse.data.attributes.datetimePublication,
+        ).filter { it.isBefore(now) }.max()
+    }
+}
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -126,12 +127,8 @@ data class StrapiConsultationContenuAvantReponse(
     val historiqueType: String,
     @JsonProperty("liste_objectifs")
     val listeObjectifs: List<StrapiRichText>,
-    @JsonProperty("createdAt")
-    val createdAt: String,
-    @JsonProperty("updatedAt")
-    val updatedAt: String,
-    @JsonProperty("publishedAt")
-    val publishedAt: String,
+    @JsonProperty("datetime_publication")
+    val datetimePublication: LocalDateTime,
 )
 
 data class StrapiConsultationContenuApresReponse(
@@ -155,12 +152,6 @@ data class StrapiConsultationContenuApresReponse(
     val historiqueCallToAction: String,
     @JsonProperty("historique_type")
     val historiqueType: String,
-    @JsonProperty("createdAt")
-    val createdAt: LocalDateTime,
-    @JsonProperty("updatedAt")
-    val updatedAt: LocalDateTime,
-    @JsonProperty("publishedAt")
-    val publishedAt: LocalDateTime,
     @JsonProperty("encart_visualisation_resultat_avant_fin_consultation_picto")
     val encartVisualisationResultatAvantFinConsultationPictogramme: String,
     @JsonProperty("encart_visualisation_resultat_avant_fin_consultation_desc")
@@ -173,6 +164,8 @@ data class StrapiConsultationContenuApresReponse(
     val encartVisualisationResultatApresFinConsultationDescription: List<StrapiRichText>,
     @JsonProperty("encart_visualisation_resultat_apres_fin_consultation_cta")
     val encartVisualisationResultatApresFinConsultationCallToAction: String,
+    @JsonProperty("datetime_publication")
+    val datetimePublication: LocalDateTime,
 )
 
 data class StrapiConsultationContenuAutre(
@@ -196,29 +189,17 @@ data class StrapiConsultationContenuAutre(
     val feedbackTitre: String,
     @JsonProperty("feedback_description")
     val feedbackDescription: List<StrapiRichText>,
-    @JsonProperty("date_publication")
-    val datePublication: LocalDate,
     @JsonProperty("historique_titre")
     val historiqueTitre: String,
     @JsonProperty("historique_call_to_action")
     val historiqueCallToAction: String,
     @JsonProperty("historique_type")
     val historiqueType: String,
-    @JsonProperty("createdAt")
-    val createdAt: LocalDateTime,
-    @JsonProperty("updatedAt")
-    val updatedAt: LocalDateTime,
-    @JsonProperty("publishedAt")
-    val publishedAt: LocalDateTime,
+    @JsonProperty("datetime_publication")
+    val datetimePublication: LocalDateTime,
 )
 
 data class StrapiConsultationAVenir(
     @JsonProperty("titre_historique")
     val titreHistorique: String,
-    @JsonProperty("createdAt")
-    val createdAt: LocalDateTime,
-    @JsonProperty("updatedAt")
-    val updatedAt: LocalDateTime,
-    @JsonProperty("publishedAt")
-    val publishedAt: LocalDateTime,
 )

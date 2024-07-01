@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
+import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.StrapiDTO
@@ -11,12 +12,13 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Component
 class ConsultationInfoMapper {
     private val logger = LoggerFactory.getLogger(ConsultationInfoMapper::class.java)
 
-    fun toDomain(dto: ConsultationDTO) = ConsultationInfo(
+    fun toDomainOngoing(dto: ConsultationDTO) = ConsultationInfo(
         id = dto.id.toString(),
         title = dto.title,
         coverUrl = dto.coverUrl,
@@ -31,7 +33,7 @@ class ConsultationInfoMapper {
         thematiqueId = dto.thematiqueId.toString(),
     )
 
-    fun toDomain(
+    fun toDomainOngoing(
         consultations: List<ConsultationDTO>,
         thematiques: List<Thematique>
     ): List<ConsultationPreviewOngoing> {
@@ -39,7 +41,7 @@ class ConsultationInfoMapper {
             val thematique = thematiques.find { it.id == consultation.thematiqueId.toString() }
 
             if (thematique == null) {
-                logger.error("ConsultationPreviewOngoing - Thematique id '${consultation.thematiqueId}' non trouvée")
+                logger.error("ConsultationPreviewOngoing Database - Thematique id '${consultation.thematiqueId}' non trouvée")
                 return@mapNotNull null
             }
 
@@ -53,7 +55,31 @@ class ConsultationInfoMapper {
         }
     }
 
-    fun toDomain(
+    fun toDomainFinished(
+        consultations: List<ConsultationWithUpdateInfoDTO>,
+        thematiques: List<Thematique>,
+    ): List<ConsultationPreviewFinished> {
+        return consultations.mapNotNull { consultation ->
+            val thematique = thematiques.find { it.id == consultation.thematiqueId.toString() }
+
+            if (thematique == null) {
+                logger.error("ConsultationPreviewFinished Database - Thematique id '${consultation.thematiqueId}' non trouvée")
+                return@mapNotNull null
+            }
+
+            return@mapNotNull ConsultationPreviewFinished(
+                id = consultation.id.toString(),
+                title = consultation.title,
+                coverUrl = consultation.coverUrl,
+                thematique = thematique,
+                updateLabel = consultation.updateLabel,
+                updateDate = consultation.updateDate.toLocalDateTime(),
+                endDate = consultation.endDate.toLocalDateTime(),
+            )
+        }
+    }
+
+    fun toDomainOngoing(
         consultations: StrapiDTO<ConsultationStrapiDTO>,
         thematiques: List<Thematique>
     ): List<ConsultationPreviewOngoing> {
@@ -61,7 +87,7 @@ class ConsultationInfoMapper {
             val thematique = thematiques.find { it.id == consultation.attributes.thematique.data.attributes.databaseId }
 
             if (thematique == null) {
-                logger.error("ConsultationPreviewOngoing - Thematique id '${consultation.attributes.thematique.data.attributes.databaseId}' non trouvée")
+                logger.error("ConsultationPreviewOngoing Strapi - Thematique id '${consultation.attributes.thematique.data.attributes.databaseId}' non trouvée")
                 return@mapNotNull null
             }
 
@@ -75,13 +101,40 @@ class ConsultationInfoMapper {
         }
     }
 
-    fun toDomain(dto: ConsultationWithUpdateInfoDTO) = ConsultationWithUpdateInfo(
+    fun toDomainFinished(
+        consultations: StrapiDTO<ConsultationStrapiDTO>,
+        thematiques: List<Thematique>,
+        now: LocalDateTime,
+    ): List<ConsultationPreviewFinished> {
+        return consultations.data.mapNotNull { consultation ->
+            val consultationFields = consultation.attributes
+
+            val thematique = thematiques.find { it.id == consultationFields.thematique.data.attributes.databaseId }
+
+            if (thematique == null) {
+                logger.error("ConsultationPreviewFinished - Thematique id '${consultationFields.thematique.data.attributes.databaseId}' non trouvée")
+                return@mapNotNull null
+            }
+
+            ConsultationPreviewFinished(
+                id = consultation.id,
+                title = consultationFields.titre,
+                coverUrl = consultationFields.urlImageDeCouverture,
+                thematique = thematique,
+                updateLabel = consultationFields.flammeLabel,
+                updateDate = consultationFields.getLatestUpdateDate(now),
+                endDate = consultationFields.dateDeFin,
+            )
+        }
+    }
+
+    fun toDomainOngoing(dto: ConsultationWithUpdateInfoDTO) = ConsultationWithUpdateInfo(
         id = dto.id.toString(),
         title = dto.title,
         coverUrl = dto.coverUrl,
         thematiqueId = dto.thematiqueId.toString(),
-        endDate = dto.endDate,
-        updateDate = dto.updateDate,
+        endDate = dto.endDate.toLocalDateTime(),
+        updateDate = dto.updateDate.toLocalDateTime(),
         updateLabel = dto.updateLabel,
     )
 }

@@ -233,7 +233,8 @@ class ConsultationStrapiDTOTest {
                           ],
                           "createdAt": "2024-06-21T12:59:00.544Z",
                           "updatedAt": "2024-06-21T12:59:01.528Z",
-                          "publishedAt": "2024-06-21T12:59:01.521Z"
+                          "publishedAt": "2024-06-21T12:59:01.521Z",
+                          "datetime_publication": "2024-07-23T23:15:00.000Z"
                         }
                       }
                     },
@@ -360,6 +361,7 @@ class ConsultationStrapiDTOTest {
                           "createdAt": "2024-06-21T14:23:51.194Z",
                           "updatedAt": "2024-06-21T14:24:55.084Z",
                           "publishedAt": "2024-06-21T14:23:52.266Z",
+                          "datetime_publication": "2024-07-23T23:15:00.000Z",
                           "encart_visualisation_resultat_avant_fin_consultation_picto": "🙌",
                           "encart_visualisation_resultat_avant_fin_consultation_desc": [
                             {
@@ -440,7 +442,8 @@ class ConsultationStrapiDTOTest {
                             "historique_type": "réponse et pourcentage",
                             "createdAt": "2024-06-21T14:40:01.183Z",
                             "updatedAt": "2024-06-21T14:40:02.858Z",
-                            "publishedAt": "2024-06-21T14:40:02.833Z"
+                            "publishedAt": "2024-06-21T14:40:02.833Z",
+                            "datetime_publication": "2024-07-23T23:15:00.000Z"
                           }
                         }
                       ]

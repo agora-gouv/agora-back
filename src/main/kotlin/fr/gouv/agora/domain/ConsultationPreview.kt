@@ -1,6 +1,5 @@
 package fr.gouv.agora.domain
 
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -31,7 +30,25 @@ data class ConsultationPreviewFinished(
     val title: String,
     val coverUrl: String,
     val thematique: Thematique,
-    val step: ConsultationStatus,
-    val updateLabel: String?,
-    val updateDate: LocalDate,
-)
+    private val updateLabel: String?,
+    val updateDate: LocalDateTime,
+    val endDate: LocalDateTime,
+) {
+    fun getStep(now: LocalDateTime): ConsultationStatus {
+        return if (now.isBefore(this.endDate)) {
+            ConsultationStatus.COLLECTING_DATA
+        } else {
+            ConsultationStatus.POLITICAL_COMMITMENT
+        }
+    }
+
+    fun getUpdateLabel(now: LocalDateTime): String? {
+        if (updateLabel == null) return null
+
+        val maxUpdateDateLabel = updateDate.plusDays(90)
+
+        if (now.isBefore(updateDate) || now.isAfter(maxUpdateDateLabel)) return null
+
+        return updateLabel
+    }
+}

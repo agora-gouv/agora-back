@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -38,28 +39,34 @@ class ConsultationInfoRepositoryImpl(
         val thematiques = thematiqueRepository.getThematiqueList()
 
         val databaseOngoingConsultations = databaseRepository.getConsultationOngoingList(today)
-            .let { consultationInfoMapper.toDomain(it, thematiques) }
+            .let { consultationInfoMapper.toDomainOngoing(it, thematiques) }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             return databaseOngoingConsultations
         }
 
         val strapiOngoingConsultations = strapiRepository.getConsultationsOngoing(today)
-            .let { consultationInfoMapper.toDomain(it, thematiques) }
+            .let { consultationInfoMapper.toDomainOngoing(it, thematiques) }
 
         return databaseOngoingConsultations + strapiOngoingConsultations
     }
 
-    override fun getFinishedConsultations(): List<ConsultationWithUpdateInfo> {
-        val today = LocalDateTime.now(clock)
+    override fun getFinishedConsultations(): List<ConsultationPreviewFinished> {
+        val now = LocalDateTime.now(clock)
+        val thematiques = thematiqueRepository.getThematiqueList()
+
         val databaseConsultations = databaseRepository
-            .getConsultationsFinishedPreviewWithUpdateInfo(today)
-            .map(consultationInfoMapper::toDomain)
+            .getConsultationsFinishedPreviewWithUpdateInfo(now)
+            .let { consultationInfoMapper.toDomainFinished(it, thematiques) }
 
-        // TODO 34 : récupérer les consultation terminées via Strapi
-        // TODO 34 : consultations endDate < today AND update_date => today AND l'update la plus récente
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            return databaseConsultations
+        }
+        val consultationsStrapi = strapiRepository.getConsultationsFinished(now)
+        val strapiConsultations = consultationsStrapi
+            .let { consultationInfoMapper.toDomainFinished(it, thematiques, now) }
 
-        return databaseConsultations
+        return strapiConsultations + databaseConsultations
     }
 
     override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {
@@ -68,7 +75,7 @@ class ConsultationInfoRepositoryImpl(
         // TODO 33 : via Strapi
         return userId.toUuidOrNull()?.let { userUUID ->
             databaseRepository.getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
-                .map(consultationInfoMapper::toDomain)
+                .map(consultationInfoMapper::toDomainOngoing)
         } ?: emptyList()
     }
 
@@ -82,7 +89,7 @@ class ConsultationInfoRepositoryImpl(
                 CacheResult.CachedConsultationNotFound -> null
                 is CacheResult.CachedConsultation -> cacheResult.consultationDTO
             }?.let { dto ->
-                consultationInfoMapper.toDomain(dto)
+                consultationInfoMapper.toDomainOngoing(dto)
             }
         } catch (e: IllegalArgumentException) {
             null
@@ -90,7 +97,7 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getConsultationsToAggregate(): List<ConsultationInfo> {
-        return databaseRepository.getConsultationsToAggregate().map(consultationInfoMapper::toDomain)
+        return databaseRepository.getConsultationsToAggregate().map(consultationInfoMapper::toDomainOngoing)
     }
 
     private fun getCache() = cacheManager.getCache(CONSULTATION_CACHE_NAME)

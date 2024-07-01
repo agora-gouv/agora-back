@@ -29,4 +29,18 @@ class ConsultationStrapiRepository(
             StrapiDTO.ofEmpty()
         }
     }
+
+    fun getConsultationsFinished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
+        return try {
+            val consultations = cmsStrapiHttpClient
+                .getAllBeforeDate("consultations", "date_de_fin", date)
+
+            val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
+            objectMapper.readValue(consultations, ref)
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la récupération des consultations ongoing Strapi : ", e)
+
+            StrapiDTO.ofEmpty()
+        }
+    }
 }

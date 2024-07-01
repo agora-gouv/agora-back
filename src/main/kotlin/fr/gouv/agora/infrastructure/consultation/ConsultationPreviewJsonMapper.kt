@@ -42,16 +42,19 @@ class ConsultationPreviewJsonMapper(
         )
     }
 
-    private fun toJson(domain: ConsultationPreviewFinished) =
-        ConsultationFinishedJson(
+    private fun toJson(domain: ConsultationPreviewFinished): ConsultationFinishedJson {
+        val now = LocalDateTime.now(clock)
+
+        return ConsultationFinishedJson(
             id = domain.id,
             title = domain.title,
             coverUrl = domain.coverUrl,
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
-            step = statusToJson(domain.step),
-            updateLabel = domain.updateLabel,
+            step = statusToJson(domain.getStep(now)),
+            updateLabel = domain.getUpdateLabel(now),
             updateDate = dateMapper.toFormattedDate(domain.updateDate),
         )
+    }
 
     private fun statusToJson(step: ConsultationStatus) = when (step) {
         COLLECTING_DATA -> 1
