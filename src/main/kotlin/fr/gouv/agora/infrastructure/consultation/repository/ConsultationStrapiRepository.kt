@@ -44,15 +44,29 @@ class ConsultationStrapiRepository(
         }
     }
 
-    fun getConsultationsByIds(userAnsweredConsultationsId: List<String>): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationsByIds(consultationIds: List<String>): StrapiDTO<ConsultationStrapiDTO> {
         return try {
             val consultations = cmsStrapiHttpClient
-                .getBy("consultations", "id", userAnsweredConsultationsId)
+                .getBy("consultations", "id", consultationIds)
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)
         } catch (e: Exception) {
             logger.error("Erreur lors de la récupération des consultations par Ids Strapi : ", e)
+
+            StrapiDTO.ofEmpty()
+        }
+    }
+
+    fun getConsultationsById(consultationId: String): StrapiDTO<ConsultationStrapiDTO> {
+        return try {
+            val consultations = cmsStrapiHttpClient
+                .getBy("consultations", "id", consultationId)
+
+            val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
+            objectMapper.readValue(consultations, ref)
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la récupération d'une consultation par Id Strapi : ", e)
 
             StrapiDTO.ofEmpty()
         }

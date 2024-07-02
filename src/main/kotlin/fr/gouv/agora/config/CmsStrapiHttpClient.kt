@@ -28,6 +28,15 @@ class CmsStrapiHttpClient(
         return httpResponse.body()
     }
 
+    fun getBy(cmsModel: String, byField: String, byValue: String): String {
+        val uri = "${cmsModel}?populate=*&filters[$byField][\$eq]=$byValue"
+
+        val request = getClientRequest(uri).GET().build()
+        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        return httpResponse.body()
+    }
+
     fun getAllBetweenDates(cmsModel: String, beginField: String, endField: String, dateBetween: LocalDateTime): String {
         val formattedBetweenDate = dateBetween.format(DateTimeFormatter.ISO_DATE_TIME)
 

@@ -30,6 +30,8 @@ class ConsultationInfoRepositoryImpl(
     private val cacheManager: CacheManager,
 ) : ConsultationInfoRepository {
 
+    // TODO : bientot on aura aussi des consultations sans UUID, à gérer !!
+
     companion object {
         const val CONSULTATION_CACHE_NAME = "consultationCache"
         private const val CONSULTATION_NOT_FOUND_ID = "00000000-0000-0000-0000-000000000000"
@@ -93,10 +95,23 @@ class ConsultationInfoRepositoryImpl(
         return databaseAnsweredConsultations + strapiAnsweredConsultations
     }
 
+    override fun isConsultationExists(consultationId: String): Boolean {
+        val consultationUUID = consultationId.toUuidOrNull()
+
+        val existsInDatabase = if (consultationUUID != null) {
+            consultationsDatabaseRepository.getConsultation(consultationUUID) != null
+        } else false
+
+        val existsInStrapi = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            strapiRepository.getConsultationsById(consultationId).meta.pagination.total == 1
+        } else false
+
+        return existsInStrapi || existsInDatabase
+    }
+
     override fun getConsultation(consultationId: String): ConsultationInfo? {
         return try {
             val uuid = UUID.fromString(consultationId)
-            //todo
             val cacheResult = getConsultationFromCache(uuid)
             when (cacheResult) {
                 CacheResult.CacheNotInitialized -> getConsultationFromDatabase(uuid)
