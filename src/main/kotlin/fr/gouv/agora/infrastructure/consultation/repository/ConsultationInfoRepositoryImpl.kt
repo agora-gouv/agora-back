@@ -4,10 +4,10 @@ import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
+import fr.gouv.agora.infrastructure.userAnsweredConsultation.repository.UserAnsweredConsultationDatabaseRepository
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.cache.CacheManager
@@ -20,12 +20,13 @@ import java.util.UUID
 @Component
 @Suppress("unused")
 class ConsultationInfoRepositoryImpl(
-    private val databaseRepository: ConsultationDatabaseRepository,
+    private val consultationsDatabaseRepository: ConsultationDatabaseRepository,
     private val strapiRepository: ConsultationStrapiRepository,
     private val thematiqueRepository: ThematiqueRepository,
+    private val userAnsweredConsultationsDatabaseRepository: UserAnsweredConsultationDatabaseRepository,
     private val featureFlagsRepository: FeatureFlagsRepository,
-    private val clock: Clock,
     private val consultationInfoMapper: ConsultationInfoMapper,
+    private val clock: Clock,
     private val cacheManager: CacheManager,
 ) : ConsultationInfoRepository {
 
@@ -38,7 +39,7 @@ class ConsultationInfoRepositoryImpl(
         val today = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
-        val databaseOngoingConsultations = databaseRepository.getConsultationOngoingList(today)
+        val databaseOngoingConsultations = consultationsDatabaseRepository.getConsultationOngoingList(today)
             .let { consultationInfoMapper.toDomainOngoing(it, thematiques) }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
@@ -55,7 +56,7 @@ class ConsultationInfoRepositoryImpl(
         val now = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
-        val databaseConsultations = databaseRepository
+        val databaseConsultations = consultationsDatabaseRepository
             .getConsultationsFinishedPreviewWithUpdateInfo(now)
             .let { consultationInfoMapper.toDomainFinished(it, thematiques) }
 
@@ -69,20 +70,33 @@ class ConsultationInfoRepositoryImpl(
         return strapiConsultations + databaseConsultations
     }
 
-    override fun getAnsweredConsultations(userId: String): List<ConsultationWithUpdateInfo> {
-        // TODO 33 : récupérer les consultations répondues par l'utilisateur avec
-        // TODO 33 : les informations update les + récentes mais avec un update date < à la date actuelle
-        // TODO 33 : via Strapi
-        return userId.toUuidOrNull()?.let { userUUID ->
-            databaseRepository.getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
-                .map(consultationInfoMapper::toDomainOngoing)
-        } ?: emptyList()
+    override fun getAnsweredConsultations(userId: String): List<ConsultationPreviewFinished> {
+        val userUUID = userId.toUuidOrNull() ?: return emptyList()
+
+        val now = LocalDateTime.now(clock)
+        val thematiques = thematiqueRepository.getThematiqueList()
+
+        val databaseAnsweredConsultations = consultationsDatabaseRepository
+            .getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
+            .let { consultationInfoMapper.toDomainFinished(it, thematiques) }
+
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            return databaseAnsweredConsultations
+        }
+
+        val userAnsweredConsultationsId = userAnsweredConsultationsDatabaseRepository
+            .getAnsweredConsultationIds(userUUID).map { it.toString() }
+
+        val strapiAnsweredConsultations = strapiRepository.getConsultationsByIds(userAnsweredConsultationsId)
+            .let { consultationInfoMapper.toDomainFinished(it, thematiques, now) }
+
+        return databaseAnsweredConsultations + strapiAnsweredConsultations
     }
 
     override fun getConsultation(consultationId: String): ConsultationInfo? {
         return try {
             val uuid = UUID.fromString(consultationId)
-
+            //todo
             val cacheResult = getConsultationFromCache(uuid)
             when (cacheResult) {
                 CacheResult.CacheNotInitialized -> getConsultationFromDatabase(uuid)
@@ -96,8 +110,21 @@ class ConsultationInfoRepositoryImpl(
         }
     }
 
-    override fun getConsultationsToAggregate(): List<ConsultationInfo> {
-        return databaseRepository.getConsultationsToAggregate().map(consultationInfoMapper::toDomainOngoing)
+    override fun getConsultationsToAggregate(): List<ConsultationPreviewOngoing> {
+        val now = LocalDateTime.now(clock)
+        val thematiques = thematiqueRepository.getThematiqueList()
+
+        val databaseConsultationsToAggregate = consultationsDatabaseRepository.getConsultationsEnded14DaysAgo(now)
+            .let { consultationInfoMapper.toDomainOngoing(it, thematiques) }
+
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            return databaseConsultationsToAggregate
+        }
+
+        val strapiConsultationsToAggregate = strapiRepository.getConsultationsEnded14DaysAgo(now)
+            .let { consultationInfoMapper.toDomainOngoing(it, thematiques) }
+
+        return databaseConsultationsToAggregate + strapiConsultationsToAggregate
     }
 
     private fun getCache() = cacheManager.getCache(CONSULTATION_CACHE_NAME)
@@ -116,7 +143,7 @@ class ConsultationInfoRepositoryImpl(
     }
 
     private fun getConsultationFromDatabase(uuid: UUID): ConsultationDTO? {
-        val consultationDto = databaseRepository.getConsultation(uuid)
+        val consultationDto = consultationsDatabaseRepository.getConsultation(uuid)
         getCache()?.put(uuid.toString(), consultationDto ?: createConsultationNotFound())
         return consultationDto
     }

@@ -43,4 +43,32 @@ class ConsultationStrapiRepository(
             StrapiDTO.ofEmpty()
         }
     }
+
+    fun getConsultationsByIds(userAnsweredConsultationsId: List<String>): StrapiDTO<ConsultationStrapiDTO> {
+        return try {
+            val consultations = cmsStrapiHttpClient
+                .getBy("consultations", "id", userAnsweredConsultationsId)
+
+            val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
+            objectMapper.readValue(consultations, ref)
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la récupération des consultations par Ids Strapi : ", e)
+
+            StrapiDTO.ofEmpty()
+        }
+    }
+
+    fun getConsultationsEnded14DaysAgo(today: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
+        return try {
+            val consultations = cmsStrapiHttpClient
+                .getAllBeforeDate("consultations", "date_de_fin", today.minusDays(14))
+
+            val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
+            objectMapper.readValue(consultations, ref)
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la récupération des consultations par Ids Strapi : ", e)
+
+            StrapiDTO.ofEmpty()
+        }
+    }
 }

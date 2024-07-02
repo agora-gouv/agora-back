@@ -1,5 +1,6 @@
 package fr.gouv.agora.usecase.consultationAggregate
 
+import fr.gouv.agora.domain.ConsultationPreviewOngoing
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
@@ -43,7 +44,7 @@ class PickConsultationsToAggregateUseCaseTest {
     fun `aggregateConsultations - when has consultations that are not already aggregated - should aggregate them`() {
         // Given
         val consultations = listOf(
-            mock(ConsultationInfo::class.java).also {
+            mock(ConsultationPreviewOngoing::class.java).also {
                 given(it.id).willReturn("consultationId")
             }
         )
@@ -62,7 +63,7 @@ class PickConsultationsToAggregateUseCaseTest {
     fun `aggregateConsultations - when has consultations that already aggregated - should do nothing`() {
         // Given
         val consultations = listOf(
-            mock(ConsultationInfo::class.java).also {
+            mock(ConsultationPreviewOngoing::class.java).also {
                 given(it.id).willReturn("consultationId")
             }
         )
@@ -78,5 +79,4 @@ class PickConsultationsToAggregateUseCaseTest {
         then(consultationAggregatedRepository).should(only()).getAggregatedResultsConsultationIds()
         then(aggregateConsultationResultUseCase).shouldHaveNoInteractions()
     }
-
 }

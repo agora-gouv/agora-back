@@ -11,11 +11,8 @@ import org.springframework.stereotype.Service
 @Service
 class ConsultationPreviewUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
-    private val thematiqueRepository: ThematiqueRepository,
-    private val finishedMapper: ConsultationPreviewFinishedMapper,
     private val cacheRepository: ConsultationPreviewPageRepository,
 ) {
-
     fun getConsultationPreviewPage(userId: String): ConsultationPreviewPage {
         val cachedOngoingConsultations = cacheRepository.getConsultationPreviewOngoingList()
         val cachedFinishedConsultations = cacheRepository.getConsultationPreviewFinishedList()
@@ -55,10 +52,6 @@ class ConsultationPreviewUseCase(
 
     private fun buildAnsweredList(userId: String): List<ConsultationPreviewFinished> {
         val answeredConsultationsWithThematique = consultationInfoRepository.getAnsweredConsultations(userId)
-            .mapNotNull { consultationWithUpdateInfo ->
-                thematiqueRepository.getThematique(consultationWithUpdateInfo.thematiqueId)
-                    ?.let { finishedMapper.toConsultationPreviewFinished(consultationWithUpdateInfo, it) }
-            }
         cacheRepository.insertConsultationPreviewAnsweredList(userId, answeredConsultationsWithThematique)
 
         return answeredConsultationsWithThematique

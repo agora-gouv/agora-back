@@ -25,7 +25,6 @@ class ConsultationDetailsV2UseCase(
     private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
-
     fun getConsultation(consultationId: String, userId: String): ConsultationDetailsV2WithInfo? {
         return getConsultationDetails(consultationId, userId)?.let { details ->
             ConsultationDetailsV2WithInfo(
