@@ -16,8 +16,35 @@ class CmsStrapiHttpClient(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CmsStrapiHttpClient::class.java)
 
+    private val strapiEmptyResponse = """
+        {
+          "data": [],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 0,
+              "total": 0
+            }
+          }
+        }
+    """.trimIndent()
+
+    fun getByIds(cmsModel: String, ids: List<Int>): String {
+        if (ids.isEmpty()) return strapiEmptyResponse
+        val idsFilter = ids.joinToString("") { "&filters[id][\$in]=$it" }
+        val uri = "${cmsModel}?populate=*$idsFilter"
+
+        val request = getClientRequest(uri).GET().build()
+        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        return httpResponse.body()
+    }
+
     fun getBy(cmsModel: String, byField: String, byValues: List<String>): String {
         if (byValues.size > 100) logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url")
+
+        if (byValues.isEmpty()) return strapiEmptyResponse
 
         val idsFilter = byValues.joinToString("") { "&filters[$byField][\$in]=$it" }
         val uri = "${cmsModel}?populate=*$idsFilter"

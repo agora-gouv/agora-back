@@ -1,17 +1,15 @@
 package fr.gouv.agora.infrastructure.consultation
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
-import fr.gouv.agora.domain.ConsultationPreviewOngoing
+import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationStatus
 import fr.gouv.agora.domain.ConsultationStatus.COLLECTING_DATA
 import fr.gouv.agora.domain.ConsultationStatus.EXECUTION
 import fr.gouv.agora.domain.ConsultationStatus.POLITICAL_COMMITMENT
 import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
-import fr.gouv.agora.infrastructure.utils.DateUtils
 import org.springframework.stereotype.Component
 import java.time.Clock
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Component
@@ -22,7 +20,7 @@ class ConsultationPreviewJsonMapper(
 ) {
 
     fun toJson(
-        domainOngoingList: List<ConsultationPreviewOngoing>,
+        domainOngoingList: List<ConsultationPreview>,
         domainFinishedList: List<ConsultationPreviewFinished>,
         domainAnsweredList: List<ConsultationPreviewFinished>,
     ): ConsultationPreviewJson {

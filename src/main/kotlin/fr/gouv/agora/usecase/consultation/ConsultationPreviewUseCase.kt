@@ -1,11 +1,10 @@
 package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
-import fr.gouv.agora.domain.ConsultationPreviewOngoing
+import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewPage
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
-import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -35,7 +34,7 @@ class ConsultationPreviewUseCase(
         )
     }
 
-    private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreviewOngoing> {
+    private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreview> {
         val consultations = consultationInfoRepository.getOngoingConsultations()
             .sortedBy { it.endDate }
 
@@ -57,7 +56,7 @@ class ConsultationPreviewUseCase(
         return answeredConsultationsWithThematique
     }
 
-    private fun List<ConsultationPreviewOngoing>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewFinished>): List<ConsultationPreviewOngoing> {
+    private fun List<ConsultationPreview>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewFinished>): List<ConsultationPreview> {
         return this.filterNot { ongoingConsultation ->
             answeredList.any { answeredConsultation -> answeredConsultation.id == ongoingConsultation.id }
         }

@@ -19,7 +19,7 @@ class ConsultationStrapiRepository(
     fun getConsultationsOngoing(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
         return try {
             val consultations = cmsStrapiHttpClient
-                .getAllBetweenDates("consultations", "date_de_debut", "date_de_fin", date)
+                .getAllBetweenDates("consultations", "datetime_de_debut", "datetime_de_fin", date)
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)
@@ -33,7 +33,7 @@ class ConsultationStrapiRepository(
     fun getConsultationsFinished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
         return try {
             val consultations = cmsStrapiHttpClient
-                .getAllBeforeDate("consultations", "date_de_fin", date)
+                .getAllBeforeDate("consultations", "datetime_de_fin", date)
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)
@@ -44,10 +44,10 @@ class ConsultationStrapiRepository(
         }
     }
 
-    fun getConsultationsByIds(consultationIds: List<String>): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationsByIds(consultationIds: List<Int>): StrapiDTO<ConsultationStrapiDTO> {
         return try {
             val consultations = cmsStrapiHttpClient
-                .getBy("consultations", "id", consultationIds)
+                .getByIds("consultations", consultationIds)
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)
@@ -75,7 +75,7 @@ class ConsultationStrapiRepository(
     fun getConsultationsEnded14DaysAgo(today: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
         return try {
             val consultations = cmsStrapiHttpClient
-                .getAllBeforeDate("consultations", "date_de_fin", today.minusDays(14))
+                .getAllBeforeDate("consultations", "datetime_de_fin", today.minusDays(14))
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)

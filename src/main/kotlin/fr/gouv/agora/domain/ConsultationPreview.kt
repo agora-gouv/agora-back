@@ -3,7 +3,7 @@ package fr.gouv.agora.domain
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-data class ConsultationPreviewOngoing(
+data class ConsultationPreview(
     val id: String,
     val title: String,
     val coverUrl: String,

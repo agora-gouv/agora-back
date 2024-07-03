@@ -21,7 +21,7 @@ class NotificationCacheRepository(
         return try {
             getCache()?.get("$ALL_NOTIFICATION_CACHE_KEY.$userId", List::class.java) as? List<NotificationDTO>
         } catch (e: IllegalStateException) {
-            logger.warn("getCachedNotificationsForUser - impossible de récupéer le cache de l'utilisateur '$userId'")
+            logger.warn("getCachedNotificationsForUser - impossible de récupérer le cache de l'utilisateur '$userId'")
             null
         }
     }
