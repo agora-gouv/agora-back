@@ -184,7 +184,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
 
     private fun toCacheable(details: ConsultationDetailsV2) = CacheableConsultationDetails(
         consultation = details.consultation,
-        thematique = details.thematique,
+        thematique = details.consultation.thematique,
         update = CacheableConsultationUpdateInfo(
             id = details.update.id,
             updateDate = details.update.updateDate,
@@ -208,7 +208,6 @@ class ConsultationDetailsV2CacheRepositoryImpl(
     private fun fromCacheable(cacheable: CacheableConsultationDetails): ConsultationDetailsV2 {
         return ConsultationDetailsV2(
             consultation = cacheable.consultation,
-            thematique = cacheable.thematique,
             update = ConsultationUpdateInfoV2(
                 id = cacheable.update.id,
                 updateDate = cacheable.update.updateDate,

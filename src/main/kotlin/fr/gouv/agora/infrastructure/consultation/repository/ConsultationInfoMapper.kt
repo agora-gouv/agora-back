@@ -22,20 +22,24 @@ class ConsultationInfoMapper(
 ) {
     private val logger = LoggerFactory.getLogger(ConsultationInfoMapper::class.java)
 
-    fun toConsultationInfo(dto: ConsultationDTO) = ConsultationInfo(
-        id = dto.id.toString(),
-        title = dto.title,
-        coverUrl = dto.coverUrl,
-        detailsCoverUrl = dto.detailsCoverUrl,
-        startDate = dto.startDate.toLocalDateTime(),
-        endDate = dto.endDate.toLocalDateTime(),
-        questionCount = dto.questionCount,
-        estimatedTime = dto.estimatedTime,
-        participantCountGoal = dto.participantCountGoal,
-        description = dto.description,
-        tipsDescription = dto.tipsDescription,
-        thematiqueId = dto.thematiqueId.toString(),
-    )
+    fun toConsultationInfo(consultation: ConsultationDTO, thematiques: List<Thematique>): ConsultationInfo {
+        val thematique = thematiques.first { it.id == consultation.thematiqueId.toString() }
+
+        return ConsultationInfo(
+            id = consultation.id.toString(),
+            title = consultation.title,
+            coverUrl = consultation.coverUrl,
+            detailsCoverUrl = consultation.detailsCoverUrl,
+            startDate = consultation.startDate.toLocalDateTime(),
+            endDate = consultation.endDate.toLocalDateTime(),
+            questionCount = consultation.questionCount,
+            estimatedTime = consultation.estimatedTime,
+            participantCountGoal = consultation.participantCountGoal,
+            description = consultation.description,
+            tipsDescription = consultation.tipsDescription,
+            thematique = thematique,
+        )
+    }
 
     fun toConsultationInfo(
         dto: StrapiDTO<ConsultationStrapiDTO>,
@@ -53,7 +57,7 @@ class ConsultationInfoMapper(
                 participantCountGoal = consultation.attributes.nombreParticipantsCible,
                 description = consultation.attributes.description.toHtml(),
                 tipsDescription = consultation.attributes.objectifs.toHtml(),
-                thematiqueId = consultation.attributes.thematique.data.attributes.databaseId,
+                thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
             )
         }
     }

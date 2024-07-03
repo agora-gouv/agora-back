@@ -1,6 +1,6 @@
 package fr.gouv.agora.infrastructure.consultation
 
-import fr.gouv.agora.domain.ConsultationDetailsV2WithParticipantCount
+import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
 import fr.gouv.agora.domain.ConsultationUpdateHistoryStatus
 import fr.gouv.agora.domain.ConsultationUpdateHistoryType
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
@@ -13,7 +13,6 @@ import fr.gouv.agora.infrastructure.consultation.PublicConsultationDetailsJson.G
 import fr.gouv.agora.infrastructure.consultation.PublicConsultationDetailsJson.History
 import fr.gouv.agora.infrastructure.consultation.PublicConsultationDetailsJson.InfoHeader
 import fr.gouv.agora.infrastructure.consultation.PublicConsultationDetailsJson.ParticipationInfo
-import fr.gouv.agora.infrastructure.consultation.PublicConsultationDetailsJson.QuestionsInfo
 import fr.gouv.agora.infrastructure.consultation.PublicConsultationDetailsJson.ResponsesInfo
 import fr.gouv.agora.infrastructure.consultation.PublicConsultationDetailsJson.Section
 import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
@@ -22,30 +21,7 @@ import org.springframework.stereotype.Component
 @Component
 class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
 
-    fun toJson(consultationDetails: ConsultationDetailsV2WithParticipantCount): PublicConsultationDetailsJson {
-        return PublicConsultationDetailsJson(
-            updateId = consultationDetails.update.id,
-            title = consultationDetails.consultation.title,
-            coverUrl = consultationDetails.consultation.detailsCoverUrl,
-            thematique = ThematiqueNoIdJson(
-                label = consultationDetails.thematique.label,
-                picto = consultationDetails.thematique.picto,
-            ),
-            questionsInfo = buildQuestionsInfo(consultationDetails),
-            consultationDates = null,
-            responsesInfo = buildResponsesInfo(consultationDetails),
-            infoHeader = buildInfoHeader(consultationDetails),
-            body = buildBody(consultationDetails),
-            participationInfo = buildParticipationInfo(consultationDetails),
-            downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
-            feedbackQuestion = buildFeedbackQuestion(consultationDetails),
-            footer = buildFooter(consultationDetails),
-            goals = buildGoals(consultationDetails),
-            history = buildHistory(consultationDetails),
-        )
-    }
-
-    fun toUpdateJson(consultationDetails: ConsultationDetailsV2WithParticipantCount): PublicConsultationDetailsJson {
+    fun toUpdateJson(consultationDetails: ConsultationDetailsV2WithInfo): PublicConsultationDetailsJson {
         return PublicConsultationDetailsJson(
             updateId = consultationDetails.update.id,
             title = consultationDetails.consultation.title,
@@ -68,18 +44,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         )
     }
 
-    private fun buildQuestionsInfo(consultationDetails: ConsultationDetailsV2WithParticipantCount): QuestionsInfo? {
-        if (!consultationDetails.update.hasQuestionsInfo) return null
-        return QuestionsInfo(
-            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate),
-            questionCount = consultationDetails.consultation.questionCount,
-            estimatedTime = consultationDetails.consultation.estimatedTime,
-            participantCount = consultationDetails.participantCount,
-            participantCountGoal = consultationDetails.consultation.participantCountGoal,
-        )
-    }
-
-    private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithParticipantCount): ConsultationDates? {
+    private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDates? {
         if (!consultationDetails.update.hasQuestionsInfo) return null
         return ConsultationDates(
             startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate),
@@ -87,7 +52,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         )
     }
 
-    private fun buildResponsesInfo(consultationDetails: ConsultationDetailsV2WithParticipantCount): ResponsesInfo? {
+    private fun buildResponsesInfo(consultationDetails: ConsultationDetailsV2WithInfo): ResponsesInfo? {
         return consultationDetails.update.responsesInfo?.let { responsesInfo ->
             ResponsesInfo(
                 picto = responsesInfo.picto,
@@ -96,7 +61,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         }
     }
 
-    private fun buildInfoHeader(consultationDetails: ConsultationDetailsV2WithParticipantCount): InfoHeader? {
+    private fun buildInfoHeader(consultationDetails: ConsultationDetailsV2WithInfo): InfoHeader? {
         return consultationDetails.update.infoHeader?.let { infoHeader ->
             InfoHeader(
                 picto = infoHeader.picto,
@@ -105,7 +70,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         }
     }
 
-    private fun buildParticipationInfo(consultationDetails: ConsultationDetailsV2WithParticipantCount): ParticipationInfo? {
+    private fun buildParticipationInfo(consultationDetails: ConsultationDetailsV2WithInfo): ParticipationInfo? {
         if (!consultationDetails.update.hasParticipationInfo) return null
         return ParticipationInfo(
             participantCount = consultationDetails.participantCount,
@@ -113,7 +78,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         )
     }
 
-    private fun buildFeedbackQuestion(consultationDetails: ConsultationDetailsV2WithParticipantCount): FeedbackQuestion? {
+    private fun buildFeedbackQuestion(consultationDetails: ConsultationDetailsV2WithInfo): FeedbackQuestion? {
         return consultationDetails.update.feedbackQuestion?.let { feedbackQuestion ->
             FeedbackQuestion(
                 title = feedbackQuestion.title,
@@ -123,7 +88,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         }
     }
 
-    private fun buildFooter(consultationDetails: ConsultationDetailsV2WithParticipantCount): Footer? {
+    private fun buildFooter(consultationDetails: ConsultationDetailsV2WithInfo): Footer? {
         return consultationDetails.update.footer?.let { footer ->
             Footer(
                 title = footer.title,
@@ -132,7 +97,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         }
     }
 
-    private fun buildGoals(consultationDetails: ConsultationDetailsV2WithParticipantCount): List<Goal>? {
+    private fun buildGoals(consultationDetails: ConsultationDetailsV2WithInfo): List<Goal>? {
         return consultationDetails.update.goals?.map { goal ->
             Goal(
                 picto = goal.picto,
@@ -141,7 +106,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         }
     }
 
-    private fun buildHistory(consultationDetails: ConsultationDetailsV2WithParticipantCount): List<History>? {
+    private fun buildHistory(consultationDetails: ConsultationDetailsV2WithInfo): List<History>? {
         return consultationDetails.history?.map { historyItem ->
             History(
                 updateId = historyItem.consultationUpdateId,
@@ -161,7 +126,7 @@ class PublicConsultationDetailsJsonMapper(private val dateMapper: DateMapper) {
         }
     }
 
-    private fun buildBody(consultationDetails: ConsultationDetailsV2WithParticipantCount): Body {
+    private fun buildBody(consultationDetails: ConsultationDetailsV2WithInfo): Body {
         val allSections = consultationDetails.update.sectionsHeader.map(::buildSection) +
                 consultationDetails.update.body.map(::buildSection)
         return Body(sections = allSections)

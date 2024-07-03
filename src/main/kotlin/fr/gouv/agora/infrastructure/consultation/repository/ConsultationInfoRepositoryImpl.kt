@@ -114,7 +114,8 @@ class ConsultationInfoRepositoryImpl(
         val consultationUUID = consultationId.toUuidOrNull() ?: return null
         val consultationDto = consultationsDatabaseRepository.getConsultation(consultationUUID)
         if (consultationDto != null) {
-            val consultationInfoFromDb = consultationInfoMapper.toConsultationInfo(consultationDto)
+            val thematiques = thematiqueRepository.getThematiqueList()
+            val consultationInfoFromDb = consultationInfoMapper.toConsultationInfo(consultationDto, thematiques)
             getCache()?.put(consultationId, consultationInfoFromDb)
             return consultationInfoFromDb
         }

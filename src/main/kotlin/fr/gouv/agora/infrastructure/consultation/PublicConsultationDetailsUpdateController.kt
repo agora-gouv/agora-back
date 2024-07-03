@@ -17,13 +17,13 @@ class PublicConsultationDetailsUpdateController(
     fun getConsultationDetailsUpdate(
         @PathVariable consultationId: String,
         @PathVariable consultationUpdateId: String,
-    ): ResponseEntity<*> {
+    ): ResponseEntity<PublicConsultationDetailsJson> {
         return useCase.getConsultationUpdate(
             consultationId = consultationId,
             consultationUpdateId = consultationUpdateId,
         )?.let { consultationDetails ->
             ResponseEntity.ok().body(mapper.toUpdateJson(consultationDetails))
-        } ?: ResponseEntity.notFound().build<Unit>()
+        } ?: ResponseEntity.notFound().build()
     }
 
 }

@@ -10,7 +10,7 @@ import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
 import java.time.LocalDateTime
 
 data class ConsultationStrapiDTO(
-    @JsonProperty(value = "titre")
+    @JsonProperty(value = "titre_consultation")
     val titre: String,
     @JsonProperty(value = "datetime_de_debut")
     val dateDeDebut: LocalDateTime,

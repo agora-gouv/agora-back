@@ -49,7 +49,6 @@ class ConsultationDetailsUpdateV2UseCase(
         }?.let { details ->
             ConsultationDetailsV2WithInfo(
                 consultation = details.consultation,
-                thematique = details.thematique,
                 update = details.update,
                 feedbackStats = details.feedbackStats,
                 history = details.history,
@@ -57,26 +56,24 @@ class ConsultationDetailsUpdateV2UseCase(
                     getParticipantCount(consultationId)
                 } else 0,
                 isUserFeedbackPositive = getUserFeedback(consultationUpdate = details.update, userId = userId),
+                thematique = details.consultation.thematique // TODO à supprimer
             )
         }
     }
 
     private fun buildConsultationDetails(consultationId: String, consultationUpdateId: String): ConsultationDetailsV2? {
         return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
-            thematiqueRepository.getThematique(consultationInfo.thematiqueId)?.let { thematique ->
                 updateRepository.getConsultationUpdate(
                     consultationId = consultationId,
                     consultationUpdateId = consultationUpdateId,
                 )?.let { update ->
                     ConsultationDetailsV2(
                         consultation = consultationInfo,
-                        thematique = thematique,
                         update = update,
                         feedbackStats = getFeedbackStats(update),
                         history = null,
                     )
                 }
-            }
         }
     }
 
