@@ -11,7 +11,6 @@ data class ConsultationDetailsV2(
 
 data class ConsultationDetailsV2WithInfo(
     val consultation: ConsultationInfo,
-    val thematique: Thematique,
     val update: ConsultationUpdateInfoV2,
     val feedbackStats: FeedbackConsultationUpdateStats?,
     val history: List<ConsultationUpdateHistory>?,

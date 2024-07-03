@@ -56,7 +56,6 @@ class ConsultationDetailsUpdateV2UseCase(
                     getParticipantCount(consultationId)
                 } else 0,
                 isUserFeedbackPositive = getUserFeedback(consultationUpdate = details.update, userId = userId),
-                thematique = details.consultation.thematique // TODO à supprimer
             )
         }
     }

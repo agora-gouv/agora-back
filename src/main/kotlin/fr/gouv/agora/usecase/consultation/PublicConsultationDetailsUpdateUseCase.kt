@@ -53,7 +53,6 @@ class PublicConsultationDetailsUpdateUseCase(
                     getParticipantCount(consultationId)
                 } else 0,
                 isUserFeedbackPositive = null,
-                thematique = details.consultation.thematique // TODO à supprimer
             )
         }
     }
