@@ -1,5 +1,10 @@
 package fr.gouv.agora.config
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
@@ -45,65 +50,63 @@ class CacheConfig {
                 logger.error("Invalid Redis URL: $redisUrl")
             }
         }
+
         return JedisConnectionFactory(config)
     }
 
     @Bean
     @Primary
-    fun cacheManager(factory: RedisConnectionFactory): CacheManager {
-        val config = RedisCacheConfiguration.defaultCacheConfig()
-        val redisCacheConfiguration = config
-            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer()
-                )
-            )
-            .entryTtl(Duration.ofHours(1L))
-        return RedisCacheManager.builder(factory).cacheDefaults(redisCacheConfiguration).build()
+    fun cacheManager(factory: RedisConnectionFactory, objectMapper: ObjectMapper): CacheManager {
+        return RedisCacheManager
+            .builder(factory)
+            .cacheDefaults(
+                getDefautConfig().entryTtl(Duration.ofHours(1L))
+            ).build()
     }
 
     @Bean
     @Qualifier("shortTermCacheManager")
     fun shortTermCacheManager(factory: RedisConnectionFactory): CacheManager {
-        val config = RedisCacheConfiguration.defaultCacheConfig()
-        val redisCacheConfiguration = config
-            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer()
-                )
-            )
-            .entryTtl(Duration.ofMinutes(5))
-        return RedisCacheManager.builder(factory).cacheDefaults(redisCacheConfiguration).build()
+        return RedisCacheManager
+            .builder(factory)
+            .cacheDefaults(
+                getDefautConfig().entryTtl(Duration.ofMinutes(5))
+            ).build()
     }
 
     @Bean
     @Qualifier("longTermCacheManager")
     fun longTermCacheManager(factory: RedisConnectionFactory): CacheManager {
-        val config = RedisCacheConfiguration.defaultCacheConfig()
-        val redisCacheConfiguration = config
-            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer()
-                )
-            )
-            .entryTtl(Duration.ofDays(1))
-        return RedisCacheManager.builder(factory).cacheDefaults(redisCacheConfiguration).build()
+        return RedisCacheManager
+            .builder(factory)
+            .cacheDefaults(
+                getDefautConfig().entryTtl(Duration.ofDays(1))
+            ).build()
     }
 
     @Bean
     @Qualifier("eternalCacheManager")
     fun eternalCacheManager(factory: RedisConnectionFactory): CacheManager {
-        val config = RedisCacheConfiguration.defaultCacheConfig()
-        val redisCacheConfiguration = config
+        return RedisCacheManager
+            .builder(factory)
+            .cacheDefaults(getDefautConfig())
+            .build()
+    }
+
+    private fun getDefautConfig(): RedisCacheConfiguration {
+        val jacksonObjectMapper = jacksonObjectMapper()
+        val objectMapper = jacksonObjectMapper
+            .registerKotlinModule()
+            .registerModule(JavaTimeModule())
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .activateDefaultTyping(jacksonObjectMapper.polymorphicTypeValidator, ObjectMapper.DefaultTyping.EVERYTHING)
+
+        return RedisCacheConfiguration.defaultCacheConfig()
             .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
             .serializeValuesWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer()
+                    GenericJackson2JsonRedisSerializer(objectMapper)
                 )
             )
-        return RedisCacheManager.builder(factory).cacheDefaults(redisCacheConfiguration).build()
     }
 }

@@ -1,8 +1,8 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreview
+import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.infrastructure.userAnsweredConsultation.repository.UserAnsweredConsultationDatabaseRepository
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
@@ -111,24 +111,25 @@ class ConsultationInfoRepositoryImpl(
         }
         if (cachedConsultationInfo != null) return cachedConsultationInfo
 
-        val consultationUUID = consultationId.toUuidOrNull() ?: return null
-        val consultationDto = consultationsDatabaseRepository.getConsultation(consultationUUID)
-        if (consultationDto != null) {
+        // si l'id est un UUID, c'est forcément un id de la db, les ids Strapi sont des Int
+        consultationId.toUuidOrNull()?.let {
+            val consultationDto = consultationsDatabaseRepository.getConsultation(it) ?: return null
             val thematiques = thematiqueRepository.getThematiqueList()
             val consultationInfoFromDb = consultationInfoMapper.toConsultationInfo(consultationDto, thematiques)
             getCache()?.put(consultationId, consultationInfoFromDb)
             return consultationInfoFromDb
         }
 
-        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId)
-            val consultationsInfo = consultationInfoMapper.toConsultationInfo(strapiConsultationDTO)
-            if (consultationsInfo.isEmpty()) return null
-            getCache()?.put(consultationId, consultationsInfo.first())
-            return consultationsInfo.first()
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            return null
         }
 
-        return null
+        val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId)
+        val consultationsInfo = consultationInfoMapper.toConsultationInfo(strapiConsultationDTO)
+        if (consultationsInfo.isEmpty()) return null
+        getCache()?.put(consultationId, consultationsInfo.first())
+
+        return consultationsInfo.first()
     }
 
     override fun getConsultationsToAggregate(): List<ConsultationPreview> {
