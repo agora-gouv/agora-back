@@ -47,7 +47,7 @@ class ConsultationStrapiRepository(
     fun getConsultationsByIds(consultationIds: List<Int>): StrapiDTO<ConsultationStrapiDTO> {
         return try {
             val consultations = cmsStrapiHttpClient
-                .getByIds("consultations", consultationIds)
+                .getByIds("consultations", *consultationIds.toIntArray())
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)
@@ -58,10 +58,11 @@ class ConsultationStrapiRepository(
         }
     }
 
-    fun getConsultationsById(consultationId: String): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationById(consultationId: String): StrapiDTO<ConsultationStrapiDTO> {
         return try {
+            val consultationIdInt = consultationId.toIntOrNull() ?: return StrapiDTO.ofEmpty()
             val consultations = cmsStrapiHttpClient
-                .getBy("consultations", "id", consultationId)
+                .getByIds("consultations", consultationIdInt)
 
             val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
             objectMapper.readValue(consultations, ref)
@@ -83,6 +84,20 @@ class ConsultationStrapiRepository(
             logger.error("Erreur lors de la récupération des consultations par Ids Strapi : ", e)
 
             StrapiDTO.ofEmpty()
+        }
+    }
+
+    fun isConsultationExists(consultationId: String): Boolean {
+        return try {
+            val consultationIdInt = consultationId.toIntOrNull() ?: return false
+            val consultations = cmsStrapiHttpClient.getByIds("consultations", consultationIdInt)
+
+            val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
+            objectMapper.readValue(consultations, ref).meta.pagination.total == 1
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la vérification de l'existance d'une consultation Strapi : ", e)
+
+            false
         }
     }
 }

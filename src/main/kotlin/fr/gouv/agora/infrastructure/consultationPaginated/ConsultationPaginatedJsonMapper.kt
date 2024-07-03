@@ -41,7 +41,7 @@ class ConsultationPaginatedJsonMapper(
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
             step = statusToJson(domain.getStep(now)),
             updateLabel = domain.getUpdateLabel(now),
-            updateDate = dateMapper.toFormattedDate(domain.updateDate),
+            updateDate = dateMapper.toFormattedDate(domain.lastUpdateDate),
         )
     }
 

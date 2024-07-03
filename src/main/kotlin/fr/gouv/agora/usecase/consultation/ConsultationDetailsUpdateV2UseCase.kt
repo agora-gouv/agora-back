@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component
 class ConsultationDetailsUpdateV2UseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val infoRepository: ConsultationInfoRepository,
-    private val thematiqueRepository: ThematiqueRepository,
     private val updateRepository: ConsultationUpdateV2Repository,
     private val userAnsweredRepository: UserAnsweredConsultationRepository,
     private val feedbackRepository: FeedbackConsultationUpdateRepository,

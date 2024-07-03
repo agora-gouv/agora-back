@@ -8,13 +8,11 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResu
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateHistoryRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
-import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Component
 
 @Component
 class PublicConsultationDetailsUpdateUseCase(
     private val infoRepository: ConsultationInfoRepository,
-    private val thematiqueRepository: ThematiqueRepository,
     private val updateRepository: ConsultationUpdateV2Repository,
     private val userAnsweredRepository: UserAnsweredConsultationRepository,
     private val historyRepository: ConsultationUpdateHistoryRepository,

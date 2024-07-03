@@ -102,7 +102,7 @@ class ConsultationInfoMapper(
                 coverUrl = consultation.coverUrl,
                 thematique = thematique,
                 updateLabel = consultation.updateLabel,
-                updateDate = consultation.updateDate.toLocalDateTime(),
+                lastUpdateDate = consultation.updateDate.toLocalDateTime(),
                 endDate = consultation.endDate.toLocalDateTime(),
             )
         }
@@ -147,7 +147,7 @@ class ConsultationInfoMapper(
                 coverUrl = consultationFields.urlImageDeCouverture,
                 thematique = thematique,
                 updateLabel = consultationFields.flammeLabel,
-                updateDate = updateDate,
+                lastUpdateDate = updateDate,
                 endDate = consultationFields.dateDeFin,
             )
         }

@@ -30,7 +30,7 @@ class CmsStrapiHttpClient(
         }
     """.trimIndent()
 
-    fun getByIds(cmsModel: String, ids: List<Int>): String {
+    fun getByIds(cmsModel: String, vararg ids: Int): String {
         if (ids.isEmpty()) return strapiEmptyResponse
         val idsFilter = ids.joinToString("") { "&filters[id][\$in]=$it" }
         val uri = "${cmsModel}?populate=*$idsFilter"

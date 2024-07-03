@@ -97,7 +97,7 @@ class ConsultationInfoRepositoryImpl(
         } else false
 
         val existsInStrapi = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            strapiRepository.getConsultationsById(consultationId).meta.pagination.total == 1
+            strapiRepository.isConsultationExists(consultationId)
         } else false
 
         return existsInStrapi || existsInDatabase
@@ -121,7 +121,7 @@ class ConsultationInfoRepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val strapiConsultationDTO = strapiRepository.getConsultationsById(consultationId)
+            val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId)
             val consultationsInfo = consultationInfoMapper.toConsultationInfo(strapiConsultationDTO)
             if (consultationsInfo.isEmpty()) return null
             getCache()?.put(consultationId, consultationsInfo.first())
