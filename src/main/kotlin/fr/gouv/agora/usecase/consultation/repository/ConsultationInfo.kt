@@ -1,5 +1,6 @@
 package fr.gouv.agora.usecase.consultation.repository
 
+import fr.gouv.agora.domain.Thematique
 import java.time.LocalDateTime
 
 data class ConsultationInfo(
@@ -14,5 +15,7 @@ data class ConsultationInfo(
     val participantCountGoal: Int,
     val description: String,
     val tipsDescription: String,
-    val thematiqueId: String,
-)
+    val thematique: Thematique,
+) {
+    constructor(): this("", "", "", "", LocalDateTime.MIN, LocalDateTime.MIN, "", "", 0, "", "", Thematique())
+}

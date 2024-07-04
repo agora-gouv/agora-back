@@ -1,6 +1,6 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.ConsultationPreviewOngoing
+import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import org.springframework.stereotype.Component
@@ -10,8 +10,8 @@ class ConsultationPreviewOngoingMapper {
     fun toConsultationPreviewOngoing(
         consultationInfo: ConsultationInfo,
         thematique: Thematique,
-    ): ConsultationPreviewOngoing {
-        return ConsultationPreviewOngoing(
+    ): ConsultationPreview {
+        return ConsultationPreview(
             id = consultationInfo.id,
             title = consultationInfo.title,
             coverUrl = consultationInfo.coverUrl,

@@ -53,7 +53,7 @@ class LoginCacheRepository(private val cacheManager: CacheManager) {
             fcmToken = "",
             createdDate = Date(0),
             authorizationLevel = 0,
-            isBanned = 0,
+            userIsBanned = 0,
             lastConnectionDate = Date(0),
         )
     }

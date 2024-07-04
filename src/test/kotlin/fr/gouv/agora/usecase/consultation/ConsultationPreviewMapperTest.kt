@@ -1,6 +1,6 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.ConsultationPreviewOngoing
+import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import org.assertj.core.api.Assertions.assertThat
@@ -14,13 +14,13 @@ import java.time.LocalDateTime
 import java.time.Month
 
 @ExtendWith(MockitoExtension::class)
-internal class ConsultationPreviewOngoingMapperTest {
+internal class ConsultationPreviewMapperTest {
 
     private lateinit var mapper: ConsultationPreviewOngoingMapper
 
     private val thematique = mock(Thematique::class.java)
 
-    private val expectedConsultationPreviewOngoing = ConsultationPreviewOngoing(
+    private val expectedConsultationPreviewOngoing = ConsultationPreview(
         id = "consultationId",
         title = "title",
         coverUrl = "coverUrl",

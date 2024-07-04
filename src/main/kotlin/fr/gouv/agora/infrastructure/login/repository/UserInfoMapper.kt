@@ -25,7 +25,7 @@ class UserInfoMapper {
         return UserInfo(
             userId = dto.id.toString(),
             fcmToken = dto.fcmToken,
-            isBanned = dto.isBanned != IS_BANNED_FALSE_VALUE,
+            isBanned = dto.userIsBanned != IS_BANNED_FALSE_VALUE,
             authorizationList = when (dto.authorizationLevel) {
                 DEFAULT_AUTHORIZATION_LEVEL -> UserAuthorization.getUserAuthorizations()
                 MODERATOR_AUTHORIZATION_LEVEL -> UserAuthorization.getModeratorAuthorizations()
@@ -42,7 +42,7 @@ class UserInfoMapper {
             fcmToken = signupRequest.fcmToken,
             createdDate = Date(),
             authorizationLevel = DEFAULT_AUTHORIZATION_LEVEL,
-            isBanned = IS_BANNED_FALSE_VALUE,
+            userIsBanned = IS_BANNED_FALSE_VALUE,
             lastConnectionDate = Date(),
         )
     }

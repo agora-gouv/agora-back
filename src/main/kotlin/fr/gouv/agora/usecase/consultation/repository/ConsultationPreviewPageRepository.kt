@@ -1,11 +1,11 @@
 package fr.gouv.agora.usecase.consultation.repository
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
-import fr.gouv.agora.domain.ConsultationPreviewOngoing
+import fr.gouv.agora.domain.ConsultationPreview
 
 interface ConsultationPreviewPageRepository {
-    fun getConsultationPreviewOngoingList(): List<ConsultationPreviewOngoing>?
-    fun insertConsultationPreviewOngoingList(ongoingList: List<ConsultationPreviewOngoing>)
+    fun getConsultationPreviewOngoingList(): List<ConsultationPreview>?
+    fun insertConsultationPreviewOngoingList(ongoingList: List<ConsultationPreview>)
     fun evictConsultationPreviewOngoingList()
 
     fun getConsultationPreviewFinishedList(): List<ConsultationPreviewFinished>?

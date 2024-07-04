@@ -26,7 +26,7 @@ class ConsultationDetailsUpdateV2Controller(
             consultationUpdateId = consultationUpdateId,
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )?.let { consultationDetails ->
-            ResponseEntity.ok().body(mapper.toUpdateJson(consultationDetails))
+            ResponseEntity.ok().body(mapper.toJson(consultationDetails))
         } ?: ResponseEntity.notFound().build()
     }
 

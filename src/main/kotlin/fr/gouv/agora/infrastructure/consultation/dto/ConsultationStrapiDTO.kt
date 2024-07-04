@@ -10,7 +10,7 @@ import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
 import java.time.LocalDateTime
 
 data class ConsultationStrapiDTO(
-    @JsonProperty(value = "titre")
+    @JsonProperty(value = "titre_consultation")
     val titre: String,
     @JsonProperty(value = "datetime_de_debut")
     val dateDeDebut: LocalDateTime,
@@ -27,9 +27,13 @@ data class ConsultationStrapiDTO(
     @JsonProperty(value = "estimation_temps")
     val estimationTemps: String,
     @JsonProperty(value = "nombre_participants_cible")
-    val nombreParticipantsCible: String,
+    val nombreParticipantsCible: Int,
     @JsonProperty(value = "flamme_label")
     val flammeLabel: String,
+    @JsonProperty(value = "description")
+    val description: List<StrapiRichText>,
+    @JsonProperty(value = "objectifs")
+    val objectifs: List<StrapiRichText>,
     @JsonProperty(value = "thematique")
     val thematique: StrapiData<StrapiThematiqueDTO>,
     @JsonProperty(value = "questions")
@@ -43,12 +47,12 @@ data class ConsultationStrapiDTO(
     @JsonProperty("consultation_contenu_a_venir")
     val consultationContenuAVenir: StrapiData<StrapiConsultationAVenir>?,
 ) {
-    fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime {
+    fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime? {
         return listOfNotNull(
             *consultationContenuAutres.data.map { it.attributes.datetimePublication }.toTypedArray(),
             contenuApresReponseOuTerminee.data.attributes.datetimePublication,
             contenuAvantReponse.data.attributes.datetimePublication,
-        ).filter { it.isBefore(now) }.max()
+        ).filter { it.isBefore(now) }.maxOrNull()
     }
 }
 
@@ -125,8 +129,6 @@ data class StrapiConsultationContenuAvantReponse(
     val historiqueCallToAction: String,
     @JsonProperty("historique_type")
     val historiqueType: String,
-    @JsonProperty("liste_objectifs")
-    val listeObjectifs: List<StrapiRichText>,
     @JsonProperty("datetime_publication")
     val datetimePublication: LocalDateTime,
 )

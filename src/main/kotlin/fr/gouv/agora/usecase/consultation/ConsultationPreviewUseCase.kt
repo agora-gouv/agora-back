@@ -1,21 +1,17 @@
 package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
-import fr.gouv.agora.domain.ConsultationPreviewOngoing
+import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewPage
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
-import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 
 @Service
 class ConsultationPreviewUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
-    private val thematiqueRepository: ThematiqueRepository,
-    private val finishedMapper: ConsultationPreviewFinishedMapper,
     private val cacheRepository: ConsultationPreviewPageRepository,
 ) {
-
     fun getConsultationPreviewPage(userId: String): ConsultationPreviewPage {
         val cachedOngoingConsultations = cacheRepository.getConsultationPreviewOngoingList()
         val cachedFinishedConsultations = cacheRepository.getConsultationPreviewFinishedList()
@@ -38,7 +34,7 @@ class ConsultationPreviewUseCase(
         )
     }
 
-    private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreviewOngoing> {
+    private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreview> {
         val consultations = consultationInfoRepository.getOngoingConsultations()
             .sortedBy { it.endDate }
 
@@ -55,16 +51,12 @@ class ConsultationPreviewUseCase(
 
     private fun buildAnsweredList(userId: String): List<ConsultationPreviewFinished> {
         val answeredConsultationsWithThematique = consultationInfoRepository.getAnsweredConsultations(userId)
-            .mapNotNull { consultationWithUpdateInfo ->
-                thematiqueRepository.getThematique(consultationWithUpdateInfo.thematiqueId)
-                    ?.let { finishedMapper.toConsultationPreviewFinished(consultationWithUpdateInfo, it) }
-            }
         cacheRepository.insertConsultationPreviewAnsweredList(userId, answeredConsultationsWithThematique)
 
         return answeredConsultationsWithThematique
     }
 
-    private fun List<ConsultationPreviewOngoing>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewFinished>): List<ConsultationPreviewOngoing> {
+    private fun List<ConsultationPreview>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewFinished>): List<ConsultationPreview> {
         return this.filterNot { ongoingConsultation ->
             answeredList.any { answeredConsultation -> answeredConsultation.id == ongoingConsultation.id }
         }

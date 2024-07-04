@@ -18,19 +18,16 @@ class ConsultationDetailsV2UseCase(
     private val clock: Clock,
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val infoRepository: ConsultationInfoRepository,
-    private val thematiqueRepository: ThematiqueRepository,
     private val updateRepository: ConsultationUpdateV2Repository,
     private val userAnsweredRepository: UserAnsweredConsultationRepository,
     private val feedbackRepository: FeedbackConsultationUpdateRepository,
     private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
-
     fun getConsultation(consultationId: String, userId: String): ConsultationDetailsV2WithInfo? {
         return getConsultationDetails(consultationId, userId)?.let { details ->
             ConsultationDetailsV2WithInfo(
                 consultation = details.consultation,
-                thematique = details.thematique,
                 update = details.update,
                 feedbackStats = details.feedbackStats,
                 history = details.history,
@@ -44,19 +41,11 @@ class ConsultationDetailsV2UseCase(
 
     private fun getConsultationDetails(consultationId: String, userId: String): ConsultationDetailsV2? {
         return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
-            thematiqueRepository.getThematique(consultationInfo.thematiqueId)?.let { thematique ->
                 if (shouldUseUnansweredUsersUpdate(consultationInfo = consultationInfo, userId = userId)) {
-                    getUnansweredUsersConsultationDetails(
-                        consultationInfo = consultationInfo,
-                        thematique = thematique,
-                    )
+                    getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
                 } else {
-                    getLastConsultationDetails(
-                        consultationInfo = consultationInfo,
-                        thematique = thematique,
-                    )
+                    getLastConsultationDetails(consultationInfo = consultationInfo,)
                 }
-            }
         } ?: run {
             cacheRepository.initUnansweredUsersConsultationDetails(consultationId, null)
             cacheRepository.initLastConsultationDetails(consultationId, null)
@@ -88,7 +77,6 @@ class ConsultationDetailsV2UseCase(
 
     private fun getUnansweredUsersConsultationDetails(
         consultationInfo: ConsultationInfo,
-        thematique: Thematique,
     ): ConsultationDetailsV2? {
         return when (val cacheResult = cacheRepository.getUnansweredUsersConsultationDetails(consultationInfo.id)) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
@@ -98,7 +86,6 @@ class ConsultationDetailsV2UseCase(
             )?.let { update ->
                 ConsultationDetailsV2(
                     consultation = consultationInfo,
-                    thematique = thematique,
                     update = update,
                     feedbackStats = getFeedbackStats(update),
                     history = null,
@@ -111,7 +98,6 @@ class ConsultationDetailsV2UseCase(
 
     private fun getLastConsultationDetails(
         consultationInfo: ConsultationInfo,
-        thematique: Thematique,
     ): ConsultationDetailsV2? {
         return when (val cacheResult = cacheRepository.getLastConsultationDetails(consultationInfo.id)) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
@@ -121,7 +107,6 @@ class ConsultationDetailsV2UseCase(
             )?.let { update ->
                 ConsultationDetailsV2(
                     consultation = consultationInfo,
-                    thematique = thematique,
                     update = update,
                     feedbackStats = getFeedbackStats(update),
                     history = historyRepository.getConsultationUpdateHistory(consultationInfo.id),

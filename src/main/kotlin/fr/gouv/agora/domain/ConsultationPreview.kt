@@ -3,7 +3,7 @@ package fr.gouv.agora.domain
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-data class ConsultationPreviewOngoing(
+data class ConsultationPreview(
     val id: String,
     val title: String,
     val coverUrl: String,
@@ -31,7 +31,7 @@ data class ConsultationPreviewFinished(
     val coverUrl: String,
     val thematique: Thematique,
     private val updateLabel: String?,
-    val updateDate: LocalDateTime,
+    val lastUpdateDate: LocalDateTime,
     val endDate: LocalDateTime,
 ) {
     fun getStep(now: LocalDateTime): ConsultationStatus {
@@ -45,9 +45,9 @@ data class ConsultationPreviewFinished(
     fun getUpdateLabel(now: LocalDateTime): String? {
         if (updateLabel == null) return null
 
-        val maxUpdateDateLabel = updateDate.plusDays(90)
+        val maxUpdateDateLabel = lastUpdateDate.plusDays(90)
 
-        if (now.isBefore(updateDate) || now.isAfter(maxUpdateDateLabel)) return null
+        if (now.isBefore(lastUpdateDate) || now.isAfter(maxUpdateDateLabel)) return null
 
         return updateLabel
     }

@@ -4,6 +4,7 @@ import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.ReponseConsultationInserting
+import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
@@ -81,7 +82,7 @@ internal class InsertReponseConsultationUseCaseTest {
         participantCountGoal = 1,
         description = "",
         tipsDescription = "",
-        thematiqueId = "",
+        thematique = Thematique()
     )
 
     @Test

@@ -26,7 +26,6 @@ class ConsultationStrapiDTOTest {
                 {
                   "id": 2,
                   "attributes": {
-                    "titre": "Mieux rémunérer les agriculteurs : quels leviers pour le consommateur ?",
                     "url_image_de_couverture": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
                     "url_image_page_de_contenu": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
                     "nombre_de_questions": 8,
@@ -34,11 +33,88 @@ class ConsultationStrapiDTOTest {
                     "estimation_temps": "5 minutes",
                     "nombre_participants_cible": 5000,
                     "createdAt": "2024-06-21T12:56:18.914Z",
-                    "updatedAt": "2024-06-26T14:25:44.309Z",
+                    "updatedAt": "2024-07-03T12:48:11.644Z",
                     "publishedAt": "2024-06-21T13:22:52.004Z",
                     "flamme_label": "Gogogo !",
                     "datetime_de_debut": "2024-06-25T23:00:00.000Z",
-                    "datetime_de_fin": "2024-06-27T04:45:00.000Z",
+                    "datetime_de_fin": "2025-06-26T04:45:00.000Z",
+                    "description": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "Le 22 février 2024, le Premier ministre Gabriel Attal a désigné Anne-Laure Babault et Alexis Izard pour réaliser une mission parlementaire afin d’évaluer une potentielle évolution des lois EGAlim et, plus globalement, des négociations commerciales dans l’agriculture et l’alimentation. ",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "Les États généraux de l'alimentation (EGAlim), réunis en 2017, répondaient à un engagement fort du Président de la République en faveur d’une alimentation saine et durable et de relations commerciales plus équilibrées entre la grande distribution, les industriels et les agriculteurs. Ils ont offert un temps de réflexion partagée pour construire des solutions nouvelles. ",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "Ce processus a abouti à la loi du 30 octobre 2018 pour l'équilibre des relations commerciales dans le secteur agricole et alimentaire et une alimentation saine, durable et accessible à tous, dite « EGAlim 1 ». Elle a été complétée ensuite par la loi du 18 octobre 2021 visant à protéger la rémunération des agriculteurs, dite « EGAlim 2 ». Ces lois ont placé les agriculteurs au cœur de la construction des prix afin de permettre de créer un lien direct entre leurs coûts de production et le prix payé en magasin.",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "En dépit de résultats positifs, des adaptations de ces lois sont nécessaires pour les rendre plus simples, plus efficaces et plus protectrices des agriculteurs.",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "Vos réponses à cette consultation permettront à la mission de recueillir votre avis, en tant que consommateur, sur les enjeux de meilleure rémunération des agriculteurs et de transparence dans ce secteur, en lien avec l’objectif de reconquête de notre souveraineté alimentaire. Vos contributions nourriront les propositions de réforme des lois EGAlim. Une autre consultation dédiée est disponible dans l’application pour les professionnels de ce secteur.",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "objectifs": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "👀 Objectif : !",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "🌵 Cactus !",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "titre_consultation": "Mieux rémunérer les agriculteurs : quels leviers pour le consommateur ?",
                     "thematique": {
                       "data": {
                         "id": 11,
@@ -184,57 +260,10 @@ class ConsultationStrapiDTOTest {
                           "historique_titre": "Lancement",
                           "historique_call_to_action": "Voir les objectifs",
                           "historique_type": "contenu",
-                          "liste_objectifs": [
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "🗣 Consultation proposée par la mission parlementaire sur la loi EGAlim et les négociations commerciales ",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "🎯 Objectif : Assurer notre souveraineté alimentaire et protéger le pouvoir d'achat en garantissant la rémunération des agriculteurs",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "🚀 Axe gouvernemental : Atteindre le plein emploi et réindustrialiser le pays",
-                                  "type": "text"
-                                }
-                              ]
-                            }
-                          ],
                           "createdAt": "2024-06-21T12:59:00.544Z",
-                          "updatedAt": "2024-06-21T12:59:01.528Z",
+                          "updatedAt": "2024-07-02T10:00:56.724Z",
                           "publishedAt": "2024-06-21T12:59:01.521Z",
-                          "datetime_publication": "2024-07-23T23:15:00.000Z"
+                          "datetime_publication": "2024-07-01T23:00:00.000Z"
                         }
                       }
                     },
@@ -359,9 +388,8 @@ class ConsultationStrapiDTOTest {
                           "historique_call_to_action": "Consulter toutes les réponses",
                           "historique_type": "réponse et pourcentage",
                           "createdAt": "2024-06-21T14:23:51.194Z",
-                          "updatedAt": "2024-06-21T14:24:55.084Z",
+                          "updatedAt": "2024-07-02T10:01:15.907Z",
                           "publishedAt": "2024-06-21T14:23:52.266Z",
-                          "datetime_publication": "2024-07-23T23:15:00.000Z",
                           "encart_visualisation_resultat_avant_fin_consultation_picto": "🙌",
                           "encart_visualisation_resultat_avant_fin_consultation_desc": [
                             {
@@ -387,7 +415,8 @@ class ConsultationStrapiDTOTest {
                               ]
                             }
                           ],
-                          "encart_visualisation_resultat_apres_fin_consultation_cta": "Voir les premiers résultats"
+                          "encart_visualisation_resultat_apres_fin_consultation_cta": "Voir les premiers résultats",
+                          "datetime_publication": "2024-06-24T22:30:00.000Z"
                         }
                       }
                     },
@@ -436,14 +465,13 @@ class ConsultationStrapiDTOTest {
                                 ]
                               }
                             ],
-                            "date_publication": "2024-06-05",
                             "historique_titre": "Analyse des réponses",
                             "historique_call_to_action": "Consulter la synthèse",
                             "historique_type": "réponse et pourcentage",
                             "createdAt": "2024-06-21T14:40:01.183Z",
-                            "updatedAt": "2024-06-21T14:40:02.858Z",
+                            "updatedAt": "2024-07-02T10:01:05.469Z",
                             "publishedAt": "2024-06-21T14:40:02.833Z",
-                            "datetime_publication": "2024-07-23T23:15:00.000Z"
+                            "datetime_publication": "2024-06-30T23:00:00.000Z"
                           }
                         }
                       ]
@@ -465,7 +493,7 @@ class ConsultationStrapiDTOTest {
               "meta": {
                 "pagination": {
                   "page": 1,
-                  "pageSize": 100,
+                  "pageSize": 25,
                   "pageCount": 1,
                   "total": 1
                 }

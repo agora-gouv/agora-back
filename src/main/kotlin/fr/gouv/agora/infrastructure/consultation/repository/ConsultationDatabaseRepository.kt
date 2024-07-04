@@ -26,9 +26,9 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     @Query(
         value = """
         SELECT * FROM consultations
-        WHERE CURRENT_TIMESTAMP > end_date + INTERVAL '14 DAYS'""", nativeQuery = true
+        WHERE :today > end_date + INTERVAL '14 DAYS'""", nativeQuery = true
     )
-    fun getConsultationsToAggregate(): List<ConsultationDTO>
+    fun getConsultationsEnded14DaysAgo(@Param("today") today: LocalDateTime): List<ConsultationDTO>
 
     @Query(value = "SELECT * FROM consultations WHERE id = :consultationId LIMIT 1", nativeQuery = true)
     fun getConsultation(@Param("consultationId") consultationId: UUID): ConsultationDTO?
