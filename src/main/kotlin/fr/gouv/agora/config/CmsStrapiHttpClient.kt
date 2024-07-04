@@ -1,5 +1,9 @@
 package fr.gouv.agora.config
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.agora.infrastructure.common.StrapiDTO
+import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -7,96 +11,13 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Service
 class CmsStrapiHttpClient(
     private val httpClient: HttpClient,
+    private val objectMapper: ObjectMapper,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CmsStrapiHttpClient::class.java)
-
-    private val strapiEmptyResponse = """
-        {
-          "data": [],
-          "meta": {
-            "pagination": {
-              "page": 1,
-              "pageSize": 25,
-              "pageCount": 0,
-              "total": 0
-            }
-          }
-        }
-    """.trimIndent()
-
-    fun getByIds(cmsModel: String, vararg ids: Int): String {
-        if (ids.isEmpty()) return strapiEmptyResponse
-        val idsFilter = ids.joinToString("") { "&filters[id][\$in]=$it" }
-        val uri = "${cmsModel}?populate=*$idsFilter"
-
-        val request = getClientRequest(uri).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun getBy(cmsModel: String, byField: String, byValues: List<String>): String {
-        if (byValues.size > 100) logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url")
-
-        if (byValues.isEmpty()) return strapiEmptyResponse
-
-        val idsFilter = byValues.joinToString("") { "&filters[$byField][\$in]=$it" }
-        val uri = "${cmsModel}?populate=*$idsFilter"
-
-        val request = getClientRequest(uri).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun getBy(cmsModel: String, byField: String, byValue: String): String {
-        val uri = "${cmsModel}?populate=*&filters[$byField][\$eq]=$byValue"
-
-        val request = getClientRequest(uri).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun getAllBetweenDates(cmsModel: String, beginField: String, endField: String, dateBetween: LocalDateTime): String {
-        val formattedBetweenDate = dateBetween.format(DateTimeFormatter.ISO_DATE_TIME)
-
-        val filter = "&filters[$beginField][\$lt]=$formattedBetweenDate&filters[$endField][\$gt]=$formattedBetweenDate"
-        val uri = "${cmsModel}?pagination[pageSize]=100&populate=*$filter"
-
-        val request = getClientRequest(uri).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun getAllBeforeDate(cmsModel: String, dateField: String, dateAfter: LocalDateTime): String {
-        val formattedDate = dateAfter.format(DateTimeFormatter.ISO_DATE_TIME)
-
-        val filter = "&filters[$dateField][\$lt]=$formattedDate"
-        val uri = "${cmsModel}?pagination[pageSize]=100&populate=*$filter"
-
-        val request = getClientRequest(uri).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun getAllSortedBy(cmsModel: String, sortField: String, sortByDesc: Boolean = true): String {
-        val sortDirection = if (sortByDesc) "desc" else "asc"
-        val uri = "${cmsModel}?populate=*&sort[0]=$sortField:$sortDirection&pagination[pageSize]=100"
-
-        val request = getClientRequest(uri).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
 
     fun getAll(cmsModel: String): String {
         val uri = "${cmsModel}?populate=*&pagination[pageSize]=100"
@@ -107,13 +28,20 @@ class CmsStrapiHttpClient(
         return httpResponse.body()
     }
 
-    fun count(cmsModel: String): String {
-        val uri = "${cmsModel}?pagination[pageSize]=1&populate=*"
+    fun <T> request(builder: StrapiRequestBuilder): StrapiDTO<T> {
+        val uri = builder.build()
 
-        val request = getClientRequest(uri).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        return try {
+            val request = getClientRequest(uri).GET().build()
+            val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
 
-        return httpResponse.body()
+            val ref = object : TypeReference<StrapiDTO<T>>() {}
+            objectMapper.readValue(httpResponse.body(), ref)
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la requête $uri: ", e)
+
+            StrapiDTO.ofEmpty()
+        }
     }
 
     private fun getClientRequest(uri: String): HttpRequest.Builder {

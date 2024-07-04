@@ -82,25 +82,22 @@ class ConsultationInfoRepositoryImpl(
         val userAnsweredConsultationsId = userAnsweredConsultationsDatabaseRepository
             .getAnsweredConsultationIds(userUUID).map { it.toString() }
 
-        val userAnsweredConsultationsWithStrapiId = userAnsweredConsultationsId.mapNotNull { it.toIntOrNull() }
-        val strapiAnsweredConsultations = strapiRepository.getConsultationsByIds(userAnsweredConsultationsWithStrapiId)
+        val strapiAnsweredConsultations = strapiRepository.getConsultationsByIds(userAnsweredConsultationsId)
             .let { consultationInfoMapper.toDomainFinished(it, thematiques, now) }
 
         return databaseAnsweredConsultations + strapiAnsweredConsultations
     }
 
     override fun isConsultationExists(consultationId: String): Boolean {
-        val consultationUUID = consultationId.toUuidOrNull()
+        consultationId.toUuidOrNull()?.let {
+            return consultationsDatabaseRepository.existsById(it)
+        }
 
-        val existsInDatabase = if (consultationUUID != null) {
-            consultationsDatabaseRepository.getConsultation(consultationUUID) != null
-        } else false
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            return false
+        }
 
-        val existsInStrapi = if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            strapiRepository.isConsultationExists(consultationId)
-        } else false
-
-        return existsInStrapi || existsInDatabase
+        return strapiRepository.isConsultationExists(consultationId)
     }
 
     override fun getConsultation(consultationId: String): ConsultationInfo? {
