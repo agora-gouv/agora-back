@@ -19,26 +19,15 @@ class CmsStrapiHttpClient(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CmsStrapiHttpClient::class.java)
 
-    fun getAll(cmsModel: String): String {
-        val uri = "${cmsModel}?populate=*&pagination[pageSize]=100"
-
-        val request = getClientRequest(uri).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun <T> request(builder: StrapiRequestBuilder): StrapiDTO<T> {
-        val uri = builder.build()
-
+    fun <T> request(builder: StrapiRequestBuilder, typeReference: TypeReference<*>): StrapiDTO<T> {
         return try {
+            val uri = builder.build()
             val request = getClientRequest(uri).GET().build()
             val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
 
-            val ref = object : TypeReference<StrapiDTO<T>>() {}
-            objectMapper.readValue(httpResponse.body(), ref)
+            objectMapper.readValue(httpResponse.body(), typeReference) as StrapiDTO<T>
         } catch (e: Exception) {
-            logger.error("Erreur lors de la requête $uri: ", e)
+            logger.error("Erreur lors de la requête du builder $builder: ", e)
 
             StrapiDTO.ofEmpty()
         }
