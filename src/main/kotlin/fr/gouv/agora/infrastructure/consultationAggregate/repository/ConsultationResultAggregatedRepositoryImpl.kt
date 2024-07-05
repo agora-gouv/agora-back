@@ -2,11 +2,9 @@ package fr.gouv.agora.infrastructure.consultationAggregate.repository
 
 import fr.gouv.agora.domain.ConsultationResultAggregated
 import fr.gouv.agora.domain.ConsultationResultAggregatedInserting
-import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationAggregatedInsertResult
 import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResultAggregatedRepository
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 @Suppress("unused")

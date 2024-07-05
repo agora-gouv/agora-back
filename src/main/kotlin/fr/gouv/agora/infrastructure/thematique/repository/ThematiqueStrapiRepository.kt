@@ -1,10 +1,9 @@
-package fr.gouv.agora.infrastructure.responseQag.repository
+package fr.gouv.agora.infrastructure.thematique.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.gouv.agora.config.CmsStrapiHttpClient
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
-import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQag
 import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
 import org.springframework.stereotype.Repository
 

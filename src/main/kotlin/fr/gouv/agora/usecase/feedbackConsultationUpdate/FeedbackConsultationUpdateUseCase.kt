@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.feedbackConsultationUpdate
 
 import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.domain.FeedbackConsultationUpdateDeleting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateResults
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats

@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.consultationResponse.repository
 import fr.gouv.agora.infrastructure.consultationResponse.dto.ReponseConsultationDTO
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 class ReponseConsultationCacheRepository(private val cacheManager: CacheManager) {
