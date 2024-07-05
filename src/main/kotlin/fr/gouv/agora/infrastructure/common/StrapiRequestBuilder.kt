@@ -10,13 +10,13 @@ class StrapiRequestBuilder(private val cmsModel: String) {
     private var populate = "&populate=*"
     private var pageSize = "pagination[pageSize]=100"
 
-    private var builderInError = false
+    private var builderError = ""
 
     private val logger = LoggerFactory.getLogger(StrapiRequestBuilder::class.java)
 
     fun filterBy(field: String, values: List<String>): StrapiRequestBuilder {
         if (values.isEmpty()) {
-            builderInError = true
+            builderError = "filterBy : aucune valeur donnée pour le champs $field"
             return this
         }
 
@@ -64,7 +64,7 @@ class StrapiRequestBuilder(private val cmsModel: String) {
     }
 
     fun build(): String {
-        if (builderInError) throw Exception("...")
+        if (builderError.isNotBlank()) throw Exception(builderError)
 
         return "${cmsModel}?$pageSize$populate$filters$sort"
     }
