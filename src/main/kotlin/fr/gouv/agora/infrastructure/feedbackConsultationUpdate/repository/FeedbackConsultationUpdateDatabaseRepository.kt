@@ -32,7 +32,7 @@ interface FeedbackConsultationUpdateDatabaseRepository : JpaRepository<FeedbackC
         """, nativeQuery = true
     )
     fun getConsultationUpdateFeedbackStats(
-        @Param("consultationUpdateId") consultationUpdateId: UUID,
+        @Param("consultationUpdateId") consultationUpdateId: String,
     ): List<FeedbackConsultationUpdateStatsDTO>
 
     @Modifying
@@ -44,7 +44,7 @@ interface FeedbackConsultationUpdateDatabaseRepository : JpaRepository<FeedbackC
         """, nativeQuery = true
     )
     fun deleteFeedback(
-        @Param("consultationUpdateId") consultationUpdateId: UUID,
+        @Param("consultationUpdateId") consultationUpdateId: String,
         @Param("userId") userId: UUID,
     )
 

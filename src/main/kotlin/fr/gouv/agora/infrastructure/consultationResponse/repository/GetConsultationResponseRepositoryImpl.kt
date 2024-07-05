@@ -80,9 +80,8 @@ class GetConsultationResponseRepositoryImpl(
 
     private fun getConsultationResponseDTOList(consultationId: String): List<ReponseConsultationDTO> {
         return try {
-            val consultationUUID = UUID.fromString(consultationId)
-            when (val cacheResult = cacheRepository.getReponseConsultationList(consultationUUID)) {
-                CacheResult.CacheNotInitialized -> getConsultationResponsesFromDatabase(consultationUUID)
+            when (val cacheResult = cacheRepository.getReponseConsultationList(consultationId)) {
+                CacheResult.CacheNotInitialized -> getConsultationResponsesFromDatabase(consultationId)
                 CacheResult.CacheReponseConsultationNotFound -> emptyList()
                 is CacheResult.CacheReponseConsultation -> cacheResult.reponseConsultationList
             }
@@ -91,9 +90,9 @@ class GetConsultationResponseRepositoryImpl(
         }
     }
 
-    private fun getConsultationResponsesFromDatabase(consultationUUID: UUID): List<ReponseConsultationDTO> {
-        val consultationResponseDtoList = databaseRepository.getConsultationResponses(consultationUUID)
-        cacheRepository.insertReponseConsultationList(consultationUUID, consultationResponseDtoList)
+    private fun getConsultationResponsesFromDatabase(consultationId: String): List<ReponseConsultationDTO> {
+        val consultationResponseDtoList = databaseRepository.getConsultationResponses(consultationId)
+        cacheRepository.insertReponseConsultationList(consultationId, consultationResponseDtoList)
         return consultationResponseDtoList
     }
 

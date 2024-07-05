@@ -99,7 +99,7 @@ class ReponseConsultationMapper {
     }
 
     fun toDto(
-        consultationId: UUID,
+        consultationId: String,
         userId: UUID,
         participationId: UUID,
         domain: ReponseConsultationInserting,
@@ -128,7 +128,7 @@ class ReponseConsultationMapper {
     }
 
     private fun toDto(
-        consultationId: UUID,
+        consultationId: String,
         userId: UUID,
         participationId: UUID,
         domain: ReponseConsultationInserting,
@@ -138,8 +138,8 @@ class ReponseConsultationMapper {
             ReponseConsultationDTO(
                 id = UUID.randomUUID(),
                 consultationId = consultationId,
-                questionId = UUID.fromString(domain.questionId),
-                choiceId = choiceId?.let { UUID.fromString(choiceId) },
+                questionId = domain.questionId,
+                choiceId = choiceId,
                 responseText = domain.responseText,
                 participationId = participationId,
                 participationDate = Date(),

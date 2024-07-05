@@ -14,7 +14,7 @@ class UserAnsweredConsultationMapper {
                 id = UUID.randomUUID(),
                 participationDate = Date(),
                 userId = UUID.fromString(domain.userId),
-                consultationId = UUID.fromString(domain.consultationId)
+                consultationId = domain.consultationId
             )
         } catch (e: IllegalArgumentException) {
             null

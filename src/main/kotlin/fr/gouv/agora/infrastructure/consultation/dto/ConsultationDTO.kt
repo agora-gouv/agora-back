@@ -9,8 +9,8 @@ import java.util.*
 data class ConsultationDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
-    val id: UUID,
+    @Column(columnDefinition = "TEXT DEFAULT gen_random_uuid()")
+    val id: String,
     @Column(columnDefinition = "TEXT")
     val title: String,
     val startDate: Date,

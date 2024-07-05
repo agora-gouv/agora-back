@@ -16,7 +16,7 @@ import java.util.*
 interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultationDTO, UUID> {
 
     @Query(value = "SELECT * FROM reponses_consultation WHERE consultation_id = :consultationId", nativeQuery = true)
-    fun getConsultationResponses(@Param("consultationId") consultationId: UUID): List<ReponseConsultationDTO>
+    fun getConsultationResponses(@Param("consultationId") consultationId: String): List<ReponseConsultationDTO>
 
     @Query(
         value = """SELECT question_id as questionId, choice_id as choiceId, count(*) as responseCount

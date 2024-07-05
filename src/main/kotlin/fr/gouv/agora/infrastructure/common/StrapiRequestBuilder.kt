@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class StrapiRequestBuilder(private val cmsModel: String) {
+data class StrapiRequestBuilder(private val cmsModel: String) {
     private var filters = ""
     private var sort = ""
     private var populate = "&populate=*"
@@ -28,10 +28,8 @@ class StrapiRequestBuilder(private val cmsModel: String) {
         return this
     }
 
-    fun getByIds(ids: List<String>): StrapiRequestBuilder {
-        val strapiIds = ids.mapNotNull { it.toIntOrNull() }
-
-        return filterBy("id", strapiIds.map { it.toString() })
+    fun getByIds(ids: List<Int>): StrapiRequestBuilder {
+        return filterBy("id", ids.map { it.toString() })
     }
 
     fun withDateBefore(date: LocalDateTime, fieldBeforeDate: String): StrapiRequestBuilder {
