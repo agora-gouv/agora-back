@@ -33,7 +33,7 @@ interface LoginDatabaseRepository : JpaRepository<UserDTO, UUID> {
         """,
         nativeQuery = true,
     )
-    fun getUsersNotAnsweredConsultation(@Param("consultationId") consultationId: UUID): List<UserDTO>
+    fun getUsersNotAnsweredConsultation(@Param("consultationId") consultationId: String): List<UserDTO>
 
     @Modifying
     @Transactional

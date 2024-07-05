@@ -50,14 +50,11 @@ class FeedbackConsultationUpdateRepositoryImpl(
     }
 
     private fun getUserFeedbackDto(consultationUpdateId: String, userId: String): FeedbackConsultationUpdateDTO? {
-        return consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
-            userId.toUuidOrNull()?.let { userUUID ->
-                databaseRepository.getUserConsultationUpdateFeedback(
-                    consultationUpdateId = consultationUpdateUUID,
-                    userId = userUUID,
-                )
-            }
+        return userId.toUuidOrNull()?.let { userUUID ->
+            databaseRepository.getUserConsultationUpdateFeedback(
+                consultationUpdateId = consultationUpdateId,
+                userId = userUUID,
+            )
         }
     }
-
 }

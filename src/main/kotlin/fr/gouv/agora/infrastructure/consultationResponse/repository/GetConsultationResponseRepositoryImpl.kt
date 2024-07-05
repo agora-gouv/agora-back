@@ -8,7 +8,6 @@ import fr.gouv.agora.infrastructure.consultationResponse.repository.ReponseConsu
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultationResponse.repository.GetConsultationResponseRepository
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 @Suppress("unused")
@@ -19,59 +18,43 @@ class GetConsultationResponseRepositoryImpl(
 ) : GetConsultationResponseRepository {
 
     override fun getConsultationResponsesCount(consultationId: String): List<ResponseConsultationCount> {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            databaseRepository.getConsultationResponsesCount(consultationId = consultationUUID).map(mapper::toDomain)
-        } ?: emptyList()
+        return databaseRepository.getConsultationResponsesCount(consultationId = consultationId).map(mapper::toDomain)
+
     }
 
     override fun deleteConsultationResponses(consultationId: String) {
-        consultationId.toUuidOrNull()?.let { consultationUUID ->
-            databaseRepository.deleteConsultationResponsesWithoutText(consultationUUID)
-            databaseRepository.anonymizeConsultationResponsesWithText(consultationUUID)
-        }
+        databaseRepository.deleteConsultationResponsesWithoutText(consultationId)
+        databaseRepository.anonymizeConsultationResponsesWithText(consultationId)
     }
 
     override fun getParticipantDemographicInfo(consultationId: String): DemographicInfoCount {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            mapper.toDomain(
-                genderCount = databaseRepository.getConsultationGender(consultationUUID),
-                ageRangeCount = databaseRepository.getConsultationYearOfBirth(consultationUUID),
-                departmentCount = databaseRepository.getConsultationDepartment(consultationUUID),
-                cityTypeCount = databaseRepository.getConsultationCityType(consultationUUID),
-                jobCategoryCount = databaseRepository.getConsultationJobCategory(consultationUUID),
-                voteFrequencyCount = databaseRepository.getConsultationVoteFrequency(consultationUUID),
-                publicMeetingFrequencyCount = databaseRepository.getConsultationPublicMeetingFrequency(consultationUUID),
-                consultationFrequencyCount = databaseRepository.getConsultationConsultationFrequency(consultationUUID),
-            )
-        } ?: DemographicInfoCount(
-            genderCount = emptyMap(),
-            ageRangeCount = emptyMap(),
-            departmentCount = emptyMap(),
-            cityTypeCount = emptyMap(),
-            jobCategoryCount = emptyMap(),
-            voteFrequencyCount = emptyMap(),
-            publicMeetingFrequencyCount = emptyMap(),
-            consultationFrequencyCount = emptyMap(),
+        return mapper.toDomain(
+            genderCount = databaseRepository.getConsultationGender(consultationId),
+            ageRangeCount = databaseRepository.getConsultationYearOfBirth(consultationId),
+            departmentCount = databaseRepository.getConsultationDepartment(consultationId),
+            cityTypeCount = databaseRepository.getConsultationCityType(consultationId),
+            jobCategoryCount = databaseRepository.getConsultationJobCategory(consultationId),
+            voteFrequencyCount = databaseRepository.getConsultationVoteFrequency(consultationId),
+            publicMeetingFrequencyCount = databaseRepository.getConsultationPublicMeetingFrequency(consultationId),
+            consultationFrequencyCount = databaseRepository.getConsultationConsultationFrequency(consultationId),
         )
     }
 
     override fun getParticipantDemographicInfoByChoices(questionId: String): DemographicInfoCountByChoices {
-        return questionId.toUuidOrNull()?.let { questionUUID ->
-            mapper.toDomain(
-                genderCount = databaseRepository.getConsultationGenderByChoice(questionUUID),
-                ageRangeCount = databaseRepository.getConsultationYearOfBirthByChoice(questionUUID),
-                departmentCount = databaseRepository.getConsultationDepartmentByChoice(questionUUID),
-                cityTypeCount = databaseRepository.getConsultationCityTypeByChoice(questionUUID),
-                jobCategoryCount = databaseRepository.getConsultationJobCategoryByChoice(questionUUID),
-                voteFrequencyCount = databaseRepository.getConsultationVoteFrequencyByChoice(questionUUID),
-                publicMeetingFrequencyCount = databaseRepository.getConsultationPublicMeetingFrequencyByChoice(
-                    questionUUID
-                ),
-                consultationFrequencyCount = databaseRepository.getConsultationConsultationFrequencyByChoice(
-                    questionUUID
-                ),
-            )
-        } ?: DemographicInfoCountByChoices(emptyMap())
+        return mapper.toDomain(
+            genderCount = databaseRepository.getConsultationGenderByChoice(questionId),
+            ageRangeCount = databaseRepository.getConsultationYearOfBirthByChoice(questionId),
+            departmentCount = databaseRepository.getConsultationDepartmentByChoice(questionId),
+            cityTypeCount = databaseRepository.getConsultationCityTypeByChoice(questionId),
+            jobCategoryCount = databaseRepository.getConsultationJobCategoryByChoice(questionId),
+            voteFrequencyCount = databaseRepository.getConsultationVoteFrequencyByChoice(questionId),
+            publicMeetingFrequencyCount = databaseRepository.getConsultationPublicMeetingFrequencyByChoice(
+                questionId
+            ),
+            consultationFrequencyCount = databaseRepository.getConsultationConsultationFrequencyByChoice(
+                questionId
+            ),
+        )
     }
 
     override fun deleteUserConsultationResponses(userIDs: List<String>) {

@@ -21,7 +21,7 @@ interface FeedbackConsultationUpdateDatabaseRepository : JpaRepository<FeedbackC
         """, nativeQuery = true
     )
     fun getUserConsultationUpdateFeedback(
-        @Param("consultationUpdateId") consultationUpdateId: UUID,
+        @Param("consultationUpdateId") consultationUpdateId: String,
         @Param("userId") userId: UUID,
     ): FeedbackConsultationUpdateDTO?
 

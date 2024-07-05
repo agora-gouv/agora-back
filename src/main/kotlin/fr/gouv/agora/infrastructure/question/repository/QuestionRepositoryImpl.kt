@@ -35,8 +35,7 @@ class QuestionRepositoryImpl(
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations))
             return Questions(questionCount = 0, questions = emptyList())
 
-        // todo STRAPI
-        return Questions(questionCount = 0, questions = emptyList())
+        TODO("Strapi's consultations are not implemented yet")
     }
 
     override fun getConsultationQuestionList(consultationId: String): List<Question> {
@@ -49,8 +48,7 @@ class QuestionRepositoryImpl(
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations))
             return emptyList()
 
-        // todo STRAPI
-        return emptyList()
+        TODO("Strapi's consultations are not implemented yet")
     }
 
     private fun getConsultationQuestions(consultationUUID: UUID): List<Question> {
