@@ -40,10 +40,10 @@ class PublicConsultationDetailsUseCase(
 
     private fun getConsultationDetails(consultationId: String): ConsultationDetailsV2? {
         return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
-            if (isConsultationOngoing(consultationInfo = consultationInfo)) {
-                getOngoingConsultationDetails(consultationInfo = consultationInfo)
+            if (isConsultationOngoing(consultationInfo)) {
+                getOngoingConsultationDetails(consultationInfo)
             } else {
-                getLastConsultationDetails(consultationInfo = consultationInfo)
+                getLastConsultationDetails(consultationInfo)
             }
         } ?: run {
             cacheRepository.initUnansweredUsersConsultationDetails(consultationId, null)
