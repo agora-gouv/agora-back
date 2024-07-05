@@ -1,9 +1,11 @@
 package fr.gouv.agora.infrastructure.question.repository
 
+import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.Question
 import fr.gouv.agora.domain.Questions
 import fr.gouv.agora.infrastructure.consultation.repository.ConsultationDatabaseRepository
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
+import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -14,24 +16,41 @@ class QuestionRepositoryImpl(
     private val consultationDatabaseRepository: ConsultationDatabaseRepository,
     private val questionDatabaseRepository: QuestionDatabaseRepository,
     private val choixPossibleDatabaseRepository: ChoixPossibleDatabaseRepository,
+    private val featureFlagsRepository: FeatureFlagsRepository,
     private val questionMapper: QuestionMapper,
 ) : QuestionRepository {
 
     override fun getConsultationQuestions(consultationId: String): Questions {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            consultationDatabaseRepository.getConsultation(consultationUUID)?.let { consultationDTO ->
+        val consultationUUID = consultationId.toUuidOrNull()
+
+        if (consultationUUID != null) {
+            return consultationDatabaseRepository.getConsultation(consultationUUID)?.let { consultationDTO ->
                 Questions(
                     questionCount = consultationDTO.questionCountNumber,
                     questions = getConsultationQuestions(consultationUUID),
                 )
-            }
-        } ?: Questions(questionCount = 0, questions = emptyList())
+            } ?: Questions(questionCount = 0, questions = emptyList())
+        }
+
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations))
+            return Questions(questionCount = 0, questions = emptyList())
+
+        // todo STRAPI
+        return Questions(questionCount = 0, questions = emptyList())
     }
 
     override fun getConsultationQuestionList(consultationId: String): List<Question> {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            getConsultationQuestions(consultationUUID)
-        } ?: emptyList()
+        val consultationUUID = consultationId.toUuidOrNull()
+
+        if (consultationUUID != null) {
+            return getConsultationQuestions(consultationUUID)
+        }
+
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations))
+            return emptyList()
+
+        // todo STRAPI
+        return emptyList()
     }
 
     private fun getConsultationQuestions(consultationUUID: UUID): List<Question> {

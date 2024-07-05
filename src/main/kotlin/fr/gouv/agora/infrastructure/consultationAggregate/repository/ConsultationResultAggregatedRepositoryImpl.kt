@@ -16,7 +16,7 @@ class ConsultationResultAggregatedRepositoryImpl(
 ) : ConsultationResultAggregatedRepository {
 
     override fun getAggregatedResultsConsultationIds(): List<String> {
-        return databaseRepository.getAggregatedResultsConsultationIds().map(UUID::toString)
+        return databaseRepository.getAggregatedResultsConsultationIds()
     }
 
     override fun insertConsultationResultAggregated(consultationResults: List<ConsultationResultAggregatedInserting>): ConsultationAggregatedInsertResult {
@@ -29,8 +29,7 @@ class ConsultationResultAggregatedRepositoryImpl(
     }
 
     override fun getConsultationResultAggregated(consultationId: String): List<ConsultationResultAggregated> {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            databaseRepository.getConsultationResultByConsultation(consultationUUID).map(mapper::toDomain)
-        } ?: emptyList()
+        return databaseRepository.getConsultationResultByConsultation(consultationId)
+            .map(mapper::toDomain)
     }
 }

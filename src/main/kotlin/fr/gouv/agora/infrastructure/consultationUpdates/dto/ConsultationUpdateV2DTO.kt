@@ -10,8 +10,8 @@ data class ConsultationUpdateV2DTO(
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
-    @Column(columnDefinition = "TEXT")
-    val consultationId: String,
+    @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
+    val consultationId: UUID,
     val isVisibleToUnansweredUsersOnly: Int,
     @Column(columnDefinition = "TEXT")
     val updateLabel: String?,

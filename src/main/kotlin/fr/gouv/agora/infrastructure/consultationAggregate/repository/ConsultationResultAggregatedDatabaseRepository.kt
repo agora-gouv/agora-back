@@ -11,8 +11,8 @@ import java.util.*
 interface ConsultationResultAggregatedDatabaseRepository : JpaRepository<ConsultationResultAggregatedDTO, UUID> {
 
     @Query(value = "SELECT DISTINCT consultation_id FROM consultation_results", nativeQuery = true)
-    fun getAggregatedResultsConsultationIds(): List<UUID>
+    fun getAggregatedResultsConsultationIds(): List<String>
 
     @Query(value = "SELECT * FROM consultation_results WHERE consultation_id = :consultationId", nativeQuery = true)
-    fun getConsultationResultByConsultation(@Param("consultationId") consultationId: UUID): List<ConsultationResultAggregatedDTO>
+    fun getConsultationResultByConsultation(@Param("consultationId") consultationId: String): List<ConsultationResultAggregatedDTO>
 }
