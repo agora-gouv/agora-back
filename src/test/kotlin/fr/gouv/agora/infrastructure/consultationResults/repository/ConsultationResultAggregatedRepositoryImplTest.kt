@@ -61,41 +61,27 @@ internal class ConsultationResultAggregatedRepositoryImplTest {
     }
 
     @Test
-    fun `getConsultationResultAggregated - when invalid consultationId - should returns emptyList`() {
+    fun `getConsultationResultAggregated - when valid consultationId and database returns emptyList - should returns emptyList`() {
         // Given
-        val consultationId = "invalid UUID"
+        val consultationId = UUID.randomUUID().toString()
+        given(databaseRepository.getConsultationResultByConsultation(consultationId)).willReturn(emptyList())
 
         // When
         val result = repository.getConsultationResultAggregated(consultationId)
 
         // Then
         assertThat(result).isEqualTo(emptyList<ConsultationResultAggregated>())
-        then(databaseRepository).shouldHaveNoInteractions()
-        then(mapper).shouldHaveNoInteractions()
-    }
-
-    @Test
-    fun `getConsultationResultAggregated - when valid consultationId and database returns emptyList - should returns emptyList`() {
-        // Given
-        val consultationUUID = UUID.randomUUID()
-        given(databaseRepository.getConsultationResultByConsultation(consultationUUID)).willReturn(emptyList())
-
-        // When
-        val result = repository.getConsultationResultAggregated(consultationUUID.toString())
-
-        // Then
-        assertThat(result).isEqualTo(emptyList<ConsultationResultAggregated>())
-        then(databaseRepository).should(only()).getConsultationResultByConsultation(consultationUUID)
+        then(databaseRepository).should(only()).getConsultationResultByConsultation(consultationId)
         then(mapper).shouldHaveNoInteractions()
     }
 
     @Test
     fun `getConsultationResultAggregated - when valid consultationId and database returns DTO - should returns mapped object`() {
         // Given
-        val consultationUUID = UUID.randomUUID()
+        val consultationId = UUID.randomUUID().toString()
         val consultationResultAggregated = mock(ConsultationResultAggregated::class.java)
         val consultationResultAggregatedDTO = mock(ConsultationResultAggregatedDTO::class.java)
-        given(databaseRepository.getConsultationResultByConsultation(consultationUUID)).willReturn(
+        given(databaseRepository.getConsultationResultByConsultation(consultationId)).willReturn(
             listOf(
                 consultationResultAggregatedDTO
             )
@@ -103,11 +89,11 @@ internal class ConsultationResultAggregatedRepositoryImplTest {
         given(mapper.toDomain(consultationResultAggregatedDTO)).willReturn(consultationResultAggregated)
 
         // When
-        val result = repository.getConsultationResultAggregated(consultationUUID.toString())
+        val result = repository.getConsultationResultAggregated(consultationId)
 
         // Then
         assertThat(result).isEqualTo(listOf(consultationResultAggregated))
-        then(databaseRepository).should(only()).getConsultationResultByConsultation(consultationUUID)
+        then(databaseRepository).should(only()).getConsultationResultByConsultation(consultationId)
         then(mapper).should().toDomain(consultationResultAggregatedDTO)
         then(mapper).shouldHaveNoMoreInteractions()
     }

@@ -46,7 +46,7 @@ class UserAnsweredConsultationRepositoryImpl(
     }
 
     override fun getUsersAnsweredConsultation(consultationId: String): List<String> {
-        return databaseRepository.getUsersAnsweredConsultation(consultationId)
+        return databaseRepository.getUsersAnsweredConsultation(consultationId).map { it.toString() }
     }
 
     override fun insertUserAnsweredConsultation(userAnsweredConsultation: UserAnsweredConsultation): UserAnsweredConsultationResult {
