@@ -32,13 +32,12 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
         return ConsultationDetailsV2Json(
             title = consultationDetails.consultation.title,
             coverUrl = consultationDetails.consultation.detailsCoverUrl,
-            shareText = buildShareText(consultationDetails),
             thematique = ThematiqueNoIdJson(
-                label = consultationDetails.thematique.label,
-                picto = consultationDetails.thematique.picto,
+                label = consultationDetails.consultation.thematique.label,
+                picto = consultationDetails.consultation.thematique.picto,
             ),
             questionsInfo = buildQuestionsInfo(consultationDetails),
-            consultationDates = null,
+            consultationDates = buildConsultationDates(consultationDetails),
             responsesInfo = buildResponsesInfo(consultationDetails),
             infoHeader = buildInfoHeader(consultationDetails),
             body = buildBody(consultationDetails),
@@ -48,29 +47,8 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             footer = buildFooter(consultationDetails),
             goals = buildGoals(consultationDetails),
             history = buildHistory(consultationDetails),
-        )
-    }
-
-    fun toUpdateJson(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDetailsV2Json {
-        return ConsultationDetailsV2Json(
-            title = consultationDetails.consultation.title,
-            coverUrl = consultationDetails.consultation.detailsCoverUrl,
+            updateId = consultationDetails.update.id,
             shareText = buildShareText(consultationDetails),
-            thematique = ThematiqueNoIdJson(
-                label = consultationDetails.thematique.label,
-                picto = consultationDetails.thematique.picto,
-            ),
-            questionsInfo = null,
-            consultationDates = buildConsultationDates(consultationDetails),
-            responsesInfo = buildResponsesInfo(consultationDetails),
-            infoHeader = null,
-            body = buildBody(consultationDetails),
-            participationInfo = buildParticipationInfo(consultationDetails),
-            downloadAnalysisUrl = consultationDetails.update.downloadAnalysisUrl,
-            feedbackQuestion = buildFeedbackQuestion(consultationDetails),
-            footer = buildFooter(consultationDetails),
-            goals = buildGoals(consultationDetails),
-            history = null,
         )
     }
 
@@ -86,7 +64,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
     private fun buildQuestionsInfo(consultationDetails: ConsultationDetailsV2WithInfo): QuestionsInfo? {
         if (!consultationDetails.update.hasQuestionsInfo) return null
         return QuestionsInfo(
-            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate),
+            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate.toLocalDate()),
             questionCount = consultationDetails.consultation.questionCount,
             estimatedTime = consultationDetails.consultation.estimatedTime,
             participantCount = consultationDetails.participantCount,
@@ -97,8 +75,8 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
     private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDates? {
         if (!consultationDetails.update.hasQuestionsInfo) return null
         return ConsultationDates(
-            startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate),
-            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate),
+            startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate.toLocalDate()),
+            endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate.toLocalDate()),
         )
     }
 

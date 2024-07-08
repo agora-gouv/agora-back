@@ -1,9 +1,8 @@
 package fr.gouv.agora.infrastructure.qag.dto
 
-import org.springframework.data.rest.core.config.Projection
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
-@Projection(types = [QagWithSupportCountDTO::class])
 interface QagWithSupportCountDTO {
     val id: UUID
     val title: String

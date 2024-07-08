@@ -13,9 +13,9 @@ class ConsultationResultAggregatedMapper {
         return try {
             ConsultationResultAggregatedDTO(
                 id = UUID.randomUUID(),
-                consultationId = UUID.fromString(domain.consultationId),
-                questionId = UUID.fromString(domain.questionId),
-                choiceId = UUID.fromString(domain.choiceId),
+                consultationId = domain.consultationId,
+                questionId = domain.questionId,
+                choiceId = domain.choiceId,
                 responseCount = domain.responseCount
             )
         } catch (e: IllegalArgumentException) {
@@ -25,9 +25,9 @@ class ConsultationResultAggregatedMapper {
     
     fun toDomain(dto: ConsultationResultAggregatedDTO): ConsultationResultAggregated {
         return ConsultationResultAggregated(
-            consultationId = dto.consultationId.toString(),
-            questionId = dto.questionId.toString(),
-            choiceId = dto.choiceId.toString(),
+            consultationId = dto.consultationId,
+            questionId = dto.questionId,
+            choiceId = dto.choiceId,
             responseCount = dto.responseCount
         )
     }

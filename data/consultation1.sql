@@ -1,5 +1,4 @@
 DELETE FROM consultations WHERE id = 'f5fd9c1d-6583-494c-8b0f-78129d6a0382';
-DELETE FROM consultation_updates WHERE id = '3c2d744f-7143-442b-aaa4-53bfe5f5f451';
 DELETE FROM questions WHERE id = '32a4b9b4-e9aa-4930-9983-31f477abc279';
 DELETE FROM choixpossible WHERE id = '351fb2dd-8737-49ef-b7a9-7057dbd5920c';
 DELETE FROM choixpossible WHERE id = '35ccc5f3-02d0-4704-a02d-972b777bcb63';
@@ -66,13 +65,6 @@ INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_co
     '<body>Ceci est une consultation fictive, elle contiendra des questions pour tester les différents types de questions possibles</body>',
     '<body>🗣 Consultation proposée par le <b>Capitaine P’tit Dej’</b><br/><br/>🎯<b> Objectif</b> : améliorer la qualité des petits déjeuners apportés à l’équipe AGORA 🤤.</body>',
     '5cdb4732-0153-11ee-be56-0242ac120002'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO consultation_updates(id, step, description, consultation_id) VALUES (
-    '3c2d744f-7143-442b-aaa4-53bfe5f5f451',
-    1,
-    '<body>👉 Capitaine P’tit Dej’ recevra les résultats et en tirera les enseignements pour la suite et les actions qui découleront de vos réponses !</body>',
-    'f5fd9c1d-6583-494c-8b0f-78129d6a0382'
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions(id, title, popup_description, ordre, type, description, max_choices, consultation_id) VALUES (

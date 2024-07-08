@@ -6,7 +6,6 @@ import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.util.UUID
 
 @Component
 class NotificationRepositoryImpl(

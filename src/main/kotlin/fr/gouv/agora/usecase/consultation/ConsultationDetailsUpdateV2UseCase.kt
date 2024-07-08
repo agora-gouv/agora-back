@@ -1,6 +1,10 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.domain.ConsultationDetailsV2
+import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2
+import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
@@ -9,14 +13,12 @@ import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsult
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.repository.FeedbackConsultationUpdateRepository
-import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Component
 
 @Component
 class ConsultationDetailsUpdateV2UseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val infoRepository: ConsultationInfoRepository,
-    private val thematiqueRepository: ThematiqueRepository,
     private val updateRepository: ConsultationUpdateV2Repository,
     private val userAnsweredRepository: UserAnsweredConsultationRepository,
     private val feedbackRepository: FeedbackConsultationUpdateRepository,
@@ -49,7 +51,6 @@ class ConsultationDetailsUpdateV2UseCase(
         }?.let { details ->
             ConsultationDetailsV2WithInfo(
                 consultation = details.consultation,
-                thematique = details.thematique,
                 update = details.update,
                 feedbackStats = details.feedbackStats,
                 history = details.history,
@@ -63,19 +64,16 @@ class ConsultationDetailsUpdateV2UseCase(
 
     private fun buildConsultationDetails(consultationId: String, consultationUpdateId: String): ConsultationDetailsV2? {
         return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
-            thematiqueRepository.getThematique(consultationInfo.thematiqueId)?.let { thematique ->
-                updateRepository.getConsultationUpdate(
-                    consultationId = consultationId,
-                    consultationUpdateId = consultationUpdateId,
-                )?.let { update ->
-                    ConsultationDetailsV2(
-                        consultation = consultationInfo,
-                        thematique = thematique,
-                        update = update,
-                        feedbackStats = getFeedbackStats(update),
-                        history = null,
-                    )
-                }
+            updateRepository.getConsultationUpdate(
+                consultationId = consultationId,
+                consultationUpdateId = consultationUpdateId,
+            )?.let { update ->
+                ConsultationDetailsV2(
+                    consultation = consultationInfo,
+                    update = update,
+                    feedbackStats = getFeedbackStats(update),
+                    history = null,
+                )
             }
         }
     }

@@ -20,7 +20,7 @@ class ConsultationPreviewAnsweredRepositoryImpl(
 
     override fun getConsultationAnsweredList(userId: String, offset: Int): List<ConsultationWithUpdateInfo> {
         return userId.toUuidOrNull()?.let { userUUID ->
-            databaseRepository.getConsultationsAnsweredWithUpdateInfo(userUUID, offset).map(mapper::toDomain)
+            databaseRepository.getConsultationsAnsweredWithUpdateInfo(userUUID, offset).map(mapper::toConsultationWithUpdateInfo)
         } ?: emptyList()
     }
 

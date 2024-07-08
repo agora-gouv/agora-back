@@ -12,21 +12,10 @@ import java.util.*
 @Component
 class ReponseConsultationMapper {
 
-    fun toDomain(dto: ReponseConsultationDTO): ReponseConsultation {
-        return ReponseConsultation(
-            id = dto.id.toString(),
-            questionId = dto.questionId.toString(),
-            choiceId = dto.choiceId.toString(),
-            participationId = dto.participationId.toString(),
-            userId = dto.userId.toString(),
-            responseText = dto.responseText,
-        )
-    }
-
     fun toDomain(dto: ResponseConsultationCountDTO): ResponseConsultationCount {
         return ResponseConsultationCount(
-            questionId = dto.questionId.toString(),
-            choiceId = dto.choiceId.toString(),
+            questionId = dto.questionId,
+            choiceId = dto.choiceId,
             responseCount = dto.responseCount,
         )
     }
@@ -74,15 +63,15 @@ class ReponseConsultationMapper {
         val currentYear = LocalDate.now().year
         val allChoices =
             (genderCount + ageRangeCount + departmentCount + cityTypeCount + jobCategoryCount + voteFrequencyCount + publicMeetingFrequencyCount + consultationFrequencyCount)
-                .map { it.choiceId.toString() }
+                .map { it.choiceId }
                 .toSet()
 
         return DemographicInfoCountByChoices(
             choiceDemographicInfoMap = allChoices.associateWith { choice ->
                 DemographicInfoCount(
-                    genderCount = genderCount.filter { it.choiceId.toString() == choice }
+                    genderCount = genderCount.filter { it.choiceId == choice }
                         .associate { toGender(it.key) to it.count },
-                    ageRangeCount = ageRangeCount.filter { it.choiceId.toString() == choice }
+                    ageRangeCount = ageRangeCount.filter { it.choiceId == choice }
                         .fold(
                             initial = mutableMapOf(),
                             operation = { buildingAgeRangeCount, demographicInfo ->
@@ -92,17 +81,17 @@ class ReponseConsultationMapper {
                                 buildingAgeRangeCount
                             },
                         ),
-                    departmentCount = departmentCount.filter { it.choiceId.toString() == choice }
+                    departmentCount = departmentCount.filter { it.choiceId == choice }
                         .associate { findDepartmentByNumber(it.key) to it.count },
-                    cityTypeCount = cityTypeCount.filter { it.choiceId.toString() == choice }
+                    cityTypeCount = cityTypeCount.filter { it.choiceId == choice }
                         .associate { toCityType(it.key) to it.count },
-                    jobCategoryCount = jobCategoryCount.filter { it.choiceId.toString() == choice }
+                    jobCategoryCount = jobCategoryCount.filter { it.choiceId == choice }
                         .associate { toJobCategory(it.key) to it.count },
-                    voteFrequencyCount = voteFrequencyCount.filter { it.choiceId.toString() == choice }
+                    voteFrequencyCount = voteFrequencyCount.filter { it.choiceId == choice }
                         .associate { toFrequency(it.key) to it.count },
-                    publicMeetingFrequencyCount = publicMeetingFrequencyCount.filter { it.choiceId.toString() == choice }
+                    publicMeetingFrequencyCount = publicMeetingFrequencyCount.filter { it.choiceId == choice }
                         .associate { toFrequency(it.key) to it.count },
-                    consultationFrequencyCount = consultationFrequencyCount.filter { it.choiceId.toString() == choice }
+                    consultationFrequencyCount = consultationFrequencyCount.filter { it.choiceId == choice }
                         .associate { toFrequency(it.key) to it.count },
                 )
             }
@@ -110,7 +99,7 @@ class ReponseConsultationMapper {
     }
 
     fun toDto(
-        consultationId: UUID,
+        consultationId: String,
         userId: UUID,
         participationId: UUID,
         domain: ReponseConsultationInserting,
@@ -139,7 +128,7 @@ class ReponseConsultationMapper {
     }
 
     private fun toDto(
-        consultationId: UUID,
+        consultationId: String,
         userId: UUID,
         participationId: UUID,
         domain: ReponseConsultationInserting,
@@ -149,8 +138,8 @@ class ReponseConsultationMapper {
             ReponseConsultationDTO(
                 id = UUID.randomUUID(),
                 consultationId = consultationId,
-                questionId = UUID.fromString(domain.questionId),
-                choiceId = choiceId?.let { UUID.fromString(choiceId) },
+                questionId = domain.questionId,
+                choiceId = choiceId,
                 responseText = domain.responseText,
                 participationId = participationId,
                 participationDate = Date(),

@@ -24,7 +24,7 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (consultationInfoRepository.getConsultation(consultationId) == null) return NotificationResult.FAILURE
+        if (!consultationInfoRepository.isConsultationExists(consultationId)) return NotificationResult.FAILURE
 
         val userList = userRepository.getAllUsers()
         notificationSendingRepository.sendConsultationDetailsMultiNotification(
@@ -52,7 +52,7 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (consultationInfoRepository.getConsultation(consultationId) == null) return NotificationResult.FAILURE
+        if (!consultationInfoRepository.isConsultationExists(consultationId)) return NotificationResult.FAILURE
 
         val userAnsweredConsultationIds =
             userAnsweredConsultationRepository.getUsersAnsweredConsultation(consultationId = consultationId)
@@ -84,7 +84,7 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (consultationInfoRepository.getConsultation(consultationId) == null) return NotificationResult.FAILURE
+        if (!consultationInfoRepository.isConsultationExists(consultationId)) return NotificationResult.FAILURE
         val userList = userRepository.getUsersNotAnsweredConsultation(consultationId = consultationId)
 
         notificationSendingRepository.sendConsultationDetailsMultiNotification(
@@ -107,7 +107,3 @@ class SendConsultationNotificationUseCase(
         return NotificationResult.SUCCESS
     }
 }
-
-
-
-

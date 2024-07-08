@@ -1,8 +1,13 @@
 package fr.gouv.agora.infrastructure.login.dto
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
 import org.hibernate.Hibernate
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 @Entity(name = "agora_users")
 data class UserDTO(
@@ -16,8 +21,8 @@ data class UserDTO(
     val fcmToken: String,
     val createdDate: Date,
     val authorizationLevel: Int,
-    @Column(columnDefinition = "SMALLINT")
-    val isBanned: Int,
+    @Column(columnDefinition = "SMALLINT", name = "is_banned")
+    val userIsBanned: Int,
     val lastConnectionDate: Date,
 ) {
     override fun equals(other: Any?): Boolean {
@@ -32,6 +37,6 @@ data class UserDTO(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , password = $password , fcmToken = $fcmToken , createdDate = $createdDate , authorizationLevel = $authorizationLevel , isBanned = $isBanned , lastConnectionDate = $lastConnectionDate)"
+        return this::class.simpleName + "(id = $id , password = $password , fcmToken = $fcmToken , createdDate = $createdDate , authorizationLevel = $authorizationLevel , isBanned = $userIsBanned , lastConnectionDate = $lastConnectionDate)"
     }
 }

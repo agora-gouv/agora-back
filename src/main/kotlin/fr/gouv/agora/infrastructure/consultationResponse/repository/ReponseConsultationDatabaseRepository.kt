@@ -16,7 +16,7 @@ import java.util.*
 interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultationDTO, UUID> {
 
     @Query(value = "SELECT * FROM reponses_consultation WHERE consultation_id = :consultationId", nativeQuery = true)
-    fun getConsultationResponses(@Param("consultationId") consultationId: UUID): List<ReponseConsultationDTO>
+    fun getConsultationResponses(@Param("consultationId") consultationId: String): List<ReponseConsultationDTO>
 
     @Query(
         value = """SELECT question_id as questionId, choice_id as choiceId, count(*) as responseCount
@@ -27,7 +27,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationResponsesCount(@Param("consultationId") consultationId: UUID): List<ResponseConsultationCountDTO>
+    fun getConsultationResponsesCount(@Param("consultationId") consultationId: String): List<ResponseConsultationCountDTO>
 
     @Query(
         value = """SELECT gender as key, count(DISTINCT user_id) as count
@@ -41,7 +41,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationGender(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+    fun getConsultationGender(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT year_of_birth as key, count(DISTINCT user_id) as count
@@ -55,7 +55,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationYearOfBirth(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+    fun getConsultationYearOfBirth(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT department as key, count(DISTINCT user_id) as count
@@ -69,7 +69,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationDepartment(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+    fun getConsultationDepartment(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT city_type as key, count(DISTINCT user_id) as count
@@ -83,7 +83,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationCityType(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+    fun getConsultationCityType(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT job_category as key, count(DISTINCT user_id) as count
@@ -97,7 +97,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationJobCategory(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+    fun getConsultationJobCategory(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT vote_frequency as key, count(DISTINCT user_id) as count
@@ -111,7 +111,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationVoteFrequency(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+    fun getConsultationVoteFrequency(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT public_meeting_frequency as key, count(DISTINCT user_id) as count
@@ -125,7 +125,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationPublicMeetingFrequency(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+    fun getConsultationPublicMeetingFrequency(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT consultation_frequency as key, count(DISTINCT user_id) as count
@@ -139,7 +139,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationConsultationFrequency(@Param("consultationId") consultationId: UUID): List<DemographicInfoCountDTO>
+    fun getConsultationConsultationFrequency(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
         value = """SELECT choice_id as choiceId, gender as key, count(DISTINCT users_profile.user_id) AS count
@@ -151,7 +151,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationGenderByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+    fun getConsultationGenderByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
         value = """SELECT choice_id as choiceId, year_of_birth as key, count(DISTINCT users_profile.user_id) AS count
@@ -163,7 +163,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationYearOfBirthByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+    fun getConsultationYearOfBirthByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
         value = """SELECT choice_id as choiceId, department as key, count(DISTINCT users_profile.user_id) AS count
@@ -175,7 +175,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationDepartmentByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+    fun getConsultationDepartmentByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
         value = """SELECT choice_id as choiceId, city_type as key, count(DISTINCT users_profile.user_id) AS count
@@ -187,7 +187,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationCityTypeByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+    fun getConsultationCityTypeByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
         value = """SELECT choice_id as choiceId, job_category as key, count(DISTINCT users_profile.user_id) AS count
@@ -199,7 +199,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationJobCategoryByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+    fun getConsultationJobCategoryByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
         value = """SELECT choice_id as choiceId, vote_frequency as key, count(DISTINCT users_profile.user_id) AS count
@@ -211,7 +211,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationVoteFrequencyByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+    fun getConsultationVoteFrequencyByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
         value = """SELECT choice_id as choiceId, public_meeting_frequency as key, count(DISTINCT users_profile.user_id) AS count
@@ -223,7 +223,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationPublicMeetingFrequencyByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+    fun getConsultationPublicMeetingFrequencyByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
         value = """SELECT choice_id as choiceId, consultation_frequency as key, count(DISTINCT users_profile.user_id) AS count
@@ -235,7 +235,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true,
     )
-    fun getConsultationConsultationFrequencyByChoice(@Param("questionId") questionId: UUID): List<DemographicInfoCountByChoiceDTO>
+    fun getConsultationConsultationFrequencyByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Modifying
     @Transactional
@@ -246,7 +246,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true
     )
-    fun deleteConsultationResponsesWithoutText(@Param("consultationId") consultationId: UUID)
+    fun deleteConsultationResponsesWithoutText(@Param("consultationId") consultationId: String)
 
     @Modifying
     @Transactional
@@ -258,7 +258,7 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
             """,
         nativeQuery = true
     )
-    fun anonymizeConsultationResponsesWithText(@Param("consultationId") consultationId: UUID)
+    fun anonymizeConsultationResponsesWithText(@Param("consultationId") consultationId: String)
 
     @Modifying
     @Transactional

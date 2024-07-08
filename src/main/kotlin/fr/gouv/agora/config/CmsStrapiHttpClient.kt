@@ -1,5 +1,9 @@
 package fr.gouv.agora.config
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.agora.infrastructure.common.StrapiDTO
+import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -11,51 +15,22 @@ import java.net.http.HttpResponse
 @Service
 class CmsStrapiHttpClient(
     private val httpClient: HttpClient,
+    private val objectMapper: ObjectMapper,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CmsStrapiHttpClient::class.java)
 
-    fun getByIds(cmsModel: String, idField: String, ids: List<String>): String {
-        if (ids.size > 100) logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url")
+    fun <T> request(builder: StrapiRequestBuilder, typeReference: TypeReference<*>): StrapiDTO<T> {
+        return try {
+            val uri = builder.build()
+            val request = getClientRequest(uri).GET().build()
+            val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
 
-        val idsFilter = ids.map { "&filters[$idField][\$in]=$it" }.joinToString("")
-        val uri = "${cmsModel}?populate=*$idsFilter"
+            objectMapper.readValue(httpResponse.body(), typeReference) as StrapiDTO<T>
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la requête du builder $builder: ", e)
 
-        val request = getClientRequest(uri).GET().build()
-
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun getAllSortedBy(cmsModel: String, sortField: String, sortByDesc: Boolean = true): String {
-        val sortDirection = if (sortByDesc) "desc" else "asc"
-        val uri = "${cmsModel}?populate=*&sort[0]=$sortField:$sortDirection&pagination[pageSize]=100"
-
-        val request = getClientRequest(uri).GET().build()
-
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun getAll(cmsModel: String): String {
-        val uri = "${cmsModel}?populate=*&pagination[pageSize]=100"
-
-        val request = getClientRequest(uri).GET().build()
-
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
-    }
-
-    fun count(cmsModel: String): String {
-        val uri = "${cmsModel}?pagination[pageSize]=1&populate=*"
-
-        val request = getClientRequest(uri).GET().build()
-
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        return httpResponse.body()
+            StrapiDTO.ofEmpty()
+        }
     }
 
     private fun getClientRequest(uri: String): HttpRequest.Builder {

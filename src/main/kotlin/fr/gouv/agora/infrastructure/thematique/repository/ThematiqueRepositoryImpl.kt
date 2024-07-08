@@ -1,9 +1,7 @@
 package fr.gouv.agora.infrastructure.thematique.repository
 
 import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.config.CacheConfig
 import fr.gouv.agora.domain.Thematique
-import fr.gouv.agora.infrastructure.responseQag.repository.ThematiqueStrapiRepository
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueCacheRepository.CacheListResult
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository

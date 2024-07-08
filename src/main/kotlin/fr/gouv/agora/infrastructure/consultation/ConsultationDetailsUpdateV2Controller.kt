@@ -20,14 +20,14 @@ class ConsultationDetailsUpdateV2Controller(
         @RequestHeader("Authorization") authorizationHeader: String,
         @PathVariable consultationId: String,
         @PathVariable consultationUpdateId: String,
-    ): ResponseEntity<*> {
+    ): ResponseEntity<ConsultationDetailsV2Json> {
         return useCase.getConsultationDetailsUpdate(
             consultationId = consultationId,
             consultationUpdateId = consultationUpdateId,
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )?.let { consultationDetails ->
-            ResponseEntity.ok().body(mapper.toUpdateJson(consultationDetails))
-        } ?: ResponseEntity.notFound().build<Unit>()
+            ResponseEntity.ok().body(mapper.toJson(consultationDetails))
+        } ?: ResponseEntity.notFound().build()
     }
 
 }

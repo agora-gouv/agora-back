@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.consultationResponse.repository
 import fr.gouv.agora.infrastructure.consultationResponse.dto.ReponseConsultationDTO
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 class ReponseConsultationCacheRepository(private val cacheManager: CacheManager) {
@@ -19,9 +18,9 @@ class ReponseConsultationCacheRepository(private val cacheManager: CacheManager)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun getReponseConsultationList(consultationId: UUID): CacheResult {
+    fun getReponseConsultationList(consultationId: String): CacheResult {
         val reponseConsultationList = try {
-            getCache()?.get(consultationId.toString(), List::class.java) as? List<ReponseConsultationDTO>
+            getCache()?.get(consultationId, List::class.java) as? List<ReponseConsultationDTO>
         } catch (e: IllegalStateException) {
             null
         }
@@ -33,14 +32,14 @@ class ReponseConsultationCacheRepository(private val cacheManager: CacheManager)
         }
     }
 
-    fun insertReponseConsultationList(consultationId: UUID, reponseConsultationList: List<ReponseConsultationDTO>) {
+    fun insertReponseConsultationList(consultationId: String, reponseConsultationList: List<ReponseConsultationDTO>) {
         val cachedReponseConsultationList = when (val cacheResult = getReponseConsultationList(consultationId)) {
             CacheResult.CacheNotInitialized -> emptyList()
             CacheResult.CacheReponseConsultationNotFound -> emptyList()
             is CacheResult.CacheReponseConsultation -> cacheResult.reponseConsultationList
         }
 
-        getCache()?.put(consultationId.toString(), cachedReponseConsultationList.plus(reponseConsultationList))
+        getCache()?.put(consultationId, cachedReponseConsultationList.plus(reponseConsultationList))
     }
 
     private fun getCache() = cacheManager.getCache(REPONSE_CONSULTATION_CACHE_NAME)

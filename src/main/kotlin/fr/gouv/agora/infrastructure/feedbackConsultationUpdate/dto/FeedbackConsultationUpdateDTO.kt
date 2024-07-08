@@ -26,8 +26,8 @@ data class FeedbackConsultationUpdateDTO(
     val id: UUID,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
-    @JoinTable(joinColumns = [JoinColumn(table = "consultation_updates_v2", referencedColumnName = "id")])
-    val consultationUpdateId: UUID,
+    @Column(columnDefinition = "TEXT")
+    val consultationUpdateId: String,
     val isPositive: Int,
     val createdDate: Date,
     val updatedDate: Date,

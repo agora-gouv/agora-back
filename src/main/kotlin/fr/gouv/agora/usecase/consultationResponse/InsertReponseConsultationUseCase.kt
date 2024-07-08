@@ -1,7 +1,10 @@
 package fr.gouv.agora.usecase.consultationResponse
 
-import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
+import fr.gouv.agora.domain.Question
+import fr.gouv.agora.domain.QuestionOpen
+import fr.gouv.agora.domain.QuestionWithChoices
+import fr.gouv.agora.domain.ReponseConsultationInserting
+import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -45,18 +48,16 @@ class InsertReponseConsultationUseCase(
         userId: String,
         consultationResponses: List<ReponseConsultationInserting>,
     ): InsertResult {
-        if (consultationInfoRepository.getConsultation(consultationId = consultationId)?.endDate?.before(
-                LocalDateTime.now(clock).toDate()
+        if (consultationInfoRepository.getConsultation(consultationId = consultationId)?.endDate?.isBefore(
+                LocalDateTime.now(clock)
             ) == true
         ) {
             logger.error("⚠️ Insert response consultation error: this consultation is already finished")
             return InsertResult.INSERT_FAILURE
         }
 
-        if (userAnsweredConsultationRepository.hasAnsweredConsultation(
-                consultationId = consultationId,
-                userId = userId
-            )
+        if (userAnsweredConsultationRepository
+                .hasAnsweredConsultation(consultationId = consultationId, userId = userId)
         ) {
             logger.error("⚠️ Insert response consultation error: user has already answered this consultation")
             return InsertResult.INSERT_FAILURE

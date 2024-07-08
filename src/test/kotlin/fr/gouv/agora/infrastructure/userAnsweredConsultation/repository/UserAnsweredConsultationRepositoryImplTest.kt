@@ -29,19 +29,6 @@ internal class UserAnsweredConsultationRepositoryImplTest {
     inner class HasAnsweredConsultationTestCases {
 
         @Test
-        fun `hasAnsweredConsultation - when invalid consultation UUID - should return false`() {
-            // When
-            val result = repository.hasAnsweredConsultation(
-                consultationId = "invalid consultationId UUID",
-                userId = UUID.randomUUID().toString(),
-            )
-
-            // Then
-            assertThat(result).isEqualTo(false)
-            then(databaseRepository).shouldHaveNoInteractions()
-        }
-
-        @Test
         fun `hasAnsweredConsultation - when invalid user UUID - should return false`() {
             // When
             val result = repository.hasAnsweredConsultation(
@@ -57,11 +44,11 @@ internal class UserAnsweredConsultationRepositoryImplTest {
         @Test
         fun `hasAnsweredConsultation - when database has no answeredConsultation for userId - should return false`() {
             // Given
-            val consultationUUID = UUID.randomUUID()
+            val consultationId = UUID.randomUUID().toString()
             val userUUID = UUID.randomUUID()
             given(
                 databaseRepository.hasAnsweredConsultation(
-                    consultationId = consultationUUID,
+                    consultationId = consultationId,
                     userId = userUUID
                 )
             )
@@ -69,34 +56,34 @@ internal class UserAnsweredConsultationRepositoryImplTest {
 
             // When
             val result = repository.hasAnsweredConsultation(
-                consultationId = consultationUUID.toString(),
+                consultationId = consultationId,
                 userId = userUUID.toString(),
             )
 
             // Then
             assertThat(result).isEqualTo(false)
             then(databaseRepository).should(only())
-                .hasAnsweredConsultation(consultationId = consultationUUID, userId = userUUID)
+                .hasAnsweredConsultation(consultationId = consultationId, userId = userUUID)
         }
 
         @Test
         fun `hasAnsweredConsultation - when database has answeredConsultation for userId - should return true`() {
             // Given
-            val consultationUUID = UUID.randomUUID()
+            val consultationId = UUID.randomUUID().toString()
             val userUUID = UUID.randomUUID()
-            given(databaseRepository.hasAnsweredConsultation(consultationId = consultationUUID, userId = userUUID))
+            given(databaseRepository.hasAnsweredConsultation(consultationId = consultationId, userId = userUUID))
                 .willReturn(1)
 
             // When
             val result = repository.hasAnsweredConsultation(
-                consultationId = consultationUUID.toString(),
+                consultationId = consultationId,
                 userId = userUUID.toString(),
             )
 
             // Then
             assertThat(result).isEqualTo(true)
             then(databaseRepository).should(only())
-                .hasAnsweredConsultation(consultationId = consultationUUID, userId = userUUID)
+                .hasAnsweredConsultation(consultationId = consultationId, userId = userUUID)
         }
     }
 
@@ -119,23 +106,10 @@ internal class UserAnsweredConsultationRepositoryImplTest {
         }
 
         @Test
-        fun `hasAnsweredConsultations - when valid user UUID and has only invalid consultation UUIDs - should return emptyMap`() {
-            // When
-            val result = repository.hasAnsweredConsultations(
-                consultationIds = listOf("Invalid consultation UUID"),
-                userId = UUID.randomUUID().toString(),
-            )
-
-            // Then
-            assertThat(result).isEqualTo(emptyMap<String, Boolean>())
-            then(databaseRepository).shouldHaveNoInteractions()
-        }
-
-        @Test
         fun `hasAnsweredConsultations - when valid user UUID and has only valid consultation UUIDs - should return result from database`() {
             // Given
             val userId = UUID.randomUUID()
-            val consultationId = UUID.randomUUID()
+            val consultationId = UUID.randomUUID().toString()
             given(
                 databaseRepository.getAnsweredConsultations(
                     consultationIds = listOf(consultationId),
@@ -146,42 +120,12 @@ internal class UserAnsweredConsultationRepositoryImplTest {
 
             // When
             val result = repository.hasAnsweredConsultations(
-                consultationIds = listOf(consultationId.toString()),
+                consultationIds = listOf(consultationId),
                 userId = userId.toString(),
             )
 
             // Then
-            assertThat(result).isEqualTo(mapOf(consultationId.toString() to true))
-            then(databaseRepository).should(only())
-                .getAnsweredConsultations(consultationIds = listOf(consultationId), userId = userId)
-        }
-
-        @Test
-        fun `hasAnsweredConsultations - when valid user UUID and has some valid consultation UUIDs - should call database only with valid ones then return result from database with invalid mapped to false`() {
-            // Given
-            val userId = UUID.randomUUID()
-            val consultationId = UUID.randomUUID()
-            given(
-                databaseRepository.getAnsweredConsultations(
-                    consultationIds = listOf(consultationId),
-                    userId = userId
-                )
-            )
-                .willReturn(listOf(consultationId))
-
-            // When
-            val result = repository.hasAnsweredConsultations(
-                consultationIds = listOf(consultationId.toString(), "Invalid consultation UUID"),
-                userId = userId.toString(),
-            )
-
-            // Then
-            assertThat(result).isEqualTo(
-                mapOf(
-                    consultationId.toString() to true,
-                    "Invalid consultation UUID" to false,
-                )
-            )
+            assertThat(result).isEqualTo(mapOf(consultationId to true))
             then(databaseRepository).should(only())
                 .getAnsweredConsultations(consultationIds = listOf(consultationId), userId = userId)
         }
@@ -191,24 +135,14 @@ internal class UserAnsweredConsultationRepositoryImplTest {
     inner class GetUsersAnsweredConsultationTestCases {
 
         @Test
-        fun `getUsersAnsweredConsultation - when invalid consultation UUID - should return emptyList`() {
-            // When
-            val result = repository.getUsersAnsweredConsultation(consultationId = "Invalid consultation UUID")
-
-            // Then
-            assertThat(result).isEqualTo(emptyList<String>())
-            then(databaseRepository).shouldHaveNoInteractions()
-        }
-
-        @Test
         fun `getUsersAnsweredConsultation - when valid consultation UUID - should return result from database`() {
             // Given
-            val consultationId = UUID.randomUUID()
+            val consultationId = UUID.randomUUID().toString()
             val userId = UUID.randomUUID()
             given(databaseRepository.getUsersAnsweredConsultation(consultationId)).willReturn(listOf(userId))
 
             // When
-            val result = repository.getUsersAnsweredConsultation(consultationId = consultationId.toString())
+            val result = repository.getUsersAnsweredConsultation(consultationId = consultationId)
 
             // Then
             assertThat(result).isEqualTo(listOf(userId.toString()))

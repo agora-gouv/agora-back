@@ -1,5 +1,4 @@
 DELETE FROM consultations WHERE id = 'b7454b2e-74b9-454c-9cc5-afc411f962f1';
-DELETE FROM consultation_updates WHERE id = 'dba54fe2-7188-4612-b864-a2a7f690abdf';
 DELETE FROM questions WHERE id = '2c4ce51d-5278-4853-8b83-14fe5424ef9d';
 DELETE FROM choixpossible WHERE id = 'c784bbc5-6ced-4e8f-8354-c44918ae2051';
 DELETE FROM choixpossible WHERE id = 'b6bf1e1b-e790-472a-a688-16bbea410111';
@@ -66,22 +65,6 @@ INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_co
     '<body>Ca y est, c’est l’heure de la rentrée ! Faisons le bilan <i>collectif </i>sur nos vacances, afin de savoir si celles-ci se sont bien déroulées pour nos concitoyens.<br/><br/>En effet c’est particulièrement important pour le <b>Ministre des vacances</b> d’être au courant afin d’ : <br/><ul><li>Améliorer l’<b>offre des prochaines vacances d’été</b><br/></li><li>Partir sur le bon <b>pied pour la rentrée</b>. <br/></li></ul><br/>Nous comptons sur vous pour tout nous dire !</body>',
     '<body>🗣 Consultation proposée par le <b>Ministre des vacances </b><br/><br/>🎯 Objectif : améliorer les vacances de nos concitoynes<br/><br/>🚀 Axe gouvernemental : Planifier et accélérer la transition écologique</body>',
     'a4bb4b27-3271-4278-83c9-79ac3eee843a'
-) ON CONFLICT DO NOTHING;
-
-INSERT INTO consultation_updates(id, step, description, consultation_id, explanations_title, video_title, video_intro, video_url, video_width, video_height, video_transcription, conclusion_title, conclusion_description) VALUES (
-    'dba54fe2-7188-4612-b864-a2a7f690abdf',
-    1,
-    '<body><noa11y>👉</noa11y> Les réponses à cette consultation seront présentées au ministre des Vacances le 30 septembre.<br/>D’ici la fin de l’année 2023, le <b>Plan national des Vacances </b>doit être révisé et ses mesures renforcées afin de prendre en compte les nouveaux effets des vacances.<br/><br/>—<br/><br/><noa11y>🌳</noa11y><b> Envie d’aller plus loin ?</b><br/><br/><a href="https://www.service-public.fr/particuliers/vosdroits/F31952">Rendez-vous ici </a>pour voir les dates des prochaines vacances.</body>',
-    'b7454b2e-74b9-454c-9cc5-afc411f962f1',
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
 ) ON CONFLICT DO NOTHING;
 
 INSERT INTO questions (id, title, popup_description, ordre, type, description, max_choices, next_question_id, consultation_id) VALUES (

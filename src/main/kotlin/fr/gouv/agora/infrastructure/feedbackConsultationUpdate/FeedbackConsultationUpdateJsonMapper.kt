@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.feedbackConsultationUpdate
 
-import fr.gouv.agora.domain.FeedbackConsultationUpdateDeleting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateResults
 import org.springframework.stereotype.Component

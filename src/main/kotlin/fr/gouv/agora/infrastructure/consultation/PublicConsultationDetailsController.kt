@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @Suppress("unused")
 class PublicConsultationDetailsController(
     private val useCase: PublicConsultationDetailsUseCase,
-    private val mapper: PublicConsultationDetailsJsonMapper,
+    private val mapper: ConsultationDetailsV2JsonMapper,
 ) {
 
     @GetMapping("/api/public/consultations/{consultationId}")

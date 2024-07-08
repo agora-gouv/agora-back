@@ -1,14 +1,20 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
-import fr.gouv.agora.usecase.consultation.repository.*
+import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.domain.ConsultationDetailsV2
+import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2
+import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
+import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
+import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedbackCacheResult
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateHistoryRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.repository.FeedbackConsultationUpdateRepository
-import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.LocalDateTime
@@ -18,19 +24,16 @@ class ConsultationDetailsV2UseCase(
     private val clock: Clock,
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val infoRepository: ConsultationInfoRepository,
-    private val thematiqueRepository: ThematiqueRepository,
     private val updateRepository: ConsultationUpdateV2Repository,
     private val userAnsweredRepository: UserAnsweredConsultationRepository,
     private val feedbackRepository: FeedbackConsultationUpdateRepository,
     private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
-
     fun getConsultation(consultationId: String, userId: String): ConsultationDetailsV2WithInfo? {
         return getConsultationDetails(consultationId, userId)?.let { details ->
             ConsultationDetailsV2WithInfo(
                 consultation = details.consultation,
-                thematique = details.thematique,
                 update = details.update,
                 feedbackStats = details.feedbackStats,
                 history = details.history,
@@ -44,18 +47,10 @@ class ConsultationDetailsV2UseCase(
 
     private fun getConsultationDetails(consultationId: String, userId: String): ConsultationDetailsV2? {
         return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
-            thematiqueRepository.getThematique(consultationInfo.thematiqueId)?.let { thematique ->
-                if (shouldUseUnansweredUsersUpdate(consultationInfo = consultationInfo, userId = userId)) {
-                    getUnansweredUsersConsultationDetails(
-                        consultationInfo = consultationInfo,
-                        thematique = thematique,
-                    )
-                } else {
-                    getLastConsultationDetails(
-                        consultationInfo = consultationInfo,
-                        thematique = thematique,
-                    )
-                }
+            if (shouldUseUnansweredUsersUpdate(consultationInfo = consultationInfo, userId = userId)) {
+                getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
+            } else {
+                getLastConsultationDetails(consultationInfo = consultationInfo)
             }
         } ?: run {
             cacheRepository.initUnansweredUsersConsultationDetails(consultationId, null)
@@ -65,7 +60,7 @@ class ConsultationDetailsV2UseCase(
     }
 
     private fun shouldUseUnansweredUsersUpdate(consultationInfo: ConsultationInfo, userId: String): Boolean {
-        val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate.toLocalDateTime())
+        val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate)
         return isConsultationOngoing && !hasUserAnsweredConsultation(
             consultationId = consultationInfo.id,
             userId = userId,
@@ -88,7 +83,6 @@ class ConsultationDetailsV2UseCase(
 
     private fun getUnansweredUsersConsultationDetails(
         consultationInfo: ConsultationInfo,
-        thematique: Thematique,
     ): ConsultationDetailsV2? {
         return when (val cacheResult = cacheRepository.getUnansweredUsersConsultationDetails(consultationInfo.id)) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
@@ -98,7 +92,6 @@ class ConsultationDetailsV2UseCase(
             )?.let { update ->
                 ConsultationDetailsV2(
                     consultation = consultationInfo,
-                    thematique = thematique,
                     update = update,
                     feedbackStats = getFeedbackStats(update),
                     history = null,
@@ -111,7 +104,6 @@ class ConsultationDetailsV2UseCase(
 
     private fun getLastConsultationDetails(
         consultationInfo: ConsultationInfo,
-        thematique: Thematique,
     ): ConsultationDetailsV2? {
         return when (val cacheResult = cacheRepository.getLastConsultationDetails(consultationInfo.id)) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
@@ -121,7 +113,6 @@ class ConsultationDetailsV2UseCase(
             )?.let { update ->
                 ConsultationDetailsV2(
                     consultation = consultationInfo,
-                    thematique = thematique,
                     update = update,
                     feedbackStats = getFeedbackStats(update),
                     history = historyRepository.getConsultationUpdateHistory(consultationInfo.id),

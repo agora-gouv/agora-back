@@ -49,9 +49,8 @@ class UserRepositoryImpl(
     }
 
     override fun getUsersNotAnsweredConsultation(consultationId: String): List<UserInfo> {
-        return consultationId.toUuidOrNull()?.let { consultationUUID ->
-            databaseRepository.getUsersNotAnsweredConsultation(consultationUUID).map(mapper::toDomain)
-        } ?: emptyList()
+        return databaseRepository.getUsersNotAnsweredConsultation(consultationId)
+            .map(mapper::toDomain)
     }
 
     override fun deleteUsers(userIDs: List<String>) {

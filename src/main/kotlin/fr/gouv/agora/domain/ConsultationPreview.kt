@@ -1,23 +1,54 @@
 package fr.gouv.agora.domain
 
-import java.time.LocalDate
-import java.util.*
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
-data class ConsultationPreviewOngoing(
+data class ConsultationPreview(
     val id: String,
     val title: String,
     val coverUrl: String,
     val thematique: Thematique,
-    val endDate: Date,
-    val highlightLabel: String?,
-)
+    val endDate: LocalDateTime,
+) {
+    fun highlightLabel(today: LocalDateTime): String? {
+        val daysDifference = ChronoUnit.DAYS.between(today, endDate)
+
+        if (endDate.isBefore(today)) {
+            return null
+        }
+
+        return when (daysDifference) {
+            0L -> "Dernier jour !"
+            in 1L..6 -> "Plus que ${daysDifference + 1} jours !"
+            else -> null
+        }
+    }
+}
 
 data class ConsultationPreviewFinished(
     val id: String,
     val title: String,
     val coverUrl: String,
     val thematique: Thematique,
-    val step: ConsultationStatus,
-    val updateLabel: String?,
-    val updateDate: LocalDate,
-)
+    private val updateLabel: String?,
+    val lastUpdateDate: LocalDateTime,
+    val endDate: LocalDateTime,
+) {
+    fun getStep(now: LocalDateTime): ConsultationStatus {
+        return if (now.isBefore(this.endDate)) {
+            ConsultationStatus.COLLECTING_DATA
+        } else {
+            ConsultationStatus.POLITICAL_COMMITMENT
+        }
+    }
+
+    fun getUpdateLabel(now: LocalDateTime): String? {
+        if (updateLabel == null) return null
+
+        val maxUpdateDateLabel = lastUpdateDate.plusDays(90)
+
+        if (now.isBefore(lastUpdateDate) || now.isAfter(maxUpdateDateLabel)) return null
+
+        return updateLabel
+    }
+}

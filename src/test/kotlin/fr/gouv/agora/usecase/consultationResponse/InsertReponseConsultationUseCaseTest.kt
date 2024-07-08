@@ -4,8 +4,8 @@ import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.ReponseConsultationInserting
+import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.domain.UserAnsweredConsultation
-import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -21,12 +21,15 @@ import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
+import org.mockito.BDDMockito.times
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.time.Month
-import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 internal class InsertReponseConsultationUseCaseTest {
@@ -73,21 +76,21 @@ internal class InsertReponseConsultationUseCaseTest {
         title = "consultTitle",
         coverUrl = "",
         detailsCoverUrl = "",
-        startDate = Date(0),
-        endDate = LocalDateTime.of(2024, Month.OCTOBER, 19, 19, 0, 0).toDate(),
+        startDate = LocalDateTime.MIN,
+        endDate = LocalDateTime.of(2024, Month.OCTOBER, 19, 19, 0, 0),
         questionCount = "",
         estimatedTime = "",
         participantCountGoal = 1,
         description = "",
         tipsDescription = "",
-        thematiqueId = "",
+        thematique = Thematique()
     )
 
     @Test
     fun `insertReponseConsultation - when consultation is already finished - should return failure`() {
         // Given
         val endDate = LocalDateTime.of(2023, Month.JUNE, 20, 14, 0, 0)
-        val consultationFinished = consultationInfo.copy(endDate = endDate.toDate())
+        val consultationFinished = consultationInfo.copy(endDate = endDate)
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationFinished)
 
