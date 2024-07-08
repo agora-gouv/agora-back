@@ -6,7 +6,6 @@ import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.ReponseConsultationInserting
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.domain.UserAnsweredConsultation
-import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -22,13 +21,15 @@ import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
+import org.mockito.BDDMockito.times
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
-import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 internal class InsertReponseConsultationUseCaseTest {

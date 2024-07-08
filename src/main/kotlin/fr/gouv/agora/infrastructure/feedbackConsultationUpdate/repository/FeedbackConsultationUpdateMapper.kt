@@ -20,13 +20,12 @@ class FeedbackConsultationUpdateMapper {
 
     fun toDto(feedbackInserting: FeedbackConsultationUpdateInserting): FeedbackConsultationUpdateDTO? {
         val userId = feedbackInserting.userId.toUuidOrNull() ?: return null
-        val consultationUpdateId = feedbackInserting.consultationUpdateId.toUuidOrNull() ?: return null
         val createdDate = Date()
 
         return FeedbackConsultationUpdateDTO(
             id = UuidUtils.NOT_FOUND_UUID,
             userId = userId,
-            consultationUpdateId = consultationUpdateId,
+            consultationUpdateId = feedbackInserting.consultationUpdateId,
             isPositive = toInt(feedbackInserting.isPositive),
             createdDate = createdDate,
             updatedDate = createdDate,

@@ -42,7 +42,7 @@ class ConsultationInfoRepositoryImpl(
         }
 
         val strapiOngoingConsultations = strapiRepository.getConsultationsOngoing(today)
-            .let { consultationInfoMapper.toConsultationPreview(it, thematiques) }
+            .let { consultationInfoMapper.toConsultationPreview(it) }
 
         return databaseOngoingConsultations + strapiOngoingConsultations
     }
@@ -60,7 +60,7 @@ class ConsultationInfoRepositoryImpl(
         }
         val consultationsStrapi = strapiRepository.getConsultationsFinished(now)
         val strapiConsultations = consultationsStrapi
-            .let { consultationInfoMapper.toDomainFinished(it, thematiques, now) }
+            .let { consultationInfoMapper.toDomainFinished(it, now) }
 
         return strapiConsultations + databaseConsultations
     }
@@ -83,7 +83,7 @@ class ConsultationInfoRepositoryImpl(
             .getAnsweredConsultationIds(userUUID).map { it.toString() }
 
         val strapiAnsweredConsultations = strapiRepository.getConsultationsByIds(userAnsweredConsultationsId)
-            .let { consultationInfoMapper.toDomainFinished(it, thematiques, now) }
+            .let { consultationInfoMapper.toDomainFinished(it, now) }
 
         return databaseAnsweredConsultations + strapiAnsweredConsultations
     }
@@ -141,7 +141,7 @@ class ConsultationInfoRepositoryImpl(
         }
 
         val strapiConsultationsToAggregate = strapiRepository.getConsultationsEnded14DaysAgo(now)
-            .let { consultationInfoMapper.toConsultationPreview(it, thematiques) }
+            .let { consultationInfoMapper.toConsultationPreview(it) }
 
         return databaseConsultationsToAggregate + strapiConsultationsToAggregate
     }

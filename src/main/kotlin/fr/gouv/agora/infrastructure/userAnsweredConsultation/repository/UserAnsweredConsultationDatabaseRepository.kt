@@ -14,7 +14,7 @@ interface UserAnsweredConsultationDatabaseRepository : JpaRepository<UserAnswere
         value = "SELECT count(DISTINCT user_id) FROM user_answered_consultation WHERE consultation_id = :consultationId",
         nativeQuery = true
     )
-    fun getParticipantCount(@Param("consultationId") consultationId: UUID): Int
+    fun getParticipantCount(@Param("consultationId") consultationId: String): Int
 
     @Query(
         value = """SELECT DISTINCT consultation_id FROM user_answered_consultation
@@ -32,7 +32,7 @@ interface UserAnsweredConsultationDatabaseRepository : JpaRepository<UserAnswere
         nativeQuery = true,
     )
     fun hasAnsweredConsultation(
-        @Param("consultationId") consultationId: UUID,
+        @Param("consultationId") consultationId: String,
         @Param("userId") userId: UUID,
     ): Int
 
@@ -44,14 +44,14 @@ interface UserAnsweredConsultationDatabaseRepository : JpaRepository<UserAnswere
         nativeQuery = true,
     )
     fun getAnsweredConsultations(
-        @Param("consultationIds") consultationIds: List<UUID>,
+        @Param("consultationIds") consultationIds: List<String>,
         @Param("userId") userId: UUID,
-    ): List<UUID>
+    ): List<String>
 
     @Query(
         value = "SELECT DISTINCT user_id FROM user_answered_consultation WHERE consultation_id = :consultationId",
         nativeQuery = true
     )
-    fun getUsersAnsweredConsultation(@Param("consultationId") consultationId: UUID): List<UUID>
+    fun getUsersAnsweredConsultation(@Param("consultationId") consultationId: String): List<UUID>
 
 }

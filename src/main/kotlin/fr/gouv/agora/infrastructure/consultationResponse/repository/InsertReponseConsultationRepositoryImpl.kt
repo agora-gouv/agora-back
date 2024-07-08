@@ -19,13 +19,12 @@ class InsertReponseConsultationRepositoryImpl(
         consultationResponses: List<ReponseConsultationInserting>
     ): InsertResult {
         return try {
-            val consultationUUID = UUID.fromString(insertParameters.consultationId)
             val userUUID = UUID.fromString(insertParameters.userId)
             val participationUUID = UUID.fromString(insertParameters.participationId)
 
             consultationResponses.flatMap { consultationResponse ->
                 mapper.toDto(
-                    consultationId = consultationUUID,
+                    consultationId = insertParameters.consultationId,
                     userId = userUUID,
                     participationId = participationUUID,
                     domain = consultationResponse
@@ -33,7 +32,7 @@ class InsertReponseConsultationRepositoryImpl(
             }.takeUnless { it.isEmpty() }?.let { dtoList ->
                 val savedConsultationResponseDTOList = databaseRepository.saveAll(dtoList)
                 cacheRepository.insertReponseConsultationList(
-                    consultationId = consultationUUID,
+                    consultationId = insertParameters.consultationId,
                     reponseConsultationList = savedConsultationResponseDTOList.toList(),
                 )
             }
@@ -43,4 +42,3 @@ class InsertReponseConsultationRepositoryImpl(
         }
     }
 }
-

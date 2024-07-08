@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 class NotificationCacheRepository(
     @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager
 ) {
-    val logger = LoggerFactory.getLogger(NotificationCacheRepository::class.java)
+    private val logger = LoggerFactory.getLogger(NotificationCacheRepository::class.java)
 
     companion object {
         private const val NOTIFICATION_CACHE_NAME = "notificationCache"

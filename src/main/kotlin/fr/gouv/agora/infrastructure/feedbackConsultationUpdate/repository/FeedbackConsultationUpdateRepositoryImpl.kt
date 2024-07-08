@@ -40,28 +40,21 @@ class FeedbackConsultationUpdateRepositoryImpl(
     }
 
     override fun getFeedbackStats(consultationUpdateId: String): FeedbackConsultationUpdateStats? {
-        return consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
-            mapper.toStats(databaseRepository.getConsultationUpdateFeedbackStats(consultationUpdateUUID))
-        }
+        return mapper.toStats(databaseRepository.getConsultationUpdateFeedbackStats(consultationUpdateId))
     }
 
     override fun deleteFeedback(feedbackDeleting: FeedbackConsultationUpdateDeleting) {
-        feedbackDeleting.consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
-            feedbackDeleting.userId.toUuidOrNull()?.let { userUUID ->
-                databaseRepository.deleteFeedback(consultationUpdateUUID, userUUID)
-            }
+        feedbackDeleting.userId.toUuidOrNull()?.let { userUUID ->
+            databaseRepository.deleteFeedback(feedbackDeleting.consultationUpdateId, userUUID)
         }
     }
 
     private fun getUserFeedbackDto(consultationUpdateId: String, userId: String): FeedbackConsultationUpdateDTO? {
-        return consultationUpdateId.toUuidOrNull()?.let { consultationUpdateUUID ->
-            userId.toUuidOrNull()?.let { userUUID ->
-                databaseRepository.getUserConsultationUpdateFeedback(
-                    consultationUpdateId = consultationUpdateUUID,
-                    userId = userUUID,
-                )
-            }
+        return userId.toUuidOrNull()?.let { userUUID ->
+            databaseRepository.getUserConsultationUpdateFeedback(
+                consultationUpdateId = consultationUpdateId,
+                userId = userUUID,
+            )
         }
     }
-
 }

@@ -1,14 +1,20 @@
 package fr.gouv.agora.usecase.consultation
 
-import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
-import fr.gouv.agora.usecase.consultation.repository.*
+import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.domain.ConsultationDetailsV2
+import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2
+import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
+import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
+import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedbackCacheResult
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateHistoryRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.repository.FeedbackConsultationUpdateRepository
-import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.LocalDateTime
@@ -41,11 +47,11 @@ class ConsultationDetailsV2UseCase(
 
     private fun getConsultationDetails(consultationId: String, userId: String): ConsultationDetailsV2? {
         return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
-                if (shouldUseUnansweredUsersUpdate(consultationInfo = consultationInfo, userId = userId)) {
-                    getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
-                } else {
-                    getLastConsultationDetails(consultationInfo = consultationInfo,)
-                }
+            if (shouldUseUnansweredUsersUpdate(consultationInfo = consultationInfo, userId = userId)) {
+                getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
+            } else {
+                getLastConsultationDetails(consultationInfo = consultationInfo)
+            }
         } ?: run {
             cacheRepository.initUnansweredUsersConsultationDetails(consultationId, null)
             cacheRepository.initLastConsultationDetails(consultationId, null)

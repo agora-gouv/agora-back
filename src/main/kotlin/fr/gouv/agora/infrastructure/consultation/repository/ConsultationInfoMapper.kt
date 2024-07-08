@@ -110,7 +110,6 @@ class ConsultationInfoMapper(
 
     fun toConsultationPreview(
         consultations: StrapiDTO<ConsultationStrapiDTO>,
-        thematiques: List<Thematique>
     ): List<ConsultationPreview> {
         return consultations.data.map { consultation ->
             val thematique = thematiqueMapper.toDomain(consultation.attributes.thematique)
@@ -127,7 +126,6 @@ class ConsultationInfoMapper(
 
     fun toDomainFinished(
         consultations: StrapiDTO<ConsultationStrapiDTO>,
-        thematiques: List<Thematique>,
         now: LocalDateTime,
     ): List<ConsultationPreviewFinished> {
         return consultations.data.mapNotNull { consultation ->

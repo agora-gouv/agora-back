@@ -14,8 +14,8 @@ data class UserAnsweredConsultationDTO(
     val participationDate: Date,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
-    @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
-    val consultationId: UUID,
+    @Column(columnDefinition = "TEXT")
+    val consultationId: String,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

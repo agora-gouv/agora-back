@@ -28,30 +28,14 @@ internal class InsertReponseConsultationRepositoryImplTest {
     @Mock
     private lateinit var mapper: ReponseConsultationMapper
 
-    private val consultationId = UUID.randomUUID()
+    private val consultationId = UUID.randomUUID().toString()
     private val userId = UUID.randomUUID()
     private val participationId = UUID.randomUUID()
     private val insertParameters = InsertParameters(
-        consultationId = consultationId.toString(),
+        consultationId = consultationId,
         userId = userId.toString(),
         participationId = participationId.toString(),
     )
-
-    @Test
-    fun `insertConsultationResponses - when consultationId is invalid UUID - should return Failure`() {
-        // When
-        val result = repository.insertConsultationResponses(
-            insertParameters = insertParameters.copy(
-                consultationId = "invalid consultationId",
-            ),
-            consultationResponses = listOf(mock(ReponseConsultationInserting::class.java)),
-        )
-
-        // Then
-        assertThat(result).isEqualTo(InsertResult.INSERT_FAILURE)
-        then(cacheRepository).shouldHaveNoInteractions()
-        then(databaseRepository).shouldHaveNoInteractions()
-    }
 
     @Test
     fun `insertConsultationResponses - when userId is invalid UUID - should return Failure`() {

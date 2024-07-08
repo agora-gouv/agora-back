@@ -10,12 +10,12 @@ data class ConsultationResultAggregatedDTO(
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
     val id: UUID,
-    @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
-    val consultationId: UUID,
-    @JoinTable(joinColumns = [JoinColumn(table = "questions", referencedColumnName = "id")])
-    val questionId: UUID,
-    @JoinTable(joinColumns = [JoinColumn(table = "choixpossible", referencedColumnName = "id")])
-    val choiceId: UUID,
+    @Column(columnDefinition = "TEXT")
+    val consultationId: String,
+    @Column(columnDefinition = "TEXT")
+    val questionId: String,
+    @Column(columnDefinition = "TEXT")
+    val choiceId: String,
     val responseCount: Int,
 ) {
     override fun equals(other: Any?): Boolean {

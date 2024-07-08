@@ -30,17 +30,19 @@ class ConsultationStrapiRepository(
     }
 
     fun getConsultationsByIds(consultationIds: List<String>): StrapiDTO<ConsultationStrapiDTO> {
-        if (consultationIds.isEmpty()) return StrapiDTO.ofEmpty()
+        val strapiConsultationsId = consultationIds.mapNotNull { it.toIntOrNull() }
+        if (strapiConsultationsId.isEmpty()) return StrapiDTO.ofEmpty()
 
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByIds(consultationIds)
+            .getByIds(strapiConsultationsId)
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
     fun getConsultationById(consultationId: String): StrapiDTO<ConsultationStrapiDTO> {
+        val strapiConsultationId = consultationId.toIntOrNull() ?: return StrapiDTO.ofEmpty()
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByIds(listOf(consultationId))
+            .getByIds(listOf(strapiConsultationId))
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -53,8 +55,9 @@ class ConsultationStrapiRepository(
     }
 
     fun isConsultationExists(consultationId: String): Boolean {
+        val strapiConsultationId = consultationId.toIntOrNull() ?: return false
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByIds(listOf(consultationId))
+            .getByIds(listOf(strapiConsultationId))
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
             .meta.pagination.total == 1

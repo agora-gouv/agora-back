@@ -1,9 +1,7 @@
-package fr.gouv.agora.infrastructure.responseQag.dto
+package fr.gouv.agora.infrastructure.common
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import fr.gouv.agora.infrastructure.common.StrapiRichText
-import fr.gouv.agora.infrastructure.common.toHtml
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test

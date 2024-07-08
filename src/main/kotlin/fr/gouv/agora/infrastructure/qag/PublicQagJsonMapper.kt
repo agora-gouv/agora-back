@@ -62,7 +62,7 @@ class PublicQagJsonMapper(private val dateMapper: DateMapper) {
         if (qagDetails.status == QagStatus.SELECTED_FOR_RESPONSE)
             return "selectedForResponse"
 
-        return "openForSupport";
+        return "openForSupport"
     }
 
 

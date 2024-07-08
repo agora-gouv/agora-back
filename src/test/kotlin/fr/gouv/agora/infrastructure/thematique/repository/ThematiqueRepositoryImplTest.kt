@@ -3,22 +3,22 @@ package fr.gouv.agora.infrastructure.thematique.repository
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.StrapiDTO
-import fr.gouv.agora.infrastructure.responseQag.repository.ThematiqueStrapiRepository
 import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
-import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueDTO
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueCacheRepository.CacheListResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.NOT_FOUND_UUID
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
+import org.mockito.BDDMockito.only
+import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 internal class ThematiqueRepositoryImplTest {
