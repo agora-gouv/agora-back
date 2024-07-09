@@ -176,39 +176,51 @@ data class StrapiConsultationContenuAvantReponse(
         name = "consultation-section.section-chiffre"
     ),
 )
-@JsonIgnoreProperties("id", "__component", "createdAt", "updatedAt", "publishedAt")
+@JsonIgnoreProperties("__component", "createdAt", "updatedAt", "publishedAt")
 sealed interface StrapiConsultationSection
 
 data class StrapiConsultationSectionCitation(
+    @JsonProperty("id")
+    val id: String,
     @JsonProperty("description")
     val description: List<StrapiRichText>,
-): StrapiConsultationSection
+) : StrapiConsultationSection
 
 data class StrapiConsultationSectionImage(
+    @JsonProperty("id")
+    val id: String,
     @JsonProperty("url")
     val url: String,
     @JsonProperty("description_accessible_de_l_image")
     val descriptionImage: String,
-): StrapiConsultationSection
+) : StrapiConsultationSection
 
 data class StrapiConsultationSectionRichText(
+    @JsonProperty("id")
+    val id: String,
     @JsonProperty("description")
     val description: List<StrapiRichText>,
-): StrapiConsultationSection
+) : StrapiConsultationSection
 
 data class StrapiConsultationSectionTitre(
+    @JsonProperty("id")
+    val id: String,
     @JsonProperty("titre")
     val titre: String,
-): StrapiConsultationSection
+) : StrapiConsultationSection
 
 data class StrapiConsultationSectionChiffre(
+    @JsonProperty("id")
+    val id: String,
     @JsonProperty("titre")
     val titre: String,
     @JsonProperty("description")
     val description: List<StrapiRichText>,
-): StrapiConsultationSection
+) : StrapiConsultationSection
 
 data class StrapiConsultationSectionVideo(
+    @JsonProperty("id")
+    val id: String,
     @JsonProperty("url")
     val url: String,
     @JsonProperty("largeur")
@@ -223,7 +235,7 @@ data class StrapiConsultationSectionVideo(
     val dateTournage: LocalDate,
     @JsonProperty("transcription")
     val transcription: String,
-): StrapiConsultationSection
+) : StrapiConsultationSection
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class StrapiConsultationContenuApresReponse(

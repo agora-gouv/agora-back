@@ -62,4 +62,15 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
             .meta.pagination.total == 1
     }
+
+    fun getLastUpdateLabelFromConsultation(consultationId: String): String? {
+        val consultationIntId = consultationId.toIntOrNull() ?: return null
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .getByIds(listOf(consultationIntId))
+
+        val consultation = cmsStrapiHttpClient
+            .request<ConsultationStrapiDTO>(uriBuilder, ref)
+
+        return consultation.data.firstOrNull()?.attributes?.flammeLabel
+    }
 }
