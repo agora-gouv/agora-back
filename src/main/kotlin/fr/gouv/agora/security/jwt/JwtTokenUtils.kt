@@ -8,8 +8,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 object JwtTokenUtils {
-
-    private val JWT_TOKEN_VALIDITY = TimeUnit.MILLISECONDS.toMillis(1)
+    private val JWT_TOKEN_VALIDITY = TimeUnit.MINUTES.toMillis(1)
     private const val JWT_PREFIX = "Bearer "
 
     fun generateToken(userId: String, claims: Map<String, Any> = emptyMap()): Pair<String, Long> {
