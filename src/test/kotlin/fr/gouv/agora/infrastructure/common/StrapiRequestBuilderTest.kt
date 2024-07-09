@@ -16,7 +16,7 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri)
-            .isEqualTo("consultations?pagination[pageSize]=100&populate=*&filters[nom][\$in]=article&filters[nom][\$in]=titre&filters[nom][\$in]=loi")
+            .isEqualTo("consultations?pagination[pageSize]=100&populate=deep&filters[nom][\$in]=article&filters[nom][\$in]=titre&filters[nom][\$in]=loi")
     }
 
     @Test
@@ -40,7 +40,7 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri)
-            .isEqualTo("consultations?pagination[pageSize]=100&populate=*&filters[date_de_debut][\$lt]=2024-12-25T12:10:00&filters[date_de_fin][\$gt]=2024-12-25T12:10:00")
+            .isEqualTo("consultations?pagination[pageSize]=100&populate=deep&filters[date_de_debut][\$lt]=2024-12-25T12:10:00&filters[date_de_fin][\$gt]=2024-12-25T12:10:00")
     }
 
     @Test
@@ -51,7 +51,7 @@ class StrapiRequestBuilderTest {
             .build()
 
         // Then
-        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=*&sort[0]=date_de_debut:desc")
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=deep&sort[0]=date_de_debut:desc")
     }
 
     @Test
@@ -62,7 +62,7 @@ class StrapiRequestBuilderTest {
             .build()
 
         // Then
-        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=8&populate=*")
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=8&populate=deep")
     }
 
     @Test

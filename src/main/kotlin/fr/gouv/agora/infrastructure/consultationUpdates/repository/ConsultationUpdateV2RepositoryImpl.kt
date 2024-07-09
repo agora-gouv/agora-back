@@ -23,6 +23,13 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            // TODO si c'est un uuid, database, sinon strapi ?
+            // TODO SELECT update_label FROM consultation_updates_v2
+            //            WHERE consultation_id = :consultationId
+            //            AND CURRENT_TIMESTAMP > update_date
+            //            ORDER BY update_date DESC
+            //            LIMIT 1
+            // TODO récupérer le dernier update label de la consultation
             return null
         }
 
@@ -38,6 +45,17 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            // TODO si c'est un uuid, database, sinon strapi ?
+            // TODO SELECT * FROM consultation_updates_v2
+            //            WHERE consultation_id = :consultationId
+            //            AND CURRENT_TIMESTAMP > update_date
+            //            AND is_visible_to_unanswered_users_only = 1
+            //            ORDER BY update_date DESC
+            //            LIMIT 1
+            //
+            // TODO SELECT * FROM consultation_update_sections
+            //            WHERE consultation_update_id = :consultationUpdateId
+            //            ORDER BY ordre
             return null
         }
 
@@ -53,6 +71,16 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            // TODO si c'est un uuid, database, sinon strapi ?
+            //  SELECT * FROM consultation_updates_v2
+            //            WHERE consultation_id = :consultationId
+            //            AND CURRENT_TIMESTAMP > update_date
+            //            AND is_visible_to_unanswered_users_only = 0
+            //            ORDER BY update_date DESC
+            //            LIMIT 1
+            //  SELECT * FROM consultation_update_sections
+            //            WHERE consultation_update_id = :consultationUpdateId
+            //            ORDER BY ordre
             return null
         }
 
@@ -79,6 +107,16 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            // TODO si c'est un uuid, database, sinon strapi ?
+            // Strapi.get
+            //  SELECT * FROM consultation_updates_v2
+            //            WHERE consultation_id = :consultationId
+            //            AND id = :consultationUpdateId
+            //            AND CURRENT_TIMESTAMP > update_date
+            //            LIMIT 1
+            //  SELECT * FROM consultation_update_sections
+            //            WHERE consultation_update_id = :consultationUpdateId
+            //            ORDER BY ordre
             return null
         }
 
