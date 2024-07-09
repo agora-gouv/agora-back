@@ -17,8 +17,7 @@ class AgoraAuthenticationEntryPoint : AuthenticationEntryPoint {
         response: HttpServletResponse,
         authException: AuthenticationException,
     ) {
-        logger.error("Authentication exception: $authException")
+        logger.warn("Authentication exception on resource '${request.requestURI}' : $authException")
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized")
     }
-
 }
