@@ -10,6 +10,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedb
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.*
 
 @Component
@@ -318,7 +319,7 @@ private data class CacheableConsultationDetails(
 
 private data class CacheableConsultationUpdateInfo(
     val id: String,
-    val updateDate: Date,
+    val updateDate: LocalDateTime,
     val shareTextTemplate: String,
     val hasQuestionsInfo: Boolean,
     val hasParticipationInfo: Boolean,

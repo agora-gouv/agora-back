@@ -31,5 +31,4 @@ class ConsultationDetailsV2Controller(
             ResponseEntity.ok().body(mapper.toJson(consultationDetails))
         } ?: ResponseEntity.notFound().build<Unit>()
     }
-
 }

@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.consultation.repository
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.Thematique
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
@@ -39,27 +40,6 @@ class ConsultationInfoMapper(
             tipsDescription = consultation.tipsDescription,
             thematique = thematique,
         )
-    }
-
-    fun toConsultationInfo(
-        dto: StrapiDTO<ConsultationStrapiDTO>,
-    ): List<ConsultationInfo> {
-        return dto.data.map { consultation ->
-            ConsultationInfo(
-                id = consultation.id,
-                title = consultation.attributes.titre,
-                coverUrl = consultation.attributes.urlImageDeCouverture,
-                detailsCoverUrl = consultation.attributes.urlImagePageDeContenu,
-                startDate = consultation.attributes.dateDeDebut,
-                endDate = consultation.attributes.dateDeFin,
-                questionCount = consultation.attributes.estimationNombreDeQuestions,
-                estimatedTime = consultation.attributes.estimationTemps,
-                participantCountGoal = consultation.attributes.nombreParticipantsCible,
-                description = consultation.attributes.description.toHtml(),
-                tipsDescription = consultation.attributes.objectifs.toHtml(),
-                thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
-            )
-        }
     }
 
     fun toConsultationPreview(
@@ -160,4 +140,21 @@ class ConsultationInfoMapper(
         updateDate = dto.updateDate.toLocalDateTime(),
         updateLabel = dto.updateLabel,
     )
+
+    fun toConsultationInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationInfo {
+        return ConsultationInfo(
+            id = consultation.id,
+            title = consultation.attributes.titre,
+            coverUrl = consultation.attributes.urlImageDeCouverture,
+            detailsCoverUrl = consultation.attributes.urlImagePageDeContenu,
+            startDate = consultation.attributes.dateDeDebut,
+            endDate = consultation.attributes.dateDeFin,
+            questionCount = consultation.attributes.estimationNombreDeQuestions,
+            estimatedTime = consultation.attributes.estimationTemps,
+            participantCountGoal = consultation.attributes.nombreParticipantsCible,
+            description = consultation.attributes.description.toHtml(),
+            tipsDescription = consultation.attributes.objectifs.toHtml(),
+            thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
+        )
+    }
 }

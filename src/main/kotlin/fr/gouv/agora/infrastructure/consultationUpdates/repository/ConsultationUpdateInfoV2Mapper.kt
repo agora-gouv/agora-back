@@ -1,9 +1,25 @@
 package fr.gouv.agora.infrastructure.consultationUpdates.repository
 
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
-import fr.gouv.agora.domain.ConsultationUpdateInfoV2.*
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.FeedbackQuestion
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Footer
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Goal
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.InfoHeader
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.ResponsesInfo
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Section
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
+import fr.gouv.agora.infrastructure.common.toHtml
+import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationSectionChiffre
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationSectionCitation
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationSectionImage
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationSectionRichText
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationSectionTitre
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationSectionVideo
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateSectionDTO
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateV2DTO
+import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
+import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
@@ -33,7 +49,7 @@ class ConsultationUpdateInfoV2Mapper {
     ): ConsultationUpdateInfoV2 {
         return ConsultationUpdateInfoV2(
             id = dto.id.toString(),
-            updateDate = dto.updateDate,
+            updateDate = dto.updateDate.toLocalDateTime(),
             shareTextTemplate = dto.shareTextTemplate,
             hasQuestionsInfo = dto.hasQuestionsInfo == TRUE_INT_VALUE,
             hasParticipationInfo = dto.hasParticipationInfo == TRUE_INT_VALUE,
@@ -161,7 +177,7 @@ class ConsultationUpdateInfoV2Mapper {
         return Section.Video.AuthorInfo(
             name = sectionDTO.authorInfoName,
             message = sectionDTO.authorInfoMessage,
-            date = sectionDTO.videoDate,
+            date = sectionDTO.videoDate.toLocalDate(),
         )
     }
 
@@ -192,4 +208,58 @@ class ConsultationUpdateInfoV2Mapper {
         }
     }
 
+    fun toDomain(consultationDTO: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2 {
+        val consultation = consultationDTO.attributes
+        val contentBeforeResponse = consultation.contenuAvantReponse.data.attributes
+        val contentAfterResponse = consultation.contenuApresReponseOuTerminee.data.attributes
+
+        // todo finir le mapping de l'objet
+        // todo retirer les <html></html> ici ??
+        val sectionHeader = contentBeforeResponse.sections.map {
+            when (it) {
+                is StrapiConsultationSectionTitre -> Section.Title(it.titre)
+
+                is StrapiConsultationSectionRichText -> {
+                    Section.RichText("<body>" + it.description.toHtml() + "</body>")
+                }
+
+                is StrapiConsultationSectionCitation -> {
+                    Section.Quote("<body>" + it.description.toHtml() + "</body>")
+                }
+
+                is StrapiConsultationSectionImage -> {
+                    Section.Image(it.url, it.descriptionImage)
+                }
+
+                is StrapiConsultationSectionVideo -> {
+                    Section.Video(it.url, it.largeur, it.hauteur, Section.Video.AuthorInfo(it.nomAuteur, it.posteAuteur, it.dateTournage), it.transcription)
+                }
+
+                is StrapiConsultationSectionChiffre -> {
+                    Section.FocusNumber(it.titre, "<body>" + it.description.toHtml() + "</body>")
+                }
+            }
+        }
+
+        return ConsultationUpdateInfoV2(
+            id = consultation.contenuAvantReponse.data.id,
+            updateDate = contentBeforeResponse.datetimePublication,
+            shareTextTemplate = contentBeforeResponse.templatePartage,
+            hasQuestionsInfo = true,
+            hasParticipationInfo = false,
+            responsesInfo = ResponsesInfo(
+                picto = contentAfterResponse.encartVisualisationResultatAvantFinConsultationPictogramme,
+                description = "<body>${contentAfterResponse.encartVisualisationResultatAvantFinConsultationDescription.toHtml()}</body>",
+                actionText = contentAfterResponse.encartVisualisationResultatAvantFinConsultationCallToAction
+            ),
+            infoHeader = null,
+            sectionsHeader = emptyList(),
+            body = sectionHeader,
+            bodyPreview = emptyList(),
+            downloadAnalysisUrl = null,
+            feedbackQuestion = null,
+            footer = null,
+            goals = null,
+        )
+    }
 }

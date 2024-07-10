@@ -39,9 +39,12 @@ class ConsultationUpdateV2RepositoryImpl(
             return mapper.toDomain(updateDTO, sectionDTOs)
         }
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return null
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            val consultation = consultationStrapiRepository.getConsultationById(consultationId) ?: return null
+            return mapper.toDomain(consultation)
         }
+
+        return null
 
         // TODO si c'est un uuid, database, sinon strapi ?
         // TODO getContenuAprèsRéponses ?
