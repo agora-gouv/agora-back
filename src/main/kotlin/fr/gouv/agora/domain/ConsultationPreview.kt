@@ -30,7 +30,7 @@ data class ConsultationPreviewFinished(
     val title: String,
     val coverUrl: String,
     val thematique: Thematique,
-    private val updateLabel: String?,
+    val updateLabel: String?,
     val lastUpdateDate: LocalDateTime,
     val endDate: LocalDateTime,
 ) {
