@@ -222,7 +222,7 @@ class ConsultationUpdateInfoV2Mapper {
         val sections = toSections(contentBeforeResponse.sections)
 
         return ConsultationUpdateInfoV2(
-            id = consultation.contenuAvantReponse.data.id,
+            id = "avant~${consultation.contenuAvantReponse.data.id}",
             updateDate = contentBeforeResponse.datetimePublication,
             shareTextTemplate = contentBeforeResponse.templatePartage,
             hasQuestionsInfo = true,
@@ -249,7 +249,7 @@ class ConsultationUpdateInfoV2Mapper {
         val htmlSections = toSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
-            id = contentDTO.id,
+            id = "autre~${contentDTO.id}",
             updateDate = contenu.datetimePublication,
             shareTextTemplate = contenu.templatePartage,
             hasQuestionsInfo = false,
@@ -276,14 +276,14 @@ class ConsultationUpdateInfoV2Mapper {
 
     fun toDomainAnswered(
         consultation: StrapiAttributes<ConsultationStrapiDTO>,
-        contentDTO: StrapiAttributes<StrapiConsultationContenuApresReponse>
     ): ConsultationUpdateInfoV2? {
-        val contenu = contentDTO.attributes
+        val contenu = consultation.attributes.contenuApresReponseOuTerminee.data.attributes
+        val contenuId = consultation.attributes.contenuApresReponseOuTerminee.data.id
 
         val htmlSections = toSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
-            id = contentDTO.id,
+            id = "apres~$contenuId",
             updateDate = contenu.datetimePublication,
             shareTextTemplate = contenu.templatePartageApresFinConsultation,
             hasQuestionsInfo = false,
@@ -295,7 +295,7 @@ class ConsultationUpdateInfoV2Mapper {
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
-                contentDTO.id,
+                "apres~$contenuId",
                 contenu.feedbackTitre,
                 contenu.feedbackPictogramme,
                 "<body>${contenu.feedbackDescription.toHtml()}</body>"

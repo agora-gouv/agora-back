@@ -67,7 +67,7 @@ class ConsultationUpdateV2RepositoryImpl(
             return if (latestOtherContent != null) {
                 mapper.toDomainContenuAutre(consultation, latestOtherContent)
             } else {
-                mapper.toDomainAnswered(consultation, consultation.attributes.contenuApresReponseOuTerminee.data)
+                mapper.toDomainAnswered(consultation)
             }
         }
 
@@ -76,7 +76,7 @@ class ConsultationUpdateV2RepositoryImpl(
 
     override fun getConsultationUpdate(
         consultationId: String,
-        consultationUpdateId: String, // todo utiliser un id forgé ?
+        consultationUpdateId: String,
     ): ConsultationUpdateInfoV2? {
         val consultationUUID = consultationId.toUuidOrNull()
         val consultationUpdateUUID = consultationUpdateId.toUuidOrNull()
@@ -93,20 +93,25 @@ class ConsultationUpdateV2RepositoryImpl(
             }
         }
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            // TODO si c'est un uuid, database, sinon strapi ?
-            //  Strapi.get
-            //  SELECT * FROM consultation_updates_v2
-            //            WHERE consultation_id = :consultationId
-            //            AND id = :consultationUpdateId
-            //            AND CURRENT_TIMESTAMP > update_date
-            //            LIMIT 1
-            //  SELECT * FROM consultation_update_sections
-            //            WHERE consultation_update_id = :consultationUpdateId
-            //            ORDER BY ordre
-            return null
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            val unforgedConsultationUpdate = consultationUpdateId.split('~')
+            val consultation = consultationStrapiRepository.getConsultationById(consultationId) ?: return null
+
+            return when (unforgedConsultationUpdate[0]) {
+                "autre" -> {
+                    val otherContent = consultation.attributes.consultationContenuAutres.data
+                        .firstOrNull { it.id == unforgedConsultationUpdate[1] }
+                        ?: return null
+
+                    mapper.toDomainContenuAutre(consultation, otherContent)
+                }
+
+                "avant" -> mapper.toDomainUnanswered(consultation)
+                "apres" -> mapper.toDomainAnswered(consultation)
+                else -> null
+            }
         }
 
-        TODO("Strapi's consultations are not implemented yet")
+        return null
     }
 }
