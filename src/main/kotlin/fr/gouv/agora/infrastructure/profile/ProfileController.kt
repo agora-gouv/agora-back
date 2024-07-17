@@ -4,6 +4,8 @@ import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.profile.GetProfileUseCase
 import fr.gouv.agora.usecase.profile.InsertProfileUseCase
 import fr.gouv.agora.usecase.profile.repository.ProfileEditResult
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -32,6 +34,7 @@ class ProfileController(
     }
 
     @GetMapping("/profile")
+    @Operation(summary = "Récupérer les information du profil", security = [SecurityRequirement(name = "bearerAuth")])
     fun getProfile(
         @RequestHeader("Authorization") authorizationHeader: String,
     ): HttpEntity<*> {

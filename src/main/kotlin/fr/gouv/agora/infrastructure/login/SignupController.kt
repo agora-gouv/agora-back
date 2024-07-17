@@ -7,6 +7,14 @@ import fr.gouv.agora.usecase.appVersionControl.AppVersionControlUseCase
 import fr.gouv.agora.usecase.appVersionControl.AppVersionStatus
 import fr.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
 import fr.gouv.agora.usecase.login.LoginUseCase
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.parameters.RequestBody
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
@@ -17,14 +25,21 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(
+    name = "Authentification (Sign up)",
+    description = "Controller pour s'authentifier et récupérer un token d'authentification"
+)
 class SignupController(
     private val appVersionControlUseCase: AppVersionControlUseCase,
     private val loginUseCase: LoginUseCase,
     private val signupInfoJsonMapper: SignupInfoJsonMapper,
     private val featureFlagsUseCase: FeatureFlagsUseCase,
 ) {
-
     @PostMapping("/signup")
+    @Operation(
+        summary = "S'Authentifier pour obtenir un token",
+        description = "Retourne un code 200 si tout s'est bien passé"
+    )
     fun signup(
         @RequestHeader("User-Agent") userAgent: String,
         @RequestHeader("fcmToken") fcmToken: String,
