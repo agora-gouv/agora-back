@@ -3,6 +3,8 @@ package fr.gouv.agora.infrastructure.moderatus
 import fr.gouv.agora.usecase.moderatus.ModerateModeratusQagUseCase
 import fr.gouv.agora.usecase.moderatus.ModeratusLoginResult
 import fr.gouv.agora.usecase.moderatus.ModeratusLoginUseCase
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "Moderatus")
 class ModeratusModerateQagController(
     private val moderatusLoginUseCase: ModeratusLoginUseCase,
     private val moderateQagUseCase: ModerateModeratusQagUseCase,
@@ -18,6 +21,7 @@ class ModeratusModerateQagController(
     private val mapper: ModeratusQagModerateResultPageXmlMapper,
 ) {
 
+    @Operation(summary = "Get Moderate QaG")
     @GetMapping("/moderatus/result_qag")
     fun lockQag(
         @RequestParam("password") loginToken: String,

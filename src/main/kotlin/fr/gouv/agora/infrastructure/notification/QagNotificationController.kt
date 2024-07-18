@@ -2,6 +2,8 @@ package fr.gouv.agora.infrastructure.notification
 
 import fr.gouv.agora.usecase.notification.SendQagNotificationUseCase
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -10,10 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "Admin")
 class QagNotificationController(
     private val sendQagNotificationUseCase: SendQagNotificationUseCase,
 ) {
-
+    @Operation(summary = "Admin Qag Notification")
     @GetMapping("/admin/notifyQag/{qagId}")
     fun notifyAllQagNotification(
         @RequestParam("title") title: String,

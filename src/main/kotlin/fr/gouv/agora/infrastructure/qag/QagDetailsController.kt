@@ -4,6 +4,8 @@ import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetPublicQagDetailsUseCase
 import fr.gouv.agora.usecase.qag.GetQagDetailsUseCase
 import fr.gouv.agora.usecase.qag.QagResult
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,16 +15,17 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "QaG")
 class QagDetailsController(
     private val getQagDetailsUseCase: GetQagDetailsUseCase,
     private val mapper: QagJsonMapper,
     private val getPublicQagDetailsUseCase: GetPublicQagDetailsUseCase,
     private val publicQagJsonMapper: PublicQagJsonMapper,
 ) {
-
+    @Operation(summary = "Get QaG Détails")
     @GetMapping("/qags/{qagId}")
     fun getQagDetails(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable qagId: String,
     ): ResponseEntity<*> {
         val qagResult = getQagDetailsUseCase.getQagDetails(
@@ -36,6 +39,8 @@ class QagDetailsController(
         }
     }
 
+    @Tag(name = "Public")
+    @Operation(summary = "Get Public QaG")
     @GetMapping("/api/public/qags/{qagId}")
     fun getPublicQagDetails(
         @PathVariable qagId: String,

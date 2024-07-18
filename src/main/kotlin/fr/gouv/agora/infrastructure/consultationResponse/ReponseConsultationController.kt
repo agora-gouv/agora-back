@@ -6,6 +6,8 @@ import fr.gouv.agora.usecase.consultationResponse.ControlResponseConsultationUse
 import fr.gouv.agora.usecase.consultationResponse.InsertReponseConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository.InsertResult
 import fr.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "Consultations")
 class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,
     private val controlResponseConsultationUseCase: ControlResponseConsultationUseCase,
@@ -23,10 +26,11 @@ class ReponseConsultationController(
     private val jsonMapper: ReponseConsultationJsonMapper,
     private val queue: InsertResponseConsultationQueue,
 ) {
+    @Operation(summary = "Post Consultation Responses")
     @PostMapping("/consultations/{consultationId}/responses")
     fun postResponseConsultation(
         @PathVariable consultationId: String,
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestBody responsesConsultationJson: ReponsesConsultationJson,
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
