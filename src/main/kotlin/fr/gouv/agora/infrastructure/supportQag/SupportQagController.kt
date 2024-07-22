@@ -9,6 +9,8 @@ import fr.gouv.agora.usecase.supportQag.DeleteSupportQagUseCase
 import fr.gouv.agora.usecase.supportQag.InsertSupportQagUseCase
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagResult
 import fr.gouv.agora.usecase.suspiciousUser.IsSuspiciousUserUseCase
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
@@ -20,16 +22,18 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "QaG")
 class SupportQagController(
     private val insertSupportQagUseCase: InsertSupportQagUseCase,
     private val deleteSupportQagUseCase: DeleteSupportQagUseCase,
     private val isSuspiciousUserUseCase: IsSuspiciousUserUseCase,
     private val queue: SupportQagQueue,
 ) {
+    @Operation(summary = "Post QaG Support")
     @PostMapping("/qags/{qagId}/support")
     fun insertSupportQag(
         @RequestHeader("User-Agent") userAgent: String,
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable qagId: String,
         request: HttpServletRequest,
     ): HttpEntity<*> {
@@ -59,9 +63,10 @@ class SupportQagController(
         )
     }
 
+    @Operation(summary = "Delete QaG Support")
     @DeleteMapping("/qags/{qagId}/support")
     fun deleteSupportQag(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable qagId: String
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)

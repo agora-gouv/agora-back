@@ -4,11 +4,14 @@ import fr.gouv.agora.infrastructure.qagPaginated.QagPaginatedJsonMapper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.gouv.agora.usecase.qagPaginated.QagPaginatedV2UseCase
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
+@Tag(name = "QaG")
 class QagHomeV2Controller(
     private val qagPaginatedV2UseCase: QagPaginatedV2UseCase,
     private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
@@ -16,9 +19,10 @@ class QagHomeV2Controller(
     private val qagHomeJsonMapper: QagHomeJsonMapper,
 ) {
 
+    @Operation(summary = "Get QaG Détails")
     @GetMapping("/v2/qags")
     fun getQagDetails(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestParam("pageNumber") pageNumber: String,
         @RequestParam("thematiqueId") thematiqueId: String?,
         @RequestParam("filterType") filterType: String,
@@ -56,8 +60,9 @@ class QagHomeV2Controller(
         } ?: ResponseEntity.badRequest().body(Unit)
     }
 
+    @Operation(summary = "Get QaG Status")
     @GetMapping("/qags/ask_status")
-    fun askStatus(@RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<*> {
+    fun askStatus(@RequestHeader("Authorization", required = false) authorizationHeader: String): ResponseEntity<*> {
         return ResponseEntity.ok().body(
             qagHomeJsonMapper.toQagAskStatusJson(
                 getQagErrorTextUseCase.getGetQagErrorText(

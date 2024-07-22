@@ -7,6 +7,9 @@ import fr.gouv.agora.usecase.appVersionControl.AppVersionControlUseCase
 import fr.gouv.agora.usecase.appVersionControl.AppVersionStatus
 import fr.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
 import fr.gouv.agora.usecase.login.LoginUseCase
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
@@ -17,20 +20,24 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "Authentification")
 class SignupController(
     private val appVersionControlUseCase: AppVersionControlUseCase,
     private val loginUseCase: LoginUseCase,
     private val signupInfoJsonMapper: SignupInfoJsonMapper,
     private val featureFlagsUseCase: FeatureFlagsUseCase,
 ) {
-
     @PostMapping("/signup")
+    @Operation(
+        summary = "S'Authentifier pour obtenir un token",
+        description = "Retourne un code 200 si tout s'est bien passé"
+    )
     fun signup(
-        @RequestHeader("User-Agent") userAgent: String,
-        @RequestHeader("fcmToken") fcmToken: String,
-        @RequestHeader("versionName") versionName: String?,
-        @RequestHeader("versionCode") versionCode: String,
-        @RequestHeader("platform") platform: String,
+        @RequestHeader("User-Agent") @Parameter(example = "Chrome/126.0.0.0") userAgent: String,
+        @RequestHeader("fcmToken", required = false) fcmToken: String?,
+        @RequestHeader("versionName", required = false) versionName: String?,
+        @RequestHeader("versionCode") @Parameter(example = "1") versionCode: String,
+        @RequestHeader("platform") @Parameter(example = "web") platform: String,
         request: HttpServletRequest,
     ): ResponseEntity<*> {
         if (!featureFlagsUseCase.isFeatureEnabled(AgoraFeature.SignUp)) {
@@ -46,7 +53,7 @@ class SignupController(
                 SignupRequest(
                     ipAddressHash = IpAddressUtils.retrieveIpAddressHash(request),
                     userAgent = userAgent,
-                    fcmToken = fcmToken,
+                    fcmToken = fcmToken ?: "",
                     platform = platform,
                     versionName = versionName ?: "($versionCode)",
                     versionCode = versionCode,

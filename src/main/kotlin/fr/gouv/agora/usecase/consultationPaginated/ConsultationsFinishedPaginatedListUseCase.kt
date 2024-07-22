@@ -2,8 +2,8 @@ package fr.gouv.agora.usecase.consultationPaginated
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
-import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationFinishedPaginatedListCacheRepository
+import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 import kotlin.math.ceil
@@ -30,14 +30,7 @@ class ConsultationsFinishedPaginatedListUseCase(
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (offset > consultationsCount) return null
 
-        return ConsultationFinishedPaginatedList(
-            consultationFinishedList = buildConsultationFinishedPreviewList(offset),
-            maxPageNumber = ceil(consultationsCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt(),
-        ).also { cacheRepository.initConsultationFinishedPage(pageNumber = pageNumber, content = it) }
-    }
-
-    private fun buildConsultationFinishedPreviewList(offset: Int): List<ConsultationPreviewFinished> {
-        return consultationPreviewFinishedRepository.getConsultationFinishedList(offset)
+        val consultationFinishedList = consultationPreviewFinishedRepository.getConsultationFinishedList(offset)
             .mapNotNull { consultationInfo ->
                 thematiqueRepository.getThematique(consultationInfo.thematiqueId)
                     ?.let { thematique ->
@@ -47,7 +40,15 @@ class ConsultationsFinishedPaginatedListUseCase(
                         )
                     }
             }
+
+        val maxPageNumber = ceil(consultationsCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt()
+
+        return ConsultationFinishedPaginatedList(
+            consultationFinishedList = consultationFinishedList,
+            maxPageNumber = maxPageNumber,
+        ).also { cacheRepository.initConsultationFinishedPage(pageNumber = pageNumber, content = it) }
     }
+
 }
 
 data class ConsultationFinishedPaginatedList(

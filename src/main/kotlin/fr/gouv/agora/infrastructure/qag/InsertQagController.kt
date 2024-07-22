@@ -6,6 +6,8 @@ import fr.gouv.agora.usecase.qag.AskQagStatus
 import fr.gouv.agora.usecase.qag.GetAskQagStatusUseCase
 import fr.gouv.agora.usecase.qag.InsertQagUseCase
 import fr.gouv.agora.usecase.qag.repository.QagInsertionResult
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "QaG")
 class InsertQagController(
     private val insertQagUseCase: InsertQagUseCase,
     private val getAskQagStatusUseCase: GetAskQagStatusUseCase,
@@ -21,9 +24,10 @@ class InsertQagController(
     private val queue: InsertQagQueue,
 ) {
 
+    @Operation(summary = "Post QaG")
     @PostMapping("/qags")
     fun insertQag(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestBody qagJson: QagInsertingJson,
     ): ResponseEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)

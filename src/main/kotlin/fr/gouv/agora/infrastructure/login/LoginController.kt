@@ -7,6 +7,8 @@ import fr.gouv.agora.usecase.appVersionControl.AppVersionControlUseCase
 import fr.gouv.agora.usecase.appVersionControl.AppVersionStatus.*
 import fr.gouv.agora.usecase.featureFlags.FeatureFlagsUseCase
 import fr.gouv.agora.usecase.login.LoginUseCase
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "Login")
 class LoginController(
     private val appVersionControlUseCase: AppVersionControlUseCase,
     private val loginTokenGenerator: LoginTokenGenerator,
@@ -27,11 +30,11 @@ class LoginController(
 
     @PostMapping("/login")
     fun login(
-        @RequestHeader("User-Agent") userAgent: String,
-        @RequestHeader("fcmToken") fcmToken: String,
-        @RequestHeader("versionName") versionName: String?,
-        @RequestHeader("versionCode") versionCode: String,
-        @RequestHeader("platform") platform: String,
+        @RequestHeader("User-Agent") @Parameter(example = "Chrome/126.0.0.0") userAgent: String,
+        @RequestHeader("fcmToken", required = false) fcmToken: String?,
+        @RequestHeader("versionName", required = false) versionName: String?,
+        @RequestHeader("versionCode") @Parameter(example = "1") versionCode: String,
+        @RequestHeader("platform") @Parameter(example = "web") platform: String,
         @RequestBody loginRequest: LoginRequestJson,
         request: HttpServletRequest,
     ): ResponseEntity<*> {
@@ -51,7 +54,7 @@ class LoginController(
                         userId = loginTokenResult.loginTokenData.userId,
                         ipAddressHash = IpAddressUtils.retrieveIpAddressHash(request),
                         userAgent = userAgent,
-                        fcmToken = fcmToken,
+                        fcmToken = fcmToken ?: "",
                         platform = platform,
                         versionName = versionName ?: "($versionCode)",
                         versionCode = versionCode,

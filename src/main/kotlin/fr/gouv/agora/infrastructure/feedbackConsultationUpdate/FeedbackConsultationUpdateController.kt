@@ -4,6 +4,8 @@ import fr.gouv.agora.infrastructure.feedbackConsultationUpdate.FeedbackConsultat
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.FeedbackConsultationUpdateUseCase
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.InsertFeedbackConsultationUpdateResults
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,15 +16,17 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "Consultations")
 class FeedbackConsultationUpdateController(
     private val useCase: FeedbackConsultationUpdateUseCase,
     private val queue: FeedbackConsultationUpdateQueue,
     private val mapper: FeedbackConsultationUpdateJsonMapper,
 ) {
 
+    @Operation(summary = "Post Consultation Feedback Update")
     @PostMapping("/consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
     fun insertFeedbackConsultationUpdate(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable consultationId: String,
         @PathVariable consultationUpdateId: String,
         @RequestBody body: InsertFeedbackConsultationUpdateJson,
@@ -52,7 +56,7 @@ class FeedbackConsultationUpdateController(
     @DeleteMapping("/consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
     @Deprecated("DELETE feedback is not needed anymore to change feedback using POST /consultations/{consultationId}/updates/{consultationUpdateId}/feedback, can be deleted once required app version is <TBD> (development not started yet)")
     fun deleteFeedbackConsultationUpdate(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable consultationId: String,
         @PathVariable consultationUpdateId: String,
     ): ResponseEntity<*> {
