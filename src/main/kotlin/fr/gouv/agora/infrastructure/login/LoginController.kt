@@ -31,7 +31,7 @@ class LoginController(
     @PostMapping("/login")
     fun login(
         @RequestHeader("User-Agent") @Parameter(example = "Chrome/126.0.0.0") userAgent: String,
-        @RequestHeader("fcmToken") @Parameter(example = " ") fcmToken: String,
+        @RequestHeader("fcmToken", required = false) fcmToken: String?,
         @RequestHeader("versionName", required = false) versionName: String?,
         @RequestHeader("versionCode") @Parameter(example = "1") versionCode: String,
         @RequestHeader("platform") @Parameter(example = "web") platform: String,
@@ -54,7 +54,7 @@ class LoginController(
                         userId = loginTokenResult.loginTokenData.userId,
                         ipAddressHash = IpAddressUtils.retrieveIpAddressHash(request),
                         userAgent = userAgent,
-                        fcmToken = fcmToken,
+                        fcmToken = fcmToken ?: "",
                         platform = platform,
                         versionName = versionName ?: "($versionCode)",
                         versionCode = versionCode,
