@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.appFeedback
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.appFeedback.InsertAppFeedbackResult
 import fr.gouv.agora.usecase.appFeedback.InsertAppFeedbackUseCase
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Suppress("unused")
+@Tag(name = "App FeedBack")
 class AppFeedbackController(
     private val insertAppFeedbackUseCase: InsertAppFeedbackUseCase,
     private val mapper: AppFeedbackJsonMapper,
@@ -19,7 +21,7 @@ class AppFeedbackController(
 
     @PostMapping("/feedback")
     fun insertAppFeedback(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestBody body: AppFeedbackJson,
     ): HttpEntity<*> {
         return mapper.toDomain(

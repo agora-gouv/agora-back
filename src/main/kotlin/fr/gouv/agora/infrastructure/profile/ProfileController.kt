@@ -4,13 +4,15 @@ import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.profile.GetProfileUseCase
 import fr.gouv.agora.usecase.profile.InsertProfileUseCase
 import fr.gouv.agora.usecase.profile.repository.ProfileEditResult
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @Suppress("unused")
-
+@Tag(name = "Profil")
 class ProfileController(
     private val insertProfileUseCase: InsertProfileUseCase,
     private val getProfileUseCase: GetProfileUseCase,
@@ -18,7 +20,8 @@ class ProfileController(
 ) {
     @PostMapping("/profile")
     fun postProfile(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        // TODO : Modifier la gestion des JWT pour pas avoir de paramètre authorizationHeader dans tout les controllers
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestBody profileJson: ProfileJson,
     ): HttpEntity<*> {
         val profile = jsonMapper.toDomain(
@@ -32,8 +35,9 @@ class ProfileController(
     }
 
     @GetMapping("/profile")
+    @Operation(summary = "Récupérer les informations du profil")
     fun getProfile(
-        @RequestHeader("Authorization") authorizationHeader: String,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
     ): HttpEntity<*> {
         val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
         val profile = getProfileUseCase.getProfile(userId)
