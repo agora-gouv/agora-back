@@ -20,4 +20,5 @@ data class NotificationInserting(
 enum class NotificationType {
     CONSULTATION,
     QAG,
+    REPONSE_SUPPORT,
 }
