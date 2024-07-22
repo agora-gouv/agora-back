@@ -94,21 +94,17 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val unforgedConsultationUpdate = consultationUpdateId.split('~')
             val consultation = consultationStrapiRepository.getConsultationById(consultationId) ?: return null
+            val contenuAutre = consultation.attributes.consultationContenuAutres.data.firstOrNull { it.id == consultationUpdateId }
 
-            return when (unforgedConsultationUpdate[0]) {
-                "autre" -> {
-                    val otherContent = consultation.attributes.consultationContenuAutres.data
-                        .firstOrNull { it.id == unforgedConsultationUpdate[1] }
-                        ?: return null
-
-                    mapper.toDomainContenuAutre(consultation, otherContent)
-                }
-
-                "avant" -> mapper.toDomainUnanswered(consultation)
-                "apres" -> mapper.toDomainAnswered(consultation)
-                else -> null
+            if (consultation.attributes.contenuAvantReponse.data.id == consultationUpdateId) {
+                mapper.toDomainUnanswered(consultation)
+            } else if (consultation.attributes.contenuApresReponseOuTerminee.data.id == consultationUpdateId) {
+                mapper.toDomainAnswered(consultation)
+            } else if (contenuAutre != null) {
+                return mapper.toDomainContenuAutre(consultation, contenuAutre)
+            } else {
+                return null
             }
         }
 

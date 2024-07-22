@@ -222,7 +222,7 @@ class ConsultationUpdateInfoV2Mapper {
         val sections = toSections(contentBeforeResponse.sections)
 
         return ConsultationUpdateInfoV2(
-            id = "avant~${consultation.contenuAvantReponse.data.id}",
+            id = consultation.contenuAvantReponse.data.id,
             updateDate = contentBeforeResponse.datetimePublication,
             shareTextTemplate = contentBeforeResponse.templatePartage,
             hasQuestionsInfo = true,
@@ -249,7 +249,7 @@ class ConsultationUpdateInfoV2Mapper {
         val htmlSections = toSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
-            id = "autre~${contentDTO.id}",
+            id = contentDTO.id,
             updateDate = contenu.datetimePublication,
             shareTextTemplate = contenu.templatePartage,
             hasQuestionsInfo = false,
@@ -283,7 +283,7 @@ class ConsultationUpdateInfoV2Mapper {
         val htmlSections = toSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
-            id = "apres~$contenuId",
+            id = contenuId,
             updateDate = contenu.datetimePublication,
             shareTextTemplate = contenu.templatePartageApresFinConsultation,
             hasQuestionsInfo = false,
@@ -295,7 +295,7 @@ class ConsultationUpdateInfoV2Mapper {
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
-                "apres~$contenuId",
+                contenuId,
                 contenu.feedbackTitre,
                 contenu.feedbackPictogramme,
                 "<body>${contenu.feedbackDescription.toHtml()}</body>"
