@@ -4,7 +4,7 @@
 
 - Nous sommes en train de remplacer certaines tables de notre base de données par un CMS headless, Strapi. 
 - Lors de notre modélisation sur Strapi, les contenus de consultations ne sont plus génériques et ils ont été divisés en 4 types différents : avant réponse, après réponse, autre et à venir.
-- Il existe une route qui permet de récupérer le contenu d'une consultation via son id "GET /consultation/{id}/contenu/{id}".
+- Il existe une route qui permet de récupérer un contenu d'une consultation via son id "GET /consultation/{id}/contenu/{id}".
 - Cependant, Strapi n'utilise pas d'UUID mais un incrément de nombre entiers commençant à 1. 
 - Entre les 4 types de contenus différents, une collision d'id est possible.
 - Par exemple, je souhaite récupérer le contenu 8 de la consultation 12. Il est fort probable que cet id "8" soit utilisé par le contenu avant réponse et le contenu autre. En appelant la route, on pourra donc récupérer l'un des deux contenu, qui ne sera pas forcément celui attendu.
