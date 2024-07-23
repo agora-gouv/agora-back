@@ -16,12 +16,16 @@ class SendUserNotificationUseCase(
     private val notificationRepository: NotificationRepository,
 ) {
     fun execute(title: String, description: String, userId: String): NotificationResult {
-        val user = userRepository.getUserById(userId)
-        notificationSendingRepository.sendUserNotification(request = NotificationRequest(
-            title = title,
-            description = description,
-            fcmToken = user?.fcmToken ?: "",
-        ))
+        val user = userRepository.getUserById(userId) ?: return NotificationResult.FAILURE
+        if (user.fcmToken.isBlank()) return NotificationResult.FAILURE
+
+        notificationSendingRepository.sendUserNotification(
+            request = NotificationRequest(
+                title = title,
+                description = description,
+                fcmToken = user.fcmToken,
+            )
+        )
         notificationRepository.insertNotifications(
             NotificationInserting(
                 title = title,

@@ -76,7 +76,7 @@ class NotificationSendingRepositoryImpl(
                     .build()
             )
         } catch (e: IllegalArgumentException) {
-            logger.error("⚠️ Send notification error: ${e.message}")
+            logger.error("⚠️ Send réponse support notification error: ${e.message}")
             NotificationResult.FAILURE
         }
     }
