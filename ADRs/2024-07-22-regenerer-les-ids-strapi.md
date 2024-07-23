@@ -12,16 +12,19 @@
 
 ### Utiliser un id forgé
 ✅ Avantages : rapide à faire
+
 🚫 Inconvénients : on doit le modifier partout et on peut vite l'oublier, ce qui causerait des bugs
 
 ### Mettre une distance entre les ids Strapi
 Lancer une requête SQL qui modifierait le compteur d'id Strapi, afin de mettre une distance entre les types.
 
 ✅ Avantages : rapide à faire, aucune modification de code
+
 🚫 Inconvénients : on peut l'oublier et ne pas le faire sur un nouvel environnement
 
 ### séparer la récupération des contenus via des routes distinctes selon leur type
 ✅ Avantages : /
+
 🚫 Inconvénients : routes moins génériques, compliqué à mettre en place, gros refactos 
 
 ## Décision 🏆
