@@ -121,12 +121,11 @@ class ConsultationInfoRepositoryImpl(
             return null
         }
 
-        val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId)
+        val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId) ?: return null
         val consultationsInfo = consultationInfoMapper.toConsultationInfo(strapiConsultationDTO)
-        if (consultationsInfo.isEmpty()) return null
-        getCache()?.put(consultationId, consultationsInfo.first())
+        getCache()?.put(consultationId, consultationsInfo)
 
-        return consultationsInfo.first()
+        return consultationsInfo
     }
 
     override fun getConsultationsToAggregate(): List<ConsultationPreview> {

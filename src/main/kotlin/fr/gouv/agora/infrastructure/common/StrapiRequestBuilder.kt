@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 data class StrapiRequestBuilder(private val cmsModel: String) {
     private var filters = ""
     private var sort = ""
-    private var populate = "&populate=*"
+    private var populate = "&populate=deep"
     private var pageSize = "pagination[pageSize]=100"
 
     private var builderError = ""
