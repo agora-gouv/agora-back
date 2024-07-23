@@ -53,7 +53,7 @@ class ConsultationUpdateHistoryMapper(
         val historiqueAutres = autresContenusTriesParDate
             .mapIndexed { index, contenuAutre ->
                 ConsultationUpdateHistory(
-                    2 + index,
+                    3 + index,
                     if (contenuAutre.attributes.historiqueType == "contenu") ConsultationUpdateHistoryType.UPDATE else ConsultationUpdateHistoryType.RESULTS,
                     contenuAutre.id,
                     if (dernierContenuId == contenuAutre.id) ConsultationUpdateHistoryStatus.DONE else ConsultationUpdateHistoryStatus.CURRENT,
