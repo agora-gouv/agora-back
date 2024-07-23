@@ -2,7 +2,6 @@ package fr.gouv.agora.domain
 
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Date
 
 data class ConsultationUpdateInfoV2(
     val id: String,
