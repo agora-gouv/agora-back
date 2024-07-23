@@ -28,6 +28,7 @@ class NotificationSendingRepositoryImpl(
         private const val QAG_DETAILS_NOTIFICATION_TYPE = "qagDetails"
         private const val CONSULTATION_DETAILS_NOTIFICATION_TYPE = "consultationDetails"
         private const val CONSULTATION_RESULTS_NOTIFICATION_TYPE = "consultationResults"
+        private const val REPONSE_SUPPORT_NOTIFICATION_TYPE = "reponseSupport"
 
         private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 500
     }
@@ -35,7 +36,7 @@ class NotificationSendingRepositoryImpl(
     override fun sendQagDetailsNotification(request: QagNotificationRequest): NotificationResult {
         return try {
             sendNotification(
-                notificationMessage = createBaseMessage(request)
+                notificationMessage = createQagNotificationBaseMessage(request)
                     .putData(NOTIFICATION_TYPE_KEY, QAG_DETAILS_NOTIFICATION_TYPE)
                     .putData(QAG_DETAILS_ID_KEY, request.qagId)
                     .build()
@@ -67,7 +68,31 @@ class NotificationSendingRepositoryImpl(
         )
     }
 
-    private fun createBaseMessage(request: QagNotificationRequest): Message.Builder {
+    override fun sendUserNotification(request: NotificationRequest): NotificationResult {
+        return try {
+            sendNotification(
+                notificationMessage = createBaseMessage(request)
+                    .putData(NOTIFICATION_TYPE_KEY, REPONSE_SUPPORT_NOTIFICATION_TYPE)
+                    .build()
+            )
+        } catch (e: IllegalArgumentException) {
+            logger.error("⚠️ Send réponse support notification error: ${e.message}")
+            NotificationResult.FAILURE
+        }
+    }
+
+    private fun createQagNotificationBaseMessage(request: QagNotificationRequest): Message.Builder {
+        return Message.builder()
+            .setNotification(
+                Notification.builder()
+                    .setTitle(request.title)
+                    .setBody(request.description)
+                    .build()
+            )
+            .setToken(request.fcmToken)
+    }
+
+    private fun createBaseMessage(request: NotificationRequest): Message.Builder {
         return Message.builder()
             .setNotification(
                 Notification.builder()

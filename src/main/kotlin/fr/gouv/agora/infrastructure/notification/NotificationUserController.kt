@@ -1,6 +1,6 @@
 package fr.gouv.agora.infrastructure.notification
 
-import fr.gouv.agora.usecase.notification.SendQagNotificationUseCase
+import fr.gouv.agora.usecase.notification.SendUserNotificationUseCase
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Tag(name = "Admin")
-class QagNotificationController(
-    private val sendQagNotificationUseCase: SendQagNotificationUseCase,
+class NotificationUserController(
+    private val sendUserNotificationUseCase: SendUserNotificationUseCase
 ) {
-    @Operation(summary = "Admin Qag Notification")
-    @GetMapping("/admin/notifyQag/{qagId}")
-    fun notifyAllQagNotification(
+    @Operation(summary = "Admin User Notification")
+    @GetMapping("/admin/notifyUser/{userId}")
+    fun notifyUser(
         @RequestParam("title") title: String,
         @RequestParam("description") description: String,
-        @PathVariable("qagId") qagId: String,
+        @PathVariable("userId") userId: String,
     ): ResponseEntity<*> {
-        val result = sendQagNotificationUseCase.sendNotificationQagUpdate(
+        val result = sendUserNotificationUseCase.execute(
             title = title,
             description = description,
-            qagId = qagId,
+            userId = userId
         )
 
         return when (result) {
@@ -33,5 +33,4 @@ class QagNotificationController(
             NotificationResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
         }
     }
-
 }
