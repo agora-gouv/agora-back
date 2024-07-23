@@ -3,21 +3,84 @@ package fr.gouv.agora.infrastructure.consultationUpdates.repository
 import fr.gouv.agora.domain.ConsultationUpdateHistory
 import fr.gouv.agora.domain.ConsultationUpdateHistoryStatus
 import fr.gouv.agora.domain.ConsultationUpdateHistoryType
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
+import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateHistoryWithDateDTO
+import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Date
 
 @Component
 class ConsultationUpdateHistoryMapper(
     val clock: Clock,
 ) {
+    fun toDomain(consultationStrapiDTO: StrapiAttributes<ConsultationStrapiDTO>): List<ConsultationUpdateHistory> {
+        val contenuAvantReponse = consultationStrapiDTO.attributes.contenuAvantReponse.data
+        val contenuApresReponse = consultationStrapiDTO.attributes.contenuApresReponseOuTerminee.data
+        val autresContenusTriesParDate = consultationStrapiDTO.attributes.consultationContenuAutres.data
+            .sortedBy { it.attributes.datetimePublication }
 
-    companion object {
-        private const val TYPE_UPDATE = "update"
-        private const val TYPE_RESULTS = "results"
+        val dernierContenuId = if (autresContenusTriesParDate.isNotEmpty()) {
+            autresContenusTriesParDate.last().id
+        } else contenuApresReponse.id
+
+
+        val historiqueAvantReponse = contenuAvantReponse.let {
+            ConsultationUpdateHistory(
+                1,
+                ConsultationUpdateHistoryType.UPDATE,
+                it.id,
+                ConsultationUpdateHistoryStatus.DONE,
+                it.attributes.historiqueTitre,
+                it.attributes.datetimePublication.toDate(),
+                it.attributes.historiqueCallToAction
+            )
+        }
+        val historiqueApresReponse = contenuApresReponse.let {
+            ConsultationUpdateHistory(
+                2,
+                ConsultationUpdateHistoryType.UPDATE,
+                it.id,
+                if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.DONE else ConsultationUpdateHistoryStatus.CURRENT,
+                it.attributes.historiqueTitre,
+                it.attributes.datetimePublication.toDate(),
+                it.attributes.historiqueCallToAction
+            )
+        }
+        val historiqueAutres = autresContenusTriesParDate
+            .mapIndexed { index, contenuAutre ->
+                ConsultationUpdateHistory(
+                    2 + index,
+                    if (contenuAutre.attributes.historiqueType == "contenu") ConsultationUpdateHistoryType.UPDATE else ConsultationUpdateHistoryType.RESULTS,
+                    contenuAutre.id,
+                    if (dernierContenuId == contenuAutre.id) ConsultationUpdateHistoryStatus.DONE else ConsultationUpdateHistoryStatus.CURRENT,
+                    contenuAutre.attributes.historiqueTitre,
+                    contenuAutre.attributes.datetimePublication.toDate(),
+                    contenuAutre.attributes.historiqueCallToAction
+                )
+            }
+
+        val contenuAVenir = consultationStrapiDTO.attributes.consultationContenuAVenir?.data?.let {
+            ConsultationUpdateHistory(
+                999,
+                ConsultationUpdateHistoryType.RESULTS,
+                it.id,
+                ConsultationUpdateHistoryStatus.INCOMING,
+                it.attributes.titreHistorique,
+                null,
+                null,
+            )
+        }
+
+        return listOfNotNull(
+            historiqueAvantReponse,
+            historiqueApresReponse,
+            *historiqueAutres.toTypedArray(),
+            contenuAVenir,
+        )
     }
 
     fun toDomain(dtoList: List<ConsultationUpdateHistoryWithDateDTO>): List<ConsultationUpdateHistory> {
@@ -57,8 +120,8 @@ class ConsultationUpdateHistoryMapper(
         historyItemDTO: ConsultationUpdateHistoryWithDateDTO,
     ): ConsultationUpdateHistory? {
         val type = when (historyItemDTO.type) {
-            TYPE_UPDATE -> ConsultationUpdateHistoryType.UPDATE
-            TYPE_RESULTS -> ConsultationUpdateHistoryType.RESULTS
+            "update" -> ConsultationUpdateHistoryType.UPDATE
+            "results" -> ConsultationUpdateHistoryType.RESULTS
             else -> null
         }
 
