@@ -97,14 +97,14 @@ class ConsultationUpdateV2RepositoryImpl(
             val consultation = consultationStrapiRepository.getConsultationById(consultationId) ?: return null
             val contenuAutre = consultation.attributes.consultationContenuAutres.data.firstOrNull { it.id == consultationUpdateId }
 
-            if (consultation.attributes.contenuAvantReponse.data.id == consultationUpdateId) {
+            return if (consultation.attributes.contenuAvantReponse.data.id == consultationUpdateId) {
                 mapper.toDomainUnanswered(consultation)
             } else if (consultation.attributes.contenuApresReponseOuTerminee.data.id == consultationUpdateId) {
                 mapper.toDomainAnswered(consultation)
             } else if (contenuAutre != null) {
-                return mapper.toDomainContenuAutre(consultation, contenuAutre)
+                mapper.toDomainContenuAutre(consultation, contenuAutre)
             } else {
-                return null
+                null
             }
         }
 
