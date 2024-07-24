@@ -64,7 +64,7 @@ class ConsultationUpdateHistoryMapper(
         val contenuAVenir = consultationStrapiDTO.attributes.consultationContenuAVenir?.data?.let {
             ConsultationUpdateHistory(
                 ConsultationUpdateHistoryType.RESULTS,
-                it.id,
+                null,
                 ConsultationUpdateHistoryStatus.INCOMING,
                 it.attributes.titreHistorique,
                 null,
