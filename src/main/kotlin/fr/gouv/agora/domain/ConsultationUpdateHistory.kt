@@ -11,7 +11,6 @@ enum class ConsultationUpdateHistoryStatus {
 }
 
 data class ConsultationUpdateHistory(
-    val stepNumber: Int,
     val type: ConsultationUpdateHistoryType,
     val consultationUpdateId: String?,
     val status: ConsultationUpdateHistoryStatus,
