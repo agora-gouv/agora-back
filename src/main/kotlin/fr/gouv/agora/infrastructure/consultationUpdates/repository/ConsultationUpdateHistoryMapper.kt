@@ -21,7 +21,7 @@ class ConsultationUpdateHistoryMapper(
         val contenuAvantReponse = consultationStrapiDTO.attributes.contenuAvantReponse.data
         val contenuApresReponse = consultationStrapiDTO.attributes.contenuApresReponseOuTerminee.data
         val autresContenusTriesParDate = consultationStrapiDTO.attributes.consultationContenuAutres.data
-            .filter { it.attributes.datetimePublication.isAfter(LocalDateTime.now(clock)) }
+            .filter { it.attributes.datetimePublication.isBefore(LocalDateTime.now(clock)) }
             .sortedByDescending { it.attributes.datetimePublication }
 
         val dernierContenuId = if (autresContenusTriesParDate.isNotEmpty()) {
@@ -43,7 +43,7 @@ class ConsultationUpdateHistoryMapper(
             ConsultationUpdateHistory(
                 ConsultationUpdateHistoryType.UPDATE,
                 it.id,
-                if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.DONE else ConsultationUpdateHistoryStatus.CURRENT,
+                if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                 it.attributes.historiqueTitre,
                 it.attributes.datetimePublication.toDate(),
                 it.attributes.historiqueCallToAction
@@ -54,7 +54,7 @@ class ConsultationUpdateHistoryMapper(
                 ConsultationUpdateHistory(
                     if (it.attributes.historiqueType == "contenu") ConsultationUpdateHistoryType.UPDATE else ConsultationUpdateHistoryType.RESULTS,
                     it.id,
-                    if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.DONE else ConsultationUpdateHistoryStatus.CURRENT,
+                    if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                     it.attributes.historiqueTitre,
                     it.attributes.datetimePublication.toDate(),
                     it.attributes.historiqueCallToAction
