@@ -314,11 +314,11 @@ class ConsultationUpdateInfoV2Mapper {
                 is StrapiConsultationSectionTitre -> Section.Title(it.titre)
 
                 is StrapiConsultationSectionRichText -> {
-                    Section.RichText("<body>" + it.description.toHtml() + "</body>")
+                    Section.RichText(it.description.toHtml().removeSurrounding("<p>", "</p>"))
                 }
 
                 is StrapiConsultationSectionCitation -> {
-                    Section.Quote("<body>" + it.description.toHtml() + "</body>")
+                    Section.Quote(it.description.toHtml().removeSurrounding("<p>", "</p>"))
                 }
 
                 is StrapiConsultationSectionImage -> {
