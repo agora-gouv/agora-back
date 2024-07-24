@@ -336,7 +336,7 @@ class ConsultationUpdateInfoV2Mapper {
                 }
 
                 is StrapiConsultationSectionChiffre -> {
-                    Section.FocusNumber(it.titre, "<body>" + it.description.toHtml() + "</body>")
+                    Section.FocusNumber(it.titre, it.description.toHtml())
                 }
             }
         }
