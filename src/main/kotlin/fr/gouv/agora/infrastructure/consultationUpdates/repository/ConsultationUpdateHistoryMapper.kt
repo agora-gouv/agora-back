@@ -21,6 +21,7 @@ class ConsultationUpdateHistoryMapper(
         val contenuAvantReponse = consultationStrapiDTO.attributes.contenuAvantReponse.data
         val contenuApresReponse = consultationStrapiDTO.attributes.contenuApresReponseOuTerminee.data
         val autresContenusTriesParDate = consultationStrapiDTO.attributes.consultationContenuAutres.data
+            .filter { it.attributes.datetimePublication.isAfter(LocalDateTime.now(clock)) }
             .sortedBy { it.attributes.datetimePublication }
 
         val dernierContenuId = if (autresContenusTriesParDate.isNotEmpty()) {
