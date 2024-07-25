@@ -184,7 +184,6 @@ class ConsultationUpdateHistoryMapperTest {
         assertThat(result).isEqualTo(
             listOf(
                 ConsultationUpdateHistory(
-                    stepNumber = 1,
                     type = ConsultationUpdateHistoryType.UPDATE,
                     consultationUpdateId = updateUUID.toString(),
                     status = ConsultationUpdateHistoryStatus.CURRENT,
@@ -217,7 +216,6 @@ class ConsultationUpdateHistoryMapperTest {
         assertThat(result).isEqualTo(
             listOf(
                 ConsultationUpdateHistory(
-                    stepNumber = 1,
                     type = ConsultationUpdateHistoryType.RESULTS,
                     consultationUpdateId = updateUUID.toString(),
                     status = ConsultationUpdateHistoryStatus.CURRENT,
@@ -254,10 +252,9 @@ class ConsultationUpdateHistoryMapperTest {
         val result = mapper.toDomain(historyDTOs)
 
         // Then
-        val expectedResults = historyItems.sortedByDescending { it.stepNumber }.mapNotNull { historyItem ->
+        val expectedResults = historyItems.sortedByDescending { it.updateDate }.mapNotNull { historyItem ->
             historyItem.expectedStatus?.let {
                 ConsultationUpdateHistory(
-                    stepNumber = historyItem.stepNumber,
                     type = ConsultationUpdateHistoryType.UPDATE,
                     consultationUpdateId = null,
                     status = historyItem.expectedStatus,

@@ -836,131 +836,201 @@ class ConsultationStrapiDTOTest {
                     },
                     "consultation_contenu_autres": {
                       "data": [
-                        {
-                          "id": 1,
-                          "attributes": {
-                            "message_mise_a_jour": "Analyse disponible",
-                            "lien_telechargement_analyse": "https://content.agora.incubateur.net/consultation-syntheses/20240605-agora_handicap_synthese_VF.pdf",
-                            "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
-                            "header_titre": "Analyse des réponses",
-                            "header_description": [
-                              {
-                                "type": "paragraph",
-                                "children": [
-                                  {
-                                    "text": "Les participants souhaitent en majorité financer la transition écologique tout en réduisant la dette publique.",
-                                    "type": "text"
-                                  }
-                                ]
-                              }
-                            ],
-                            "footer_titre": "optionnel normalement",
-                            "footer_description": [
-                              {
-                                "type": "paragraph",
-                                "children": [
-                                  {
-                                    "text": "optionnel normalement",
-                                    "type": "text"
-                                  }
-                                ]
-                              }
-                            ],
-                            "feedback_pictogramme": "💬",
-                            "feedback_titre": "Donnez votre avis",
-                            "feedback_description": [
-                              {
-                                "type": "paragraph",
-                                "children": [
-                                  {
-                                    "text": "Êtes-vous satisfait(e) de l'analyse de cette consultation ?",
-                                    "type": "text"
-                                  }
-                                ]
-                              }
-                            ],
-                            "historique_titre": "Analyse des réponses",
-                            "historique_call_to_action": "Consulter la synthèse",
-                            "historique_type": "réponse et pourcentage",
-                            "createdAt": "2024-06-21T14:40:01.183Z",
-                            "updatedAt": "2024-07-02T10:01:05.469Z",
-                            "publishedAt": "2024-06-21T14:40:02.833Z",
-                            "datetime_publication": "2024-06-30T23:00:00.000Z",
-                            "sections": [
-                              {
-                                "id": 2,
-                                "__component": "consultation-section.section-titre",
-                                "titre": "Analyse des réponses"
-                              },
-                              {
-                                "id": 3,
-                                "__component": "consultation-section.section-texte-riche",
-                                "description": [
-                                  {
-                                    "type": "paragraph",
-                                    "children": [
-                                      {
-                                        "bold": true,
-                                        "text": "56% des participants",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "text": " estiment être suffisamment sensibilisés à la question du handicap, mais leur perception est radicalement différente en ce qui concerne le niveau de sensibilisation de la société française.",
-                                        "type": "text"
-                                      }
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "id": 1,
-                                "__component": "consultation-section.section-chiffre",
-                                "titre": "61%",
-                                "description": [
-                                  {
-                                    "type": "paragraph",
-                                    "children": [
-                                      {
-                                        "text": "des participants pensent que la ",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "bold": true,
-                                        "text": "société française",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "text": " n’est pas suffisamment sensibilisée au handicap.",
-                                        "type": "text"
-                                      }
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "id": 4,
-                                "__component": "consultation-section.section-texte-riche",
-                                "description": [
-                                  {
-                                    "type": "paragraph",
-                                    "children": [
-                                      {
-                                        "bold": true,
-                                        "text": "56% des participants",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "text": " estiment être suffisamment sensibilisés à la question du handicap, mais leur perception est radicalement différente en ce qui concerne le niveau de sensibilisation de la société française.",
-                                        "type": "text"
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                          {
+                            "id": 18003,
+                            "attributes": {
+                              "message_mise_a_jour": "Analyse disponible",
+                              "lien_telechargement_analyse": "https://content.agora.incubateur.net/consultation-syntheses/20240605-agora_handicap_synthese_VF.pdf",
+                              "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
+                              "header_titre": "Analyse des réponses",
+                              "header_description": [
+                                {
+                                  "type": "paragraph",
+                                  "children": [
+                                    {
+                                      "text": "Les participants souhaitent en majorité financer la transition écologique tout en réduisant la dette publique.",
+                                      "type": "text"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "footer_titre": "optionnel normalement",
+                              "footer_description": [
+                                {
+                                  "type": "paragraph",
+                                  "children": [
+                                    {
+                                      "text": "optionnel normalement",
+                                      "type": "text"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "feedback_pictogramme": "💬",
+                              "feedback_titre": "Donnez votre avis",
+                              "feedback_description": [
+                                {
+                                  "type": "paragraph",
+                                  "children": [
+                                    {
+                                      "text": "Êtes-vous satisfait(e) de l'analyse de cette consultation ?",
+                                      "type": "text"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "historique_titre": "Analyse des réponses",
+                              "historique_call_to_action": "Consulter la synthèse",
+                              "historique_type": "réponse et pourcentage",
+                              "createdAt": "2024-06-21T14:40:01.183Z",
+                              "updatedAt": "2024-07-24T09:49:23.682Z",
+                              "publishedAt": "2024-07-24T09:49:12.421Z",
+                              "datetime_publication": "2024-06-30T23:00:00.000Z",
+                              "sections": [
+                                {
+                                  "id": 6,
+                                  "__component": "consultation-section.section-titre",
+                                  "titre": "Analyse des réponses"
+                                },
+                                {
+                                  "id": 11,
+                                  "__component": "consultation-section.section-texte-riche",
+                                  "description": [
+                                    {
+                                      "type": "paragraph",
+                                      "children": [
+                                        {
+                                          "bold": true,
+                                          "text": "56% des participants",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "text": " estiment être suffisamment sensibilisés à la question du handicap, mais leur perception est radicalement différente en ce qui concerne le niveau de sensibilisation de la société française.",
+                                          "type": "text"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": 5,
+                                  "__component": "consultation-section.section-chiffre",
+                                  "titre": "61%",
+                                  "description": [
+                                    {
+                                      "type": "paragraph",
+                                      "children": [
+                                        {
+                                          "text": "des participants pensent que la ",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "bold": true,
+                                          "text": "société française",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "text": " n’est pas suffisamment sensibilisée au handicap.",
+                                          "type": "text"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": 10,
+                                  "__component": "consultation-section.section-texte-riche",
+                                  "description": [
+                                    {
+                                      "type": "paragraph",
+                                      "children": [
+                                        {
+                                          "bold": true,
+                                          "text": "99% des participants",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "text": " estiment être suffisamment sensibilisés à la question du handicap, mais leur perception est radicalement différente en ce qui concerne le niveau de sensibilisation de la société française.",
+                                          "type": "text"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "id": 18002,
+                            "attributes": {
+                              "message_mise_a_jour": "Mise à jour",
+                              "lien_telechargement_analyse": null,
+                              "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
+                              "header_titre": "Mise à jour",
+                              "header_description": [
+                                {
+                                  "type": "paragraph",
+                                  "children": [
+                                    {
+                                      "text": "Test de mise à jour",
+                                      "type": "text"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "footer_titre": "Test de mise à jour",
+                              "footer_description": [
+                                {
+                                  "type": "paragraph",
+                                  "children": [
+                                    {
+                                      "text": "Test de mise à jour",
+                                      "type": "text"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "feedback_pictogramme": "💬",
+                              "feedback_titre": "Donnez votre avis",
+                              "feedback_description": [
+                                {
+                                  "type": "paragraph",
+                                  "children": [
+                                    {
+                                      "text": "Êtes-vous satisfait(e) de l'analyse de cette consultation  ????",
+                                      "type": "text"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "historique_titre": "Test de mise à jour",
+                              "historique_call_to_action": "Test de mise à jour",
+                              "historique_type": "contenu",
+                              "createdAt": "2024-06-21T14:40:01.183Z",
+                              "updatedAt": "2024-07-24T09:48:33.635Z",
+                              "publishedAt": "2024-07-24T09:48:33.628Z",
+                              "datetime_publication": "2024-06-30T23:00:00.000Z",
+                              "sections": [
+                                {
+                                  "id": 7,
+                                  "__component": "consultation-section.section-texte-riche",
+                                  "description": [
+                                    {
+                                      "type": "paragraph",
+                                      "children": [
+                                        {
+                                          "bold": true,
+                                          "text": "Test de mise à jour",
+                                          "type": "text"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
                           }
-                        }
-                      ]
+                        ]
                     },
                     "consultation_contenu_a_venir": {
                       "data": {
@@ -993,5 +1063,9 @@ class ConsultationStrapiDTOTest {
 
         // THEN
         assertThat(actual.data[0].attributes.titre).isEqualTo("Mieux rémunérer les agriculteurs : quels leviers pour le consommateur ?")
+        assertThat(actual.data[0].attributes.consultationContenuAutres.data).hasSize(2)
+        assertThat(actual.data[0].attributes.consultationContenuAVenir).isNotNull
+        assertThat(actual.data[0].attributes.contenuAvantReponse.data.attributes.sections).hasSize(2)
+        assertThat(actual.data[0].attributes.contenuApresReponseOuTerminee.data.attributes.sections).hasSize(7)
     }
 }

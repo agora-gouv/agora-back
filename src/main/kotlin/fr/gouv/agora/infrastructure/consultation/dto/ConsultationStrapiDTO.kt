@@ -282,7 +282,7 @@ data class StrapiConsultationContenuAutre(
     @JsonProperty("message_mise_a_jour")
     val messageMiseAJour: String,
     @JsonProperty("lien_telechargement_analyse")
-    val lienTelechargementAnalyse: String,
+    val lienTelechargementAnalyse: String?,
     @JsonProperty("template_partage")
     val templatePartage: String,
     @JsonProperty("header_titre")
