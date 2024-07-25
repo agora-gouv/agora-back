@@ -25,7 +25,7 @@ class ConsultationUpdateHistoryMapper(
             .sortedByDescending { it.attributes.datetimePublication }
 
         val dernierContenuId = if (autresContenusTriesParDate.isNotEmpty()) {
-            autresContenusTriesParDate.last().id
+            autresContenusTriesParDate.first().id
         } else contenuApresReponse.id
 
 
