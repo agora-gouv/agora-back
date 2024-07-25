@@ -33,6 +33,7 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = null,
                         expectedStatus = ConsultationUpdateHistoryStatus.INCOMING,
                     ),
@@ -43,6 +44,7 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = null,
                         actionText = "actionText",
                         expectedStatus = ConsultationUpdateHistoryStatus.INCOMING,
@@ -55,6 +57,7 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 6, 21, 30),
                         expectedStatus = ConsultationUpdateHistoryStatus.INCOMING,
                     ),
@@ -65,6 +68,7 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                         expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
                     ),
@@ -75,6 +79,7 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                         actionText = "actionText",
                         expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
@@ -87,10 +92,12 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                         expectedStatus = ConsultationUpdateHistoryStatus.DONE,
                     ),
                     HistoryMapperTestInput(
+                        stepNumber = 2,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 18, 45),
                         expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
                     ),
@@ -101,10 +108,12 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 2,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 18, 45),
                         expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
                     ),
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                         actionText = "actionText",
                         expectedStatus = ConsultationUpdateHistoryStatus.DONE,
@@ -117,10 +126,12 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                         expectedStatus = null,
                     ),
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                         expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
                     ),
@@ -131,10 +142,12 @@ class ConsultationUpdateHistoryMapperTest {
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 historyItems = listOf(
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = null,
                         expectedStatus = null,
                     ),
                     HistoryMapperTestInput(
+                        stepNumber = 1,
                         updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                         expectedStatus = ConsultationUpdateHistoryStatus.CURRENT,
                     ),
@@ -226,6 +239,7 @@ class ConsultationUpdateHistoryMapperTest {
         mockCurrentDate(serverDate)
         val historyDTOs = historyItems.map { historyItem ->
             mock(ConsultationUpdateHistoryWithDateDTO::class.java).also {
+                given(it.stepNumber).willReturn(historyItem.stepNumber)
                 given(it.updateDate).willReturn(historyItem.updateDate?.toDate())
                 lenientGiven(it.type).willReturn("update")
                 lenientGiven(it.consultationUpdateId).willReturn(null)
@@ -238,7 +252,7 @@ class ConsultationUpdateHistoryMapperTest {
         val result = mapper.toDomain(historyDTOs)
 
         // Then
-        val expectedResults = historyItems.mapNotNull { historyItem ->
+        val expectedResults = historyItems.sortedByDescending { it.updateDate }.mapNotNull { historyItem ->
             historyItem.expectedStatus?.let {
                 ConsultationUpdateHistory(
                     type = ConsultationUpdateHistoryType.UPDATE,
@@ -262,6 +276,7 @@ class ConsultationUpdateHistoryMapperTest {
 }
 
 data class HistoryMapperTestInput(
+    val stepNumber: Int,
     val updateDate: LocalDateTime?,
     val actionText: String? = null,
     val expectedStatus: ConsultationUpdateHistoryStatus?,
