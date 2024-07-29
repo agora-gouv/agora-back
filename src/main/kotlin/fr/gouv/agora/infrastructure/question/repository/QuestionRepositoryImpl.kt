@@ -61,7 +61,6 @@ class QuestionRepositoryImpl(
 
     override fun getConsultationQuestionList(consultationId: String): List<Question> {
         val consultationUUID = consultationId.toUuidOrNull()
-
         if (consultationUUID != null) {
             return getConsultationQuestions(consultationUUID)
         }

@@ -74,7 +74,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                         questionStrapi.titre,
                         questionStrapi.popupExplication,
                         questionStrapi.numero,
-                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        null,//todo : consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
                         consultationDTO.id,
                         choix,
                         questionStrapi.nombreMaximumDeChoix
@@ -96,7 +96,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                         questionStrapi.titre,
                         questionStrapi.popupExplication,
                         questionStrapi.numero,
-                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        null,//todo : consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
                         consultationDTO.id,
                         choix,
                     )
@@ -108,7 +108,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                         questionStrapi.titre,
                         questionStrapi.popupExplication,
                         questionStrapi.numero,
-                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        null,//todo : consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
                         consultationDTO.id,
                     )
                 }
@@ -119,7 +119,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                         questionStrapi.titre,
                         null,
                         questionStrapi.numero,
-                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        null,//todo : consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
                         consultationDTO.id,
                         questionStrapi.description.toHtml()
                     )
@@ -133,7 +133,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                             index,
                             questionStrapi.id,
                             choice.ouvert,
-                            consultationDTO.attributes.questions.first { it.numero == choice.numeroDeLaQuestionSuivante }.id // or null ?
+                            consultationDTO.attributes.questions.first { it.numero == choice.numeroDeLaQuestionSuivante }.id
                         )
                     }
 
@@ -142,7 +142,7 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                         questionStrapi.titre,
                         questionStrapi.popupExplication,
                         questionStrapi.numero,
-                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        null,
                         consultationDTO.id,
                         choices
                     )
