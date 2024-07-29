@@ -35,7 +35,7 @@ Ca dupliquerait le code 4 fois et on devrait aussi modifier l'application mobile
 🚫 Inconvénients : routes moins génériques, compliqué à mettre en place, gros refactos 
 
 ## Décision 🏆
-Mettre une distance entre les ids Strapi via des `ALTER SEQUENCE consultations_avant_reponse_id_seq RESTART WITH 6000;`
+Mettre une distance entre les ids Strapi via des `ALTER SEQUENCE consultations_avant_reponse_id_seq RESTART WITH 6000;` (cf le fichier 2024-07-23-id-contenus.sql du repo agora-cms-strapi)
 
 ## Conséquences
 On doit lancer 4 requêtes SQL par serveur. 
