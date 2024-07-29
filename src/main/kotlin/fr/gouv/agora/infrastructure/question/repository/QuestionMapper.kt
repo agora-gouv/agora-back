@@ -1,6 +1,15 @@
 package fr.gouv.agora.infrastructure.question.repository
 
 import fr.gouv.agora.domain.*
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
+import fr.gouv.agora.infrastructure.common.toHtml
+import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestion
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionChoixMultiples
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionChoixUnique
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionConditionnelle
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionDescription
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionOuverte
 import fr.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.gouv.agora.infrastructure.question.dto.QuestionDTO
 import org.springframework.stereotype.Component
@@ -44,6 +53,101 @@ class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
                 choixPossibleDTOList,
             )
             else -> throw IllegalArgumentException("Invalid question type ${dto.type}")
+        }
+    }
+
+    fun toDomain(consultationDTO: StrapiAttributes<ConsultationStrapiDTO>): List<Question> {
+        return consultationDTO.attributes.questions.map { questionStrapi ->
+            when (questionStrapi) {
+                is StrapiConsultationQuestionChoixMultiples -> {
+                    val choix = questionStrapi.choix.mapIndexed { index, choice ->
+                        ChoixPossibleDefault(
+                            choice.id,
+                            choice.label,
+                            index,
+                            questionStrapi.id,
+                            choice.ouvert
+                        )
+                    }
+                    QuestionMultipleChoices(
+                        questionStrapi.id,
+                        questionStrapi.titre,
+                        questionStrapi.popupExplication,
+                        questionStrapi.numero,
+                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        consultationDTO.id,
+                        choix,
+                        questionStrapi.nombreMaximumDeChoix
+                    )
+                }
+
+                is StrapiConsultationQuestionChoixUnique -> {
+                    val choix = questionStrapi.choix.mapIndexed { index, choice ->
+                        ChoixPossibleDefault(
+                            choice.id,
+                            choice.label,
+                            index,
+                            questionStrapi.id,
+                            choice.ouvert
+                        )
+                    }
+                    QuestionUniqueChoice(
+                        questionStrapi.id,
+                        questionStrapi.titre,
+                        questionStrapi.popupExplication,
+                        questionStrapi.numero,
+                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        consultationDTO.id,
+                        choix,
+                    )
+                }
+
+                is StrapiConsultationQuestionOuverte -> {
+                    QuestionOpen(
+                        questionStrapi.id,
+                        questionStrapi.titre,
+                        questionStrapi.popupExplication,
+                        questionStrapi.numero,
+                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        consultationDTO.id,
+                    )
+                }
+
+                is StrapiConsultationQuestionDescription -> {
+                    QuestionChapter(
+                        questionStrapi.id,
+                        questionStrapi.titre,
+                        null,
+                        questionStrapi.numero,
+                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        consultationDTO.id,
+                        questionStrapi.description.toHtml()
+                    )
+                }
+
+                is StrapiConsultationQuestionConditionnelle -> {
+                    val choices = questionStrapi.choix.mapIndexed { index, choice ->
+                        ChoixPossibleConditional(
+                            choice.id,
+                            choice.label,
+                            index,
+                            questionStrapi.id,
+                            choice.ouvert,
+                            consultationDTO.attributes.questions.first { it.numero == choice.numeroDeLaQuestionSuivante }.id // or null ?
+                        )
+                    }
+
+                    QuestionConditional(
+                        questionStrapi.id,
+                        questionStrapi.titre,
+                        questionStrapi.popupExplication,
+                        questionStrapi.numero,
+                        consultationDTO.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                        consultationDTO.id,
+                        choices
+                    )
+                }
+            }
         }
     }
 

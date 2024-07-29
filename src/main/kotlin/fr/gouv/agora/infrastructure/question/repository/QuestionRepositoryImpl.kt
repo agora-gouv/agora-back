@@ -50,98 +50,7 @@ class QuestionRepositoryImpl(
             val consultation = consultationStrapiRepository.getConsultationById(consultationId)
                 ?: return Questions(questionCount = 0, questions = emptyList())
 
-            val questions = consultation.attributes.questions.map { questionStrapi ->
-                when (questionStrapi) {
-                    is StrapiConsultationQuestionChoixMultiples -> {
-                        val choix = questionStrapi.choix.mapIndexed { index, choice ->
-                            ChoixPossibleDefault(
-                                choice.id,
-                                choice.label,
-                                index,
-                                questionStrapi.id,
-                                choice.ouvert
-                            )
-                        }
-                        QuestionMultipleChoices(
-                            questionStrapi.id,
-                            questionStrapi.titre,
-                            questionStrapi.popupExplication,
-                            questionStrapi.numero,
-                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
-                            consultationId,
-                            choix,
-                            questionStrapi.nombreMaximumDeChoix
-                        )
-                    }
-
-                    is StrapiConsultationQuestionChoixUnique -> {
-                        val choix = questionStrapi.choix.mapIndexed { index, choice ->
-                            ChoixPossibleDefault(
-                                choice.id,
-                                choice.label,
-                                index,
-                                questionStrapi.id,
-                                choice.ouvert
-                            )
-                        }
-                        QuestionUniqueChoice(
-                            questionStrapi.id,
-                            questionStrapi.titre,
-                            questionStrapi.popupExplication,
-                            questionStrapi.numero,
-                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
-                            consultationId,
-                            choix,
-                        )
-                    }
-
-                    is StrapiConsultationQuestionOuverte -> {
-                        QuestionOpen(
-                            questionStrapi.id,
-                            questionStrapi.titre,
-                            questionStrapi.popupExplication,
-                            questionStrapi.numero,
-                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
-                            consultationId,
-                        )
-                    }
-
-                    is StrapiConsultationQuestionDescription -> {
-                        QuestionChapter(
-                            questionStrapi.id,
-                            questionStrapi.titre,
-                            null,
-                            questionStrapi.numero,
-                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
-                            consultationId,
-                            questionStrapi.description.toHtml()
-                        )
-                    }
-
-                    is StrapiConsultationQuestionConditionnelle -> {
-                        val choices = questionStrapi.choix.mapIndexed { index, choice ->
-                            ChoixPossibleConditional(
-                                choice.id,
-                                choice.label,
-                                index,
-                                questionStrapi.id,
-                                choice.ouvert,
-                                consultation.attributes.questions.first { it.numero == choice.numeroDeLaQuestionSuivante }.id // or null ?
-                            )
-                        }
-
-                        QuestionConditional(
-                            questionStrapi.id,
-                            questionStrapi.titre,
-                            questionStrapi.popupExplication,
-                            questionStrapi.numero,
-                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
-                            consultationId,
-                            choices
-                        )
-                    }
-                }
-            }
+            val questions = questionMapper.toDomain(consultation)
 
             return Questions(consultation.attributes.nombreDeQuestion, questions)
         }
@@ -158,7 +67,10 @@ class QuestionRepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            TODO("Strapi's consultations are not implemented yet")
+            val consultation = consultationStrapiRepository.getConsultationById(consultationId)
+                ?: return emptyList()
+
+            return questionMapper.toDomain(consultation)
         }
 
         return emptyList()
