@@ -1,21 +1,8 @@
 package fr.gouv.agora.infrastructure.question.repository
 
 import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.domain.ChoixPossibleConditional
-import fr.gouv.agora.domain.ChoixPossibleDefault
 import fr.gouv.agora.domain.Question
-import fr.gouv.agora.domain.QuestionChapter
-import fr.gouv.agora.domain.QuestionConditional
-import fr.gouv.agora.domain.QuestionMultipleChoices
-import fr.gouv.agora.domain.QuestionOpen
-import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.Questions
-import fr.gouv.agora.infrastructure.common.toHtml
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionChoixMultiples
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionChoixUnique
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionConditionnelle
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionDescription
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionOuverte
 import fr.gouv.agora.infrastructure.consultation.repository.ConsultationDatabaseRepository
 import fr.gouv.agora.infrastructure.consultation.repository.ConsultationStrapiRepository
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -32,7 +19,7 @@ class QuestionRepositoryImpl(
     private val questionDatabaseRepository: QuestionDatabaseRepository,
     private val choixPossibleDatabaseRepository: ChoixPossibleDatabaseRepository,
     private val featureFlagsRepository: FeatureFlagsRepository,
-    private val questionMapper: QuestionMapper,
+    private val questionMapper: QuestionsMapper,
 ) : QuestionRepository {
 
     override fun getConsultationQuestions(consultationId: String): Questions {

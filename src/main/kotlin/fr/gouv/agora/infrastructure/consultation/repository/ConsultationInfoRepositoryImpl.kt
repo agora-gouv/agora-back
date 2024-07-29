@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.infrastructure.userAnsweredConsultation.repository.UserAnsweredConsultationDatabaseRepository
+import fr.gouv.agora.infrastructure.utils.UuidUtils.isUuid
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -71,18 +72,20 @@ class ConsultationInfoRepositoryImpl(
         val now = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
+        val (databaseAnsweredConsultationIds, strapiAnsweredConsultationIds) = userAnsweredConsultationsDatabaseRepository
+            .getAnsweredConsultationIds(userUUID)
+            .partition { it.isUuid() }
+
+        val databaseAnsweredConsultationsUUID = databaseAnsweredConsultationIds.mapNotNull { it.toUuidOrNull() }
         val databaseAnsweredConsultations = consultationsDatabaseRepository
-            .getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
+            .getConsultationsPreviewWithUpdateInfo(databaseAnsweredConsultationsUUID)
             .let { consultationInfoMapper.toDomainFinished(it, thematiques) }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             return databaseAnsweredConsultations
         }
 
-        val userAnsweredConsultationsId = userAnsweredConsultationsDatabaseRepository
-            .getAnsweredConsultationIds(userUUID).map { it.toString() }
-
-        val strapiAnsweredConsultations = strapiRepository.getConsultationsByIds(userAnsweredConsultationsId)
+        val strapiAnsweredConsultations = strapiRepository.getConsultationsByIds(strapiAnsweredConsultationIds)
             .let { consultationInfoMapper.toDomainFinished(it, now) }
 
         return databaseAnsweredConsultations + strapiAnsweredConsultations

@@ -15,10 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-internal class QuestionMapperTest {
+internal class QuestionsMapperTest {
 
     @InjectMocks
-    private lateinit var questionMapper: QuestionMapper
+    private lateinit var questionMapper: QuestionsMapper
 
     @Mock
     private lateinit var choixPossibleMapper: ChoixPossibleMapper
