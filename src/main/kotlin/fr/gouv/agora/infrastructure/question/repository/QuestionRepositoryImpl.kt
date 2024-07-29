@@ -1,19 +1,34 @@
 package fr.gouv.agora.infrastructure.question.repository
 
 import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.domain.ChoixPossibleConditional
+import fr.gouv.agora.domain.ChoixPossibleDefault
 import fr.gouv.agora.domain.Question
+import fr.gouv.agora.domain.QuestionChapter
+import fr.gouv.agora.domain.QuestionConditional
+import fr.gouv.agora.domain.QuestionMultipleChoices
+import fr.gouv.agora.domain.QuestionOpen
+import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.Questions
+import fr.gouv.agora.infrastructure.common.toHtml
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionChoixMultiples
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionChoixUnique
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionConditionnelle
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionDescription
+import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionOuverte
 import fr.gouv.agora.infrastructure.consultation.repository.ConsultationDatabaseRepository
+import fr.gouv.agora.infrastructure.consultation.repository.ConsultationStrapiRepository
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 @Component
 @Suppress("unused")
 class QuestionRepositoryImpl(
     private val consultationDatabaseRepository: ConsultationDatabaseRepository,
+    private val consultationStrapiRepository: ConsultationStrapiRepository,
     private val questionDatabaseRepository: QuestionDatabaseRepository,
     private val choixPossibleDatabaseRepository: ChoixPossibleDatabaseRepository,
     private val featureFlagsRepository: FeatureFlagsRepository,
@@ -22,7 +37,6 @@ class QuestionRepositoryImpl(
 
     override fun getConsultationQuestions(consultationId: String): Questions {
         val consultationUUID = consultationId.toUuidOrNull()
-
         if (consultationUUID != null) {
             return consultationDatabaseRepository.getConsultation(consultationUUID)?.let { consultationDTO ->
                 Questions(
@@ -32,11 +46,109 @@ class QuestionRepositoryImpl(
             } ?: Questions(questionCount = 0, questions = emptyList())
         }
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations))
-            return Questions(questionCount = 0, questions = emptyList())
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            val consultation = consultationStrapiRepository.getConsultationById(consultationId)
+                ?: return Questions(questionCount = 0, questions = emptyList())
 
-        TODO("Strapi's consultations are not implemented yet")
+            val questions = consultation.attributes.questions.map { questionStrapi ->
+                when (questionStrapi) {
+                    is StrapiConsultationQuestionChoixMultiples -> {
+                        val choix = questionStrapi.choix.mapIndexed { index, choice ->
+                            ChoixPossibleDefault(
+                                choice.id,
+                                choice.label,
+                                index,
+                                questionStrapi.id,
+                                choice.ouvert
+                            )
+                        }
+                        QuestionMultipleChoices(
+                            questionStrapi.id,
+                            questionStrapi.titre,
+                            questionStrapi.popupExplication,
+                            questionStrapi.numero,
+                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                            consultationId,
+                            choix,
+                            questionStrapi.nombreMaximumDeChoix
+                        )
+                    }
+
+                    is StrapiConsultationQuestionChoixUnique -> {
+                        val choix = questionStrapi.choix.mapIndexed { index, choice ->
+                            ChoixPossibleDefault(
+                                choice.id,
+                                choice.label,
+                                index,
+                                questionStrapi.id,
+                                choice.ouvert
+                            )
+                        }
+                        QuestionUniqueChoice(
+                            questionStrapi.id,
+                            questionStrapi.titre,
+                            questionStrapi.popupExplication,
+                            questionStrapi.numero,
+                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                            consultationId,
+                            choix,
+                        )
+                    }
+
+                    is StrapiConsultationQuestionOuverte -> {
+                        QuestionOpen(
+                            questionStrapi.id,
+                            questionStrapi.titre,
+                            questionStrapi.popupExplication,
+                            questionStrapi.numero,
+                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                            consultationId,
+                        )
+                    }
+
+                    is StrapiConsultationQuestionDescription -> {
+                        QuestionChapter(
+                            questionStrapi.id,
+                            questionStrapi.titre,
+                            null,
+                            questionStrapi.numero,
+                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                            consultationId,
+                            questionStrapi.description.toHtml()
+                        )
+                    }
+
+                    is StrapiConsultationQuestionConditionnelle -> {
+                        val choices = questionStrapi.choix.mapIndexed { index, choice ->
+                            ChoixPossibleConditional(
+                                choice.id,
+                                choice.label,
+                                index,
+                                questionStrapi.id,
+                                choice.ouvert,
+                                consultation.attributes.questions.first { it.numero == choice.numeroDeLaQuestionSuivante }.id // or null ?
+                            )
+                        }
+
+                        QuestionConditional(
+                            questionStrapi.id,
+                            questionStrapi.titre,
+                            questionStrapi.popupExplication,
+                            questionStrapi.numero,
+                            consultation.attributes.questions.firstOrNull { it.numero == (questionStrapi.numero + 1) }?.id,
+                            consultationId,
+                            choices
+                        )
+                    }
+                }
+            }
+
+            return Questions(consultation.attributes.nombreDeQuestion, questions)
+        }
+
+        return Questions(questionCount = 0, questions = emptyList())
     }
+
 
     override fun getConsultationQuestionList(consultationId: String): List<Question> {
         val consultationUUID = consultationId.toUuidOrNull()
@@ -45,10 +157,11 @@ class QuestionRepositoryImpl(
             return getConsultationQuestions(consultationUUID)
         }
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations))
-            return emptyList()
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            TODO("Strapi's consultations are not implemented yet")
+        }
 
-        TODO("Strapi's consultations are not implemented yet")
+        return emptyList()
     }
 
     private fun getConsultationQuestions(consultationUUID: UUID): List<Question> {

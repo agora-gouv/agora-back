@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiDataList
+import fr.gouv.agora.infrastructure.common.StrapiDataNullable
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
 import java.time.LocalDate
@@ -32,7 +33,7 @@ data class ConsultationStrapiDTO(
     @JsonProperty(value = "nombre_participants_cible")
     val nombreParticipantsCible: Int,
     @JsonProperty(value = "flamme_label")
-    val flammeLabel: String,
+    val flammeLabel: String?,
     @JsonProperty(value = "description")
     val description: List<StrapiRichText>,
     @JsonProperty(value = "objectifs")
@@ -48,7 +49,7 @@ data class ConsultationStrapiDTO(
     @JsonProperty("consultation_contenu_autres")
     val consultationContenuAutres: StrapiDataList<StrapiConsultationContenuAutre>,
     @JsonProperty("consultation_contenu_a_venir")
-    val consultationContenuAVenir: StrapiData<StrapiConsultationAVenir>?,
+    val consultationContenuAVenir: StrapiDataNullable<StrapiConsultationAVenir>,
 ) {
     fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime? {
         return listOfNotNull(
@@ -82,50 +83,78 @@ data class ConsultationStrapiDTO(
         value = StrapiConsultationQuestionDescription::class,
         name = "question-de-consultation.description"
     ),
+    JsonSubTypes.Type(
+        value = StrapiConsultationQuestionConditionnelle::class,
+        name = "question-de-consultation.question-conditionnelle"
+    ),
 )
-@JsonIgnoreProperties("id", "__component", "createdAt", "updatedAt", "publishedAt")
-sealed interface StrapiConsultationQuestion
+@JsonIgnoreProperties("__component", "createdAt", "updatedAt", "publishedAt")
+sealed interface StrapiConsultationQuestion {
+    val id: String
+    val numero: Int
+}
 
 data class StrapiConsultationQuestionChoixMultiples(
+    @JsonProperty("id")
+    override val id: String,
     @JsonProperty("titre")
     val titre: String,
     @JsonProperty("numero")
-    val numero: String,
+    override val numero: Int,
     @JsonProperty("nombre_maximum_de_choix")
-    val nombreMaximumDeChoix: String,
+    val nombreMaximumDeChoix: Int,
     @JsonProperty("choix")
-    val choix: List<StrapiConsultationChoix>,
+    val choix: List<StrapiConsultationChoixSimple>,
     @JsonProperty("popup_explication")
     val popupExplication: String?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionChoixUnique(
+    @JsonProperty("id")
+    override val id: String,
     @JsonProperty("titre")
     val titre: String,
     @JsonProperty("numero")
-    val numero: String,
+    override val numero: Int,
     @JsonProperty("choix")
-    val choix: List<StrapiConsultationChoix>,
+    val choix: List<StrapiConsultationChoixSimple>,
     @JsonProperty("popup_explication")
     val popupExplication: String?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionOuverte(
+    @JsonProperty("id")
+    override val id: String,
     @JsonProperty("titre")
     val titre: String,
     @JsonProperty("numero")
-    val numero: String,
+    override val numero: Int,
     @JsonProperty("popup_explication")
     val popupExplication: String?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionDescription(
+    @JsonProperty("id")
+    override val id: String,
     @JsonProperty("titre")
     val titre: String,
     @JsonProperty("numero")
-    val numero: String,
+    override val numero: Int,
     @JsonProperty("description")
     val description: List<StrapiRichText>,
+) : StrapiConsultationQuestion
+
+data class StrapiConsultationQuestionConditionnelle(
+    @JsonProperty("id")
+    override val id: String,
+    @JsonProperty("titre")
+    val titre: String,
+    @JsonProperty("numero")
+    override val numero: Int,
+    @JsonProperty("choix")
+    val choix: List<StrapiConsultationChoixConditionnel>,
+    @JsonProperty("popup_explication")
+    val popupExplication: String?,
 ) : StrapiConsultationQuestion
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
@@ -317,11 +346,22 @@ data class StrapiConsultationAVenir(
     val titreHistorique: String,
 )
 
-data class StrapiConsultationChoix(
+data class StrapiConsultationChoixSimple(
     @JsonProperty("id")
     val id: String,
     @JsonProperty("label")
     val label: String,
     @JsonProperty("ouvert")
     val ouvert: Boolean,
+)
+
+data class StrapiConsultationChoixConditionnel(
+    @JsonProperty("id")
+    val id: String,
+    @JsonProperty("label")
+    val label: String,
+    @JsonProperty("ouvert")
+    val ouvert: Boolean,
+    @JsonProperty("numero_de_la_question_suivante")
+    val numeroDeLaQuestionSuivante: Int
 )
