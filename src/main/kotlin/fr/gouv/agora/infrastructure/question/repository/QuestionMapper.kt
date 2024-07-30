@@ -33,18 +33,12 @@ class QuestionMapper {
             )
         }
 
-        val questionSuivanteId = if (questionChoixMultipleStrapi.numeroQuestionSuivante != null) {
-            consultationDTO.attributes.getQuestionId(questionChoixMultipleStrapi.numeroQuestionSuivante)
-        } else {
-            consultationDTO.attributes.getQuestionId(questionChoixMultipleStrapi.numero + 1)
-        }
-
         return QuestionMultipleChoices(
             questionChoixMultipleStrapi.id,
             questionChoixMultipleStrapi.titre,
             questionChoixMultipleStrapi.popupExplication?.toHtml(),
             questionChoixMultipleStrapi.numero,
-            questionSuivanteId,
+            consultationDTO.attributes.getNextQuestionId(questionChoixMultipleStrapi),
             consultationDTO.id,
             choix,
             questionChoixMultipleStrapi.nombreMaximumDeChoix
@@ -65,18 +59,12 @@ class QuestionMapper {
             )
         }
 
-        val questionSuivanteId = if (questionChoixUniqueStrapi.numeroQuestionSuivante != null) {
-            consultationDTO.attributes.getQuestionId(questionChoixUniqueStrapi.numeroQuestionSuivante)
-        } else {
-            consultationDTO.attributes.getQuestionId(questionChoixUniqueStrapi.numero + 1)
-        }
-
         return QuestionUniqueChoice(
             questionChoixUniqueStrapi.id,
             questionChoixUniqueStrapi.titre,
             questionChoixUniqueStrapi.popupExplication?.toHtml(),
             questionChoixUniqueStrapi.numero,
-            questionSuivanteId,
+            consultationDTO.attributes.getNextQuestionId(questionChoixUniqueStrapi),
             consultationDTO.id,
             choix,
         )
@@ -86,17 +74,12 @@ class QuestionMapper {
         questionOuverteStrapi: StrapiConsultationQuestionOuverte,
         consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
     ): QuestionOpen {
-        val questionSuivanteId = if (questionOuverteStrapi.numeroQuestionSuivante != null) {
-            consultationDTO.attributes.getQuestionId(questionOuverteStrapi.numeroQuestionSuivante)
-        } else {
-            consultationDTO.attributes.getQuestionId(questionOuverteStrapi.numero + 1)
-        }
         return QuestionOpen(
             questionOuverteStrapi.id,
             questionOuverteStrapi.titre,
             questionOuverteStrapi.popupExplication?.toHtml(),
             questionOuverteStrapi.numero,
-            questionSuivanteId,
+            consultationDTO.attributes.getNextQuestionId(questionOuverteStrapi),
             consultationDTO.id,
         )
     }
@@ -105,17 +88,12 @@ class QuestionMapper {
         questionDescriptionStrapi: StrapiConsultationQuestionDescription,
         consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
     ): QuestionChapter {
-        val questionSuivanteId = if (questionDescriptionStrapi.numeroQuestionSuivante != null) {
-            consultationDTO.attributes.getQuestionId(questionDescriptionStrapi.numeroQuestionSuivante)
-        } else {
-            consultationDTO.attributes.getQuestionId(questionDescriptionStrapi.numero + 1)
-        } // TODO refacto questionSuivanteId ?
         return QuestionChapter(
             questionDescriptionStrapi.id,
             questionDescriptionStrapi.titre,
             null,
             questionDescriptionStrapi.numero,
-            questionSuivanteId,
+            consultationDTO.attributes.getNextQuestionId(questionDescriptionStrapi),
             consultationDTO.id,
             questionDescriptionStrapi.description.toHtml()
         )
