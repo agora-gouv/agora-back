@@ -106,7 +106,7 @@ data class StrapiConsultationQuestionChoixMultiples(
     @JsonProperty("choix")
     val choix: List<StrapiConsultationChoixSimple>,
     @JsonProperty("popup_explication")
-    val popupExplication: String?,
+    val popupExplication: List<StrapiRichText>?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionChoixUnique(
@@ -119,7 +119,7 @@ data class StrapiConsultationQuestionChoixUnique(
     @JsonProperty("choix")
     val choix: List<StrapiConsultationChoixSimple>,
     @JsonProperty("popup_explication")
-    val popupExplication: String?,
+    val popupExplication: List<StrapiRichText>?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionOuverte(
@@ -130,7 +130,7 @@ data class StrapiConsultationQuestionOuverte(
     @JsonProperty("numero")
     override val numero: Int,
     @JsonProperty("popup_explication")
-    val popupExplication: String?,
+    val popupExplication: List<StrapiRichText>?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionDescription(
@@ -154,7 +154,7 @@ data class StrapiConsultationQuestionConditionnelle(
     @JsonProperty("choix")
     val choix: List<StrapiConsultationChoixConditionnel>,
     @JsonProperty("popup_explication")
-    val popupExplication: String?,
+    val popupExplication: List<StrapiRichText>?,
 ) : StrapiConsultationQuestion
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")

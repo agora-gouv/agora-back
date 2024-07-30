@@ -36,7 +36,7 @@ class QuestionMapper {
         return QuestionMultipleChoices(
             questionChoixMultipleStrapi.id,
             questionChoixMultipleStrapi.titre,
-            questionChoixMultipleStrapi.popupExplication,
+            questionChoixMultipleStrapi.popupExplication?.toHtml(),
             questionChoixMultipleStrapi.numero,
             consultationDTO.attributes.questions.firstOrNull { questionChoixMultipleStrapi.numero + 1 == it.numero }?.id,
             consultationDTO.id,
@@ -61,7 +61,7 @@ class QuestionMapper {
         return QuestionUniqueChoice(
             questionChoixUniqueStrapi.id,
             questionChoixUniqueStrapi.titre,
-            questionChoixUniqueStrapi.popupExplication,
+            questionChoixUniqueStrapi.popupExplication?.toHtml(),
             questionChoixUniqueStrapi.numero,
             consultationDTO.attributes.questions.firstOrNull { it.numero == (questionChoixUniqueStrapi.numero + 1) }?.id,
             consultationDTO.id,
@@ -76,7 +76,7 @@ class QuestionMapper {
         return QuestionOpen(
             questionOuverteStrapi.id,
             questionOuverteStrapi.titre,
-            questionOuverteStrapi.popupExplication,
+            questionOuverteStrapi.popupExplication?.toHtml(),
             questionOuverteStrapi.numero,
             consultationDTO.attributes.questions.firstOrNull { it.numero == (questionOuverteStrapi.numero + 1) }?.id,
             consultationDTO.id,
@@ -116,7 +116,7 @@ class QuestionMapper {
         return QuestionConditional(
             questionConditionnelleStrapi.id,
             questionConditionnelleStrapi.titre,
-            questionConditionnelleStrapi.popupExplication,
+            questionConditionnelleStrapi.popupExplication?.toHtml(),
             questionConditionnelleStrapi.numero,
             null,
             consultationDTO.id,
