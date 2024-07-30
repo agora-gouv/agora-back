@@ -18,10 +18,13 @@ import java.util.*
 internal class QuestionsMapperTest {
 
     @InjectMocks
-    private lateinit var questionMapper: QuestionsMapper
+    private lateinit var questionsMapper: QuestionsMapper
 
     @Mock
     private lateinit var choixPossibleMapper: ChoixPossibleMapper
+
+    @Mock
+    private lateinit var questionMapper: QuestionMapper
 
     private val questionUUID = UUID.randomUUID()
     private val consultationUUID = UUID.randomUUID()
@@ -60,7 +63,7 @@ internal class QuestionsMapperTest {
             val questionUniqueChoiceDTO = questionUniqueChoiceDTO.copy(nextQuestionId = nextQuestionUUID)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionUniqueChoiceDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -76,7 +79,7 @@ internal class QuestionsMapperTest {
             val questionUniqueChoiceDTO = questionUniqueChoiceDTO.copy(nextQuestionId = null)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionUniqueChoiceDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -97,7 +100,7 @@ internal class QuestionsMapperTest {
             )
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionUniqueChoiceDTO,
                 questionDTOList = listOf(questionUniqueChoiceDTO, nextQuestionDTO),
                 choixPossibleDTOList = emptyList(),
@@ -115,7 +118,7 @@ internal class QuestionsMapperTest {
             given(choixPossibleMapper.toDefault(choixPossibleDTO)).willReturn(choixPossible)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionUniqueChoiceDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = listOf(choixPossibleDTO),
@@ -150,7 +153,7 @@ internal class QuestionsMapperTest {
 
             // When
             val hasException = try {
-                questionMapper.toDomain(
+                questionsMapper.toDomain(
                     dto = questionMultipleChoicesDTO,
                     questionDTOList = emptyList(),
                     choixPossibleDTOList = emptyList(),
@@ -171,7 +174,7 @@ internal class QuestionsMapperTest {
             val questionMultipleChoicesDTO = questionMultipleChoicesDTO.copy(nextQuestionId = nextQuestionUUID)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionMultipleChoicesDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -187,7 +190,7 @@ internal class QuestionsMapperTest {
             val questionMultipleChoicesDTO = questionMultipleChoicesDTO.copy(nextQuestionId = null)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionMultipleChoicesDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -208,7 +211,7 @@ internal class QuestionsMapperTest {
             )
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionMultipleChoicesDTO,
                 questionDTOList = listOf(questionMultipleChoicesDTO, nextQuestionDTO),
                 choixPossibleDTOList = emptyList(),
@@ -226,7 +229,7 @@ internal class QuestionsMapperTest {
             given(choixPossibleMapper.toDefault(choixPossibleDTO)).willReturn(choixPossible)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionMultipleChoicesDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = listOf(choixPossibleDTO),
@@ -259,7 +262,7 @@ internal class QuestionsMapperTest {
             val questionOpenDTO = questionOpenDTO.copy(nextQuestionId = nextQuestionUUID)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionOpenDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -275,7 +278,7 @@ internal class QuestionsMapperTest {
             val questionOpenDTO = questionOpenDTO.copy(nextQuestionId = null)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionOpenDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -296,7 +299,7 @@ internal class QuestionsMapperTest {
             )
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionOpenDTO,
                 questionDTOList = listOf(questionOpenDTO, nextQuestionDTO),
                 choixPossibleDTOList = emptyList(),
@@ -330,7 +333,7 @@ internal class QuestionsMapperTest {
             val questionChapterDTO = questionChapterDTO.copy(nextQuestionId = nextQuestionUUID)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionChapterDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -346,7 +349,7 @@ internal class QuestionsMapperTest {
             val questionChapterDTO = questionChapterDTO.copy(nextQuestionId = null)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionChapterDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -367,7 +370,7 @@ internal class QuestionsMapperTest {
             )
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionChapterDTO,
                 questionDTOList = listOf(questionChapterDTO, nextQuestionDTO),
                 choixPossibleDTOList = emptyList(),
@@ -401,7 +404,7 @@ internal class QuestionsMapperTest {
             val questionConditionalDTO = questionConditionalDTO.copy(nextQuestionId = nextQuestionUUID)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionConditionalDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -417,7 +420,7 @@ internal class QuestionsMapperTest {
             val questionConditionalDTO = questionConditionalDTO.copy(nextQuestionId = null)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionConditionalDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = emptyList(),
@@ -438,7 +441,7 @@ internal class QuestionsMapperTest {
             )
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionConditionalDTO,
                 questionDTOList = listOf(questionConditionalDTO, nextQuestionDTO),
                 choixPossibleDTOList = emptyList(),
@@ -455,7 +458,7 @@ internal class QuestionsMapperTest {
             given(choixPossibleMapper.toConditional(choixPossibleDTO)).willReturn(null)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionConditionalDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = listOf(choixPossibleDTO),
@@ -473,7 +476,7 @@ internal class QuestionsMapperTest {
             given(choixPossibleMapper.toConditional(choixPossibleDTO)).willReturn(choixPossible)
 
             // When
-            val result = questionMapper.toDomain(
+            val result = questionsMapper.toDomain(
                 dto = questionConditionalDTO,
                 questionDTOList = emptyList(),
                 choixPossibleDTOList = listOf(choixPossibleDTO),

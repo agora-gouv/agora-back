@@ -58,6 +58,10 @@ data class ConsultationStrapiDTO(
             contenuAvantReponse.data.attributes.datetimePublication,
         ).filter { it.isBefore(now) }.maxOrNull()
     }
+
+    fun getQuestionId(numero: Int): String? {
+        return questions.firstOrNull { numero == it.numero }?.id
+    }
 }
 
 @JsonTypeInfo(
@@ -107,6 +111,8 @@ data class StrapiConsultationQuestionChoixMultiples(
     val choix: List<StrapiConsultationChoixSimple>,
     @JsonProperty("popup_explication")
     val popupExplication: List<StrapiRichText>?,
+    @JsonProperty("question_suivante")
+    val numeroQuestionSuivante: Int?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionChoixUnique(
@@ -120,6 +126,8 @@ data class StrapiConsultationQuestionChoixUnique(
     val choix: List<StrapiConsultationChoixSimple>,
     @JsonProperty("popup_explication")
     val popupExplication: List<StrapiRichText>?,
+    @JsonProperty("question_suivante")
+    val numeroQuestionSuivante: Int?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionOuverte(
@@ -131,6 +139,8 @@ data class StrapiConsultationQuestionOuverte(
     override val numero: Int,
     @JsonProperty("popup_explication")
     val popupExplication: List<StrapiRichText>?,
+    @JsonProperty("question_suivante")
+    val numeroQuestionSuivante: Int?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionDescription(
@@ -142,6 +152,8 @@ data class StrapiConsultationQuestionDescription(
     override val numero: Int,
     @JsonProperty("description")
     val description: List<StrapiRichText>,
+    @JsonProperty("question_suivante")
+    val numeroQuestionSuivante: Int?,
 ) : StrapiConsultationQuestion
 
 data class StrapiConsultationQuestionConditionnelle(
