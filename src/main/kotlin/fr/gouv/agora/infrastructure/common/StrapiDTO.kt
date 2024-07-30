@@ -25,6 +25,11 @@ data class StrapiData <T>(
     val data: StrapiAttributes<T>,
 )
 
+data class StrapiDataNullable <T>(
+    @JsonProperty("data")
+    val data: StrapiAttributes<T>?,
+)
+
 data class StrapiAttributes<T>(
     @JsonProperty(value = "attributes")
     val attributes: T,

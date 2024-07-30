@@ -10,6 +10,10 @@ object UuidUtils {
     const val SKIP_QUESTION_CHOICE_UUID = NOT_FOUND_UUID_STRING
     const val NOT_APPLICABLE_CHOICE_UUID = "11111111-1111-1111-1111-111111111111"
 
+    fun String.isUuid(): Boolean {
+        return this.toUuidOrNull() != null
+    }
+
     fun String.toUuidOrNull() = try {
         UUID.fromString(this)
     } catch (e: IllegalArgumentException) {

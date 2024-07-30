@@ -61,7 +61,7 @@ class ConsultationUpdateHistoryMapper(
                 )
             }
 
-        val contenuAVenir = consultationStrapiDTO.attributes.consultationContenuAVenir?.data?.let {
+        val contenuAVenir = consultationStrapiDTO.attributes.consultationContenuAVenir.data?.let {
             ConsultationUpdateHistory(
                 ConsultationUpdateHistoryType.RESULTS,
                 null,
@@ -149,5 +149,4 @@ class ConsultationUpdateHistoryMapper(
                 } else historyItem
             }
     }
-
 }

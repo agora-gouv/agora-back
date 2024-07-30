@@ -66,12 +66,12 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
                 WHERE CURRENT_DATE > update_date
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
-            AND CAST(id as TEXT) IN (SELECT consultation_id FROM user_answered_consultation WHERE user_id = :userId)
+            AND id IN :consultationsId
             ORDER BY updateDate DESC
         """,
         nativeQuery = true
     )
-    fun getConsultationsAnsweredPreviewWithUpdateInfo(@Param("userId") userId: UUID): List<ConsultationWithUpdateInfoDTO>
+    fun getConsultationsPreviewWithUpdateInfo(@Param("consultationsId") consultationsId: List<UUID>): List<ConsultationWithUpdateInfoDTO>
 
     @Query(
         value = """SELECT COUNT(*)
