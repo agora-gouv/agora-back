@@ -39,8 +39,6 @@ data class StrapiConsultationContenuApresReponse(
     val historiqueTitre: String,
     @JsonProperty("historique_call_to_action")
     val historiqueCallToAction: String,
-    @JsonProperty("historique_type")
-    val historiqueType: String,
     @JsonProperty("encart_visualisation_resultat_avant_fin_consultation_picto")
     val encartVisualisationResultatAvantFinConsultationPictogramme: String,
     @JsonProperty("encart_visualisation_resultat_avant_fin_consultation_desc")
