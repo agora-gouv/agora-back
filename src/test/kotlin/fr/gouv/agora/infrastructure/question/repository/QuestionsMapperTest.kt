@@ -12,7 +12,7 @@ import fr.gouv.agora.domain.QuestionMultipleChoices
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.gouv.agora.infrastructure.question.dto.QuestionDTO
 import org.assertj.core.api.Assertions.assertThat

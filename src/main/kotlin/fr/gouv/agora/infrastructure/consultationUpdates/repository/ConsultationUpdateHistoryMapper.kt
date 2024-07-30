@@ -4,7 +4,7 @@ import fr.gouv.agora.domain.ConsultationUpdateHistory
 import fr.gouv.agora.domain.ConsultationUpdateHistoryStatus
 import fr.gouv.agora.domain.ConsultationUpdateHistoryType
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateHistoryWithDateDTO
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
