@@ -38,6 +38,10 @@ import java.time.LocalDate
         value = StrapiConsultationSectionChiffre::class,
         name = "consultation-section.section-chiffre"
     ),
+    JsonSubTypes.Type(
+        value = StrapiConsultationSectionAccordeon::class,
+        name = "consultation-section.section-accordeon"
+    ),
 )
 @JsonIgnoreProperties("__component", "createdAt", "updatedAt", "publishedAt")
 sealed interface StrapiConsultationSection
@@ -80,6 +84,15 @@ data class StrapiConsultationSectionChiffre(
     @JsonProperty("description")
     val description: List<StrapiRichText>,
 ) : StrapiConsultationSection
+
+data class StrapiConsultationSectionAccordeon(
+    @JsonProperty("id")
+    val id: String,
+    @JsonProperty("titre")
+    val titre: String,
+    @JsonProperty("description")
+    val description: List<StrapiRichText>,
+): StrapiConsultationSection
 
 data class StrapiConsultationSectionVideo(
     @JsonProperty("id")
