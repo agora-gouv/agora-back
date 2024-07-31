@@ -330,8 +330,7 @@ class ConsultationUpdateInfoV2Mapper {
                 }
 
                 is StrapiConsultationSectionAccordeon -> {
-                    Section.Accordion(it.titre, listOf(Section.RichText(it.description.toHtml().removeSurrounding("<p>", "</p>")))
-                    )
+                    Section.Accordion(it.titre, listOf(Section.RichText(it.description.toHtml().removeSurrounding("<p>", "</p>"))))
                 }
             }
         }
