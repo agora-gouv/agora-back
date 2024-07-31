@@ -330,7 +330,8 @@ class ConsultationUpdateInfoV2Mapper {
                 }
 
                 is StrapiConsultationSectionAccordeon -> {
-                    Section.FocusNumber(it.titre, it.description.toHtml().removeSurrounding("<p>", "</p>"))
+                    Section.Accordion(it.titre, listOf(Section.RichText(it.description.toHtml().removeSurrounding("<p>", "</p>")))
+                    )
                 }
             }
         }
