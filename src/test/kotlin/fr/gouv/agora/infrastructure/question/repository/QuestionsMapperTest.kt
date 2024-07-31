@@ -659,8 +659,6 @@ internal class QuestionsMapperTest {
                           "attributes": {
                             "template_partage_avant_fin_consultation": " ",
                             "template_partage_apres_fin_consultation": " ",
-                            "footer_titre": " ",
-                            "footer_description": [],
                             "feedback_pictogramme": " ",
                             "feedback_titre": " ",
                             "feedback_description": [],

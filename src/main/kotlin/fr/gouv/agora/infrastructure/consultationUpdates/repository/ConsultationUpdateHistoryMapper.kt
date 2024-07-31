@@ -45,7 +45,7 @@ class ConsultationUpdateHistoryMapper(
                 it.id,
                 if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                 it.attributes.historiqueTitre,
-                consultationStrapiDTO.attributes.dateDeDebut.toDate(),
+                consultationStrapiDTO.attributes.dateDeFin.toDate(),
                 it.attributes.historiqueCallToAction
             )
         }

@@ -578,99 +578,6 @@ class ConsultationStrapiDTOTest {
                         "attributes": {
                           "template_partage_avant_fin_consultation": "Comme moi, tu peux participer à la consultation : {title} {url}",
                           "template_partage_apres_fin_consultation": "Les premiers résultats de la consultation {title} : {url}",
-                          "footer_titre": "Envie d'aller plus loin ?",
-                          "footer_description": [
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour en savoir plus sur la mission parlementaire",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour mieux comprendre la loi EGAlim 2  ",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour en savoir plus sur la construction des prix des produits alimentaires ",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "Si vous souhaitez prendre connaissance des textes de référence :",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour lire la loi EGAlim 1",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour lire la loi EGAlim 2",
-                                  "type": "text"
-                                }
-                              ]
-                            }
-                          ],
                           "feedback_pictogramme": "👀",
                           "feedback_titre": "titre feedback",
                           "feedback_description": [
@@ -839,30 +746,6 @@ class ConsultationStrapiDTOTest {
                               "message_mise_a_jour": "Analyse disponible",
                               "lien_telechargement_analyse": "https://content.agora.incubateur.net/consultation-syntheses/20240605-agora_handicap_synthese_VF.pdf",
                               "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
-                              "header_titre": "Analyse des réponses",
-                              "header_description": [
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "Les participants souhaitent en majorité financer la transition écologique tout en réduisant la dette publique.",
-                                      "type": "text"
-                                    }
-                                  ]
-                                }
-                              ],
-                              "footer_titre": "optionnel normalement",
-                              "footer_description": [
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "optionnel normalement",
-                                      "type": "text"
-                                    }
-                                  ]
-                                }
-                              ],
                               "feedback_pictogramme": "💬",
                               "feedback_titre": "Donnez votre avis",
                               "feedback_description": [
@@ -963,30 +846,6 @@ class ConsultationStrapiDTOTest {
                               "message_mise_a_jour": "Mise à jour",
                               "lien_telechargement_analyse": null,
                               "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
-                              "header_titre": "Mise à jour",
-                              "header_description": [
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "Test de mise à jour",
-                                      "type": "text"
-                                    }
-                                  ]
-                                }
-                              ],
-                              "footer_titre": "Test de mise à jour",
-                              "footer_description": [
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "Test de mise à jour",
-                                      "type": "text"
-                                    }
-                                  ]
-                                }
-                              ],
                               "feedback_pictogramme": "💬",
                               "feedback_titre": "Donnez votre avis",
                               "feedback_description": [

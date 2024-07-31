@@ -23,10 +23,6 @@ data class StrapiConsultationContenuApresReponse(
     val templatePartageAvantFinConsultation: String,
     @JsonProperty("template_partage_apres_fin_consultation")
     val templatePartageApresFinConsultation: String,
-    @JsonProperty("footer_titre")
-    val footerTitre: String,
-    @JsonProperty("footer_description")
-    val footerDescription: List<StrapiRichText>,
     @JsonProperty("feedback_pictogramme")
     val feedbackPictogramme: String,
     @JsonProperty("feedback_titre")
@@ -61,14 +57,6 @@ data class StrapiConsultationContenuAutre(
     val lienTelechargementAnalyse: String?,
     @JsonProperty("template_partage")
     val templatePartage: String,
-    @JsonProperty("header_titre")
-    val headerTitre: String,
-    @JsonProperty("header_description")
-    val headerDescription: List<StrapiRichText>,
-    @JsonProperty("footer_titre")
-    val footerTitre: String,
-    @JsonProperty("footer_description")
-    val footerDescription: List<StrapiRichText>,
     @JsonProperty("feedback_pictogramme")
     val feedbackPictogramme: String,
     @JsonProperty("feedback_titre")

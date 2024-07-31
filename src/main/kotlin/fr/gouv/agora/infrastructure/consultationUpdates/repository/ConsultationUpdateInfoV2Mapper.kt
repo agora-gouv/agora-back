@@ -246,11 +246,7 @@ class ConsultationUpdateInfoV2Mapper {
             hasQuestionsInfo = false,
             hasParticipationInfo = false,
             responsesInfo = null,
-            // TODO test via l'app
-            sectionsHeader = listOf(
-                Section.Title(contenu.headerTitre),
-                Section.RichText(contenu.headerDescription.toHtml())
-            ),
+            sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = emptyList(),
             infoHeader = null,
@@ -261,10 +257,7 @@ class ConsultationUpdateInfoV2Mapper {
                 contenu.feedbackPictogramme,
                 "<body>${contenu.feedbackDescription.toHtml()}</body>"
             ),
-            footer = Footer(
-                contenu.footerTitre,
-                "<body>${contenu.footerDescription.toHtml()}</body>"
-            ),
+            footer = null,
             goals = null,
         )
     }
@@ -299,10 +292,7 @@ class ConsultationUpdateInfoV2Mapper {
                 contenu.feedbackPictogramme,
                 "<body>${contenu.feedbackDescription.toHtml()}</body>"
             ),
-            footer = Footer(
-                contenu.footerTitre,
-                "<body>${contenu.footerDescription.toHtml()}</body>"
-            ),
+            footer = null,
             goals = null,
         )
     }
