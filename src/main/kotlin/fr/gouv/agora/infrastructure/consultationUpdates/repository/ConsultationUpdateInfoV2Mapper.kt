@@ -219,15 +219,11 @@ class ConsultationUpdateInfoV2Mapper {
 
         return ConsultationUpdateInfoV2(
             id = consultation.contenuAvantReponse.data.id,
-            updateDate = contentBeforeResponse.datetimePublication,
+            updateDate = consultation.dateDeDebut,
             shareTextTemplate = contentBeforeResponse.templatePartage,
             hasQuestionsInfo = true,
             hasParticipationInfo = false,
-            responsesInfo = ResponsesInfo(
-                picto = contentAfterResponse.encartVisualisationResultatAvantFinConsultationPictogramme,
-                description = "<body>${contentAfterResponse.encartVisualisationResultatAvantFinConsultationDescription.toHtml()}</body>",
-                actionText = contentAfterResponse.encartVisualisationResultatAvantFinConsultationCallToAction
-            ),
+            responsesInfo = null,
             sectionsHeader = emptyList(),
             body = sections,
             bodyPreview = emptyList(),
@@ -280,11 +276,15 @@ class ConsultationUpdateInfoV2Mapper {
 
         return ConsultationUpdateInfoV2(
             id = contenuId,
-            updateDate = contenu.datetimePublication,
+            updateDate = consultation.attributes.dateDeDebut,
             shareTextTemplate = contenu.templatePartageApresFinConsultation,
             hasQuestionsInfo = false,
             hasParticipationInfo = false,
-            responsesInfo = null,
+            responsesInfo = ResponsesInfo(
+                picto = contenu.encartVisualisationResultatAvantFinConsultationPictogramme,
+                description = "<body>${contenu.encartVisualisationResultatAvantFinConsultationDescription.toHtml()}</body>",
+                actionText = contenu.encartVisualisationResultatAvantFinConsultationCallToAction
+            ),
             sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = emptyList(),

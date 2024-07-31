@@ -649,7 +649,6 @@ internal class QuestionsMapperTest {
                             "createdAt": "2024-07-30T14:48:10.811Z",
                             "updatedAt": "2024-07-30T14:49:13.946Z",
                             "publishedAt": "2024-07-30T14:49:13.936Z",
-                            "datetime_publication": "2024-07-29T22:00:00.000Z",
                             "sections": []
                           }
                         }
@@ -676,7 +675,6 @@ internal class QuestionsMapperTest {
                             "encart_visualisation_resultat_apres_fin_consultation_picto": " ",
                             "encart_visualisation_resultat_apres_fin_consultation_desc": [],
                             "encart_visualisation_resultat_apres_fin_consultation_cta": " ",
-                            "datetime_publication": "2024-07-22T22:00:00.000Z",
                             "sections": []
                           }
                         }

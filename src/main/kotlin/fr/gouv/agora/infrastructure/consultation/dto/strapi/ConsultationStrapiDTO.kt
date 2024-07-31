@@ -54,8 +54,7 @@ data class ConsultationStrapiDTO(
     fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime? {
         return listOfNotNull(
             *consultationContenuAutres.data.map { it.attributes.datetimePublication }.toTypedArray(),
-            contenuApresReponseOuTerminee.data.attributes.datetimePublication,
-            contenuAvantReponse.data.attributes.datetimePublication,
+            dateDeDebut,
         ).filter { it.isBefore(now) }.maxOrNull()
     }
 

@@ -13,8 +13,6 @@ data class StrapiConsultationContenuAvantReponse(
     val historiqueTitre: String,
     @JsonProperty("historique_call_to_action")
     val historiqueCallToAction: String,
-    @JsonProperty("datetime_publication")
-    val datetimePublication: LocalDateTime,
     @JsonProperty("sections")
     val sections: List<StrapiConsultationSection>,
 )
@@ -51,8 +49,6 @@ data class StrapiConsultationContenuApresReponse(
     val encartVisualisationResultatApresFinConsultationDescription: List<StrapiRichText>,
     @JsonProperty("encart_visualisation_resultat_apres_fin_consultation_cta")
     val encartVisualisationResultatApresFinConsultationCallToAction: String,
-    @JsonProperty("datetime_publication")
-    val datetimePublication: LocalDateTime,
     @JsonProperty("sections")
     val sections: List<StrapiConsultationSection>,
 )

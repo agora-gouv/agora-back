@@ -511,7 +511,6 @@ class ConsultationStrapiDTOTest {
                           "createdAt": "2024-06-21T12:59:00.544Z",
                           "updatedAt": "2024-07-02T10:00:56.724Z",
                           "publishedAt": "2024-06-21T12:59:01.521Z",
-                          "datetime_publication": "2024-07-01T23:00:00.000Z",
                           "sections": [
                             {
                               "id": 1,
@@ -721,7 +720,6 @@ class ConsultationStrapiDTOTest {
                             }
                           ],
                           "encart_visualisation_resultat_apres_fin_consultation_cta": "Voir les premiers résultats",
-                          "datetime_publication": "2024-06-24T22:30:00.000Z",
                           "sections": [
                             {
                               "id": 2,
