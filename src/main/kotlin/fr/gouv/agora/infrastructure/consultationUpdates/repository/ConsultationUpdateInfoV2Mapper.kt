@@ -213,7 +213,6 @@ class ConsultationUpdateInfoV2Mapper {
     fun toDomainUnanswered(consultationDTO: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2 {
         val consultation = consultationDTO.attributes
         val contentBeforeResponse = consultation.contenuAvantReponse.data.attributes
-        val contentAfterResponse = consultation.contenuApresReponseOuTerminee.data.attributes
 
         val sections = toSections(contentBeforeResponse.sections)
 
@@ -247,7 +246,11 @@ class ConsultationUpdateInfoV2Mapper {
             hasQuestionsInfo = false,
             hasParticipationInfo = false,
             responsesInfo = null,
-            sectionsHeader = emptyList(),
+            // TODO test via l'app
+            sectionsHeader = listOf(
+                Section.Title(contenu.headerTitre),
+                Section.RichText(contenu.headerDescription.toHtml())
+            ),
             body = htmlSections,
             bodyPreview = emptyList(),
             infoHeader = null,

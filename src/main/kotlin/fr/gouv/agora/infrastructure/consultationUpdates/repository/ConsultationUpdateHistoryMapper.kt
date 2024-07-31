@@ -41,7 +41,7 @@ class ConsultationUpdateHistoryMapper(
         }
         val historiqueApresReponse = contenuApresReponse.let {
             ConsultationUpdateHistory(
-                ConsultationUpdateHistoryType.UPDATE,
+                ConsultationUpdateHistoryType.RESULTS,
                 it.id,
                 if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                 it.attributes.historiqueTitre,
