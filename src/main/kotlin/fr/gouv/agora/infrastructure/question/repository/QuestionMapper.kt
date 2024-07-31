@@ -9,12 +9,12 @@ import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.toHtml
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionChoixMultiples
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionChoixUnique
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionConditionnelle
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionDescription
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationQuestionOuverte
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionChoixMultiples
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionChoixUnique
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionConditionnelle
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionDescription
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionOuverte
 import org.springframework.stereotype.Component
 
 @Component

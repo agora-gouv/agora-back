@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import fr.gouv.agora.infrastructure.common.StrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
@@ -507,11 +508,9 @@ class ConsultationStrapiDTOTest {
                           "template_partage": "Comme moi, tu peux participer à la consultation : {title} {url}",
                           "historique_titre": "Lancement",
                           "historique_call_to_action": "Voir les objectifs",
-                          "historique_type": "contenu",
                           "createdAt": "2024-06-21T12:59:00.544Z",
                           "updatedAt": "2024-07-02T10:00:56.724Z",
                           "publishedAt": "2024-06-21T12:59:01.521Z",
-                          "datetime_publication": "2024-07-01T23:00:00.000Z",
                           "sections": [
                             {
                               "id": 1,
@@ -579,99 +578,6 @@ class ConsultationStrapiDTOTest {
                         "attributes": {
                           "template_partage_avant_fin_consultation": "Comme moi, tu peux participer à la consultation : {title} {url}",
                           "template_partage_apres_fin_consultation": "Les premiers résultats de la consultation {title} : {url}",
-                          "footer_titre": "Envie d'aller plus loin ?",
-                          "footer_description": [
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour en savoir plus sur la mission parlementaire",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour mieux comprendre la loi EGAlim 2  ",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour en savoir plus sur la construction des prix des produits alimentaires ",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "Si vous souhaitez prendre connaissance des textes de référence :",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour lire la loi EGAlim 1",
-                                  "type": "text"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "paragraph",
-                              "children": [
-                                {
-                                  "text": "- Cliquez ici pour lire la loi EGAlim 2",
-                                  "type": "text"
-                                }
-                              ]
-                            }
-                          ],
                           "feedback_pictogramme": "👀",
                           "feedback_titre": "titre feedback",
                           "feedback_description": [
@@ -692,7 +598,6 @@ class ConsultationStrapiDTOTest {
                           ],
                           "historique_titre": "Fin de consultation",
                           "historique_call_to_action": "Consulter toutes les réponses",
-                          "historique_type": "réponse et pourcentage",
                           "createdAt": "2024-06-21T14:23:51.194Z",
                           "updatedAt": "2024-07-09T13:15:13.923Z",
                           "publishedAt": "2024-06-21T14:23:52.266Z",
@@ -722,7 +627,6 @@ class ConsultationStrapiDTOTest {
                             }
                           ],
                           "encart_visualisation_resultat_apres_fin_consultation_cta": "Voir les premiers résultats",
-                          "datetime_publication": "2024-06-24T22:30:00.000Z",
                           "sections": [
                             {
                               "id": 2,
@@ -842,30 +746,6 @@ class ConsultationStrapiDTOTest {
                               "message_mise_a_jour": "Analyse disponible",
                               "lien_telechargement_analyse": "https://content.agora.incubateur.net/consultation-syntheses/20240605-agora_handicap_synthese_VF.pdf",
                               "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
-                              "header_titre": "Analyse des réponses",
-                              "header_description": [
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "Les participants souhaitent en majorité financer la transition écologique tout en réduisant la dette publique.",
-                                      "type": "text"
-                                    }
-                                  ]
-                                }
-                              ],
-                              "footer_titre": "optionnel normalement",
-                              "footer_description": [
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "optionnel normalement",
-                                      "type": "text"
-                                    }
-                                  ]
-                                }
-                              ],
                               "feedback_pictogramme": "💬",
                               "feedback_titre": "Donnez votre avis",
                               "feedback_description": [
@@ -881,7 +761,6 @@ class ConsultationStrapiDTOTest {
                               ],
                               "historique_titre": "Analyse des réponses",
                               "historique_call_to_action": "Consulter la synthèse",
-                              "historique_type": "réponse et pourcentage",
                               "createdAt": "2024-06-21T14:40:01.183Z",
                               "updatedAt": "2024-07-24T09:49:23.682Z",
                               "publishedAt": "2024-07-24T09:49:12.421Z",
@@ -966,30 +845,6 @@ class ConsultationStrapiDTOTest {
                               "message_mise_a_jour": "Mise à jour",
                               "lien_telechargement_analyse": null,
                               "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
-                              "header_titre": "Mise à jour",
-                              "header_description": [
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "Test de mise à jour",
-                                      "type": "text"
-                                    }
-                                  ]
-                                }
-                              ],
-                              "footer_titre": "Test de mise à jour",
-                              "footer_description": [
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "Test de mise à jour",
-                                      "type": "text"
-                                    }
-                                  ]
-                                }
-                              ],
                               "feedback_pictogramme": "💬",
                               "feedback_titre": "Donnez votre avis",
                               "feedback_description": [
@@ -1005,7 +860,6 @@ class ConsultationStrapiDTOTest {
                               ],
                               "historique_titre": "Test de mise à jour",
                               "historique_call_to_action": "Test de mise à jour",
-                              "historique_type": "contenu",
                               "createdAt": "2024-06-21T14:40:01.183Z",
                               "updatedAt": "2024-07-24T09:48:33.635Z",
                               "publishedAt": "2024-07-24T09:48:33.628Z",

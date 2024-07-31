@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference
 import fr.gouv.agora.config.CmsStrapiHttpClient
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
-import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
-import fr.gouv.agora.infrastructure.consultation.dto.StrapiConsultationContenuAvantReponse
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 

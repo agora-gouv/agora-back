@@ -4,7 +4,7 @@ import fr.gouv.agora.domain.ConsultationUpdateHistory
 import fr.gouv.agora.domain.ConsultationUpdateHistoryStatus
 import fr.gouv.agora.domain.ConsultationUpdateHistoryType
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateHistoryWithDateDTO
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
@@ -28,31 +28,30 @@ class ConsultationUpdateHistoryMapper(
             autresContenusTriesParDate.first().id
         } else contenuApresReponse.id
 
-
         val historiqueAvantReponse = contenuAvantReponse.let {
             ConsultationUpdateHistory(
                 ConsultationUpdateHistoryType.UPDATE,
                 it.id,
                 ConsultationUpdateHistoryStatus.DONE,
                 it.attributes.historiqueTitre,
-                it.attributes.datetimePublication.toDate(),
+                consultationStrapiDTO.attributes.dateDeDebut.toDate(),
                 it.attributes.historiqueCallToAction
             )
         }
         val historiqueApresReponse = contenuApresReponse.let {
             ConsultationUpdateHistory(
-                ConsultationUpdateHistoryType.UPDATE,
+                ConsultationUpdateHistoryType.RESULTS,
                 it.id,
                 if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                 it.attributes.historiqueTitre,
-                it.attributes.datetimePublication.toDate(),
+                consultationStrapiDTO.attributes.dateDeFin.toDate(),
                 it.attributes.historiqueCallToAction
             )
         }
         val historiqueAutres = autresContenusTriesParDate
             .map {
                 ConsultationUpdateHistory(
-                    if (it.attributes.historiqueType == "contenu") ConsultationUpdateHistoryType.UPDATE else ConsultationUpdateHistoryType.RESULTS,
+                    ConsultationUpdateHistoryType.UPDATE,
                     it.id,
                     if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                     it.attributes.historiqueTitre,
@@ -60,10 +59,9 @@ class ConsultationUpdateHistoryMapper(
                     it.attributes.historiqueCallToAction
                 )
             }
-
-        val contenuAVenir = consultationStrapiDTO.attributes.consultationContenuAVenir.data?.let {
+        val historiqueContenuAVenir = consultationStrapiDTO.attributes.consultationContenuAVenir.data?.let {
             ConsultationUpdateHistory(
-                ConsultationUpdateHistoryType.RESULTS,
+                ConsultationUpdateHistoryType.UPDATE,
                 null,
                 ConsultationUpdateHistoryStatus.INCOMING,
                 it.attributes.titreHistorique,
@@ -73,7 +71,7 @@ class ConsultationUpdateHistoryMapper(
         }
 
         return listOfNotNull(
-            contenuAVenir,
+            historiqueContenuAVenir,
             *historiqueAutres.toTypedArray(),
             historiqueApresReponse,
             historiqueAvantReponse,

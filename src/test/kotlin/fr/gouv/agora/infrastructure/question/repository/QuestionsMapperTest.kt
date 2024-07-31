@@ -12,7 +12,7 @@ import fr.gouv.agora.domain.QuestionMultipleChoices
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
 import fr.gouv.agora.infrastructure.question.dto.QuestionDTO
 import org.assertj.core.api.Assertions.assertThat
@@ -646,11 +646,9 @@ internal class QuestionsMapperTest {
                             "template_partage": " ",
                             "historique_titre": " ",
                             "historique_call_to_action": " ",
-                            "historique_type": "contenu",
                             "createdAt": "2024-07-30T14:48:10.811Z",
                             "updatedAt": "2024-07-30T14:49:13.946Z",
                             "publishedAt": "2024-07-30T14:49:13.936Z",
-                            "datetime_publication": "2024-07-29T22:00:00.000Z",
                             "sections": []
                           }
                         }
@@ -661,14 +659,11 @@ internal class QuestionsMapperTest {
                           "attributes": {
                             "template_partage_avant_fin_consultation": " ",
                             "template_partage_apres_fin_consultation": " ",
-                            "footer_titre": " ",
-                            "footer_description": [],
                             "feedback_pictogramme": " ",
                             "feedback_titre": " ",
                             "feedback_description": [],
                             "historique_titre": " ",
                             "historique_call_to_action": " ",
-                            "historique_type": "contenu",
                             "createdAt": "2024-07-30T14:48:56.580Z",
                             "updatedAt": "2024-07-30T14:49:17.531Z",
                             "publishedAt": "2024-07-30T14:49:17.526Z",
@@ -678,7 +673,6 @@ internal class QuestionsMapperTest {
                             "encart_visualisation_resultat_apres_fin_consultation_picto": " ",
                             "encart_visualisation_resultat_apres_fin_consultation_desc": [],
                             "encart_visualisation_resultat_apres_fin_consultation_cta": " ",
-                            "datetime_publication": "2024-07-22T22:00:00.000Z",
                             "sections": []
                           }
                         }
