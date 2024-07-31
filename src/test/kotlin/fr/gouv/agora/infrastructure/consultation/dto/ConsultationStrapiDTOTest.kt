@@ -525,42 +525,6 @@ class ConsultationStrapiDTOTest {
                                   "type": "paragraph",
                                   "children": [
                                     {
-                                      "text": "Le 22 février 2024, le Premier ministre Gabriel Attal a désigné Anne-Laure Babault et Alexis Izard pour réaliser une mission parlementaire afin d’évaluer une potentielle évolution des lois EGAlim et, plus globalement, des négociations commerciales dans l’agriculture et l’alimentation. ",
-                                      "type": "text"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "Les États généraux de l'alimentation (EGAlim), réunis en 2017, répondaient à un engagement fort du Président de la République en faveur d’une alimentation saine et durable et de relations commerciales plus équilibrées entre la grande distribution, les industriels et les agriculteurs. Ils ont offert un temps de réflexion partagée pour construire des solutions nouvelles. ",
-                                      "type": "text"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "Ce processus a abouti à la loi du 30 octobre 2018 pour l'équilibre des relations commerciales dans le secteur agricole et alimentaire et une alimentation saine, durable et accessible à tous, dite « EGAlim 1 ». Elle a été complétée ensuite par la loi du 18 octobre 2021 visant à protéger la rémunération des agriculteurs, dite « EGAlim 2 ». Ces lois ont placé les agriculteurs au cœur de la construction des prix afin de permettre de créer un lien direct entre leurs coûts de production et le prix payé en magasin.",
-                                      "type": "text"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "En dépit de résultats positifs, des adaptations de ces lois sont nécessaires pour les rendre plus simples, plus efficaces et plus protectrices des agriculteurs.",
-                                      "type": "text"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
                                       "text": "Vos réponses à cette consultation permettront à la mission de recueillir votre avis, en tant que consommateur, sur les enjeux de meilleure rémunération des agriculteurs et de transparence dans ce secteur, en lien avec l’objectif de reconquête de notre souveraineté alimentaire. Vos contributions nourriront les propositions de réforme des lois EGAlim. Une autre consultation dédiée est disponible dans l’application pour les professionnels de ce secteur.",
                                       "type": "text"
                                     }
@@ -636,24 +600,6 @@ class ConsultationStrapiDTOTest {
                                   "type": "paragraph",
                                   "children": [
                                     {
-                                      "text": "👉 A partir des résultats de cette consultation, la mission parlementaire reviendra vers vous pour présenter son rapport et les contributions qu'elle a retenues.",
-                                      "type": "text"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "",
-                                      "type": "text"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
                                       "text": "Le Gouvernement retiendra, ensuite, les propositions de réforme des lois EGAlim qui lui semblent nécessaires pour garantir une rémunération plus juste des agriculteurs.",
                                       "type": "text"
                                     }
@@ -671,6 +617,22 @@ class ConsultationStrapiDTOTest {
                                   "children": [
                                     {
                                       "text": "CINQUANTE",
+                                      "type": "text"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "id": 23,
+                              "__component": "consultation-section.section-accordeon",
+                              "titre": "accordeon",
+                              "description": [
+                                {
+                                  "type": "paragraph",
+                                  "children": [
+                                    {
+                                      "text": "texte caché",
                                       "type": "text"
                                     }
                                   ]
@@ -920,6 +882,6 @@ class ConsultationStrapiDTOTest {
         assertThat(actual.data[0].attributes.consultationContenuAutres.data).hasSize(2)
         assertThat(actual.data[0].attributes.consultationContenuAVenir).isNotNull
         assertThat(actual.data[0].attributes.contenuAvantReponse.data.attributes.sections).hasSize(2)
-        assertThat(actual.data[0].attributes.contenuApresReponseOuTerminee.data.attributes.sections).hasSize(7)
+        assertThat(actual.data[0].attributes.contenuApresReponseOuTerminee.data.attributes.sections).hasSize(8)
     }
 }

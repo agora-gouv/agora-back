@@ -12,6 +12,7 @@ import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationContenuAutre
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSection
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionAccordeon
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionChiffre
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionCitation
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionImage
@@ -325,6 +326,10 @@ class ConsultationUpdateInfoV2Mapper {
                 }
 
                 is StrapiConsultationSectionChiffre -> {
+                    Section.FocusNumber(it.titre, it.description.toHtml().removeSurrounding("<p>", "</p>"))
+                }
+
+                is StrapiConsultationSectionAccordeon -> {
                     Section.FocusNumber(it.titre, it.description.toHtml().removeSurrounding("<p>", "</p>"))
                 }
             }
