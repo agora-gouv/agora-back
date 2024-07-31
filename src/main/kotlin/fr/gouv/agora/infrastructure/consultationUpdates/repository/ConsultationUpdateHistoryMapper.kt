@@ -28,7 +28,6 @@ class ConsultationUpdateHistoryMapper(
             autresContenusTriesParDate.first().id
         } else contenuApresReponse.id
 
-
         val historiqueAvantReponse = contenuAvantReponse.let {
             ConsultationUpdateHistory(
                 ConsultationUpdateHistoryType.UPDATE,
@@ -52,7 +51,7 @@ class ConsultationUpdateHistoryMapper(
         val historiqueAutres = autresContenusTriesParDate
             .map {
                 ConsultationUpdateHistory(
-                    if (it.attributes.historiqueType == "contenu") ConsultationUpdateHistoryType.UPDATE else ConsultationUpdateHistoryType.RESULTS,
+                    ConsultationUpdateHistoryType.UPDATE,
                     it.id,
                     if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                     it.attributes.historiqueTitre,
@@ -60,10 +59,9 @@ class ConsultationUpdateHistoryMapper(
                     it.attributes.historiqueCallToAction
                 )
             }
-
-        val contenuAVenir = consultationStrapiDTO.attributes.consultationContenuAVenir.data?.let {
+        val historiqueContenuAVenir = consultationStrapiDTO.attributes.consultationContenuAVenir.data?.let {
             ConsultationUpdateHistory(
-                ConsultationUpdateHistoryType.RESULTS,
+                ConsultationUpdateHistoryType.UPDATE,
                 null,
                 ConsultationUpdateHistoryStatus.INCOMING,
                 it.attributes.titreHistorique,
@@ -73,7 +71,7 @@ class ConsultationUpdateHistoryMapper(
         }
 
         return listOfNotNull(
-            contenuAVenir,
+            historiqueContenuAVenir,
             *historiqueAutres.toTypedArray(),
             historiqueApresReponse,
             historiqueAvantReponse,

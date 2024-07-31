@@ -67,8 +67,6 @@ data class StrapiConsultationContenuAutre(
     val historiqueTitre: String,
     @JsonProperty("historique_call_to_action")
     val historiqueCallToAction: String,
-    @JsonProperty("historique_type")
-    val historiqueType: String,
     @JsonProperty("datetime_publication")
     val datetimePublication: LocalDateTime,
     @JsonProperty("sections")
