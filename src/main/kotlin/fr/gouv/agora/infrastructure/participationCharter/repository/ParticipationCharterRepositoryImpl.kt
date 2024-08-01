@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.participationCharter.repository
 
-import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.AgoraFeature.StrapiParticipationCharter
 import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository

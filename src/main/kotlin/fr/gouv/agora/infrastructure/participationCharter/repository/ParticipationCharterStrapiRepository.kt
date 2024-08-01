@@ -5,7 +5,6 @@ import fr.gouv.agora.config.CmsStrapiHttpClient
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
-import fr.gouv.agora.infrastructure.headerQag.dto.HeaderQagStrapiDTO
 import fr.gouv.agora.infrastructure.participationCharter.dto.ParticipationCharterStrapiDTO
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -17,7 +16,7 @@ class ParticipationCharterStrapiRepository(
     val ref = object : TypeReference<StrapiDTO<ParticipationCharterStrapiDTO>>() {}
 
     fun getLastParticipationCharter(now: LocalDateTime): StrapiAttributes<ParticipationCharterStrapiDTO>? {
-        val uriBuilder = StrapiRequestBuilder("qa-g-headers-onglet")
+        val uriBuilder = StrapiRequestBuilder("charte-participation")
             .withDateBefore(now, "datetime_debut")
             .sortBy("datetime_debut", "desc")
 
