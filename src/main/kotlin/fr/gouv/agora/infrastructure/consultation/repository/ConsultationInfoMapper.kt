@@ -36,8 +36,6 @@ class ConsultationInfoMapper(
             questionCount = consultation.questionCount,
             estimatedTime = consultation.estimatedTime,
             participantCountGoal = consultation.participantCountGoal,
-            description = consultation.description,
-            tipsDescription = consultation.tipsDescription,
             thematique = thematique,
         )
     }
@@ -152,8 +150,6 @@ class ConsultationInfoMapper(
             questionCount = consultation.attributes.estimationNombreDeQuestions,
             estimatedTime = consultation.attributes.estimationTemps,
             participantCountGoal = consultation.attributes.nombreParticipantsCible,
-            description = consultation.attributes.description.toHtml(),
-            tipsDescription = consultation.attributes.objectifs.toHtml(),
             thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
         )
     }
