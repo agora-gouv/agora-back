@@ -14,4 +14,7 @@ enum class AgoraFeature {
     StrapiConsultations,
     StrapiReponsesQag,
     StrapiThematiques,
+    StrapiNews,
+    StrapiHeaders,
+    StrapiParticipationCharter,
 }
