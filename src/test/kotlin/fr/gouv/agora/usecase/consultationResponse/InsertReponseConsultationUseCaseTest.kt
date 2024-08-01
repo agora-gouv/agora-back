@@ -81,8 +81,6 @@ internal class InsertReponseConsultationUseCaseTest {
         questionCount = "",
         estimatedTime = "",
         participantCountGoal = 1,
-        description = "",
-        tipsDescription = "",
         thematique = Thematique()
     )
 

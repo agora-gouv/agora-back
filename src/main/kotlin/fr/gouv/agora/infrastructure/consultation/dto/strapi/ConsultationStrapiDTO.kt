@@ -34,10 +34,6 @@ data class ConsultationStrapiDTO(
     val nombreParticipantsCible: Int,
     @JsonProperty(value = "flamme_label")
     val flammeLabel: String?,
-    @JsonProperty(value = "description")
-    val description: List<StrapiRichText>,
-    @JsonProperty(value = "objectifs")
-    val objectifs: List<StrapiRichText>,
     @JsonProperty(value = "thematique")
     val thematique: StrapiData<StrapiThematiqueDTO>,
     @JsonProperty(value = "questions")

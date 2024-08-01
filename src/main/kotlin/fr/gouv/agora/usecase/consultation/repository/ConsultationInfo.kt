@@ -13,9 +13,7 @@ data class ConsultationInfo(
     val questionCount: String,
     val estimatedTime: String,
     val participantCountGoal: Int,
-    val description: String,
-    val tipsDescription: String,
     val thematique: Thematique,
 ) {
-    constructor(): this("", "", "", "", LocalDateTime.MIN, LocalDateTime.MIN, "", "", 0, "", "", Thematique())
+    constructor(): this("", "", "", "", LocalDateTime.MIN, LocalDateTime.MIN, "", "", 0, Thematique())
 }
