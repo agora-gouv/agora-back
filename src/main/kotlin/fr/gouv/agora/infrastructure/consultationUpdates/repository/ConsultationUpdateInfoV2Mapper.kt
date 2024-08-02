@@ -304,11 +304,11 @@ class ConsultationUpdateInfoV2Mapper {
                 is StrapiConsultationSectionTitre -> Section.Title(it.titre)
 
                 is StrapiConsultationSectionRichText -> {
-                    Section.RichText(it.description.toHtml().removeSurrounding("<p>", "</p>"))
+                    Section.RichText(it.description.toHtml())
                 }
 
                 is StrapiConsultationSectionCitation -> {
-                    Section.Quote(it.description.toHtml().removeSurrounding("<p>", "</p>"))
+                    Section.Quote(it.description.toHtml())
                 }
 
                 is StrapiConsultationSectionImage -> {
@@ -326,11 +326,11 @@ class ConsultationUpdateInfoV2Mapper {
                 }
 
                 is StrapiConsultationSectionChiffre -> {
-                    Section.FocusNumber(it.titre, it.description.toHtml().removeSurrounding("<p>", "</p>"))
+                    Section.FocusNumber(it.titre, it.description.toHtml())
                 }
 
                 is StrapiConsultationSectionAccordeon -> {
-                    Section.Accordion(it.titre, listOf(Section.RichText(it.description.toHtml().removeSurrounding("<p>", "</p>"))))
+                    Section.Accordion(it.titre, listOf(Section.RichText(it.description.toHtml())))
                 }
             }
         }

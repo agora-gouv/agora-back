@@ -27,7 +27,7 @@ class ParticipationCharterRepositoryImpl(
         val now = LocalDateTime.now(clock)
         val participationCharterText = if (featureFlagsRepository.isFeatureEnabled(StrapiParticipationCharter)) {
             participationCharterStrapiRepository.getLastParticipationCharter(now)
-                ?.attributes?.charte?.toHtml() ?: ""
+                ?.attributes?.charte?.toHtml()?.let { "<body>$it</body>" } ?: ""
         } else {
             databaseRepository.getLatestParticipationCharterText(now)
         }

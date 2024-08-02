@@ -156,4 +156,5 @@ data class StrapiRichUnknownNode(
 
 fun List<StrapiRichText>.toHtml(): String {
     return this.joinToString("") { it.toHtml() }
+        .removeSurrounding("<p>", "</p>")
 }
