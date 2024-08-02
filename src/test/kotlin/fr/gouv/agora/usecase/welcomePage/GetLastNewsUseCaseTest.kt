@@ -1,8 +1,9 @@
 package fr.gouv.agora.usecase.welcomePage
 
 import fr.gouv.agora.TestUtils
+import fr.gouv.agora.domain.News
 import fr.gouv.agora.infrastructure.welcomePage.repository.NewsDTO
-import fr.gouv.agora.infrastructure.welcomePage.repository.NewsDatabaseRepository
+import fr.gouv.agora.infrastructure.welcomePage.repository.NewsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,6 +14,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @ExtendWith(MockitoExtension::class)
 class GetLastNewsUseCaseTest {
@@ -20,32 +22,32 @@ class GetLastNewsUseCaseTest {
     private lateinit var getLastNewsUseCase: GetLastNewsUseCase
 
     @Mock
-    private lateinit var newsDatabaseRepository: NewsDatabaseRepository
+    private lateinit var newsRepository: NewsRepository
 
     @Mock
     private lateinit var newsJsonMapper: NewsJsonMapper
 
-    private val today = LocalDate.of(2024, 12, 25)
+    private val today = LocalDateTime.of(2024, 12, 25, 12, 0)
 
     @BeforeEach
     fun setUp() {
-        val clock = TestUtils.getFixedClock(today.atStartOfDay())
-        getLastNewsUseCase = GetLastNewsUseCase(newsDatabaseRepository, clock, newsJsonMapper)
+        val clock = TestUtils.getFixedClock(today)
+        getLastNewsUseCase = GetLastNewsUseCase(newsRepository, clock, newsJsonMapper)
     }
 
     @Test
     fun `when there is pasts and future news, it returns the last before tomorrow`() {
         // GIVEN
-        val todayNews = mock(NewsDTO::class.java).also {
+        val todayNews = mock(News::class.java).also {
             given(it.beginDate).willReturn(today)
         }
-        val futureNews = mock(NewsDTO::class.java).also {
+        val futureNews = mock(News::class.java).also {
             given(it.beginDate).willReturn(today.plusDays(1))
         }
-        val pastNews = mock(NewsDTO::class.java).also {
+        val pastNews = mock(News::class.java).also {
             given(it.beginDate).willReturn(today.minusDays(1))
         }
-        given(newsDatabaseRepository.getNewsList()).willReturn(listOf(todayNews, futureNews, pastNews))
+        given(newsRepository.getNews()).willReturn(listOf(todayNews, futureNews, pastNews))
 
         // WHEN
         getLastNewsUseCase.execute()
@@ -57,10 +59,10 @@ class GetLastNewsUseCaseTest {
     @Test
     fun `when there is no news before today, it returns null`() {
         // GIVEN
-        val futureNews = mock(NewsDTO::class.java).also {
+        val futureNews = mock(News::class.java).also {
             given(it.beginDate).willReturn(today.plusDays(1))
         }
-        given(newsDatabaseRepository.getNewsList()).willReturn(listOf(futureNews))
+        given(newsRepository.getNews()).willReturn(listOf(futureNews))
 
         // WHEN
         val actual = getLastNewsUseCase.execute()

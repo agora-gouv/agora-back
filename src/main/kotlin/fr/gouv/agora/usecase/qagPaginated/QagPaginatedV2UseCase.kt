@@ -186,7 +186,7 @@ class QagPaginatedV2UseCase(
         val header = when (pageNumber) {
             1 -> when (val cachedHeader = headerCacheRepository.getHeader(filterType)) {
                 is HeaderQagCacheResult.CachedHeaderQag -> cachedHeader.headerQag
-                HeaderQagCacheResult.HeaderQagCacheNotInitialized -> headerRepository.getHeader(filterType)
+                HeaderQagCacheResult.HeaderQagCacheNotInitialized -> headerRepository.getLastHeader(filterType)
                     .also { headerQag ->
                         if (headerQag != null) headerCacheRepository.initHeader(
                             filterType,
