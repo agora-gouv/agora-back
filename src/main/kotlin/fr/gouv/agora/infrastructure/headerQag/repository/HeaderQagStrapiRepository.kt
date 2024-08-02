@@ -16,7 +16,7 @@ class HeaderQagStrapiRepository(
     val ref = object : TypeReference<StrapiDTO<HeaderQagStrapiDTO>>() {}
 
     fun getLastHeader(type: String, date: LocalDateTime): StrapiAttributes<HeaderQagStrapiDTO>? {
-        val uriBuilder = StrapiRequestBuilder("qa-g-headers-onglet")
+        val uriBuilder = StrapiRequestBuilder("qa-g-headers-onglets")
             .withDateBefore(date, "datetime_de_debut")
             .filterBy("type", listOf(type))
             .sortBy("datetime_de_debut", "desc")

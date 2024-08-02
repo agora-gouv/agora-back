@@ -14,7 +14,7 @@ class NewsStrapiRepository(
     val ref = object : TypeReference<StrapiDTO<NewsStrapiDTO>>() {}
 
     fun getNews(): List<StrapiAttributes<NewsStrapiDTO>> {
-        val uriBuilder = StrapiRequestBuilder("welcome-page-new")
+        val uriBuilder = StrapiRequestBuilder("welcome-page-news")
             .sortBy("date_de_debut", "desc")
 
         return cmsStrapiHttpClient.request<NewsStrapiDTO>(uriBuilder, ref).data
