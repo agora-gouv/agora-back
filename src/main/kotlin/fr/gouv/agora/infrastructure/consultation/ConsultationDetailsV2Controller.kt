@@ -39,11 +39,12 @@ class ConsultationDetailsV2Controller(
         @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable slug: String,
     ): ResponseEntity<*> {
-        return useCase.getConsultationBySlug(
-            consultationId = slug,
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
-        )?.let { consultationDetails ->
-            ResponseEntity.ok().body(mapper.toJson(consultationDetails))
-        } ?: ResponseEntity.notFound().build<Unit>()
+//        return useCase.getConsultationBySlug(
+//            consultationId = slug,
+//            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+//        )?.let { consultationDetails ->
+//            ResponseEntity.ok().body(mapper.toJson(consultationDetails))
+//        } ?: ResponseEntity.notFound().build<Unit>()
+        TODO()
     }
 }

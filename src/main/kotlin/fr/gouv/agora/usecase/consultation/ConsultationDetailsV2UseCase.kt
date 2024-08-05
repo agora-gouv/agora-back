@@ -31,7 +31,25 @@ class ConsultationDetailsV2UseCase(
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
     fun getConsultation(consultationId: String, userId: String): ConsultationDetailsV2WithInfo? {
-        return getConsultationDetails(consultationId, userId)?.let { details ->
+        val consultationInfo = infoRepository.getConsultation(consultationId)
+
+        val consultationWithInfo = if (consultationInfo != null) {
+            val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate)
+            val userHasNotAnsweredConsultation =
+                !userAnsweredRepository.hasAnsweredConsultation(consultationInfo.id, userId)
+
+            if (isConsultationOngoing && userHasNotAnsweredConsultation) {
+                getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
+            } else {
+                getLastConsultationDetails(consultationInfo = consultationInfo)
+            }
+        } else {
+            cacheRepository.initUnansweredUsersConsultationDetails(consultationId, null)
+            cacheRepository.initLastConsultationDetails(consultationId, null)
+            null
+        }
+
+        return consultationWithInfo?.let { details ->
             ConsultationDetailsV2WithInfo(
                 consultation = details.consultation,
                 update = details.update,
@@ -43,42 +61,6 @@ class ConsultationDetailsV2UseCase(
                 isUserFeedbackPositive = getUserFeedback(consultationUpdate = details.update, userId = userId),
             )
         }
-    }
-
-    private fun getConsultationDetails(consultationId: String, userId: String): ConsultationDetailsV2? {
-        return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
-            if (shouldUseUnansweredUsersUpdate(consultationInfo = consultationInfo, userId = userId)) {
-                getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
-            } else {
-                getLastConsultationDetails(consultationInfo = consultationInfo)
-            }
-        } ?: run {
-            cacheRepository.initUnansweredUsersConsultationDetails(consultationId, null)
-            cacheRepository.initLastConsultationDetails(consultationId, null)
-            null
-        }
-    }
-
-    private fun shouldUseUnansweredUsersUpdate(consultationInfo: ConsultationInfo, userId: String): Boolean {
-        val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate)
-        return isConsultationOngoing && !hasUserAnsweredConsultation(
-            consultationId = consultationInfo.id,
-            userId = userId,
-        )
-    }
-
-    private fun hasUserAnsweredConsultation(consultationId: String, userId: String): Boolean {
-        return cacheRepository.hasAnsweredConsultation(consultationId = consultationId, userId = userId)
-            ?: userAnsweredRepository.hasAnsweredConsultation(
-                consultationId = consultationId,
-                userId = userId,
-            ).also { hasAnswered ->
-                cacheRepository.initHasAnsweredConsultation(
-                    consultationId = consultationId,
-                    userId = userId,
-                    hasAnswered = hasAnswered,
-                )
-            }
     }
 
     private fun getUnansweredUsersConsultationDetails(
