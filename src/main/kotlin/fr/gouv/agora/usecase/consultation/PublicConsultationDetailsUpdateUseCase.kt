@@ -18,15 +18,21 @@ class PublicConsultationDetailsUpdateUseCase(
     private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
-
     fun getConsultationUpdate(
-        consultationId: String,
-        consultationUpdateId: String,
+        slugConsultation: String,
+        slugUpdate: String,
     ): ConsultationDetailsV2WithInfo? {
+        // TODO soit je vais chercher les ids et je continue le flow et ça me permet de garder le cache
+        // TODO soit je vais chercher l'objet via slug. Mais doublon côté cache
+        val consultationId = infoRepository.getConsultationId(slugConsultation) ?: return null
+        val consultationUpdateId = updateRepository.getConsultationUpdateId(consultationId, slugUpdate) ?: return null
+
         val cacheResult = cacheRepository.getConsultationDetails(
             consultationId = consultationId,
             consultationUpdateId = consultationUpdateId,
         )
+
+        // TODO refaire le cache à la fin du uc ?
 
         return when (cacheResult) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details

@@ -18,7 +18,6 @@ class ConsultationDetailsUpdateV2Controller(
     private val mapper: ConsultationDetailsV2JsonMapper,
 ) {
 
-    // TODO ici (pour les 2 ids ? oui)
     @Operation(summary = "Get Détails Consultation Update")
     @GetMapping("/v2/consultations/{consultationId}/updates/{consultationUpdateId}")
     fun getConsultationDetailsUpdate(

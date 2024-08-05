@@ -61,4 +61,14 @@ data class ConsultationStrapiDTO(
             questions.firstOrNull { question.numero + 1 == it.numero }?.id
         }
     }
+
+    fun getContenuIdBySlug(slug: String): String? {
+        return if (contenuAvantReponse.data.attributes.slug == slug) {
+            contenuAvantReponse.data.id
+        } else if (contenuApresReponseOuTerminee.data.attributes.slug == slug) {
+            contenuApresReponseOuTerminee.data.id
+        } else {
+            consultationContenuAutres.data.firstOrNull { it.attributes.slug == slug }?.id
+        }
+    }
 }

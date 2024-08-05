@@ -22,8 +22,9 @@ class PublicConsultationDetailsUseCase(
     private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
-
-    fun getConsultation(consultationId: String): ConsultationDetailsV2WithInfo? {
+    fun getConsultation(slug: String): ConsultationDetailsV2WithInfo? {
+        val consultationId = infoRepository.getConsultationId(slug) ?: return null
+        
         return getConsultationDetails(consultationId = consultationId)?.let { details ->
             ConsultationDetailsV2WithInfo(
                 consultation = details.consultation,

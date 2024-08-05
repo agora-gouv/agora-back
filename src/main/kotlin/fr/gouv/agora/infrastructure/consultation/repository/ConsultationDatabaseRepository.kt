@@ -136,4 +136,9 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
         @Param("offset") offset: Int,
     ): List<ConsultationWithUpdateInfoDTO>
 
+    @Query(
+        value = """SELECT id from concertations where slug = :slug limit 1;""",
+        nativeQuery = true
+    )
+    fun getConsultationId(@Param("slug") slug: String): UUID?
 }

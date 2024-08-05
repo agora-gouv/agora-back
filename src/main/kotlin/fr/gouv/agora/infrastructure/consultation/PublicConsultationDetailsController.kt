@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.consultation
 
+import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
 import fr.gouv.agora.usecase.consultation.PublicConsultationDetailsUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -17,13 +18,13 @@ class PublicConsultationDetailsController(
 ) {
 
     @Operation(summary = "Get Consultation Détails")
-    @GetMapping("/api/public/consultations/{consultationId}")
+    @GetMapping("/api/public/consultations/{slugConsultation}")
     fun getConsultationDetails(
-        @PathVariable consultationId: String,
-    ): ResponseEntity<*> {
-        return useCase.getConsultation(consultationId = consultationId)?.let { consultationDetails ->
+        @PathVariable slugConsultation: String,
+    ): ResponseEntity<ConsultationDetailsV2Json> {
+        return useCase.getConsultation(slugConsultation)?.let { consultationDetails ->
             ResponseEntity.ok().body(mapper.toJson(consultationDetails))
-        } ?: ResponseEntity.notFound().build<Unit>()
+        } ?: ResponseEntity.notFound().build()
     }
 
 }

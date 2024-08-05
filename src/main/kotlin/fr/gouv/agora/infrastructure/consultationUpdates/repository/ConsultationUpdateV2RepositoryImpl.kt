@@ -50,6 +50,17 @@ class ConsultationUpdateV2RepositoryImpl(
         return null
     }
 
+    override fun getConsultationUpdateId(consultationId: String, slug: String): String? {
+        val updateIdFromDb = updateDatabaseRepository.getConsultationUpdateIdBySlug(slug)
+        if (updateIdFromDb != null) return updateIdFromDb.toString()
+
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            return consultationStrapiRepository.getConsultationById(consultationId)?.attributes?.getContenuIdBySlug(slug)
+        }
+
+        return null
+    }
+
     override fun getLatestConsultationUpdate(consultationId: String): ConsultationUpdateInfoV2? {
         val consultationUUID = consultationId.toUuidOrNull()
         if (consultationUUID != null) {
@@ -95,7 +106,8 @@ class ConsultationUpdateV2RepositoryImpl(
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             val consultation = consultationStrapiRepository.getConsultationById(consultationId) ?: return null
-            val contenuAutre = consultation.attributes.consultationContenuAutres.data.firstOrNull { it.id == consultationUpdateId }
+            val contenuAutre =
+                consultation.attributes.consultationContenuAutres.data.firstOrNull { it.id == consultationUpdateId }
 
             return if (consultation.attributes.contenuAvantReponse.data.id == consultationUpdateId) {
                 mapper.toDomainUnanswered(consultation)

@@ -15,19 +15,14 @@ class PublicConsultationDetailsUpdateController(
     private val useCase: PublicConsultationDetailsUpdateUseCase,
     private val mapper: ConsultationDetailsV2JsonMapper,
 ) {
-
     @Operation(summary = "Get Consultation Détails Update")
-    @GetMapping("/api/public/consultations/{consultationId}/updates/{consultationUpdateId}")
+    @GetMapping("/api/public/consultations/{slugConsultation}/updates/{slugUpdate}")
     fun getConsultationDetailsUpdate(
-        @PathVariable consultationId: String,
-        @PathVariable consultationUpdateId: String,
+        @PathVariable slugConsultation: String,
+        @PathVariable slugUpdate: String,
     ): ResponseEntity<ConsultationDetailsV2Json> {
-        return useCase.getConsultationUpdate(
-            consultationId = consultationId,
-            consultationUpdateId = consultationUpdateId,
-        )?.let { consultationDetails ->
+        return useCase.getConsultationUpdate(slugConsultation, slugUpdate)?.let { consultationDetails ->
             ResponseEntity.ok().body(mapper.toJson(consultationDetails))
         } ?: ResponseEntity.notFound().build()
     }
-
 }

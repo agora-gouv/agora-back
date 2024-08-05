@@ -7,6 +7,8 @@ import java.time.LocalDateTime
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class StrapiConsultationContenuAvantReponse(
+    @JsonProperty("slug")
+    val slug: String,
     @JsonProperty("template_partage")
     val templatePartage: String,
     @JsonProperty("historique_titre")
@@ -19,6 +21,8 @@ data class StrapiConsultationContenuAvantReponse(
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class StrapiConsultationContenuApresReponse(
+    @JsonProperty("slug")
+    val slug: String,
     @JsonProperty("template_partage_avant_fin_consultation")
     val templatePartageAvantFinConsultation: String,
     @JsonProperty("template_partage_apres_fin_consultation")
@@ -51,6 +55,8 @@ data class StrapiConsultationContenuApresReponse(
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class StrapiConsultationContenuAutre(
+    @JsonProperty("slug")
+    val slug: String,
     @JsonProperty("message_mise_a_jour")
     val messageMiseAJour: String,
     @JsonProperty("lien_telechargement_analyse")
