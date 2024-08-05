@@ -18,6 +18,7 @@ class ConsultationDetailsV2Controller(
     private val mapper: ConsultationDetailsV2JsonMapper,
 ) {
 
+    // TODO ici
     @Operation(summary = "Get Détails Consultation")
     @GetMapping("/v2/consultations/{consultationId}")
     fun getConsultationDetails(
@@ -26,6 +27,20 @@ class ConsultationDetailsV2Controller(
     ): ResponseEntity<*> {
         return useCase.getConsultation(
             consultationId = consultationId,
+            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+        )?.let { consultationDetails ->
+            ResponseEntity.ok().body(mapper.toJson(consultationDetails))
+        } ?: ResponseEntity.notFound().build<Unit>()
+    }
+
+    @Operation(summary = "Get Détails Consultation")
+    @GetMapping("/v2/consultations/slug/{slug}")
+    fun getConsultationDetailsBySlug(
+        @RequestHeader("Authorization", required = false) authorizationHeader: String,
+        @PathVariable slug: String,
+    ): ResponseEntity<*> {
+        return useCase.getConsultationBySlug(
+            consultationId = slug,
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )?.let { consultationDetails ->
             ResponseEntity.ok().body(mapper.toJson(consultationDetails))

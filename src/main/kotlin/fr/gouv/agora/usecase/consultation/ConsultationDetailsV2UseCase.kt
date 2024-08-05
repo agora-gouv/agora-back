@@ -38,7 +38,7 @@ class ConsultationDetailsV2UseCase(
                 feedbackStats = details.feedbackStats,
                 history = details.history,
                 participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
-                    getParticipantCount(consultationId)
+                    getParticipantCount(details.consultation.id)
                 } else 0,
                 isUserFeedbackPositive = getUserFeedback(consultationUpdate = details.update, userId = userId),
             )
