@@ -13,6 +13,7 @@ class ConsultationPreviewFinishedMapper {
     ): ConsultationPreviewFinished {
         return ConsultationPreviewFinished(
             id = consultationInfo.id,
+            slug = consultationInfo.slug,
             title = consultationInfo.title,
             coverUrl = consultationInfo.coverUrl,
             thematique = thematique,

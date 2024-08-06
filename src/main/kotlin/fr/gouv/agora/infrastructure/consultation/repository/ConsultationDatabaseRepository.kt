@@ -14,10 +14,10 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
 
     companion object {
         private const val CONSULTATION_WITH_UPDATE_INFO_PROJECTION =
-            "id, title, coverUrl, thematiqueId, endDate, updateDate, updateLabel"
+            "id, slug, title, coverUrl, thematiqueId, endDate, updateDate, updateLabel"
 
         private const val CONSULTATION_WITH_UPDATE_INFO_JOIN = """
-             SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
+             SELECT consultations.id AS id, consultations.slug as slug, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
                 FROM consultations LEFT JOIN consultation_updates_v2
                 ON consultation_updates_v2.consultation_id = consultations.id
         """
@@ -45,7 +45,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     @Query(
         value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
             FROM (
-                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
+                SELECT consultations.id AS id, consultations.slug as slug, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
                 FROM consultations LEFT JOIN consultation_updates_v2
                 ON consultation_updates_v2.consultation_id = consultations.id
                 WHERE :today > end_date

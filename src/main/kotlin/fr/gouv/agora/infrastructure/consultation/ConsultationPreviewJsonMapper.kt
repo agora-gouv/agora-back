@@ -28,6 +28,7 @@ class ConsultationPreviewJsonMapper(
             ongoingList = domainOngoingList.map { domain ->
                 ConsultationOngoingJson(
                     id = domain.id,
+                    slug = domain.slug,
                     title = domain.title,
                     coverUrl = domain.coverUrl,
                     endDate = dateMapper.toFormattedDate(domain.endDate),
@@ -45,6 +46,7 @@ class ConsultationPreviewJsonMapper(
 
         return ConsultationFinishedJson(
             id = domain.id,
+            slug = domain.slug,
             title = domain.title,
             coverUrl = domain.coverUrl,
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),

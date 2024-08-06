@@ -36,6 +36,7 @@ class ConsultationPaginatedJsonMapper(
         val now = LocalDateTime.now(clock)
         return ConsultationFinishedJson(
             id = domain.id,
+            slug = domain.slug,
             title = domain.title,
             coverUrl = domain.coverUrl,
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),

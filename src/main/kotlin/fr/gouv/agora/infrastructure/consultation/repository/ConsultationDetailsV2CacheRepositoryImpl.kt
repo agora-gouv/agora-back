@@ -188,6 +188,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         thematique = details.consultation.thematique,
         update = CacheableConsultationUpdateInfo(
             id = details.update.id,
+            slug = details.update.slug,
             updateDate = details.update.updateDate,
             shareTextTemplate = details.update.shareTextTemplate,
             hasQuestionsInfo = details.update.hasQuestionsInfo,
@@ -211,6 +212,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             consultation = cacheable.consultation,
             update = ConsultationUpdateInfoV2(
                 id = cacheable.update.id,
+                slug = cacheable.update.slug,
                 updateDate = cacheable.update.updateDate,
                 shareTextTemplate = cacheable.update.shareTextTemplate,
                 hasQuestionsInfo = cacheable.update.hasQuestionsInfo,
@@ -319,6 +321,7 @@ private data class CacheableConsultationDetails(
 
 private data class CacheableConsultationUpdateInfo(
     val id: String,
+    val slug: String,
     val updateDate: LocalDateTime,
     val shareTextTemplate: String,
     val hasQuestionsInfo: Boolean,

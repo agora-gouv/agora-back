@@ -52,6 +52,7 @@ class ConsultationUpdateInfoV2Mapper {
     ): ConsultationUpdateInfoV2 {
         return ConsultationUpdateInfoV2(
             id = dto.id.toString(),
+            slug = dto.slug,
             updateDate = dto.updateDate.toLocalDateTime(),
             shareTextTemplate = dto.shareTextTemplate,
             hasQuestionsInfo = dto.hasQuestionsInfo == TRUE_INT_VALUE,
@@ -219,6 +220,7 @@ class ConsultationUpdateInfoV2Mapper {
 
         return ConsultationUpdateInfoV2(
             id = consultation.contenuAvantReponse.data.id,
+            slug = contentBeforeResponse.slug,
             updateDate = consultation.dateDeDebut,
             shareTextTemplate = contentBeforeResponse.templatePartage,
             hasQuestionsInfo = true,
@@ -242,6 +244,7 @@ class ConsultationUpdateInfoV2Mapper {
 
         return ConsultationUpdateInfoV2(
             id = contentDTO.id,
+            slug = contenu.slug,
             updateDate = contenu.datetimePublication,
             shareTextTemplate = contenu.templatePartage,
             hasQuestionsInfo = false,
@@ -273,6 +276,7 @@ class ConsultationUpdateInfoV2Mapper {
 
         return ConsultationUpdateInfoV2(
             id = contenuId,
+            slug = contenu.slug,
             updateDate = consultation.attributes.dateDeDebut,
             shareTextTemplate = contenu.templatePartageApresFinConsultation,
             hasQuestionsInfo = false,
