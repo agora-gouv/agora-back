@@ -2,20 +2,18 @@ package fr.gouv.agora.infrastructure.consultation.dto.strapi
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiDataList
 import fr.gouv.agora.infrastructure.common.StrapiDataNullable
-import fr.gouv.agora.infrastructure.common.StrapiRichText
 import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class ConsultationStrapiDTO(
     @JsonProperty(value = "titre_consultation")
     val titre: String,
+    @JsonProperty(value = "slug")
+    val slug: String,
     @JsonProperty(value = "datetime_de_debut")
     val dateDeDebut: LocalDateTime,
     @JsonProperty(value = "datetime_de_fin")
@@ -62,13 +60,13 @@ data class ConsultationStrapiDTO(
         }
     }
 
-    fun getContenuIdBySlug(slug: String): String? {
-        return if (contenuAvantReponse.data.attributes.slug == slug) {
+    fun getContenuIdBySlugOrId(slugOrId: String): String? {
+        return if (contenuAvantReponse.data.attributes.slug == slugOrId || contenuAvantReponse.data.id == slugOrId) {
             contenuAvantReponse.data.id
-        } else if (contenuApresReponseOuTerminee.data.attributes.slug == slug) {
+        } else if (contenuApresReponseOuTerminee.data.attributes.slug == slugOrId || contenuApresReponseOuTerminee.data.id == slugOrId) {
             contenuApresReponseOuTerminee.data.id
         } else {
-            consultationContenuAutres.data.firstOrNull { it.attributes.slug == slug }?.id
+            consultationContenuAutres.data.firstOrNull { it.attributes.slug == slugOrId || it.id == slugOrId }?.id
         }
     }
 }

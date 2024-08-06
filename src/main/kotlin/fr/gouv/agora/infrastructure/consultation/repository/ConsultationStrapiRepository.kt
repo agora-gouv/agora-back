@@ -84,8 +84,4 @@ class ConsultationStrapiRepository(
         return consultation.data
             .firstOrNull()?.attributes?.flammeLabel
     }
-
-    fun getConsultationByUpdateSlug() {
-        TODO("Not yet implemented")
-    }
 }

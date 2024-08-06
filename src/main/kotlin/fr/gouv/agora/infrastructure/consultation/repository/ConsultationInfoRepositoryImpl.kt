@@ -103,19 +103,21 @@ class ConsultationInfoRepositoryImpl(
         return strapiRepository.isConsultationExists(consultationId)
     }
 
-    override fun getConsultationId(slug: String): String? {
-        val consultationSlugFromDatabase = consultationsDatabaseRepository.getConsultationId(slug)
-        if (consultationSlugFromDatabase != null) return consultationSlugFromDatabase.toString()
+    override fun getConsultationId(slugOrId: String): String? {
+        val consultationIdFromDatabase = consultationsDatabaseRepository.getConsultationId(slugOrId)
+        if (consultationIdFromDatabase != null) return consultationIdFromDatabase.toString()
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return strapiRepository.getConsultationBySlug(slug)?.id
+            return strapiRepository.getConsultationBySlug(slugOrId)?.id
+                ?: strapiRepository.getConsultationById(slugOrId)?.id
         }
 
-        // TODO : faire la récupération Strapi
-        // TODO : ajouter les slugs dans les 2 types d'objet dans Strapi et DB (4 modif en tout)
-        // TODO : ajouter les slugs dans les objets de retour JSON pour que le mobile puisse les envoyer dans les urls
-        // TODO : modifier le mobile pour envoyer les slugs -> màj obligatoire mobile ?
-        // TODO : modifier le front pour pinguer les bonnes urls (et remplacer id par slug)
+        // TODO : OK faire la récupération Strapi
+        // TODO : OK ajouter les slugs dans les 2 types d'objet dans Strapi et DB (4 modif en tout)
+        // TODO : NOK remplir les colonnes slug
+        // TODO : NOK ajouter les slugs dans les objets de retour JSON pour que le mobile puisse les envoyer dans les urls
+        // TODO : NOK modifier le mobile pour envoyer les slugs -> màj obligatoire mobile ? non car slugOrId
+        // TODO : NOK modifier le front pour pinguer les bonnes urls (et remplacer id par slug)
 
         return null
     }

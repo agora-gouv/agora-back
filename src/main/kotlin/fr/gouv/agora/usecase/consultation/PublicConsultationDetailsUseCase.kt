@@ -22,9 +22,11 @@ class PublicConsultationDetailsUseCase(
     private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
-    fun getConsultation(slug: String): ConsultationDetailsV2WithInfo? {
-        val consultationId = infoRepository.getConsultationId(slug) ?: return null
-        
+    fun getConsultation(slugOrId: String): ConsultationDetailsV2WithInfo? {
+        // Pour le moment on récupère soit par slug, soit par ID, pour ne pas avoir à obliger la mise à jour
+        // mobile en même temps.
+        val consultationId = infoRepository.getConsultationId(slugOrId) ?: return null
+
         return getConsultationDetails(consultationId = consultationId)?.let { details ->
             ConsultationDetailsV2WithInfo(
                 consultation = details.consultation,

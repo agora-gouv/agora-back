@@ -53,8 +53,8 @@ interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<Consultatio
     fun getConsultationUpdate(@Param("consultationId") consultationId: UUID, @Param("consultationUpdateId") consultationUpdateId: UUID): ConsultationUpdateV2DTO?
 
     @Query(
-        value = """SELECT id FROM consultation_updates_v2 WHERE slug = :slug LIMIT 1""",
+        value = """SELECT id FROM consultation_updates_v2 WHERE slug = :slugOrId OR CAST(id AS TEXT) = :slugOrId LIMIT 1""",
         nativeQuery = true
     )
-    fun getConsultationUpdateIdBySlug(slug: String): UUID?
+    fun getConsultationUpdateIdBySlug(@Param("slugOrId") slugOrId: String): UUID?
 }

@@ -137,8 +137,8 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     ): List<ConsultationWithUpdateInfoDTO>
 
     @Query(
-        value = """SELECT id from concertations where slug = :slug limit 1;""",
+        value = """SELECT id from consultations where slug = :slugOrId OR CAST(id AS TEXT) = :slugOrId limit 1;""",
         nativeQuery = true
     )
-    fun getConsultationId(@Param("slug") slug: String): UUID?
+    fun getConsultationId(@Param("slugOrId") slugOrId: String): UUID?
 }

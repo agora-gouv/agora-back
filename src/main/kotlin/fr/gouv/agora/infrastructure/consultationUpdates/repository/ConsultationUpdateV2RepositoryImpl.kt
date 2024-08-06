@@ -55,7 +55,7 @@ class ConsultationUpdateV2RepositoryImpl(
         if (updateIdFromDb != null) return updateIdFromDb.toString()
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return consultationStrapiRepository.getConsultationById(consultationId)?.attributes?.getContenuIdBySlug(slug)
+            return consultationStrapiRepository.getConsultationById(consultationId)?.attributes?.getContenuIdBySlugOrId(slug)
         }
 
         return null
