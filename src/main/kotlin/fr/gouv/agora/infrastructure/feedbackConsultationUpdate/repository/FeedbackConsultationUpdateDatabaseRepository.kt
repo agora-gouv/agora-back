@@ -13,7 +13,6 @@ import java.util.*
 @Repository
 interface FeedbackConsultationUpdateDatabaseRepository : JpaRepository<FeedbackConsultationUpdateDTO, UUID> {
 
-    // TODO faire index
     @Query(
         value = """SELECT * FROM feedbacks_consultation_update
             WHERE consultation_update_id = :consultationUpdateId

@@ -22,11 +22,8 @@ class PublicConsultationDetailsUpdateUseCase(
         slugOrIdConsultation: String,
         slugUpdate: String,
     ): ConsultationDetailsV2WithInfo? {
-        // TODO soit je vais chercher les ids et je continue le flow et ça me permet de garder le cache
-        // TODO soit je vais chercher l'objet via slug. Mais doublon côté cache
-
-        // Pour le moment on récupère soit par slug, soit par ID, pour ne pas avoir à obliger la mise à jour
-        // mobile en même temps.
+        // Pour le moment on récupère soit par slug, soit par ID, pour ne
+        // pas avoir à obliger la mise à jour mobile en même temps.
         val consultationId = infoRepository.getConsultationId(slugOrIdConsultation) ?: return null
         val consultationUpdateId = updateRepository.getConsultationUpdateId(consultationId, slugUpdate) ?: return null
 
@@ -34,8 +31,6 @@ class PublicConsultationDetailsUpdateUseCase(
             consultationId = consultationId,
             consultationUpdateId = consultationUpdateId,
         )
-
-        // TODO refaire le cache à la fin du uc ?
 
         return when (cacheResult) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details

@@ -45,9 +45,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     @Query(
         value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
             FROM (
-                SELECT consultations.id AS id, consultations.slug as slug, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
-                FROM consultations LEFT JOIN consultation_updates_v2
-                ON consultation_updates_v2.consultation_id = consultations.id
+                $CONSULTATION_WITH_UPDATE_INFO_JOIN
                 WHERE :today > end_date
                 AND :today >= update_date
                 ORDER BY updateDate DESC

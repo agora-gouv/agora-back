@@ -13,7 +13,6 @@ data class ConsultationUpdateV2DTO(
     @JoinTable(joinColumns = [JoinColumn(table = "consultations", referencedColumnName = "id")])
     val consultationId: UUID,
     val isVisibleToUnansweredUsersOnly: Int,
-    // TODO : slug avant réponse et après réponse toujours les mêmes ? avant-réponse après-réponse ?
     @Column(columnDefinition = "TEXT")
     val slug: String,
     @Column(columnDefinition = "TEXT")
