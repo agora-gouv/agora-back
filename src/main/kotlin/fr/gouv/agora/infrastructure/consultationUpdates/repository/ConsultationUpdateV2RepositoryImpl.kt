@@ -50,17 +50,6 @@ class ConsultationUpdateV2RepositoryImpl(
         return null
     }
 
-    override fun getConsultationUpdateId(consultationId: String, slug: String): String? {
-        val updateIdFromDb = updateDatabaseRepository.getConsultationUpdateIdBySlug(slug)
-        if (updateIdFromDb != null) return updateIdFromDb.toString()
-
-        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return consultationStrapiRepository.getConsultationById(consultationId)?.attributes?.getContenuIdBySlugOrId(slug)
-        }
-
-        return null
-    }
-
     override fun getLatestConsultationUpdate(consultationId: String): ConsultationUpdateInfoV2? {
         val consultationUUID = consultationId.toUuidOrNull()
         if (consultationUUID != null) {
@@ -79,6 +68,41 @@ class ConsultationUpdateV2RepositoryImpl(
                 mapper.toDomainContenuAutre(consultation, latestOtherContent)
             } else {
                 mapper.toDomainAnswered(consultation)
+            }
+        }
+
+        return null
+    }
+
+    override fun getConsultationUpdateBySlugOrId(
+        consultationId: String,
+        consultationUpdateIdOrSlug: String,
+    ): ConsultationUpdateInfoV2? {
+        val updateFromDb = updateDatabaseRepository
+            .getConsultationUpdateByIdOrSlug(consultationId, consultationUpdateIdOrSlug)
+        if (updateFromDb != null) {
+            val sections = sectionDatabaseRepository.getConsultationUpdateSections(updateFromDb.id)
+            return mapper.toDomain(updateFromDb, sections)
+        }
+
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            val consultationFromStrapi = consultationStrapiRepository.getConsultationById(consultationId)
+                ?: return null
+
+            val consultationAttributes = consultationFromStrapi.attributes
+            val contenuAvantReponse = consultationAttributes.contenuAvantReponse.data
+            val contenuApresReponse = consultationAttributes.contenuApresReponseOuTerminee.data
+            val foundContenuAvantReponse = contenuAvantReponse.id == consultationUpdateIdOrSlug || contenuAvantReponse.attributes.slug == consultationUpdateIdOrSlug
+            val foundContenuApresReponse = contenuApresReponse.id == consultationUpdateIdOrSlug || contenuApresReponse.attributes.slug == consultationUpdateIdOrSlug
+            return if (foundContenuAvantReponse) {
+                mapper.toDomainUnanswered(consultationFromStrapi)
+            } else if (foundContenuApresReponse) {
+                mapper.toDomainAnswered(consultationFromStrapi)
+            } else {
+                val contenuAutre = consultationAttributes.consultationContenuAutres.data
+                    .firstOrNull { it.id == consultationUpdateIdOrSlug || it.attributes.slug == consultationUpdateIdOrSlug }
+                    ?: return null
+                mapper.toDomainContenuAutre(consultationFromStrapi, contenuAutre)
             }
         }
 

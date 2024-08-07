@@ -34,6 +34,14 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     fun getConsultation(@Param("consultationId") consultationId: UUID): ConsultationDTO?
 
     @Query(
+        value = """
+            SELECT * FROM consultations 
+            WHERE slug = :consultationIdOrSlug 
+            OR CAST(id as TEXT) = :consultationIdOrSlug LIMIT 1""", nativeQuery = true
+    )
+    fun getConsultationByIdOrSlug(@Param("consultationIdOrSlug") consultationIdOrSlug: String): ConsultationDTO?
+
+    @Query(
         value = """SELECT * FROM consultations 
             WHERE :today < end_date
             AND (start_date IS NULL OR :today >= start_date) 
@@ -133,10 +141,4 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
         @Param("userId") userId: UUID,
         @Param("offset") offset: Int,
     ): List<ConsultationWithUpdateInfoDTO>
-
-    @Query(
-        value = """SELECT id from consultations where slug = :slugOrId OR CAST(id AS TEXT) = :slugOrId limit 1;""",
-        nativeQuery = true
-    )
-    fun getConsultationId(@Param("slugOrId") slugOrId: String): UUID?
 }

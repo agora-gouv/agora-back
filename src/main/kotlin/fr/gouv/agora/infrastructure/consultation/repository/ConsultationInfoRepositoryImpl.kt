@@ -103,13 +103,32 @@ class ConsultationInfoRepositoryImpl(
         return strapiRepository.isConsultationExists(consultationId)
     }
 
-    override fun getConsultationId(slugOrId: String): String? {
-        val consultationIdFromDatabase = consultationsDatabaseRepository.getConsultationId(slugOrId)
-        if (consultationIdFromDatabase != null) return consultationIdFromDatabase.toString()
+    override fun getConsultationByIdOrSlug(consultationIdOrSlug: String): ConsultationInfo? {
+        val cachedConsultationInfo = try {
+            getCache()?.get(consultationIdOrSlug, ConsultationInfo::class.java)
+        } catch (e: IllegalStateException) {
+            null
+        }
+        if (cachedConsultationInfo != null) return cachedConsultationInfo
+
+        val consultationFromDb = consultationsDatabaseRepository.getConsultationByIdOrSlug(consultationIdOrSlug)
+
+        if (consultationFromDb != null) {
+            val thematiques = thematiqueRepository.getThematiqueList()
+            val consultationInfoFromDb = consultationInfoMapper.toConsultationInfo(consultationFromDb, thematiques)
+            getCache()?.put(consultationIdOrSlug, consultationInfoFromDb)
+            return consultationInfoFromDb
+        }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return strapiRepository.getConsultationBySlug(slugOrId)?.id
-                ?: strapiRepository.getConsultationById(slugOrId)?.id
+            val consultationFromStrapi = strapiRepository.getConsultationBySlug(consultationIdOrSlug)
+                ?: strapiRepository.getConsultationById(consultationIdOrSlug)
+                ?: return null
+
+            val consultationsInfo = consultationInfoMapper.toConsultationInfo(consultationFromStrapi)
+            getCache()?.put(consultationIdOrSlug, consultationsInfo)
+
+            return consultationsInfo
         }
 
         return null
@@ -132,15 +151,15 @@ class ConsultationInfoRepositoryImpl(
             return consultationInfoFromDb
         }
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return null
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId) ?: return null
+            val consultationsInfo = consultationInfoMapper.toConsultationInfo(strapiConsultationDTO)
+            getCache()?.put(consultationId, consultationsInfo)
+
+            return consultationsInfo
         }
 
-        val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId) ?: return null
-        val consultationsInfo = consultationInfoMapper.toConsultationInfo(strapiConsultationDTO)
-        getCache()?.put(consultationId, consultationsInfo)
-
-        return consultationsInfo
+        return null
     }
 
     override fun getConsultationsToAggregate(): List<ConsultationPreview> {

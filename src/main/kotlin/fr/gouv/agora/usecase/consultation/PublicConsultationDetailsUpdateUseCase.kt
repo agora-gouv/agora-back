@@ -20,28 +20,23 @@ class PublicConsultationDetailsUpdateUseCase(
 ) {
     fun getConsultationUpdate(
         slugOrIdConsultation: String,
-        slugUpdate: String,
+        slugOrIdUpdate: String,
     ): ConsultationDetailsV2WithInfo? {
-        // Pour le moment on récupère soit par slug, soit par ID, pour ne
-        // pas avoir à obliger la mise à jour mobile en même temps.
-        val consultationId = infoRepository.getConsultationId(slugOrIdConsultation) ?: return null
-        val consultationUpdateId = updateRepository.getConsultationUpdateId(consultationId, slugUpdate) ?: return null
-
         val cacheResult = cacheRepository.getConsultationDetails(
-            consultationId = consultationId,
-            consultationUpdateId = consultationUpdateId,
+            consultationId = slugOrIdConsultation,
+            consultationUpdateId = slugOrIdUpdate,
         )
 
         return when (cacheResult) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
             ConsultationUpdateCacheResult.ConsultationUpdateNotFound -> null
             ConsultationUpdateCacheResult.CacheNotInitialized -> buildConsultationDetails(
-                consultationId = consultationId,
-                consultationUpdateId = consultationUpdateId
+                consultationIdOrSlug = slugOrIdConsultation,
+                consultationUpdateIdOrSlug = slugOrIdUpdate
             ).also { details ->
                 cacheRepository.initConsultationDetails(
-                    consultationId = consultationId,
-                    consultationUpdateId = consultationUpdateId,
+                    consultationId = slugOrIdConsultation,
+                    consultationUpdateId = slugOrIdUpdate,
                     details = details,
                 )
             }
@@ -52,18 +47,18 @@ class PublicConsultationDetailsUpdateUseCase(
                 feedbackStats = details.feedbackStats,
                 history = details.history,
                 participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
-                    getParticipantCount(consultationId)
+                    getParticipantCount(details.consultation.id)
                 } else 0,
                 isUserFeedbackPositive = null,
             )
         }
     }
 
-    private fun buildConsultationDetails(consultationId: String, consultationUpdateId: String): ConsultationDetailsV2? {
-        return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
-            updateRepository.getConsultationUpdate(
-                consultationId = consultationId,
-                consultationUpdateId = consultationUpdateId,
+    private fun buildConsultationDetails(consultationIdOrSlug: String, consultationUpdateIdOrSlug: String): ConsultationDetailsV2? {
+        return infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)?.let { consultationInfo ->
+            updateRepository.getConsultationUpdateBySlugOrId(
+                consultationInfo.id,
+                consultationUpdateIdOrSlug,
             )?.let { update ->
                 ConsultationDetailsV2(
                     consultation = consultationInfo,

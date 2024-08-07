@@ -7,5 +7,8 @@ interface ConsultationUpdateV2Repository {
     fun getUnansweredUsersConsultationUpdate(consultationId: String): ConsultationUpdateInfoV2?
     fun getLatestConsultationUpdate(consultationId: String): ConsultationUpdateInfoV2?
     fun getConsultationUpdate(consultationId: String, consultationUpdateId: String): ConsultationUpdateInfoV2?
-    fun getConsultationUpdateId(consultationId: String, slug: String): String?
+    fun getConsultationUpdateBySlugOrId(
+        consultationId: String,
+        consultationUpdateIdOrSlug: String
+    ): ConsultationUpdateInfoV2?
 }
