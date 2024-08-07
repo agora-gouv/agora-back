@@ -515,6 +515,7 @@ internal class QuestionsMapperTest {
                 {
                     "id": 6,
                     "attributes": {
+                      "slug": "",
                       "url_image_de_couverture": "",
                       "url_image_page_de_contenu": "",
                       "nombre_de_questions": 5,
@@ -641,6 +642,7 @@ internal class QuestionsMapperTest {
                         "data": {
                           "id": 6003,
                           "attributes": {
+                            "slug": "",
                             "template_partage": " ",
                             "historique_titre": " ",
                             "historique_call_to_action": " ",
@@ -655,6 +657,7 @@ internal class QuestionsMapperTest {
                         "data": {
                           "id": 12003,
                           "attributes": {
+                            "slug": "",
                             "template_partage_avant_fin_consultation": " ",
                             "template_partage_apres_fin_consultation": " ",
                             "feedback_pictogramme": " ",

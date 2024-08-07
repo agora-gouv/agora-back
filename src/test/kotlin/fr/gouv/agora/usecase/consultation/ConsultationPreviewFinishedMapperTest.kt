@@ -99,6 +99,7 @@ class ConsultationPreviewFinishedMapperTest {
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
+            given(it.slug).willReturn("slug")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 30, 18, 45))
             given(it.updateLabel).willReturn(null)
@@ -122,6 +123,7 @@ class ConsultationPreviewFinishedMapperTest {
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
+            given(it.slug).willReturn("slug")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 1, 4, 15))
             given(it.updateLabel).willReturn(null)
@@ -145,6 +147,7 @@ class ConsultationPreviewFinishedMapperTest {
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
+            given(it.slug).willReturn("slug")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(now)
             given(it.updateLabel).willReturn(null)
@@ -175,6 +178,7 @@ class ConsultationPreviewFinishedMapperTest {
         val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
+            given(it.slug).willReturn("slug")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(LocalDateTime.MIN)
             lenientGiven(it.updateDate).willReturn(updateDate)

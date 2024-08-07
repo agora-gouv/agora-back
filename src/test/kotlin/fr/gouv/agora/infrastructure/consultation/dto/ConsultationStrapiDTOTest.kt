@@ -27,6 +27,7 @@ class ConsultationStrapiDTOTest {
                 {
                   "id": 2,
                   "attributes": {
+                    "slug": "mieux-remunerer-agriculteurs",
                     "url_image_de_couverture": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
                     "url_image_page_de_contenu": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
                     "nombre_de_questions": 8,
@@ -438,6 +439,7 @@ class ConsultationStrapiDTOTest {
                       "data": {
                         "id": 1,
                         "attributes": {
+                          "slug": "avant-reponse",
                           "template_partage": "Comme moi, tu peux participer à la consultation : {title} {url}",
                           "historique_titre": "Lancement",
                           "historique_call_to_action": "Voir les objectifs",
@@ -473,6 +475,7 @@ class ConsultationStrapiDTOTest {
                       "data": {
                         "id": 1,
                         "attributes": {
+                          "slug": "apres-reponse",
                           "template_partage_avant_fin_consultation": "Comme moi, tu peux participer à la consultation : {title} {url}",
                           "template_partage_apres_fin_consultation": "Les premiers résultats de la consultation {title} : {url}",
                           "feedback_pictogramme": "👀",
@@ -638,6 +641,7 @@ class ConsultationStrapiDTOTest {
                           {
                             "id": 18003,
                             "attributes": {
+                              "slug": "analyse",
                               "message_mise_a_jour": "Analyse disponible",
                               "lien_telechargement_analyse": "https://content.agora.incubateur.net/consultation-syntheses/20240605-agora_handicap_synthese_VF.pdf",
                               "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
@@ -737,6 +741,7 @@ class ConsultationStrapiDTOTest {
                           {
                             "id": 18002,
                             "attributes": {
+                              "slug": "mise-a-jour",
                               "message_mise_a_jour": "Mise à jour",
                               "lien_telechargement_analyse": null,
                               "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
