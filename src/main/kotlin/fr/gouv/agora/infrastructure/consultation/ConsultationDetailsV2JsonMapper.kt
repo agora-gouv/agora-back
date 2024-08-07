@@ -48,6 +48,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             goals = buildGoals(consultationDetails),
             history = buildHistory(consultationDetails),
             updateId = consultationDetails.update.id,
+            updateSlug = consultationDetails.update.slug,
             shareText = buildShareText(consultationDetails),
         )
     }

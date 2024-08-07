@@ -17,13 +17,13 @@ class PublicConsultationDetailsController(
 ) {
 
     @Operation(summary = "Get Consultation Détails")
-    @GetMapping("/api/public/consultations/{consultationId}")
+    @GetMapping("/api/public/consultations/{slugOrIdConsultation}")
     fun getConsultationDetails(
-        @PathVariable consultationId: String,
-    ): ResponseEntity<*> {
-        return useCase.getConsultation(consultationId = consultationId)?.let { consultationDetails ->
+        @PathVariable slugOrIdConsultation: String,
+    ): ResponseEntity<ConsultationDetailsV2Json> {
+        return useCase.getConsultation(slugOrIdConsultation)?.let { consultationDetails ->
             ResponseEntity.ok().body(mapper.toJson(consultationDetails))
-        } ?: ResponseEntity.notFound().build<Unit>()
+        } ?: ResponseEntity.notFound().build()
     }
 
 }

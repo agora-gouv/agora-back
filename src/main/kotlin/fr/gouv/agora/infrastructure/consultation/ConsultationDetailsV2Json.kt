@@ -8,6 +8,8 @@ import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 data class ConsultationDetailsV2Json(
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("slug")
+    val updateSlug: String,
     @JsonProperty("updateId")
     val updateId: String,
     @JsonProperty("coverUrl")

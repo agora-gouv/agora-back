@@ -14,6 +14,7 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.slf4j.LoggerFactory
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
@@ -28,6 +29,7 @@ class ConsultationInfoMapper(
 
         return ConsultationInfo(
             id = consultation.id.toString(),
+            slug = consultation.slug,
             title = consultation.title,
             coverUrl = consultation.coverUrl,
             detailsCoverUrl = consultation.detailsCoverUrl,
@@ -54,6 +56,7 @@ class ConsultationInfoMapper(
 
             return@mapNotNull ConsultationPreview(
                 id = consultation.id.toString(),
+                slug = consultation.slug,
                 title = consultation.title,
                 coverUrl = consultation.coverUrl,
                 thematique = thematique,
@@ -76,6 +79,7 @@ class ConsultationInfoMapper(
 
             return@mapNotNull ConsultationPreviewFinished(
                 id = consultation.id.toString(),
+                slug = consultation.slug,
                 title = consultation.title,
                 coverUrl = consultation.coverUrl,
                 thematique = thematique,
@@ -94,6 +98,7 @@ class ConsultationInfoMapper(
 
             ConsultationPreview(
                 id = consultation.id,
+                slug = consultation.attributes.slug,
                 title = consultation.attributes.titre,
                 coverUrl = consultation.attributes.urlImageDeCouverture,
                 thematique = thematique,
@@ -119,6 +124,7 @@ class ConsultationInfoMapper(
 
             ConsultationPreviewFinished(
                 id = consultation.id,
+                slug = consultation.attributes.slug,
                 title = consultationFields.titre,
                 coverUrl = consultationFields.urlImageDeCouverture,
                 thematique = thematique,
@@ -131,6 +137,7 @@ class ConsultationInfoMapper(
 
     fun toConsultationWithUpdateInfo(dto: ConsultationWithUpdateInfoDTO) = ConsultationWithUpdateInfo(
         id = dto.id.toString(),
+        slug = dto.slug,
         title = dto.title,
         coverUrl = dto.coverUrl,
         thematiqueId = dto.thematiqueId.toString(),
@@ -143,6 +150,7 @@ class ConsultationInfoMapper(
         return ConsultationInfo(
             id = consultation.id,
             title = consultation.attributes.titre,
+            slug = consultation.attributes.slug,
             coverUrl = consultation.attributes.urlImageDeCouverture,
             detailsCoverUrl = consultation.attributes.urlImagePageDeContenu,
             startDate = consultation.attributes.dateDeDebut,

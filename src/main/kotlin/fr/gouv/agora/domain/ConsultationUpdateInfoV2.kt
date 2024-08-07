@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 
 data class ConsultationUpdateInfoV2(
     val id: String,
+    val slug: String,
     val updateDate: LocalDateTime,
     val shareTextTemplate: String,
     val hasQuestionsInfo: Boolean,

@@ -18,7 +18,7 @@ class UserAnsweredConsultationRepositoryImpl(
 
     override fun getAnsweredConsultationIds(userId: String): List<String> {
         return userId.toUuidOrNull()?.let { userUUID ->
-            databaseRepository.getAnsweredConsultationIds(userUUID).map { it.toString() }
+            databaseRepository.getAnsweredConsultationIds(userUUID)
         } ?: emptyList()
     }
 
@@ -36,10 +36,10 @@ class UserAnsweredConsultationRepositoryImpl(
         if (consultationIds.isEmpty()) return emptyMap()
 
         return userId.toUuidOrNull()?.let { userUUID ->
-                val answeredConsultationList = databaseRepository.getAnsweredConsultations(
-                    consultationIds = consultationIds,
-                    userId = userUUID,
-                )
+            val answeredConsultationList = databaseRepository.getAnsweredConsultations(
+                consultationIds = consultationIds,
+                userId = userUUID,
+            )
 
             consultationIds.associateWith { consultationId -> answeredConsultationList.contains(consultationId) }
         } ?: emptyMap()

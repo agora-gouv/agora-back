@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 
 data class ConsultationWithUpdateInfo(
     val id: String,
+    val slug: String,
     val title: String,
     val coverUrl: String,
     val thematiqueId: String,

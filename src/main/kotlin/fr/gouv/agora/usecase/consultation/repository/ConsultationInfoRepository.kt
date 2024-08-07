@@ -10,4 +10,5 @@ interface ConsultationInfoRepository {
     fun getConsultation(consultationId: String): ConsultationInfo?
     fun getConsultationsToAggregate(): List<ConsultationPreview>
     fun isConsultationExists(consultationId: String): Boolean
+    fun getConsultationByIdOrSlug(consultationIdOrSlug: String): ConsultationInfo?
 }

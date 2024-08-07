@@ -40,6 +40,14 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
+    fun getConsultationBySlug(slug: String): StrapiAttributes<ConsultationStrapiDTO>? {
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .filterBy("slug", listOf(slug))
+
+        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
+            .firstOrNull()
+    }
+
     fun getConsultationById(consultationId: String): StrapiAttributes<ConsultationStrapiDTO>? {
         val strapiConsultationId = consultationId.toIntOrNull() ?: return null
         val uriBuilder = StrapiRequestBuilder("consultations")

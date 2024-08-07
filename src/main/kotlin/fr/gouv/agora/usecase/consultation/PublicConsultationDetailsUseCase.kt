@@ -22,32 +22,33 @@ class PublicConsultationDetailsUseCase(
     private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
-
-    fun getConsultation(consultationId: String): ConsultationDetailsV2WithInfo? {
-        return getConsultationDetails(consultationId = consultationId)?.let { details ->
+    fun getConsultation(slugOrId: String): ConsultationDetailsV2WithInfo? {
+        // Pour le moment on récupère soit par slug, soit par ID, pour ne
+        // pas avoir à obliger la mise à jour mobile en même temps.
+        return getConsultationDetails(consultationIdOrSlug = slugOrId)?.let { details ->
             ConsultationDetailsV2WithInfo(
                 consultation = details.consultation,
                 update = details.update,
                 feedbackStats = details.feedbackStats,
                 history = details.history,
                 participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
-                    getParticipantCount(consultationId)
+                    getParticipantCount(details.consultation.id)
                 } else 0,
                 isUserFeedbackPositive = null,
             )
         }
     }
 
-    private fun getConsultationDetails(consultationId: String): ConsultationDetailsV2? {
-        return infoRepository.getConsultation(consultationId)?.let { consultationInfo ->
+    private fun getConsultationDetails(consultationIdOrSlug: String): ConsultationDetailsV2? {
+        return infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)?.let { consultationInfo ->
             if (isConsultationOngoing(consultationInfo)) {
                 getOngoingConsultationDetails(consultationInfo)
             } else {
                 getLastConsultationDetails(consultationInfo)
             }
         } ?: run {
-            cacheRepository.initUnansweredUsersConsultationDetails(consultationId, null)
-            cacheRepository.initLastConsultationDetails(consultationId, null)
+            cacheRepository.initUnansweredUsersConsultationDetails(consultationIdOrSlug, null)
+            cacheRepository.initLastConsultationDetails(consultationIdOrSlug, null)
             null
         }
     }

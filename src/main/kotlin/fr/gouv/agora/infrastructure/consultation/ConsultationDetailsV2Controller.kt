@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.RestController
 @Suppress("unused")
 @Tag(name = "Consultations")
 class ConsultationDetailsV2Controller(
-    private val useCase: ConsultationDetailsV2UseCase,
+    private val getConsultationUseCase: ConsultationDetailsV2UseCase,
     private val mapper: ConsultationDetailsV2JsonMapper,
 ) {
-
     @Operation(summary = "Get Détails Consultation")
     @GetMapping("/v2/consultations/{consultationId}")
     fun getConsultationDetails(
         @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable consultationId: String,
     ): ResponseEntity<*> {
-        return useCase.getConsultation(
+        return getConsultationUseCase.getConsultation(
             consultationId = consultationId,
             userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
         )?.let { consultationDetails ->
