@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.qagHome
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.qagPaginated.QagPaginatedJsonMapper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetQagErrorTextUseCase
@@ -17,17 +18,17 @@ class QagHomeV2Controller(
     private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
     private val qagPaginatedJsonMapper: QagPaginatedJsonMapper,
     private val qagHomeJsonMapper: QagHomeJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
 
     @Operation(summary = "Get QaG Détails")
     @GetMapping("/v2/qags")
     fun getQagDetails(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestParam("pageNumber") pageNumber: String,
         @RequestParam("thematiqueId") thematiqueId: String?,
         @RequestParam("filterType") filterType: String,
     ): ResponseEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val userId = authentificationHelper.getUserId()!!
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedFilterType = filterType.takeUnless { it.isBlank() }
 
@@ -62,11 +63,11 @@ class QagHomeV2Controller(
 
     @Operation(summary = "Get QaG Status")
     @GetMapping("/qags/ask_status")
-    fun askStatus(@RequestHeader("Authorization", required = false) authorizationHeader: String): ResponseEntity<*> {
+    fun askStatus(): ResponseEntity<*> {
         return ResponseEntity.ok().body(
             qagHomeJsonMapper.toQagAskStatusJson(
                 getQagErrorTextUseCase.getGetQagErrorText(
-                    userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+                    userId = authentificationHelper.getUserId()!!
                 )
             )
         )

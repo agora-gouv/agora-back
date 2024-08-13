@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.qagHome
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.utils.StringUtils.replaceDiacritics
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetQagByKeywordsUseCase
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class QagHomeSearchController(
     private val getQagByKeywordsUseCase: GetQagByKeywordsUseCase,
     private val qagHomeJsonMapper: QagHomeJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
     companion object {
         private const val MAX_CHARACTER_SIZE = 75
@@ -26,10 +28,9 @@ class QagHomeSearchController(
     @Operation(summary = "Get QaG Recherche")
     @GetMapping("/qags/search")
     fun getQagSearchPreviews(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestParam("keywords") keywords: String?,
     ): ResponseEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val userId = authentificationHelper.getUserId()!!
         val filteredKeywords =
             keywords.takeUnless { it.isNullOrBlank() }?.take(MAX_CHARACTER_SIZE)?.let { replaceDiacritics(it) }
                 ?.replace(Regex("[^A-Za-z0-9 ]"), "")

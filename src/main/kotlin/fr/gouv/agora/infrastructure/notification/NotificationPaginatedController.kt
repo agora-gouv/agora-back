@@ -1,12 +1,11 @@
 package fr.gouv.agora.infrastructure.notification
 
-import fr.gouv.agora.security.jwt.JwtTokenUtils
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.usecase.notification.NotificationPaginatedUseCase
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -15,39 +14,20 @@ import org.springframework.web.bind.annotation.RestController
 class NotificationPaginatedController(
     private val notificationPaginatedUseCase: NotificationPaginatedUseCase,
     private val notificationPaginatedJsonMapper: NotificationPaginatedJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
-
-    @GetMapping("/notifications/{pageNumber}")
-    fun getNotificationList(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
-        @PathVariable pageNumber: String,
-    ): ResponseEntity<*> {
-        return getNotificationPaginatedJson(authorizationHeader, pageNumber)?.let { json ->
-            ResponseEntity.ok(json)
-        } ?: ResponseEntity.badRequest().body(Unit)
-    }
 
     @GetMapping("/notifications/paginated/{pageNumber}")
     fun getNotificationPaginatedList(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable pageNumber: String,
     ): ResponseEntity<*> {
-        return getNotificationPaginatedJson(authorizationHeader, pageNumber)?.let { json ->
-            ResponseEntity.ok(json)
-        } ?: ResponseEntity.badRequest().body(Unit)
-    }
+        val userId = authentificationHelper.getUserId()!!
+        val pageNumberInt = pageNumber.toIntOrNull() ?: return ResponseEntity.badRequest().body(Unit)
+        val notifications = notificationPaginatedUseCase
+            .getNotificationPaginated(userId = userId, pageNumber = pageNumberInt)
+            ?: return ResponseEntity.badRequest().body(Unit)
 
-    private fun getNotificationPaginatedJson(
-        authorizationHeader: String,
-        pageNumber: String,
-    ): NotificationPaginatedJson? {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        return pageNumber.toIntOrNull()?.let { pageNumberInt ->
-            notificationPaginatedUseCase.getNotificationPaginated(userId = userId, pageNumber = pageNumberInt)
-                ?.let { notificationListAndHasMoreNotificationsFlag ->
-                    notificationPaginatedJsonMapper.toJson(notificationListAndHasMoreNotificationsFlag)
-                }
-        }
+        return ResponseEntity.ok(notificationPaginatedJsonMapper.toJson(notifications))
     }
 
 }

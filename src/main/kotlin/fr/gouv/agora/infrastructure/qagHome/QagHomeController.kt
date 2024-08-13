@@ -20,9 +20,7 @@ class QagHomeController(
 
     @Operation(summary = "Get QaG Responses")
     @GetMapping("/qags/responses")
-    fun getQagResponses(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
-    ): ResponseEntity<QagResponsesJson> {
+    fun getQagResponses(): ResponseEntity<QagResponsesJson> {
         return ResponseEntity.ok().body(
             qagHomeJsonMapper.toResponsesJson(responseQagPreviewListUseCase.getResponseQagPreviewList())
         )

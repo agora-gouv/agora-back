@@ -34,9 +34,6 @@ object JwtTokenUtils {
             ?.trim()
     }
 
-    fun extractUserIdFromHeader(authorizationHeader: String): String {
-        return extractUserId(extractJwtFromHeader(authorizationHeader) ?: "")
-    }
 
     fun isCorrectSignatureAndTokenNotExpired(jwtToken: String): Boolean {
         val expiration = extractExpirationDate(jwtToken)

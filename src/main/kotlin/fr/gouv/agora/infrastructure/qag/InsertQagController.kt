@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.qag
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.qag.InsertQagQueue.TaskType
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.AskQagStatus
@@ -22,15 +23,15 @@ class InsertQagController(
     private val getAskQagStatusUseCase: GetAskQagStatusUseCase,
     private val mapper: QagJsonMapper,
     private val queue: InsertQagQueue,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
 
     @Operation(summary = "Post QaG")
     @PostMapping("/qags")
     fun insertQag(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestBody qagJson: QagInsertingJson,
     ): ResponseEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val userId = authentificationHelper.getUserId()!!
         return queue.executeTask(
             taskType = TaskType.InsertQag(userId = userId),
             onTaskExecuted = {

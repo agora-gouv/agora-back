@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.qag
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.*
 import fr.gouv.agora.usecase.qag.repository.QagDeleteResult
@@ -13,16 +14,15 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "QaG")
 class DeleteQagController(
     private val deleteQagUseCase: DeleteQagUseCase,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
-
     @Operation(summary = "Delete QaG")
     @DeleteMapping("/qags/{qagId}")
     fun deleteQagById(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable qagId: String,
     ): ResponseEntity<*> {
         val qagDeleteResult = deleteQagUseCase.deleteQagById(
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+            userId = authentificationHelper.getUserId()!!,
             qagId = qagId,
         )
         return when (qagDeleteResult) {

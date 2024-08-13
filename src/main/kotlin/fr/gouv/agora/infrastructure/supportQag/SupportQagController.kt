@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.supportQag
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.domain.SupportQagDeleting
 import fr.gouv.agora.domain.SupportQagInserting
 import fr.gouv.agora.infrastructure.supportQag.SupportQagQueue.TaskType
@@ -28,16 +29,16 @@ class SupportQagController(
     private val deleteSupportQagUseCase: DeleteSupportQagUseCase,
     private val isSuspiciousUserUseCase: IsSuspiciousUserUseCase,
     private val queue: SupportQagQueue,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
     @Operation(summary = "Post QaG Support")
     @PostMapping("/qags/{qagId}/support")
     fun insertSupportQag(
         @RequestHeader("User-Agent") userAgent: String,
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable qagId: String,
         request: HttpServletRequest,
     ): HttpEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val userId = authentificationHelper.getUserId()!!
         return queue.executeTask(
             taskType = TaskType.AddSupport(userId = userId),
             onTaskExecuted = {
@@ -66,10 +67,9 @@ class SupportQagController(
     @Operation(summary = "Delete QaG Support")
     @DeleteMapping("/qags/{qagId}/support")
     fun deleteSupportQag(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable qagId: String
     ): HttpEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val userId = authentificationHelper.getUserId()!!
         return queue.executeTask(
             taskType = TaskType.RemoveSupport(userId = userId),
             onTaskExecuted = {

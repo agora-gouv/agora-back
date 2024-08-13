@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.feedbackConsultationUpdate
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.feedbackConsultationUpdate.FeedbackConsultationUpdateQueue.TaskType
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.FeedbackConsultationUpdateUseCase
@@ -21,17 +22,17 @@ class FeedbackConsultationUpdateController(
     private val useCase: FeedbackConsultationUpdateUseCase,
     private val queue: FeedbackConsultationUpdateQueue,
     private val mapper: FeedbackConsultationUpdateJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
 
     @Operation(summary = "Post Consultation Feedback Update")
     @PostMapping("/consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
     fun insertFeedbackConsultationUpdate(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable consultationId: String,
         @PathVariable consultationUpdateId: String,
         @RequestBody body: InsertFeedbackConsultationUpdateJson,
     ): ResponseEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val userId = authentificationHelper.getUserId()!!
         return queue.executeTask(
             taskType = TaskType.AddFeedback(userId = userId),
             onTaskRejected = { ResponseEntity.badRequest().body(Unit) },
@@ -56,7 +57,6 @@ class FeedbackConsultationUpdateController(
     @DeleteMapping("/consultations/{consultationId}/updates/{consultationUpdateId}/feedback")
     @Deprecated("DELETE feedback is not needed anymore to change feedback using POST /consultations/{consultationId}/updates/{consultationUpdateId}/feedback, can be deleted once required app version is <TBD> (development not started yet)")
     fun deleteFeedbackConsultationUpdate(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable consultationId: String,
         @PathVariable consultationUpdateId: String,
     ): ResponseEntity<*> {

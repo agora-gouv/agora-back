@@ -6,6 +6,7 @@ import fr.gouv.agora.security.jwt.AuthenticationTokenFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
@@ -35,6 +36,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .requestMatchers("/signup", "/login").permitAll()
             .requestMatchers("/moderatus/**").permitAll()
             .requestMatchers("/api/public/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/v2/consultations/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
