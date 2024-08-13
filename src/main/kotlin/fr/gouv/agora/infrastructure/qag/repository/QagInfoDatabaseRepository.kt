@@ -321,7 +321,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     @Transactional
     @Query(
         value = """UPDATE qags 
-        SET status = 7, user_id = '00000000-0000-0000-0000-000000000000'
+        SET status = 7
         WHERE id = :qagId
         """, nativeQuery = true
     )
@@ -331,7 +331,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     @Transactional
     @Query(
         value = """UPDATE qags 
-            SET status = 2, username = '', user_id = '00000000-0000-0000-0000-000000000000' 
+            SET status = 2, username = ''
             WHERE status = 1
             AND id IN (
                 SELECT qag_id FROM qag_updates 
