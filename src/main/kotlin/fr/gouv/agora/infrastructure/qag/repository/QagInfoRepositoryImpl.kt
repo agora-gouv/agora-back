@@ -198,6 +198,10 @@ class QagInfoRepositoryImpl(
         databaseRepository.deleteUsersQags(userIDs.mapNotNull { it.toUuidOrNull() })
     }
 
+    override fun isQagExists(qagTitle: String): Boolean {
+        return databaseRepository.isTitleExists(qagTitle)
+    }
+
     private fun List<QagInfoWithSupportCount>.removeDuplicates() = this.fold(
         initial = emptyList<QagInfoWithSupportCount>(),
         operation = { buildingList, qag ->

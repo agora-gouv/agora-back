@@ -41,6 +41,7 @@ interface QagInfoRepository {
     fun deleteQag(qagId: String): QagDeleteResult
     fun getQagByKeywordsList(keywords: List<String>): List<QagInfoWithSupportCount>
     fun deleteUsersQag(userIDs: List<String>)
+    fun isQagExists(qagTitle: String): Boolean
 }
 
 sealed class QagInsertionResult {

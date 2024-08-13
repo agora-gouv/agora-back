@@ -37,6 +37,10 @@ class InsertQagUseCase(
                 username = contentSanitizer.sanitize(qagInserting.username, USERNAME_MAX_LENGTH),
             )
         )
+
+        if (qagInfoRepository.isQagExists(qagInserting.title))
+            return qagInsertionResult
+
         if (qagInsertionResult is QagInsertionResult.Success) {
             supportQagRepository.insertSupportQag(
                 SupportQagInserting(

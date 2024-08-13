@@ -363,4 +363,9 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             AND status <> 7""", nativeQuery = true
     )
     fun deleteUsersQags(@Param("userIDs") userIDs: List<UUID>)
+
+    @Query("""SELECT Boolean(count(id) > 0) 
+            FROM qags 
+            WHERE title = :title""")
+    fun isTitleExists(@Param("title") title: String): Boolean
 }
