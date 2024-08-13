@@ -29,17 +29,17 @@ class ConsultationDetailsV2UseCase(
     private val historyRepository: ConsultationUpdateHistoryRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
 ) {
-    fun getConsultation(consultationId: String, userId: String): ConsultationDetailsV2WithInfo? {
-        val consultationInfo = infoRepository.getConsultation(consultationId)
+    fun getConsultation(consultationIdOrSlug: String, userId: String?): ConsultationDetailsV2WithInfo? {
+        val consultationInfo = infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)
 
         if (consultationInfo == null) {
-            cacheRepository.initUnansweredUsersConsultationDetails(consultationId, null)
-            cacheRepository.initLastConsultationDetails(consultationId, null)
+            cacheRepository.initUnansweredUsersConsultationDetails(consultationIdOrSlug, null)
+            cacheRepository.initLastConsultationDetails(consultationIdOrSlug, null)
             return null
         }
 
         val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate)
-        val userHasNotAnsweredConsultation = !userRepository.hasAnsweredConsultation(consultationInfo.id, userId)
+        val userHasNotAnsweredConsultation = userId == null || !userRepository.hasAnsweredConsultation(consultationInfo.id, userId)
 
         val consultationWithInfo = if (isConsultationOngoing && userHasNotAnsweredConsultation) {
             getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
@@ -54,7 +54,7 @@ class ConsultationDetailsV2UseCase(
         val hasInfo = consultationWithInfo.update.hasParticipationInfo || consultationWithInfo.update.hasQuestionsInfo
         val participantCount = if (hasInfo) getParticipantCount(consultationWithInfo.consultation.id) else 0
 
-        val isUserFeedbackPositive = if (consultationWithInfo.update.feedbackQuestion != null) {
+        val isUserFeedbackPositive = if (userId != null && consultationWithInfo.update.feedbackQuestion != null) {
             feedbackRepository.getUserFeedback(consultationWithInfo.update.id, userId)
         } else null
 

@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.consultationResponse
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.consultationResponse.InsertResponseConsultationQueue.TaskType
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.consultationResponse.ControlResponseConsultationUseCase
@@ -25,16 +26,15 @@ class ReponseConsultationController(
     private val askForDemographicInfoUseCase: AskForDemographicInfoUseCase,
     private val jsonMapper: ReponseConsultationJsonMapper,
     private val queue: InsertResponseConsultationQueue,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
     @Operation(summary = "Post Consultation Responses")
     @PostMapping("/consultations/{consultationId}/responses")
     fun postResponseConsultation(
         @PathVariable consultationId: String,
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestBody responsesConsultationJson: ReponsesConsultationJson,
     ): HttpEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-
+        val userId = authentificationHelper.getUserId()!!
         return queue.executeTask(
             taskType = TaskType.InsertResponse(userId = userId),
             onTaskExecuted = {

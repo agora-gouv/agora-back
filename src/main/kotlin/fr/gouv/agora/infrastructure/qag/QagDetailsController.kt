@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.qag
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetPublicQagDetailsUseCase
 import fr.gouv.agora.usecase.qag.GetQagDetailsUseCase
@@ -21,16 +22,16 @@ class QagDetailsController(
     private val mapper: QagJsonMapper,
     private val getPublicQagDetailsUseCase: GetPublicQagDetailsUseCase,
     private val publicQagJsonMapper: PublicQagJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
     @Operation(summary = "Get QaG Détails")
     @GetMapping("/qags/{qagId}")
     fun getQagDetails(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable qagId: String,
     ): ResponseEntity<*> {
         val qagResult = getQagDetailsUseCase.getQagDetails(
             qagId = qagId,
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+            userId = authentificationHelper.getUserId()!!,
         )
         return when (qagResult) {
             is QagResult.Success -> ResponseEntity.ok(mapper.toJson(qagResult.qag))

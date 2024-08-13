@@ -35,6 +35,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .requestMatchers("/signup", "/login").permitAll()
             .requestMatchers("/moderatus/**").permitAll()
             .requestMatchers("/api/public/**").permitAll()
+            .requestMatchers("/v2/consultations/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter::class.java)

@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.consultation
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewUseCase
 import io.swagger.v3.oas.annotations.Operation
@@ -15,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController
 class ConsultationPreviewController(
     private val consultationPreviewUseCase: ConsultationPreviewUseCase,
     private val consultationPreviewJsonMapper: ConsultationPreviewJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
     @Operation(summary = "Get Consultation Preview")
     @GetMapping("/consultations")
-    fun getConsultationPreviewOngoingList(@RequestHeader("Authorization", required = false) authorizationHeader: String): ResponseEntity<ConsultationPreviewJson> {
+    fun getConsultationPreviewOngoingList(): ResponseEntity<ConsultationPreviewJson> {
         val consultationPreviewPage = consultationPreviewUseCase.getConsultationPreviewPage(
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+            userId = authentificationHelper.getUserId()!!,
         )
 
         return ResponseEntity.ok().body(
