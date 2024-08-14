@@ -57,7 +57,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
         return consultationDetails.update.shareTextTemplate
             .replace(
                 SHARE_TEXT_REPLACE_URL_PATTERN,
-                System.getenv("UNIVERSAL_LINK_URL") + SHARE_TEXT_CONSULTATION_PATH + consultationDetails.consultation.id,
+                System.getenv("UNIVERSAL_LINK_URL") + SHARE_TEXT_CONSULTATION_PATH + consultationDetails.consultation.slug,
             )
             .replace(SHARE_TEXT_REPLACE_TITLE_PATTERN, consultationDetails.consultation.title)
     }
@@ -165,6 +165,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
                 title = historyItem.title,
                 date = historyItem.updateDate?.let(dateMapper::toFormattedDate),
                 actionText = historyItem.actionText,
+                slug = historyItem.slug,
             )
         }
     }

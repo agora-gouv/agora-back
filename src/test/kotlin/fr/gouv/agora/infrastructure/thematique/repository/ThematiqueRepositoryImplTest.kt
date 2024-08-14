@@ -62,7 +62,7 @@ internal class ThematiqueRepositoryImplTest {
         }
 
         @Test
-        fun `getThematiqueList - when cache returns CacheNotInitialized and database returns emptyList - should insert to cache then return emptyList`() {
+        fun `getThematiqueList - when cache returns CacheNotInitialized and database returns emptyList - should not insert to cache then return emptyList`() {
             // Given
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
 
@@ -77,7 +77,6 @@ internal class ThematiqueRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(emptyList<Thematique>())
             then(cacheRepository).should().getThematiqueList()
-            then(cacheRepository).should().insertThematiqueList(emptyList())
             then(cacheRepository).shouldHaveNoMoreInteractions()
         }
 
