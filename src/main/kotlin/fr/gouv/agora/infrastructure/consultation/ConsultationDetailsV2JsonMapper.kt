@@ -30,6 +30,8 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
 
     fun toJson(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDetailsV2Json {
         return ConsultationDetailsV2Json(
+            id = consultationDetails.consultation.id,
+            slug = consultationDetails.consultation.slug,
             title = consultationDetails.consultation.title,
             coverUrl = consultationDetails.consultation.detailsCoverUrl,
             thematique = ThematiqueNoIdJson(
@@ -48,7 +50,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             goals = buildGoals(consultationDetails),
             history = buildHistory(consultationDetails),
             updateId = consultationDetails.update.id,
-            updateSlug = consultationDetails.update.slug,
+            lastUpdateSlug = consultationDetails.update.slug,
             shareText = buildShareText(consultationDetails),
         )
     }
