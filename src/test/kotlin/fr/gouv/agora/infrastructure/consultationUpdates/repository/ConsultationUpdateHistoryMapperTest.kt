@@ -249,7 +249,7 @@ class ConsultationUpdateHistoryMapperTest {
                 lenientGiven(it.consultationUpdateId).willReturn(null)
                 lenientGiven(it.title).willReturn("title")
                 lenientGiven(it.actionText).willReturn(historyItem.actionText)
-                given(it.slug).willReturn("slug")
+                lenientGiven(it.slug).willReturn("slug")
             }
         }
 
