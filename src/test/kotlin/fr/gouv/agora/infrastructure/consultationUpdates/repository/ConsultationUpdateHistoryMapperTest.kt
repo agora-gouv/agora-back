@@ -175,6 +175,7 @@ class ConsultationUpdateHistoryMapperTest {
             given(it.title).willReturn("title")
             given(it.updateDate).willReturn(Date(0))
             given(it.actionText).willReturn("actionText")
+            given(it.slug).willReturn("slug")
         }
 
         // When
@@ -190,6 +191,7 @@ class ConsultationUpdateHistoryMapperTest {
                     title = "title",
                     updateDate = Date(0),
                     actionText = "actionText",
+                    slug = "slug"
                 ),
             )
         )
@@ -207,6 +209,7 @@ class ConsultationUpdateHistoryMapperTest {
             given(it.title).willReturn("title")
             given(it.updateDate).willReturn(Date(0))
             given(it.actionText).willReturn("actionText")
+            given(it.slug).willReturn("slug")
         }
 
         // When
@@ -222,6 +225,7 @@ class ConsultationUpdateHistoryMapperTest {
                     title = "title",
                     updateDate = Date(0),
                     actionText = "actionText",
+                    slug = "slug"
                 ),
             )
         )
@@ -245,6 +249,7 @@ class ConsultationUpdateHistoryMapperTest {
                 lenientGiven(it.consultationUpdateId).willReturn(null)
                 lenientGiven(it.title).willReturn("title")
                 lenientGiven(it.actionText).willReturn(historyItem.actionText)
+                given(it.slug).willReturn("slug")
             }
         }
 
@@ -261,6 +266,7 @@ class ConsultationUpdateHistoryMapperTest {
                     title = "title",
                     updateDate = historyItem.updateDate?.toDate(),
                     actionText = historyItem.expectedActionText,
+                    slug = "slug"
                 )
             }
         }

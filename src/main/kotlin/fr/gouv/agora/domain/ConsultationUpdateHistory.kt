@@ -15,6 +15,7 @@ data class ConsultationUpdateHistory(
     val consultationUpdateId: String?,
     val status: ConsultationUpdateHistoryStatus,
     val title: String,
+    val slug: String?,
     val updateDate: Date?,
     val actionText: String?,
 )

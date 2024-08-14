@@ -213,5 +213,7 @@ data class ConsultationDetailsV2Json(
         val date: String?,
         @JsonProperty("actionText")
         val actionText: String?,
+        @JsonProperty("slug")
+        val slug: String?,
     )
 }

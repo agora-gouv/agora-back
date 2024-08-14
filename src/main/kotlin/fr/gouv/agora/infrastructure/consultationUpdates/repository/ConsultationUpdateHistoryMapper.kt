@@ -34,6 +34,7 @@ class ConsultationUpdateHistoryMapper(
                 it.id,
                 ConsultationUpdateHistoryStatus.DONE,
                 it.attributes.historiqueTitre,
+                it.attributes.slug,
                 consultationStrapiDTO.attributes.dateDeDebut.toDate(),
                 it.attributes.historiqueCallToAction
             )
@@ -44,6 +45,7 @@ class ConsultationUpdateHistoryMapper(
                 it.id,
                 if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                 it.attributes.historiqueTitre,
+                it.attributes.slug,
                 consultationStrapiDTO.attributes.dateDeFin.toDate(),
                 it.attributes.historiqueCallToAction
             )
@@ -55,6 +57,7 @@ class ConsultationUpdateHistoryMapper(
                     it.id,
                     if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
                     it.attributes.historiqueTitre,
+                    it.attributes.slug,
                     it.attributes.datetimePublication.toDate(),
                     it.attributes.historiqueCallToAction
                 )
@@ -65,6 +68,7 @@ class ConsultationUpdateHistoryMapper(
                 null,
                 ConsultationUpdateHistoryStatus.INCOMING,
                 it.attributes.titreHistorique,
+                null,
                 null,
                 null,
             )
@@ -132,6 +136,7 @@ class ConsultationUpdateHistoryMapper(
                 consultationUpdateId = historyItemDTO.consultationUpdateId?.toString(),
                 status = status,
                 title = historyItemDTO.title,
+                slug = historyItemDTO.slug,
                 updateDate = historyItemDTO.updateDate,
                 actionText = historyItemDTO.actionText.takeIf { status == ConsultationUpdateHistoryStatus.DONE },
             )

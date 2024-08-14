@@ -165,6 +165,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
                 title = historyItem.title,
                 date = historyItem.updateDate?.let(dateMapper::toFormattedDate),
                 actionText = historyItem.actionText,
+                slug = historyItem.slug,
             )
         }
     }

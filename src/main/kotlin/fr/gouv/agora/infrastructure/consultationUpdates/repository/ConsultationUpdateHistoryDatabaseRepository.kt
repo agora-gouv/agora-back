@@ -12,7 +12,7 @@ import java.util.*
 interface ConsultationUpdateHistoryDatabaseRepository: JpaRepository<ConsultationUpdateHistoryDTO, UUID> {
 
     @Query(
-        value = """SELECT step_number AS stepNumber, type, consultation_update_id AS consultationUpdateId, title, update_date AS updateDate, action_text AS actionText
+        value = """SELECT step_number AS stepNumber, type, consultation_update_id AS consultationUpdateId, title, update_date AS updateDate, action_text AS actionText, slug
             FROM consultation_update_history LEFT JOIN consultation_updates_v2
             ON consultation_update_history.consultation_update_id = consultation_updates_v2.id
             WHERE consultation_update_history.consultation_id = :consultationId
