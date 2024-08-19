@@ -11,6 +11,8 @@ import fr.gouv.agora.usecase.notification.repository.NotificationSendingReposito
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
 
+class ConsultationIdInconnuException(consultationId: String) : Exception("There is no consultation with id $consultationId")
+
 @Service
 class SendConsultationNotificationUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
@@ -24,7 +26,7 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (!consultationInfoRepository.isConsultationExists(consultationId)) return NotificationResult.FAILURE
+        if (!consultationInfoRepository.isConsultationExists(consultationId)) throw ConsultationIdInconnuException(consultationId)
 
         val userList = userRepository.getAllUsers()
         notificationSendingRepository.sendConsultationDetailsMultiNotification(
@@ -52,7 +54,7 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (!consultationInfoRepository.isConsultationExists(consultationId)) return NotificationResult.FAILURE
+        if (!consultationInfoRepository.isConsultationExists(consultationId)) throw ConsultationIdInconnuException(consultationId)
 
         val userAnsweredConsultationIds =
             userAnsweredConsultationRepository.getUsersAnsweredConsultation(consultationId = consultationId)
@@ -84,7 +86,7 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (!consultationInfoRepository.isConsultationExists(consultationId)) return NotificationResult.FAILURE
+        if (!consultationInfoRepository.isConsultationExists(consultationId)) throw ConsultationIdInconnuException(consultationId)
         val userList = userRepository.getUsersNotAnsweredConsultation(consultationId = consultationId)
 
         notificationSendingRepository.sendConsultationDetailsMultiNotification(
