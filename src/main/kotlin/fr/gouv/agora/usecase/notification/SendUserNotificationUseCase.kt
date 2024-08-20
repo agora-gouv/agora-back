@@ -16,8 +16,8 @@ class SendUserNotificationUseCase(
     private val notificationRepository: NotificationRepository,
 ) {
     fun execute(title: String, description: String, userId: String): NotificationResult {
-        val user = userRepository.getUserById(userId) ?: return NotificationResult.FAILURE
-        if (user.fcmToken.isBlank()) return NotificationResult.FAILURE
+        val user = userRepository.getUserById(userId) ?: throw UserIdInconnuException(userId)
+        if (user.fcmToken.isBlank()) throw FcmTokenVideException()
 
         notificationSendingRepository.sendUserNotification(
             request = NotificationRequest(
