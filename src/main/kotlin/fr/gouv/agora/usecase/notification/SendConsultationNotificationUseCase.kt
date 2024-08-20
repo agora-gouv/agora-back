@@ -3,15 +3,13 @@ package fr.gouv.agora.usecase.notification
 import fr.gouv.agora.domain.NotificationInserting
 import fr.gouv.agora.domain.NotificationType
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
+import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.login.repository.UserRepository
 import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.ConsultationMultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
-import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import org.springframework.stereotype.Service
-
-class ConsultationIdInconnuException(consultationId: String) : Exception("There is no consultation with id $consultationId")
 
 @Service
 class SendConsultationNotificationUseCase(
@@ -26,7 +24,8 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (!consultationInfoRepository.isConsultationExists(consultationId)) throw ConsultationIdInconnuException(consultationId)
+        if (!consultationInfoRepository.isConsultationExists(consultationId))
+            throw ConsultationIdInconnuException(consultationId)
 
         val userList = userRepository.getAllUsers()
         notificationSendingRepository.sendConsultationDetailsMultiNotification(
@@ -54,7 +53,8 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (!consultationInfoRepository.isConsultationExists(consultationId)) throw ConsultationIdInconnuException(consultationId)
+        if (!consultationInfoRepository.isConsultationExists(consultationId))
+            throw ConsultationIdInconnuException(consultationId)
 
         val userAnsweredConsultationIds =
             userAnsweredConsultationRepository.getUsersAnsweredConsultation(consultationId = consultationId)
@@ -86,7 +86,9 @@ class SendConsultationNotificationUseCase(
         description: String,
         consultationId: String,
     ): NotificationResult {
-        if (!consultationInfoRepository.isConsultationExists(consultationId)) throw ConsultationIdInconnuException(consultationId)
+        if (!consultationInfoRepository.isConsultationExists(consultationId))
+            throw ConsultationIdInconnuException(consultationId)
+
         val userList = userRepository.getUsersNotAnsweredConsultation(consultationId = consultationId)
 
         notificationSendingRepository.sendConsultationDetailsMultiNotification(
