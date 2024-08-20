@@ -2,11 +2,14 @@ package fr.gouv.agora.infrastructure.admin
 
 import fr.gouv.agora.usecase.deleteUsers.DeleteUsersUseCase
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.parameters.RequestBody
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -15,10 +18,25 @@ import org.springframework.web.bind.annotation.RestController
 class DeleteUsersController(
     private val deleteUsersController: DeleteUsersUseCase,
 ) {
-    @Operation(summary = "Admin Delete Users")
+    @Operation(
+        summary = "Supprimer un utilisateur",
+        responses = [
+            ApiResponse(responseCode = "200", description = "Success"),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized : Votre compte ne possède pas les droits administrateur",
+                content = [Content(mediaType = "application/json")]
+            )
+        ]
+    )
     @DeleteMapping("/admin/delete_users")
     fun deleteUsers(
-        @RequestBody body: DeleteUsersJson,
+        @RequestBody(
+            description = "Liste des IDs utilisateur à supprimer", required = true,
+            content = [Content(
+                schema = Schema(implementation = DeleteUsersJson::class)
+            )]
+        ) body: DeleteUsersJson,
     ): HttpEntity<*> {
         deleteUsersController.deleteUsers(body.userIDsToDelete)
         return ResponseEntity.ok().body(Unit)
