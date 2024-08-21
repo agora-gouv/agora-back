@@ -15,6 +15,12 @@ data class StrapiConsultationContenuAvantReponse(
     val historiqueTitre: String,
     @JsonProperty("historique_call_to_action")
     val historiqueCallToAction: String,
+    @JsonProperty("commanditaire")
+    val commanditaire: List<StrapiRichText>,
+    @JsonProperty("objectif")
+    val objectif: List<StrapiRichText>,
+    @JsonProperty("axe_gouvernemental")
+    val axeGouvernemental: List<StrapiRichText>,
     @JsonProperty("sections")
     val sections: List<StrapiConsultationSection>,
 )

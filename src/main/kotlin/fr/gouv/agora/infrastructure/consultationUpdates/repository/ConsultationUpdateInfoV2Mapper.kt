@@ -233,7 +233,11 @@ class ConsultationUpdateInfoV2Mapper {
             downloadAnalysisUrl = null,
             feedbackQuestion = null,
             footer = null,
-            goals = null,
+            goals = listOf(
+                Goal("🗣️", contentBeforeResponse.commanditaire.toHtml()),
+                Goal("🎯", contentBeforeResponse.objectif.toHtml()),
+                Goal("🚀", contentBeforeResponse.axeGouvernemental.toHtml()),
+            ),
         )
     }
 
