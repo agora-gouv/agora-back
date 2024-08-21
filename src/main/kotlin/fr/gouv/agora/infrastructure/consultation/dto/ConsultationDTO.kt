@@ -13,6 +13,8 @@ data class ConsultationDTO(
     val id: UUID,
     @Column(columnDefinition = "TEXT")
     val title: String,
+    @Column(columnDefinition = "TEXT")
+    val slug: String,
     val startDate: Date,
     val endDate: Date,
     @Column(columnDefinition = "TEXT")

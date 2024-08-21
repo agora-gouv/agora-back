@@ -4,6 +4,6 @@ import fr.gouv.agora.domain.HeaderQag
 
 interface HeaderQagRepository {
 
-    fun getHeader(filterType: String): HeaderQag?
+    fun getLastHeader(filterType: String): HeaderQag?
 
 }

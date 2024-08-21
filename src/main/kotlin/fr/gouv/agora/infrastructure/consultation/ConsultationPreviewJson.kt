@@ -15,6 +15,8 @@ data class ConsultationPreviewJson(
 data class ConsultationOngoingJson(
     @JsonProperty("id")
     val id: String,
+    @JsonProperty("slug")
+    val slug: String,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("coverUrl")
@@ -30,6 +32,8 @@ data class ConsultationOngoingJson(
 data class ConsultationFinishedJson(
     @JsonProperty("id")
     val id: String,
+    @JsonProperty("slug")
+    val slug: String,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("coverUrl")

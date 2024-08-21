@@ -1,9 +1,28 @@
 package fr.gouv.agora.infrastructure.consultationUpdates.repository
 
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
-import fr.gouv.agora.domain.ConsultationUpdateInfoV2.*
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.FeedbackQuestion
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Footer
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Goal
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.InfoHeader
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.ResponsesInfo
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Section
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
+import fr.gouv.agora.infrastructure.common.toHtml
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationContenuAutre
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSection
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionAccordeon
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionChiffre
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionCitation
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionImage
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionRichText
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionTitre
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationSectionVideo
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateSectionDTO
 import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateV2DTO
+import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
+import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
@@ -33,7 +52,8 @@ class ConsultationUpdateInfoV2Mapper {
     ): ConsultationUpdateInfoV2 {
         return ConsultationUpdateInfoV2(
             id = dto.id.toString(),
-            updateDate = dto.updateDate,
+            slug = dto.slug,
+            updateDate = dto.updateDate.toLocalDateTime(),
             shareTextTemplate = dto.shareTextTemplate,
             hasQuestionsInfo = dto.hasQuestionsInfo == TRUE_INT_VALUE,
             hasParticipationInfo = dto.hasParticipationInfo == TRUE_INT_VALUE,
@@ -161,7 +181,7 @@ class ConsultationUpdateInfoV2Mapper {
         return Section.Video.AuthorInfo(
             name = sectionDTO.authorInfoName,
             message = sectionDTO.authorInfoMessage,
-            date = sectionDTO.videoDate,
+            date = sectionDTO.videoDate.toLocalDate(),
         )
     }
 
@@ -192,4 +212,132 @@ class ConsultationUpdateInfoV2Mapper {
         }
     }
 
+    fun toDomainUnanswered(consultationDTO: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2 {
+        val consultation = consultationDTO.attributes
+        val contentBeforeResponse = consultation.contenuAvantReponse.data.attributes
+
+        val sections = toSections(contentBeforeResponse.sections)
+
+        return ConsultationUpdateInfoV2(
+            id = consultation.contenuAvantReponse.data.id,
+            slug = contentBeforeResponse.slug,
+            updateDate = consultation.dateDeDebut,
+            shareTextTemplate = contentBeforeResponse.templatePartage,
+            hasQuestionsInfo = true,
+            hasParticipationInfo = false,
+            responsesInfo = null,
+            sectionsHeader = emptyList(),
+            body = sections,
+            bodyPreview = emptyList(),
+            infoHeader = null,
+            downloadAnalysisUrl = null,
+            feedbackQuestion = null,
+            footer = null,
+            goals = null,
+        )
+    }
+
+    fun toDomainContenuAutre(consultationDTO: StrapiAttributes<ConsultationStrapiDTO>, contentDTO: StrapiAttributes<StrapiConsultationContenuAutre>): ConsultationUpdateInfoV2 {
+        val contenu = contentDTO.attributes
+
+        val htmlSections = toSections(contenu.sections)
+
+        return ConsultationUpdateInfoV2(
+            id = contentDTO.id,
+            slug = contenu.slug,
+            updateDate = contenu.datetimePublication,
+            shareTextTemplate = contenu.templatePartage,
+            hasQuestionsInfo = false,
+            hasParticipationInfo = false,
+            responsesInfo = null,
+            sectionsHeader = emptyList(),
+            body = htmlSections,
+            bodyPreview = emptyList(),
+            infoHeader = null,
+            downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
+            feedbackQuestion = FeedbackQuestion(
+                contentDTO.id,
+                contenu.feedbackTitre,
+                contenu.feedbackPictogramme,
+                "<body>${contenu.feedbackDescription.toHtml()}</body>"
+            ),
+            footer = null,
+            goals = null,
+        )
+    }
+
+    fun toDomainAnswered(
+        consultation: StrapiAttributes<ConsultationStrapiDTO>,
+    ): ConsultationUpdateInfoV2? {
+        val contenu = consultation.attributes.contenuApresReponseOuTerminee.data.attributes
+        val contenuId = consultation.attributes.contenuApresReponseOuTerminee.data.id
+
+        val htmlSections = toSections(contenu.sections)
+
+        return ConsultationUpdateInfoV2(
+            id = contenuId,
+            slug = contenu.slug,
+            updateDate = consultation.attributes.dateDeDebut,
+            shareTextTemplate = contenu.templatePartageApresFinConsultation,
+            hasQuestionsInfo = false,
+            hasParticipationInfo = false,
+            responsesInfo = ResponsesInfo(
+                picto = contenu.encartVisualisationResultatAvantFinConsultationPictogramme,
+                description = "<body>${contenu.encartVisualisationResultatAvantFinConsultationDescription.toHtml()}</body>",
+                actionText = contenu.encartVisualisationResultatAvantFinConsultationCallToAction
+            ),
+            sectionsHeader = emptyList(),
+            body = htmlSections,
+            bodyPreview = emptyList(),
+            infoHeader = null,
+            downloadAnalysisUrl = null,
+            feedbackQuestion = FeedbackQuestion(
+                contenuId,
+                contenu.feedbackTitre,
+                contenu.feedbackPictogramme,
+                "<body>${contenu.feedbackDescription.toHtml()}</body>"
+            ),
+            footer = null,
+            goals = null,
+        )
+    }
+
+    private fun toSections(sections: List<StrapiConsultationSection>): List<Section> {
+        val sectionHeader = sections.map {
+            when (it) {
+                is StrapiConsultationSectionTitre -> Section.Title(it.titre)
+
+                is StrapiConsultationSectionRichText -> {
+                    Section.RichText(it.description.toHtml())
+                }
+
+                is StrapiConsultationSectionCitation -> {
+                    Section.Quote(it.description.toHtml())
+                }
+
+                is StrapiConsultationSectionImage -> {
+                    Section.Image(it.url, it.descriptionImage)
+                }
+
+                is StrapiConsultationSectionVideo -> {
+                    Section.Video(
+                        it.url,
+                        it.largeur,
+                        it.hauteur,
+                        Section.Video.AuthorInfo(it.nomAuteur, it.posteAuteur, it.dateTournage),
+                        it.transcription
+                    )
+                }
+
+                is StrapiConsultationSectionChiffre -> {
+                    Section.FocusNumber(it.titre, it.description.toHtml())
+                }
+
+                is StrapiConsultationSectionAccordeon -> {
+                    Section.Accordion(it.titre, listOf(Section.RichText(it.description.toHtml())))
+                }
+            }
+        }
+        return sectionHeader
+    }
 }

@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit
 
 data class ConsultationPreview(
     val id: String,
+    val slug: String,
     val title: String,
     val coverUrl: String,
     val thematique: Thematique,
@@ -27,6 +28,7 @@ data class ConsultationPreview(
 
 data class ConsultationPreviewFinished(
     val id: String,
+    val slug: String,
     val title: String,
     val coverUrl: String,
     val thematique: Thematique,

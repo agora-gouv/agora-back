@@ -175,6 +175,7 @@ class ConsultationUpdateHistoryMapperTest {
             given(it.title).willReturn("title")
             given(it.updateDate).willReturn(Date(0))
             given(it.actionText).willReturn("actionText")
+            given(it.slug).willReturn("slug")
         }
 
         // When
@@ -184,13 +185,13 @@ class ConsultationUpdateHistoryMapperTest {
         assertThat(result).isEqualTo(
             listOf(
                 ConsultationUpdateHistory(
-                    stepNumber = 1,
                     type = ConsultationUpdateHistoryType.UPDATE,
                     consultationUpdateId = updateUUID.toString(),
                     status = ConsultationUpdateHistoryStatus.CURRENT,
                     title = "title",
                     updateDate = Date(0),
                     actionText = "actionText",
+                    slug = "slug"
                 ),
             )
         )
@@ -208,6 +209,7 @@ class ConsultationUpdateHistoryMapperTest {
             given(it.title).willReturn("title")
             given(it.updateDate).willReturn(Date(0))
             given(it.actionText).willReturn("actionText")
+            given(it.slug).willReturn("slug")
         }
 
         // When
@@ -217,13 +219,13 @@ class ConsultationUpdateHistoryMapperTest {
         assertThat(result).isEqualTo(
             listOf(
                 ConsultationUpdateHistory(
-                    stepNumber = 1,
                     type = ConsultationUpdateHistoryType.RESULTS,
                     consultationUpdateId = updateUUID.toString(),
                     status = ConsultationUpdateHistoryStatus.CURRENT,
                     title = "title",
                     updateDate = Date(0),
                     actionText = "actionText",
+                    slug = "slug"
                 ),
             )
         )
@@ -247,6 +249,7 @@ class ConsultationUpdateHistoryMapperTest {
                 lenientGiven(it.consultationUpdateId).willReturn(null)
                 lenientGiven(it.title).willReturn("title")
                 lenientGiven(it.actionText).willReturn(historyItem.actionText)
+                lenientGiven(it.slug).willReturn("slug")
             }
         }
 
@@ -254,16 +257,16 @@ class ConsultationUpdateHistoryMapperTest {
         val result = mapper.toDomain(historyDTOs)
 
         // Then
-        val expectedResults = historyItems.sortedByDescending { it.stepNumber }.mapNotNull { historyItem ->
+        val expectedResults = historyItems.sortedByDescending { it.updateDate }.mapNotNull { historyItem ->
             historyItem.expectedStatus?.let {
                 ConsultationUpdateHistory(
-                    stepNumber = historyItem.stepNumber,
                     type = ConsultationUpdateHistoryType.UPDATE,
                     consultationUpdateId = null,
                     status = historyItem.expectedStatus,
                     title = "title",
                     updateDate = historyItem.updateDate?.toDate(),
                     actionText = historyItem.expectedActionText,
+                    slug = "slug"
                 )
             }
         }

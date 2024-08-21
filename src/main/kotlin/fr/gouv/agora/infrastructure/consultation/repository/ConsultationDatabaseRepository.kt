@@ -7,17 +7,17 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 @Repository
 interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> {
 
     companion object {
         private const val CONSULTATION_WITH_UPDATE_INFO_PROJECTION =
-            "id, title, coverUrl, thematiqueId, endDate, updateDate, updateLabel"
+            "id, slug, title, coverUrl, thematiqueId, endDate, updateDate, updateLabel"
 
         private const val CONSULTATION_WITH_UPDATE_INFO_JOIN = """
-             SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
+             SELECT consultations.id AS id, consultations.slug as slug, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
                 FROM consultations LEFT JOIN consultation_updates_v2
                 ON consultation_updates_v2.consultation_id = consultations.id
         """
@@ -34,6 +34,14 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     fun getConsultation(@Param("consultationId") consultationId: UUID): ConsultationDTO?
 
     @Query(
+        value = """
+            SELECT * FROM consultations 
+            WHERE slug = :consultationIdOrSlug 
+            OR CAST(id as TEXT) = :consultationIdOrSlug LIMIT 1""", nativeQuery = true
+    )
+    fun getConsultationByIdOrSlug(@Param("consultationIdOrSlug") consultationIdOrSlug: String): ConsultationDTO?
+
+    @Query(
         value = """SELECT * FROM consultations 
             WHERE :today < end_date
             AND (start_date IS NULL OR :today >= start_date) 
@@ -45,9 +53,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     @Query(
         value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
             FROM (
-                SELECT consultations.id AS id, title, cover_url AS coverUrl, thematique_id AS thematiqueId, end_date AS endDate, update_date AS updateDate, update_label AS updateLabel, ROW_NUMBER() OVER (PARTITION BY consultations.id ORDER BY update_date DESC) AS consultationRowNumber
-                FROM consultations LEFT JOIN consultation_updates_v2
-                ON consultation_updates_v2.consultation_id = consultations.id
+                $CONSULTATION_WITH_UPDATE_INFO_JOIN
                 WHERE :today > end_date
                 AND :today >= update_date
                 ORDER BY updateDate DESC
@@ -66,12 +72,12 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
                 WHERE CURRENT_DATE > update_date
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
-            AND CAST(id as TEXT) IN (SELECT consultation_id FROM user_answered_consultation WHERE user_id = :userId)
+            AND id IN :consultationsId
             ORDER BY updateDate DESC
         """,
         nativeQuery = true
     )
-    fun getConsultationsAnsweredPreviewWithUpdateInfo(@Param("userId") userId: UUID): List<ConsultationWithUpdateInfoDTO>
+    fun getConsultationsPreviewWithUpdateInfo(@Param("consultationsId") consultationsId: List<UUID>): List<ConsultationWithUpdateInfoDTO>
 
     @Query(
         value = """SELECT COUNT(*)
@@ -135,5 +141,4 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
         @Param("userId") userId: UUID,
         @Param("offset") offset: Int,
     ): List<ConsultationWithUpdateInfoDTO>
-
 }

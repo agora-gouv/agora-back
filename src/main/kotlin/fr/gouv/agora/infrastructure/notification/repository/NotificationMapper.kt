@@ -15,6 +15,7 @@ class NotificationMapper {
     companion object {
         private const val QAG_NOTIFICATION_TYPE = "Questions citoyennes"
         private const val CONSULTATION_NOTIFICATION_TYPE = "Consultations"
+        private const val REPONSE_SUPPORT_NOTIFICATION_TYPE = "Réponse du support"
     }
 
     fun toDomain(dto: NotificationDTO): Notification {
@@ -24,6 +25,7 @@ class NotificationMapper {
             type = when (dto.type) {
                 QAG_NOTIFICATION_TYPE -> NotificationType.QAG
                 CONSULTATION_NOTIFICATION_TYPE -> NotificationType.CONSULTATION
+                REPONSE_SUPPORT_NOTIFICATION_TYPE -> NotificationType.REPONSE_SUPPORT
                 else -> throw IllegalArgumentException("Invalid Notification type : ${dto.type}")
             },
             date = dto.date,
@@ -42,6 +44,7 @@ class NotificationMapper {
                     type = when (domain.type) {
                         NotificationType.QAG -> QAG_NOTIFICATION_TYPE
                         NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
+                        NotificationType.REPONSE_SUPPORT -> REPONSE_SUPPORT_NOTIFICATION_TYPE
                     },
                     date = nowDate,
                     userId = userUUID,

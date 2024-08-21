@@ -1,4 +1,4 @@
-DELETE FROM consultations WHERE id = 'f5fd9c1d-6583-494c-8b0f-78129d6a0382';
+DELETE FROM consultations WHERE id = 'db0f2d59-7962-43ff-a69f-878204b7be95';
 DELETE FROM questions WHERE id = '32a4b9b4-e9aa-4930-9983-31f477abc279';
 DELETE FROM choixpossible WHERE id = '351fb2dd-8737-49ef-b7a9-7057dbd5920c';
 DELETE FROM choixpossible WHERE id = '35ccc5f3-02d0-4704-a02d-972b777bcb63';
@@ -52,7 +52,7 @@ DELETE FROM consultation_update_history WHERE id = '48b29a32-17d6-4a61-be39-0c62
 DELETE FROM consultation_update_history WHERE id = 'dfef5438-5983-482f-8ee7-8a64c8de2eab';
 
 INSERT INTO consultations(id, title, start_date, end_date, cover_url, details_cover_url, question_count_number, question_count, estimated_time, participant_count_goal, description, tips_description, thematique_id) VALUES (
-    'f5fd9c1d-6583-494c-8b0f-78129d6a0382',
+    'db0f2d59-7962-43ff-a69f-878204b7be95',
     'Le petit déjeuner, le rituel sacré de la matinée.',
     '2023-01-01',
     '2025-01-01',

@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.profile
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.profile.GetProfileUseCase
 import fr.gouv.agora.usecase.profile.InsertProfileUseCase
@@ -17,16 +18,15 @@ class ProfileController(
     private val insertProfileUseCase: InsertProfileUseCase,
     private val getProfileUseCase: GetProfileUseCase,
     private val jsonMapper: ProfileJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
     @PostMapping("/profile")
     fun postProfile(
-        // TODO : Modifier la gestion des JWT pour pas avoir de paramètre authorizationHeader dans tout les controllers
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestBody profileJson: ProfileJson,
     ): HttpEntity<*> {
         val profile = jsonMapper.toDomain(
             json = profileJson,
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+            userId = authentificationHelper.getUserId()!!,
         )
         return when (profile?.let { insertProfileUseCase.insertProfile(profile) } ?: ProfileEditResult.FAILURE) {
             ProfileEditResult.SUCCESS -> ResponseEntity.ok().body("")
@@ -36,11 +36,8 @@ class ProfileController(
 
     @GetMapping("/profile")
     @Operation(summary = "Récupérer les informations du profil")
-    fun getProfile(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
-    ): HttpEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
-        val profile = getProfileUseCase.getProfile(userId)
+    fun getProfile(): HttpEntity<*> {
+        val profile = getProfileUseCase.getProfile(authentificationHelper.getUserId()!!)
         return ResponseEntity.ok().body(jsonMapper.toJson(profile))
     }
 }

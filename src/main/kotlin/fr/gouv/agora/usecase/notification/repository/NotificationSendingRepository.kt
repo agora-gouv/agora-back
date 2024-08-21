@@ -8,7 +8,14 @@ interface NotificationSendingRepository {
     fun sendQagDetailsMultiNotification(request: QagMultiNotificationRequest)
     fun sendConsultationDetailsMultiNotification(request: ConsultationMultiNotificationRequest)
     fun sendConsultationUpdateMultiNotification(request: ConsultationMultiNotificationRequest)
+    fun sendUserNotification(request: NotificationRequest): NotificationResult
 }
+
+data class NotificationRequest(
+    val title: String,
+    val description: String,
+    val fcmToken: String,
+)
 
 data class QagNotificationRequest(
     val title: String,

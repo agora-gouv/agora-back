@@ -12,6 +12,7 @@ class NotificationPaginatedJsonMapper(private val dateMapper: DateMapper) {
     companion object {
         private const val QAG_NOTIFICATION_TYPE = "Questions citoyennes"
         private const val CONSULTATION_NOTIFICATION_TYPE = "Consultations"
+        private const val REPONSE_SUPPORT_NOTIFICATION_TYPE = "Réponse du support"
     }
 
     fun toJson(notificationListAndHasMoreNotificationsFlag: NotificationListAndHasMoreNotificationsFlag): NotificationPaginatedJson {
@@ -27,6 +28,7 @@ class NotificationPaginatedJsonMapper(private val dateMapper: DateMapper) {
             type = when (domain.type) {
                 NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
                 NotificationType.QAG -> QAG_NOTIFICATION_TYPE
+                NotificationType.REPONSE_SUPPORT -> REPONSE_SUPPORT_NOTIFICATION_TYPE
             },
             date = dateMapper.toFormattedDate(domain.date),
         )

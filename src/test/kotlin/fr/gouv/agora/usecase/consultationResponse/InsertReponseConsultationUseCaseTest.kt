@@ -73,6 +73,7 @@ internal class InsertReponseConsultationUseCaseTest {
 
     private val consultationInfo = ConsultationInfo(
         id = "consultId",
+        slug = "slug",
         title = "consultTitle",
         coverUrl = "",
         detailsCoverUrl = "",
@@ -81,8 +82,6 @@ internal class InsertReponseConsultationUseCaseTest {
         questionCount = "",
         estimatedTime = "",
         participantCountGoal = 1,
-        description = "",
-        tipsDescription = "",
         thematique = Thematique()
     )
 

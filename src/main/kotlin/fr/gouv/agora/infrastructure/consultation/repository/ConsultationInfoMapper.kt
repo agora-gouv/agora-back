@@ -3,11 +3,11 @@ package fr.gouv.agora.infrastructure.consultation.repository
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.Thematique
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
-import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationWithUpdateInfoDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueMapper
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 @Component
-class ConsultationInfoMapper(
-    private val thematiqueMapper: ThematiqueMapper,
-) {
+class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
     private val logger = LoggerFactory.getLogger(ConsultationInfoMapper::class.java)
 
     fun toConsultationInfo(consultation: ConsultationDTO, thematiques: List<Thematique>): ConsultationInfo {
@@ -27,6 +25,7 @@ class ConsultationInfoMapper(
 
         return ConsultationInfo(
             id = consultation.id.toString(),
+            slug = consultation.slug,
             title = consultation.title,
             coverUrl = consultation.coverUrl,
             detailsCoverUrl = consultation.detailsCoverUrl,
@@ -35,31 +34,8 @@ class ConsultationInfoMapper(
             questionCount = consultation.questionCount,
             estimatedTime = consultation.estimatedTime,
             participantCountGoal = consultation.participantCountGoal,
-            description = consultation.description,
-            tipsDescription = consultation.tipsDescription,
             thematique = thematique,
         )
-    }
-
-    fun toConsultationInfo(
-        dto: StrapiDTO<ConsultationStrapiDTO>,
-    ): List<ConsultationInfo> {
-        return dto.data.map { consultation ->
-            ConsultationInfo(
-                id = consultation.id,
-                title = consultation.attributes.titre,
-                coverUrl = consultation.attributes.urlImageDeCouverture,
-                detailsCoverUrl = consultation.attributes.urlImagePageDeContenu,
-                startDate = consultation.attributes.dateDeDebut,
-                endDate = consultation.attributes.dateDeFin,
-                questionCount = consultation.attributes.estimationNombreDeQuestions,
-                estimatedTime = consultation.attributes.estimationTemps,
-                participantCountGoal = consultation.attributes.nombreParticipantsCible,
-                description = consultation.attributes.description.toHtml(),
-                tipsDescription = consultation.attributes.objectifs.toHtml(),
-                thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
-            )
-        }
     }
 
     fun toConsultationPreview(
@@ -76,6 +52,7 @@ class ConsultationInfoMapper(
 
             return@mapNotNull ConsultationPreview(
                 id = consultation.id.toString(),
+                slug = consultation.slug,
                 title = consultation.title,
                 coverUrl = consultation.coverUrl,
                 thematique = thematique,
@@ -98,6 +75,7 @@ class ConsultationInfoMapper(
 
             return@mapNotNull ConsultationPreviewFinished(
                 id = consultation.id.toString(),
+                slug = consultation.slug,
                 title = consultation.title,
                 coverUrl = consultation.coverUrl,
                 thematique = thematique,
@@ -116,6 +94,7 @@ class ConsultationInfoMapper(
 
             ConsultationPreview(
                 id = consultation.id,
+                slug = consultation.attributes.slug,
                 title = consultation.attributes.titre,
                 coverUrl = consultation.attributes.urlImageDeCouverture,
                 thematique = thematique,
@@ -141,6 +120,7 @@ class ConsultationInfoMapper(
 
             ConsultationPreviewFinished(
                 id = consultation.id,
+                slug = consultation.attributes.slug,
                 title = consultationFields.titre,
                 coverUrl = consultationFields.urlImageDeCouverture,
                 thematique = thematique,
@@ -153,6 +133,7 @@ class ConsultationInfoMapper(
 
     fun toConsultationWithUpdateInfo(dto: ConsultationWithUpdateInfoDTO) = ConsultationWithUpdateInfo(
         id = dto.id.toString(),
+        slug = dto.slug,
         title = dto.title,
         coverUrl = dto.coverUrl,
         thematiqueId = dto.thematiqueId.toString(),
@@ -160,4 +141,20 @@ class ConsultationInfoMapper(
         updateDate = dto.updateDate.toLocalDateTime(),
         updateLabel = dto.updateLabel,
     )
+
+    fun toConsultationInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationInfo {
+        return ConsultationInfo(
+            id = consultation.id,
+            title = consultation.attributes.titre,
+            slug = consultation.attributes.slug,
+            coverUrl = consultation.attributes.urlImageDeCouverture,
+            detailsCoverUrl = consultation.attributes.urlImagePageDeContenu,
+            startDate = consultation.attributes.dateDeDebut,
+            endDate = consultation.attributes.dateDeFin,
+            questionCount = consultation.attributes.estimationNombreDeQuestions,
+            estimatedTime = consultation.attributes.estimationTemps,
+            participantCountGoal = consultation.attributes.nombreParticipantsCible,
+            thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
+        )
+    }
 }

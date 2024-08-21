@@ -14,6 +14,8 @@ data class ConsultationUpdateV2DTO(
     val consultationId: UUID,
     val isVisibleToUnansweredUsersOnly: Int,
     @Column(columnDefinition = "TEXT")
+    val slug: String,
+    @Column(columnDefinition = "TEXT")
     val updateLabel: String?,
     val updateDate: Date,
     @Column(columnDefinition = "TEXT")

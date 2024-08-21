@@ -39,6 +39,16 @@ data class QuestionMultipleChoices(
     val maxChoices: Int,
 ) : QuestionWithChoices()
 
+data class QuestionConditional(
+    override val id: String,
+    override val title: String,
+    override val popupDescription: String?,
+    override val order: Int,
+    override val nextQuestionId: String?,
+    override val consultationId: String,
+    override val choixPossibleList: List<ChoixPossibleConditional>,
+) : QuestionWithChoices()
+
 data class QuestionOpen(
     override val id: String,
     override val title: String,
@@ -57,13 +67,3 @@ data class QuestionChapter(
     override val consultationId: String,
     val description: String,
 ) : Question()
-
-data class QuestionConditional(
-    override val id: String,
-    override val title: String,
-    override val popupDescription: String?,
-    override val order: Int,
-    override val nextQuestionId: String?,
-    override val consultationId: String,
-    override val choixPossibleList: List<ChoixPossibleConditional>,
-) : QuestionWithChoices()

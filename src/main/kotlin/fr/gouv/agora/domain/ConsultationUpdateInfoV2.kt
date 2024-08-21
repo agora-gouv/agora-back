@@ -1,10 +1,12 @@
 package fr.gouv.agora.domain
 
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class ConsultationUpdateInfoV2(
     val id: String,
-    val updateDate: Date,
+    val slug: String,
+    val updateDate: LocalDateTime,
     val shareTextTemplate: String,
     val hasQuestionsInfo: Boolean,
     val hasParticipationInfo: Boolean,
@@ -44,7 +46,7 @@ data class ConsultationUpdateInfoV2(
             data class AuthorInfo(
                 val name: String,
                 val message: String,
-                val date: Date,
+                val date: LocalDate,
             )
         }
 

@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.consultationPaginated
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.consultationPaginated.ConsultationsAnsweredPaginatedListUseCase
 import io.swagger.v3.oas.annotations.Operation
@@ -16,17 +17,17 @@ import org.springframework.web.bind.annotation.RestController
 class ConsultationAnsweredPaginatedController(
     private val consultationsAnsweredPaginatedListUseCase: ConsultationsAnsweredPaginatedListUseCase,
     private val consultationPaginatedJsonMapper: ConsultationPaginatedJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
 
     @Operation(summary = "Get Consultations Répondues")
     @GetMapping("/consultations/answered/{pageNumber}")
     fun getConsultationFinishedList(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable pageNumber: String,
     ): ResponseEntity<*> {
         return pageNumber.toIntOrNull()?.let { pageNumberInt ->
             consultationsAnsweredPaginatedListUseCase.getConsultationAnsweredPaginatedList(
-                userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+                userId = authentificationHelper.getUserId()!!,
                 pageNumber = pageNumberInt,
             )
         }?.let { consultationAnsweredPaginatedList ->

@@ -6,8 +6,14 @@ import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ConsultationDetailsV2Json(
+    @JsonProperty("id")
+    val id: String,
+    @JsonProperty("slug")
+    val slug: String,
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("lastUpdateSlug")
+    val lastUpdateSlug: String,
     @JsonProperty("updateId")
     val updateId: String,
     @JsonProperty("coverUrl")
@@ -211,5 +217,7 @@ data class ConsultationDetailsV2Json(
         val date: String?,
         @JsonProperty("actionText")
         val actionText: String?,
+        @JsonProperty("slug")
+        val slug: String?,
     )
 }

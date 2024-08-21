@@ -30,6 +30,8 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
 
     fun toJson(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDetailsV2Json {
         return ConsultationDetailsV2Json(
+            id = consultationDetails.consultation.id,
+            slug = consultationDetails.consultation.slug,
             title = consultationDetails.consultation.title,
             coverUrl = consultationDetails.consultation.detailsCoverUrl,
             thematique = ThematiqueNoIdJson(
@@ -48,6 +50,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             goals = buildGoals(consultationDetails),
             history = buildHistory(consultationDetails),
             updateId = consultationDetails.update.id,
+            lastUpdateSlug = consultationDetails.update.slug,
             shareText = buildShareText(consultationDetails),
         )
     }
@@ -56,7 +59,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
         return consultationDetails.update.shareTextTemplate
             .replace(
                 SHARE_TEXT_REPLACE_URL_PATTERN,
-                System.getenv("UNIVERSAL_LINK_URL") + SHARE_TEXT_CONSULTATION_PATH + consultationDetails.consultation.id,
+                System.getenv("UNIVERSAL_LINK_URL") + SHARE_TEXT_CONSULTATION_PATH + consultationDetails.consultation.slug,
             )
             .replace(SHARE_TEXT_REPLACE_TITLE_PATTERN, consultationDetails.consultation.title)
     }
@@ -164,6 +167,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
                 title = historyItem.title,
                 date = historyItem.updateDate?.let(dateMapper::toFormattedDate),
                 actionText = historyItem.actionText,
+                slug = historyItem.slug,
             )
         }
     }

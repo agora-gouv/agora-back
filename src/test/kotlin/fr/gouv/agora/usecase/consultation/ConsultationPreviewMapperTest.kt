@@ -26,6 +26,7 @@ internal class ConsultationPreviewMapperTest {
         coverUrl = "coverUrl",
         thematique = thematique,
         endDate = LocalDateTime.MIN,
+        slug = "slug"
     )
 
     companion object {
@@ -136,6 +137,7 @@ internal class ConsultationPreviewMapperTest {
         return mock(ConsultationInfo::class.java).also {
             given(it.id).willReturn("consultationId")
             given(it.title).willReturn("title")
+            given(it.slug).willReturn("slug")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(endDate)
         }

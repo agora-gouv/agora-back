@@ -39,7 +39,9 @@ class ThematiqueRepositoryImpl(
             databaseRepository.getThematiqueList().map(mapper::toDomain)
         }
 
-        cacheRepository.insertThematiqueList(thematiques)
+        if (thematiques.isNotEmpty()) {
+            cacheRepository.insertThematiqueList(thematiques)
+        }
 
         return thematiques
     }

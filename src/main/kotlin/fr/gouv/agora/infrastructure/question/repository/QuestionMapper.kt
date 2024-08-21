@@ -1,115 +1,127 @@
 package fr.gouv.agora.infrastructure.question.repository
 
-import fr.gouv.agora.domain.*
-import fr.gouv.agora.infrastructure.question.dto.ChoixPossibleDTO
-import fr.gouv.agora.infrastructure.question.dto.QuestionDTO
+import fr.gouv.agora.domain.ChoixPossibleConditional
+import fr.gouv.agora.domain.ChoixPossibleDefault
+import fr.gouv.agora.domain.QuestionChapter
+import fr.gouv.agora.domain.QuestionConditional
+import fr.gouv.agora.domain.QuestionMultipleChoices
+import fr.gouv.agora.domain.QuestionOpen
+import fr.gouv.agora.domain.QuestionUniqueChoice
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
+import fr.gouv.agora.infrastructure.common.toHtml
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionChoixMultiples
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionChoixUnique
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionConditionnelle
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionDescription
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionOuverte
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
-class QuestionMapper(private val choixPossibleMapper: ChoixPossibleMapper) {
-
-    companion object {
-        private const val QUESTION_TYPE_UNIQUE_CHOICE = "unique"
-        private const val QUESTION_TYPE_MULTIPLE_CHOICE = "multiple"
-        private const val QUESTION_TYPE_OPEN = "open"
-        private const val QUESTION_TYPE_CHAPTER = "chapter"
-        private const val QUESTION_TYPE_CONDITIONAL = "conditional"
-    }
-
-    fun toDomain(
-        dto: QuestionDTO,
-        questionDTOList: List<QuestionDTO>,
-        choixPossibleDTOList: List<ChoixPossibleDTO>,
-    ): Question {
-        return when (dto.type) {
-            QUESTION_TYPE_UNIQUE_CHOICE -> buildQuestionUniqueChoice(
-                dto = dto,
-                nextQuestionId = findNextQuestionId(dto, questionDTOList),
-                choixPossibleDtoList = choixPossibleDTOList,
+class QuestionMapper {
+    fun toQuestionChoixMultiple(
+        questionChoixMultipleStrapi: StrapiConsultationQuestionChoixMultiples,
+        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+    ): QuestionMultipleChoices {
+        val choix = questionChoixMultipleStrapi.choix.mapIndexed { index, choice ->
+            ChoixPossibleDefault(
+                choice.id,
+                choice.label,
+                index,
+                questionChoixMultipleStrapi.id,
+                choice.ouvert
             )
-            QUESTION_TYPE_MULTIPLE_CHOICE -> buildQuestionMultipleChoice(
-                dto = dto,
-                nextQuestionId = findNextQuestionId(dto, questionDTOList),
-                choixPossibleDtoList = choixPossibleDTOList,
-            )
-            QUESTION_TYPE_OPEN -> buildQuestionOpen(
-                dto = dto,
-                nextQuestionId = findNextQuestionId(dto, questionDTOList)
-            )
-            QUESTION_TYPE_CHAPTER -> buildChapter(dto = dto, nextQuestionId = findNextQuestionId(dto, questionDTOList))
-            QUESTION_TYPE_CONDITIONAL -> buildQuestionConditional(
-                dto = dto,
-                nextQuestionId = findNextQuestionId(dto, questionDTOList),
-                choixPossibleDTOList,
-            )
-            else -> throw IllegalArgumentException("Invalid question type ${dto.type}")
         }
+
+        return QuestionMultipleChoices(
+            questionChoixMultipleStrapi.id,
+            questionChoixMultipleStrapi.titre,
+            questionChoixMultipleStrapi.popupExplication?.toHtml(),
+            questionChoixMultipleStrapi.numero,
+            consultationDTO.attributes.getNextQuestionId(questionChoixMultipleStrapi),
+            consultationDTO.id,
+            choix,
+            questionChoixMultipleStrapi.nombreMaximumDeChoix
+        )
     }
 
-    private fun buildQuestionUniqueChoice(
-        dto: QuestionDTO,
-        nextQuestionId: UUID?,
-        choixPossibleDtoList: List<ChoixPossibleDTO>,
-    ) = QuestionUniqueChoice(
-        id = dto.id.toString(),
-        title = dto.title,
-        popupDescription = dto.popupDescription,
-        order = dto.ordre,
-        consultationId = dto.consultationId.toString(),
-        choixPossibleList = choixPossibleDtoList.map(choixPossibleMapper::toDefault),
-        nextQuestionId = nextQuestionId?.toString(),
-    )
+    fun toQuestionChoixUnique(
+        questionChoixUniqueStrapi: StrapiConsultationQuestionChoixUnique,
+        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+    ): QuestionUniqueChoice {
+        val choix = questionChoixUniqueStrapi.choix.mapIndexed { index, choice ->
+            ChoixPossibleDefault(
+                choice.id,
+                choice.label,
+                index,
+                questionChoixUniqueStrapi.id,
+                choice.ouvert
+            )
+        }
 
-    private fun buildQuestionMultipleChoice(
-        dto: QuestionDTO,
-        nextQuestionId: UUID?,
-        choixPossibleDtoList: List<ChoixPossibleDTO>,
-    ) = QuestionMultipleChoices(
-        id = dto.id.toString(),
-        title = dto.title,
-        popupDescription = dto.popupDescription,
-        order = dto.ordre,
-        consultationId = dto.consultationId.toString(),
-        nextQuestionId = nextQuestionId?.toString(),
-        choixPossibleList = choixPossibleDtoList.map(choixPossibleMapper::toDefault),
-        maxChoices = dto.maxChoices ?: throw IllegalStateException("maxChoices must be non-null for multiple type")
-    )
+        return QuestionUniqueChoice(
+            questionChoixUniqueStrapi.id,
+            questionChoixUniqueStrapi.titre,
+            questionChoixUniqueStrapi.popupExplication?.toHtml(),
+            questionChoixUniqueStrapi.numero,
+            consultationDTO.attributes.getNextQuestionId(questionChoixUniqueStrapi),
+            consultationDTO.id,
+            choix,
+        )
+    }
 
-    private fun buildQuestionOpen(dto: QuestionDTO, nextQuestionId: UUID?) = QuestionOpen(
-        id = dto.id.toString(),
-        title = dto.title,
-        popupDescription = dto.popupDescription,
-        order = dto.ordre,
-        consultationId = dto.consultationId.toString(),
-        nextQuestionId = nextQuestionId?.toString(),
-    )
+    fun toQuestionOuverte(
+        questionOuverteStrapi: StrapiConsultationQuestionOuverte,
+        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+    ): QuestionOpen {
+        return QuestionOpen(
+            questionOuverteStrapi.id,
+            questionOuverteStrapi.titre,
+            questionOuverteStrapi.popupExplication?.toHtml(),
+            questionOuverteStrapi.numero,
+            consultationDTO.attributes.getNextQuestionId(questionOuverteStrapi),
+            consultationDTO.id,
+        )
+    }
 
-    private fun buildChapter(dto: QuestionDTO, nextQuestionId: UUID?) = QuestionChapter(
-        id = dto.id.toString(),
-        title = dto.title,
-        popupDescription = dto.popupDescription,
-        order = dto.ordre,
-        consultationId = dto.consultationId.toString(),
-        nextQuestionId = nextQuestionId?.toString(),
-        description = dto.description ?: "",
-    )
+    fun toQuestionDescription(
+        questionDescriptionStrapi: StrapiConsultationQuestionDescription,
+        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+    ): QuestionChapter {
+        return QuestionChapter(
+            questionDescriptionStrapi.id,
+            questionDescriptionStrapi.titre,
+            null,
+            questionDescriptionStrapi.numero,
+            consultationDTO.attributes.getNextQuestionId(questionDescriptionStrapi),
+            consultationDTO.id,
+            questionDescriptionStrapi.description.toHtml()
+        )
+    }
 
-    private fun buildQuestionConditional(
-        dto: QuestionDTO,
-        nextQuestionId: UUID?,
-        choixPossibleDtoList: List<ChoixPossibleDTO>,
-    ) = QuestionConditional(
-        id = dto.id.toString(),
-        title = dto.title,
-        popupDescription = dto.popupDescription,
-        order = dto.ordre,
-        consultationId = dto.consultationId.toString(),
-        choixPossibleList = choixPossibleDtoList.mapNotNull(choixPossibleMapper::toConditional),
-        nextQuestionId = nextQuestionId?.toString(),
-    )
+    fun toQuestionConditionnelle(
+        questionConditionnelleStrapi: StrapiConsultationQuestionConditionnelle,
+        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+    ): QuestionConditional {
+        val choices = questionConditionnelleStrapi.choix.mapIndexed { index, choice ->
+            ChoixPossibleConditional(
+                choice.id,
+                choice.label,
+                index,
+                questionConditionnelleStrapi.id,
+                choice.ouvert,
+                consultationDTO.attributes.questions.first { it.numero == choice.numeroDeLaQuestionSuivante }.id
+            )
+        }
 
-    private fun findNextQuestionId(dto: QuestionDTO, questionDTOList: List<QuestionDTO>): UUID? {
-        return dto.nextQuestionId ?: questionDTOList.find { questionDTO -> questionDTO.ordre == dto.ordre + 1 }?.id
+        return QuestionConditional(
+            questionConditionnelleStrapi.id,
+            questionConditionnelleStrapi.titre,
+            questionConditionnelleStrapi.popupExplication?.toHtml(),
+            questionConditionnelleStrapi.numero,
+            null,
+            consultationDTO.id,
+            choices
+        )
     }
 }

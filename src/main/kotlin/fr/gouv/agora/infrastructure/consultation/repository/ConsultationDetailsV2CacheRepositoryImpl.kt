@@ -10,6 +10,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedb
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.*
 
 @Component
@@ -187,6 +188,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         thematique = details.consultation.thematique,
         update = CacheableConsultationUpdateInfo(
             id = details.update.id,
+            slug = details.update.slug,
             updateDate = details.update.updateDate,
             shareTextTemplate = details.update.shareTextTemplate,
             hasQuestionsInfo = details.update.hasQuestionsInfo,
@@ -210,6 +212,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             consultation = cacheable.consultation,
             update = ConsultationUpdateInfoV2(
                 id = cacheable.update.id,
+                slug = cacheable.update.slug,
                 updateDate = cacheable.update.updateDate,
                 shareTextTemplate = cacheable.update.shareTextTemplate,
                 hasQuestionsInfo = cacheable.update.hasQuestionsInfo,
@@ -318,7 +321,8 @@ private data class CacheableConsultationDetails(
 
 private data class CacheableConsultationUpdateInfo(
     val id: String,
-    val updateDate: Date,
+    val slug: String,
+    val updateDate: LocalDateTime,
     val shareTextTemplate: String,
     val hasQuestionsInfo: Boolean,
     val hasParticipationInfo: Boolean,

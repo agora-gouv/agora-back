@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.infrastructure.userAnsweredConsultation.repository.UserAnsweredConsultationDatabaseRepository
+import fr.gouv.agora.infrastructure.utils.UuidUtils.isUuid
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -71,18 +72,20 @@ class ConsultationInfoRepositoryImpl(
         val now = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
+        val (databaseAnsweredConsultationIds, strapiAnsweredConsultationIds) = userAnsweredConsultationsDatabaseRepository
+            .getAnsweredConsultationIds(userUUID)
+            .partition { it.isUuid() }
+
+        val databaseAnsweredConsultationsUUID = databaseAnsweredConsultationIds.mapNotNull { it.toUuidOrNull() }
         val databaseAnsweredConsultations = consultationsDatabaseRepository
-            .getConsultationsAnsweredPreviewWithUpdateInfo(userUUID)
+            .getConsultationsPreviewWithUpdateInfo(databaseAnsweredConsultationsUUID)
             .let { consultationInfoMapper.toDomainFinished(it, thematiques) }
 
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             return databaseAnsweredConsultations
         }
 
-        val userAnsweredConsultationsId = userAnsweredConsultationsDatabaseRepository
-            .getAnsweredConsultationIds(userUUID).map { it.toString() }
-
-        val strapiAnsweredConsultations = strapiRepository.getConsultationsByIds(userAnsweredConsultationsId)
+        val strapiAnsweredConsultations = strapiRepository.getConsultationsByIds(strapiAnsweredConsultationIds)
             .let { consultationInfoMapper.toDomainFinished(it, now) }
 
         return databaseAnsweredConsultations + strapiAnsweredConsultations
@@ -98,6 +101,37 @@ class ConsultationInfoRepositoryImpl(
         }
 
         return strapiRepository.isConsultationExists(consultationId)
+    }
+
+    override fun getConsultationByIdOrSlug(consultationIdOrSlug: String): ConsultationInfo? {
+        val cachedConsultationInfo = try {
+            getCache()?.get(consultationIdOrSlug, ConsultationInfo::class.java)
+        } catch (e: IllegalStateException) {
+            null
+        }
+        if (cachedConsultationInfo != null) return cachedConsultationInfo
+
+        val consultationFromDb = consultationsDatabaseRepository.getConsultationByIdOrSlug(consultationIdOrSlug)
+
+        if (consultationFromDb != null) {
+            val thematiques = thematiqueRepository.getThematiqueList()
+            val consultationInfoFromDb = consultationInfoMapper.toConsultationInfo(consultationFromDb, thematiques)
+            getCache()?.put(consultationIdOrSlug, consultationInfoFromDb)
+            return consultationInfoFromDb
+        }
+
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            val consultationFromStrapi = strapiRepository.getConsultationBySlug(consultationIdOrSlug)
+                ?: strapiRepository.getConsultationById(consultationIdOrSlug)
+                ?: return null
+
+            val consultationsInfo = consultationInfoMapper.toConsultationInfo(consultationFromStrapi)
+            getCache()?.put(consultationIdOrSlug, consultationsInfo)
+
+            return consultationsInfo
+        }
+
+        return null
     }
 
     override fun getConsultation(consultationId: String): ConsultationInfo? {
@@ -117,16 +151,15 @@ class ConsultationInfoRepositoryImpl(
             return consultationInfoFromDb
         }
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return null
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId) ?: return null
+            val consultationsInfo = consultationInfoMapper.toConsultationInfo(strapiConsultationDTO)
+            getCache()?.put(consultationId, consultationsInfo)
+
+            return consultationsInfo
         }
 
-        val strapiConsultationDTO = strapiRepository.getConsultationById(consultationId)
-        val consultationsInfo = consultationInfoMapper.toConsultationInfo(strapiConsultationDTO)
-        if (consultationsInfo.isEmpty()) return null
-        getCache()?.put(consultationId, consultationsInfo.first())
-
-        return consultationsInfo.first()
+        return null
     }
 
     override fun getConsultationsToAggregate(): List<ConsultationPreview> {

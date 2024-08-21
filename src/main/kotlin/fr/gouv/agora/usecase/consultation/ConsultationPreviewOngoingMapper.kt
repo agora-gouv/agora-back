@@ -13,6 +13,7 @@ class ConsultationPreviewOngoingMapper {
     ): ConsultationPreview {
         return ConsultationPreview(
             id = consultationInfo.id,
+            slug = consultationInfo.slug,
             title = consultationInfo.title,
             coverUrl = consultationInfo.coverUrl,
             thematique = thematique,

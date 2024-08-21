@@ -2,9 +2,10 @@ package fr.gouv.agora.infrastructure.consultation.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.gouv.agora.config.CmsStrapiHttpClient
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationStrapiDTO
+import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
@@ -39,12 +40,21 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getConsultationById(consultationId: String): StrapiDTO<ConsultationStrapiDTO> {
-        val strapiConsultationId = consultationId.toIntOrNull() ?: return StrapiDTO.ofEmpty()
+    fun getConsultationBySlug(slug: String): StrapiAttributes<ConsultationStrapiDTO>? {
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .filterBy("slug", listOf(slug))
+
+        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
+            .firstOrNull()
+    }
+
+    fun getConsultationById(consultationId: String): StrapiAttributes<ConsultationStrapiDTO>? {
+        val strapiConsultationId = consultationId.toIntOrNull() ?: return null
         val uriBuilder = StrapiRequestBuilder("consultations")
             .getByIds(listOf(strapiConsultationId))
 
-        return cmsStrapiHttpClient.request(uriBuilder, ref)
+        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
+            .firstOrNull()
     }
 
     fun getConsultationsEnded14DaysAgo(today: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
@@ -61,5 +71,17 @@ class ConsultationStrapiRepository(
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
             .meta.pagination.total == 1
+    }
+
+    fun getLastUpdateLabelFromConsultation(consultationId: String): String? {
+        val consultationIntId = consultationId.toIntOrNull() ?: return null
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .getByIds(listOf(consultationIntId))
+
+        val consultation = cmsStrapiHttpClient
+            .request<ConsultationStrapiDTO>(uriBuilder, ref)
+
+        return consultation.data
+            .firstOrNull()?.attributes?.flammeLabel
     }
 }

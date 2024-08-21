@@ -4,6 +4,7 @@ import java.util.*
 
 interface ConsultationWithUpdateInfoDTO {
     val id: UUID
+    val slug: String
     val title: String
     val coverUrl: String
     val thematiqueId: UUID

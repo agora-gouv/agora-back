@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.appFeedback
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.appFeedback.InsertAppFeedbackResult
 import fr.gouv.agora.usecase.appFeedback.InsertAppFeedbackUseCase
@@ -17,16 +18,16 @@ import org.springframework.web.bind.annotation.RestController
 class AppFeedbackController(
     private val insertAppFeedbackUseCase: InsertAppFeedbackUseCase,
     private val mapper: AppFeedbackJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
 
     @PostMapping("/feedback")
     fun insertAppFeedback(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @RequestBody body: AppFeedbackJson,
     ): HttpEntity<*> {
         return mapper.toDomain(
             json = body,
-            userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader),
+            userId = authentificationHelper.getUserId()!!,
         )?.let { appFeedback ->
             when (insertAppFeedbackUseCase.insertAppFeedback(appFeedback)) {
                 InsertAppFeedbackResult.SUCCESS -> ResponseEntity.ok().body(Unit)

@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.feedbackQag
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.domain.FeedbackQagInserting
 import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.feedbackQag.InsertFeedbackQagResult
@@ -21,15 +22,15 @@ class FeedbackQagController(
     private val insertFeedbackQagUseCase: InsertFeedbackQagUseCase,
     private val queue: FeedbackQagQueue,
     private val mapper: FeedbackJsonMapper,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
     @Operation(summary = "Post QaG Feedback")
     @PostMapping("/qags/{qagId}/feedback")
     fun insertFeedbackQag(
-        @RequestHeader("Authorization", required = false) authorizationHeader: String,
         @PathVariable qagId: String,
         @RequestBody body: FeedbackQagJson,
     ): HttpEntity<*> {
-        val userId = JwtTokenUtils.extractUserIdFromHeader(authorizationHeader)
+        val userId = authentificationHelper.getUserId()!!
         return queue.executeTask(
             taskType = FeedbackQagQueue.TaskType.AddFeedback(userId = userId),
             onTaskExecuted = {

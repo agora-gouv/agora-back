@@ -22,7 +22,7 @@ interface UserAnsweredConsultationDatabaseRepository : JpaRepository<UserAnswere
         """,
         nativeQuery = true,
     )
-    fun getAnsweredConsultationIds(@Param("userId") userId: UUID): List<UUID>
+    fun getAnsweredConsultationIds(@Param("userId") userId: UUID): List<String>
 
     @Query(
         value = """SELECT count(DISTINCT user_id) FROM user_answered_consultation

@@ -22,7 +22,7 @@ class SendQagNotificationUseCase(
 ) {
 
     fun sendNotificationQagUpdate(title: String, description: String, qagId: String): NotificationResult {
-        if (qagInfoRepository.getQagInfo(qagId) == null) return NotificationResult.FAILURE
+        if (qagInfoRepository.getQagInfo(qagId) == null) throw QagIdInconnuException(qagId)
 
         val userList = userRepository.getAllUsers()
         notificationSendingRepository.sendQagDetailsMultiNotification(
@@ -77,7 +77,7 @@ class SendQagNotificationUseCase(
 
 
     private fun sendNotification(qagId: String, title: String, description: String): NotificationResult {
-        if (qagInfoRepository.getQagInfo(qagId) == null) return NotificationResult.FAILURE
+        if (qagInfoRepository.getQagInfo(qagId) == null) throw QagIdInconnuException(qagId)
 
         val (userId, fcmToken) = getQagAuthorFcmToken(qagId = qagId)
         val sendingNotificationResult = fcmToken?.let {
