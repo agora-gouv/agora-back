@@ -67,6 +67,8 @@ data class QagPreviewJson(
     val thematique: ThematiqueNoIdJson,
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("description")
+    val description: String,
     @JsonProperty("username")
     val username: String,
     @JsonProperty("date")
