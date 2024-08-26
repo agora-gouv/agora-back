@@ -59,15 +59,23 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
+            val now = LocalDateTime.now(clock)
             val consultation = consultationStrapiRepository.getConsultationById(consultationId) ?: return null
+
             val latestOtherContent = consultation.attributes.consultationContenuAutres.data
-                .filter { it.attributes.datetimePublication < LocalDateTime.now(clock) }
+                .filter { it.attributes.datetimePublication < now }
                 .maxByOrNull { it.attributes.datetimePublication }
+            val reponseDuCommanditaire = consultation.attributes.consultationContenuReponseDuCommanditaire.data
+            val analyseDesReponses = consultation.attributes.consultationContenuAnalyseDesReponses.data
 
             return if (latestOtherContent != null) {
                 mapper.toDomainContenuAutre(consultation, latestOtherContent)
+            } else if (reponseDuCommanditaire != null && reponseDuCommanditaire.attributes.datetimePublication.isBefore(now)) {
+                mapper.toDomainReponseDuCommanditaire(consultation)
+            } else if (analyseDesReponses != null && analyseDesReponses.attributes.datetimePublication.isBefore(now)) {
+                mapper.toDomainAnalyseDesReponses(consultation)
             } else {
-                mapper.toDomainAnswered(consultation)
+                mapper.toDomainAnsweredOrEnded(consultation, now)
             }
         }
 
@@ -92,12 +100,22 @@ class ConsultationUpdateV2RepositoryImpl(
             val consultationAttributes = consultationFromStrapi.attributes
             val contenuAvantReponse = consultationAttributes.contenuAvantReponse.data
             val contenuApresReponse = consultationAttributes.contenuApresReponseOuTerminee.data
+            val contenuAnalyseReponses = consultationAttributes.consultationContenuAnalyseDesReponses.data
+            val contenuReponseCommanditaire = consultationAttributes.consultationContenuReponseDuCommanditaire.data
+
             val foundContenuAvantReponse = contenuAvantReponse.id == consultationUpdateIdOrSlug || contenuAvantReponse.attributes.slug == consultationUpdateIdOrSlug
             val foundContenuApresReponse = contenuApresReponse.id == consultationUpdateIdOrSlug || contenuApresReponse.attributes.slug == consultationUpdateIdOrSlug
+            val foundContenuAnalyseReponses = contenuAnalyseReponses?.id == consultationUpdateIdOrSlug || contenuAnalyseReponses?.attributes?.slug == consultationUpdateIdOrSlug
+            val foundContenuReponseCommanditaire = contenuReponseCommanditaire?.id == consultationUpdateIdOrSlug || contenuReponseCommanditaire?.attributes?.slug == consultationUpdateIdOrSlug
+
             return if (foundContenuAvantReponse) {
                 mapper.toDomainUnanswered(consultationFromStrapi)
             } else if (foundContenuApresReponse) {
-                mapper.toDomainAnswered(consultationFromStrapi)
+                mapper.toDomainAnsweredOrEnded(consultationFromStrapi, LocalDateTime.now(clock))
+            } else if (foundContenuAnalyseReponses) {
+                mapper.toDomainAnalyseDesReponses(consultationFromStrapi)
+            } else if (foundContenuReponseCommanditaire) {
+                mapper.toDomainReponseDuCommanditaire(consultationFromStrapi)
             } else {
                 val contenuAutre = consultationAttributes.consultationContenuAutres.data
                     .firstOrNull { it.id == consultationUpdateIdOrSlug || it.attributes.slug == consultationUpdateIdOrSlug }
@@ -136,7 +154,11 @@ class ConsultationUpdateV2RepositoryImpl(
             return if (consultation.attributes.contenuAvantReponse.data.id == consultationUpdateId) {
                 mapper.toDomainUnanswered(consultation)
             } else if (consultation.attributes.contenuApresReponseOuTerminee.data.id == consultationUpdateId) {
-                mapper.toDomainAnswered(consultation)
+                mapper.toDomainAnsweredOrEnded(consultation, LocalDateTime.now(clock))
+            } else if (consultation.attributes.consultationContenuAnalyseDesReponses.data?.id == consultationUpdateId) {
+                mapper.toDomainAnalyseDesReponses(consultation)
+            } else if (consultation.attributes.consultationContenuReponseDuCommanditaire.data?.id == consultationUpdateId) {
+                mapper.toDomainReponseDuCommanditaire(consultation)
             } else if (contenuAutre != null) {
                 mapper.toDomainContenuAutre(consultation, contenuAutre)
             } else {

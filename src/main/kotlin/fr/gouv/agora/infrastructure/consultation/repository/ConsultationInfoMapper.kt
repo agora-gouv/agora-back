@@ -124,7 +124,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 title = consultationFields.titre,
                 coverUrl = consultationFields.urlImageDeCouverture,
                 thematique = thematique,
-                updateLabel = consultationFields.flammeLabel,
+                updateLabel = consultationFields.getFlammeLabel(now),
                 lastUpdateDate = updateDate,
                 endDate = consultationFields.dateDeFin,
             )
