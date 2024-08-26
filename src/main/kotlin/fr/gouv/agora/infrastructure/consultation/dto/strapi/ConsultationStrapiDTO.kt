@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.consultation.dto.strapi
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiDataList
 import fr.gouv.agora.infrastructure.common.StrapiDataNullable
@@ -30,8 +31,6 @@ data class ConsultationStrapiDTO(
     val estimationTemps: String,
     @JsonProperty(value = "nombre_participants_cible")
     val nombreParticipantsCible: Int,
-    @JsonProperty(value = "flamme_label")
-    val flammeLabel: String?,
     @JsonProperty(value = "thematique")
     val thematique: StrapiData<StrapiThematiqueDTO>,
     @JsonProperty(value = "questions")
@@ -40,12 +39,18 @@ data class ConsultationStrapiDTO(
     val contenuAvantReponse: StrapiData<StrapiConsultationContenuAvantReponse>,
     @JsonProperty(value = "consultation_apres_reponse_ou_terminee")
     val contenuApresReponseOuTerminee: StrapiData<StrapiConsultationContenuApresReponse>,
+    @JsonProperty("consultation_contenu_analyse_des_reponse")
+    val consultationContenuAnalyseDesReponses: StrapiDataNullable<StrapiConsultationAnalyseDesReponses>,
+    @JsonProperty("contenu_reponse_du_commanditaires")
+    val consultationContenuReponseDuCommanditaire: StrapiDataNullable<StrapiConsultationReponseCommanditaire>,
     @JsonProperty("consultation_contenu_autres")
     val consultationContenuAutres: StrapiDataList<StrapiConsultationContenuAutre>,
     @JsonProperty("consultation_contenu_a_venir")
     val consultationContenuAVenir: StrapiDataNullable<StrapiConsultationAVenir>,
 ) {
     fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime? {
+        // TODO à modifier avec les nouveaux types
+        //  consultationContenuAnalyseDesReponses et consultationContenuReponseDuCommanditaire
         return listOfNotNull(
             *consultationContenuAutres.data.map { it.attributes.datetimePublication }.toTypedArray(),
             dateDeDebut,
@@ -60,6 +65,19 @@ data class ConsultationStrapiDTO(
         }
     }
 
+    private fun getLastContenuAutre(now: LocalDateTime): StrapiAttributes<StrapiConsultationContenuAutre>? {
+        return consultationContenuAutres.data
+            .filter { it.attributes.datetimePublication < now }
+            .maxByOrNull { it.attributes.datetimePublication }
+    }
+
+    fun getFlammeLabel(now: LocalDateTime): String? {
+        return this.getLastContenuAutre(now)?.attributes?.flammeLabel
+            ?: consultationContenuReponseDuCommanditaire.data?.attributes?.flammeLabel
+            ?: consultationContenuAnalyseDesReponses.data?.attributes?.flammeLabel
+    }
+
+    // TODO pas utilisé ?
     fun getContenuIdBySlugOrId(slugOrId: String): String? {
         return if (contenuAvantReponse.data.attributes.slug == slugOrId || contenuAvantReponse.data.id == slugOrId) {
             contenuAvantReponse.data.id

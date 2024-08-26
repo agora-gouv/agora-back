@@ -7,11 +7,13 @@ import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import org.springframework.stereotype.Repository
+import java.time.Clock
 import java.time.LocalDateTime
 
 @Repository
 class ConsultationStrapiRepository(
     private val cmsStrapiHttpClient: CmsStrapiHttpClient,
+    private val clock: Clock,
 ) {
     val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
 
@@ -78,10 +80,10 @@ class ConsultationStrapiRepository(
         val uriBuilder = StrapiRequestBuilder("consultations")
             .getByIds(listOf(consultationIntId))
 
+        val now = LocalDateTime.now(clock)
         val consultation = cmsStrapiHttpClient
             .request<ConsultationStrapiDTO>(uriBuilder, ref)
 
-        return consultation.data
-            .firstOrNull()?.attributes?.flammeLabel
+        return consultation.data.firstOrNull()?.attributes?.getFlammeLabel(now)
     }
 }

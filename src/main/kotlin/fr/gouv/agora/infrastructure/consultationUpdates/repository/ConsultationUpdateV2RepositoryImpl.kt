@@ -64,7 +64,7 @@ class ConsultationUpdateV2RepositoryImpl(
                 .filter { it.attributes.datetimePublication < LocalDateTime.now(clock) }
                 .maxByOrNull { it.attributes.datetimePublication }
 
-            return if (latestOtherContent != null) {
+            return if (latestOtherContent != null) { // TODO va falloir intégrer les nouveaux contenus
                 mapper.toDomainContenuAutre(consultation, latestOtherContent)
             } else {
                 mapper.toDomainAnswered(consultation)
@@ -94,7 +94,7 @@ class ConsultationUpdateV2RepositoryImpl(
             val contenuApresReponse = consultationAttributes.contenuApresReponseOuTerminee.data
             val foundContenuAvantReponse = contenuAvantReponse.id == consultationUpdateIdOrSlug || contenuAvantReponse.attributes.slug == consultationUpdateIdOrSlug
             val foundContenuApresReponse = contenuApresReponse.id == consultationUpdateIdOrSlug || contenuApresReponse.attributes.slug == consultationUpdateIdOrSlug
-            return if (foundContenuAvantReponse) {
+            return if (foundContenuAvantReponse) { // TODO intégrer les news contenus
                 mapper.toDomainUnanswered(consultationFromStrapi)
             } else if (foundContenuApresReponse) {
                 mapper.toDomainAnswered(consultationFromStrapi)
@@ -133,6 +133,7 @@ class ConsultationUpdateV2RepositoryImpl(
             val contenuAutre =
                 consultation.attributes.consultationContenuAutres.data.firstOrNull { it.id == consultationUpdateId }
 
+            // TODO intégrer les news contenus
             return if (consultation.attributes.contenuAvantReponse.data.id == consultationUpdateId) {
                 mapper.toDomainUnanswered(consultation)
             } else if (consultation.attributes.contenuApresReponseOuTerminee.data.id == consultationUpdateId) {

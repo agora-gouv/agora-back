@@ -98,10 +98,10 @@ class ConsultationUpdateInfoV2Mapper {
     private fun buildFeedbackQuestion(dto: ConsultationUpdateV2DTO): FeedbackQuestion? {
         if (dto.feedbackQuestionTitle == null || dto.feedbackQuestionPicto == null || dto.feedbackQuestionDescription == null) return null
         return FeedbackQuestion(
-            consultationUpdateId = dto.id.toString(),
-            title = dto.feedbackQuestionTitle,
-            picto = dto.feedbackQuestionPicto,
-            description = dto.feedbackQuestionDescription,
+            dto.id.toString(),
+            "Donnez votre avis",
+            "💬",
+            dto.feedbackQuestionDescription,
         )
     }
 
@@ -258,12 +258,12 @@ class ConsultationUpdateInfoV2Mapper {
             body = htmlSections,
             bodyPreview = emptyList(),
             infoHeader = null,
-            downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
+            downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
                 contentDTO.id,
-                contenu.feedbackTitre,
-                contenu.feedbackPictogramme,
-                "<body>${contenu.feedbackDescription.toHtml()}</body>"
+                "Donnez votre avis",
+                "💬",
+                "<body>${contenu.feedbackMessage}</body>"
             ),
             footer = null,
             goals = null,
@@ -276,19 +276,26 @@ class ConsultationUpdateInfoV2Mapper {
         val contenu = consultation.attributes.contenuApresReponseOuTerminee.data.attributes
         val contenuId = consultation.attributes.contenuApresReponseOuTerminee.data.id
 
+        // todo changer si la consultation est terminée ou pas
+
         val htmlSections = toSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
             id = contenuId,
             slug = contenu.slug,
             updateDate = consultation.attributes.dateDeDebut,
-            shareTextTemplate = contenu.templatePartageApresFinConsultation,
+            shareTextTemplate = contenu.templatePartage,
             hasQuestionsInfo = false,
             hasParticipationInfo = false,
+            // todo : pas le même encart selon si terminée ou répondue
+            // 🏁
+            // <body> <b>Cette consultation est maintenant terminée.</b> Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.</body>
+            // Voir tous les résultats
+
             responsesInfo = ResponsesInfo(
-                picto = contenu.encartVisualisationResultatAvantFinConsultationPictogramme,
-                description = "<body>${contenu.encartVisualisationResultatAvantFinConsultationDescription.toHtml()}</body>",
-                actionText = contenu.encartVisualisationResultatAvantFinConsultationCallToAction
+                picto = "🙌",
+                description = "<body><b>Merci pour votre participation</b> à cette consultation !</body>",
+                actionText = "Voir les premiers résultats"
             ),
             sectionsHeader = emptyList(),
             body = htmlSections,
@@ -297,9 +304,9 @@ class ConsultationUpdateInfoV2Mapper {
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
                 contenuId,
-                contenu.feedbackTitre,
-                contenu.feedbackPictogramme,
-                "<body>${contenu.feedbackDescription.toHtml()}</body>"
+                "Donnez votre avis",
+                "💬",
+                "<body>${contenu.feedbackMessage}</body>"
             ),
             footer = null,
             goals = null,
