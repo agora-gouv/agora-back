@@ -351,4 +351,12 @@ class ConsultationUpdateInfoV2Mapper {
         }
         return sectionHeader
     }
+
+    fun toDomainReponseDuCommanditaire(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2? {
+
+    }
+
+    fun toDomainAnalyseDesReponses(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2? {
+
+    }
 }

@@ -49,10 +49,10 @@ data class ConsultationStrapiDTO(
     val consultationContenuAVenir: StrapiDataNullable<StrapiConsultationAVenir>,
 ) {
     fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime? {
-        // TODO à modifier avec les nouveaux types
-        //  consultationContenuAnalyseDesReponses et consultationContenuReponseDuCommanditaire
         return listOfNotNull(
             *consultationContenuAutres.data.map { it.attributes.datetimePublication }.toTypedArray(),
+            consultationContenuAnalyseDesReponses.data?.attributes?.datetimePublication,
+            consultationContenuReponseDuCommanditaire.data?.attributes?.datetimePublication,
             dateDeDebut,
         ).filter { it.isBefore(now) }.maxOrNull()
     }
@@ -67,7 +67,7 @@ data class ConsultationStrapiDTO(
 
     private fun getLastContenuAutre(now: LocalDateTime): StrapiAttributes<StrapiConsultationContenuAutre>? {
         return consultationContenuAutres.data
-            .filter { it.attributes.datetimePublication < now }
+            .filter { it.attributes.datetimePublication.isBefore(now) }
             .maxByOrNull { it.attributes.datetimePublication }
     }
 
