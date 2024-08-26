@@ -75,7 +75,7 @@ class ConsultationUpdateV2RepositoryImpl(
             } else if (analyseDesReponses != null && analyseDesReponses.attributes.datetimePublication.isBefore(now)) {
                 mapper.toDomainAnalyseDesReponses(consultation)
             } else {
-                mapper.toDomainAnsweredOrEnded(consultation)
+                mapper.toDomainAnsweredOrEnded(consultation, now)
             }
         }
 
@@ -111,7 +111,7 @@ class ConsultationUpdateV2RepositoryImpl(
             return if (foundContenuAvantReponse) {
                 mapper.toDomainUnanswered(consultationFromStrapi)
             } else if (foundContenuApresReponse) {
-                mapper.toDomainAnsweredOrEnded(consultationFromStrapi)
+                mapper.toDomainAnsweredOrEnded(consultationFromStrapi, LocalDateTime.now(clock))
             } else if (foundContenuAnalyseReponses) {
                 mapper.toDomainAnalyseDesReponses(consultationFromStrapi)
             } else if (foundContenuReponseCommanditaire) {
@@ -154,7 +154,7 @@ class ConsultationUpdateV2RepositoryImpl(
             return if (consultation.attributes.contenuAvantReponse.data.id == consultationUpdateId) {
                 mapper.toDomainUnanswered(consultation)
             } else if (consultation.attributes.contenuApresReponseOuTerminee.data.id == consultationUpdateId) {
-                mapper.toDomainAnsweredOrEnded(consultation)
+                mapper.toDomainAnsweredOrEnded(consultation, LocalDateTime.now(clock))
             } else if (consultation.attributes.consultationContenuAnalyseDesReponses.data?.id == consultationUpdateId) {
                 mapper.toDomainAnalyseDesReponses(consultation)
             } else if (consultation.attributes.consultationContenuReponseDuCommanditaire.data?.id == consultationUpdateId) {
