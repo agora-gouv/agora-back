@@ -30,6 +30,10 @@ class ConsultationUpdateHistoryMapper(
 
         val dernierContenuId = if (autresContenusTriesParDate.isNotEmpty()) {
             autresContenusTriesParDate.first().id
+        } else if (contenuReponseCommanditaire != null) {
+            contenuReponseCommanditaire.id
+        } else if (contenuAnalyseDesReponses != null) {
+            contenuAnalyseDesReponses.id
         } else contenuApresReponse.id
 
         val historiqueAvantReponse = contenuAvantReponse.let {
