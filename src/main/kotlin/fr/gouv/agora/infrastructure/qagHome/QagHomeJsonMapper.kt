@@ -60,6 +60,7 @@ class QagHomeJsonMapper(
             qagId = qagPreview.id,
             thematique = thematiqueJsonMapper.toNoIdJson(qagPreview.thematique),
             title = qagPreview.title,
+            description = qagPreview.description,
             username = qagPreview.username,
             date = dateMapper.toFormattedDate(qagPreview.date),
             support = SupportQagJson(

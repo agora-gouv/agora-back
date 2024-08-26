@@ -28,6 +28,7 @@ class QagPreviewMapper {
             id = qag.id,
             thematique = thematique,
             title = qag.title,
+            description = qag.description,
             username = qag.username,
             date = qag.date,
             supportCount = qag.supportCount,
