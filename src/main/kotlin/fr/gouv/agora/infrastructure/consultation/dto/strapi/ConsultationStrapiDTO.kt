@@ -76,15 +76,4 @@ data class ConsultationStrapiDTO(
             ?: consultationContenuReponseDuCommanditaire.data?.attributes?.flammeLabel
             ?: consultationContenuAnalyseDesReponses.data?.attributes?.flammeLabel
     }
-
-    // TODO pas utilisé ?
-    fun getContenuIdBySlugOrId(slugOrId: String): String? {
-        return if (contenuAvantReponse.data.attributes.slug == slugOrId || contenuAvantReponse.data.id == slugOrId) {
-            contenuAvantReponse.data.id
-        } else if (contenuApresReponseOuTerminee.data.attributes.slug == slugOrId || contenuApresReponseOuTerminee.data.id == slugOrId) {
-            contenuApresReponseOuTerminee.data.id
-        } else {
-            consultationContenuAutres.data.firstOrNull { it.attributes.slug == slugOrId || it.id == slugOrId }?.id
-        }
-    }
 }

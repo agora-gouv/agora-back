@@ -10,6 +10,7 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component
 import java.time.Clock
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Date
 
@@ -18,8 +19,6 @@ class ConsultationUpdateHistoryMapper(
     val clock: Clock,
 ) {
     fun toDomain(consultationStrapiDTO: StrapiAttributes<ConsultationStrapiDTO>): List<ConsultationUpdateHistory> {
-        // TODO récupérer les contenus publiés seulement
-
         val contenuAvantReponse = consultationStrapiDTO.attributes.contenuAvantReponse.data
         val contenuApresReponse = consultationStrapiDTO.attributes.contenuApresReponseOuTerminee.data
         val contenuAnalyseDesReponses = consultationStrapiDTO.attributes.consultationContenuAnalyseDesReponses.data
@@ -108,7 +107,7 @@ class ConsultationUpdateHistoryMapper(
             historiqueAnalyseDesReponses,
             historiqueApresReponse,
             historiqueAvantReponse,
-        )
+        ).filter { it.updateDate?.toLocalDateTime()?.isBefore(LocalDateTime.now(clock)) ?: true }
     }
 
     fun toDomain(dtoList: List<ConsultationUpdateHistoryWithDateDTO>): List<ConsultationUpdateHistory> {
