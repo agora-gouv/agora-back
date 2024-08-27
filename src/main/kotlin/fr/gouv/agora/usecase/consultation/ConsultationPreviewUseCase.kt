@@ -1,5 +1,6 @@
 package fr.gouv.agora.usecase.consultation
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewPage
@@ -11,12 +12,17 @@ import org.springframework.stereotype.Service
 class ConsultationPreviewUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val cacheRepository: ConsultationPreviewPageRepository,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
     fun getConsultationPreviewPage(userId: String): ConsultationPreviewPage {
         val cachedOngoingConsultations = cacheRepository.getConsultationPreviewOngoingList()
         val cachedFinishedConsultations = cacheRepository.getConsultationPreviewFinishedList()
         val answeredList = cacheRepository.getConsultationPreviewAnsweredList(userId)
             ?: buildAnsweredList(userId)
+
+        if (authentificationHelper.canViewUnpublishedConsultations()) {
+
+        }
 
         if (cachedOngoingConsultations != null && cachedFinishedConsultations != null) {
             return ConsultationPreviewPage(

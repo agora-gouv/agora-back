@@ -19,6 +19,7 @@ class UserJwtMapper {
         return when (domain) {
             UserAuthorization.VIEW_CONSULTATION -> UserAuthorizationJWT.VIEW_CONSULTATION
             UserAuthorization.ANSWER_CONSULTATION -> UserAuthorizationJWT.ANSWER_CONSULTATION
+            UserAuthorization.VIEW_UNPUBLISHED_CONSULTATION -> UserAuthorizationJWT.VIEW_UNPUBLISHED_CONSULTATION
             UserAuthorization.VIEW_QAG -> UserAuthorizationJWT.VIEW_QAG
             UserAuthorization.SUPPORT_QAG -> UserAuthorizationJWT.SUPPORT_QAG
             UserAuthorization.FEEDBACK_QAG_RESPONSE -> UserAuthorizationJWT.FEEDBACK_QAG_RESPONSE
