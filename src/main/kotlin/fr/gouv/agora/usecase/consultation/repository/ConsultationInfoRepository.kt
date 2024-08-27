@@ -4,8 +4,8 @@ import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreview
 
 interface ConsultationInfoRepository {
-    fun getOngoingConsultations(): List<ConsultationPreview>
-    fun getFinishedConsultations(): List<ConsultationPreviewFinished>
+    fun getOngoingConsultationsWithUnpublished(): List<ConsultationPreview>
+    fun getFinishedConsultationsWithUnpublished(): List<ConsultationPreviewFinished>
     fun getAnsweredConsultations(userId: String): List<ConsultationPreviewFinished>
     fun getConsultation(consultationId: String): ConsultationInfo?
     fun getConsultationsToAggregate(): List<ConsultationPreview>

@@ -17,17 +17,19 @@ class ConsultationStrapiRepository(
 ) {
     val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
 
-    fun getConsultationsOngoing(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationsOngoingWithUnpublished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .withDateBefore(date, "datetime_de_debut")
             .withDateAfter(date, "datetime_de_fin")
+            .withUnpublished()
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getConsultationsFinished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationsFinishedWithUnpublished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .withDateBefore(date, "datetime_de_fin")
+            .withUnpublished()
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }

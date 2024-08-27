@@ -31,7 +31,7 @@ class ConsultationInfoRepositoryImpl(
         const val CONSULTATION_CACHE_NAME = "consultationCache"
     }
 
-    override fun getOngoingConsultations(): List<ConsultationPreview> {
+    override fun getOngoingConsultationsWithUnpublished(): List<ConsultationPreview> {
         val today = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
@@ -42,13 +42,13 @@ class ConsultationInfoRepositoryImpl(
             return databaseOngoingConsultations
         }
 
-        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoing(today)
+        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoingWithUnpublished(today)
             .let { consultationInfoMapper.toConsultationPreview(it) }
 
         return databaseOngoingConsultations + strapiOngoingConsultations
     }
 
-    override fun getFinishedConsultations(): List<ConsultationPreviewFinished> {
+    override fun getFinishedConsultationsWithUnpublished(): List<ConsultationPreviewFinished> {
         val now = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
@@ -59,7 +59,7 @@ class ConsultationInfoRepositoryImpl(
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             return databaseConsultations
         }
-        val consultationsStrapi = strapiRepository.getConsultationsFinished(now)
+        val consultationsStrapi = strapiRepository.getConsultationsFinishedWithUnpublished(now)
         val strapiConsultations = consultationsStrapi
             .let { consultationInfoMapper.toDomainFinished(it, now) }
 

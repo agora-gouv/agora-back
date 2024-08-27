@@ -1,8 +1,8 @@
 package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.config.AuthentificationHelper
-import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreview
+import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewPage
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
@@ -21,14 +21,15 @@ class ConsultationPreviewUseCase(
             ?: buildAnsweredList(userId)
 
         if (authentificationHelper.canViewUnpublishedConsultations()) {
+            val onGoingConsultations = consultationInfoRepository.getOngoingConsultationsWithUnpublished()
+                .sortedBy { it.endDate }
+            val finishedConsultations = consultationInfoRepository.getFinishedConsultationsWithUnpublished()
+            val answeredConsultations = consultationInfoRepository.getAnsweredConsultations(userId)
 
-        }
-
-        if (cachedOngoingConsultations != null && cachedFinishedConsultations != null) {
             return ConsultationPreviewPage(
-                ongoingList = cachedOngoingConsultations.removeAnsweredConsultation(answeredList),
-                finishedList = cachedFinishedConsultations,
-                answeredList = answeredList,
+                ongoingList = onGoingConsultations.removeAnsweredConsultation(answeredConsultations),
+                finishedList = finishedConsultations,
+                answeredList = answeredConsultations,
             )
         }
 
@@ -41,18 +42,16 @@ class ConsultationPreviewUseCase(
     }
 
     private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreview> {
-        val consultations = consultationInfoRepository.getOngoingConsultations()
+        return consultationInfoRepository.getOngoingConsultationsWithUnpublished()
             .sortedBy { it.endDate }
-
-        cacheRepository.insertConsultationPreviewOngoingList(consultations)
-
-        return consultations
+            .filter { it.isPublished }
+            .also { cacheRepository.insertConsultationPreviewOngoingList(it) }
     }
 
     private fun buildFinishedList(): List<ConsultationPreviewFinished> {
-        return consultationInfoRepository.getFinishedConsultations().also { finishedList ->
-            cacheRepository.insertConsultationPreviewFinishedList(finishedList)
-        }
+        return consultationInfoRepository.getFinishedConsultationsWithUnpublished()
+            .filter { it.isPublished }
+            .also { finishedList -> cacheRepository.insertConsultationPreviewFinishedList(finishedList) }
     }
 
     private fun buildAnsweredList(userId: String): List<ConsultationPreviewFinished> {
@@ -67,5 +66,4 @@ class ConsultationPreviewUseCase(
             answeredList.any { answeredConsultation -> answeredConsultation.id == ongoingConsultation.id }
         }
     }
-
 }
