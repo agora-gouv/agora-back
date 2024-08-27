@@ -59,7 +59,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
                 ORDER BY updateDate DESC
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
-            LIMIT 5
+            LIMIT 7
         """,
         nativeQuery = true
     )
