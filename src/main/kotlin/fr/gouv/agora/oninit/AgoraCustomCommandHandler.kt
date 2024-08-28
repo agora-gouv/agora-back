@@ -9,7 +9,6 @@ import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class AgoraCustomCommandHandler(
     private val applicationContext: ApplicationContext,
     private val dailyTasksHandler: DailyTasksHandler,

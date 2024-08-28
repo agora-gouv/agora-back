@@ -1,7 +1,6 @@
 package fr.gouv.agora.infrastructure.qag
 
 import fr.gouv.agora.config.AuthentificationHelper
-import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetPublicQagDetailsUseCase
 import fr.gouv.agora.usecase.qag.GetQagDetailsUseCase
 import fr.gouv.agora.usecase.qag.QagResult
@@ -11,11 +10,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "QaG")
 class QagDetailsController(
     private val getQagDetailsUseCase: GetQagDetailsUseCase,

@@ -25,14 +25,12 @@ import java.net.URI
 import java.time.Duration
 
 @Configuration
-@Suppress("unused")
 @EnableCaching
 class CacheConfig {
     private val logger: Logger = LoggerFactory.getLogger(CacheConfig::class.java)
 
     companion object {
         const val DEFAULT_REDIS_USER = "default"
-        const val DEFAULT_REDIS_PORT = 6379
     }
 
     @Bean

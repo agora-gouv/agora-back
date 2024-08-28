@@ -12,7 +12,6 @@ import java.time.*
 import java.util.concurrent.RejectedExecutionException
 
 @Component
-@Suppress("unused")
 class NotificationSendingRepositoryImpl(
     private val taskScheduler: ThreadPoolTaskScheduler,
     private val clock: Clock,

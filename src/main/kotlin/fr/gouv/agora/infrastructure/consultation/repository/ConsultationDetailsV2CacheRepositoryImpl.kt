@@ -1,8 +1,17 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.agora.domain.*
-import fr.gouv.agora.domain.ConsultationUpdateInfoV2.*
+import fr.gouv.agora.domain.ConsultationDetailsV2
+import fr.gouv.agora.domain.ConsultationUpdateHistory
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.FeedbackQuestion
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Footer
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Goal
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.InfoHeader
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.ResponsesInfo
+import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Section
+import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
@@ -11,10 +20,8 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
-import java.util.*
 
 @Component
-@Suppress("unused")
 class ConsultationDetailsV2CacheRepositoryImpl(
     private val cacheManager: CacheManager,
     @Qualifier("shortTermCacheManager")
@@ -139,7 +146,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
                 ?.get("$consultationUpdateId/$userId", String::class.java)
             when (cachedContent) {
                 null -> ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized
-                "" -> ConsultationUpdateUserFeedbackCacheResult.ConsultationUpdateUserFeedbackNotFound
+                "" -> ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized
                 else -> ConsultationUpdateUserFeedbackCacheResult.CachedConsultationUpdateUserFeedback(
                     isUserFeedbackPositive = cachedContent.toBooleanStrictOrNull()
                 )
@@ -161,7 +168,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         return try {
             when (val cachedValue = cacheManager.getCache(cacheName)?.get(cacheKey, String::class.java)) {
                 null -> ConsultationUpdateCacheResult.CacheNotInitialized
-                "" -> ConsultationUpdateCacheResult.ConsultationUpdateNotFound
+                "" -> ConsultationUpdateCacheResult.CacheNotInitialized
                 else -> ConsultationUpdateCacheResult.CachedConsultationsDetails(
                     details = fromCacheable(
                         objectMapper.readValue(
@@ -226,6 +233,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
                 feedbackQuestion = cacheable.update.feedbackQuestion,
                 goals = cacheable.update.goals,
                 footer = cacheable.update.footer,
+                isPublished = true,
             ),
             feedbackStats = cacheable.feedbackStats,
             history = cacheable.history,

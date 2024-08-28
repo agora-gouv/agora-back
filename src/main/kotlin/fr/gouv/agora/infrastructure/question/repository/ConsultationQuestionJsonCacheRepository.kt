@@ -12,7 +12,6 @@ interface ConsultationQuestionJsonCacheRepository {
 }
 
 @Component
-@Suppress("unused")
 class ConsultationQuestionJsonCacheRepositoryImpl(
     @Qualifier("longTermCacheManager")
     private val cacheManager: CacheManager,

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Admin")
 class GetConsultationResponsesWithDemographicInfoController(
     private val consultationResultsUseCase: GetConsultationResultsWithDemographicRatiosUseCase,

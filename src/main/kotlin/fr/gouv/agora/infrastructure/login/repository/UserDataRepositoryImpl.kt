@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component
 import java.util.Date
 
 @Component
-@Suppress("unused")
 class UserDataRepositoryImpl(
     private val databaseRepository: UserDataDatabaseRepository,
     private val mapper: UserDataMapper,

@@ -20,6 +20,7 @@ class ConsultationPreviewFinishedMapper {
             updateLabel = consultationInfo.updateLabel,
             endDate = consultationInfo.endDate,
             lastUpdateDate = consultationInfo.updateDate,
+            isPublished = true,
         )
     }
 }

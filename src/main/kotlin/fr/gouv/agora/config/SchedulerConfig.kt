@@ -6,7 +6,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 
 @Configuration
-@Suppress("unused")
 @EnableScheduling
 @ConditionalOnProperty(name = ["spring.scheduler.enabled"])
 class SchedulerConfig

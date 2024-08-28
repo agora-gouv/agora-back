@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody as RequestBodySwagge
 import org.springframework.web.bind.annotation.RequestBody as RequestBodySpring
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Admin")
 class DeleteUsersController(
     private val deleteUsersController: DeleteUsersUseCase,

@@ -19,6 +19,7 @@ data class ConsultationUpdateInfoV2(
     val feedbackQuestion: FeedbackQuestion?,
     val footer: Footer?,
     val goals: List<Goal>?,
+    val isPublished: Boolean,
 ) {
 
     data class ResponsesInfo(

@@ -10,7 +10,6 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Component
-@Suppress("unused")
 class SupportQagRepositoryImpl(
     private val databaseRepository: SupportQagDatabaseRepository,
     private val mapper: SupportQagMapper,

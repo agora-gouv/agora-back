@@ -2,19 +2,16 @@ package fr.gouv.agora.infrastructure.qagHome
 
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.utils.StringUtils.replaceDiacritics
-import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetQagByKeywordsUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "QaG")
 class QagHomeSearchController(
     private val getQagByKeywordsUseCase: GetQagByKeywordsUseCase,
@@ -41,7 +38,7 @@ class QagHomeSearchController(
                 qagHomeJsonMapper.toJson(
                     getQagByKeywordsUseCase.getQagByKeywordsUseCase(
                         userId = userId,
-                        keywords = filteredKeywords.split(" ").filterNot{ it.isBlank() },
+                        keywords = filteredKeywords.split(" ").filterNot { it.isBlank() },
                     )
                 )
             )

@@ -76,6 +76,7 @@ class ConsultationUpdateInfoV2Mapper {
             feedbackQuestion = buildFeedbackQuestion(dto),
             footer = buildFooter(dto),
             goals = buildGoals(dto),
+            isPublished = true,
         )
     }
 
@@ -239,6 +240,7 @@ class ConsultationUpdateInfoV2Mapper {
                 Goal("🎯", contentBeforeResponse.objectif.toHtml()),
                 Goal("🚀", contentBeforeResponse.axeGouvernemental.toHtml()),
             ),
+            isPublished = consultation.isPublished(),
         )
     }
 
@@ -271,6 +273,7 @@ class ConsultationUpdateInfoV2Mapper {
             ),
             footer = null,
             goals = null,
+            isPublished = consultationDTO.attributes.isPublished(),
         )
     }
 
@@ -318,6 +321,7 @@ class ConsultationUpdateInfoV2Mapper {
             ),
             footer = null,
             goals = null,
+            isPublished = consultation.attributes.isPublished(),
         )
     }
 
@@ -348,6 +352,7 @@ class ConsultationUpdateInfoV2Mapper {
             ),
             footer = null,
             goals = null,
+            isPublished = consultation.attributes.isPublished(),
         )
     }
 
@@ -378,6 +383,7 @@ class ConsultationUpdateInfoV2Mapper {
             ),
             footer = null,
             goals = null,
+            isPublished = consultation.attributes.isPublished(),
         )
     }
 

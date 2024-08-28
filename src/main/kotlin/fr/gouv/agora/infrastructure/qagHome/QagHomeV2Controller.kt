@@ -2,16 +2,16 @@ package fr.gouv.agora.infrastructure.qagHome
 
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.qagPaginated.QagPaginatedJsonMapper
-import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.gouv.agora.usecase.qagPaginated.QagPaginatedV2UseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "QaG")
 class QagHomeV2Controller(
     private val qagPaginatedV2UseCase: QagPaginatedV2UseCase,

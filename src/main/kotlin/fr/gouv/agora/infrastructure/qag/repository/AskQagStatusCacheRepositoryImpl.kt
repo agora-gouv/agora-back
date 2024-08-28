@@ -6,7 +6,6 @@ import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class AskQagStatusCacheRepositoryImpl(
     private val cacheManager: CacheManager,
 ) : AskQagStatusCacheRepository {

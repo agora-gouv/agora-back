@@ -35,6 +35,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             estimatedTime = consultation.estimatedTime,
             participantCountGoal = consultation.participantCountGoal,
             thematique = thematique,
+            isPublished = true,
         )
     }
 
@@ -57,6 +58,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 coverUrl = consultation.coverUrl,
                 thematique = thematique,
                 endDate = consultation.endDate.toLocalDateTime(),
+                isPublished = true
             )
         }
     }
@@ -82,6 +84,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 updateLabel = consultation.updateLabel,
                 lastUpdateDate = consultation.updateDate.toLocalDateTime(),
                 endDate = consultation.endDate.toLocalDateTime(),
+                isPublished = true,
             )
         }
     }
@@ -99,6 +102,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 coverUrl = consultation.attributes.urlImageDeCouverture,
                 thematique = thematique,
                 endDate = consultation.attributes.dateDeFin,
+                isPublished = consultation.attributes.isPublished()
             )
         }
     }
@@ -127,6 +131,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 updateLabel = consultationFields.getFlammeLabel(now),
                 lastUpdateDate = updateDate,
                 endDate = consultationFields.dateDeFin,
+                isPublished = consultation.attributes.isPublished()
             )
         }
     }
@@ -155,6 +160,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             estimatedTime = consultation.attributes.estimationTemps,
             participantCountGoal = consultation.attributes.nombreParticipantsCible,
             thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
+            isPublished = consultation.attributes.isPublished(),
         )
     }
 }

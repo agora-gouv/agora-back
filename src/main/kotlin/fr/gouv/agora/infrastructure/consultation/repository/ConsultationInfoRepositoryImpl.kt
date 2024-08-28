@@ -16,7 +16,6 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Component
-@Suppress("unused")
 class ConsultationInfoRepositoryImpl(
     private val consultationsDatabaseRepository: ConsultationDatabaseRepository,
     private val strapiRepository: ConsultationStrapiRepository,
@@ -32,6 +31,11 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getOngoingConsultations(): List<ConsultationPreview> {
+        return this.getOngoingConsultationsWithUnpublished()
+            .filter { it.isPublished }
+    }
+
+    override fun getOngoingConsultationsWithUnpublished(): List<ConsultationPreview> {
         val today = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
@@ -42,13 +46,18 @@ class ConsultationInfoRepositoryImpl(
             return databaseOngoingConsultations
         }
 
-        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoing(today)
+        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoingWithUnpublished(today)
             .let { consultationInfoMapper.toConsultationPreview(it) }
 
         return databaseOngoingConsultations + strapiOngoingConsultations
     }
 
     override fun getFinishedConsultations(): List<ConsultationPreviewFinished> {
+        return this.getFinishedConsultationsWithUnpublished()
+            .filter { it.isPublished }
+    }
+
+    override fun getFinishedConsultationsWithUnpublished(): List<ConsultationPreviewFinished> {
         val now = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
@@ -59,7 +68,7 @@ class ConsultationInfoRepositoryImpl(
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             return databaseConsultations
         }
-        val consultationsStrapi = strapiRepository.getConsultationsFinished(now)
+        val consultationsStrapi = strapiRepository.getConsultationsFinishedWithUnpublished(now)
         val strapiConsultations = consultationsStrapi
             .let { consultationInfoMapper.toDomainFinished(it, now) }
 
@@ -104,6 +113,11 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getConsultationByIdOrSlug(consultationIdOrSlug: String): ConsultationInfo? {
+        return getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
+            ?.takeIf { it.isPublished }
+    }
+
+    override fun getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug: String): ConsultationInfo? {
         val cachedConsultationInfo = try {
             getCache()?.get(consultationIdOrSlug, ConsultationInfo::class.java)
         } catch (e: IllegalStateException) {
@@ -112,7 +126,6 @@ class ConsultationInfoRepositoryImpl(
         if (cachedConsultationInfo != null) return cachedConsultationInfo
 
         val consultationFromDb = consultationsDatabaseRepository.getConsultationByIdOrSlug(consultationIdOrSlug)
-
         if (consultationFromDb != null) {
             val thematiques = thematiqueRepository.getThematiqueList()
             val consultationInfoFromDb = consultationInfoMapper.toConsultationInfo(consultationFromDb, thematiques)
@@ -121,13 +134,11 @@ class ConsultationInfoRepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val consultationFromStrapi = strapiRepository.getConsultationBySlug(consultationIdOrSlug)
-                ?: strapiRepository.getConsultationById(consultationIdOrSlug)
+            val consultationFromStrapi = strapiRepository.getConsultationBySlugWithUnpublished(consultationIdOrSlug)
+                ?: strapiRepository.getConsultationByIdWithUnpublished(consultationIdOrSlug)
                 ?: return null
-
             val consultationsInfo = consultationInfoMapper.toConsultationInfo(consultationFromStrapi)
             getCache()?.put(consultationIdOrSlug, consultationsInfo)
-
             return consultationsInfo
         }
 

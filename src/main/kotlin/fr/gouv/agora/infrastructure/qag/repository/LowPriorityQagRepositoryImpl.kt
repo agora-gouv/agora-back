@@ -5,7 +5,6 @@ import fr.gouv.agora.usecase.qag.repository.LowPriorityQagRepository
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class LowPriorityQagRepositoryImpl(
     private val databaseRepository: LowPriorityQagDatabaseRepository,
 ) : LowPriorityQagRepository {

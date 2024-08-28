@@ -30,7 +30,6 @@ interface ConsultationDetailsV2CacheRepository {
 
 sealed class ConsultationUpdateCacheResult {
     data class CachedConsultationsDetails(val details: ConsultationDetailsV2) : ConsultationUpdateCacheResult()
-    object ConsultationUpdateNotFound : ConsultationUpdateCacheResult()
     object CacheNotInitialized : ConsultationUpdateCacheResult()
 }
 
@@ -38,6 +37,5 @@ sealed class ConsultationUpdateUserFeedbackCacheResult {
     data class CachedConsultationUpdateUserFeedback(val isUserFeedbackPositive: Boolean?) :
         ConsultationUpdateUserFeedbackCacheResult()
 
-    object ConsultationUpdateUserFeedbackNotFound : ConsultationUpdateUserFeedbackCacheResult()
     object CacheNotInitialized : ConsultationUpdateUserFeedbackCacheResult()
 }

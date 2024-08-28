@@ -14,6 +14,7 @@ class UserInfoMapper {
 
     companion object {
         private const val DEFAULT_AUTHORIZATION_LEVEL = 0
+        private const val PUBLISHER_AUTHORIZATION_LEVEL = 8
         private const val MODERATOR_AUTHORIZATION_LEVEL = 42
         private const val ADMIN_AUTHORIZATION_LEVEL = 1337
         private const val DEFAULT_PASSWORD = ""
@@ -29,6 +30,7 @@ class UserInfoMapper {
             authorizationList = when (dto.authorizationLevel) {
                 DEFAULT_AUTHORIZATION_LEVEL -> UserAuthorization.getUserAuthorizations()
                 MODERATOR_AUTHORIZATION_LEVEL -> UserAuthorization.getModeratorAuthorizations()
+                PUBLISHER_AUTHORIZATION_LEVEL -> UserAuthorization.getPublisherAuthorizations()
                 ADMIN_AUTHORIZATION_LEVEL -> UserAuthorization.geAdminAuthorizations()
                 else -> emptyList()
             }

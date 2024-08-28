@@ -11,7 +11,6 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Component
-@Suppress("unused")
 class ConsultationUpdateV2RepositoryImpl(
     private val updateDatabaseRepository: ConsultationUpdateInfoV2DatabaseRepository,
     private val consultationStrapiRepository: ConsultationStrapiRepository,
@@ -21,20 +20,7 @@ class ConsultationUpdateV2RepositoryImpl(
     private val mapper: ConsultationUpdateInfoV2Mapper,
 ) : ConsultationUpdateV2Repository {
 
-    override fun getLatestConsultationUpdateLabel(consultationId: String): String? {
-        val consultationUUID = consultationId.toUuidOrNull()
-        if (consultationUUID != null) {
-            return updateDatabaseRepository.getLatestConsultationUpdateLabel(consultationUUID)
-        }
-
-        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return consultationStrapiRepository.getLastUpdateLabelFromConsultation(consultationId)
-        }
-
-        return null
-    }
-
-    override fun getUnansweredUsersConsultationUpdate(consultationId: String): ConsultationUpdateInfoV2? {
+    override fun getUnansweredUsersConsultationUpdateWithUnpublished(consultationId: String): ConsultationUpdateInfoV2? {
         val consultationUUID = consultationId.toUuidOrNull()
         if (consultationUUID != null) {
             val updateDTO = updateDatabaseRepository.getUnansweredUsersConsultationUpdate(consultationUUID)
@@ -43,7 +29,7 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val consultation = consultationStrapiRepository.getConsultationById(consultationId) ?: return null
+            val consultation = consultationStrapiRepository.getConsultationByIdWithUnpublished(consultationId) ?: return null
             return mapper.toDomainUnanswered(consultation)
         }
 
@@ -60,7 +46,7 @@ class ConsultationUpdateV2RepositoryImpl(
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             val now = LocalDateTime.now(clock)
-            val consultation = consultationStrapiRepository.getConsultationById(consultationId) ?: return null
+            val consultation = consultationStrapiRepository.getConsultationByIdWithUnpublished(consultationId) ?: return null
 
             val latestOtherContent = consultation.attributes.consultationContenuAutres.data
                 .filter { it.attributes.datetimePublication < now }
@@ -82,7 +68,8 @@ class ConsultationUpdateV2RepositoryImpl(
         return null
     }
 
-    override fun getConsultationUpdateBySlugOrId(
+
+    override fun getConsultationUpdateBySlugOrIdWithUnpublished(
         consultationId: String,
         consultationUpdateIdOrSlug: String,
     ): ConsultationUpdateInfoV2? {
@@ -94,7 +81,7 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val consultationFromStrapi = consultationStrapiRepository.getConsultationById(consultationId)
+            val consultationFromStrapi = consultationStrapiRepository.getConsultationByIdWithUnpublished(consultationId)
                 ?: return null
 
             val consultationAttributes = consultationFromStrapi.attributes
@@ -125,6 +112,14 @@ class ConsultationUpdateV2RepositoryImpl(
         }
 
         return null
+    }
+
+    override fun getConsultationUpdateBySlugOrId(
+        consultationId: String,
+        consultationUpdateIdOrSlug: String,
+    ): ConsultationUpdateInfoV2? {
+        return getConsultationUpdateBySlugOrIdWithUnpublished(consultationId, consultationUpdateIdOrSlug)
+            ?.takeIf { it.isPublished }
     }
 
     override fun getConsultationUpdate(

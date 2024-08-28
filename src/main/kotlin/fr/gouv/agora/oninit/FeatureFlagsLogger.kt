@@ -8,7 +8,6 @@ import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class FeatureFlagsLogger(private val featureFlagsRepository: FeatureFlagsRepository) : InitializingBean {
     private val logger: Logger = LoggerFactory.getLogger(FeatureFlagsLogger::class.java)
 

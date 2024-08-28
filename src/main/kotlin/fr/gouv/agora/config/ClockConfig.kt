@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration
 import java.time.Clock
 
 @Configuration
-@Suppress("unused")
 class ClockConfig {
 
     @Bean

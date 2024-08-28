@@ -9,7 +9,6 @@ import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class ConsultationUpdateHistoryRepositoryImpl(
     val databaseRepository: ConsultationUpdateHistoryDatabaseRepository,
     val consultationStrapiRepository: ConsultationStrapiRepository,

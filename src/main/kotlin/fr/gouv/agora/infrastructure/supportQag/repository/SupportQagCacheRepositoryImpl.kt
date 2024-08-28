@@ -6,7 +6,6 @@ import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class SupportQagCacheRepositoryImpl(
     @Qualifier("shortTermCacheManager") private val cacheManager: CacheManager,
 ) : SupportQagCacheRepository {

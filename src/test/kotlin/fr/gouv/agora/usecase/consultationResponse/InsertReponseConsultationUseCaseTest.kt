@@ -82,7 +82,8 @@ internal class InsertReponseConsultationUseCaseTest {
         questionCount = "",
         estimatedTime = "",
         participantCountGoal = 1,
-        thematique = Thematique()
+        thematique = Thematique(),
+        isPublished = true,
     )
 
     @Test

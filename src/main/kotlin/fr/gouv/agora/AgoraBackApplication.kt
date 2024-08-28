@@ -41,7 +41,6 @@ fun main(args: Array<String>) {
 }
 
 @Component
-@Suppress("unused")
 class ServerPortCustomizer : WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
     override fun customize(factory: ConfigurableWebServerFactory) {
         val portValue = System.getenv("AGORA_PORT") ?: System.getenv("PORT")
