@@ -139,7 +139,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
                 ?.get("$consultationUpdateId/$userId", String::class.java)
             when (cachedContent) {
                 null -> ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized
-                "" -> ConsultationUpdateUserFeedbackCacheResult.ConsultationUpdateUserFeedbackNotFound
+                "" -> ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized
                 else -> ConsultationUpdateUserFeedbackCacheResult.CachedConsultationUpdateUserFeedback(
                     isUserFeedbackPositive = cachedContent.toBooleanStrictOrNull()
                 )
@@ -161,7 +161,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
         return try {
             when (val cachedValue = cacheManager.getCache(cacheName)?.get(cacheKey, String::class.java)) {
                 null -> ConsultationUpdateCacheResult.CacheNotInitialized
-                "" -> ConsultationUpdateCacheResult.ConsultationUpdateNotFound
+                "" -> ConsultationUpdateCacheResult.CacheNotInitialized
                 else -> ConsultationUpdateCacheResult.CachedConsultationsDetails(
                     details = fromCacheable(
                         objectMapper.readValue(
@@ -226,6 +226,7 @@ class ConsultationDetailsV2CacheRepositoryImpl(
                 feedbackQuestion = cacheable.update.feedbackQuestion,
                 goals = cacheable.update.goals,
                 footer = cacheable.update.footer,
+                isPublished = true,
             ),
             feedbackStats = cacheable.feedbackStats,
             history = cacheable.history,

@@ -1,15 +1,12 @@
 package fr.gouv.agora.infrastructure.consultation
 
 import fr.gouv.agora.config.AuthentificationHelper
-import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.consultation.ConsultationDetailsUpdateV2UseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -29,13 +26,14 @@ class ConsultationDetailsUpdateV2Controller(
         @PathVariable consultationIdOrSlug: String,
         @PathVariable consultationUpdateIdOrSlug: String,
     ): ResponseEntity<ConsultationDetailsV2Json> {
-        return useCase.getConsultationDetailsUpdate(
-            consultationIdOrSlug = consultationIdOrSlug,
-            consultationUpdateIdOrSlug = consultationUpdateIdOrSlug,
-            userId = authentificationHelper.getUserId(),
-        )?.let { consultationDetails ->
-            ResponseEntity.ok().body(mapper.toJson(consultationDetails))
-        } ?: ResponseEntity.notFound().build()
-    }
+        val consultationDetails = if (authentificationHelper.canViewUnpublishedConsultations()) {
+            useCase.getConsultationUnpublishedDetailsUpdate(consultationIdOrSlug, consultationUpdateIdOrSlug)
+        } else {
+            useCase.getConsultationDetailsUpdate(consultationIdOrSlug, consultationUpdateIdOrSlug)
+        }
 
+        if (consultationDetails == null) return ResponseEntity.notFound().build()
+
+        return ResponseEntity.ok().body(mapper.toJson(consultationDetails))
+    }
 }

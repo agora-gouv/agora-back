@@ -44,9 +44,10 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getConsultationBySlug(slug: String): StrapiAttributes<ConsultationStrapiDTO>? {
+    fun getConsultationBySlugWithUnpublished(slug: String): StrapiAttributes<ConsultationStrapiDTO>? {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .filterBy("slug", listOf(slug))
+            .withUnpublished()
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
             .firstOrNull()
@@ -56,6 +57,16 @@ class ConsultationStrapiRepository(
         val strapiConsultationId = consultationId.toIntOrNull() ?: return null
         val uriBuilder = StrapiRequestBuilder("consultations")
             .getByIds(listOf(strapiConsultationId))
+
+        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
+            .firstOrNull()
+    }
+
+    fun getConsultationByIdWithUnpublished(consultationId: String): StrapiAttributes<ConsultationStrapiDTO>? {
+        val strapiConsultationId = consultationId.toIntOrNull() ?: return null
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .getByIds(listOf(strapiConsultationId))
+            .withUnpublished()
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
             .firstOrNull()

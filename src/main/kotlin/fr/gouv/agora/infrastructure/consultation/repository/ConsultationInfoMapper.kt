@@ -35,6 +35,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             estimatedTime = consultation.estimatedTime,
             participantCountGoal = consultation.participantCountGoal,
             thematique = thematique,
+            isPublished = true,
         )
     }
 
@@ -159,6 +160,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             estimatedTime = consultation.attributes.estimationTemps,
             participantCountGoal = consultation.attributes.nombreParticipantsCible,
             thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
+            isPublished = consultation.attributes.isPublished(),
         )
     }
 }

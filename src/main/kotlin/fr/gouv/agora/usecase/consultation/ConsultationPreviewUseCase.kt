@@ -42,15 +42,13 @@ class ConsultationPreviewUseCase(
     }
 
     private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreview> {
-        return consultationInfoRepository.getOngoingConsultationsWithUnpublished()
+        return consultationInfoRepository.getOngoingConsultations()
             .sortedBy { it.endDate }
-            .filter { it.isPublished }
             .also { cacheRepository.insertConsultationPreviewOngoingList(it) }
     }
 
     private fun buildFinishedList(): List<ConsultationPreviewFinished> {
-        return consultationInfoRepository.getFinishedConsultationsWithUnpublished()
-            .filter { it.isPublished }
+        return consultationInfoRepository.getFinishedConsultations()
             .also { finishedList -> cacheRepository.insertConsultationPreviewFinishedList(finishedList) }
     }
 
