@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component
 import java.util.UUID
 
 @Component
-@Suppress("unused")
 class QuestionRepositoryImpl(
     private val consultationDatabaseRepository: ConsultationDatabaseRepository,
     private val consultationStrapiRepository: ConsultationStrapiRepository,

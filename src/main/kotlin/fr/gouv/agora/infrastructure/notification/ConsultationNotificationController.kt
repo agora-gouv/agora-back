@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Admin")
 class ConsultationNotificationController(
     private val sendConsultationNotificationUseCase: SendConsultationNotificationUseCase,

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Consultations")
 class ConsultationDetailsUpdateV2Controller(
     private val useCase: ConsultationDetailsUpdateV2UseCase,

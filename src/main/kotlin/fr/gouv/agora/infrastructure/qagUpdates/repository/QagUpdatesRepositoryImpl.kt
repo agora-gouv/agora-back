@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-@Suppress("unused")
 class QagUpdatesRepositoryImpl(
     private val databaseRepository: QagUpdatesDatabaseRepository,
     private val mapper: QagUpdatesMapper,

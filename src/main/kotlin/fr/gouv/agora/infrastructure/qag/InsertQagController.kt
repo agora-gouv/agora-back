@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.qag
 
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.qag.InsertQagQueue.TaskType
-import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.qag.AskQagStatus
 import fr.gouv.agora.usecase.qag.GetAskQagStatusUseCase
 import fr.gouv.agora.usecase.qag.InsertQagUseCase
@@ -12,11 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "QaG")
 class InsertQagController(
     private val insertQagUseCase: InsertQagUseCase,

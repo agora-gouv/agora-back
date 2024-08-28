@@ -11,16 +11,6 @@ import java.util.*
 interface ConsultationUpdateInfoV2DatabaseRepository : JpaRepository<ConsultationUpdateV2DTO, UUID> {
 
     @Query(
-        value = """SELECT update_label FROM consultation_updates_v2
-            WHERE consultation_id = :consultationId
-            AND CURRENT_TIMESTAMP > update_date
-            ORDER BY update_date DESC
-            LIMIT 1""",
-        nativeQuery = true
-    )
-    fun getLatestConsultationUpdateLabel(@Param("consultationId") consultationId: UUID): String
-
-    @Query(
         value = """SELECT * FROM consultation_updates_v2
             WHERE consultation_id = :consultationId
             AND CURRENT_TIMESTAMP > update_date

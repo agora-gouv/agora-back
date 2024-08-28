@@ -5,7 +5,6 @@ import fr.gouv.agora.usecase.qag.repository.QagDeleteLogRepository
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class QagDeleteLogRepositoryImpl(
     private val databaseRepository: QagDeleteLogDatabaseRepository,
     private val mapper: QagDeleteLogMapper,

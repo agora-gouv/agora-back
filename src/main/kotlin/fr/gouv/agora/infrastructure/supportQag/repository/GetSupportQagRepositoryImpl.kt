@@ -5,7 +5,6 @@ import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class GetSupportQagRepositoryImpl(
     private val databaseRepository: SupportQagDatabaseRepository,
 ) : GetSupportQagRepository {

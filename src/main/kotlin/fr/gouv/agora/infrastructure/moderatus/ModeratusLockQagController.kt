@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Moderatus")
 class ModeratusLockQagController(
     private val moderatusLoginUseCase: ModeratusLoginUseCase,

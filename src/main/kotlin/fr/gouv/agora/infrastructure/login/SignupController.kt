@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Authentification")
 class SignupController(
     private val appVersionControlUseCase: AppVersionControlUseCase,

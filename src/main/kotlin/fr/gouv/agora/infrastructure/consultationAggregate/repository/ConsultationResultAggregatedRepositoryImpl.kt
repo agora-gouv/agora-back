@@ -7,7 +7,6 @@ import fr.gouv.agora.usecase.consultationAggregate.repository.ConsultationResult
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class ConsultationResultAggregatedRepositoryImpl(
     private val databaseRepository: ConsultationResultAggregatedDatabaseRepository,
     private val mapper: ConsultationResultAggregatedMapper,

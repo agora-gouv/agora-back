@@ -5,7 +5,6 @@ import fr.gouv.agora.usecase.notification.repository.NotificationMessageReposito
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class NotificationMessageRepositoryImpl : NotificationMessageRepository {
 
     companion object {

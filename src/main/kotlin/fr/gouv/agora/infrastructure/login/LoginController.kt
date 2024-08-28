@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Login")
 class LoginController(
     private val appVersionControlUseCase: AppVersionControlUseCase,

@@ -7,7 +7,6 @@ import java.time.LocalDate
 import java.util.*
 
 @Component
-@Suppress("unused")
 class DemographicInfoAskDateRepositoryImpl(
     private val cacheRepository: DemographicInfoAskDateCacheRepository,
     private val databaseRepository: DemographicInfoAskDateDatabaseRepository,

@@ -9,7 +9,6 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Component
-@Suppress("unused")
 class ParticipationCharterRepositoryImpl(
     private val cacheRepository: ParticipationCharterCacheRepository,
     private val databaseRepository: ParticipationCharterDatabaseRepository,

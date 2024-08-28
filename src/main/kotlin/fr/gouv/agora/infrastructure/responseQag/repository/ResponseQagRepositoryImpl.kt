@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 import kotlin.math.min
 
 @Component
-@Suppress("unused")
 class ResponseQagRepositoryImpl(
     private val databaseRepository: ResponseQagDatabaseRepository,
     private val strapiRepository: ResponseQagStrapiRepository,

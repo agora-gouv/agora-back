@@ -11,7 +11,6 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Component
-@Suppress("unused")
 class ConsultationUpdateV2RepositoryImpl(
     private val updateDatabaseRepository: ConsultationUpdateInfoV2DatabaseRepository,
     private val consultationStrapiRepository: ConsultationStrapiRepository,
@@ -20,19 +19,6 @@ class ConsultationUpdateV2RepositoryImpl(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val mapper: ConsultationUpdateInfoV2Mapper,
 ) : ConsultationUpdateV2Repository {
-
-    override fun getLatestConsultationUpdateLabel(consultationId: String): String? {
-        val consultationUUID = consultationId.toUuidOrNull()
-        if (consultationUUID != null) {
-            return updateDatabaseRepository.getLatestConsultationUpdateLabel(consultationUUID)
-        }
-
-        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return consultationStrapiRepository.getLastUpdateLabelFromConsultation(consultationId)
-        }
-
-        return null
-    }
 
     override fun getUnansweredUsersConsultationUpdateWithUnpublished(consultationId: String): ConsultationUpdateInfoV2? {
         val consultationUUID = consultationId.toUuidOrNull()

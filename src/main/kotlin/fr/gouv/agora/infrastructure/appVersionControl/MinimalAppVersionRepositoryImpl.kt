@@ -5,7 +5,6 @@ import fr.gouv.agora.usecase.appVersionControl.repository.MinimalAppVersionRepos
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class MinimalAppVersionRepositoryImpl : MinimalAppVersionRepository {
 
     override fun getMinimalAppVersion(appPlatform: AppPlatform): Int {

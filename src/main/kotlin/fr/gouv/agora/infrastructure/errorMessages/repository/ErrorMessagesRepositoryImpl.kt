@@ -4,7 +4,6 @@ import fr.gouv.agora.usecase.errorMessages.repository.ErrorMessagesRepository
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class ErrorMessagesRepositoryImpl : ErrorMessagesRepository {
     companion object {
         private const val ERROR_TEXT_WITHIN_THE_WEEK =

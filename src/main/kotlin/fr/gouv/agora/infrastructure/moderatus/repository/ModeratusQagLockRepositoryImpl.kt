@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-@Suppress("unused")
 class ModeratusQagLockRepositoryImpl(
     private val databaseRepository: ModeratusQagLockDatabaseRepository,
     private val cacheRepository: ModeratusQagLockCacheRepository,

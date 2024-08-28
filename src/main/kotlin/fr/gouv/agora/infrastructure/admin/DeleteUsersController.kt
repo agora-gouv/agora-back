@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Admin")
 class DeleteUsersController(
     private val deleteUsersController: DeleteUsersUseCase,

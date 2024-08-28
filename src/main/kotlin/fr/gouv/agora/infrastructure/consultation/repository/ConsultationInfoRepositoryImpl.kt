@@ -16,7 +16,6 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 @Component
-@Suppress("unused")
 class ConsultationInfoRepositoryImpl(
     private val consultationsDatabaseRepository: ConsultationDatabaseRepository,
     private val strapiRepository: ConsultationStrapiRepository,

@@ -22,29 +22,6 @@ class QagInfoRepositoryImpl(
         return databaseRepository.getQagToModerateList().map(mapper::toDomain)
     }
 
-    override fun getPopularQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
-        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-            databaseRepository.getPopularQags(thematiqueId = thematiqueUUID)
-        } ?: databaseRepository.getPopularQags()
-        return qagList.map(mapper::toDomain)
-    }
-
-    override fun getLatestQags(thematiqueId: String?): List<QagInfoWithSupportCount> {
-        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-            databaseRepository.getLatestQags(thematiqueId = thematiqueUUID)
-        } ?: databaseRepository.getLatestQags()
-        return qagList.map(mapper::toDomain)
-    }
-
-    override fun getSupportedQags(userId: String, thematiqueId: String?): List<QagInfoWithSupportCount> {
-        val qagList = userId.toUuidOrNull()?.let { userUUID ->
-            thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
-                databaseRepository.getSupportedQags(userId = userUUID, thematiqueId = thematiqueUUID)
-            } ?: databaseRepository.getSupportedQags(userId = userUUID)
-        } ?: emptyList()
-        return qagList.map(mapper::toDomain)
-    }
-
     override fun getUserLastQagInfo(userId: String): QagInfo? {
         return userId.toUuidOrNull()?.let { userUUID ->
             databaseRepository.getLastUserQag(userId = userUUID)?.let(mapper::toDomain)
