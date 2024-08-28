@@ -63,7 +63,7 @@ class InsertReponseConsultationUseCase(
             return InsertResult.INSERT_FAILURE
         }
 
-        val questionList = questionRepository.getConsultationQuestionList(consultationId)
+        val questionList = questionRepository.getConsultationQuestions(consultationId).questions
 
         val filledConsultationResponses = addMissingResponseIfQuestionWithChoices(
             consultationResponses = consultationResponses,

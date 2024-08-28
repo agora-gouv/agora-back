@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 class ConsultationDetailsV2Controller(
     private val getConsultationUseCase: ConsultationDetailsV2UseCase,
     private val mapper: ConsultationDetailsV2JsonMapper,
-    private val authentificationHelper: AuthentificationHelper,
 ) {
     @Operation(summary = "Get Détails Consultation")
     @GetMapping(
@@ -26,7 +25,6 @@ class ConsultationDetailsV2Controller(
     ): ResponseEntity<ConsultationDetailsV2Json> {
         return getConsultationUseCase.getConsultation(
             consultationIdOrSlug = consultationIdOrSlug,
-            userId = authentificationHelper.getUserId(),
         )?.let { consultationDetails ->
             ResponseEntity.ok().body(mapper.toJson(consultationDetails))
         } ?: ResponseEntity.notFound().build()

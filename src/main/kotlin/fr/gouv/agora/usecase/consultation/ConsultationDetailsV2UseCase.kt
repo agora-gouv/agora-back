@@ -31,29 +31,26 @@ class ConsultationDetailsV2UseCase(
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
     private val authentificationHelper: AuthentificationHelper,
 ) {
-    fun getConsultation(consultationIdOrSlug: String, userId: String?): ConsultationDetailsV2WithInfo? {
+    fun getConsultation(consultationIdOrSlug: String): ConsultationDetailsV2WithInfo? {
         val consultationInfo = if (authentificationHelper.canViewUnpublishedConsultations()) {
             infoRepository.getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
         } else {
             infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)
         }
-
         if (consultationInfo == null) return null
 
-        val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate)
+        val userId = authentificationHelper.getUserId()
         val userHasNotAnsweredConsultation =
             userId == null || !userRepository.hasAnsweredConsultation(consultationInfo.id, userId)
-        val consultationWithInfo = if (isConsultationOngoing && userHasNotAnsweredConsultation) {
+        val now = LocalDateTime.now(clock)
+        val consultationWithInfo = if (consultationInfo.isOngoing(now) && userHasNotAnsweredConsultation) {
             getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
         } else {
             getLastConsultationDetails(consultationInfo = consultationInfo)
         }
         if (consultationWithInfo == null) return null
 
-        val hasInfos = consultationWithInfo.update.hasParticipationInfo || consultationWithInfo.update.hasQuestionsInfo
-        val participantCount = if (hasInfos) getParticipantCount(consultationWithInfo.consultation.id) else 0
-
-        val isUserFeedbackPositive = if (userId != null && consultationWithInfo.update.feedbackQuestion != null) {
+        val userFeedback = if (userId != null && consultationWithInfo.update.feedbackQuestion != null) {
             feedbackRepository.getUserFeedback(consultationWithInfo.update.id, userId)
         } else null
 
@@ -62,8 +59,8 @@ class ConsultationDetailsV2UseCase(
             update = consultationWithInfo.update,
             feedbackStats = consultationWithInfo.feedbackStats,
             history = consultationWithInfo.history,
-            participantCount = participantCount,
-            isUserFeedbackPositive = isUserFeedbackPositive,
+            participantCount = getParticipantCount(consultationWithInfo),
+            isUserFeedbackPositive = userFeedback,
         )
     }
 
@@ -116,7 +113,10 @@ class ConsultationDetailsV2UseCase(
         return feedbackRepository.getFeedbackStats(consultationUpdate.id)
     }
 
-    private fun getParticipantCount(consultationId: String): Int {
+    private fun getParticipantCount(consultationWithInfo: ConsultationDetailsV2): Int {
+        if (!consultationWithInfo.hasQuestionsOrParticipationInfos()) return 0
+
+        val consultationId = consultationWithInfo.getConsultationId()
         val participantCount = cacheRepository.getParticipantCount(consultationId)
             ?: userRepository.getParticipantCount(consultationId)
         cacheRepository.initParticipantCount(consultationId, participantCount)
