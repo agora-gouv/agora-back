@@ -20,13 +20,11 @@ class QuestionController(
     @GetMapping("/consultations/{consultationId}/questions")
     fun getQuestions(@PathVariable consultationId: String): ResponseEntity<QuestionsJson> {
         val questionsJson = cacheRepository.getConsultationQuestions(consultationId)
-            ?: getQuestionsFromUseCase(consultationId)
+            ?: jsonMapper.toJson(listQuestionConsultationUseCase.getConsultationQuestions(consultationId))
+
+        cacheRepository.insertConsultationQuestions(consultationId, questionsJson)
 
         return ResponseEntity.ok().body(questionsJson)
     }
 
-    private fun getQuestionsFromUseCase(consultationId: String): QuestionsJson {
-        return jsonMapper.toJson(listQuestionConsultationUseCase.getConsultationQuestions(consultationId))
-            .also { cacheRepository.insertConsultationQuestions(consultationId, it) }
-    }
 }

@@ -33,7 +33,7 @@ internal class ControlResponseConsultationUseCaseTest {
     @Test
     fun `isResponseConsultationValid - when response has duplicated questionId - should return false`() {
         // Given
-        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(emptyList())
+        given(questionRepository.getConsultationQuestions(consultationId = "consultId")).willReturn(Questions(0, emptyList()))
 
         // When
         val result = useCase.isResponseConsultationValid(
@@ -45,7 +45,7 @@ internal class ControlResponseConsultationUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(false)
-        then(questionRepository).should(only()).getConsultationQuestionList(
+        then(questionRepository).should(only()).getConsultationQuestions(
             consultationId = "consultId",
         )
         then(questionOpenValidator).shouldHaveNoInteractions()
@@ -65,10 +65,8 @@ internal class ControlResponseConsultationUseCaseTest {
             question = mock(QuestionOpen::class.java).also { given(it.id).willReturn("question1") }
             response =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
+            given(questionRepository.getConsultationQuestions(consultationId = "consultationId")).willReturn(
+                Questions(1, listOf(question))
             )
         }
 
@@ -85,7 +83,7 @@ internal class ControlResponseConsultationUseCaseTest {
 
             //Then
             assertThat(result).isEqualTo(true)
-            then(questionRepository).should(only()).getConsultationQuestionList(
+            then(questionRepository).should(only()).getConsultationQuestions(
                 consultationId = "consultationId",
             )
             then(questionOpenValidator).should(only()).isValid(question, response)
@@ -106,7 +104,7 @@ internal class ControlResponseConsultationUseCaseTest {
 
             //Then
             assertThat(result).isEqualTo(false)
-            then(questionRepository).should(only()).getConsultationQuestionList(
+            then(questionRepository).should(only()).getConsultationQuestions(
                 consultationId = "consultationId",
             )
             then(questionOpenValidator).should(only()).isValid(question, response)
@@ -126,10 +124,8 @@ internal class ControlResponseConsultationUseCaseTest {
             question = mock(QuestionMultipleChoices::class.java).also { given(it.id).willReturn("question1") }
             response =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question
-                )
+            given(questionRepository.getConsultationQuestions(consultationId = "consultationId")).willReturn(
+                Questions(1, listOf(question))
             )
         }
 
@@ -146,7 +142,7 @@ internal class ControlResponseConsultationUseCaseTest {
 
             //Then
             assertThat(result).isEqualTo(true)
-            then(questionRepository).should(only()).getConsultationQuestionList(
+            then(questionRepository).should(only()).getConsultationQuestions(
                 consultationId = "consultationId",
             )
             then(questionOpenValidator).shouldHaveNoInteractions()
@@ -167,7 +163,7 @@ internal class ControlResponseConsultationUseCaseTest {
 
             //Then
             assertThat(result).isEqualTo(false)
-            then(questionRepository).should(only()).getConsultationQuestionList(
+            then(questionRepository).should(only()).getConsultationQuestions(
                 consultationId = "consultationId",
             )
             then(questionOpenValidator).shouldHaveNoInteractions()
@@ -191,10 +187,8 @@ internal class ControlResponseConsultationUseCaseTest {
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question1") }
             response2 =
                 mock(ReponseConsultationInserting::class.java).also { given(it.questionId).willReturn("question2") }
-            given(questionRepository.getConsultationQuestionList(consultationId = "consultationId")).willReturn(
-                listOf(
-                    question1, question2
-                )
+            given(questionRepository.getConsultationQuestions(consultationId = "consultationId")).willReturn(
+                Questions(2, listOf(question1, question2))
             )
         }
 
@@ -212,7 +206,7 @@ internal class ControlResponseConsultationUseCaseTest {
 
             //Then
             assertThat(result).isEqualTo(true)
-            then(questionRepository).should(only()).getConsultationQuestionList(
+            then(questionRepository).should(only()).getConsultationQuestions(
                 consultationId = "consultationId",
             )
             then(questionOpenValidator).shouldHaveNoInteractions()
@@ -236,7 +230,7 @@ internal class ControlResponseConsultationUseCaseTest {
 
             //Then
             assertThat(result).isEqualTo(false)
-            then(questionRepository).should(only()).getConsultationQuestionList(
+            then(questionRepository).should(only()).getConsultationQuestions(
                 consultationId = "consultationId",
             )
             then(questionOpenValidator).shouldHaveNoInteractions()

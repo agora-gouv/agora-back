@@ -18,4 +18,8 @@ data class ConsultationInfo(
     val isPublished: Boolean,
 ) {
     constructor(): this("", "", "", "", "", LocalDateTime.MIN, LocalDateTime.MIN, "", "", 0, Thematique(), true)
+
+    fun isOngoing(now: LocalDateTime): Boolean {
+        return now.isBefore(endDate)
+    }
 }

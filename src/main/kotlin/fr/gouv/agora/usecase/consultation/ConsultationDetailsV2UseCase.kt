@@ -6,6 +6,7 @@ import fr.gouv.agora.domain.ConsultationDetailsV2
 import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.usecase.consultation.exception.ConsultationNotFoundException
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -31,40 +32,47 @@ class ConsultationDetailsV2UseCase(
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
     private val authentificationHelper: AuthentificationHelper,
 ) {
-    fun getConsultation(consultationIdOrSlug: String, userId: String?): ConsultationDetailsV2WithInfo? {
+    fun getConsultation(consultationIdOrSlug: String): ConsultationDetailsV2WithInfo {
         val consultationInfo = if (authentificationHelper.canViewUnpublishedConsultations()) {
             infoRepository.getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
         } else {
             infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)
         }
+        if (consultationInfo == null) throw ConsultationNotFoundException(consultationIdOrSlug)
 
-        if (consultationInfo == null) return null
-
-        val isConsultationOngoing = LocalDateTime.now(clock).isBefore(consultationInfo.endDate)
-        val userHasNotAnsweredConsultation =
-            userId == null || !userRepository.hasAnsweredConsultation(consultationInfo.id, userId)
-        val consultationWithInfo = if (isConsultationOngoing && userHasNotAnsweredConsultation) {
-            getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
-        } else {
-            getLastConsultationDetails(consultationInfo = consultationInfo)
-        }
-        if (consultationWithInfo == null) return null
-
-        val hasInfos = consultationWithInfo.update.hasParticipationInfo || consultationWithInfo.update.hasQuestionsInfo
-        val participantCount = if (hasInfos) getParticipantCount(consultationWithInfo.consultation.id) else 0
-
-        val isUserFeedbackPositive = if (userId != null && consultationWithInfo.update.feedbackQuestion != null) {
-            feedbackRepository.getUserFeedback(consultationWithInfo.update.id, userId)
-        } else null
+        val consultationWithInfo = getConsultationDetails(consultationInfo)
 
         return ConsultationDetailsV2WithInfo(
             consultation = consultationWithInfo.consultation,
             update = consultationWithInfo.update,
             feedbackStats = consultationWithInfo.feedbackStats,
             history = consultationWithInfo.history,
-            participantCount = participantCount,
-            isUserFeedbackPositive = isUserFeedbackPositive,
+            participantCount = getParticipantCount(consultationWithInfo),
+            isUserFeedbackPositive = getUserFeedback(consultationWithInfo),
         )
+    }
+
+    private fun getUserFeedback(consultationWithInfo: ConsultationDetailsV2): Boolean? {
+        val userId = authentificationHelper.getUserId()
+        if (userId == null || consultationWithInfo.update.feedbackQuestion == null) return null
+
+        return feedbackRepository.getUserFeedback(consultationWithInfo.update.id, userId)
+    }
+
+    private fun getConsultationDetails(consultationInfo: ConsultationInfo): ConsultationDetailsV2 {
+        val userId = authentificationHelper.getUserId()
+        val userHasNotAnsweredConsultation =
+            userId == null || !userRepository.hasAnsweredConsultation(consultationInfo.id, userId)
+        val now = LocalDateTime.now(clock)
+
+        val consultationWithInfo = if (consultationInfo.isOngoing(now) && userHasNotAnsweredConsultation) {
+            getUnansweredUsersConsultationDetails(consultationInfo = consultationInfo)
+        } else {
+            getLastConsultationDetails(consultationInfo = consultationInfo)
+        }
+        if (consultationWithInfo == null) throw ConsultationNotFoundException(consultationInfo.id)
+
+        return consultationWithInfo
     }
 
     private fun getUnansweredUsersConsultationDetails(
@@ -74,11 +82,8 @@ class ConsultationDetailsV2UseCase(
         val consultationDetails = when (cachedConsultationDetails) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cachedConsultationDetails.details
             is ConsultationUpdateCacheResult.CacheNotInitialized -> {
-                updateRepository.getUnansweredUsersConsultationUpdateWithUnpublished(
-                    consultationId = consultationInfo.id,
-                )?.let { update ->
-                    ConsultationDetailsV2(consultationInfo, update, getFeedbackStats(update), null)
-                }
+                updateRepository.getUnansweredUsersConsultationUpdateWithUnpublished(consultationInfo.id)
+                    ?.let { ConsultationDetailsV2(consultationInfo, it, getFeedbackStats(it), null) }
             }
         }
         cacheRepository.initUnansweredUsersConsultationDetails(consultationInfo.id, consultationDetails)
@@ -92,16 +97,11 @@ class ConsultationDetailsV2UseCase(
         val details = when (val cacheResult = cacheRepository.getLastConsultationDetails(consultationInfo.id)) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
             is ConsultationUpdateCacheResult.CacheNotInitialized -> {
-                updateRepository.getLatestConsultationUpdate(
-                    consultationId = consultationInfo.id,
-                )?.let { update ->
-                    ConsultationDetailsV2(
-                        consultation = consultationInfo,
-                        update = update,
-                        feedbackStats = getFeedbackStats(update),
-                        history = historyRepository.getConsultationUpdateHistory(consultationInfo.id),
-                    )
-                }
+                updateRepository.getLatestConsultationUpdate(consultationInfo.id)
+                    ?.let { update ->
+                        val history = historyRepository.getConsultationUpdateHistory(consultationInfo.id)
+                        ConsultationDetailsV2(consultationInfo, update, getFeedbackStats(update), history)
+                    }
             }
         }
         cacheRepository.initLastConsultationDetails(consultationInfo.id, details)
@@ -116,7 +116,10 @@ class ConsultationDetailsV2UseCase(
         return feedbackRepository.getFeedbackStats(consultationUpdate.id)
     }
 
-    private fun getParticipantCount(consultationId: String): Int {
+    private fun getParticipantCount(consultationWithInfo: ConsultationDetailsV2): Int {
+        if (!consultationWithInfo.hasQuestionsOrParticipationInfos()) return 0
+
+        val consultationId = consultationWithInfo.getConsultationId()
         val participantCount = cacheRepository.getParticipantCount(consultationId)
             ?: userRepository.getParticipantCount(consultationId)
         cacheRepository.initParticipantCount(consultationId, participantCount)

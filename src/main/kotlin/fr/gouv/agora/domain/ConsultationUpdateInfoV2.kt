@@ -21,7 +21,6 @@ data class ConsultationUpdateInfoV2(
     val goals: List<Goal>?,
     val isPublished: Boolean,
 ) {
-
     data class ResponsesInfo(
         val picto: String,
         val description: String,

@@ -35,8 +35,8 @@ class GetConsultationResultsWithDemographicRatiosUseCase(
         val consultationInfo = consultationInfoRepository.getConsultation(consultationId = consultationId)
             ?: return null
 
-        val questionList =
-            questionRepository.getConsultationQuestionList(consultationId).filterIsInstance<QuestionWithChoices>()
+        val questionList = questionRepository.getConsultationQuestions(consultationId).questions
+            .filterIsInstance<QuestionWithChoices>()
         val participantCount = userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
         val demographicInfo =
             consultationResponseRepository.getParticipantDemographicInfo(consultationId = consultationId)
