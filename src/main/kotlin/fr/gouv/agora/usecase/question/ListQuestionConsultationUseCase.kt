@@ -10,5 +10,4 @@ class ListQuestionConsultationUseCase(private val repository: QuestionRepository
     fun getConsultationQuestions(consultationId: String): Questions {
         return repository.getConsultationQuestions(consultationId)
     }
-
 }
