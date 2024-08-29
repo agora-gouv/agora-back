@@ -1,4 +1,4 @@
-package fr.gouv.agora.infrastructure.notification
+package fr.gouv.agora.infrastructure.common
 
 import fr.gouv.agora.usecase.notification.ConsultationIdInconnuException
 import fr.gouv.agora.usecase.notification.FcmTokenVideException
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
-class ConsultationNotificationControllerAdvice {
+class GeneralControllerAdvice {
     @ExceptionHandler(ConsultationIdInconnuException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun consultationIdInconnuHandler(e: ConsultationIdInconnuException): ErrorResponse {
@@ -33,6 +33,12 @@ class ConsultationNotificationControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun userIdInconnuHandler(e: UserIdInconnuException): ErrorResponse {
         return ErrorResponse("Veuillez renseigner un id d'utilisateur existant.")
+    }
+
+    @ExceptionHandler(ConsultationIdInconnuException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun userIdInconnuHandler(e: ConsultationIdInconnuException): ErrorResponse {
+        return ErrorResponse("Veuillez renseigner un id de consultation existant.")
     }
 }
 
