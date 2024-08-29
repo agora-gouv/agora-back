@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.consultation
 
-import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.usecase.consultation.ConsultationDetailsV2UseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -23,10 +22,8 @@ class ConsultationDetailsV2Controller(
     fun getConsultationDetails(
         @PathVariable consultationIdOrSlug: String,
     ): ResponseEntity<ConsultationDetailsV2Json> {
-        return getConsultationUseCase.getConsultation(
-            consultationIdOrSlug = consultationIdOrSlug,
-        )?.let { consultationDetails ->
-            ResponseEntity.ok().body(mapper.toJson(consultationDetails))
-        } ?: ResponseEntity.notFound().build()
+        val consultationDetails = getConsultationUseCase.getConsultation(consultationIdOrSlug)
+
+        return ResponseEntity.ok().body(mapper.toJson(consultationDetails))
     }
 }

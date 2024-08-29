@@ -6,6 +6,7 @@ import fr.gouv.agora.domain.ConsultationDetailsV2
 import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.usecase.consultation.exception.ConsultationUpdateNotFoundException
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
@@ -29,11 +30,9 @@ class ConsultationDetailsUpdateV2UseCase(
     fun getConsultationDetailsUpdate(
         consultationIdOrSlug: String,
         consultationUpdateIdOrSlug: String,
-    ): ConsultationDetailsV2WithInfo? {
-        val cacheResult = cacheRepository.getConsultationDetails(
-            consultationId = consultationIdOrSlug,
-            consultationUpdateId = consultationUpdateIdOrSlug,
-        )
+    ): ConsultationDetailsV2WithInfo {
+        val cacheResult = cacheRepository
+            .getConsultationDetails(consultationIdOrSlug, consultationUpdateIdOrSlug)
 
         val details = when (cacheResult) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
@@ -48,7 +47,6 @@ class ConsultationDetailsUpdateV2UseCase(
                 )
             }
         }
-        if (details == null) return null
 
         return ConsultationDetailsV2WithInfo(
             consultation = details.consultation,
@@ -65,13 +63,13 @@ class ConsultationDetailsUpdateV2UseCase(
     fun getConsultationUnpublishedDetailsUpdate(
         consultationIdOrSlug: String,
         consultationUpdateIdOrSlug: String,
-    ): ConsultationDetailsV2WithInfo? {
+    ): ConsultationDetailsV2WithInfo {
         val consultationInfo = infoRepository.getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
-            ?: return null
+            ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
         val update = updateRepository.getConsultationUpdateBySlugOrIdWithUnpublished(
             consultationInfo.id,
             consultationUpdateIdOrSlug,
-        ) ?: return null
+        ) ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
 
         val details = ConsultationDetailsV2(
             consultation = consultationInfo,
@@ -95,7 +93,7 @@ class ConsultationDetailsUpdateV2UseCase(
     private fun buildConsultationDetails(
         consultationIdOrSlug: String,
         consultationUpdateIdOrSlug: String
-    ): ConsultationDetailsV2? {
+    ): ConsultationDetailsV2 {
         return infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)?.let { consultationInfo ->
             updateRepository.getConsultationUpdateBySlugOrId(
                 consultationInfo.id,
@@ -108,7 +106,7 @@ class ConsultationDetailsUpdateV2UseCase(
                     history = null,
                 )
             }
-        }
+        } ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
     }
 
     private fun getFeedbackStats(consultationUpdate: ConsultationUpdateInfoV2): FeedbackConsultationUpdateStats? {
