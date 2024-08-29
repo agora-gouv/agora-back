@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
-class GeneralControllerAdvice {
+class DefaultControllerAdvice {
     @ExceptionHandler(ConsultationIdInconnuException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun consultationIdInconnuHandler(e: ConsultationIdInconnuException): ErrorResponse {
