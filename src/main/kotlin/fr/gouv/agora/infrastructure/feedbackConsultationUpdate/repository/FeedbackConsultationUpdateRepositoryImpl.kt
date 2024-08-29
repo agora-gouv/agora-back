@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.feedbackConsultationUpdate.repository
 
-import fr.gouv.agora.domain.FeedbackConsultationUpdateDeleting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateInserting
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
 import fr.gouv.agora.infrastructure.feedbackConsultationUpdate.dto.FeedbackConsultationUpdateDTO
@@ -9,7 +8,6 @@ import fr.gouv.agora.usecase.feedbackConsultationUpdate.repository.FeedbackConsu
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class FeedbackConsultationUpdateRepositoryImpl(
     private val databaseRepository: FeedbackConsultationUpdateDatabaseRepository,
     private val mapper: FeedbackConsultationUpdateMapper,
@@ -41,12 +39,6 @@ class FeedbackConsultationUpdateRepositoryImpl(
 
     override fun getFeedbackStats(consultationUpdateId: String): FeedbackConsultationUpdateStats? {
         return mapper.toStats(databaseRepository.getConsultationUpdateFeedbackStats(consultationUpdateId))
-    }
-
-    override fun deleteFeedback(feedbackDeleting: FeedbackConsultationUpdateDeleting) {
-        feedbackDeleting.userId.toUuidOrNull()?.let { userUUID ->
-            databaseRepository.deleteFeedback(feedbackDeleting.consultationUpdateId, userUUID)
-        }
     }
 
     private fun getUserFeedbackDto(consultationUpdateId: String, userId: String): FeedbackConsultationUpdateDTO? {

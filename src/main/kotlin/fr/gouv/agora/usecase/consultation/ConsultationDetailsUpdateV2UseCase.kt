@@ -1,10 +1,12 @@
 package fr.gouv.agora.usecase.consultation
 
+import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.ConsultationDetailsV2
 import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
+import fr.gouv.agora.usecase.consultation.exception.ConsultationUpdateNotFoundException
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
@@ -23,22 +25,18 @@ class ConsultationDetailsUpdateV2UseCase(
     private val userAnsweredRepository: UserAnsweredConsultationRepository,
     private val feedbackRepository: FeedbackConsultationUpdateRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
+    private val authentificationHelper: AuthentificationHelper,
 ) {
-
     fun getConsultationDetailsUpdate(
         consultationIdOrSlug: String,
         consultationUpdateIdOrSlug: String,
-        userId: String?,
-    ): ConsultationDetailsV2WithInfo? {
-        val cacheResult = cacheRepository.getConsultationDetails(
-            consultationId = consultationIdOrSlug,
-            consultationUpdateId = consultationUpdateIdOrSlug,
-        )
+    ): ConsultationDetailsV2WithInfo {
+        val cacheResult = cacheRepository
+            .getConsultationDetails(consultationIdOrSlug, consultationUpdateIdOrSlug)
 
-        return when (cacheResult) {
+        val details = when (cacheResult) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
-            ConsultationUpdateCacheResult.ConsultationUpdateNotFound -> null
-            ConsultationUpdateCacheResult.CacheNotInitialized -> buildConsultationDetails(
+            is ConsultationUpdateCacheResult.CacheNotInitialized -> buildConsultationDetails(
                 consultationIdOrSlug = consultationIdOrSlug,
                 consultationUpdateIdOrSlug = consultationUpdateIdOrSlug
             ).also { details ->
@@ -48,21 +46,54 @@ class ConsultationDetailsUpdateV2UseCase(
                     details = details,
                 )
             }
-        }?.let { details ->
-            ConsultationDetailsV2WithInfo(
-                consultation = details.consultation,
-                update = details.update,
-                feedbackStats = details.feedbackStats,
-                history = details.history,
-                participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
-                    getParticipantCount(consultationIdOrSlug)
-                } else 0,
-                isUserFeedbackPositive = getUserFeedback(consultationUpdate = details.update, userId = userId),
-            )
         }
+
+        return ConsultationDetailsV2WithInfo(
+            consultation = details.consultation,
+            update = details.update,
+            feedbackStats = details.feedbackStats,
+            history = details.history,
+            participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
+                getParticipantCount(consultationIdOrSlug)
+            } else 0,
+            isUserFeedbackPositive = getUserFeedback(details.update),
+        )
     }
 
-    private fun buildConsultationDetails(consultationIdOrSlug: String, consultationUpdateIdOrSlug: String): ConsultationDetailsV2? {
+    fun getConsultationUnpublishedDetailsUpdate(
+        consultationIdOrSlug: String,
+        consultationUpdateIdOrSlug: String,
+    ): ConsultationDetailsV2WithInfo {
+        val consultationInfo = infoRepository.getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
+            ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
+        val update = updateRepository.getConsultationUpdateBySlugOrIdWithUnpublished(
+            consultationInfo.id,
+            consultationUpdateIdOrSlug,
+        ) ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
+
+        val details = ConsultationDetailsV2(
+            consultation = consultationInfo,
+            update = update,
+            feedbackStats = getFeedbackStats(update),
+            history = null,
+        )
+
+        return ConsultationDetailsV2WithInfo(
+            consultation = details.consultation,
+            update = details.update,
+            feedbackStats = details.feedbackStats,
+            history = details.history,
+            participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
+                getParticipantCount(consultationIdOrSlug)
+            } else 0,
+            isUserFeedbackPositive = getUserFeedback(details.update),
+        )
+    }
+
+    private fun buildConsultationDetails(
+        consultationIdOrSlug: String,
+        consultationUpdateIdOrSlug: String
+    ): ConsultationDetailsV2 {
         return infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)?.let { consultationInfo ->
             updateRepository.getConsultationUpdateBySlugOrId(
                 consultationInfo.id,
@@ -75,7 +106,7 @@ class ConsultationDetailsUpdateV2UseCase(
                     history = null,
                 )
             }
-        }
+        } ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
     }
 
     private fun getFeedbackStats(consultationUpdate: ConsultationUpdateInfoV2): FeedbackConsultationUpdateStats? {
@@ -93,13 +124,13 @@ class ConsultationDetailsUpdateV2UseCase(
         }
     }
 
-    private fun getUserFeedback(consultationUpdate: ConsultationUpdateInfoV2, userId: String?): Boolean? {
+    private fun getUserFeedback(consultationUpdate: ConsultationUpdateInfoV2): Boolean? {
+        val userId = authentificationHelper.getUserId()
         if (userId == null || consultationUpdate.feedbackQuestion == null) return null
 
         val cacheResult = cacheRepository.getUserFeedback(consultationUpdateId = consultationUpdate.id, userId = userId)
         return when (cacheResult) {
             is ConsultationUpdateUserFeedbackCacheResult.CachedConsultationUpdateUserFeedback -> cacheResult.isUserFeedbackPositive
-            ConsultationUpdateUserFeedbackCacheResult.ConsultationUpdateUserFeedbackNotFound -> null
             ConsultationUpdateUserFeedbackCacheResult.CacheNotInitialized -> feedbackRepository.getUserFeedback(
                 consultationUpdateId = consultationUpdate.id, userId = userId
             ).also { userResponse ->
@@ -111,5 +142,4 @@ class ConsultationDetailsUpdateV2UseCase(
             }
         }
     }
-
 }

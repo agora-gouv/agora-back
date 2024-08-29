@@ -24,6 +24,7 @@ import fr.gouv.agora.infrastructure.consultationUpdates.dto.ConsultationUpdateV2
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Component
 class ConsultationUpdateInfoV2Mapper {
@@ -75,6 +76,7 @@ class ConsultationUpdateInfoV2Mapper {
             feedbackQuestion = buildFeedbackQuestion(dto),
             footer = buildFooter(dto),
             goals = buildGoals(dto),
+            isPublished = true,
         )
     }
 
@@ -98,10 +100,10 @@ class ConsultationUpdateInfoV2Mapper {
     private fun buildFeedbackQuestion(dto: ConsultationUpdateV2DTO): FeedbackQuestion? {
         if (dto.feedbackQuestionTitle == null || dto.feedbackQuestionPicto == null || dto.feedbackQuestionDescription == null) return null
         return FeedbackQuestion(
-            consultationUpdateId = dto.id.toString(),
-            title = dto.feedbackQuestionTitle,
-            picto = dto.feedbackQuestionPicto,
-            description = dto.feedbackQuestionDescription,
+            dto.id.toString(),
+            "Donnez votre avis",
+            "💬",
+            dto.feedbackQuestionDescription,
         )
     }
 
@@ -226,18 +228,26 @@ class ConsultationUpdateInfoV2Mapper {
             hasQuestionsInfo = true,
             hasParticipationInfo = false,
             responsesInfo = null,
-            sectionsHeader = emptyList(),
+            sectionsHeader = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml())),
             body = sections,
             bodyPreview = emptyList(),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = null,
             footer = null,
-            goals = null,
+            goals = listOf(
+                Goal("🗣️", contentBeforeResponse.commanditaire.toHtml()),
+                Goal("🎯", contentBeforeResponse.objectif.toHtml()),
+                Goal("🚀", contentBeforeResponse.axeGouvernemental.toHtml()),
+            ),
+            isPublished = consultation.isPublished(),
         )
     }
 
-    fun toDomainContenuAutre(consultationDTO: StrapiAttributes<ConsultationStrapiDTO>, contentDTO: StrapiAttributes<StrapiConsultationContenuAutre>): ConsultationUpdateInfoV2 {
+    fun toDomainContenuAutre(
+        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>,
+        contentDTO: StrapiAttributes<StrapiConsultationContenuAutre>
+    ): ConsultationUpdateInfoV2 {
         val contenu = contentDTO.attributes
 
         val htmlSections = toSections(contenu.sections)
@@ -254,38 +264,50 @@ class ConsultationUpdateInfoV2Mapper {
             body = htmlSections,
             bodyPreview = emptyList(),
             infoHeader = null,
-            downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
+            downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
                 contentDTO.id,
-                contenu.feedbackTitre,
-                contenu.feedbackPictogramme,
-                "<body>${contenu.feedbackDescription.toHtml()}</body>"
+                "Donnez votre avis",
+                "💬",
+                "<body>${contenu.feedbackMessage}</body>"
             ),
             footer = null,
             goals = null,
+            isPublished = consultationDTO.attributes.isPublished(),
         )
     }
 
-    fun toDomainAnswered(
+    fun toDomainAnsweredOrEnded(
         consultation: StrapiAttributes<ConsultationStrapiDTO>,
+        now: LocalDateTime,
     ): ConsultationUpdateInfoV2? {
         val contenu = consultation.attributes.contenuApresReponseOuTerminee.data.attributes
         val contenuId = consultation.attributes.contenuApresReponseOuTerminee.data.id
-
         val htmlSections = toSections(contenu.sections)
+
+        val consultationIsEnded = consultation.attributes.dateDeFin.isBefore(now)
+        val responsesInfo = if (consultationIsEnded) {
+            ResponsesInfo(
+                "🏁",
+                "<body><b>Cette consultation est maintenant terminée.</b> Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.</body>",
+                "Voir tous les résultats"
+            )
+        } else {
+            ResponsesInfo(
+                "🙌",
+                "<body><b>Merci pour votre participation</b> à cette consultation !</body>",
+                "Voir les premiers résultats"
+            )
+        }
 
         return ConsultationUpdateInfoV2(
             id = contenuId,
             slug = contenu.slug,
             updateDate = consultation.attributes.dateDeDebut,
-            shareTextTemplate = contenu.templatePartageApresFinConsultation,
+            shareTextTemplate = contenu.templatePartage,
             hasQuestionsInfo = false,
             hasParticipationInfo = false,
-            responsesInfo = ResponsesInfo(
-                picto = contenu.encartVisualisationResultatAvantFinConsultationPictogramme,
-                description = "<body>${contenu.encartVisualisationResultatAvantFinConsultationDescription.toHtml()}</body>",
-                actionText = contenu.encartVisualisationResultatAvantFinConsultationCallToAction
-            ),
+            responsesInfo = responsesInfo,
             sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = emptyList(),
@@ -293,12 +315,75 @@ class ConsultationUpdateInfoV2Mapper {
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
                 contenuId,
-                contenu.feedbackTitre,
-                contenu.feedbackPictogramme,
-                "<body>${contenu.feedbackDescription.toHtml()}</body>"
+                "Donnez votre avis",
+                "💬",
+                "<body>${contenu.feedbackMessage}</body>"
             ),
             footer = null,
             goals = null,
+            isPublished = consultation.attributes.isPublished(),
+        )
+    }
+
+    fun toDomainReponseDuCommanditaire(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2? {
+        val contenu = consultation.attributes.consultationContenuReponseDuCommanditaire.data?.attributes
+            ?: return null
+        val contenuId = consultation.attributes.consultationContenuReponseDuCommanditaire.data.id
+        val htmlSections = toSections(contenu.sections)
+
+        return ConsultationUpdateInfoV2(
+            id = contenuId,
+            slug = contenu.slug,
+            updateDate = contenu.datetimePublication,
+            shareTextTemplate = contenu.templatePartage,
+            hasQuestionsInfo = false,
+            hasParticipationInfo = false,
+            responsesInfo = null,
+            sectionsHeader = emptyList(),
+            body = htmlSections,
+            bodyPreview = emptyList(),
+            infoHeader = null,
+            downloadAnalysisUrl = null,
+            feedbackQuestion = FeedbackQuestion(
+                contenuId,
+                "Donnez votre avis",
+                "💬",
+                "<body>${contenu.feedbackMessage}</body>"
+            ),
+            footer = null,
+            goals = null,
+            isPublished = consultation.attributes.isPublished(),
+        )
+    }
+
+    fun toDomainAnalyseDesReponses(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2? {
+        val contenu = consultation.attributes.consultationContenuAnalyseDesReponses.data?.attributes
+            ?: return null
+        val contenuId = consultation.attributes.consultationContenuAnalyseDesReponses.data.id
+        val htmlSections = toSections(contenu.sections)
+
+        return ConsultationUpdateInfoV2(
+            id = contenuId,
+            slug = contenu.slug,
+            updateDate = contenu.datetimePublication,
+            shareTextTemplate = contenu.templatePartage,
+            hasQuestionsInfo = false,
+            hasParticipationInfo = false,
+            responsesInfo = null,
+            sectionsHeader = emptyList(),
+            body = htmlSections,
+            bodyPreview = emptyList(),
+            infoHeader = null,
+            downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
+            feedbackQuestion = FeedbackQuestion(
+                contenuId,
+                "Donnez votre avis",
+                "💬",
+                "<body>${contenu.feedbackMessage}</body>"
+            ),
+            footer = null,
+            goals = null,
+            isPublished = consultation.attributes.isPublished(),
         )
     }
 

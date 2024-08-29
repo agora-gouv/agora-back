@@ -8,7 +8,6 @@ import fr.gouv.agora.usecase.feedbackQag.repository.FeedbackQagResult
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class FeedbackQagRepositoryImpl(
     private val databaseRepository: FeedbackQagDatabaseRepository,
     private val mapper: FeedbackQagMapper,

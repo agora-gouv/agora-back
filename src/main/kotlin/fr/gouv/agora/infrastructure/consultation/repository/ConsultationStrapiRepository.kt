@@ -15,17 +15,19 @@ class ConsultationStrapiRepository(
 ) {
     val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
 
-    fun getConsultationsOngoing(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationsOngoingWithUnpublished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .withDateBefore(date, "datetime_de_debut")
             .withDateAfter(date, "datetime_de_fin")
+            .withUnpublished()
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getConsultationsFinished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
+    fun getConsultationsFinishedWithUnpublished(date: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .withDateBefore(date, "datetime_de_fin")
+            .withUnpublished()
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -40,9 +42,10 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getConsultationBySlug(slug: String): StrapiAttributes<ConsultationStrapiDTO>? {
+    fun getConsultationBySlugWithUnpublished(slug: String): StrapiAttributes<ConsultationStrapiDTO>? {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .filterBy("slug", listOf(slug))
+            .withUnpublished()
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
             .firstOrNull()
@@ -52,6 +55,16 @@ class ConsultationStrapiRepository(
         val strapiConsultationId = consultationId.toIntOrNull() ?: return null
         val uriBuilder = StrapiRequestBuilder("consultations")
             .getByIds(listOf(strapiConsultationId))
+
+        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
+            .firstOrNull()
+    }
+
+    fun getConsultationByIdWithUnpublished(consultationId: String): StrapiAttributes<ConsultationStrapiDTO>? {
+        val strapiConsultationId = consultationId.toIntOrNull() ?: return null
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .getByIds(listOf(strapiConsultationId))
+            .withUnpublished()
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
             .firstOrNull()
@@ -71,17 +84,5 @@ class ConsultationStrapiRepository(
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
             .meta.pagination.total == 1
-    }
-
-    fun getLastUpdateLabelFromConsultation(consultationId: String): String? {
-        val consultationIntId = consultationId.toIntOrNull() ?: return null
-        val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByIds(listOf(consultationIntId))
-
-        val consultation = cmsStrapiHttpClient
-            .request<ConsultationStrapiDTO>(uriBuilder, ref)
-
-        return consultation.data
-            .firstOrNull()?.attributes?.flammeLabel
     }
 }

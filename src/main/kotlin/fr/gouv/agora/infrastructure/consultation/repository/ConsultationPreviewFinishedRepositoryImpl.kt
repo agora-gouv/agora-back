@@ -5,7 +5,6 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class ConsultationPreviewFinishedRepositoryImpl(
     private val databaseRepository: ConsultationDatabaseRepository,
     private val mapper: ConsultationInfoMapper,

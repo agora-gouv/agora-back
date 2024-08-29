@@ -29,6 +29,7 @@ class QagPaginatedJsonMapper(
             qagId = domain.id,
             thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
             title = domain.title,
+            description = domain.description,
             username = domain.username,
             date = dateMapper.toFormattedDate(domain.date),
             support = SupportQagJson(

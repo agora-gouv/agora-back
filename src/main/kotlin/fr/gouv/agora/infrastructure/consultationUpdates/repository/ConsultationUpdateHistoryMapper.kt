@@ -20,12 +20,19 @@ class ConsultationUpdateHistoryMapper(
     fun toDomain(consultationStrapiDTO: StrapiAttributes<ConsultationStrapiDTO>): List<ConsultationUpdateHistory> {
         val contenuAvantReponse = consultationStrapiDTO.attributes.contenuAvantReponse.data
         val contenuApresReponse = consultationStrapiDTO.attributes.contenuApresReponseOuTerminee.data
+        val contenuAnalyseDesReponses = consultationStrapiDTO.attributes.consultationContenuAnalyseDesReponses.data
+        val contenuReponseCommanditaire =
+            consultationStrapiDTO.attributes.consultationContenuReponseDuCommanditaire.data
         val autresContenusTriesParDate = consultationStrapiDTO.attributes.consultationContenuAutres.data
             .filter { it.attributes.datetimePublication.isBefore(LocalDateTime.now(clock)) }
             .sortedByDescending { it.attributes.datetimePublication }
 
         val dernierContenuId = if (autresContenusTriesParDate.isNotEmpty()) {
             autresContenusTriesParDate.first().id
+        } else if (contenuReponseCommanditaire != null) {
+            contenuReponseCommanditaire.id
+        } else if (contenuAnalyseDesReponses != null) {
+            contenuAnalyseDesReponses.id
         } else contenuApresReponse.id
 
         val historiqueAvantReponse = contenuAvantReponse.let {
@@ -47,6 +54,28 @@ class ConsultationUpdateHistoryMapper(
                 it.attributes.historiqueTitre,
                 it.attributes.slug,
                 consultationStrapiDTO.attributes.dateDeFin.toDate(),
+                it.attributes.historiqueCallToAction
+            )
+        }
+        val historiqueAnalyseDesReponses = contenuAnalyseDesReponses?.let {
+            ConsultationUpdateHistory(
+                ConsultationUpdateHistoryType.UPDATE,
+                it.id,
+                if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
+                it.attributes.historiqueTitre,
+                it.attributes.slug,
+                it.attributes.datetimePublication.toDate(),
+                it.attributes.historiqueCallToAction
+            )
+        }
+        val historiqueReponseCommanditaire = contenuReponseCommanditaire?.let {
+            ConsultationUpdateHistory(
+                ConsultationUpdateHistoryType.UPDATE,
+                it.id,
+                if (dernierContenuId == it.id) ConsultationUpdateHistoryStatus.CURRENT else ConsultationUpdateHistoryStatus.DONE,
+                it.attributes.historiqueTitre,
+                it.attributes.slug,
+                it.attributes.datetimePublication.toDate(),
                 it.attributes.historiqueCallToAction
             )
         }
@@ -77,9 +106,11 @@ class ConsultationUpdateHistoryMapper(
         return listOfNotNull(
             historiqueContenuAVenir,
             *historiqueAutres.toTypedArray(),
+            historiqueReponseCommanditaire,
+            historiqueAnalyseDesReponses,
             historiqueApresReponse,
             historiqueAvantReponse,
-        )
+        ).filter { it.updateDate?.toLocalDateTime()?.isBefore(LocalDateTime.now(clock)) ?: true }
     }
 
     fun toDomain(dtoList: List<ConsultationUpdateHistoryWithDateDTO>): List<ConsultationUpdateHistory> {

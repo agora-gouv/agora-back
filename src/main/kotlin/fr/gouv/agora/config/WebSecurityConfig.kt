@@ -15,7 +15,6 @@ import org.springframework.web.servlet.function.RouterFunctions.resources
 
 @Configuration
 @EnableWebSecurity
-@Suppress("unused")
 class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTokenFilter) {
 
     @Bean

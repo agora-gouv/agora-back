@@ -2,6 +2,7 @@ package fr.gouv.agora.usecase.notification
 
 import fr.gouv.agora.domain.NotificationInserting
 import fr.gouv.agora.domain.NotificationType
+import fr.gouv.agora.usecase.consultation.exception.ConsultationNotFoundException
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.login.repository.UserRepository
@@ -25,7 +26,7 @@ class SendConsultationNotificationUseCase(
         consultationId: String,
     ): NotificationResult {
         if (!consultationInfoRepository.isConsultationExists(consultationId))
-            throw ConsultationIdInconnuException(consultationId)
+            throw ConsultationNotFoundException(consultationId)
 
         val userList = userRepository.getAllUsers()
         notificationSendingRepository.sendConsultationDetailsMultiNotification(
@@ -54,7 +55,7 @@ class SendConsultationNotificationUseCase(
         consultationId: String,
     ): NotificationResult {
         if (!consultationInfoRepository.isConsultationExists(consultationId))
-            throw ConsultationIdInconnuException(consultationId)
+            throw ConsultationNotFoundException(consultationId)
 
         val userAnsweredConsultationIds =
             userAnsweredConsultationRepository.getUsersAnsweredConsultation(consultationId = consultationId)
@@ -87,7 +88,7 @@ class SendConsultationNotificationUseCase(
         consultationId: String,
     ): NotificationResult {
         if (!consultationInfoRepository.isConsultationExists(consultationId))
-            throw ConsultationIdInconnuException(consultationId)
+            throw ConsultationNotFoundException(consultationId)
 
         val userList = userRepository.getUsersNotAnsweredConsultation(consultationId = consultationId)
 

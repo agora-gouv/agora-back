@@ -4,7 +4,6 @@ import fr.gouv.agora.domain.AppFeedbackInserting
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class AppFeedbackRepositoryImpl(
     private val databaseRepository: AppFeedbackDatabaseRepository,
     private val mapper: AppFeedbackMapper,

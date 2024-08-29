@@ -2,6 +2,7 @@ package fr.gouv.agora.domain
 
 enum class UserAuthorization {
     VIEW_CONSULTATION,
+    VIEW_UNPUBLISHED_CONSULTATION,
     ANSWER_CONSULTATION,
     VIEW_QAG,
     SUPPORT_QAG,
@@ -19,6 +20,11 @@ enum class UserAuthorization {
             SUPPORT_QAG,
             FEEDBACK_QAG_RESPONSE,
             ADD_QAG,
+        )
+
+        fun getPublisherAuthorizations() = listOf(
+            *getUserAuthorizations().toTypedArray(),
+            VIEW_UNPUBLISHED_CONSULTATION
         )
 
         fun getModeratorAuthorizations() = listOf(

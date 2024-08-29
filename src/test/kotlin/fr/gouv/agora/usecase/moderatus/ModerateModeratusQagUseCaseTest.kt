@@ -38,11 +38,9 @@ internal class ModerateModeratusQagUseCaseTest {
     private lateinit var moderatusQagLockRepository: ModeratusQagLockRepository
 
     @Mock
-    @Suppress("unused")
     private lateinit var qagDetailsCacheRepository: QagDetailsCacheRepository
 
     @Mock
-    @Suppress("unused")
     private lateinit var qagListsCacheRepository: QagListsCacheRepository
 
     private val moderateQagOptions = ModerateQagOptions(

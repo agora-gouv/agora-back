@@ -16,7 +16,7 @@ class ControlResponseConsultationUseCase(
         consultationId: String,
         consultationResponses: List<ReponseConsultationInserting>,
     ): Boolean {
-        val questionList = questionRepository.getConsultationQuestionList(consultationId)
+        val questionList = questionRepository.getConsultationQuestions(consultationId).questions
         val uniqueQuestionIdList =
             consultationResponses.map { consultationResponse -> consultationResponse.questionId }.toSet()
 
@@ -43,6 +43,3 @@ class ControlResponseConsultationUseCase(
         }
     }
 }
-
-
-

@@ -5,7 +5,6 @@ import fr.gouv.agora.domain.SupportQagDeleting
 import fr.gouv.agora.domain.SupportQagInserting
 import fr.gouv.agora.infrastructure.supportQag.SupportQagQueue.TaskType
 import fr.gouv.agora.infrastructure.utils.IpAddressUtils
-import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.supportQag.DeleteSupportQagUseCase
 import fr.gouv.agora.usecase.supportQag.InsertSupportQagUseCase
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagResult
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "QaG")
 class SupportQagController(
     private val insertSupportQagUseCase: InsertSupportQagUseCase,

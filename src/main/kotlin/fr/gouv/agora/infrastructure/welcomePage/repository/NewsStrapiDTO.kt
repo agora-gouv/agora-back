@@ -13,7 +13,7 @@ data class NewsStrapiDTO(
     val callToAction: String,
     @JsonProperty("date_de_debut")
     val dateDeDebut: LocalDateTime,
-    @JsonProperty("page_route_mobile")
+    @JsonProperty("page_route_mobile_enum")
     val pageRouteMobile: String,
     @JsonProperty("page_route_argument_mobile")
     val pageRouteArgumentMobile: String?,

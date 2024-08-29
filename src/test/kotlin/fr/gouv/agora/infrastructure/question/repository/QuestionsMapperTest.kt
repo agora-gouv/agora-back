@@ -525,7 +525,6 @@ internal class QuestionsMapperTest {
                       "createdAt": "2024-07-30T12:56:08.853Z",
                       "updatedAt": "2024-07-30T13:32:28.132Z",
                       "publishedAt": "2024-07-30T12:56:28.553Z",
-                      "flamme_label": null,
                       "datetime_de_debut": "2024-07-22T22:00:00.000Z",
                       "datetime_de_fin": "2038-07-14T22:00:00.000Z",
                       "titre_consultation": "Test questions",
@@ -648,8 +647,11 @@ internal class QuestionsMapperTest {
                             "historique_call_to_action": " ",
                             "createdAt": "2024-07-30T14:48:10.811Z",
                             "updatedAt": "2024-07-30T14:49:13.946Z",
-                            "publishedAt": "2024-07-30T14:49:13.936Z",
-                            "sections": []
+                            "sections": [],
+                            "commanditaire": [],
+                            "objectif": [],
+                            "axe_gouvernemental": [],
+                            "presentation": []
                           }
                         }
                       },
@@ -657,26 +659,23 @@ internal class QuestionsMapperTest {
                         "data": {
                           "id": 12003,
                           "attributes": {
-                            "slug": "",
-                            "template_partage_avant_fin_consultation": " ",
-                            "template_partage_apres_fin_consultation": " ",
-                            "feedback_pictogramme": " ",
-                            "feedback_titre": " ",
-                            "feedback_description": [],
-                            "historique_titre": " ",
-                            "historique_call_to_action": " ",
+                            "historique_titre": "",
+                            "historique_call_to_action": "",
+                            "slug":  "",
+                            "feedback_message": "",
+                            "nom_strapi":  "",
+                            "template_partage": "",
+                            "sections":  [],
                             "createdAt": "2024-07-30T14:48:56.580Z",
-                            "updatedAt": "2024-07-30T14:49:17.531Z",
-                            "publishedAt": "2024-07-30T14:49:17.526Z",
-                            "encart_visualisation_resultat_avant_fin_consultation_picto": " ",
-                            "encart_visualisation_resultat_avant_fin_consultation_desc": [],
-                            "encart_visualisation_resultat_avant_fin_consultation_cta": " ",
-                            "encart_visualisation_resultat_apres_fin_consultation_picto": " ",
-                            "encart_visualisation_resultat_apres_fin_consultation_desc": [],
-                            "encart_visualisation_resultat_apres_fin_consultation_cta": " ",
-                            "sections": []
+                            "updatedAt": "2024-07-30T14:49:17.531Z"
                           }
                         }
+                      },
+                      "consultation_contenu_analyse_des_reponse": {
+                        "data": null
+                      },
+                      "contenu_reponse_du_commanditaires": {
+                        "data": null
                       },
                       "consultation_contenu_autres": {
                         "data": []

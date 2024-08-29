@@ -7,7 +7,6 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter
 
 
 @Configuration
-@Suppress("unused")
 class ETagConfig {
 
     @Bean

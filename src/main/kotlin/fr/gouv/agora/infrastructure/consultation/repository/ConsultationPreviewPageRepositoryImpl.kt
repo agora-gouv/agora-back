@@ -8,7 +8,6 @@ import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
-@Suppress("unused")
 class ConsultationPreviewPageRepositoryImpl(
     private val cacheManager: CacheManager,
     private val objectMapper: ObjectMapper,

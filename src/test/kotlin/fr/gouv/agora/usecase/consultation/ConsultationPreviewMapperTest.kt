@@ -26,7 +26,8 @@ internal class ConsultationPreviewMapperTest {
         coverUrl = "coverUrl",
         thematique = thematique,
         endDate = LocalDateTime.MIN,
-        slug = "slug"
+        slug = "slug",
+        isPublished = true,
     )
 
     companion object {

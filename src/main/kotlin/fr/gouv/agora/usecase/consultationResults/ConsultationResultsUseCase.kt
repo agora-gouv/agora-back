@@ -48,7 +48,7 @@ class ConsultationResultsUseCase(
         val consultationInfo = consultationInfoRepository.getConsultation(consultationId = consultationId)
             ?: return null
 
-        val questionList = questionRepository.getConsultationQuestionList(consultationId = consultationId)
+        val questionList = questionRepository.getConsultationQuestions(consultationId = consultationId).questions
         val participantCount = userAnsweredConsultationRepository.getParticipantCount(consultationId = consultationId)
         val consultationResponseList = if (questionList.isNotEmpty()) {
             consultationResultAggregatedRepository.getConsultationResultAggregated(consultationId = consultationId)

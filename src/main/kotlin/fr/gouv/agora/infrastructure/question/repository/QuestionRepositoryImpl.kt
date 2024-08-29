@@ -1,7 +1,6 @@
 package fr.gouv.agora.infrastructure.question.repository
 
 import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.domain.Question
 import fr.gouv.agora.domain.Questions
 import fr.gouv.agora.infrastructure.consultation.repository.ConsultationDatabaseRepository
 import fr.gouv.agora.infrastructure.consultation.repository.ConsultationStrapiRepository
@@ -9,10 +8,8 @@ import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.springframework.stereotype.Component
-import java.util.UUID
 
 @Component
-@Suppress("unused")
 class QuestionRepositoryImpl(
     private val consultationDatabaseRepository: ConsultationDatabaseRepository,
     private val consultationStrapiRepository: ConsultationStrapiRepository,
@@ -26,15 +23,24 @@ class QuestionRepositoryImpl(
         val consultationUUID = consultationId.toUuidOrNull()
         if (consultationUUID != null) {
             return consultationDatabaseRepository.getConsultation(consultationUUID)?.let { consultationDTO ->
+                val questions = questionDatabaseRepository.getQuestionConsultation(consultationUUID) ?: emptyList()
                 Questions(
                     questionCount = consultationDTO.questionCountNumber,
-                    questions = getConsultationQuestions(consultationUUID),
+                    questions = questions.map { questionDTO ->
+                        questionMapper.toDomain(
+                            dto = questionDTO,
+                            questionDTOList = questions,
+                            choixPossibleDTOList = choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)
+                                ?: emptyList(),
+                        )
+                    },
                 )
             } ?: Questions(questionCount = 0, questions = emptyList())
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val consultation = consultationStrapiRepository.getConsultationById(consultationId)
+            // TODO est-ce possible qu'il y ait une fuite ?
+            val consultation = consultationStrapiRepository.getConsultationByIdWithUnpublished(consultationId)
                 ?: return Questions(questionCount = 0, questions = emptyList())
 
             val questions = questionMapper.toDomain(consultation)
@@ -44,34 +50,4 @@ class QuestionRepositoryImpl(
 
         return Questions(questionCount = 0, questions = emptyList())
     }
-
-
-    override fun getConsultationQuestionList(consultationId: String): List<Question> {
-        val consultationUUID = consultationId.toUuidOrNull()
-        if (consultationUUID != null) {
-            return getConsultationQuestions(consultationUUID)
-        }
-
-        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val consultation = consultationStrapiRepository.getConsultationById(consultationId)
-                ?: return emptyList()
-
-            return questionMapper.toDomain(consultation)
-        }
-
-        return emptyList()
-    }
-
-    private fun getConsultationQuestions(consultationUUID: UUID): List<Question> {
-        val questions = questionDatabaseRepository.getQuestionConsultation(consultationUUID) ?: emptyList()
-        return questions.map { questionDTO ->
-            questionMapper.toDomain(
-                dto = questionDTO,
-                questionDTOList = questions,
-                choixPossibleDTOList = choixPossibleDatabaseRepository.getChoixPossibleQuestion(questionDTO.id)
-                    ?: emptyList(),
-            )
-        }
-    }
-
 }

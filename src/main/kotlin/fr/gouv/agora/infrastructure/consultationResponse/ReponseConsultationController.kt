@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.consultationResponse
 
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.consultationResponse.InsertResponseConsultationQueue.TaskType
-import fr.gouv.agora.security.jwt.JwtTokenUtils
 import fr.gouv.agora.usecase.consultationResponse.ControlResponseConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.InsertReponseConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository.InsertResult
@@ -14,11 +13,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Suppress("unused")
 @Tag(name = "Consultations")
 class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,

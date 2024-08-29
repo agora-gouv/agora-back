@@ -3,6 +3,7 @@ package fr.gouv.agora.usecase.consultationResponse
 import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
+import fr.gouv.agora.domain.Questions
 import fr.gouv.agora.domain.ReponseConsultationInserting
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.domain.UserAnsweredConsultation
@@ -82,7 +83,8 @@ internal class InsertReponseConsultationUseCaseTest {
         questionCount = "",
         estimatedTime = "",
         participantCountGoal = 1,
-        thematique = Thematique()
+        thematique = Thematique(),
+        isPublished = true,
     )
 
     @Test
@@ -159,7 +161,12 @@ internal class InsertReponseConsultationUseCaseTest {
         val questionList = listOf(
             mock(QuestionOpen::class.java).also { given(it.id).willReturn("question1") }
         )
-        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(questionList)
+        given(questionRepository.getConsultationQuestions(consultationId = "consultId")).willReturn(
+            Questions(
+                1,
+                questionList
+            )
+        )
 
         val consultationResponses = listOf(
             ReponseConsultationInserting(
@@ -221,7 +228,7 @@ internal class InsertReponseConsultationUseCaseTest {
             insertParameters = insertParameters,
             consultationResponses = consultationResponsesSanitized,
         )
-        then(questionRepository).should(times(1)).getConsultationQuestionList(consultationId = "consultId")
+        then(questionRepository).should(times(1)).getConsultationQuestions(consultationId = "consultId")
         then(contentSanitizer).should(only()).sanitize("salut", OPEN_QUESTION_MAX_LENGTH)
     }
 
@@ -241,7 +248,12 @@ internal class InsertReponseConsultationUseCaseTest {
         val questionList = listOf(
             mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") }
         )
-        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(questionList)
+        given(questionRepository.getConsultationQuestions(consultationId = "consultId")).willReturn(
+            Questions(
+                1,
+                questionList
+            )
+        )
 
         val consultationResponses = listOf(
             ReponseConsultationInserting(
@@ -302,7 +314,7 @@ internal class InsertReponseConsultationUseCaseTest {
             insertParameters = insertParameters,
             consultationResponses = consultationResponsesSanitized,
         )
-        then(questionRepository).should(times(1)).getConsultationQuestionList(consultationId = "consultId")
+        then(questionRepository).should(times(1)).getConsultationQuestions(consultationId = "consultId")
         then(contentSanitizer).should(only()).sanitize("autre choix", OTHER_QUESTION_MAX_LENGTH)
     }
 
@@ -322,7 +334,9 @@ internal class InsertReponseConsultationUseCaseTest {
         val questionList = listOf(
             mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") },
         )
-        given(questionRepository.getConsultationQuestionList(consultationId = "consultId")).willReturn(questionList)
+        given(questionRepository.getConsultationQuestions(consultationId = "consultId")).willReturn(
+            Questions(1, questionList)
+        )
 
         val insertParameters = mock(InsertParameters::class.java)
         given(
@@ -372,7 +386,7 @@ internal class InsertReponseConsultationUseCaseTest {
             insertParameters = insertParameters,
             consultationResponses = listOf(addedResponseUniqueChoice),
         )
-        then(questionRepository).should(times(1)).getConsultationQuestionList(consultationId = "consultId")
+        then(questionRepository).should(times(1)).getConsultationQuestions(consultationId = "consultId")
         then(contentSanitizer).shouldHaveNoInteractions()
     }
 

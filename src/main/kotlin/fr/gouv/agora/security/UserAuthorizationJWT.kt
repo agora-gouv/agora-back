@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority
 
 enum class UserAuthorizationJWT(private val authorityValue: String) : GrantedAuthority {
     VIEW_CONSULTATION("VIEW_CONSULTATION"),
+    VIEW_UNPUBLISHED_CONSULTATION("VIEW_UNPUBLISHED_CONSULTATION"),
     ANSWER_CONSULTATION("ANSWER_CONSULTATION"),
     VIEW_QAG("VIEW_QAG"),
     SUPPORT_QAG("SUPPORT_QAG"),
@@ -14,5 +15,4 @@ enum class UserAuthorizationJWT(private val authorityValue: String) : GrantedAut
     ;
 
     override fun getAuthority() = authorityValue
-
 }

@@ -10,7 +10,6 @@ import java.net.URI
 import javax.sql.DataSource
 
 @Configuration
-@Suppress("unused")
 class DatabaseConfig {
     private val logger: Logger = LoggerFactory.getLogger(DatabaseConfig::class.java)
 
