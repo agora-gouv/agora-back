@@ -76,7 +76,6 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
     }
 
     private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDates? {
-        if (!consultationDetails.update.hasQuestionsInfo) return null
         return ConsultationDates(
             startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate.toLocalDate()),
             endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate.toLocalDate()),
