@@ -6,7 +6,6 @@ data class ConsultationDetailsV2(
     val consultation: ConsultationInfo,
     val update: ConsultationUpdateInfoV2,
     val feedbackStats: FeedbackConsultationUpdateStats?,
-    val history: List<ConsultationUpdateHistory>?,
 ) {
     private fun isLancementUpdate(): Boolean {
         return update.hasQuestionsInfo

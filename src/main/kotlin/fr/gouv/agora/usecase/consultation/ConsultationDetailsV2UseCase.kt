@@ -42,11 +42,12 @@ class ConsultationDetailsV2UseCase(
 
         val consultationWithInfo = getConsultationDetails(consultationInfo)
 
+        val history = historyRepository.getConsultationUpdateHistory(consultationInfo.id)
         return ConsultationDetailsV2WithInfo(
             consultation = consultationWithInfo.consultation,
             update = consultationWithInfo.update,
             feedbackStats = consultationWithInfo.feedbackStats,
-            history = consultationWithInfo.history,
+            history = history,
             participantCount = getParticipantCount(consultationWithInfo),
             isUserFeedbackPositive = getUserFeedback(consultationWithInfo),
         )
@@ -83,7 +84,7 @@ class ConsultationDetailsV2UseCase(
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cachedConsultationDetails.details
             is ConsultationUpdateCacheResult.CacheNotInitialized -> {
                 updateRepository.getUnansweredUsersConsultationUpdateWithUnpublished(consultationInfo.id)
-                    ?.let { ConsultationDetailsV2(consultationInfo, it, getFeedbackStats(it), null) }
+                    ?.let { ConsultationDetailsV2(consultationInfo, it, getFeedbackStats(it)) }
             }
         }
         cacheRepository.initUnansweredUsersConsultationDetails(consultationInfo.id, consultationDetails)
@@ -98,10 +99,7 @@ class ConsultationDetailsV2UseCase(
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
             is ConsultationUpdateCacheResult.CacheNotInitialized -> {
                 updateRepository.getLatestConsultationUpdate(consultationInfo.id)
-                    ?.let { update ->
-                        val history = historyRepository.getConsultationUpdateHistory(consultationInfo.id)
-                        ConsultationDetailsV2(consultationInfo, update, getFeedbackStats(update), history)
-                    }
+                    ?.let { ConsultationDetailsV2(consultationInfo, it, getFeedbackStats(it)) }
             }
         }
         cacheRepository.initLastConsultationDetails(consultationInfo.id, details)
@@ -110,8 +108,7 @@ class ConsultationDetailsV2UseCase(
     }
 
     private fun getFeedbackStats(consultationUpdate: ConsultationUpdateInfoV2): FeedbackConsultationUpdateStats? {
-        if (!featureFlagsRepository.isFeatureEnabled(FeedbackConsultationUpdate) || consultationUpdate.feedbackQuestion == null)
-            return null
+        if (!featureFlagsRepository.isFeatureEnabled(FeedbackConsultationUpdate) || consultationUpdate.feedbackQuestion == null) return null
 
         return feedbackRepository.getFeedbackStats(consultationUpdate.id)
     }
@@ -121,7 +118,7 @@ class ConsultationDetailsV2UseCase(
 
         val consultationId = consultationWithInfo.getConsultationId()
         val participantCount = cacheRepository.getParticipantCount(consultationId)
-            ?: userRepository.getParticipantCount(consultationId)
+                ?: userRepository.getParticipantCount(consultationId)
         cacheRepository.initParticipantCount(consultationId, participantCount)
 
         return participantCount

@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.consultation.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.agora.domain.ConsultationDetailsV2
-import fr.gouv.agora.domain.ConsultationUpdateHistory
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2.FeedbackQuestion
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Footer
@@ -211,7 +210,6 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             goals = details.update.goals,
         ),
         feedbackStats = details.feedbackStats,
-        history = details.history,
     )
 
     private fun fromCacheable(cacheable: CacheableConsultationDetails): ConsultationDetailsV2 {
@@ -236,7 +234,6 @@ class ConsultationDetailsV2CacheRepositoryImpl(
                 isPublished = true,
             ),
             feedbackStats = cacheable.feedbackStats,
-            history = cacheable.history,
         )
     }
 
@@ -324,7 +321,6 @@ private data class CacheableConsultationDetails(
     val thematique: Thematique,
     val update: CacheableConsultationUpdateInfo,
     val feedbackStats: FeedbackConsultationUpdateStats?,
-    val history: List<ConsultationUpdateHistory>?,
 )
 
 private data class CacheableConsultationUpdateInfo(
