@@ -151,8 +151,8 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
         }
     }
 
-    private fun buildHistory(consultationDetails: ConsultationDetailsV2WithInfo): List<History>? {
-        return consultationDetails.history?.map { historyItem ->
+    private fun buildHistory(consultationDetails: ConsultationDetailsV2WithInfo): List<History> {
+        return consultationDetails.history.map { historyItem ->
             History(
                 updateId = historyItem.consultationUpdateId,
                 type = when (historyItem.type) {

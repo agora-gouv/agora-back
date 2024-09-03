@@ -11,14 +11,9 @@ import org.springframework.web.bind.annotation.RestController
 class ParticipationCharterController(
     private val useCase: ParticipationCharterUseCase,
 ) {
-
     @GetMapping("/participation_charter")
     fun getParticipationCharterText(): ResponseEntity<*> {
-        return ResponseEntity.ok().body(
-            ParticipationCharterJson(
-                extraText = useCase.getParticipationCharterText(),
-            )
-        )
+        return ResponseEntity.ok()
+            .body(ParticipationCharterJson(useCase.getParticipationCharterText()))
     }
-
 }
