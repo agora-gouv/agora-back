@@ -15,6 +15,11 @@ class ParticipationCharterController(
     fun getParticipationCharterText(): ResponseEntity<ParticipationCharterJson> {
         val participationCharter = useCase.getParticipationCharterText()
         return ResponseEntity.ok()
-            .body(ParticipationCharterJson(participationCharter.text, participationCharter.preview))
+            .body(
+                ParticipationCharterJson(
+                    "<body>${participationCharter.text}</body>",
+                    "<body>${participationCharter.preview}</body>"
+                )
+            )
     }
 }

@@ -20,13 +20,13 @@ class ParticipationCharterRepositoryImpl(
     override fun getLatestParticipationCharter(): ParticipationCharter {
         val now = LocalDateTime.now(clock)
         return if (featureFlagsRepository.isFeatureEnabled(StrapiParticipationCharter)) {
-            val charte = participationCharterStrapiRepository.getLastParticipationCharter(now)
-                ?.attributes?.charte?.toHtml()?.let { "<body>$it</body>" } ?: ""
-            val preview = participationCharterStrapiRepository.getLastParticipationCharter(now)
-                ?.attributes?.chartePreview?.toHtml()?.let { "<body>$it</body>" } ?: ""
-            return ParticipationCharter(charte, preview)
+            val lastParticipationCharter = participationCharterStrapiRepository.getLastParticipationCharter(now).attributes
+            val charte = lastParticipationCharter.charte.toHtml()
+            val preview = lastParticipationCharter.chartePreview.toHtml()
+
+            ParticipationCharter(charte, preview)
         } else {
-            return ParticipationCharter(databaseRepository.getLatestParticipationCharterText(now), "")
+            ParticipationCharter(databaseRepository.getLatestParticipationCharterText(now), "")
         }
     }
 }
