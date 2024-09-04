@@ -12,8 +12,14 @@ class ParticipationCharterController(
     private val useCase: ParticipationCharterUseCase,
 ) {
     @GetMapping("/participation_charter")
-    fun getParticipationCharterText(): ResponseEntity<*> {
+    fun getParticipationCharterText(): ResponseEntity<ParticipationCharterJson> {
+        val participationCharter = useCase.getParticipationCharterText()
         return ResponseEntity.ok()
-            .body(ParticipationCharterJson(useCase.getParticipationCharterText()))
+            .body(
+                ParticipationCharterJson(
+                    "<body>${participationCharter.text}</body>",
+                    "<body>${participationCharter.preview}</body>"
+                )
+            )
     }
 }
