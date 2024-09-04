@@ -26,10 +26,7 @@ class FeatureFlagsRepositoryImpl(
     private fun toKey(feature: AgoraFeature) = when (feature) {
         AgoraFeature.SignUp -> "IS_SIGNUP_ENABLED"
         AgoraFeature.Login -> "IS_LOGIN_ENABLED"
-        AgoraFeature.AskQuestion -> "IS_ASK_QUESTION_ENABLED"
         AgoraFeature.QagSelect -> "IS_QAG_SELECT_ENABLED"
-        AgoraFeature.QagArchive -> "IS_QAG_ARCHIVE_ENABLED"
-        AgoraFeature.SimilarQag -> "IS_SIMILAR_QAG_ENABLED"
         AgoraFeature.FeedbackResponseQag -> "IS_FEEDBACK_ON_RESPONSE_QAG_ENABLED"
         AgoraFeature.FeedbackConsultationUpdate -> "IS_FEEDBACK_ON_CONSULTATION_UPDATE_ENABLED"
         AgoraFeature.SuspiciousUserDetection -> "IS_SUSPICIOUS_USER_DETECTION_ENABLED"

@@ -26,11 +26,7 @@ class InsertSupportQagUseCase(
     private val logger: Logger = LoggerFactory.getLogger(InsertSupportQagUseCase::class.java)
 
     fun insertSupportQag(supportQagInserting: SupportQagInserting): SupportQagResult {
-        if (getSupportQagRepository.isQagSupported(
-                qagId = supportQagInserting.qagId,
-                userId = supportQagInserting.userId,
-            )
-        ) {
+        if (getSupportQagRepository.isQagSupported(supportQagInserting.userId, supportQagInserting.qagId)) {
             logger.debug("⚠️ Add support error: already supported")
             return SupportQagResult.FAILURE
         }
