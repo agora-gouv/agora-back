@@ -8,7 +8,9 @@ import java.time.LocalDateTime
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class ParticipationCharterStrapiDTO(
     @JsonProperty("charte")
-    val charte: List<StrapiRichText>?,
+    val charte: List<StrapiRichText>,
+    @JsonProperty("charte_preview")
+    val chartePreview: List<StrapiRichText>,
     @JsonProperty("datetime_debut")
     val datetimeDebut: LocalDateTime,
 )
