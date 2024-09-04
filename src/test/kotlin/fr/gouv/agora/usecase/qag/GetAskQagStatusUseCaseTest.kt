@@ -31,9 +31,6 @@ internal class GetAskQagStatusUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @Mock
-    private lateinit var featureFlagsRepository: FeatureFlagsRepository
-
-    @Mock
     private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
 
     private val userId = "userId"
@@ -109,36 +106,13 @@ internal class GetAskQagStatusUseCaseTest {
     }
 
     @Test
-    fun `getAskQagStatus - when feature disabled - should return DISABLED`() {
+    fun `getAskQagStatus - when has cached value - should return cached value`() {
         // Given
         useCase = GetAskQagStatusUseCase(
             qagInfoRepository = qagInfoRepository,
-            featureFlagsRepository = featureFlagsRepository,
             clock = mock(Clock::class.java),
             askQagStatusCacheRepository = askQagStatusCacheRepository,
         )
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(false)
-
-        // When
-        val result = useCase.getAskQagStatus(userId)
-
-        // Then
-        assertThat(result).isEqualTo(AskQagStatus.FEATURE_DISABLED)
-        then(qagInfoRepository).shouldHaveNoInteractions()
-        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.AskQuestion)
-        then(askQagStatusCacheRepository).shouldHaveNoInteractions()
-    }
-
-    @Test
-    fun `getAskQagStatus - when feature enabled and has cached value - should return cached value`() {
-        // Given
-        useCase = GetAskQagStatusUseCase(
-            qagInfoRepository = qagInfoRepository,
-            featureFlagsRepository = featureFlagsRepository,
-            clock = mock(Clock::class.java),
-            askQagStatusCacheRepository = askQagStatusCacheRepository,
-        )
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(true)
         given(askQagStatusCacheRepository.getAskQagStatus(userId = userId)).willReturn(AskQagStatus.WEEKLY_LIMIT_REACHED)
 
         // When
@@ -147,20 +121,17 @@ internal class GetAskQagStatusUseCaseTest {
         // Then
         assertThat(result).isEqualTo(AskQagStatus.WEEKLY_LIMIT_REACHED)
         then(qagInfoRepository).shouldHaveNoInteractions()
-        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.AskQuestion)
         then(askQagStatusCacheRepository).should(only()).getAskQagStatus(userId = userId)
     }
 
     @Test
-    fun `getAskQagStatus - when feature enabled, no cached value and user didn't have Qag - should return ENABLED and put it to cache`() {
+    fun `getAskQagStatus - when no cached value and user didn't have Qag - should return ENABLED and put it to cache`() {
         // Given
         useCase = GetAskQagStatusUseCase(
             qagInfoRepository = qagInfoRepository,
-            featureFlagsRepository = featureFlagsRepository,
             clock = mock(Clock::class.java),
             askQagStatusCacheRepository = askQagStatusCacheRepository,
         )
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(true)
         given(qagInfoRepository.getUserLastQagInfo(userId = userId)).willReturn(null)
         given(askQagStatusCacheRepository.getAskQagStatus(userId = userId)).willReturn(null)
 
@@ -170,7 +141,6 @@ internal class GetAskQagStatusUseCaseTest {
         // Then
         assertThat(result).isEqualTo(AskQagStatus.ENABLED)
         then(qagInfoRepository).should(only()).getUserLastQagInfo(userId = userId)
-        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.AskQuestion)
         then(askQagStatusCacheRepository).should().getAskQagStatus(userId = userId)
         then(askQagStatusCacheRepository).should().initAskQagStatus(userId = userId, status = AskQagStatus.ENABLED)
         then(askQagStatusCacheRepository).shouldHaveNoMoreInteractions()
@@ -187,12 +157,10 @@ internal class GetAskQagStatusUseCaseTest {
     ) {
         useCase = GetAskQagStatusUseCase(
             qagInfoRepository = qagInfoRepository,
-            featureFlagsRepository = featureFlagsRepository,
             clock = TestUtils.getFixedClock(serverDate),
             askQagStatusCacheRepository = askQagStatusCacheRepository,
         )
 
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.AskQuestion)).willReturn(true)
         given(askQagStatusCacheRepository.getAskQagStatus(userId = userId)).willReturn(null)
 
         val qagInfo = mock(QagInfo::class.java).also {
@@ -206,16 +174,9 @@ internal class GetAskQagStatusUseCaseTest {
         // Then
         assertThat(result).isEqualTo(expectedStatus)
         then(qagInfoRepository).should(only()).getUserLastQagInfo(userId = userId)
-        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.AskQuestion)
         then(askQagStatusCacheRepository).should().getAskQagStatus(userId = userId)
         then(askQagStatusCacheRepository).should().initAskQagStatus(userId = userId, status = expectedStatus)
         then(askQagStatusCacheRepository).shouldHaveNoMoreInteractions()
     }
 
 }
-
-
-
-
-
-

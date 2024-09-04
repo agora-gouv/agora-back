@@ -42,7 +42,7 @@ internal class ArchiveOldQagUseCaseTest {
     @Test
     fun `archiveOldQag - when feature disabled - should do nothing and return FAILURE`() {
         // Given
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(false)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(false)
         mockDate(LocalDateTime.of(2024, Month.JANUARY, 4, 16, 0, 0))
 
         // When
@@ -50,7 +50,7 @@ internal class ArchiveOldQagUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(ArchiveQagListResult.FAILURE)
-        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
         then(qagInfoRepository).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
         then(qagListsCacheRepository).shouldHaveNoInteractions()
@@ -59,7 +59,7 @@ internal class ArchiveOldQagUseCaseTest {
     @Test
     fun `archiveOldQag - when feature enabled and today is after monday from this week - should call repository with resetDate as monday before today at 14h then return SUCCESS`() {
         // Given
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(true)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(true)
         // Thursday, Thursday 4th 2024, 16h00 => resetDate is Monday, January 1st, 14h00
         val todayDate = LocalDateTime.of(2024, Month.JANUARY, 4, 16, 0, 0)
         val resetDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0, 0)
@@ -70,7 +70,7 @@ internal class ArchiveOldQagUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(ArchiveQagListResult.SUCCESS)
-        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
         then(qagInfoRepository).should(only()).archiveOldQags(resetDate.toDate())
         then(qagListsCacheRepository).should(only()).clear()
     }
@@ -78,7 +78,7 @@ internal class ArchiveOldQagUseCaseTest {
     @Test
     fun `archiveOldQag - when feature enabled and today is before reset date - should call repository with resetDate as monday after today at 14h then return SUCCESS`() {
         // Given
-        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive)).willReturn(true)
+        given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(true)
         // Monday, January 1st 2024, 10h00 => resetDate is Monday, January 1st, 14h00
         val todayDate = LocalDateTime.of(2024, Month.JANUARY, 1, 10, 0, 0)
         val resetDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0, 0)
@@ -89,7 +89,7 @@ internal class ArchiveOldQagUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(ArchiveQagListResult.SUCCESS)
-        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagArchive)
+        then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
         then(qagInfoRepository).should(only()).archiveOldQags(resetDate.toDate())
         then(askQagStatusCacheRepository).should(only()).clear()
         then(qagListsCacheRepository).should(only()).clear()
