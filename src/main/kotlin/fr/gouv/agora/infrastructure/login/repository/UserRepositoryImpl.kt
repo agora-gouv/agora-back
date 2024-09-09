@@ -62,7 +62,8 @@ class UserRepositoryImpl(
     }
 
     override fun changeAuthorizationLevel(userIDs: List<String>, authorizationLevel: AuthorizationLevel): Int {
-        val numberOfChange = databaseRepository.updateAuthorizationLevel(userIDs, authorizationLevel.value)
+        val usersUUID = userIDs.mapNotNull { it.toUuidOrNull() }
+        val numberOfChange = databaseRepository.updateAuthorizationLevel(usersUUID, authorizationLevel.value)
         return numberOfChange
     }
 
