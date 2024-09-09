@@ -44,10 +44,10 @@ interface UserDatabaseRepository : JpaRepository<UserDTO, UUID> {
     @Transactional
     @Query(
         value = """UPDATE agora_users
-            SET authorization_level = :authorization_level
+            SET authorization_level = :authorizationLevel
             WHERE id IN :usersId
             """,
         nativeQuery = true
     )
-    fun updateAuthorizationLevel(@Param("usersId") usersId: List<String>, @Param("authorizationLevel") authorizationLevel: Int): Int
+    fun updateAuthorizationLevel(@Param("usersId") usersId: List<UUID>, @Param("authorizationLevel") authorizationLevel: Int): Int
 }
