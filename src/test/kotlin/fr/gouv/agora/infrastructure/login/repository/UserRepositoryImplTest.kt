@@ -22,7 +22,7 @@ internal class UserRepositoryImplTest {
     private lateinit var repository: UserRepositoryImpl
 
     @Mock
-    private lateinit var databaseRepository: LoginDatabaseRepository
+    private lateinit var databaseRepository: UserDatabaseRepository
 
     @Mock
     private lateinit var cacheRepository: LoginCacheRepository
@@ -255,4 +255,3 @@ internal class UserRepositoryImplTest {
     }
 
 }
-
