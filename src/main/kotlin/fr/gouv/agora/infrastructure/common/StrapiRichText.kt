@@ -120,10 +120,10 @@ data class StrapiRichListNode(
 ) : StrapiRichText {
     override fun toHtml(): String {
         if (format == "ordered") {
-            return "<ol>${children.toHtml()}</ol>"
+            return "<ol>${children.toHtml()}</ol><br/>"
         }
 
-        return "<ul>${children.toHtml()}</ul>"
+        return "<ul>${children.toHtml()}</ul><br/>"
     }
 }
 

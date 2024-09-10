@@ -12,7 +12,7 @@ import java.util.UUID
 
 @Component
 class UserRepositoryImpl(
-    private val databaseRepository: LoginDatabaseRepository,
+    private val databaseRepository: UserDatabaseRepository,
     private val cacheRepository: LoginCacheRepository,
     private val mapper: UserInfoMapper,
 ) : UserRepository {
@@ -59,6 +59,13 @@ class UserRepositoryImpl(
         userUUIDs.forEach { userUUID ->
             cacheRepository.deleteUser(userUUID)
         }
+    }
+
+    override fun changeAuthorizationLevel(userIDs: List<String>, authorizationLevel: AuthorizationLevel): Int {
+        val usersUUID = userIDs.mapNotNull { it.toUuidOrNull() }
+        val numberOfChange = databaseRepository.updateAuthorizationLevel(usersUUID, authorizationLevel.value)
+
+        return numberOfChange
     }
 
     private fun getUserDTO(userUUID: UUID): UserDTO? {

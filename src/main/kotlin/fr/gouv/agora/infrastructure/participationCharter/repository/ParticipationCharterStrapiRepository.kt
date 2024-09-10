@@ -15,12 +15,12 @@ class ParticipationCharterStrapiRepository(
 ) {
     val ref = object : TypeReference<StrapiDTO<ParticipationCharterStrapiDTO>>() {}
 
-    fun getLastParticipationCharter(now: LocalDateTime): StrapiAttributes<ParticipationCharterStrapiDTO>? {
+    fun getLastParticipationCharter(now: LocalDateTime): StrapiAttributes<ParticipationCharterStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("charte-participations")
             .withDateBefore(now, "datetime_debut")
             .sortBy("datetime_debut", "desc")
 
         return cmsStrapiHttpClient.request<ParticipationCharterStrapiDTO>(uriBuilder, ref).data
-            .firstOrNull()
+            .first()
     }
 }

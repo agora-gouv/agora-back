@@ -43,7 +43,7 @@ data class ConsultationDetailsV2Json(
     @JsonProperty("goals")
     val goals: List<Goal>?,
     @JsonProperty("history")
-    val history: List<History>?,
+    val history: List<History>,
 ) {
 
     data class QuestionsInfo(

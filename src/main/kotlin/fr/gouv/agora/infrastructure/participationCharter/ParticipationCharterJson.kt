@@ -5,4 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class ParticipationCharterJson(
     @JsonProperty("extraText")
     val extraText: String,
+    @JsonProperty("previewText")
+    val previewText: String,
 )

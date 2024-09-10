@@ -24,7 +24,7 @@ class ArchiveOldQagUseCase(
     private val logger: Logger = LoggerFactory.getLogger(ArchiveOldQagUseCase::class.java)
 
     fun archiveOldQag(): ArchiveQagListResult {
-        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagArchive).not()) return ArchiveQagListResult.FAILURE
+        if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect).not()) return ArchiveQagListResult.FAILURE
 
         logger.info("📜️ Archiving old QaGs...")
         val mondayThisWeek = LocalDateTime.now(clock).with(DayOfWeek.MONDAY).withHour(14).withMinute(0).withSecond(0)

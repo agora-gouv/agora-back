@@ -12,6 +12,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedbackCacheResult
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
+import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateHistoryRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateV2Repository
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.feedbackConsultationUpdate.repository.FeedbackConsultationUpdateRepository
@@ -26,6 +27,7 @@ class ConsultationDetailsUpdateV2UseCase(
     private val feedbackRepository: FeedbackConsultationUpdateRepository,
     private val cacheRepository: ConsultationDetailsV2CacheRepository,
     private val authentificationHelper: AuthentificationHelper,
+    private val historyRepository: ConsultationUpdateHistoryRepository,
 ) {
     fun getConsultationDetailsUpdate(
         consultationIdOrSlug: String,
@@ -52,7 +54,7 @@ class ConsultationDetailsUpdateV2UseCase(
             consultation = details.consultation,
             update = details.update,
             feedbackStats = details.feedbackStats,
-            history = details.history,
+            history = historyRepository.getConsultationUpdateHistory(details.getConsultationId()),
             participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
                 getParticipantCount(consultationIdOrSlug)
             } else 0,
@@ -70,23 +72,17 @@ class ConsultationDetailsUpdateV2UseCase(
             consultationInfo.id,
             consultationUpdateIdOrSlug,
         ) ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
+        val history = historyRepository.getConsultationUpdateHistory(consultationInfo.id)
 
-        val details = ConsultationDetailsV2(
+        return ConsultationDetailsV2WithInfo(
             consultation = consultationInfo,
             update = update,
             feedbackStats = getFeedbackStats(update),
-            history = null,
-        )
-
-        return ConsultationDetailsV2WithInfo(
-            consultation = details.consultation,
-            update = details.update,
-            feedbackStats = details.feedbackStats,
-            history = details.history,
-            participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
+            history = history,
+            participantCount = if (update.hasParticipationInfo || update.hasQuestionsInfo) {
                 getParticipantCount(consultationIdOrSlug)
             } else 0,
-            isUserFeedbackPositive = getUserFeedback(details.update),
+            isUserFeedbackPositive = getUserFeedback(update),
         )
     }
 
@@ -103,7 +99,6 @@ class ConsultationDetailsUpdateV2UseCase(
                     consultation = consultationInfo,
                     update = update,
                     feedbackStats = getFeedbackStats(update),
-                    history = null,
                 )
             }
         } ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)

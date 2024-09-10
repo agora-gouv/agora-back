@@ -31,8 +31,6 @@ class ConsultationDetailsUpdateV2Controller(
             useCase.getConsultationDetailsUpdate(consultationIdOrSlug, consultationUpdateIdOrSlug)
         }
 
-        if (consultationDetails == null) return ResponseEntity.notFound().build()
-
         return ResponseEntity.ok().body(mapper.toJson(consultationDetails))
     }
 }

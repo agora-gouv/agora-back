@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Repository
-interface LoginDatabaseRepository : JpaRepository<UserDTO, UUID> {
+interface UserDatabaseRepository : JpaRepository<UserDTO, UUID> {
 
     @Query("SELECT * FROM agora_users WHERE id = :userId LIMIT 1", nativeQuery = true)
     fun getUserById(@Param("userId") userId: UUID): UserDTO?
@@ -39,4 +39,15 @@ interface LoginDatabaseRepository : JpaRepository<UserDTO, UUID> {
     @Transactional
     @Query(value = "DELETE FROM agora_users WHERE id IN :userIDs", nativeQuery = true)
     fun deleteUsers(@Param("userIDs") userIDs: List<UUID>)
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """UPDATE agora_users
+            SET authorization_level = :authorizationLevel
+            WHERE id IN :usersId
+            """,
+        nativeQuery = true
+    )
+    fun updateAuthorizationLevel(@Param("usersId") usersId: List<UUID>, @Param("authorizationLevel") authorizationLevel: Int): Int
 }
