@@ -4,5 +4,5 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 
 interface ConsultationPreviewFinishedRepository {
     fun getConsultationFinishedCount(): Int
-    fun getConsultationFinishedList(offset: Int): List<ConsultationWithUpdateInfo>
+    fun getConsultationFinishedList(offset: Int, pageSize: Int): List<ConsultationWithUpdateInfo>
 }

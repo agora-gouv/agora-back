@@ -103,11 +103,11 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
             OFFSET :offset
-            LIMIT 20
+            LIMIT :pageSize
         """,
         nativeQuery = true
     )
-    fun getConsultationsFinishedWithUpdateInfo(@Param("offset") offset: Int): List<ConsultationWithUpdateInfoDTO>
+    fun getConsultationsFinishedWithUpdateInfo(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int): List<ConsultationWithUpdateInfoDTO>
 
     @Query(
         value = """SELECT COUNT(*)

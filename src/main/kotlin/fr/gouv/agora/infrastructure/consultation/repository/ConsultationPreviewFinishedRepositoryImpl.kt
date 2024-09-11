@@ -14,8 +14,8 @@ class ConsultationPreviewFinishedRepositoryImpl(
         return databaseRepository.getConsultationFinishedCount()
     }
 
-    override fun getConsultationFinishedList(offset: Int): List<ConsultationWithUpdateInfo> {
-        return databaseRepository.getConsultationsFinishedWithUpdateInfo(offset)
+    override fun getConsultationFinishedList(offset: Int, pageSize: Int): List<ConsultationWithUpdateInfo> {
+        return databaseRepository.getConsultationsFinishedWithUpdateInfo(offset, pageSize)
             .map(mapper::toConsultationWithUpdateInfo)
     }
 
