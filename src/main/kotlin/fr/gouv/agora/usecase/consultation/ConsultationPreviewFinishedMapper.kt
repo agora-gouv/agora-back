@@ -21,6 +21,7 @@ class ConsultationPreviewFinishedMapper {
             endDate = consultationInfo.endDate,
             lastUpdateDate = consultationInfo.updateDate,
             isPublished = true,
+            territory = consultationInfo.territory,
         )
     }
 }

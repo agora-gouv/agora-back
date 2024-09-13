@@ -27,6 +27,8 @@ data class ConsultationOngoingJson(
     val thematique: ThematiqueNoIdJson,
     @JsonProperty("highlightLabel")
     val highlightLabel: String?,
+    @JsonProperty("territory")
+    val territory: String,
 )
 
 data class ConsultationFinishedJson(
@@ -46,4 +48,6 @@ data class ConsultationFinishedJson(
     val updateLabel: String?,
     @JsonProperty("updateDate")
     val updateDate: String,
+    @JsonProperty("territory")
+    val territory: String,
 )

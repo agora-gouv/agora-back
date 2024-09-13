@@ -46,21 +46,21 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
                 expectedMaxPageNumber = 1,
             ),
             input(
-                consultationFinishedCount = 21,
+                consultationFinishedCount = 121,
                 pageNumber = 1,
                 expectedOffset = 0,
                 expectedMaxPageNumber = 2,
             ),
             input(
-                consultationFinishedCount = 39,
+                consultationFinishedCount = 139,
                 pageNumber = 2,
-                expectedOffset = 20,
+                expectedOffset = 100,
                 expectedMaxPageNumber = 2,
             ),
             input(
-                consultationFinishedCount = 80,
+                consultationFinishedCount = 380,
                 pageNumber = 3,
-                expectedOffset = 40,
+                expectedOffset = 200,
                 expectedMaxPageNumber = 4,
             ),
         )
@@ -125,8 +125,8 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         val thematique = mock(Thematique::class.java)
         val consultationPreviewFinished = mock(ConsultationPreviewFinished::class.java)
 
-        given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(34)
-        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = 0))
+        given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(134)
+        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = 0, pageSize = 100))
             .willReturn(listOf(consultationInfo, consultationInfoWithoutThematique))
         given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
         given(
@@ -150,7 +150,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         then(cacheRepository).should().initConsultationFinishedPage(pageNumber = 1, content = pageContent)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
-        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = 0)
+        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = 0, pageSize = 100)
         then(consultationPreviewFinishedRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(only())
             .toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)
@@ -173,7 +173,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         val consultationPreviewFinished = mock(ConsultationPreviewFinished::class.java)
 
         given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(consultationFinishedCount)
-        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = expectedOffset))
+        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = expectedOffset, pageSize = 100))
             .willReturn(listOf(consultationInfo))
         given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
         given(
@@ -197,7 +197,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         then(cacheRepository).should().initConsultationFinishedPage(pageNumber = pageNumber, content = pageContent)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
-        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = expectedOffset)
+        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = expectedOffset, pageSize = 100)
         then(consultationPreviewFinishedRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(only())
             .toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)

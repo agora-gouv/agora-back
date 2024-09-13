@@ -1,7 +1,7 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.infrastructure.consultation.dto.ConsultationDTO
-import fr.gouv.agora.infrastructure.consultation.dto.ConsultationWithUpdateInfoDTO
+import fr.gouv.agora.infrastructure.consultation.dto.ConsultationWithUpdateInfoDatabaseDTO
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -63,7 +63,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
         """,
         nativeQuery = true
     )
-    fun getConsultationsFinishedPreviewWithUpdateInfo(@Param("today") today: LocalDateTime): List<ConsultationWithUpdateInfoDTO>
+    fun getConsultationsFinishedPreviewWithUpdateInfo(@Param("today") today: LocalDateTime): List<ConsultationWithUpdateInfoDatabaseDTO>
 
     @Query(
         value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
@@ -77,7 +77,7 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
         """,
         nativeQuery = true
     )
-    fun getConsultationsPreviewWithUpdateInfo(@Param("consultationsId") consultationsId: List<UUID>): List<ConsultationWithUpdateInfoDTO>
+    fun getConsultationsPreviewWithUpdateInfo(@Param("consultationsId") consultationsId: List<UUID>): List<ConsultationWithUpdateInfoDatabaseDTO>
 
     @Query(
         value = """SELECT COUNT(*)
@@ -103,11 +103,11 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
             ) as consultationAndUpdates
             WHERE consultationRowNumber = 1
             OFFSET :offset
-            LIMIT 20
+            LIMIT :pageSize
         """,
         nativeQuery = true
     )
-    fun getConsultationsFinishedWithUpdateInfo(@Param("offset") offset: Int): List<ConsultationWithUpdateInfoDTO>
+    fun getConsultationsFinishedWithUpdateInfo(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int): List<ConsultationWithUpdateInfoDatabaseDTO>
 
     @Query(
         value = """SELECT COUNT(*)
@@ -140,5 +140,5 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     fun getConsultationsAnsweredWithUpdateInfo(
         @Param("userId") userId: UUID,
         @Param("offset") offset: Int,
-    ): List<ConsultationWithUpdateInfoDTO>
+    ): List<ConsultationWithUpdateInfoDatabaseDTO>
 }

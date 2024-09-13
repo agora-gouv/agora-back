@@ -16,7 +16,7 @@ class ConsultationsFinishedPaginatedListUseCase(
     private val cacheRepository: ConsultationFinishedPaginatedListCacheRepository,
 ) {
     companion object {
-        private const val MAX_PAGE_LIST_SIZE = 20
+        private const val MAX_PAGE_LIST_SIZE = 100
     }
 
     fun getConsultationFinishedPaginatedList(pageNumber: Int): ConsultationFinishedPaginatedList? {
@@ -30,7 +30,7 @@ class ConsultationsFinishedPaginatedListUseCase(
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (offset > consultationsCount) return null
 
-        val consultationFinishedList = consultationPreviewFinishedRepository.getConsultationFinishedList(offset)
+        val consultationFinishedList = consultationPreviewFinishedRepository.getConsultationFinishedList(offset, MAX_PAGE_LIST_SIZE)
             .mapNotNull { consultationInfo ->
                 thematiqueRepository.getThematique(consultationInfo.thematiqueId)
                     ?.let { thematique ->
@@ -48,7 +48,6 @@ class ConsultationsFinishedPaginatedListUseCase(
             maxPageNumber = maxPageNumber,
         ).also { cacheRepository.initConsultationFinishedPage(pageNumber = pageNumber, content = it) }
     }
-
 }
 
 data class ConsultationFinishedPaginatedList(

@@ -11,6 +11,7 @@ data class ConsultationPreview(
     val thematique: Thematique,
     val endDate: LocalDateTime,
     val isPublished: Boolean,
+    val territory: String,
 ) {
     fun highlightLabel(today: LocalDateTime): String? {
         val daysDifference = ChronoUnit.DAYS.between(today, endDate)
@@ -37,6 +38,7 @@ data class ConsultationPreviewFinished(
     val lastUpdateDate: LocalDateTime,
     val endDate: LocalDateTime,
     val isPublished: Boolean,
+    val territory: String,
 ) {
     fun getStep(now: LocalDateTime): ConsultationStatus {
         return if (now.isBefore(this.endDate)) {

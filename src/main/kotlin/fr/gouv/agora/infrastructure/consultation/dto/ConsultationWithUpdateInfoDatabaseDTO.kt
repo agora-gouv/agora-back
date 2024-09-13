@@ -2,7 +2,7 @@ package fr.gouv.agora.infrastructure.consultation.dto
 
 import java.util.*
 
-interface ConsultationWithUpdateInfoDTO {
+interface ConsultationWithUpdateInfoDatabaseDTO {
     val id: UUID
     val slug: String
     val title: String
