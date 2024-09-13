@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController
 class ReferentielController {
     @Operation(summary = "Récupérer les régions et les départements français")
     @GetMapping("/regions-et-departements")
-    fun getRegionsEtDepartements(): ResponseEntity<Map<String, List<String>>> {
-        val regionsEtDepartements = mapOf(
-            "Auvergne-Rhône-Alpes" to listOf(
+    fun getRegionsEtDepartements(): ResponseEntity<List<RegionJson>> {
+        val regionsEtDepartements = listOf(
+            RegionJson("Auvergne-Rhône-Alpes", listOf(
                 "Ain",
                 "Allier",
                 "Ardèche",
@@ -28,8 +28,8 @@ class ReferentielController {
                 "Rhône",
                 "Savoie",
                 "Haute-Savoie",
-            ),
-            "Bourgogne-Franche-Comté" to listOf(
+            )),
+            RegionJson("Bourgogne-Franche-Comté",listOf(
                 "Côte-d’Or",
                 "Doubs",
                 "Jura",
@@ -38,26 +38,26 @@ class ReferentielController {
                 "Saône-et-Loire",
                 "Yonne",
                 "Territoire de Belfort",
-            ),
-            "Bretagne" to listOf(
+            )),
+            RegionJson("Bretagne",listOf(
                 "Côtes-d’Armor",
                 "Finistère",
                 "Ille-et-Vilaine",
                 "Morbihan",
-            ),
-            "Centre-Val de Loire" to listOf(
+            )),
+            RegionJson("Centre-Val de Loire",listOf(
                 "Cher",
                 "Eure-et-Loir",
                 "Indre",
                 "Indre-et-Loire",
                 "Loir-et-Cher",
                 "Loiret",
-            ),
-            "Corse" to listOf(
+            )),
+            RegionJson("Corse",listOf(
                 "Corse-du-Sud",
                 "Haute-Corse",
-            ),
-            "Grand Est" to listOf(
+            )),
+            RegionJson("Grand Est",listOf(
                 "Ardennes",
                 "Aube",
                 "Marne",
@@ -68,15 +68,15 @@ class ReferentielController {
                 "Bas-Rhin",
                 "Haut-Rhin",
                 "Vosges",
-            ),
-            "Hauts-de-France" to listOf(
+            )),
+            RegionJson("Hauts-de-France",listOf(
                 "Aisne",
                 "Nord",
                 "Oise",
                 "Pas-de-Calais",
                 "Somme",
-            ),
-            "Ile-de-France" to listOf(
+            )),
+            RegionJson("Ile-de-France",listOf(
                 "Paris",
                 "Seine-et-Marne",
                 "Yvelines",
@@ -85,15 +85,15 @@ class ReferentielController {
                 "Seine-Saint-Denis",
                 "Val-de-Marne",
                 "Val-d’Oise",
-            ),
-            "Normandie" to listOf(
+            )),
+            RegionJson("Normandie",listOf(
                 "Calvados",
                 "Eure",
                 "Manche",
                 "Orne",
                 "Seine-Maritime",
-            ),
-            "Nouvelle-Aquitaine" to listOf(
+            )),
+            RegionJson("Nouvelle-Aquitaine",listOf(
                 "Charente",
                 "Charente-Maritime",
                 "Corrèze",
@@ -106,8 +106,8 @@ class ReferentielController {
                 "Deux-Sèvres",
                 "Vienne",
                 "Haute-Vienne",
-            ),
-            "Occitanie" to listOf(
+            )),
+            RegionJson("Occitanie",listOf(
                 "Ariège",
                 "Aude",
                 "Aveyron",
@@ -121,35 +121,36 @@ class ReferentielController {
                 "Pyrénées-Orientales",
                 "Tarn",
                 "Tarn-et-Garonne",
-            ),
-            "Pays de la Loire" to listOf(
+            )),
+            RegionJson("Pays de la Loire",listOf(
                 "Loire-Atlantique",
                 "Maine-et-Loire",
                 "Mayenne",
                 "Sarthe",
                 "Vendée",
-            ),
-            "Provence Alpes Côte d’Azur" to listOf(
+            )),
+            RegionJson("Provence Alpes Côte d’Azur",listOf(
                 "Alpes-de-Haute-Provence",
                 "Hautes-Alpes",
                 "Alpes-Maritimes",
                 "Bouches-du-Rhône",
                 "Var",
                 "Vaucluse",
-            ),
-            "Guadeloupe" to emptyList(),
-            "Martinique" to emptyList(),
-            "Guyane" to emptyList(),
-            "La Réunion" to emptyList(),
-            "Mayotte" to emptyList(),
-            "Saint-Pierre-et-Miquelon" to emptyList(),
-            "Saint-Barthélémy" to emptyList(),
-            "Saint-Martin" to emptyList(),
-            "Terres australes et antarctiques françaises" to emptyList(),
-            "Wallis-et-Futuna" to emptyList(),
-            "Polynésie française" to emptyList(),
-            "Nouvelle-Calédonie" to emptyList(),
+            )),
+            RegionJson("Guadeloupe",emptyList()),
+            RegionJson("Martinique",emptyList()),
+            RegionJson("Guyane",emptyList()),
+            RegionJson("La Réunion",emptyList()),
+            RegionJson("Mayotte",emptyList()),
+            RegionJson("Saint-Pierre-et-Miquelon",emptyList()),
+            RegionJson("Saint-Barthélémy",emptyList()),
+            RegionJson("Saint-Martin",emptyList()),
+            RegionJson("Terres australes et antarctiques françaises",emptyList()),
+            RegionJson("Wallis-et-Futuna",emptyList()),
+            RegionJson("Polynésie française",emptyList()),
+            RegionJson("Nouvelle-Calédonie",emptyList()),
         )
+
         return ResponseEntity.ok().body(regionsEtDepartements)
     }
 }
