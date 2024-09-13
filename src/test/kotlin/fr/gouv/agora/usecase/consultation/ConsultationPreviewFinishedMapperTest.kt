@@ -104,6 +104,7 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 30, 18, 45))
             given(it.updateLabel).willReturn(null)
             given(it.updateDate).willReturn(updateDate)
+            given(it.territory).willReturn("National")
         }
         val thematique = mock(Thematique::class.java)
 
@@ -128,6 +129,7 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.endDate).willReturn(LocalDateTime.of(2024, Month.JANUARY, 1, 4, 15))
             given(it.updateLabel).willReturn(null)
             given(it.updateDate).willReturn(updateDate)
+            given(it.territory).willReturn("National")
         }
         val thematique = mock(Thematique::class.java)
 
@@ -152,6 +154,7 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.endDate).willReturn(now)
             given(it.updateLabel).willReturn(null)
             given(it.updateDate).willReturn(updateDate)
+            given(it.territory).willReturn("National")
         }
         val thematique = mock(Thematique::class.java)
 
@@ -183,6 +186,7 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.endDate).willReturn(LocalDateTime.MIN)
             lenientGiven(it.updateDate).willReturn(updateDate)
             given(it.updateLabel).willReturn(updateLabel)
+            given(it.territory).willReturn("National")
         }
         val thematique = mock(Thematique::class.java)
 

@@ -19,6 +19,7 @@ class ConsultationPreviewOngoingMapper {
             thematique = thematique,
             endDate = consultationInfo.endDate,
             isPublished = true,
+            territory = consultationInfo.territory,
         )
     }
 }

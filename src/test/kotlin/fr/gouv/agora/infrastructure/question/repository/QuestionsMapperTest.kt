@@ -528,6 +528,7 @@ internal class QuestionsMapperTest {
                       "datetime_de_debut": "2024-07-22T22:00:00.000Z",
                       "datetime_de_fin": "2038-07-14T22:00:00.000Z",
                       "titre_consultation": "Test questions",
+                      "territoire": "Nord",
                       "thematique": {
                         "data": {
                           "id": 17,

@@ -49,6 +49,8 @@ data class ConsultationStrapiDTO(
     val consultationContenuAutres: StrapiDataList<StrapiConsultationContenuAutre>,
     @JsonProperty("consultation_contenu_a_venir")
     val consultationContenuAVenir: StrapiDataNullable<StrapiConsultationAVenir>,
+    @JsonProperty("territoire")
+    val territoire: String,
 ) {
     fun isPublished(): Boolean {
         return publishedAt != null

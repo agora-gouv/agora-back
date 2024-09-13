@@ -40,6 +40,7 @@ class ConsultationStrapiDTOTest {
                   "datetime_de_fin": "2024-07-10T22:00:00.000Z",
                   "titre_consultation": "Agriculture professionnel",
                   "slug": "agriculture-professionnel",
+                  "territoire": "Nord",
                   "thematique": {
                     "data": {
                       "id": 9,

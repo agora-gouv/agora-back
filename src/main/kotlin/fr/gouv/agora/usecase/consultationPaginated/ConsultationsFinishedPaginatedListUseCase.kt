@@ -48,7 +48,6 @@ class ConsultationsFinishedPaginatedListUseCase(
             maxPageNumber = maxPageNumber,
         ).also { cacheRepository.initConsultationFinishedPage(pageNumber = pageNumber, content = it) }
     }
-
 }
 
 data class ConsultationFinishedPaginatedList(
