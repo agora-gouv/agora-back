@@ -1,8 +1,9 @@
 package fr.gouv.agora.usecase.concertations
 
+import fr.gouv.agora.domain.Concertation
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.DateMapper
-import fr.gouv.agora.infrastructure.concertations.ConcertationDTO
+import fr.gouv.agora.infrastructure.concertations.ConcertationDatabaseDTO
 import fr.gouv.agora.infrastructure.concertations.ConcertationJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
@@ -12,21 +13,17 @@ class ConcertationJsonMapper(
     private val thematiqueJsonMapper: ThematiqueJsonMapper,
     private val dateMapper: DateMapper,
 ) {
-    fun toConcertationJson(concertations: List<ConcertationDTO>, thematiques: List<Thematique>): List<ConcertationJson> {
-        return concertations.mapNotNull { concertation ->
-            val thematique = thematiques.firstOrNull { it.id == concertation.thematiqueId.toString() }
-                ?: return@mapNotNull null
-            val thematiqueNoIdJson = thematiqueJsonMapper.toNoIdJson(thematique)
-
+    fun toConcertationJson(concertations: List<Concertation>): List<ConcertationJson> {
+        return concertations.map { concertation ->
             ConcertationJson(
-                concertation.id.toString(),
+                concertation.id,
                 concertation.title,
                 concertation.imageUrl,
                 concertation.externalLink,
-                thematiqueNoIdJson,
+                thematiqueJsonMapper.toNoIdJson(concertation.thematique),
                 concertation.updateLabel,
-                dateMapper.toFormattedDate(concertation.lastUpdateDate),
-                "National" // toutes les concertations de la db (dépréciée) sont nationales
+                dateMapper.toFormattedDate(concertation.updateDate),
+                concertation.territory
             )
         }
     }

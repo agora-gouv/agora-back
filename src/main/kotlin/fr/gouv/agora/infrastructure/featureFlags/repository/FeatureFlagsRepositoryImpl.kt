@@ -37,6 +37,7 @@ class FeatureFlagsRepositoryImpl(
         AgoraFeature.StrapiNews -> "IS_STRAPI_NEWS_ENABLED"
         AgoraFeature.StrapiHeaders -> "IS_STRAPI_HEADERS_ENABLED"
         AgoraFeature.StrapiParticipationCharter -> "IS_STRAPI_PARTICIPATION_CHARTER_ENABLED"
+        AgoraFeature.StrapiConcertations -> "IS_STRAPI_CONCERTATIONS_ENABLED"
     }
 
     private fun getCache() = cacheManager.getCache(FEATURE_FLAGS_CACHE_NAME)
