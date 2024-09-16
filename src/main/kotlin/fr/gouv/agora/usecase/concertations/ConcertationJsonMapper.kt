@@ -26,6 +26,7 @@ class ConcertationJsonMapper(
                 thematiqueNoIdJson,
                 concertation.updateLabel,
                 dateMapper.toFormattedDate(concertation.lastUpdateDate),
+                "National" // toutes les concertations de la db (dépréciée) sont nationales
             )
         }
     }

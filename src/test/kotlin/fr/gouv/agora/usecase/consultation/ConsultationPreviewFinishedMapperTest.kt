@@ -27,7 +27,6 @@ class ConsultationPreviewFinishedMapperTest {
                 testName = "when updateLabel is null - should return null updateLabel",
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
                 updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
-                endDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                 updateLabel = null,
                 expectedUpdateLabel = null,
             ),
@@ -35,7 +34,6 @@ class ConsultationPreviewFinishedMapperTest {
                 testName = "when serverDate < updateDate - should return null updateLabel",
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                 updateDate = LocalDateTime.of(2024, Month.JANUARY, 2, 12, 30),
-                endDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                 updateLabel = "New update !",
                 expectedUpdateLabel = null,
             ),
@@ -43,7 +41,6 @@ class ConsultationPreviewFinishedMapperTest {
                 testName = "when updateDate < serverDate < updateDate+90d - should return updateLabel",
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 7, 12, 30),
                 updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
-                endDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                 updateLabel = "New update !",
                 expectedUpdateLabel = "New update !",
             ),
@@ -51,7 +48,6 @@ class ConsultationPreviewFinishedMapperTest {
                 testName = "when updateDate < updateDate+90d < serverDate - should return null updateLabel",
                 serverDate = LocalDateTime.of(2024, Month.APRIL, 10, 12, 30),
                 updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
-                endDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                 updateLabel = "New update !",
                 expectedUpdateLabel = null,
             ),
@@ -59,7 +55,6 @@ class ConsultationPreviewFinishedMapperTest {
                 testName = "when updateDate = serverDate - should return updateLabel",
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
                 updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
-                endDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                 updateLabel = "New update !",
                 expectedUpdateLabel = "New update !",
             ),
@@ -67,7 +62,6 @@ class ConsultationPreviewFinishedMapperTest {
                 testName = "when updateDate+90d = serverDate - should return updateLabel",
                 serverDate = LocalDateTime.of(2024, Month.MARCH, 31, 12, 30),
                 updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
-                endDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                 updateLabel = "New update !",
                 expectedUpdateLabel = "New update !",
             ),
@@ -75,7 +69,6 @@ class ConsultationPreviewFinishedMapperTest {
                 testName = "when updateDate+90d + 1s = serverDate - should return null updateLabel",
                 serverDate = LocalDateTime.of(2024, Month.MARCH, 31, 12, 30, 1),
                 updateDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30),
-                endDate = LocalDateTime.of(2024, Month.JANUARY, 1, 14, 0),
                 updateLabel = "New update !",
                 expectedUpdateLabel = null,
             ),
@@ -87,8 +80,7 @@ class ConsultationPreviewFinishedMapperTest {
             updateDate: LocalDateTime,
             updateLabel: String?,
             expectedUpdateLabel: String?,
-            endDate: LocalDateTime,
-        ) = arrayOf(testName, serverDate, updateDate, endDate, updateLabel, expectedUpdateLabel)
+        ) = arrayOf(testName, serverDate, updateDate, updateLabel, expectedUpdateLabel)
     }
 
     @Test
@@ -173,7 +165,6 @@ class ConsultationPreviewFinishedMapperTest {
         testName: String,
         serverDate: LocalDateTime,
         updateDate: LocalDateTime,
-        endDate: LocalDateTime,
         updateLabel: String?,
         expectedUpdateLabel: String?,
     ) {
