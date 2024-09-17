@@ -11,7 +11,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Entity(name = "concertations")
-data class ConcertationDTO(
+data class ConcertationDatabaseDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")

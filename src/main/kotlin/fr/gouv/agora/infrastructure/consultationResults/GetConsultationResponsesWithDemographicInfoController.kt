@@ -4,6 +4,7 @@ import fr.gouv.agora.usecase.consultationResponse.GetConsultationResultsWithDemo
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Encoding
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
@@ -42,7 +43,7 @@ class GetConsultationResponsesWithDemographicInfoController(
         ) consultationId: String
     ): ResponseEntity<*> {
         return consultationResultsUseCase.getConsultationResults(consultationId)?.let { consultationResult ->
-            ResponseEntity.ok().header("Content-Type", "text/plain").body(mapper.buildTsvBody(consultationResult))
+            ResponseEntity.ok().header("Content-Type", "text/plain;charset=UTF-8").body(mapper.buildTsvBody(consultationResult))
         } ?: ResponseEntity.badRequest().body(Unit)
     }
 
