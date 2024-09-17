@@ -19,5 +19,5 @@ data class ConcertationStrapiDTO(
     @JsonProperty(value = "thematique")
     val thematique: StrapiData<StrapiThematiqueDTO>,
     @JsonProperty("flamme_label")
-    val flammeLabel: String,
+    val flammeLabel: String?,
 )
