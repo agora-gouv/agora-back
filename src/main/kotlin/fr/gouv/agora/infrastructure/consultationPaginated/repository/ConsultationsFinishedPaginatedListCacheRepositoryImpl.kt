@@ -16,9 +16,11 @@ class ConsultationsFinishedPaginatedListCacheRepositoryImpl(
         private const val CONSULTATIONS_FINISHED_PAGINATED_CACHE_NAME = "consultationsFinishedPaginated"
     }
 
-    override fun getConsultationFinishedPage(pageNumber: Int): ConsultationFinishedPaginatedList? {
+    override fun getConsultationFinishedPage(pageNumber: Int, territory: String?): ConsultationFinishedPaginatedList? {
+        val key = getKey(pageNumber, territory)
+
         return try {
-            getCache()?.get("$pageNumber", String::class.java)?.let { cacheContent ->
+            getCache()?.get(key, String::class.java)?.let { cacheContent ->
                 objectMapper.readValue(cacheContent, ConsultationFinishedPaginatedList::class.java)
             }
         } catch (e: Exception) {
@@ -29,8 +31,17 @@ class ConsultationsFinishedPaginatedListCacheRepositoryImpl(
     override fun initConsultationFinishedPage(
         pageNumber: Int,
         content: ConsultationFinishedPaginatedList?,
+        territory: String?,
     ) {
-        getCache()?.put("$pageNumber", objectMapper.writeValueAsString(content))
+        val key = getKey(pageNumber, territory)
+
+        getCache()?.put(key, objectMapper.writeValueAsString(content))
+    }
+
+    private fun getKey(pageNumber: Int, territory: String?): String {
+        return territory?.let {
+            "$territory-$pageNumber"
+        } ?: "$pageNumber"
     }
 
     override fun clearCache() {

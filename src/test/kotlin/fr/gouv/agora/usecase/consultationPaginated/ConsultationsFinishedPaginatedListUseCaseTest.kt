@@ -89,7 +89,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
     fun `getConsultationFinishedPaginatedList - when has cache - should return cached content`() {
         // Given
         val pageContent = mock(ConsultationFinishedPaginatedList::class.java)
-        given(cacheRepository.getConsultationFinishedPage(pageNumber = 1)).willReturn(pageContent)
+        given(cacheRepository.getConsultationFinishedPage(pageNumber = 1, territory = territory)).willReturn(pageContent)
 
         // When
         val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 1)
@@ -146,8 +146,8 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         )
         assertThat(result).isEqualTo(pageContent)
 
-        then(cacheRepository).should().getConsultationFinishedPage(pageNumber = 1)
-        then(cacheRepository).should().initConsultationFinishedPage(pageNumber = 1, content = pageContent)
+        then(cacheRepository).should().getConsultationFinishedPage(pageNumber = 1, territory = territory)
+        then(cacheRepository).should().initConsultationFinishedPage(pageNumber = 1, content = pageContent,)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = 0, pageSize = 100)
@@ -193,8 +193,8 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         )
         assertThat(result).isEqualTo(pageContent)
 
-        then(cacheRepository).should().getConsultationFinishedPage(pageNumber = pageNumber)
-        then(cacheRepository).should().initConsultationFinishedPage(pageNumber = pageNumber, content = pageContent)
+        then(cacheRepository).should().getConsultationFinishedPage(pageNumber = pageNumber, territory = territory)
+        then(cacheRepository).should().initConsultationFinishedPage(pageNumber = pageNumber, content = pageContent,)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = expectedOffset, pageSize = 100)

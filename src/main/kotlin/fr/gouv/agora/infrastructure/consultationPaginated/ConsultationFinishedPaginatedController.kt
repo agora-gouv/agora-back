@@ -17,11 +17,12 @@ class ConsultationFinishedPaginatedController(
     @GetMapping("/consultations/finished/{pageNumber}")
     fun getConsultationFinishedList(
         @PathVariable pageNumber: String,
-    ): ResponseEntity<*> {
+        @RequestParam territory: String?,
+    ): ResponseEntity<ConsultationPaginatedJson> {
         return pageNumber.toIntOrNull()?.let { pageNumberInt ->
-            consultationsFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumber = pageNumberInt)
+            consultationsFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumberInt, territory)
         }?.let { consultationFinishedPaginatedList ->
             ResponseEntity.ok(consultationPaginatedJsonMapper.toJson(consultationFinishedPaginatedList))
-        } ?: ResponseEntity.badRequest().body(Unit)
+        } ?: ResponseEntity.badRequest().build()
     }
 }

@@ -85,4 +85,12 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
             .meta.pagination.total == 1
     }
+
+    fun countFinishedConsultations(date: LocalDateTime): Int {
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .withDateBefore(date, "datetime_de_fin")
+
+        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
+            .meta.pagination.total
+    }
 }

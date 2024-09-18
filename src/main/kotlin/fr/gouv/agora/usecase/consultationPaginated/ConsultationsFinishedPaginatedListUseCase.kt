@@ -19,13 +19,13 @@ class ConsultationsFinishedPaginatedListUseCase(
         private const val MAX_PAGE_LIST_SIZE = 100
     }
 
-    fun getConsultationFinishedPaginatedList(pageNumber: Int): ConsultationFinishedPaginatedList? {
+    fun getConsultationFinishedPaginatedList(pageNumber: Int, territory: String?): ConsultationFinishedPaginatedList? {
         if (pageNumber <= 0) return null
-
-        cacheRepository.getConsultationFinishedPage(pageNumber = pageNumber)?.let { pageContent ->
+        cacheRepository.getConsultationFinishedPage(pageNumber, territory)?.let { pageContent ->
             return pageContent
         }
 
+        // TODO territory
         val consultationsCount = consultationPreviewFinishedRepository.getConsultationFinishedCount()
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (offset > consultationsCount) return null
@@ -46,7 +46,7 @@ class ConsultationsFinishedPaginatedListUseCase(
         return ConsultationFinishedPaginatedList(
             consultationFinishedList = consultationFinishedList,
             maxPageNumber = maxPageNumber,
-        ).also { cacheRepository.initConsultationFinishedPage(pageNumber = pageNumber, content = it) }
+        ).also { cacheRepository.initConsultationFinishedPage(pageNumber = pageNumber, content = it,) }
     }
 }
 

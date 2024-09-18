@@ -153,6 +153,18 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
     )
 
+    fun toConsultationWithUpdateInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>, now: LocalDateTime) = ConsultationWithUpdateInfo(
+        id = consultation.id,
+        slug = consultation.attributes.slug,
+        title = consultation.attributes.titre,
+        coverUrl = consultation.attributes.urlImageDeCouverture,
+        thematiqueId = consultation.attributes.thematique.data.attributes.databaseId,
+        endDate = consultation.attributes.dateDeFin,
+        updateDate = consultation.attributes.dateDeDebut,
+        updateLabel = consultation.attributes.getFlammeLabel(now),
+        territory = consultation.attributes.territoire,
+    )
+
     fun toConsultationInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationInfo {
         return ConsultationInfo(
             id = consultation.id,
