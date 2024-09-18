@@ -126,7 +126,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         val consultationPreviewFinished = mock(ConsultationPreviewFinished::class.java)
 
         given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(134)
-        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = 0, pageSize = 100))
+        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = 0, pageSize = 100,))
             .willReturn(listOf(consultationInfo, consultationInfoWithoutThematique))
         given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
         given(
@@ -150,7 +150,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         then(cacheRepository).should().initConsultationFinishedPage(pageNumber = 1, content = pageContent,)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
-        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = 0, pageSize = 100)
+        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = 0, pageSize = 100,)
         then(consultationPreviewFinishedRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(only())
             .toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)
@@ -173,7 +173,10 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         val consultationPreviewFinished = mock(ConsultationPreviewFinished::class.java)
 
         given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(consultationFinishedCount)
-        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = expectedOffset, pageSize = 100))
+        given(consultationPreviewFinishedRepository.getConsultationFinishedList(
+            offset = expectedOffset,
+            pageSize = 100,
+        ))
             .willReturn(listOf(consultationInfo))
         given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
         given(
@@ -197,7 +200,10 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         then(cacheRepository).should().initConsultationFinishedPage(pageNumber = pageNumber, content = pageContent,)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
-        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = expectedOffset, pageSize = 100)
+        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(
+            offset = expectedOffset,
+            pageSize = 100,
+        )
         then(consultationPreviewFinishedRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(only())
             .toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)

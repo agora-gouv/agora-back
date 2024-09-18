@@ -1,5 +1,6 @@
 package fr.gouv.agora.domain
 
+// TODO refaire cet enum ?
 enum class Department {
     AIN_01,
     AISNE_02,
@@ -49,7 +50,7 @@ enum class Department {
     LOIRET_45,
     LOT_46,
     LOTETGARONNE_47,
-    LAZERE_48,
+    LOZERE_48,
     MAINEETLOIRE_49,
     MANCHE_50,
     MARNE_51,

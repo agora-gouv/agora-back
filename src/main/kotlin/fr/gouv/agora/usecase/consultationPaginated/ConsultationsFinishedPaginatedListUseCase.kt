@@ -30,23 +30,17 @@ class ConsultationsFinishedPaginatedListUseCase(
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (offset > consultationsCount) return null
 
-        val consultationFinishedList = consultationPreviewFinishedRepository.getConsultationFinishedList(offset, MAX_PAGE_LIST_SIZE)
-            .mapNotNull { consultationInfo ->
-                thematiqueRepository.getThematique(consultationInfo.thematiqueId)
-                    ?.let { thematique ->
-                        mapper.toConsultationPreviewFinished(
-                            consultationInfo = consultationInfo,
-                            thematique = thematique,
-                        )
-                    }
-            }
+        val thematiques = thematiqueRepository.getThematiqueList()
+        val consultationFinishedList = consultationPreviewFinishedRepository
+            .getConsultationFinishedList(offset, MAX_PAGE_LIST_SIZE, territory)
+            .let { consultationsInfo -> mapper.toConsultationPreviewFinished(consultationsInfo, thematiques) }
 
         val maxPageNumber = ceil(consultationsCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt()
 
         return ConsultationFinishedPaginatedList(
             consultationFinishedList = consultationFinishedList,
             maxPageNumber = maxPageNumber,
-        ).also { cacheRepository.initConsultationFinishedPage(pageNumber = pageNumber, content = it,) }
+        ).also { cacheRepository.initConsultationFinishedPage(pageNumber, it, territory) }
     }
 }
 

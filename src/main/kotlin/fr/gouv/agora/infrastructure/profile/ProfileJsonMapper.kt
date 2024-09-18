@@ -88,10 +88,12 @@ class ProfileJsonMapper {
         null -> null
     }
 
+    // TODO rassembler les 3 méthodes
     private fun findDepartmentByNumber(number: String?): Department? {
         return number?.let { Department.values().find { it.name.endsWith("_$number") } }
     }
 
+    // TODO rassembler les 3 méthodes
     private fun toDepartmentNumber(department: Department?): String? {
         return department?.name?.substringAfterLast("_")
     }

@@ -27,18 +27,26 @@ class ConsultationPreviewFinishedRepositoryImpl(
                 strapiRepository.countFinishedConsultations(now)
     }
 
-    override fun getConsultationFinishedList(offset: Int, pageSize: Int): List<ConsultationWithUpdateInfo> {
-        val databaseConsultationFinished = databaseRepository.getConsultationsFinishedWithUpdateInfo(offset, pageSize)
-            .map(mapper::toConsultationWithUpdateInfo)
+    // TODO utiliser un enum pour les territoires
+    override fun getConsultationFinishedList(offset: Int, pageSize: Int, territory: String?): List<ConsultationWithUpdateInfo> {
+        val databaseConsultationFinished = if (territory == null || territory.lowercase() == "national") {
+            databaseRepository.getConsultationsFinishedWithUpdateInfo(offset, pageSize)
+                .map(mapper::toConsultationWithUpdateInfo)
+        } else emptyList()
 
         if (!featureFlagsRepository.isFeatureEnabled(StrapiConsultations)) {
             return databaseConsultationFinished
         }
 
         val now = LocalDateTime.now(clock)
-        val strapiConsultationFinished = strapiRepository.getConsultationsFinishedWithUnpublished(now)
-            .data.filter { it.attributes.isPublished() }
-            .map { mapper.toConsultationWithUpdateInfo(it, now) }
+        val strapiConsultationFinished = if (territory == null) {
+            strapiRepository.getConsultationsFinishedWithUnpublished(now).data
+                .filter { it.attributes.isPublished() }
+                .map { mapper.toConsultationWithUpdateInfo(it, now) }
+        } else {
+            strapiRepository.getConsultationsFinishedByTerritory(now, territory).data
+                .map { mapper.toConsultationWithUpdateInfo(it, now) }
+        }
 
         return databaseConsultationFinished + strapiConsultationFinished
     }

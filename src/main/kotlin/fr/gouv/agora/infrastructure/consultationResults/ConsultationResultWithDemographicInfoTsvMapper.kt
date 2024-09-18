@@ -343,7 +343,7 @@ class ConsultationResultWithDemographicInfoTsvMapper {
         Department.LOIRET_45 -> "45 - Loiret"
         Department.LOT_46 -> "46 - Lot"
         Department.LOTETGARONNE_47 -> "47 - Lot-et-Garonne"
-        Department.LAZERE_48 -> "48 - Lozère"
+        Department.LOZERE_48 -> "48 - Lozère"
         Department.MAINEETLOIRE_49 -> "49 - Maine-et-Loire"
         Department.MANCHE_50 -> "50 - Manche"
         Department.MARNE_51 -> "51 - Marne"
