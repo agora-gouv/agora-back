@@ -6,7 +6,7 @@ import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiDataList
 import fr.gouv.agora.infrastructure.common.StrapiDataNullable
-import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
+import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import java.time.LocalDateTime
 
 @JsonIgnoreProperties("createdAt", "updatedAt")
@@ -34,7 +34,7 @@ data class ConsultationStrapiDTO(
     @JsonProperty(value = "nombre_participants_cible")
     val nombreParticipantsCible: Int,
     @JsonProperty(value = "thematique")
-    val thematique: StrapiData<StrapiThematiqueDTO>,
+    val thematique: StrapiData<ThematiqueStrapiDTO>,
     @JsonProperty(value = "questions")
     val questions: List<StrapiConsultationQuestion>,
     @JsonProperty(value = "consultation_avant_reponse")

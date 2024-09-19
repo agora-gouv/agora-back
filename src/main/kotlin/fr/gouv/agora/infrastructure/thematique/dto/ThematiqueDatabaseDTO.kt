@@ -6,7 +6,7 @@ import java.io.Serializable
 import java.util.*
 
 @Entity(name = "thematiques")
-data class ThematiqueDTO(
+data class ThematiqueDatabaseDTO(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
@@ -19,7 +19,7 @@ data class ThematiqueDTO(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as ThematiqueDTO
+        other as ThematiqueDatabaseDTO
 
         return id == other.id
     }

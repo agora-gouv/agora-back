@@ -1,6 +1,5 @@
 package fr.gouv.agora.domain
 
-// TODO refaire cet enum ?
 enum class Department {
     AIN_01,
     AISNE_02,

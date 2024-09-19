@@ -3,6 +3,8 @@ package fr.gouv.agora.domain
 import fr.gouv.agora.domain.exceptions.InvalidTerritoryException
 
 interface Territoire {
+    val value: String
+
     companion object {
         fun from(territoire: String): Territoire {
             val isPays = Pays.values().any { it.value == territoire }
@@ -20,8 +22,6 @@ interface Territoire {
             }
         }
     }
-
-    val value: String
 
     enum class Pays(override val value: String) : Territoire {
         FRANCE("National"),
