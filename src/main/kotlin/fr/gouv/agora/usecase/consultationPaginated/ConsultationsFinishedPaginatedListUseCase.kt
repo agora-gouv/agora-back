@@ -1,6 +1,7 @@
 package fr.gouv.agora.usecase.consultationPaginated
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationFinishedPaginatedListCacheRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
@@ -19,8 +20,10 @@ class ConsultationsFinishedPaginatedListUseCase(
         private const val MAX_PAGE_LIST_SIZE = 100
     }
 
-    fun getConsultationFinishedPaginatedList(pageNumber: Int, territory: String?): ConsultationFinishedPaginatedList? {
+    fun getConsultationFinishedPaginatedList(pageNumber: Int, inputTerritory: String?): ConsultationFinishedPaginatedList? {
         if (pageNumber <= 0) return null
+        val territory = inputTerritory?.let { Territoire.from(inputTerritory) }
+
         cacheRepository.getConsultationFinishedPage(pageNumber, territory)?.let { pageContent ->
             return pageContent
         }

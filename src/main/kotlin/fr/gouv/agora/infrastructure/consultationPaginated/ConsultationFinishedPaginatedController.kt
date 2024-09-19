@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.consultationPaginated
 
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.usecase.consultationPaginated.ConsultationsFinishedPaginatedListUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -18,6 +19,7 @@ class ConsultationFinishedPaginatedController(
     fun getConsultationFinishedList(
         @PathVariable pageNumber: String,
         @RequestParam territory: String?,
+        // TODO à tester et peut être retourner des enum via la route référentiel ?
     ): ResponseEntity<ConsultationPaginatedJson> {
         return pageNumber.toIntOrNull()?.let { pageNumberInt ->
             consultationsFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumberInt, territory)

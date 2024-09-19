@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.domain.AgoraFeature.StrapiConsultations
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
@@ -27,9 +28,8 @@ class ConsultationPreviewFinishedRepositoryImpl(
                 strapiRepository.countFinishedConsultations(now)
     }
 
-    // TODO utiliser un enum pour les territoires
-    override fun getConsultationFinishedList(offset: Int, pageSize: Int, territory: String?): List<ConsultationWithUpdateInfo> {
-        val databaseConsultationFinished = if (territory == null || territory.lowercase() == "national") {
+    override fun getConsultationFinishedList(offset: Int, pageSize: Int, territory: Territoire?): List<ConsultationWithUpdateInfo> {
+        val databaseConsultationFinished = if (territory == null || territory == Territoire.Pays.FRANCE) {
             databaseRepository.getConsultationsFinishedWithUpdateInfo(offset, pageSize)
                 .map(mapper::toConsultationWithUpdateInfo)
         } else emptyList()
