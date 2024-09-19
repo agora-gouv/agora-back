@@ -98,13 +98,13 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.updateDate).willReturn(updateDate)
             given(it.territory).willReturn("National")
         }
-        val thematique = mock(Thematique::class.java)
+        val thematiques = listOf(mock(Thematique::class.java))
 
         // When
-        val result = mapper.toConsultationPreviewFinished(consultationInfo, thematique)
+        val result = mapper.toConsultationPreviewFinished(listOf(consultationInfo), thematiques)
 
         // Then
-        assertThat(result.getStep(now))
+        assertThat(result.first().getStep(now))
             .isEqualTo(ConsultationStatus.COLLECTING_DATA)
     }
 
@@ -123,13 +123,13 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.updateDate).willReturn(updateDate)
             given(it.territory).willReturn("National")
         }
-        val thematique = mock(Thematique::class.java)
+        val thematiques = listOf(mock(Thematique::class.java))
 
         // When
-        val result = mapper.toConsultationPreviewFinished(consultationInfo, thematique)
+        val result = mapper.toConsultationPreviewFinished(listOf(consultationInfo), thematiques)
 
         // Then
-        assertThat(result.getStep(now))
+        assertThat(result.first().getStep(now))
             .isEqualTo(ConsultationStatus.POLITICAL_COMMITMENT)
     }
 
@@ -148,13 +148,13 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.updateDate).willReturn(updateDate)
             given(it.territory).willReturn("National")
         }
-        val thematique = mock(Thematique::class.java)
+        val thematiques = listOf(mock(Thematique::class.java))
 
         // When
-        val result = mapper.toConsultationPreviewFinished(consultationInfo, thematique)
+        val result = mapper.toConsultationPreviewFinished(listOf(consultationInfo), thematiques)
 
         // Then
-        assertThat(result.getStep(now))
+        assertThat(result.first().getStep(now))
             .isEqualTo(ConsultationStatus.POLITICAL_COMMITMENT)
     }
 
@@ -179,12 +179,12 @@ class ConsultationPreviewFinishedMapperTest {
             given(it.updateLabel).willReturn(updateLabel)
             given(it.territory).willReturn("National")
         }
-        val thematique = mock(Thematique::class.java)
+        val thematiques = listOf(mock(Thematique::class.java))
 
         // When
-        val result = mapper.toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)
+        val result = mapper.toConsultationPreviewFinished(listOf(consultationInfo), thematiques)
 
         // Then
-        assertThat(result.getUpdateLabel(serverDate)).isEqualTo(expectedUpdateLabel)
+        assertThat(result.first().getUpdateLabel(serverDate)).isEqualTo(expectedUpdateLabel)
     }
 }
