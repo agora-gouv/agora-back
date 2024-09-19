@@ -7,19 +7,11 @@ interface Territoire {
 
     companion object {
         fun from(territoire: String): Territoire {
-            val isPays = Pays.values().any { it.value == territoire }
-            val isRegion = Region.values().any { it.value == territoire }
-            val isDepartement = Departement.values().any { it.value == territoire }
+            val territoires = listOf(*Pays.values(), *Region.values(), *Departement.values())
 
-            return if (isPays) {
-                Pays.valueOf(territoire)
-            } else if (isRegion) {
-                Region.valueOf(territoire)
-            } else if (isDepartement) {
-                Departement.valueOf(territoire)
-            } else {
-                throw InvalidTerritoryException(territoire)
-            }
+            territoires.firstOrNull { it.name == territoire }
+                ?.let { return it }
+                ?: throw InvalidTerritoryException(territoire)
         }
     }
 
