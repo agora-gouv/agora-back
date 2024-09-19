@@ -28,7 +28,6 @@ class ConsultationsFinishedPaginatedListUseCase(
             return pageContent
         }
 
-        // TODO territory
         val consultationsCount = consultationPreviewFinishedRepository.getConsultationFinishedCount()
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (offset > consultationsCount) return null

@@ -39,14 +39,8 @@ class ConsultationPreviewFinishedRepositoryImpl(
         }
 
         val now = LocalDateTime.now(clock)
-        val strapiConsultationFinished = if (territory == null) {
-            strapiRepository.getConsultationsFinishedWithUnpublished(now).data
-                .filter { it.attributes.isPublished() }
-                .map { mapper.toConsultationWithUpdateInfo(it, now) }
-        } else {
-            strapiRepository.getConsultationsFinishedByTerritory(now, territory).data
-                .map { mapper.toConsultationWithUpdateInfo(it, now) }
-        }
+        val strapiConsultationFinished = strapiRepository.getConsultationsFinished(now, territory).data
+            .map { mapper.toConsultationWithUpdateInfo(it, now) }
 
         return databaseConsultationFinished + strapiConsultationFinished
     }
