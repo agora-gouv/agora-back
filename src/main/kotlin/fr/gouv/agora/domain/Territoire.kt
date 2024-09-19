@@ -8,8 +8,7 @@ interface Territoire {
     companion object {
         fun from(territoire: String): Territoire {
             val territoires = listOf(*Pays.values(), *Region.values(), *Departement.values())
-
-            territoires.firstOrNull { it.name == territoire }
+            territoires.firstOrNull { it.value.lowercase() == territoire.lowercase() }
                 ?.let { return it }
                 ?: throw InvalidTerritoryException(territoire)
         }
