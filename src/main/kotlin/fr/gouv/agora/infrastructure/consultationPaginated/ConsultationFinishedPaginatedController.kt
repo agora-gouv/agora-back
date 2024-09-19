@@ -19,7 +19,6 @@ class ConsultationFinishedPaginatedController(
     fun getConsultationFinishedList(
         @PathVariable pageNumber: String,
         @RequestParam territory: String?,
-        // TODO à tester et peut être retourner des enum via la route référentiel ?
     ): ResponseEntity<ConsultationPaginatedJson> {
         return pageNumber.toIntOrNull()?.let { pageNumberInt ->
             consultationsFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumberInt, territory)
