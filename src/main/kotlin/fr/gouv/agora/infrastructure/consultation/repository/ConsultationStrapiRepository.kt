@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.consultation.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.gouv.agora.config.CmsStrapiHttpClient
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
@@ -28,6 +29,19 @@ class ConsultationStrapiRepository(
         val uriBuilder = StrapiRequestBuilder("consultations")
             .withDateBefore(date, "datetime_de_fin")
             .withUnpublished()
+
+        return cmsStrapiHttpClient.request(uriBuilder, ref)
+    }
+
+    fun getConsultationsFinished(
+        date: LocalDateTime,
+        territory: Territoire?
+    ): StrapiDTO<ConsultationStrapiDTO> {
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .withDateBefore(date, "datetime_de_fin")
+
+        if (territory != null)
+            uriBuilder.filterBy("territoire", listOf(territory.value))
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -84,5 +98,13 @@ class ConsultationStrapiRepository(
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
             .meta.pagination.total == 1
+    }
+
+    fun countFinishedConsultations(date: LocalDateTime): Int {
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .withDateBefore(date, "datetime_de_fin")
+
+        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
+            .meta.pagination.total
     }
 }

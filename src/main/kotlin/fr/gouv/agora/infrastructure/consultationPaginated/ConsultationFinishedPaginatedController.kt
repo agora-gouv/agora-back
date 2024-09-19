@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.consultationPaginated
 
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.usecase.consultationPaginated.ConsultationsFinishedPaginatedListUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -17,11 +18,12 @@ class ConsultationFinishedPaginatedController(
     @GetMapping("/consultations/finished/{pageNumber}")
     fun getConsultationFinishedList(
         @PathVariable pageNumber: String,
-    ): ResponseEntity<*> {
+        @RequestParam territory: String?,
+    ): ResponseEntity<ConsultationPaginatedJson> {
         return pageNumber.toIntOrNull()?.let { pageNumberInt ->
-            consultationsFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumber = pageNumberInt)
+            consultationsFinishedPaginatedListUseCase.getConsultationFinishedPaginatedList(pageNumberInt, territory)
         }?.let { consultationFinishedPaginatedList ->
             ResponseEntity.ok(consultationPaginatedJsonMapper.toJson(consultationFinishedPaginatedList))
-        } ?: ResponseEntity.badRequest().body(Unit)
+        } ?: ResponseEntity.badRequest().build()
     }
 }

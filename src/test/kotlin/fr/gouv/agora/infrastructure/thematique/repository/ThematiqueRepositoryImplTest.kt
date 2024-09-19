@@ -3,7 +3,7 @@ package fr.gouv.agora.infrastructure.thematique.repository
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.StrapiDTO
-import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
+import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueCacheRepository.CacheListResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.NOT_FOUND_UUID
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
@@ -66,7 +66,7 @@ internal class ThematiqueRepositoryImplTest {
             // Given
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
 
-            val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<StrapiThematiqueDTO>
+            val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<ThematiqueStrapiDTO>
             given(strapiRepository.getThematiques()).willReturn(thematiqueStrapiDTO)
             given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(emptyList())
             given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
@@ -83,7 +83,7 @@ internal class ThematiqueRepositoryImplTest {
         @Test
         fun `getThematiqueList - when cache returns CacheNotInitialized and database returns something - should insert to cache then return parsed dto from database`() {
             // Given
-            val strapiThematiqueDTO = mock(StrapiDTO::class.java) as StrapiDTO<StrapiThematiqueDTO>
+            val strapiThematiqueDTO = mock(StrapiDTO::class.java) as StrapiDTO<ThematiqueStrapiDTO>
             val thematique = mock(Thematique::class.java)
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
             given(strapiRepository.getThematiques()).willReturn(strapiThematiqueDTO)
@@ -152,7 +152,7 @@ internal class ThematiqueRepositoryImplTest {
 
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
 
-            val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<StrapiThematiqueDTO>
+            val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<ThematiqueStrapiDTO>
             given(strapiRepository.getThematiques()).willReturn(thematiqueStrapiDTO)
 
             val thematique = mock(Thematique::class.java).also {
@@ -173,7 +173,7 @@ internal class ThematiqueRepositoryImplTest {
         @Test
         fun `getThematique - when cache returns CacheNotInitialized and database return no matching thematique - should insert dto to cache then return mapped dto from database`() {
             // Given
-            val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<StrapiThematiqueDTO>
+            val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<ThematiqueStrapiDTO>
             val thematique = mock(Thematique::class.java)
 
             given(strapiRepository.getThematiques()).willReturn(thematiqueStrapiDTO)

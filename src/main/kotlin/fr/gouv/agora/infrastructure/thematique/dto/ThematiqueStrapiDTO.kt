@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
-data class StrapiThematiqueDTO(
+data class ThematiqueStrapiDTO(
     @JsonProperty(value = "label")
     val label: String,
     @JsonProperty(value = "pictogramme")

@@ -11,7 +11,7 @@ class ProfileMapper {
         return Profile(
             gender = toGender(dto.gender),
             yearOfBirth = dto.yearOfBirth,
-            department = findDepartmentByNumber(dto.department),
+            department = Department.findByCode(dto.department),
             cityType = toCityType(dto.cityType),
             jobCategory = toJobCategory(dto.jobCategory),
             voteFrequency = toFrequency(dto.voteFrequency),
@@ -26,7 +26,7 @@ class ProfileMapper {
                 id = UUID.randomUUID(),
                 gender = fromGender(domain.gender),
                 yearOfBirth = domain.yearOfBirth,
-                department = toDepartmentNumber(domain.department),
+                department = Department.getDepartmentCode(domain.department),
                 cityType = fromCityType(domain.cityType),
                 jobCategory = fromJobCategory(domain.jobCategory),
                 voteFrequency = fromFrequency(domain.voteFrequency),
@@ -108,14 +108,6 @@ class ProfileMapper {
         JobCategory.AUTRESOUSANSACTIVITEPRO -> "AU"
         JobCategory.UNKNOWN -> "UN"
         null -> null
-    }
-
-    private fun findDepartmentByNumber(number: String?): Department? {
-        return number?.let { Department.values().find { it.name.endsWith("_$number") } }
-    }
-
-    private fun toDepartmentNumber(department: Department?): String? {
-        return department?.name?.substringAfterLast("_")
     }
 
     private fun toFrequency(frequencyString: String?) = when (frequencyString) {

@@ -124,6 +124,14 @@ interface ConsultationDatabaseRepository : JpaRepository<ConsultationDTO, UUID> 
     fun getConsultationAnsweredCount(@Param("userId") userId: UUID): Int
 
     @Query(
+        value = """
+            SELECT consultation_id FROM user_answered_consultation WHERE user_id = :userId
+        """,
+        nativeQuery = true
+    )
+    fun getConsultationAnsweredIds(@Param("userId") userId: UUID): List<String>
+
+    @Query(
         value = """SELECT $CONSULTATION_WITH_UPDATE_INFO_PROJECTION
             FROM (
                 $CONSULTATION_WITH_UPDATE_INFO_JOIN
