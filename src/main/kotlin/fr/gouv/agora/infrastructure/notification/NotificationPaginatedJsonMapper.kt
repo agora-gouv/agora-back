@@ -24,7 +24,8 @@ class NotificationPaginatedJsonMapper(private val dateMapper: DateMapper) {
 
     private fun toJson(domain: Notification): NotificationJson {
         return NotificationJson(
-            title = "${domain.title} ${domain.description}",
+            title = domain.title,
+            description = domain.description,
             type = when (domain.type) {
                 NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
                 NotificationType.QAG -> QAG_NOTIFICATION_TYPE
@@ -33,5 +34,4 @@ class NotificationPaginatedJsonMapper(private val dateMapper: DateMapper) {
             date = dateMapper.toFormattedDate(domain.date),
         )
     }
-
 }

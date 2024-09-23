@@ -12,6 +12,8 @@ data class NotificationPaginatedJson(
 data class NotificationJson(
     @JsonProperty("title")
     val title: String,
+    @JsonProperty("description")
+    val description: String,
     @JsonProperty("type")
     val type: String,
     @JsonProperty("date")
