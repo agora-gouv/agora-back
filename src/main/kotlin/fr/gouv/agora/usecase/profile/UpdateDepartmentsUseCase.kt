@@ -12,9 +12,9 @@ class UpdateDepartmentsUseCase(
 ) {
     fun execute(departmentsInput: List<String>) {
         val userId = authentificationHelper.getUserId()!!
-        val departments = departmentsInput.map { Territoire.Departement.from(it) }
+        if (departmentsInput.size !in 0..2) throw Exception() // TODO
 
-        if (departments.size  in 0..2) throw Exception()
+        val departments = departmentsInput.map { Territoire.Departement.from(it) }
 
         profileRepository.updateDepartments(userId, departments.getOrNull(0), departments.getOrNull(1))
     }

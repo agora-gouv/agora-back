@@ -67,7 +67,7 @@ class ProfileRepositoryImpl(
 
     override fun updateDepartments(userId: String, primaryDepartment: Territoire.Departement?, secondaryDepartment: Territoire.Departement?) {
         val userID = userId.toUuidOrNull()!!
-        databaseRepository.updateDepartments(userID, primaryDepartment?.value, secondaryDepartment?.value)
+        databaseRepository.insertDepartments(userID, primaryDepartment?.value, secondaryDepartment?.value)
     }
 
     private fun getProfileFromDatabase(userUUID: UUID): ProfileDTO? {
