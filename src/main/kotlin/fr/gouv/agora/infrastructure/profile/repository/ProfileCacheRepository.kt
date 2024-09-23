@@ -48,6 +48,8 @@ class ProfileCacheRepository(private val cacheManager: CacheManager) {
             publicMeetingFrequency = "",
             consultationFrequency = "",
             userId = NOT_FOUND_UUID,
+            primaryDepartment = null,
+            secondaryDepartment = null,
         )
     }
 

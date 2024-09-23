@@ -2,6 +2,8 @@ package fr.gouv.agora.infrastructure.profile.repository
 
 import fr.gouv.agora.domain.Profile
 import fr.gouv.agora.domain.ProfileInserting
+import fr.gouv.agora.domain.Territoire
+import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.profile.dto.ProfileDTO
 import fr.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -61,6 +63,11 @@ class ProfileRepositoryImpl(
 
     override fun deleteUsersProfile(userIDs: List<String>) {
         databaseRepository.deleteUsersProfile(userIDs.mapNotNull { it.toUuidOrNull() })
+    }
+
+    override fun updateDepartments(userId: String, primaryDepartment: Territoire.Departement?, secondaryDepartment: Territoire.Departement?) {
+        val userID = userId.toUuidOrNull()!!
+        databaseRepository.insertDepartments(userID, primaryDepartment?.value, secondaryDepartment?.value)
     }
 
     private fun getProfileFromDatabase(userUUID: UUID): ProfileDTO? {
