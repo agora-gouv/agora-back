@@ -236,9 +236,9 @@ class ConsultationUpdateInfoV2Mapper {
             feedbackQuestion = null,
             footer = null,
             goals = listOf(
-                Goal("🗣️", contentBeforeResponse.commanditaire.toHtml()),
-                Goal("🎯", contentBeforeResponse.objectif.toHtml()),
-                Goal("🚀", contentBeforeResponse.axeGouvernemental.toHtml()),
+                Goal("🗣️", "Consultation proposée par " + contentBeforeResponse.commanditaire.toHtml()),
+                Goal("🎯", "<b>Objectif : </b>" + contentBeforeResponse.objectif.toHtml()),
+                Goal("🚀", "<b>Axe gouvernemental : </b>" + contentBeforeResponse.axeGouvernemental.toHtml()),
             ),
             isPublished = consultation.isPublished(),
         )
