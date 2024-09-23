@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
+import java.util.UUID
 
 @Repository
 interface ProfileDatabaseRepository : JpaRepository<ProfileDTO, UUID> {
@@ -18,4 +18,17 @@ interface ProfileDatabaseRepository : JpaRepository<ProfileDTO, UUID> {
     @Transactional
     @Query(value = "DELETE FROM users_profile WHERE user_id IN :userIDs", nativeQuery = true)
     fun deleteUsersProfile(@Param("userIDs") userIDs: List<UUID>)
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+            UPDATE users_profile 
+            SET primaryDepartment = :primaryDepartments, secondaryDepartment = :secondaryDepartments 
+            WHERE user_id = :userID
+        """, nativeQuery = true)
+    fun updateDepartments(
+        @Param("userID") userID: UUID,
+        @Param("primaryDepartments") primaryDepartments: String?,
+        @Param("secondaryDepartments") secondaryDepartments: String?
+    )
 }

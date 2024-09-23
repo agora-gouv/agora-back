@@ -27,6 +27,10 @@ data class ProfileDTO(
     val consultationFrequency: String?,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
+    @Column(columnDefinition = "TEXT")
+    val primaryDepartment: String?,
+    @Column(columnDefinition = "TEXT")
+    val secondaryDepartment: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

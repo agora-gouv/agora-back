@@ -283,5 +283,13 @@ interface Territoire {
         BOUCHES_DU_RHONE("Bouches-du-Rhône"),
         VAR("Var"),
         VAUCLUSE("Vaucluse");
+
+        companion object {
+            fun from(departement: String): Departement {
+                Departement.values().firstOrNull { it.value.lowercase() == departement.lowercase() }
+                    ?.let { return it }
+                    ?: throw InvalidTerritoryException(departement)
+            }
+        }
     }
 }

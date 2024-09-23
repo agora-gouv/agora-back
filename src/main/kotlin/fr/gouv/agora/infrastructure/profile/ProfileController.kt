@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.profile
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.usecase.profile.GetProfileUseCase
 import fr.gouv.agora.usecase.profile.InsertProfileUseCase
+import fr.gouv.agora.usecase.profile.UpdateDepartmentsUseCase
 import fr.gouv.agora.usecase.profile.repository.ProfileEditResult
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -20,6 +21,7 @@ class ProfileController(
     private val getProfileUseCase: GetProfileUseCase,
     private val jsonMapper: ProfileJsonMapper,
     private val authentificationHelper: AuthentificationHelper,
+    private val updateDepartementsUseCase: UpdateDepartmentsUseCase,
 ) {
     @PostMapping("/profile")
     fun postProfile(
@@ -40,5 +42,14 @@ class ProfileController(
     fun getProfile(): HttpEntity<*> {
         val profile = getProfileUseCase.getProfile(authentificationHelper.getUserId()!!)
         return ResponseEntity.ok().body(jsonMapper.toJson(profile))
+    }
+
+
+    @PostMapping("/profile/departments")
+    fun updateDepartments(
+        @RequestBody departments: List<String>,
+    ): HttpEntity<*> {
+        updateDepartementsUseCase.execute(departments)
+        return ResponseEntity.ok().body("")
     }
 }
