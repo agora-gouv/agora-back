@@ -66,11 +66,13 @@ data class ConsultationStrapiDTO(
     }
 
     fun getNextQuestionId(question: StrapiConsultationQuestion): String? {
-        return if (question.numeroQuestionSuivante != null) {
-            questions.firstOrNull { question.numeroQuestionSuivante!! == it.numero }?.id
-        } else {
-            questions.firstOrNull { question.numero + 1 == it.numero }?.id
+        if (question.numeroQuestionSuivante == null) {
+            return questions.firstOrNull { question.numero + 1 == it.numero }?.id
         }
+
+        if (question.numeroQuestionSuivante == 999) return null
+
+        return questions.firstOrNull { question.numeroQuestionSuivante == it.numero }?.id
     }
 
     private fun getLastContenuAutre(now: LocalDateTime): StrapiAttributes<StrapiConsultationContenuAutre>? {
