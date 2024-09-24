@@ -1,6 +1,7 @@
 package fr.gouv.agora.usecase.consultationPaginated
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
@@ -22,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class ConsultationsFinishedPaginatedListUseCaseTest {
 
     @InjectMocks
-    private lateinit var useCase: ConsultationsByUserPreferencesUseCase
+    private lateinit var useCase: ConsultationsFinishedPaginatedListUseCase
 
     @Mock
     private lateinit var consultationPreviewFinishedRepository: ConsultationPreviewFinishedRepository
@@ -76,7 +77,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
     @Test
     fun `getConsultationFinishedPaginatedList - when pageNumber is lower or equals 0 - should return null`() {
         // When
-        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 0, null)
+        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 0, "")
 
         // Then
         assertThat(result).isEqualTo(null)
@@ -89,10 +90,10 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
     fun `getConsultationFinishedPaginatedList - when has cache - should return cached content`() {
         // Given
         val pageContent = mock(ConsultationFinishedPaginatedList::class.java)
-        given(cacheRepository.getConsultationFinishedPage(pageNumber = 1, null)).willReturn(pageContent)
+        given(cacheRepository.getConsultationFinishedPage(pageNumber = 1, Territoire.Departement.NORD)).willReturn(pageContent)
 
         // When
-        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 1, null)
+        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 1, "Nord")
 
         // Then
         assertThat(result).isEqualTo(pageContent)
@@ -104,7 +105,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(10)
 
         // When
-        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 7, null)
+        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 7, "Nord")
 
         // Then
         assertThat(result).isEqualTo(null)
@@ -122,7 +123,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         val consultationPreviewFinished = mock(ConsultationPreviewFinished::class.java)
 
         given(consultationPreviewFinishedRepository.getConsultationFinishedCount()).willReturn(134)
-        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = 0, pageSize = 100, null))
+        given(consultationPreviewFinishedRepository.getConsultationFinishedList(offset = 0, pageSize = 100, Territoire.Departement.NORD))
             .willReturn(listOf(consultationInfo, consultationInfoWithoutThematique))
         given(thematiqueRepository.getThematiqueList()).willReturn(thematiques)
         given(
@@ -133,7 +134,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         ).willReturn(listOf(consultationPreviewFinished))
 
         // When
-        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 1, null)
+        val result = useCase.getConsultationFinishedPaginatedList(pageNumber = 1, "Nord")
 
         // Then
         val pageContent = ConsultationFinishedPaginatedList(
@@ -142,11 +143,11 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         )
         assertThat(result).isEqualTo(pageContent)
 
-        then(cacheRepository).should().getConsultationFinishedPage(1, null)
-        then(cacheRepository).should().initConsultationFinishedPage(1, pageContent, null)
+        then(cacheRepository).should().getConsultationFinishedPage(1, Territoire.Departement.NORD)
+        then(cacheRepository).should().initConsultationFinishedPage(1, pageContent, Territoire.Departement.NORD)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
-        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = 0, pageSize = 100, null)
+        then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(offset = 0, pageSize = 100, Territoire.Departement.NORD)
         then(consultationPreviewFinishedRepository).shouldHaveNoMoreInteractions()
         then(mapper).shouldHaveNoMoreInteractions()
     }
@@ -168,7 +169,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         given(consultationPreviewFinishedRepository.getConsultationFinishedList(
             expectedOffset,
             100,
-            null
+            Territoire.Departement.NORD
         ))
             .willReturn(listOf(consultationInfo))
         given(thematiqueRepository.getThematiqueList()).willReturn(thematiques)
@@ -180,7 +181,7 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         ).willReturn(listOf(consultationPreviewFinished))
 
         // When
-        val result = useCase.getConsultationFinishedPaginatedList(pageNumber, null)
+        val result = useCase.getConsultationFinishedPaginatedList(pageNumber, "Nord")
 
         // Then
         val pageContent = ConsultationFinishedPaginatedList(
@@ -189,14 +190,14 @@ internal class ConsultationsFinishedPaginatedListUseCaseTest {
         )
         assertThat(result).isEqualTo(pageContent)
 
-        then(cacheRepository).should().getConsultationFinishedPage(pageNumber, null)
-        then(cacheRepository).should().initConsultationFinishedPage(pageNumber, pageContent, null)
+        then(cacheRepository).should().getConsultationFinishedPage(pageNumber, Territoire.Departement.NORD)
+        then(cacheRepository).should().initConsultationFinishedPage(pageNumber, pageContent, Territoire.Departement.NORD)
         then(cacheRepository).shouldHaveNoMoreInteractions()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedCount()
         then(consultationPreviewFinishedRepository).should().getConsultationFinishedList(
             offset = expectedOffset,
             pageSize = 100,
-            null
+            Territoire.Departement.NORD
         )
         then(consultationPreviewFinishedRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(only())
