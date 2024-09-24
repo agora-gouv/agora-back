@@ -16,7 +16,7 @@ interface Territoire {
 
     enum class Pays(override val value: String) : Territoire {
         FRANCE("National"),
-        HORS_DE_FRANCE("Hors de France");
+        HORS_DE_FRANCE("Français de l'étranger");
     }
 
     enum class Region(override val value: String, private val departements: List<Departement>) : Territoire {
@@ -168,21 +168,32 @@ interface Territoire {
                 Departement.VAUCLUSE,
             )
         ),
-        GUADELOUPE("Guadeloupe", emptyList()),
-        MARTINIQUE("Martinique", emptyList()),
-        GUYANE("Guyane", emptyList()),
-        LA_REUNION("La Réunion", emptyList()),
-        MAYOTTE("Mayotte", emptyList()),
-        SAINT_PIERRE_ET_MIQUELON("Saint-Pierre-et-Miquelon", emptyList()),
-        SAINT_BARTHELEMY("Saint-Barthélémy", emptyList()),
-        SAINT_MARTIN("Saint-Martin", emptyList()),
-        TERRES_AUSTRALES_ET_ANTARCTIQUES_FRANCAISES("Terres australes et antarctiques françaises", emptyList()),
-        WALLIS_ET_FUTUNA("Wallis-et-Futuna", emptyList()),
-        POLYNESIE_FRANCAISE("Polynésie française", emptyList()),
-        NOUVELLE_CALEDONIE("Nouvelle-Calédonie", emptyList());
+        OUTRE_MER(
+            "Outre-mer", listOf(
+                Departement.GUADELOUPE,
+                Departement.MARTINIQUE,
+                Departement.GUYANE,
+                Departement.LA_REUNION,
+                Departement.MAYOTTE,
+                Departement.SAINT_PIERRE_ET_MIQUELON,
+                Departement.SAINT_BARTHELEMY,
+                Departement.SAINT_MARTIN,
+                Departement.TERRES_AUSTRALES_ET_ANTARCTIQUES_FRANCAISES,
+                Departement.WALLIS_ET_FUTUNA,
+                Departement.POLYNESIE_FRANCAISE,
+                Departement.NOUVELLE_CALEDONIE
+            )
+        );
 
         fun getDepartementsNames(): List<String> {
             return this.departements.map { it.value }
+        }
+
+        companion object {
+            fun getByDepartment(departement: Departement?): Region? {
+                if (departement == null) return null
+                return Region.values().firstOrNull { it.departements.contains(departement) }
+            }
         }
     }
 
@@ -282,7 +293,19 @@ interface Territoire {
         ALPES_MARITIMES("Alpes-Maritimes"),
         BOUCHES_DU_RHONE("Bouches-du-Rhône"),
         VAR("Var"),
-        VAUCLUSE("Vaucluse");
+        VAUCLUSE("Vaucluse"),
+        GUADELOUPE("Guadeloupe"),
+        MARTINIQUE("Martinique"),
+        GUYANE("Guyane"),
+        LA_REUNION("La Réunion"),
+        MAYOTTE("Saint-Pierre-et-Miquelon"),
+        SAINT_PIERRE_ET_MIQUELON("Mayotte"),
+        SAINT_BARTHELEMY("Saint-Barthélémy"),
+        SAINT_MARTIN("Saint-Martin"),
+        TERRES_AUSTRALES_ET_ANTARCTIQUES_FRANCAISES("Terres australes et antarctiques françaises"),
+        WALLIS_ET_FUTUNA("Wallis-et-Futuna"),
+        POLYNESIE_FRANCAISE("Polynésie française"),
+        NOUVELLE_CALEDONIE("Nouvelle-Calédonie");
 
         companion object {
             fun from(departement: String): Departement {

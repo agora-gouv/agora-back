@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.domain.AgoraFeature.StrapiConsultations
 import fr.gouv.agora.domain.Territoire
+import fr.gouv.agora.domain.Territoire.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationWithUpdateInfo
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
@@ -28,8 +29,23 @@ class ConsultationPreviewFinishedRepositoryImpl(
                 strapiRepository.countFinishedConsultations(now)
     }
 
+    override fun getConsultationFinishedList(territories: List<Territoire>): List<ConsultationWithUpdateInfo> {
+        val databaseConsultationFinished = databaseRepository.getConsultationsFinishedWithUpdateInfo(0, 50)
+                .map(mapper::toConsultationWithUpdateInfo)
+
+        if (!featureFlagsRepository.isFeatureEnabled(StrapiConsultations)) {
+            return databaseConsultationFinished
+        }
+
+        val now = LocalDateTime.now(clock)
+        val strapiConsultationFinished = strapiRepository.getConsultationsFinishedByTerritories(now, territories).data
+            .map { mapper.toConsultationWithUpdateInfo(it, now) }
+
+        return databaseConsultationFinished + strapiConsultationFinished
+    }
+
     override fun getConsultationFinishedList(offset: Int, pageSize: Int, territory: Territoire?): List<ConsultationWithUpdateInfo> {
-        val databaseConsultationFinished = if (territory == null || territory == Territoire.Pays.FRANCE) {
+        val databaseConsultationFinished = if (territory == null || territory == Pays.FRANCE) {
             databaseRepository.getConsultationsFinishedWithUpdateInfo(offset, pageSize)
                 .map(mapper::toConsultationWithUpdateInfo)
         } else emptyList()

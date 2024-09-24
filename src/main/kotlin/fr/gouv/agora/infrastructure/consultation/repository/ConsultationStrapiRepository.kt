@@ -46,6 +46,19 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
+    fun getConsultationsFinishedByTerritories(
+        date: LocalDateTime,
+        territories: List<Territoire>
+    ): StrapiDTO<ConsultationStrapiDTO> {
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .withDateBefore(date, "datetime_de_fin")
+
+        if (territories.isNotEmpty())
+            uriBuilder.filterBy("territoire", territories.map { it.value })
+
+        return cmsStrapiHttpClient.request(uriBuilder, ref)
+    }
+
     fun getConsultationsByIds(consultationIds: List<String>): StrapiDTO<ConsultationStrapiDTO> {
         val strapiConsultationsId = consultationIds.mapNotNull { it.toIntOrNull() }
         if (strapiConsultationsId.isEmpty()) return StrapiDTO.ofEmpty()

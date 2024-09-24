@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class ConsultationsFinishedPaginatedListUseCaseTest {
 
     @InjectMocks
-    private lateinit var useCase: ConsultationsFinishedPaginatedListUseCase
+    private lateinit var useCase: ConsultationsByUserPreferencesUseCase
 
     @Mock
     private lateinit var consultationPreviewFinishedRepository: ConsultationPreviewFinishedRepository
