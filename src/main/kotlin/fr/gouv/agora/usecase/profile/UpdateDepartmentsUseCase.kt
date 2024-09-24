@@ -15,7 +15,7 @@ class UpdateDepartmentsUseCase(
         val userId = authentificationHelper.getUserId()!!
         if (departmentsInput.size !in 0..2) throw InvalidNumberOfDepartmentsException()
 
-        val departments = departmentsInput.map { Territoire.Departement.from(it) }
+        val departments = departmentsInput.map { Territoire.Departement.fromOrThrow(it) }
 
         profileRepository.updateDepartments(userId, departments.getOrNull(0), departments.getOrNull(1))
     }

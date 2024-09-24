@@ -308,10 +308,15 @@ interface Territoire {
         NOUVELLE_CALEDONIE("Nouvelle-Calédonie");
 
         companion object {
-            fun from(departement: String): Departement {
+            fun fromOrThrow(departement: String): Departement {
                 Departement.values().firstOrNull { it.value.lowercase() == departement.lowercase() }
                     ?.let { return it }
                     ?: throw InvalidTerritoryException(departement)
+            }
+
+            fun from(departement: String): Departement? {
+                Departement.values().firstOrNull { it.value.lowercase() == departement.lowercase() }
+                    .let { return it }
             }
         }
     }

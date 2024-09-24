@@ -25,14 +25,16 @@ class ConsultationFinishedPaginatedController(
         @RequestParam territory: String?,
     ): ResponseEntity<ConsultationPaginatedJson> {
         val consultations = if (territory == null) {
-            consultationsFinishedByUserPreferences.execute(pageNumber)
+            consultationsFinishedByUserPreferences.execute()
+                .let { consultationPaginatedJsonMapper.toJson(it) }
         } else {
             consultationsFinishedByTerritoryUseCase
                 .getConsultationFinishedPaginatedList(pageNumber, territory)
+                ?.let { consultationPaginatedJsonMapper.toJson(it) }
         }
 
         if (consultations == null) return ResponseEntity.notFound().build()
 
-        return ResponseEntity.ok(consultationPaginatedJsonMapper.toJson(consultations))
+        return ResponseEntity.ok(consultations)
     }
 }

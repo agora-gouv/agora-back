@@ -21,5 +21,7 @@ class GetProfileUseCase(
         voteFrequency = null,
         publicMeetingFrequency = null,
         consultationFrequency = null,
+        primaryDepartment = null,
+        secondaryDepartment = null,
     )
 }

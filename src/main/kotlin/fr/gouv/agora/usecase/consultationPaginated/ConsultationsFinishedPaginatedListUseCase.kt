@@ -20,9 +20,9 @@ class ConsultationsFinishedPaginatedListUseCase(
         private const val MAX_PAGE_LIST_SIZE = 100
     }
 
-    fun getConsultationFinishedPaginatedList(pageNumber: Int, inputTerritory: String?): ConsultationFinishedPaginatedList? {
+    fun getConsultationFinishedPaginatedList(pageNumber: Int, inputTerritory: String): ConsultationFinishedPaginatedList? {
         if (pageNumber <= 0) return null
-        val territory = inputTerritory?.let { Territoire.from(inputTerritory) }
+        val territory = inputTerritory.let { Territoire.from(inputTerritory) }
 
         cacheRepository.getConsultationFinishedPage(pageNumber, territory)?.let { pageContent ->
             return pageContent

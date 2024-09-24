@@ -40,8 +40,3 @@ class ConsultationsByUserPreferencesUseCase(
         return consultations
     }
 }
-
-data class ConsultationFinishedPaginatedList(
-    val consultationFinishedList: List<ConsultationPreviewFinished>,
-    val maxPageNumber: Int,
-)

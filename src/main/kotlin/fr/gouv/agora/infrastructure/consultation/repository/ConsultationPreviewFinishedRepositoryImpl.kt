@@ -44,8 +44,8 @@ class ConsultationPreviewFinishedRepositoryImpl(
         return databaseConsultationFinished + strapiConsultationFinished
     }
 
-    override fun getConsultationFinishedList(offset: Int, pageSize: Int, territory: Territoire?): List<ConsultationWithUpdateInfo> {
-        val databaseConsultationFinished = if (territory == null || territory == Pays.FRANCE) {
+    override fun getConsultationFinishedList(offset: Int, pageSize: Int, territory: Territoire): List<ConsultationWithUpdateInfo> {
+        val databaseConsultationFinished = if (territory == Pays.FRANCE) {
             databaseRepository.getConsultationsFinishedWithUpdateInfo(offset, pageSize)
                 .map(mapper::toConsultationWithUpdateInfo)
         } else emptyList()
