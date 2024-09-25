@@ -17,6 +17,8 @@ class ProfileMapper {
             voteFrequency = toFrequency(dto.voteFrequency),
             publicMeetingFrequency = toFrequency(dto.publicMeetingFrequency),
             consultationFrequency = toFrequency(dto.consultationFrequency),
+            primaryDepartment = dto.primaryDepartment?.let { Territoire.Departement.from(it) },
+            secondaryDepartment = dto.secondaryDepartment?.let { Territoire.Departement.from(it) },
         )
     }
 

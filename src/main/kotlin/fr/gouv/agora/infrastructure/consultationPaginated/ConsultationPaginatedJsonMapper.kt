@@ -30,4 +30,11 @@ class ConsultationPaginatedJsonMapper(
             consultations = consultationAnsweredPaginatedList.consultationAnsweredList.map { domain -> consultationPreviewJsonMapper.toJson(domain) },
         )
     }
+
+    fun toJson(consultations: List<ConsultationPreviewFinished>): ConsultationPaginatedJson {
+        return ConsultationPaginatedJson(
+            maxPageNumber = 1,
+            consultations = consultations.map { domain -> consultationPreviewJsonMapper.toJson(domain) },
+        )
+    }
 }

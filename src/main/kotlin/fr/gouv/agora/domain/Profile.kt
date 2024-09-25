@@ -9,6 +9,8 @@ data class Profile(
     val voteFrequency: Frequency?,
     val publicMeetingFrequency: Frequency?,
     val consultationFrequency: Frequency?,
+    val primaryDepartment: Territoire.Departement?,
+    val secondaryDepartment: Territoire.Departement?,
 )
 
 data class ProfileInserting(

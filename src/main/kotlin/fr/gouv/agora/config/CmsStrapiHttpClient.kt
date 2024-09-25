@@ -25,6 +25,8 @@ class CmsStrapiHttpClient(
             val request = getClientRequest(uri).GET().build()
             val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
 
+            logger.debug("requête Strapi vers {}", request)
+
             objectMapper.readValue(httpResponse.body(), typeReference) as StrapiDTO<T>
         } catch (e: Exception) {
             logger.error("Erreur lors de la requête du builder $builder: ", e)
