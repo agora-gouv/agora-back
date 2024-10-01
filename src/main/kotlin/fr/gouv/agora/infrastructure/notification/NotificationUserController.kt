@@ -80,8 +80,8 @@ class NotificationUserController(
     fun notifyAllUsers(
         @RequestParam("title", defaultValue = "Une nouvelle consultation est disponible") title: String,
         @RequestParam("description", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") description: String,
-        @RequestParam("page", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") page: String,
-        @RequestParam("pageArgument", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") pageArgument: String?,
+        @RequestParam("routeName", defaultValue = "/consultationsPage") page: String,
+        @RequestParam("routeArgument", defaultValue = "f55a68a7-8ec3-46c8-ba6b-1484fbd77ec6") pageArgument: String?,
     ): ResponseEntity<*> {
         val result = sendUsersNotificationUseCase.execute(
             title = title,
