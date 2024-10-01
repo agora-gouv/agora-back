@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.notification
 
 import fr.gouv.agora.usecase.notification.SendUserNotificationUseCase
+import fr.gouv.agora.usecase.notification.SendUsersNotificationUseCase
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @Tag(name = "Admin")
 class NotificationUserController(
-    private val sendUserNotificationUseCase: SendUserNotificationUseCase
+    private val sendUserNotificationUseCase: SendUserNotificationUseCase,
+    private val sendUsersNotificationUseCase: SendUsersNotificationUseCase,
 ) {
     @Operation(
         summary = "Envoyer une notification à un utilisateur précis", responses = [
@@ -47,6 +49,45 @@ class NotificationUserController(
             title = title,
             description = description,
             userId = userId
+        )
+
+        return when (result) {
+            NotificationResult.SUCCESS -> ResponseEntity.ok().body(Unit)
+            NotificationResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
+        }
+    }
+
+    @Operation(
+        summary = "Envoyer une notification à tous les utilisateurs", responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Success",
+                content = [Content(mediaType = "application/json")]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "La requête est incorrecte",
+                content = [Content(mediaType = "application/json")]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized : Votre compte ne possède pas les droits administrateur",
+                content = [Content(mediaType = "application/json")]
+            )
+        ]
+    )
+    @GetMapping("/admin/notififyAllUsers")
+    fun notifyAllUsers(
+        @RequestParam("title", defaultValue = "Une nouvelle consultation est disponible") title: String,
+        @RequestParam("description", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") description: String,
+        @RequestParam("page", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") page: String,
+        @RequestParam("pageArgument", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") pageArgument: String?,
+    ): ResponseEntity<*> {
+        val result = sendUsersNotificationUseCase.execute(
+            title = title,
+            description = description,
+            page = page,
+            pageArgument = pageArgument,
         )
 
         return when (result) {

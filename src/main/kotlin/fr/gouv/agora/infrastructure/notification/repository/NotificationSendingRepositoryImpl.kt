@@ -2,8 +2,7 @@ package fr.gouv.agora.infrastructure.notification.repository
 
 import com.google.firebase.messaging.*
 import fr.gouv.agora.usecase.notification.repository.*
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.ConsultationMultiNotificationRequest
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.QagMultiNotificationRequest
+import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
@@ -26,10 +25,11 @@ class NotificationSendingRepositoryImpl(
 
         private const val QAG_DETAILS_NOTIFICATION_TYPE = "qagDetails"
         private const val CONSULTATION_DETAILS_NOTIFICATION_TYPE = "consultationDetails"
+        private const val GENERIC_NOTIFICATION_TYPE = "generic"
         private const val CONSULTATION_RESULTS_NOTIFICATION_TYPE = "consultationResults"
         private const val REPONSE_SUPPORT_NOTIFICATION_TYPE = "reponseSupport"
 
-        private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 500
+        private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 300
     }
 
     override fun sendQagDetailsNotification(request: QagNotificationRequest): NotificationResult {
@@ -44,6 +44,13 @@ class NotificationSendingRepositoryImpl(
             logger.error("⚠️ Send notification error: ${e.message}")
             NotificationResult.FAILURE
         }
+    }
+
+    override fun sendGenericMultiNotification(request: GenericMultiNotificationRequest) {
+        logger.info("📩 Sending multi-notification: ${request.title}")
+        sendMultiNotifications(
+            createMultiMessage(request = request, type = GENERIC_NOTIFICATION_TYPE)
+        )
     }
 
     override fun sendQagDetailsMultiNotification(request: QagMultiNotificationRequest) {
@@ -125,10 +132,16 @@ class NotificationSendingRepositoryImpl(
                         CONSULTATION_DETAILS_ID_KEY,
                         request.consultationId,
                     )
+
                     is QagMultiNotificationRequest -> messageBuilder.putData(
                         QAG_DETAILS_ID_KEY,
                         request.qagId,
                     )
+
+                    is GenericMultiNotificationRequest -> {
+                        messageBuilder.putData("page", request.page)
+                        messageBuilder.putData("pageArgument", request.pageArgument)
+                    }
                 }
                 messageBuilder.build()
             } catch (e: IllegalArgumentException) {
@@ -167,7 +180,6 @@ class NotificationSendingRepositoryImpl(
             }
         }
     }
-
 }
 
 class SendNotificationTask(

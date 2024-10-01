@@ -28,6 +28,8 @@ class SendConsultationNotificationUseCase(
         if (!consultationInfoRepository.isConsultationExists(consultationId))
             throw ConsultationNotFoundException(consultationId)
 
+        // TODO on récupère tous les users (158 657 à date), c'est un peu vnr
+        //  on pourrait peut-être dire à Firebase : envoie les notifications à tout le monde
         val userList = userRepository.getAllUsers()
         notificationSendingRepository.sendConsultationDetailsMultiNotification(
             request = ConsultationMultiNotificationRequest(
