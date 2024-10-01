@@ -16,6 +16,7 @@ class NotificationMapper {
         private const val QAG_NOTIFICATION_TYPE = "Questions citoyennes"
         private const val CONSULTATION_NOTIFICATION_TYPE = "Consultations"
         private const val REPONSE_SUPPORT_NOTIFICATION_TYPE = "Réponse du support"
+        private const val GENERIC_TYPE = "Notification générique"
     }
 
     fun toDomain(dto: NotificationDTO): Notification {
@@ -45,6 +46,7 @@ class NotificationMapper {
                         NotificationType.QAG -> QAG_NOTIFICATION_TYPE
                         NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
                         NotificationType.REPONSE_SUPPORT -> REPONSE_SUPPORT_NOTIFICATION_TYPE
+                        NotificationType.GENERIC -> GENERIC_TYPE
                     },
                     date = nowDate,
                     userId = userUUID,

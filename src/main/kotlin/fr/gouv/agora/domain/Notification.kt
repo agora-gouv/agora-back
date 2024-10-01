@@ -21,4 +21,5 @@ enum class NotificationType {
     CONSULTATION,
     QAG,
     REPONSE_SUPPORT,
+    GENERIC,
 }

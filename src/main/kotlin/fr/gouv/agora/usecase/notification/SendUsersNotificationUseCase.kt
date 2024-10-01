@@ -32,7 +32,7 @@ class SendUsersNotificationUseCase(
             NotificationInserting(
                 title = title,
                 description = description,
-                type = NotificationType.CONSULTATION, // todo à quoi sert ce type ?
+                type = NotificationType.GENERIC, // todo à quoi sert ce type ?
                 userIds = userList.map { userInfo -> userInfo.userId },
             )
         )
