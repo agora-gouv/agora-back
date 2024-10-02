@@ -10,4 +10,5 @@ data class ConcertationJson(
     val thematique: ThematiqueNoIdJson,
     val updateLabel: String?,
     val updateDate: String,
+    val territory: String,
 )

@@ -37,6 +37,8 @@ internal class AskForDemographicInfoUseCaseTest {
         voteFrequency = Frequency.JAMAIS,
         publicMeetingFrequency = Frequency.PARFOIS,
         consultationFrequency = Frequency.SOUVENT,
+        primaryDepartment = Territoire.Departement.DOUBS,
+        secondaryDepartment = Territoire.Departement.NORD,
     )
 
     @Test

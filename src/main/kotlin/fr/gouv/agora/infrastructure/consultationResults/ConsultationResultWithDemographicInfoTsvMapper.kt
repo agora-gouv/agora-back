@@ -66,56 +66,56 @@ class ConsultationResultWithDemographicInfoTsvMapper {
         stringBuilder.append("### Genre\t#\t%")
         stringBuilder.append("\n")
         demographicInfo.genderCount.toSorted().forEach { (gender, countAndRatio) ->
-            stringBuilder.append("-- ${gender.toPretty()}\t${countAndRatio.toPretty()}")
+            stringBuilder.append("=\"-- ${gender.toPretty()}\"\t${countAndRatio.toPretty()}")
             stringBuilder.append("\n")
         }
 
         stringBuilder.append("### Tranche d'age\t#\t%")
         stringBuilder.append("\n")
         demographicInfo.ageRangeCount.toSorted().forEach { (ageRange, countAndRatio) ->
-            stringBuilder.append("-- ${ageRange.toPretty()}\t${countAndRatio.toPretty()}")
+            stringBuilder.append("=\"-- ${ageRange.toPretty()}\"\t${countAndRatio.toPretty()}")
             stringBuilder.append("\n")
         }
 
         stringBuilder.append("### Département ou collectivité d'outre mer\t#\t%")
         stringBuilder.append("\n")
         demographicInfo.departmentCount.toSorted().forEach { (department, countAndRatio) ->
-            stringBuilder.append("-- ${department.toPretty()}\t${countAndRatio.toPretty()}")
+            stringBuilder.append("=\"-- ${department.toPretty()}\"\t${countAndRatio.toPretty()}")
             stringBuilder.append("\n")
         }
 
         stringBuilder.append("### Habite en milieu\t#\t%")
         stringBuilder.append("\n")
         demographicInfo.cityTypeCount.toSorted().forEach { (cityType, countAndRatio) ->
-            stringBuilder.append("-- ${cityType.toPretty()}\t${countAndRatio.toPretty()}")
+            stringBuilder.append("=\"-- ${cityType.toPretty()}\"\t${countAndRatio.toPretty()}")
             stringBuilder.append("\n")
         }
 
         stringBuilder.append("### Catégorie socio-professionnelle\t#\t%")
         stringBuilder.append("\n")
         demographicInfo.jobCategoryCount.toSorted().forEach { (jobCategory, countAndRatio) ->
-            stringBuilder.append("-- ${jobCategory.toPretty()}\t${countAndRatio.toPretty()}")
+            stringBuilder.append("=\"-- ${jobCategory.toPretty()}\"\t${countAndRatio.toPretty()}")
             stringBuilder.append("\n")
         }
 
         stringBuilder.append("### Fréquence de vote\t#\t%")
         stringBuilder.append("\n")
         demographicInfo.voteFrequencyCount.toSorted().forEach { (frequency, countAndRatio) ->
-            stringBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.toPretty()}")
+            stringBuilder.append("=\"-- ${frequency.toPretty()}\"\t${countAndRatio.toPretty()}")
             stringBuilder.append("\n")
         }
 
         stringBuilder.append("### Fréquence d'engagement sur le terrain\t#\t%")
         stringBuilder.append("\n")
         demographicInfo.publicMeetingFrequencyCount.toSorted().forEach { (frequency, countAndRatio) ->
-            stringBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.toPretty()}")
+            stringBuilder.append("=\"-- ${frequency.toPretty()}\"\t${countAndRatio.toPretty()}")
             stringBuilder.append("\n")
         }
 
         stringBuilder.append("### Fréquence d'engagement en ligne\t#\t%")
         stringBuilder.append("\n")
         demographicInfo.consultationFrequencyCount.toSorted().forEach { (frequency, countAndRatio) ->
-            stringBuilder.append("-- ${frequency.toPretty()}\t${countAndRatio.toPretty()}")
+            stringBuilder.append("=\"-- ${frequency.toPretty()}\"\t${countAndRatio.toPretty()}")
             stringBuilder.append("\n")
         }
 
@@ -130,7 +130,7 @@ class ConsultationResultWithDemographicInfoTsvMapper {
             stringBuilder.append("\t${buildDemographicHeaders(consultationResult.demographicInfo)}")
             stringBuilder.append("\n")
             questionResult.responses.forEach { choiceResult ->
-                stringBuilder.append("- ${choiceResult.choixPossible.label}\t${choiceResult.countAndRatio.toPretty()}")
+                stringBuilder.append("=\"- ${choiceResult.choixPossible.label}\"\t${choiceResult.countAndRatio.toPretty()}")
                 stringBuilder.append(
                     "\t${
                         buildDemographicValues(
@@ -152,57 +152,57 @@ class ConsultationResultWithDemographicInfoTsvMapper {
         headerBuilder.append("### Genre")
         headerBuilder.append("\t")
         demographicInfo.genderCount.toSorted().forEach { (gender, _) ->
-            headerBuilder.append("-- ${gender.toPretty()}")
-            headerBuilder.append("\t-- %\t")
+            headerBuilder.append("=\"-- ${gender.toPretty()}\"")
+            headerBuilder.append("\t=\"-- %\"\t")
         }
 
         headerBuilder.append("### Tranche d'age")
         headerBuilder.append("\t")
         demographicInfo.ageRangeCount.toSorted().forEach { (ageRange, _) ->
-            headerBuilder.append("-- ${ageRange.toPretty()}")
-            headerBuilder.append("\t-- %\t")
+            headerBuilder.append("=\"-- ${ageRange.toPretty()}\"")
+            headerBuilder.append("\t=\"-- %\"\t")
         }
 
         headerBuilder.append("### Département ou collectivité d'outre mer")
         headerBuilder.append("\t")
         demographicInfo.departmentCount.toSorted().forEach { (department, _) ->
-            headerBuilder.append("-- ${department.toPretty()}")
-            headerBuilder.append("\t-- %\t")
+            headerBuilder.append("=\"-- ${department.toPretty()}\"")
+            headerBuilder.append("\t=\"-- %\"\t")
         }
 
         headerBuilder.append("### Habite en milieu")
         headerBuilder.append("\t")
         demographicInfo.cityTypeCount.toSorted().forEach { (cityType, _) ->
-            headerBuilder.append("-- ${cityType.toPretty()}")
-            headerBuilder.append("\t-- %\t")
+            headerBuilder.append("=\"-- ${cityType.toPretty()}\"")
+            headerBuilder.append("\t=\"-- %\"\t")
         }
 
         headerBuilder.append("### Catégorie socio-professionnelle")
         headerBuilder.append("\t")
         demographicInfo.jobCategoryCount.toSorted().forEach { (jobCategory, _) ->
-            headerBuilder.append("-- ${jobCategory.toPretty()}")
-            headerBuilder.append("\t-- %\t")
+            headerBuilder.append("=\"-- ${jobCategory.toPretty()}\"")
+            headerBuilder.append("\t=\"-- %\"\t")
         }
 
         headerBuilder.append("### Fréquence de vote")
         headerBuilder.append("\t")
         demographicInfo.voteFrequencyCount.toSorted().forEach { (frequency, _) ->
-            headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t-- %\t")
+            headerBuilder.append("=\"-- ${frequency.toPretty()}\"")
+            headerBuilder.append("\t=\"-- %\"\t")
         }
 
         headerBuilder.append("### Fréquence d'engagement sur le terrain")
         headerBuilder.append("\t")
         demographicInfo.publicMeetingFrequencyCount.toSorted().forEach { (frequency, _) ->
-            headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t-- %\t")
+            headerBuilder.append("=\"-- ${frequency.toPretty()}\"")
+            headerBuilder.append("\t=\"-- %\"\t")
         }
 
         headerBuilder.append("### Fréquence d'engagement en ligne")
         headerBuilder.append("\t")
         demographicInfo.consultationFrequencyCount.toSorted().forEach { (frequency, _) ->
-            headerBuilder.append("-- ${frequency.toPretty()}")
-            headerBuilder.append("\t-- %\t")
+            headerBuilder.append("=\"-- ${frequency.toPretty()}\"")
+            headerBuilder.append("\t=\"-- %\"\t")
         }
 
         return headerBuilder.toString()
@@ -343,7 +343,7 @@ class ConsultationResultWithDemographicInfoTsvMapper {
         Department.LOIRET_45 -> "45 - Loiret"
         Department.LOT_46 -> "46 - Lot"
         Department.LOTETGARONNE_47 -> "47 - Lot-et-Garonne"
-        Department.LAZERE_48 -> "48 - Lozère"
+        Department.LOZERE_48 -> "48 - Lozère"
         Department.MAINEETLOIRE_49 -> "49 - Maine-et-Loire"
         Department.MANCHE_50 -> "50 - Manche"
         Department.MARNE_51 -> "51 - Marne"

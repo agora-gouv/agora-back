@@ -41,7 +41,7 @@ class ReponseConsultationMapper {
                     buildingAgeRangeCount
                 },
             ),
-            departmentCount = departmentCount.associate { findDepartmentByNumber(it.key) to it.count },
+            departmentCount = departmentCount.associate { Department.findByCode(it.key) to it.count },
             cityTypeCount = cityTypeCount.associate { toCityType(it.key) to it.count },
             jobCategoryCount = jobCategoryCount.associate { toJobCategory(it.key) to it.count },
             voteFrequencyCount = voteFrequencyCount.associate { toFrequency(it.key) to it.count },
@@ -82,7 +82,7 @@ class ReponseConsultationMapper {
                             },
                         ),
                     departmentCount = departmentCount.filter { it.choiceId == choice }
-                        .associate { findDepartmentByNumber(it.key) to it.count },
+                        .associate { Department.findByCode(it.key) to it.count },
                     cityTypeCount = cityTypeCount.filter { it.choiceId == choice }
                         .associate { toCityType(it.key) to it.count },
                     jobCategoryCount = jobCategoryCount.filter { it.choiceId == choice }
@@ -196,15 +196,10 @@ class ReponseConsultationMapper {
         else -> null
     }
 
-    private fun findDepartmentByNumber(number: String?): Department? {
-        return number?.let { Department.values().find { it.name.endsWith("_$number") } }
-    }
-
     private fun toFrequency(frequencyString: String?) = when (frequencyString) {
         "S" -> Frequency.SOUVENT
         "P" -> Frequency.PARFOIS
         "J" -> Frequency.JAMAIS
         else -> null
     }
-
 }

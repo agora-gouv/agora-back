@@ -5,4 +5,4 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-interface ConcertationDatabaseRepository: JpaRepository<ConcertationDTO, UUID>
+interface ConcertationDatabaseRepository: JpaRepository<ConcertationDatabaseDTO, UUID>

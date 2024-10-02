@@ -16,8 +16,9 @@ data class ConsultationInfo(
     val participantCountGoal: Int,
     val thematique: Thematique,
     val isPublished: Boolean,
+    val territory: String,
 ) {
-    constructor(): this("", "", "", "", "", LocalDateTime.MIN, LocalDateTime.MIN, "", "", 0, Thematique(), true)
+    constructor(): this("", "", "", "", "", LocalDateTime.MIN, LocalDateTime.MIN, "", "", 0, Thematique(), true, "")
 
     fun isOngoing(now: LocalDateTime): Boolean {
         return now.isBefore(endDate)

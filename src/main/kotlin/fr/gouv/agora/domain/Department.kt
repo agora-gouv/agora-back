@@ -49,7 +49,7 @@ enum class Department {
     LOIRET_45,
     LOT_46,
     LOTETGARONNE_47,
-    LAZERE_48,
+    LOZERE_48,
     MAINEETLOIRE_49,
     MANCHE_50,
     MARNE_51,
@@ -109,5 +109,16 @@ enum class Department {
     SAINTPIERREETMIQUELON_975,
     TERRESAUSTRALESETANTARCTIQUESFRANCAISES_984,
     WALLISETFUTUNA_986,
-    ETRANGER_99,
+    ETRANGER_99;
+
+    companion object {
+        fun findByCode(code: String?): Department? {
+            if (code == null) return null
+            return Department.values().find { it.name.endsWith("_$code") }
+        }
+
+        fun getDepartmentCode(department: Department?): String? {
+            return department?.name?.substringAfterLast("_")
+        }
+    }
 }

@@ -53,5 +53,4 @@ class QagNotificationController(
             NotificationResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
         }
     }
-
 }

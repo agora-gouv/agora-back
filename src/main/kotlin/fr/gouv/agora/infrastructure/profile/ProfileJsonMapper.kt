@@ -9,7 +9,7 @@ class ProfileJsonMapper {
         return ProfileInserting(
             gender = toGender(json.gender),
             yearOfBirth = json.yearOfBirth?.toIntOrNull(),
-            department = findDepartmentByNumber(json.department),
+            department = Department.findByCode(json.department),
             cityType = toCityType(json.cityType),
             jobCategory = toJobCategory(json.jobCategory),
             voteFrequency = toFrequency(json.voteFrequency),
@@ -23,7 +23,7 @@ class ProfileJsonMapper {
         return ProfileJson(
             gender = fromGender(profile.gender),
             yearOfBirth = profile.yearOfBirth?.toString(),
-            department = toDepartmentNumber(profile.department),
+            department = Department.getDepartmentCode(profile.department),
             cityType = fromCityType(profile.cityType),
             jobCategory = fromJobCategory(profile.jobCategory),
             voteFrequency = fromFrequency(profile.voteFrequency),
@@ -86,14 +86,6 @@ class ProfileJsonMapper {
         JobCategory.AUTRESOUSANSACTIVITEPRO -> "AU"
         JobCategory.UNKNOWN -> "UN"
         null -> null
-    }
-
-    private fun findDepartmentByNumber(number: String?): Department? {
-        return number?.let { Department.values().find { it.name.endsWith("_$number") } }
-    }
-
-    private fun toDepartmentNumber(department: Department?): String? {
-        return department?.name?.substringAfterLast("_")
     }
 
     private fun toFrequency(frequencyString: String?) = when (frequencyString) {

@@ -8,7 +8,7 @@ import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationPreviewPageRepositoryImpl(
+class ConsultationPreviewPageCacheRepositoryImpl(
     private val cacheManager: CacheManager,
     private val objectMapper: ObjectMapper,
 ) : ConsultationPreviewPageRepository {

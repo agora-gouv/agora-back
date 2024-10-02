@@ -6,7 +6,7 @@ import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiDataList
 import fr.gouv.agora.infrastructure.common.StrapiDataNullable
-import fr.gouv.agora.infrastructure.thematique.dto.StrapiThematiqueDTO
+import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import java.time.LocalDateTime
 
 @JsonIgnoreProperties("createdAt", "updatedAt")
@@ -34,7 +34,7 @@ data class ConsultationStrapiDTO(
     @JsonProperty(value = "nombre_participants_cible")
     val nombreParticipantsCible: Int,
     @JsonProperty(value = "thematique")
-    val thematique: StrapiData<StrapiThematiqueDTO>,
+    val thematique: StrapiData<ThematiqueStrapiDTO>,
     @JsonProperty(value = "questions")
     val questions: List<StrapiConsultationQuestion>,
     @JsonProperty(value = "consultation_avant_reponse")
@@ -49,6 +49,8 @@ data class ConsultationStrapiDTO(
     val consultationContenuAutres: StrapiDataList<StrapiConsultationContenuAutre>,
     @JsonProperty("consultation_contenu_a_venir")
     val consultationContenuAVenir: StrapiDataNullable<StrapiConsultationAVenir>,
+    @JsonProperty("territoire")
+    val territoire: String,
 ) {
     fun isPublished(): Boolean {
         return publishedAt != null
@@ -64,11 +66,13 @@ data class ConsultationStrapiDTO(
     }
 
     fun getNextQuestionId(question: StrapiConsultationQuestion): String? {
-        return if (question.numeroQuestionSuivante != null) {
-            questions.firstOrNull { question.numeroQuestionSuivante!! == it.numero }?.id
-        } else {
-            questions.firstOrNull { question.numero + 1 == it.numero }?.id
+        if (question.numeroQuestionSuivante == null) {
+            return questions.firstOrNull { question.numero + 1 == it.numero }?.id
         }
+
+        if (question.numeroQuestionSuivante == 999) return null
+
+        return questions.firstOrNull { question.numeroQuestionSuivante == it.numero }?.id
     }
 
     private fun getLastContenuAutre(now: LocalDateTime): StrapiAttributes<StrapiConsultationContenuAutre>? {

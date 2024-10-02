@@ -11,4 +11,5 @@ data class ConsultationWithUpdateInfo(
     val endDate: LocalDateTime,
     val updateDate: LocalDateTime,
     val updateLabel: String?,
+    val territory: String,
 )

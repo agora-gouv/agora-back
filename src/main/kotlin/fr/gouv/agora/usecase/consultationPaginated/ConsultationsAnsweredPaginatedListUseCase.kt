@@ -38,14 +38,9 @@ class ConsultationsAnsweredPaginatedListUseCase(
 
     private fun buildConsultationAnsweredPreviewList(userId: String, offset: Int): List<ConsultationPreviewFinished> {
         return consultationPreviewFinishedRepository.getConsultationAnsweredList(userId = userId, offset = offset)
-            .mapNotNull { consultationInfo ->
-                thematiqueRepository.getThematique(consultationInfo.thematiqueId)
-                    ?.let { thematique ->
-                        mapper.toConsultationPreviewFinished(
-                            consultationInfo = consultationInfo,
-                            thematique = thematique,
-                        )
-                    }
+            .let {
+                val thematiques = thematiqueRepository.getThematiqueList()
+                mapper.toConsultationPreviewFinished(it, thematiques)
             }
     }
 }

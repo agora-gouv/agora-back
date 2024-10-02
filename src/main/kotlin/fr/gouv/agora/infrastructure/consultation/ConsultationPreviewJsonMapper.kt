@@ -34,6 +34,7 @@ class ConsultationPreviewJsonMapper(
                     endDate = dateMapper.toFormattedDate(domain.endDate),
                     thematique = thematiqueJsonMapper.toNoIdJson(domain.thematique),
                     highlightLabel = domain.highlightLabel(LocalDateTime.now(clock)),
+                    territory = domain.territory,
                 )
             },
             finishedList = domainFinishedList.map(::toJson),
@@ -41,7 +42,7 @@ class ConsultationPreviewJsonMapper(
         )
     }
 
-    private fun toJson(domain: ConsultationPreviewFinished): ConsultationFinishedJson {
+    fun toJson(domain: ConsultationPreviewFinished): ConsultationFinishedJson {
         val now = LocalDateTime.now(clock)
 
         return ConsultationFinishedJson(
@@ -53,6 +54,7 @@ class ConsultationPreviewJsonMapper(
             step = statusToJson(domain.getStep(now)),
             updateLabel = domain.getUpdateLabel(now),
             updateDate = dateMapper.toFormattedDate(domain.lastUpdateDate),
+            territory = domain.territory,
         )
     }
 

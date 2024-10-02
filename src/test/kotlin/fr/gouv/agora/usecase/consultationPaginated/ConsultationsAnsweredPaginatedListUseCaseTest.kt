@@ -115,25 +115,21 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
     @Test
     fun `getConsultationAnsweredPaginatedList - when no cache and have a correct pageNumber - should return consultationInfo with a matching thematique mapped to ConsultationPreviewFinished`() {
         // Given
-        val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
-            given(it.thematiqueId).willReturn("thematiqueId")
-        }
-        val consultationInfoWithoutThematique = mock(ConsultationWithUpdateInfo::class.java).also {
-            given(it.thematiqueId).willReturn("unknownThematiqueId")
-        }
-        val thematique = mock(Thematique::class.java)
+        val consultationInfo = mock(ConsultationWithUpdateInfo::class.java)
+        val consultationInfoWithoutThematique = mock(ConsultationWithUpdateInfo::class.java)
+        val thematiques = listOf(mock(Thematique::class.java))
         val consultationPreviewAnswered = mock(ConsultationPreviewFinished::class.java)
 
         given(consultationPreviewAnsweredRepository.getConsultationAnsweredCount(userId = "userId")).willReturn(34)
         given(consultationPreviewAnsweredRepository.getConsultationAnsweredList(userId = "userId", offset = 0))
             .willReturn(listOf(consultationInfo, consultationInfoWithoutThematique))
-        given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
+        given(thematiqueRepository.getThematiqueList()).willReturn(thematiques)
         given(
             mapper.toConsultationPreviewFinished(
-                consultationInfo = consultationInfo,
-                thematique = thematique,
+                listOf(consultationInfo, consultationInfoWithoutThematique),
+                thematiques,
             )
-        ).willReturn(consultationPreviewAnswered)
+        ).willReturn(listOf(consultationPreviewAnswered))
 
         // When
         val result = useCase.getConsultationAnsweredPaginatedList(userId = "userId", pageNumber = 1)
@@ -152,8 +148,6 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
         then(consultationPreviewAnsweredRepository).should().getConsultationAnsweredCount(userId = "userId")
         then(consultationPreviewAnsweredRepository).should().getConsultationAnsweredList(userId = "userId", offset = 0)
         then(consultationPreviewAnsweredRepository).shouldHaveNoMoreInteractions()
-        then(mapper).should(only())
-            .toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)
         then(mapper).shouldHaveNoMoreInteractions()
     }
 
@@ -166,10 +160,8 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
         expectedMaxPageNumber: Int,
     ) {
         // Given
-        val consultationInfo = mock(ConsultationWithUpdateInfo::class.java).also {
-            given(it.thematiqueId).willReturn("thematiqueId")
-        }
-        val thematique = mock(Thematique::class.java)
+        val consultationInfo = mock(ConsultationWithUpdateInfo::class.java)
+        val thematiques = listOf(mock(Thematique::class.java))
         val consultationPreviewAnswered = mock(ConsultationPreviewFinished::class.java)
 
         given(consultationPreviewAnsweredRepository.getConsultationAnsweredCount(userId = "userId"))
@@ -180,13 +172,9 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
                 offset = expectedOffset
             )
         ).willReturn(listOf(consultationInfo))
-        given(thematiqueRepository.getThematique("thematiqueId")).willReturn(thematique)
-        given(
-            mapper.toConsultationPreviewFinished(
-                consultationInfo = consultationInfo,
-                thematique = thematique,
-            )
-        ).willReturn(consultationPreviewAnswered)
+        given(thematiqueRepository.getThematiqueList()).willReturn(thematiques)
+        given(mapper.toConsultationPreviewFinished(listOf(consultationInfo), thematiques))
+            .willReturn(listOf(consultationPreviewAnswered))
 
         // When
         val result = useCase.getConsultationAnsweredPaginatedList(userId = "userId", pageNumber = pageNumber)
@@ -207,7 +195,7 @@ internal class ConsultationsAnsweredPaginatedListUseCaseTest {
             .getConsultationAnsweredList(userId = "userId", offset = expectedOffset)
         then(consultationPreviewAnsweredRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(only())
-            .toConsultationPreviewFinished(consultationInfo = consultationInfo, thematique = thematique)
+            .toConsultationPreviewFinished(listOf(consultationInfo), thematiques)
         then(mapper).shouldHaveNoMoreInteractions()
     }
 

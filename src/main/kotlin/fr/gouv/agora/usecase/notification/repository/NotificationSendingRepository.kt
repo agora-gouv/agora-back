@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.notification.repository
 
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.ConsultationMultiNotificationRequest
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.QagMultiNotificationRequest
+import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.*
 
 interface NotificationSendingRepository {
     fun sendQagDetailsNotification(request: QagNotificationRequest): NotificationResult
@@ -9,6 +8,7 @@ interface NotificationSendingRepository {
     fun sendConsultationDetailsMultiNotification(request: ConsultationMultiNotificationRequest)
     fun sendConsultationUpdateMultiNotification(request: ConsultationMultiNotificationRequest)
     fun sendUserNotification(request: NotificationRequest): NotificationResult
+    fun sendGenericMultiNotification(request: GenericMultiNotificationRequest)
 }
 
 data class NotificationRequest(
@@ -41,6 +41,14 @@ sealed class MultiNotificationRequest {
         override val description: String,
         override val fcmTokenList: List<String>,
         val consultationId: String,
+    ) : MultiNotificationRequest()
+
+    data class GenericMultiNotificationRequest(
+        override val title: String,
+        override val description: String,
+        override val fcmTokenList: List<String>,
+        val page: String,
+        val pageArgument: String?,
     ) : MultiNotificationRequest()
 }
 

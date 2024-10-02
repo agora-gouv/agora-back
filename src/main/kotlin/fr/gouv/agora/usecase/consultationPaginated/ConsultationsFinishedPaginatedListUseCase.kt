@@ -1,6 +1,7 @@
 package fr.gouv.agora.usecase.consultationPaginated
 
 import fr.gouv.agora.domain.ConsultationPreviewFinished
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationFinishedPaginatedListCacheRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
@@ -16,13 +17,14 @@ class ConsultationsFinishedPaginatedListUseCase(
     private val cacheRepository: ConsultationFinishedPaginatedListCacheRepository,
 ) {
     companion object {
-        private const val MAX_PAGE_LIST_SIZE = 20
+        private const val MAX_PAGE_LIST_SIZE = 100
     }
 
-    fun getConsultationFinishedPaginatedList(pageNumber: Int): ConsultationFinishedPaginatedList? {
+    fun getConsultationFinishedPaginatedList(pageNumber: Int, inputTerritory: String): ConsultationFinishedPaginatedList? {
         if (pageNumber <= 0) return null
+        val territory = inputTerritory.let { Territoire.from(inputTerritory) }
 
-        cacheRepository.getConsultationFinishedPage(pageNumber = pageNumber)?.let { pageContent ->
+        cacheRepository.getConsultationFinishedPage(pageNumber, territory)?.let { pageContent ->
             return pageContent
         }
 
@@ -30,25 +32,18 @@ class ConsultationsFinishedPaginatedListUseCase(
         val offset = (pageNumber - 1) * MAX_PAGE_LIST_SIZE
         if (offset > consultationsCount) return null
 
-        val consultationFinishedList = consultationPreviewFinishedRepository.getConsultationFinishedList(offset)
-            .mapNotNull { consultationInfo ->
-                thematiqueRepository.getThematique(consultationInfo.thematiqueId)
-                    ?.let { thematique ->
-                        mapper.toConsultationPreviewFinished(
-                            consultationInfo = consultationInfo,
-                            thematique = thematique,
-                        )
-                    }
-            }
+        val thematiques = thematiqueRepository.getThematiqueList()
+        val consultationFinishedList = consultationPreviewFinishedRepository
+            .getConsultationFinishedList(offset, MAX_PAGE_LIST_SIZE, territory)
+            .let { consultationsInfo -> mapper.toConsultationPreviewFinished(consultationsInfo, thematiques) }
 
         val maxPageNumber = ceil(consultationsCount.toDouble() / MAX_PAGE_LIST_SIZE.toDouble()).toInt()
 
         return ConsultationFinishedPaginatedList(
             consultationFinishedList = consultationFinishedList,
             maxPageNumber = maxPageNumber,
-        ).also { cacheRepository.initConsultationFinishedPage(pageNumber = pageNumber, content = it) }
+        ).also { cacheRepository.initConsultationFinishedPage(pageNumber, it, territory) }
     }
-
 }
 
 data class ConsultationFinishedPaginatedList(

@@ -1,5 +1,7 @@
 package fr.gouv.agora.infrastructure.common
 
+import fr.gouv.agora.domain.exceptions.InvalidNumberOfDepartmentsException
+import fr.gouv.agora.domain.exceptions.InvalidTerritoryException
 import fr.gouv.agora.usecase.consultation.exception.ConsultationNotFoundException
 import fr.gouv.agora.usecase.consultation.exception.ConsultationUpdateNotFoundException
 import fr.gouv.agora.usecase.notification.FcmTokenVideException
@@ -40,6 +42,18 @@ class DefaultControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handler(e: ConsultationUpdateNotFoundException): ErrorResponse {
         return ErrorResponse("Veuillez renseigner un id de contenu de consultation existant.")
+    }
+
+    @ExceptionHandler(InvalidTerritoryException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handler(e: InvalidTerritoryException): ErrorResponse {
+        return ErrorResponse(e.message!!)
+    }
+
+    @ExceptionHandler(InvalidNumberOfDepartmentsException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handler(e: InvalidNumberOfDepartmentsException): ErrorResponse {
+        return ErrorResponse(e.message!!)
     }
 }
 

@@ -20,7 +20,6 @@ class SendQagNotificationUseCase(
     private val notificationMessageRepository: NotificationMessageRepository,
     private val notificationRepository: NotificationRepository,
 ) {
-
     fun sendNotificationQagUpdate(title: String, description: String, qagId: String): NotificationResult {
         if (qagInfoRepository.getQagInfo(qagId) == null) throw QagIdInconnuException(qagId)
 

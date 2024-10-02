@@ -11,12 +11,14 @@ class ProfileMapper {
         return Profile(
             gender = toGender(dto.gender),
             yearOfBirth = dto.yearOfBirth,
-            department = findDepartmentByNumber(dto.department),
+            department = Department.findByCode(dto.department),
             cityType = toCityType(dto.cityType),
             jobCategory = toJobCategory(dto.jobCategory),
             voteFrequency = toFrequency(dto.voteFrequency),
             publicMeetingFrequency = toFrequency(dto.publicMeetingFrequency),
             consultationFrequency = toFrequency(dto.consultationFrequency),
+            primaryDepartment = dto.primaryDepartment?.let { Territoire.Departement.from(it) },
+            secondaryDepartment = dto.secondaryDepartment?.let { Territoire.Departement.from(it) },
         )
     }
 
@@ -26,13 +28,15 @@ class ProfileMapper {
                 id = UUID.randomUUID(),
                 gender = fromGender(domain.gender),
                 yearOfBirth = domain.yearOfBirth,
-                department = toDepartmentNumber(domain.department),
+                department = Department.getDepartmentCode(domain.department),
                 cityType = fromCityType(domain.cityType),
                 jobCategory = fromJobCategory(domain.jobCategory),
                 voteFrequency = fromFrequency(domain.voteFrequency),
                 publicMeetingFrequency = fromFrequency(domain.publicMeetingFrequency),
                 consultationFrequency = fromFrequency(domain.consultationFrequency),
                 userId = UUID.fromString(domain.userId),
+                primaryDepartment = null,
+                secondaryDepartment = null,
             )
         } catch (e: IllegalArgumentException) {
             null
@@ -51,6 +55,8 @@ class ProfileMapper {
             publicMeetingFrequency = newProfileDTO.publicMeetingFrequency,
             consultationFrequency = newProfileDTO.consultationFrequency,
             userId = newProfileDTO.userId,
+            primaryDepartment = oldProfileDTO.primaryDepartment,
+            secondaryDepartment = oldProfileDTO.secondaryDepartment,
         )
     }
 
@@ -108,14 +114,6 @@ class ProfileMapper {
         JobCategory.AUTRESOUSANSACTIVITEPRO -> "AU"
         JobCategory.UNKNOWN -> "UN"
         null -> null
-    }
-
-    private fun findDepartmentByNumber(number: String?): Department? {
-        return number?.let { Department.values().find { it.name.endsWith("_$number") } }
-    }
-
-    private fun toDepartmentNumber(department: Department?): String? {
-        return department?.name?.substringAfterLast("_")
     }
 
     private fun toFrequency(frequencyString: String?) = when (frequencyString) {
