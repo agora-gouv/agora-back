@@ -341,6 +341,7 @@ internal class QuestionsMapperTest {
             nextQuestionId = null,
             consultationId = consultationUUID.toString(),
             description = "description",
+            urlImage = null,
         )
 
         @Test

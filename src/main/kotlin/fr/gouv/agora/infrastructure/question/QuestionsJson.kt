@@ -88,6 +88,8 @@ data class QuestionChapterJson(
     val description: String,
     @JsonProperty("nextQuestionId")
     val nextQuestionId: String?,
+    @JsonProperty("imageUrl")
+    val imageUrl: String?,
 )
 
 data class QuestionConditionalJson(
