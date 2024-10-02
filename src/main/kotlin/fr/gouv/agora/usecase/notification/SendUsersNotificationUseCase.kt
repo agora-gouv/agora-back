@@ -16,7 +16,7 @@ class SendUsersNotificationUseCase(
     private val notificationRepository: NotificationRepository,
 ) {
     fun execute(title: String, description: String, page: String, pageArgument: String?): NotificationResult {
-        val userList = userRepository.getAllUsers()
+        val userList = userRepository.getAllUsers().take(50) // TODO à supprimer
 
         notificationSendingRepository.sendGenericMultiNotification(
             MultiNotificationRequest.GenericMultiNotificationRequest(
