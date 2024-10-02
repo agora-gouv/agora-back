@@ -7,14 +7,10 @@ import org.springframework.stereotype.Service
 @Service
 class SupportQagUseCase(
     private val supportQagRepository: GetSupportQagRepository,
-    private val cacheRepository: SupportQagCacheRepository,
 ) {
 
     fun getUserSupportedQagIds(userId: String): List<String> {
-        return cacheRepository.getUserSupportedQagIds(userId = userId)
-            ?: supportQagRepository.getUserSupportedQags(userId = userId).also { userSupportedQagIds ->
-                cacheRepository.initUserSupportedQagIds(userId, userSupportedQagIds)
-            }
+        return supportQagRepository.getUserSupportedQags(userId = userId)
     }
 
     fun getSupportedQagCount(userId: String, thematiqueId: String?): Int {

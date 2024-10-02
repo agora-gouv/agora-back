@@ -14,7 +14,6 @@ class SelectMostPopularQagUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val qagInfoRepository: QagInfoRepository,
     private val randomQagSelector: RandomQagSelector,
-    private val cacheRepository: ResponseQagPreviewCacheRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(SelectMostPopularQagUseCase::class.java)
 
@@ -36,7 +35,6 @@ class SelectMostPopularQagUseCase(
         if (qagInfoRepository.selectQagForResponse(qagId = selectedQag.id) == QagUpdateResult.Failure) {
             logger.info("⚠️️ Select popular QaG error")
         }
-        cacheRepository.evictResponseQagPreviewList()
         logger.info("🗳️ Selecting the most popular QaG finished !")
     }
 

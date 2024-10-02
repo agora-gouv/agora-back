@@ -17,7 +17,6 @@ import java.time.LocalDateTime
 class ArchiveOldQagUseCase(
     private val featureFlagsRepository: FeatureFlagsRepository,
     private val qagInfoRepository: QagInfoRepository,
-    private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
     private val clock: Clock,
 ) {
@@ -29,8 +28,6 @@ class ArchiveOldQagUseCase(
         logger.info("📜️ Archiving old QaGs...")
         val mondayThisWeek = LocalDateTime.now(clock).with(DayOfWeek.MONDAY).withHour(14).withMinute(0).withSecond(0)
         qagInfoRepository.archiveOldQags(mondayThisWeek.toDate())
-        askQagStatusCacheRepository.clear()
-        qagListsCacheRepository.clear()
         logger.info("📜️ Archiving old QaGs finished !")
 
         return ArchiveQagListResult.SUCCESS

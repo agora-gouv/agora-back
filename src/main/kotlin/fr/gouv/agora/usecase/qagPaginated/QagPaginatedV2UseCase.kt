@@ -20,7 +20,6 @@ import kotlin.math.ceil
 class QagPaginatedV2UseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val thematiqueRepository: ThematiqueRepository,
-    private val qagListsCacheRepository: QagListsCacheRepository,
     private val headerRepository: HeaderQagRepository,
     private val headerCacheRepository: HeaderQagCacheRepository,
     private val mapper: QagPreviewMapper,
@@ -41,20 +40,13 @@ class QagPaginatedV2UseCase(
         pageNumber: Int,
         thematiqueId: String?,
     ): QagsAndMaxPageCountV2? {
-        val qagListWithMaxPageCount =
-            qagListsCacheRepository.getQagPopularList(thematiqueId = thematiqueId, pageNumber = pageNumber)
-                ?: getQagPaginated(
-                    getQagMethod = RetrieveQagMethod.WithoutUserId(QagInfoRepository::getPopularQagsPaginatedV2),
-                    userId = userId,
-                    pageNumber = pageNumber,
-                    thematiqueId = thematiqueId
-                )?.also {
-                    qagListsCacheRepository.initQagPopularList(
-                        thematiqueId = thematiqueId,
-                        pageNumber = pageNumber,
-                        qagListWithMaxPageCount = it
-                    )
-                }
+        val qagListWithMaxPageCount = getQagPaginated(
+            getQagMethod = RetrieveQagMethod.WithoutUserId(QagInfoRepository::getPopularQagsPaginatedV2),
+            userId = userId,
+            pageNumber = pageNumber,
+            thematiqueId = thematiqueId
+        )
+
         return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = TOP, pageNumber = pageNumber)
     }
 
@@ -63,20 +55,12 @@ class QagPaginatedV2UseCase(
         pageNumber: Int,
         thematiqueId: String?,
     ): QagsAndMaxPageCountV2? {
-        val qagListWithMaxPageCount =
-            qagListsCacheRepository.getQagLatestList(thematiqueId = thematiqueId, pageNumber = pageNumber)
-                ?: getQagPaginated(
-                    getQagMethod = RetrieveQagMethod.WithoutUserId(QagInfoRepository::getLatestQagsPaginatedV2),
-                    userId = userId,
-                    pageNumber = pageNumber,
-                    thematiqueId = thematiqueId
-                )?.also {
-                    qagListsCacheRepository.initQagLatestList(
-                        thematiqueId = thematiqueId,
-                        pageNumber = pageNumber,
-                        qagListWithMaxPageCount = it
-                    )
-                }
+        val qagListWithMaxPageCount = getQagPaginated(
+            getQagMethod = RetrieveQagMethod.WithoutUserId(QagInfoRepository::getLatestQagsPaginatedV2),
+            userId = userId,
+            pageNumber = pageNumber,
+            thematiqueId = thematiqueId
+        )
         return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = LATEST, pageNumber = pageNumber)
     }
 
@@ -86,42 +70,24 @@ class QagPaginatedV2UseCase(
         pageNumber: Int,
         thematiqueId: String?,
     ): QagsAndMaxPageCountV2? {
-        val qagListWithMaxPageCount = qagListsCacheRepository.getQagSupportedList(
+        val qagListWithMaxPageCount = getQagPaginated(
+            getQagMethod = RetrieveQagMethod.WithUserId(QagInfoRepository::getSupportedQagsPaginatedV2),
             userId = userId,
-            thematiqueId = thematiqueId,
-            pageNumber = pageNumber
+            pageNumber = pageNumber,
+            thematiqueId = thematiqueId
         )
-            ?: getQagPaginated(
-                getQagMethod = RetrieveQagMethod.WithUserId(QagInfoRepository::getSupportedQagsPaginatedV2),
-                userId = userId,
-                pageNumber = pageNumber,
-                thematiqueId = thematiqueId
-            )?.also {
-                qagListsCacheRepository.initQagSupportedList(
-                    userId = userId,
-                    thematiqueId = thematiqueId,
-                    pageNumber = pageNumber,
-                    qagListWithMaxPageCount = it
-                )
-            }
         return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = SUPPORTING, pageNumber = pageNumber)
     }
 
     fun getTrendingQag(
         userId: String,
     ): QagsAndMaxPageCountV2? {
-        val qagListWithMaxPageCount =
-            qagListsCacheRepository.getQagTrendingList()
-                ?: getQagPaginated(
-                    getQagMethod = RetrieveQagMethod.WithoutParams(QagInfoRepository::getTrendingQags),
-                    userId = userId,
-                    pageNumber = 1,
-                    thematiqueId = null,
-                )?.also {
-                    qagListsCacheRepository.initQagTrendingList(
-                        qagListWithMaxPageCount = it
-                    )
-                }
+        val qagListWithMaxPageCount = getQagPaginated(
+            getQagMethod = RetrieveQagMethod.WithoutParams(QagInfoRepository::getTrendingQags),
+            userId = userId,
+            pageNumber = 1,
+            thematiqueId = null,
+        )
         return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = TRENDING, pageNumber = 1)
     }
 

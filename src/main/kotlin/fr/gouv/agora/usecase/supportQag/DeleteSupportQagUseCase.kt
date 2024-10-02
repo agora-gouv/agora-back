@@ -19,9 +19,6 @@ class DeleteSupportQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val getSupportQagRepository: GetSupportQagRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val qagDetailsCacheRepository: QagDetailsCacheRepository,
-    private val supportQagCacheRepository: SupportQagCacheRepository,
-    private val qagListsCacheRepository: QagListsCacheRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(DeleteSupportQagUseCase::class.java)
 
@@ -43,45 +40,8 @@ class DeleteSupportQagUseCase(
             }
 
             QagStatus.OPEN, QagStatus.MODERATED_ACCEPTED -> {
-                val supportResult = supportQagRepository.deleteSupportQag(supportQagDeleting)
-                if (supportResult == SupportQagResult.SUCCESS) {
-                    updateCache(qagInfo, supportQagDeleting.userId)
-                } else {
-                    logger.error("⚠️ Remove support error")
-                }
-                supportResult
+                return supportQagRepository.deleteSupportQag(supportQagDeleting)
             }
         }
     }
-
-    private fun updateCache(qagInfo: QagInfo, userId: String) {
-        qagDetailsCacheRepository.decrementSupportCount(qagInfo.id)
-        supportQagCacheRepository.removeSupportedQagIds(userId = userId, qagId = qagInfo.id)
-        qagListsCacheRepository.decrementQagPopularSupportCount(thematiqueId = null, pageNumber = 1, qagId = qagInfo.id)
-        qagListsCacheRepository.decrementQagPopularSupportCount(
-            thematiqueId = qagInfo.thematiqueId,
-            pageNumber = 1,
-            qagId = qagInfo.id
-        )
-        qagListsCacheRepository.decrementQagLatestSupportCount(thematiqueId = null, pageNumber = 1, qagId = qagInfo.id)
-        qagListsCacheRepository.decrementQagLatestSupportCount(
-            thematiqueId = qagInfo.thematiqueId,
-            pageNumber = 1,
-            qagId = qagInfo.id
-        )
-        qagListsCacheRepository.decrementSupportedSupportCount(
-            userId = userId,
-            thematiqueId = null,
-            pageNumber = 1,
-            qagId = qagInfo.id
-        )
-        qagListsCacheRepository.decrementSupportedSupportCount(
-            userId = userId,
-            thematiqueId = qagInfo.thematiqueId,
-            pageNumber = 1,
-            qagId = qagInfo.id
-        )
-        qagListsCacheRepository.decrementTrendingSupportCount(qagId = qagInfo.id)
-    }
-
 }

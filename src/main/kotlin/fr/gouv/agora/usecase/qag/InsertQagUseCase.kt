@@ -18,7 +18,6 @@ class InsertQagUseCase(
     private val qagInfoRepository: QagInfoRepository,
     private val supportQagRepository: SupportQagRepository,
     private val qagListsCacheRepository: QagListsCacheRepository,
-    private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
     private val supportQagCacheRepository: SupportQagCacheRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(InsertQagUseCase::class.java)
@@ -44,21 +43,6 @@ class InsertQagUseCase(
                     userId = qagInserting.userId,
                 )
             )
-            supportQagCacheRepository.addSupportedQagIds(
-                userId = qagInserting.userId,
-                qagId = qagInsertionResult.qagInfo.id,
-            )
-            qagListsCacheRepository.evictQagSupportedList(
-                userId = qagInserting.userId,
-                thematiqueId = null,
-                pageNumber = 1
-            )
-            qagListsCacheRepository.evictQagSupportedList(
-                userId = qagInserting.userId,
-                thematiqueId = qagInserting.thematiqueId,
-                pageNumber = 1
-            )
-            askQagStatusCacheRepository.evictAskQagStatus(userId = qagInserting.userId)
         } else {
             logger.error("⚠️ Insert QaG error")
         }
