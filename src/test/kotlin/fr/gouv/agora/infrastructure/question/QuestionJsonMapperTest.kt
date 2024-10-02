@@ -105,6 +105,7 @@ class QuestionJsonMapperTest {
         consultationId = "consultationId",
         nextQuestionId = "nextQuestionId",
         description = "description",
+        urlImage = null,
     )
 
     private val expectedQuestionChapterJson = QuestionChapterJson(
@@ -114,6 +115,7 @@ class QuestionJsonMapperTest {
         order = 1,
         description = "description",
         nextQuestionId = "nextQuestionId",
+        imageUrl = null,
     )
 
     private val questionOpen = QuestionOpen(

@@ -65,5 +65,6 @@ data class QuestionChapter(
     override val order: Int,
     override val nextQuestionId: String?,
     override val consultationId: String,
+    val urlImage: String?,
     val description: String,
 ) : Question()

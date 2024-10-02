@@ -113,6 +113,7 @@ class QuestionJsonMapper {
             order = domain.order,
             description = domain.description,
             nextQuestionId = domain.nextQuestionId,
+            imageUrl = domain.urlImage,
         )
     }
 

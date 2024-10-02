@@ -142,6 +142,7 @@ class QuestionsMapper(
         consultationId = dto.consultationId.toString(),
         nextQuestionId = nextQuestionId?.toString(),
         description = dto.description ?: "",
+        urlImage = null,
     )
 
     private fun buildQuestionConditional(

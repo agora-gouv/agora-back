@@ -95,6 +95,7 @@ class QuestionMapper {
             questionDescriptionStrapi.numero,
             consultationDTO.attributes.getNextQuestionId(questionDescriptionStrapi),
             consultationDTO.id,
+            questionDescriptionStrapi.urlImage,
             questionDescriptionStrapi.description.toHtml()
         )
     }

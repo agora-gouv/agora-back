@@ -91,6 +91,8 @@ data class StrapiConsultationQuestionDescription(
     override val id: String,
     @JsonProperty("titre")
     val titre: String,
+    @JsonProperty("url_image")
+    val urlImage: String?,
     @JsonProperty("numero")
     override val numero: Int,
     @JsonProperty("description")
