@@ -191,7 +191,7 @@ class SendNotificationTask(
 
     override fun run() {
         try {
-            val response = FirebaseMessaging.getInstance().sendMulticast(notificationMessage)
+            val response = FirebaseMessaging.getInstance().sendEachForMulticast(notificationMessage)
             logger.info("📩 Send multi-notification n°${batchIndex + 1}/$batchCount results:\n- ${response.responses.size} total responses\n- ${response.successCount} successes\n- ${response.failureCount} failures")
         } catch (e: FirebaseMessagingException) {
             logger.error("⚠️ Send multi-notification error on batch n°${batchIndex + 1}/$batchCount ${e.message}")
