@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController
 class ReferentielController {
     @Operation(summary = "Récupérer les régions et les départements français")
     @GetMapping("/regions-et-departements")
-    fun getRegionsEtDepartements(): ResponseEntity<List<RegionJson>> {
+    fun getRegionsEtDepartements(): ResponseEntity<TerritoiresJson> {
         val regionsEtDepartements = Territoire.Region.values().map {
             RegionJson(it.value, it.getDepartementsNames())
         }
 
-        return ResponseEntity.ok().body(regionsEtDepartements)
+        val territoires = TerritoiresJson(regionsEtDepartements, Territoire.Pays.values().map { it.value })
+
+        return ResponseEntity.ok().body(territoires)
     }
 }
