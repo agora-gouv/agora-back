@@ -4,8 +4,6 @@ import fr.gouv.agora.domain.QagInserting
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.domain.SupportQagInserting
 import fr.gouv.agora.usecase.qag.repository.*
-import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
-import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -30,16 +28,7 @@ internal class InsertQagUseCaseTest {
     private lateinit var qagInfoRepository: QagInfoRepository
 
     @Mock
-    private lateinit var qagListsCacheRepository: QagListsCacheRepository
-
-    @Mock
     private lateinit var supportQagRepository: SupportQagRepository
-
-    @Mock
-    private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
-
-    @Mock
-    private lateinit var supportQagCacheRepository: SupportQagCacheRepository
 
     private val qagInserting = QagInserting(
         thematiqueId = "thematiqueId",
@@ -83,8 +72,6 @@ internal class InsertQagUseCaseTest {
         then(contentSanitizer).should().sanitize("username", 50)
         then(contentSanitizer).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).insertQagInfo(sanitizedQagInserting)
-        then(qagListsCacheRepository).shouldHaveNoInteractions()
-        then(askQagStatusCacheRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -111,15 +98,6 @@ internal class InsertQagUseCaseTest {
                 userId = "userId",
             )
         )
-        then(qagListsCacheRepository).should().evictQagSupportedList(
-            userId = "userId", thematiqueId = null, pageNumber = 1
-        )
-        then(qagListsCacheRepository).should().evictQagSupportedList(
-            userId = "userId", thematiqueId = "thematiqueId", pageNumber = 1
-        )
-        then(qagListsCacheRepository).shouldHaveNoMoreInteractions()
-        then(askQagStatusCacheRepository).should(only()).evictAskQagStatus(userId = "userId")
-        then(supportQagCacheRepository).should(only()).addSupportedQagIds(userId = "userId", qagId = "qagId")
     }
 
 }

@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.supportQag
 
 import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
-import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import org.springframework.stereotype.Service
 
 @Service

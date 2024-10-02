@@ -3,14 +3,12 @@ package fr.gouv.agora.usecase.qagPaginated
 import fr.gouv.agora.domain.HeaderQag
 import fr.gouv.agora.domain.QagPreview
 import fr.gouv.agora.domain.QagWithSupportCount
-import fr.gouv.agora.infrastructure.qag.repository.QagListWithMaxPageCount
 import fr.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheResult
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagRepository
-import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
@@ -200,3 +198,8 @@ private sealed class RetrieveQagMethod {
         val method: QagInfoRepository.() -> List<QagInfoWithSupportCount>,
     ) : RetrieveQagMethod()
 }
+
+data class QagListWithMaxPageCount(
+    val maxPageCount: Int,
+    val qags: List<QagWithSupportCount>,
+)

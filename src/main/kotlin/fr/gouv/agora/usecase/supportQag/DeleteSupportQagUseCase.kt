@@ -2,12 +2,8 @@ package fr.gouv.agora.usecase.supportQag
 
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.domain.SupportQagDeleting
-import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
-import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.GetSupportQagRepository
-import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagResult
 import org.slf4j.Logger

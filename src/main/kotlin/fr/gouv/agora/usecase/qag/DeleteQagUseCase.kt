@@ -2,10 +2,8 @@ package fr.gouv.agora.usecase.qag
 
 import fr.gouv.agora.domain.QagDeleteLog
 import fr.gouv.agora.domain.QagStatus
-import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagDeleteLogRepository
 import fr.gouv.agora.usecase.qag.repository.QagDeleteResult
-import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.springframework.stereotype.Service

@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.qag
 
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
-import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 import java.time.Clock

@@ -4,9 +4,7 @@ import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
-import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
-import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -33,12 +31,6 @@ internal class ArchiveOldQagUseCaseTest {
     @Mock
     private lateinit var qagUpdatesRepository: QagUpdatesRepository
 
-    @Mock
-    private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
-
-    @Mock
-    private lateinit var qagListsCacheRepository: QagListsCacheRepository
-
     @Test
     fun `archiveOldQag - when feature disabled - should do nothing and return FAILURE`() {
         // Given
@@ -53,7 +45,6 @@ internal class ArchiveOldQagUseCaseTest {
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
         then(qagInfoRepository).shouldHaveNoInteractions()
         then(qagUpdatesRepository).shouldHaveNoInteractions()
-        then(qagListsCacheRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -72,7 +63,6 @@ internal class ArchiveOldQagUseCaseTest {
         assertThat(result).isEqualTo(ArchiveQagListResult.SUCCESS)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
         then(qagInfoRepository).should(only()).archiveOldQags(resetDate.toDate())
-        then(qagListsCacheRepository).should(only()).clear()
     }
 
     @Test
@@ -91,16 +81,12 @@ internal class ArchiveOldQagUseCaseTest {
         assertThat(result).isEqualTo(ArchiveQagListResult.SUCCESS)
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
         then(qagInfoRepository).should(only()).archiveOldQags(resetDate.toDate())
-        then(askQagStatusCacheRepository).should(only()).clear()
-        then(qagListsCacheRepository).should(only()).clear()
     }
 
     private fun mockDate(localDateTime: LocalDateTime) {
         useCase = ArchiveOldQagUseCase(
             featureFlagsRepository = featureFlagsRepository,
             qagInfoRepository = qagInfoRepository,
-            askQagStatusCacheRepository = askQagStatusCacheRepository,
-            qagListsCacheRepository = qagListsCacheRepository,
             clock = TestUtils.getFixedClock(localDateTime),
         )
     }
