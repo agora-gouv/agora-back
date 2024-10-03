@@ -35,6 +35,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .requestMatchers("/signup", "/login").permitAll()
             .requestMatchers("/moderatus/**").permitAll()
             .requestMatchers("/api/public/**").permitAll()
+            .requestMatchers("/welcome_page/last_news").permitAll()
             .requestMatchers("/error").permitAll()
             .requestMatchers("/referentiels/regions-et-departements").permitAll()
             .requestMatchers("/participation_charter").permitAll()
