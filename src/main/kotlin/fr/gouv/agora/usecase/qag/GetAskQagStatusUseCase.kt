@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.qag
 
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
-import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 import java.time.Clock
@@ -12,20 +11,14 @@ import java.util.Date
 @Service
 class GetAskQagStatusUseCase(
     private val qagInfoRepository: QagInfoRepository,
-    private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
     private val clock: Clock,
 ) {
     fun getAskQagStatus(userId: String): AskQagStatus {
-        val cachedStatus = askQagStatusCacheRepository.getAskQagStatus(userId = userId)
-        if (cachedStatus != null) return cachedStatus
-
         val latestQagByUser = qagInfoRepository.getUserLastQagInfo(userId = userId)
         return when {
             latestQagByUser == null -> AskQagStatus.ENABLED
             isDateWithinTheWeek(latestQagByUser.date) -> AskQagStatus.WEEKLY_LIMIT_REACHED
             else -> AskQagStatus.ENABLED
-        }.also {
-            askQagStatusCacheRepository.initAskQagStatus(userId = userId, status = it)
         }
     }
 

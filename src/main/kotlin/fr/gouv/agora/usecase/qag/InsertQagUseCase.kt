@@ -2,11 +2,8 @@ package fr.gouv.agora.usecase.qag
 
 import fr.gouv.agora.domain.QagInserting
 import fr.gouv.agora.domain.SupportQagInserting
-import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInsertionResult
-import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
-import fr.gouv.agora.usecase.supportQag.repository.SupportQagCacheRepository
 import fr.gouv.agora.usecase.supportQag.repository.SupportQagRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -17,9 +14,6 @@ class InsertQagUseCase(
     private val contentSanitizer: ContentSanitizer,
     private val qagInfoRepository: QagInfoRepository,
     private val supportQagRepository: SupportQagRepository,
-    private val qagListsCacheRepository: QagListsCacheRepository,
-    private val askQagStatusCacheRepository: AskQagStatusCacheRepository,
-    private val supportQagCacheRepository: SupportQagCacheRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(InsertQagUseCase::class.java)
 
@@ -44,21 +38,6 @@ class InsertQagUseCase(
                     userId = qagInserting.userId,
                 )
             )
-            supportQagCacheRepository.addSupportedQagIds(
-                userId = qagInserting.userId,
-                qagId = qagInsertionResult.qagInfo.id,
-            )
-            qagListsCacheRepository.evictQagSupportedList(
-                userId = qagInserting.userId,
-                thematiqueId = null,
-                pageNumber = 1
-            )
-            qagListsCacheRepository.evictQagSupportedList(
-                userId = qagInserting.userId,
-                thematiqueId = qagInserting.thematiqueId,
-                pageNumber = 1
-            )
-            askQagStatusCacheRepository.evictAskQagStatus(userId = qagInserting.userId)
         } else {
             logger.error("⚠️ Insert QaG error")
         }
