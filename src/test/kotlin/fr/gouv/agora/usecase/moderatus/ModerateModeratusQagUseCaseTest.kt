@@ -5,11 +5,9 @@ import fr.gouv.agora.domain.QagInsertingUpdates
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.usecase.moderatus.repository.ModeratusQagLockRepository
 import fr.gouv.agora.usecase.notification.SendQagNotificationUseCase
-import fr.gouv.agora.usecase.qag.repository.QagDetailsCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagUpdateResult
-import fr.gouv.agora.usecase.qagPaginated.repository.QagListsCacheRepository
 import fr.gouv.agora.usecase.qagUpdates.repository.QagUpdatesRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -36,12 +34,6 @@ internal class ModerateModeratusQagUseCaseTest {
 
     @Mock
     private lateinit var moderatusQagLockRepository: ModeratusQagLockRepository
-
-    @Mock
-    private lateinit var qagDetailsCacheRepository: QagDetailsCacheRepository
-
-    @Mock
-    private lateinit var qagListsCacheRepository: QagListsCacheRepository
 
     private val moderateQagOptions = ModerateQagOptions(
         qagId = "qagId",

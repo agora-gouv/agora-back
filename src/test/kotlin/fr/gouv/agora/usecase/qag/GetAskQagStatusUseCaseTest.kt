@@ -1,14 +1,10 @@
 package fr.gouv.agora.usecase.qag
 
-import fr.gouv.agora.TestUtils
-import fr.gouv.agora.domain.AgoraFeature
+import fr.gouv.agora.TestUtils.getFixedClock
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
-import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
-import fr.gouv.agora.usecase.qag.repository.AskQagStatusCacheRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -18,7 +14,6 @@ import org.mockito.BDDMockito.only
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.Clock
 import java.time.LocalDateTime
 import java.time.Month
 
@@ -29,9 +24,6 @@ internal class GetAskQagStatusUseCaseTest {
 
     @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
-
-    @Mock
-    private lateinit var askQagStatusCacheRepository: AskQagStatusCacheRepository
 
     private val userId = "userId"
 
@@ -105,47 +97,6 @@ internal class GetAskQagStatusUseCaseTest {
 
     }
 
-    @Test
-    fun `getAskQagStatus - when has cached value - should return cached value`() {
-        // Given
-        useCase = GetAskQagStatusUseCase(
-            qagInfoRepository = qagInfoRepository,
-            clock = mock(Clock::class.java),
-            askQagStatusCacheRepository = askQagStatusCacheRepository,
-        )
-        given(askQagStatusCacheRepository.getAskQagStatus(userId = userId)).willReturn(AskQagStatus.WEEKLY_LIMIT_REACHED)
-
-        // When
-        val result = useCase.getAskQagStatus(userId)
-
-        // Then
-        assertThat(result).isEqualTo(AskQagStatus.WEEKLY_LIMIT_REACHED)
-        then(qagInfoRepository).shouldHaveNoInteractions()
-        then(askQagStatusCacheRepository).should(only()).getAskQagStatus(userId = userId)
-    }
-
-    @Test
-    fun `getAskQagStatus - when no cached value and user didn't have Qag - should return ENABLED and put it to cache`() {
-        // Given
-        useCase = GetAskQagStatusUseCase(
-            qagInfoRepository = qagInfoRepository,
-            clock = mock(Clock::class.java),
-            askQagStatusCacheRepository = askQagStatusCacheRepository,
-        )
-        given(qagInfoRepository.getUserLastQagInfo(userId = userId)).willReturn(null)
-        given(askQagStatusCacheRepository.getAskQagStatus(userId = userId)).willReturn(null)
-
-        // When
-        val result = useCase.getAskQagStatus(userId)
-
-        // Then
-        assertThat(result).isEqualTo(AskQagStatus.ENABLED)
-        then(qagInfoRepository).should(only()).getUserLastQagInfo(userId = userId)
-        then(askQagStatusCacheRepository).should().getAskQagStatus(userId = userId)
-        then(askQagStatusCacheRepository).should().initAskQagStatus(userId = userId, status = AskQagStatus.ENABLED)
-        then(askQagStatusCacheRepository).shouldHaveNoMoreInteractions()
-    }
-
     @ParameterizedTest(name = "getAskQagStatus - when {0} - should return {3}")
     @MethodSource("getAskQagStatusDateTestCases")
     fun `getAskQagStatus - should return expected`(
@@ -157,11 +108,8 @@ internal class GetAskQagStatusUseCaseTest {
     ) {
         useCase = GetAskQagStatusUseCase(
             qagInfoRepository = qagInfoRepository,
-            clock = TestUtils.getFixedClock(serverDate),
-            askQagStatusCacheRepository = askQagStatusCacheRepository,
+            clock = getFixedClock(serverDate),
         )
-
-        given(askQagStatusCacheRepository.getAskQagStatus(userId = userId)).willReturn(null)
 
         val qagInfo = mock(QagInfo::class.java).also {
             given(it.date).willReturn(qagPostDate.toDate())
@@ -174,9 +122,6 @@ internal class GetAskQagStatusUseCaseTest {
         // Then
         assertThat(result).isEqualTo(expectedStatus)
         then(qagInfoRepository).should(only()).getUserLastQagInfo(userId = userId)
-        then(askQagStatusCacheRepository).should().getAskQagStatus(userId = userId)
-        then(askQagStatusCacheRepository).should().initAskQagStatus(userId = userId, status = expectedStatus)
-        then(askQagStatusCacheRepository).shouldHaveNoMoreInteractions()
     }
 
 }

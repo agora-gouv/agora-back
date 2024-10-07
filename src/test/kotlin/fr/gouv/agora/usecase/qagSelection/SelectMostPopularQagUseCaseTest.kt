@@ -4,7 +4,6 @@ import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
-import fr.gouv.agora.usecase.responseQag.repository.ResponseQagPreviewCacheRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,9 +27,6 @@ internal class SelectMostPopularQagUseCaseTest {
     @Mock
     private lateinit var randomQagSelector: RandomQagSelector
 
-    @Mock
-    private lateinit var cacheRepository: ResponseQagPreviewCacheRepository
-
     @BeforeEach
     fun setUp() {
         given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.QagSelect)).willReturn(true)
@@ -48,7 +44,6 @@ internal class SelectMostPopularQagUseCaseTest {
         then(featureFlagsRepository).should(only()).isFeatureEnabled(AgoraFeature.QagSelect)
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(randomQagSelector).shouldHaveNoMoreInteractions()
-        then(cacheRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -63,7 +58,6 @@ internal class SelectMostPopularQagUseCaseTest {
         then(qagInfoRepository).should(only()).getMostPopularQags()
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(randomQagSelector).shouldHaveNoMoreInteractions()
-        then(cacheRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -82,7 +76,6 @@ internal class SelectMostPopularQagUseCaseTest {
         then(qagInfoRepository).should().selectQagForResponse(qagId = "qagId")
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(randomQagSelector).shouldHaveNoMoreInteractions()
-        then(cacheRepository).should(only()).evictResponseQagPreviewList()
     }
 
     @Test
@@ -103,7 +96,6 @@ internal class SelectMostPopularQagUseCaseTest {
         then(qagInfoRepository).should().selectQagForResponse(qagId = "qagId2")
         then(qagInfoRepository).shouldHaveNoMoreInteractions()
         then(randomQagSelector).should(only()).chooseRandom(listOf(qag1, qag2))
-        then(cacheRepository).should(only()).evictResponseQagPreviewList()
     }
 
 }

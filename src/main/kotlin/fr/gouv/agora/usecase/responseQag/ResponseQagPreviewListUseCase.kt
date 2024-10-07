@@ -6,14 +6,12 @@ import fr.gouv.agora.domain.ResponseQagPreview
 import fr.gouv.agora.usecase.qag.repository.LowPriorityQagRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
-import fr.gouv.agora.usecase.responseQag.repository.ResponseQagPreviewCacheRepository
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 
 @Service
 class ResponseQagPreviewListUseCase(
-    private val cacheRepository: ResponseQagPreviewCacheRepository,
     private val qagInfoRepository: QagInfoRepository,
     private val responseQagRepository: ResponseQagRepository,
     private val thematiqueRepository: ThematiqueRepository,
@@ -21,15 +19,7 @@ class ResponseQagPreviewListUseCase(
     private val mapper: ResponseQagPreviewListMapper,
     private val orderMapper: ResponseQagPreviewOrderMapper,
 ) {
-
     fun getResponseQagPreviewList(): ResponseQagPreviewList {
-        return cacheRepository.getResponseQagPreviewList() ?: buildResponseQagPreviewList().also {
-            cacheRepository.initResponseQagPreviewList(it)
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun buildResponseQagPreviewList(): ResponseQagPreviewList {
         val qagsSelectedForResponse = qagInfoRepository.getQagsSelectedForResponse()
         val qagsResponses = responseQagRepository.getResponsesQag(qagsSelectedForResponse.map { it.id })
 
