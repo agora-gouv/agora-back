@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.qagHome
 
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.qagPaginated.QagPaginatedJsonMapper
+import fr.gouv.agora.usecase.qag.GetQagCountUseCase
 import fr.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.gouv.agora.usecase.qagPaginated.QagPaginatedV2UseCase
 import io.swagger.v3.oas.annotations.Operation
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 class QagHomeV2Controller(
     private val qagPaginatedV2UseCase: QagPaginatedV2UseCase,
     private val getQagErrorTextUseCase: GetQagErrorTextUseCase,
+    private val getQagCountUseCase: GetQagCountUseCase,
     private val qagPaginatedJsonMapper: QagPaginatedJsonMapper,
     private val qagHomeJsonMapper: QagHomeJsonMapper,
     private val authentificationHelper: AuthentificationHelper,
@@ -73,4 +75,9 @@ class QagHomeV2Controller(
         )
     }
 
+    @Operation(summary = "Récupérer le nombre de QaGs sur la période en cours (non archivées et non sélectionnées")
+    @GetMapping("/qags/count")
+    fun getQagCount(): ResponseEntity<Int> {
+        return ResponseEntity.ok().body(getQagCountUseCase.execute())
+    }
 }
