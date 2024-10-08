@@ -29,6 +29,8 @@ class ProfileJsonMapper {
             voteFrequency = fromFrequency(profile.voteFrequency),
             publicMeetingFrequency = fromFrequency(profile.publicMeetingFrequency),
             consultationFrequency = fromFrequency(profile.consultationFrequency),
+            primaryDepartment = profile.primaryDepartment?.value,
+            secondaryDepartment = profile.secondaryDepartment?.value,
         )
     }
 
