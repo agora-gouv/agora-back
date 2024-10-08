@@ -32,7 +32,6 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getOngoingConsultationsWithUnpublished(userTerritoires: List<Territoire>): List<ConsultationPreview> {
-        // TODO territoires
         val today = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
@@ -43,14 +42,13 @@ class ConsultationInfoRepositoryImpl(
             return databaseOngoingConsultations
         }
 
-        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoingWithUnpublished(today)
+        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoingWithUnpublished(today, userTerritoires)
             .let { consultationInfoMapper.toConsultationPreview(it) }
 
         return databaseOngoingConsultations + strapiOngoingConsultations
     }
 
     override fun getFinishedConsultationsWithUnpublished(userTerritoires: List<Territoire>): List<ConsultationPreviewFinished> {
-        // TODO territoires
         val now = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
@@ -61,7 +59,7 @@ class ConsultationInfoRepositoryImpl(
         if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
             return databaseConsultations
         }
-        val consultationsStrapi = strapiRepository.getConsultationsFinishedWithUnpublished(now)
+        val consultationsStrapi = strapiRepository.getConsultationsFinishedWithUnpublished(now, userTerritoires)
         val strapiConsultations = consultationsStrapi
             .let { consultationInfoMapper.toDomainFinished(it, now) }
 
@@ -94,13 +92,9 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun isConsultationExists(consultationId: String): Boolean {
-        consultationId.toUuidOrNull()?.let {
-            return consultationsDatabaseRepository.existsById(it)
-        }
+        consultationId.toUuidOrNull()?.let { return consultationsDatabaseRepository.existsById(it) }
 
-        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            return false
-        }
+        if (!featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) return false
 
         return strapiRepository.isConsultationExists(consultationId)
     }
