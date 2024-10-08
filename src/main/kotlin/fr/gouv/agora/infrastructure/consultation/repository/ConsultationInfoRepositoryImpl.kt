@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.consultation.repository
 import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.infrastructure.userAnsweredConsultation.repository.UserAnsweredConsultationDatabaseRepository
 import fr.gouv.agora.infrastructure.utils.UuidUtils.isUuid
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -30,12 +31,8 @@ class ConsultationInfoRepositoryImpl(
         const val CONSULTATION_CACHE_NAME = "consultationCache"
     }
 
-    override fun getOngoingConsultations(): List<ConsultationPreview> {
-        return this.getOngoingConsultationsWithUnpublished()
-            .filter { it.isPublished }
-    }
-
-    override fun getOngoingConsultationsWithUnpublished(): List<ConsultationPreview> {
+    override fun getOngoingConsultationsWithUnpublished(userTerritoires: List<Territoire>): List<ConsultationPreview> {
+        // TODO territoires
         val today = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 
@@ -52,12 +49,8 @@ class ConsultationInfoRepositoryImpl(
         return databaseOngoingConsultations + strapiOngoingConsultations
     }
 
-    override fun getFinishedConsultations(): List<ConsultationPreviewFinished> {
-        return this.getFinishedConsultationsWithUnpublished()
-            .filter { it.isPublished }
-    }
-
-    override fun getFinishedConsultationsWithUnpublished(): List<ConsultationPreviewFinished> {
+    override fun getFinishedConsultationsWithUnpublished(userTerritoires: List<Territoire>): List<ConsultationPreviewFinished> {
+        // TODO territoires
         val now = LocalDateTime.now(clock)
         val thematiques = thematiqueRepository.getThematiqueList()
 

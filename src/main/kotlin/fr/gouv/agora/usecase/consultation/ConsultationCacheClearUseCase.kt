@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationFinishedPaginatedListCacheRepository
 import org.springframework.stereotype.Service
 
