@@ -7,13 +7,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class ConsultationCacheClearUseCase(
-    private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
     private val consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository,
     private val consultationFinishedPaginatedRepository: ConsultationFinishedPaginatedListCacheRepository,
 ) {
 
     fun clearConsultationCaches() {
-        consultationPreviewPageRepository.clear()
         consultationDetailsV2CacheRepository.clearLastConsultationDetails()
         consultationFinishedPaginatedRepository.clearCache()
     }

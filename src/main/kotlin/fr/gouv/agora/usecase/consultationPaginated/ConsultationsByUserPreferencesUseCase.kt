@@ -3,7 +3,6 @@ package fr.gouv.agora.usecase.consultationPaginated
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.Territoire
-import fr.gouv.agora.domain.Territoire.Region.*
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewFinishedMapper
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationPreviewFinishedRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
@@ -22,19 +21,11 @@ class ConsultationsByUserPreferencesUseCase(
         val userId = authentificationHelper.getUserId()!!
         val userProfile = profileRepository.getProfile(userId)
 
-        val primaryDepartment = userProfile?.primaryDepartment
-        val secondaryDepartment = userProfile?.secondaryDepartment
-        val primaryRegion = Territoire.Region.getByDepartment(primaryDepartment)
-        val secondaryRegion = Territoire.Region.getByDepartment(secondaryDepartment)
-
-        val territories = listOfNotNull(
-            Territoire.Pays.FRANCE, primaryDepartment, secondaryDepartment,
-            primaryRegion, secondaryRegion
-        ).distinct()
+        val territoires = Territoire.of(userProfile)
 
         val thematiques = thematiqueRepository.getThematiqueList()
         val consultations =
-            consultationPreviewFinishedRepository.getConsultationFinishedList(territories)
+            consultationPreviewFinishedRepository.getConsultationFinishedList(territoires)
                 .let { consultationsInfo -> mapper.toConsultationPreviewFinished(consultationsInfo, thematiques) }
 
         return consultations
