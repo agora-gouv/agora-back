@@ -19,7 +19,7 @@ class ConsultationAnsweredPaginatedController(
 
     @Operation(summary = "Get Consultations Répondues")
     @GetMapping("/consultations/answered/{pageNumber}")
-    fun getConsultationFinishedList(
+    fun getConsultationAnsweredList(
         @PathVariable pageNumber: String,
     ): ResponseEntity<*> {
         return pageNumber.toIntOrNull()?.let { pageNumberInt ->

@@ -12,6 +12,18 @@ interface Territoire {
                 ?.let { return it }
                 ?: throw InvalidTerritoryException(territoire)
         }
+
+        fun of(userProfile: Profile?): List<Territoire> {
+            val primaryDepartment = userProfile?.primaryDepartment
+            val secondaryDepartment = userProfile?.secondaryDepartment
+            val primaryRegion = Region.getByDepartment(primaryDepartment)
+            val secondaryRegion = Region.getByDepartment(secondaryDepartment)
+
+            return listOfNotNull(
+                Pays.FRANCE, primaryDepartment, secondaryDepartment,
+                primaryRegion, secondaryRegion
+            ).distinct()
+        }
     }
 
     enum class Pays(override val value: String) : Territoire {

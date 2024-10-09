@@ -10,7 +10,6 @@ import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationAnsweredPaginatedListCacheRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository.InsertParameters
@@ -45,9 +44,6 @@ internal class InsertReponseConsultationUseCaseTest {
 
     @Mock
     private lateinit var questionRepository: QuestionRepository
-
-    @Mock
-    private lateinit var consultationPreviewPageRepository: ConsultationPreviewPageRepository
 
     @Mock
     private lateinit var insertConsultationResponseParametersMapper: InsertConsultationResponseParametersMapper
@@ -109,7 +105,6 @@ internal class InsertReponseConsultationUseCaseTest {
         then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
         then(insertReponseConsultationRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
-        then(consultationPreviewPageRepository).shouldHaveNoInteractions()
         then(contentSanitizer).shouldHaveNoInteractions()
     }
 
@@ -142,7 +137,6 @@ internal class InsertReponseConsultationUseCaseTest {
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
         then(insertReponseConsultationRepository).shouldHaveNoInteractions()
         then(questionRepository).shouldHaveNoInteractions()
-        then(consultationPreviewPageRepository).shouldHaveNoInteractions()
         then(contentSanitizer).shouldHaveNoInteractions()
     }
 
@@ -221,7 +215,6 @@ internal class InsertReponseConsultationUseCaseTest {
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
-        then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
         then(consultationAnsweredPaginatedListCacheRepository).should(only()).clearCache(userId = "userId")
         then(consultationResultsCacheRepository).should(only())
             .evictConsultationResultsCache(consultationId = "consultId")
@@ -307,7 +300,6 @@ internal class InsertReponseConsultationUseCaseTest {
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
-        then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
         then(consultationAnsweredPaginatedListCacheRepository).should(only()).clearCache(userId = "userId")
         then(consultationResultsCacheRepository).should(only())
             .evictConsultationResultsCache(consultationId = "consultId")
@@ -379,7 +371,6 @@ internal class InsertReponseConsultationUseCaseTest {
         then(userAnsweredConsultationRepository).shouldHaveNoMoreInteractions()
         then(consultationDetailsV2CacheRepository).should(only())
             .evictHasAnsweredConsultation(consultationId = "consultId", userId = "userId")
-        then(consultationPreviewPageRepository).should(only()).evictConsultationPreviewAnsweredList(userId = "userId")
         then(consultationAnsweredPaginatedListCacheRepository).should(only()).clearCache(userId = "userId")
         then(consultationResultsCacheRepository).should(only())
             .evictConsultationResultsCache(consultationId = "consultId")
@@ -398,7 +389,6 @@ internal class InsertReponseConsultationUseCaseTest {
             userAnsweredConsultationRepository = userAnsweredConsultationRepository,
             questionRepository = questionRepository,
             insertConsultationResponseParametersMapper = insertConsultationResponseParametersMapper,
-            consultationPreviewPageRepository = consultationPreviewPageRepository,
             consultationInfoRepository = consultationInfoRepository,
             consultationDetailsV2CacheRepository = consultationDetailsV2CacheRepository,
             consultationAnsweredPaginatedListCacheRepository = consultationAnsweredPaginatedListCacheRepository,
