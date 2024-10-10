@@ -6,5 +6,12 @@ data class RegionJson(
     @JsonProperty("region")
     val region: String,
     @JsonProperty("departements")
-    val departements: List<String>,
+    val departements: List<DepartementJson>,
+)
+
+data class DepartementJson(
+    @JsonProperty("codePostal")
+    val codePostal: String,
+    @JsonProperty("label")
+    val label: String,
 )
