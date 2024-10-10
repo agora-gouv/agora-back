@@ -8,7 +8,7 @@ class TerritoiresJsonMapper {
     fun toJson(regions: Array<Territoire.Region>, pays: Array<Territoire.Pays>): TerritoiresJson {
         val regionsEtDepartements = regions.map { region ->
             val departements = region.departements.map { departement ->
-                DepartementJson(departement.value, departement.codePostal)
+                DepartementJson(departement.codePostal, departement.value)
             }
 
             RegionJson(region.value, departements)
