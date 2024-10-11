@@ -230,7 +230,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml()), *sections.toTypedArray()),
-            bodyPreview = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml().split("<br/>").take(6).joinToString("<br/>"))),
+            bodyPreview = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml().split("<br/>").take(3).joinToString("<br/>"))),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = null,
