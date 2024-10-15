@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties("createdAt", "updatedAt")
 data class PageQuestionsAuGouvernementStrapiDTO(
-    @JsonProperty(value = "information_bottosheet")
-    val informationBottosheet: String,
+    @JsonProperty(value = "information_bottomsheet")
+    val informationBottomsheet: String,
 )
