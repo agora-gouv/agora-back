@@ -53,6 +53,8 @@ data class StrapiResponseQagVideo(
     val transcription: String,
     @JsonProperty("informationAdditionnelleTitre")
     val informationAdditionnelleTitre: String?,
+    @JsonProperty("page_title")
+    val pageTitle: String,
     @JsonProperty("informationAdditionnelleDescription")
     val informationAdditionnelleDescription: List<StrapiRichText>?,
 ) : StrapiResponseQagType {

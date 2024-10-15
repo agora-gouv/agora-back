@@ -18,6 +18,7 @@ data class ResponseQagVideo(
     override val qagId: String,
     val authorDescription: String,
     val videoUrl: String,
+    val videoTitle: String,
     val videoWidth: Int,
     val videoHeight: Int,
     val transcription: String,

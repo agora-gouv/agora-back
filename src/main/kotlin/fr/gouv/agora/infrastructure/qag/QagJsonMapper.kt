@@ -63,6 +63,7 @@ class QagJsonMapper(
                     authorDescription = response.authorDescription,
                     responseDate = dateMapper.toFormattedDate(response.responseDate),
                     videoUrl = response.videoUrl,
+                    videoTitle = response.videoTitle,
                     videoWidth = response.videoWidth,
                     videoHeight = response.videoHeight,
                     transcription = StringUtils.unescapeLineBreaks(response.transcription),
