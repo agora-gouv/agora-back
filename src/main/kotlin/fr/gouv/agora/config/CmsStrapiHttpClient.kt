@@ -2,8 +2,11 @@ package fr.gouv.agora.config
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
+import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
+import fr.gouv.agora.infrastructure.common.StrapiSingleTypeDTO
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -32,6 +35,21 @@ class CmsStrapiHttpClient(
             logger.error("Erreur lors de la requête du builder $builder: ", e)
 
             StrapiDTO.ofEmpty()
+        }
+    }
+
+    fun <T> requestSingleType(builder: StrapiRequestBuilder, typeReference: TypeReference<*>): StrapiSingleTypeDTO<T> {
+        return try {
+            val uri = builder.build()
+            val request = getClientRequest(uri).GET().build()
+            val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+            logger.debug("requête Strapi vers {}", request)
+
+            objectMapper.readValue(httpResponse.body(), typeReference) as StrapiSingleTypeDTO<T>
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la requête du builder $builder: ", e)
+            throw e
         }
     }
 
