@@ -4,10 +4,10 @@ import fr.gouv.agora.usecase.content.repository.ContentRepository
 import org.springframework.stereotype.Service
 
 @Service
-class GetInformationsPoserMaQuestionUseCase(
-    private val contentRepository: ContentRepository
+class GetContentQuestionsAuGouvernementUseCase(
+    private val contentRepository: ContentRepository,
 ) {
     fun execute(): String {
-        return contentRepository.getPagePoserMaQuestion()
+        return contentRepository.getPageQuestionsAuGouvernement()
     }
 }

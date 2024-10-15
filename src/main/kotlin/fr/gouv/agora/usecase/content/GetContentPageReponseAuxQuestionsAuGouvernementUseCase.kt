@@ -4,10 +4,9 @@ import fr.gouv.agora.usecase.content.repository.ContentRepository
 import org.springframework.stereotype.Service
 
 @Service
-class GetInformationsReponsesAVenirUseCase(
+class GetContentPageReponseAuxQuestionsAuGouvernementUseCase(
     private val contentRepository: ContentRepository,
 ) {
-    // todo refacto : ajouter la notion de page dans les controllers/usecase
     fun execute(): String {
         return contentRepository.getPageReponseAuxQuestionsAuGouvernement()
     }
