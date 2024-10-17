@@ -1,4 +1,4 @@
-package fr.gouv.agora.infrastructure.content.repository
+package fr.gouv.agora.infrastructure.content.repository.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
