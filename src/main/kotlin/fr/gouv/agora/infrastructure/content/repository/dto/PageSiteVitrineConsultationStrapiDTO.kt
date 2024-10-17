@@ -1,5 +1,8 @@
 package fr.gouv.agora.infrastructure.content.repository.dto
 
-class PageSiteVitrineConsultationStrapiDTO {
+import com.fasterxml.jackson.annotation.JsonProperty
 
-}
+data class PageSiteVitrineConsultationStrapiDTO (
+    @JsonProperty("donnez_votre_avis")
+    val donnezVotreAvis: String,
+)

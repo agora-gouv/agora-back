@@ -23,30 +23,46 @@ class ContentRepositoryImpl(
     }
 
     override fun getPageSiteVitrineAccueil(): SiteVitrineAccueilContent {
-        TODO("Not yet implemented")
+        return contentStrapiRepository.getPageSiteVitrineAccueil().attributes.let {
+            SiteVitrineAccueilContent(
+                it.titreHeader,
+                it.sousTitreHeader,
+                it.titreBody,
+                it.descriptionBody,
+                it.texteImage1,
+                it.texteImage2,
+                it.texteImage3,
+            )
+        }
     }
 
     override fun getPageSiteVitrineConditionGenerales(): String {
-        TODO("Not yet implemented")
+        return contentStrapiRepository.getPageSiteVitrineConditionGenerales().attributes.conditionsGeneralesDUtilisation
     }
 
     override fun getPageSiteVitrineConsultation(): String {
-        TODO("Not yet implemented")
+        return contentStrapiRepository.getPageSiteVitrineConsultation().attributes.donnezVotreAvis
     }
 
     override fun getPageSiteVitrineDeclarationAccessibilite(): String {
-        TODO("Not yet implemented")
+        return contentStrapiRepository.getPageSiteVitrineDeclarationAccessibilite().attributes.declaration
     }
 
     override fun getPageSiteVitrineMentionsLegales(): String {
-        TODO("Not yet implemented")
+        return contentStrapiRepository.getPageSiteVitrineMentionsLegales().attributes.mentionsLegales
     }
 
     override fun getPageSiteVitrinePolitiqueConfidentialite(): String {
-        TODO("Not yet implemented")
+        return contentStrapiRepository.getPageSiteVitrinePolitiqueConfidentialite().attributes.politiqueDeConfidentialite
     }
 
     override fun getPageSiteVitrineQuestionAuGouvernement(): SiteVitrineQuestionAuGouvernementContent {
-        TODO("Not yet implemented")
+        return contentStrapiRepository.getPageSiteVitrineQuestionAuGouvernement().attributes.let {
+            SiteVitrineQuestionAuGouvernementContent(
+                it.titre,
+                it.sousTitre,
+                it.texteSoutien,
+            )
+        }
     }
 }

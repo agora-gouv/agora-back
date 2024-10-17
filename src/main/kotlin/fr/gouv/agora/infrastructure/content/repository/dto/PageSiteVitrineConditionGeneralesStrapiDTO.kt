@@ -1,5 +1,8 @@
 package fr.gouv.agora.infrastructure.content.repository.dto
 
-class PageSiteVitrineConditionGeneralesStrapiDTO {
+import com.fasterxml.jackson.annotation.JsonProperty
 
-}
+data class PageSiteVitrineConditionGeneralesStrapiDTO(
+    @JsonProperty("conditions_generales_d_utilisation")
+    val conditionsGeneralesDUtilisation: String,
+)
