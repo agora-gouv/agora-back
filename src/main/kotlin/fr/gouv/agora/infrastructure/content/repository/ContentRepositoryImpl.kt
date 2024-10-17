@@ -1,9 +1,9 @@
 package fr.gouv.agora.infrastructure.content.repository
 
+import fr.gouv.agora.domain.SiteVitrineAccueilContent
+import fr.gouv.agora.domain.SiteVitrineQuestionAuGouvernementContent
 import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.usecase.content.repository.ContentRepository
-import fr.gouv.agora.usecase.content.repository.SiteVitrineAccueilContent
-import fr.gouv.agora.usecase.content.repository.SiteVitrineQuestionAuGouvernementContent
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -29,31 +29,31 @@ class ContentRepositoryImpl(
                 it.sousTitreHeader,
                 it.titreBody,
                 it.descriptionBody,
-                it.texteImage1,
-                it.texteImage2,
-                it.texteImage3,
+                it.texteImage1.toHtml(),
+                it.texteImage2.toHtml(),
+                it.texteImage3.toHtml(),
             )
         }
     }
 
     override fun getPageSiteVitrineConditionGenerales(): String {
-        return contentStrapiRepository.getPageSiteVitrineConditionGenerales().attributes.conditionsGeneralesDUtilisation
+        return contentStrapiRepository.getPageSiteVitrineConditionGenerales().attributes.conditionsGeneralesDUtilisation.toHtml()
     }
 
     override fun getPageSiteVitrineConsultation(): String {
-        return contentStrapiRepository.getPageSiteVitrineConsultation().attributes.donnezVotreAvis
+        return contentStrapiRepository.getPageSiteVitrineConsultation().attributes.donnezVotreAvis.toHtml()
     }
 
     override fun getPageSiteVitrineDeclarationAccessibilite(): String {
-        return contentStrapiRepository.getPageSiteVitrineDeclarationAccessibilite().attributes.declaration
+        return contentStrapiRepository.getPageSiteVitrineDeclarationAccessibilite().attributes.declaration.toHtml()
     }
 
     override fun getPageSiteVitrineMentionsLegales(): String {
-        return contentStrapiRepository.getPageSiteVitrineMentionsLegales().attributes.mentionsLegales
+        return contentStrapiRepository.getPageSiteVitrineMentionsLegales().attributes.mentionsLegales.toHtml()
     }
 
     override fun getPageSiteVitrinePolitiqueConfidentialite(): String {
-        return contentStrapiRepository.getPageSiteVitrinePolitiqueConfidentialite().attributes.politiqueDeConfidentialite
+        return contentStrapiRepository.getPageSiteVitrinePolitiqueConfidentialite().attributes.politiqueDeConfidentialite.toHtml()
     }
 
     override fun getPageSiteVitrineQuestionAuGouvernement(): SiteVitrineQuestionAuGouvernementContent {
@@ -61,7 +61,7 @@ class ContentRepositoryImpl(
             SiteVitrineQuestionAuGouvernementContent(
                 it.titre,
                 it.sousTitre,
-                it.texteSoutien,
+                it.texteSoutien.toHtml(),
             )
         }
     }

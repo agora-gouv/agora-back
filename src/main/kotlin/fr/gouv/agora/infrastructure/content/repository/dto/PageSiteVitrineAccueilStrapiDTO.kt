@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.content.repository.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.gouv.agora.infrastructure.common.StrapiRichText
 
 @JsonIgnoreProperties("createdAt", "updatedAt")
 data class PageSiteVitrineAccueilStrapiDTO(
@@ -14,9 +15,9 @@ data class PageSiteVitrineAccueilStrapiDTO(
     @JsonProperty("description_body")
     val descriptionBody: String,
     @JsonProperty("texte_image_1")
-    val texteImage1: String,
+    val texteImage1: List<StrapiRichText>,
     @JsonProperty("texte_image_2")
-    val texteImage2: String,
+    val texteImage2: List<StrapiRichText>,
     @JsonProperty("texte_image_3")
-    val texteImage3: String,
+    val texteImage3: List<StrapiRichText>,
 )

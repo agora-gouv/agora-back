@@ -1,5 +1,8 @@
 package fr.gouv.agora.usecase.content.repository
 
+import fr.gouv.agora.domain.SiteVitrineAccueilContent
+import fr.gouv.agora.domain.SiteVitrineQuestionAuGouvernementContent
+
 interface ContentRepository {
     fun getPagePoserMaQuestion(): String
     fun getPageQuestionsAuGouvernement(): String
@@ -12,18 +15,3 @@ interface ContentRepository {
     fun getPageSiteVitrinePolitiqueConfidentialite(): String
     fun getPageSiteVitrineQuestionAuGouvernement(): SiteVitrineQuestionAuGouvernementContent
 }
-
-data class SiteVitrineAccueilContent(
-    val titreHeader: String,
-    val sousTitreHeader: String,
-    val titreBody: String,
-    val descriptionBody: String,
-    val texteImage1: String,
-    val texteImage2: String,
-    val texteImage3: String,
-)
-data class SiteVitrineQuestionAuGouvernementContent(
-    val titre: String,
-    val sousTitre: String,
-    val texteSoutien: String,
-)
