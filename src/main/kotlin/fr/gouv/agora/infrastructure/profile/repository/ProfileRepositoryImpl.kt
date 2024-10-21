@@ -70,10 +70,4 @@ class ProfileRepositoryImpl(
         val userID = userId.toUuidOrNull()!!
         databaseRepository.insertDepartments(userID, primaryDepartment?.value, secondaryDepartment?.value)
     }
-
-    private fun getProfileFromDatabase(userUUID: UUID): ProfileDTO? {
-        val profileDTO = databaseRepository.getProfile(userUUID)
-        cacheRepository.insertProfile(userUUID, profileDTO)
-        return profileDTO
-    }
 }
