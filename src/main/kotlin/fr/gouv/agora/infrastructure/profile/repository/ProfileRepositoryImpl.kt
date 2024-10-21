@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.profile.repository
 import fr.gouv.agora.domain.Profile
 import fr.gouv.agora.domain.ProfileInserting
 import fr.gouv.agora.domain.Territoire
-import fr.gouv.agora.infrastructure.profile.dto.ProfileDTO
 import fr.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.profile.repository.ProfileEditResult
