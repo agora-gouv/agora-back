@@ -3,14 +3,13 @@ package fr.gouv.agora.infrastructure.profile.repository
 import fr.gouv.agora.domain.Profile
 import fr.gouv.agora.domain.ProfileInserting
 import fr.gouv.agora.domain.Territoire
-import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.infrastructure.profile.dto.ProfileDTO
 import fr.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.CacheResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.profile.repository.ProfileEditResult
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 @Component
 class ProfileRepositoryImpl(
@@ -22,11 +21,9 @@ class ProfileRepositoryImpl(
     override fun getProfile(userId: String): Profile? {
         return try {
             val userUUID = UUID.fromString(userId)
-            when (val cacheResult = cacheRepository.getProfile(userUUID)) {
-                CacheResult.CacheNotInitialized -> getProfileFromDatabase(userUUID)
-                CacheResult.CachedProfileNotFound -> null
-                is CacheResult.CachedProfile -> cacheResult.profileDTO
-            }?.let { profileDTO -> mapper.toDomain(profileDTO) }
+            return databaseRepository.getProfile(userUUID)?.let {
+                mapper.toDomain(it)
+            }
         } catch (e: IllegalArgumentException) {
             null
         }
@@ -65,7 +62,11 @@ class ProfileRepositoryImpl(
         databaseRepository.deleteUsersProfile(userIDs.mapNotNull { it.toUuidOrNull() })
     }
 
-    override fun updateDepartments(userId: String, primaryDepartment: Territoire.Departement?, secondaryDepartment: Territoire.Departement?) {
+    override fun updateDepartments(
+        userId: String,
+        primaryDepartment: Territoire.Departement?,
+        secondaryDepartment: Territoire.Departement?
+    ) {
         val userID = userId.toUuidOrNull()!!
         databaseRepository.insertDepartments(userID, primaryDepartment?.value, secondaryDepartment?.value)
     }
