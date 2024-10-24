@@ -2,9 +2,7 @@ package fr.gouv.agora.config
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
-import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import fr.gouv.agora.infrastructure.common.StrapiSingleTypeDTO
 import org.slf4j.Logger
