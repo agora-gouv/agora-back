@@ -1,8 +1,10 @@
 package fr.gouv.agora.infrastructure.common
 
 import org.slf4j.LoggerFactory
+import java.net.URLEncoder
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.text.Charsets.UTF_8
 
 data class StrapiRequestBuilder(private val cmsModel: String) {
     private var filters = ""
@@ -24,7 +26,9 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
         if (values.size > 80)
             logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url (${values.size}/100)")
 
-        filters += values.joinToString("") { "&filters[$field][\$in]=$it" }
+        filters += values
+            .map { URLEncoder.encode(it, UTF_8) }
+            .joinToString("") { "&filters[$field][\$in]=$it" }
 
         return this
     }
