@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.content.repository
 
+import fr.gouv.agora.domain.PageQuestionAuGouvernementContent
 import fr.gouv.agora.domain.SiteVitrineAccueilContent
 import fr.gouv.agora.domain.SiteVitrineQuestionAuGouvernementContent
 import fr.gouv.agora.infrastructure.common.toHtml
@@ -14,8 +15,10 @@ class ContentRepositoryImpl(
         return contentStrapiRepository.getPagePoserMaQuestion().attributes.texteRegles.toHtml()
     }
 
-    override fun getPageQuestionsAuGouvernement(): String {
-        return contentStrapiRepository.getPageQuestionsAuGouvernement().attributes.informationBottomsheet
+    override fun getPageQuestionsAuGouvernement(): PageQuestionAuGouvernementContent {
+        return contentStrapiRepository.getPageQuestionsAuGouvernement().attributes.let {
+            PageQuestionAuGouvernementContent(it.informationBottomsheet, it.nombreDeQuestions)
+        }
     }
 
     override fun getPageReponseAuxQuestionsAuGouvernement(): String {
