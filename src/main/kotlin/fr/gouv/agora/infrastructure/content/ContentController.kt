@@ -46,7 +46,9 @@ class ContentController(
     @GetMapping("/page-questions-au-gouvernement")
     fun getContentQuestionsAuGouvernementPage(): ResponseEntity<QuestionsAuGouvernementContentJson> {
         val content = getContentPageQuestionsAuGouvernementUseCase.execute()
-        return ResponseEntity.ok().body(QuestionsAuGouvernementContentJson(content))
+        return ResponseEntity.ok().body(
+            QuestionsAuGouvernementContentJson(content.informationBottomsheet, content.texteTotalQuestions)
+        )
     }
 
     @Operation(summary = "Récupérer les informations de la page Réponse aux QaGs")
