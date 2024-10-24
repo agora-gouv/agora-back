@@ -11,9 +11,11 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.net.URI
+import java.net.URLEncoder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import kotlin.text.Charsets.UTF_8
 
 @Service
 class CmsStrapiHttpClient(
@@ -58,8 +60,9 @@ class CmsStrapiHttpClient(
         val apiUrl = System.getenv("CMS_API_URL")
         logger.debug("Requête Strapi vers l'URI : $uri")
 
+        val encodedURI = URLEncoder.encode("$apiUrl$uri", UTF_8)
         return HttpRequest.newBuilder()
-            .uri(URI("$apiUrl$uri"))
+            .uri(URI(encodedURI))
             .setHeader("Authorization", "Bearer $authToken")
     }
 }
