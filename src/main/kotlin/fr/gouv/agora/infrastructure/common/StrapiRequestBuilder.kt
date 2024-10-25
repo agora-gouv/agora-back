@@ -26,9 +26,7 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
         if (values.size > 80)
             logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url (${values.size}/100)")
 
-        filters += values
-            .map { URLEncoder.encode(it, UTF_8) }
-            .joinToString("") { "&filters[$field][\$in]=$it" }
+        filters += values.joinToString("") { "&filters[$field][\$in]=$it" }
 
         return this
     }
