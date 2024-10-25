@@ -54,10 +54,12 @@ class CmsStrapiHttpClient(
     private fun getClientRequest(uri: String): HttpRequest.Builder {
         val authToken = System.getenv("CMS_AUTH_TOKEN")
         val apiUrl = System.getenv("CMS_API_URL")
-        logger.debug("Requête Strapi vers l'URI : $uri")
+
+        val uriWithoutSpace = uri.replace(" ", "%20")
+        logger.info("Requête Strapi vers l'URI : $uriWithoutSpace")
 
         return HttpRequest.newBuilder()
-            .uri(URI("$apiUrl$uri"))
+            .uri(URI("$apiUrl$uriWithoutSpace"))
             .setHeader("Authorization", "Bearer $authToken")
     }
 }
