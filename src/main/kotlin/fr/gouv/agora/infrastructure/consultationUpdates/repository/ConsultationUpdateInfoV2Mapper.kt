@@ -262,7 +262,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = htmlSections.take(3),
+            bodyPreview = htmlSections.take(5),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -310,7 +310,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = responsesInfo,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = htmlSections.take(3),
+            bodyPreview = htmlSections.take(5),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -341,7 +341,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = htmlSections.take(3),
+            bodyPreview = htmlSections.take(5),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -372,7 +372,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = htmlSections.take(3),
+            bodyPreview = htmlSections.take(5),
             infoHeader = null,
             downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
             feedbackQuestion = FeedbackQuestion(
