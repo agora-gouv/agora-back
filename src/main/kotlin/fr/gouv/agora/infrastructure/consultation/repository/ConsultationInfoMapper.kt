@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
@@ -36,7 +37,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             participantCountGoal = consultation.participantCountGoal,
             thematique = thematique,
             isPublished = true,
-            territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+            territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
         )
     }
 
@@ -60,7 +61,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 thematique = thematique,
                 endDate = consultation.endDate.toLocalDateTime(),
                 isPublished = true,
-                territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+                territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
             )
         }
     }
@@ -87,7 +88,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 lastUpdateDate = consultation.updateDate.toLocalDateTime(),
                 endDate = consultation.endDate.toLocalDateTime(),
                 isPublished = true,
-                territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+                territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
             )
         }
     }
@@ -150,7 +151,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         endDate = dto.endDate.toLocalDateTime(),
         updateDate = dto.updateDate.toLocalDateTime(),
         updateLabel = dto.updateLabel,
-        territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+        territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
     )
 
     fun toConsultationWithUpdateInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>, now: LocalDateTime) = ConsultationWithUpdateInfo(

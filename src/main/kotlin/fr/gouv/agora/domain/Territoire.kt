@@ -29,7 +29,7 @@ interface Territoire {
     }
 
     enum class Pays(override val value: String) : Territoire {
-        FRANCE("National"),
+        FRANCE("France"),
         HORS_DE_FRANCE("Français de l'étranger");
     }
 
