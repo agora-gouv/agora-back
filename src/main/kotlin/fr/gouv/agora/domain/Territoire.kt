@@ -19,10 +19,12 @@ interface Territoire {
             val primaryRegion = Region.getByDepartment(primaryDepartment)
             val secondaryRegion = Region.getByDepartment(secondaryDepartment)
 
-            return listOfNotNull(
-                Pays.FRANCE, primaryDepartment, secondaryDepartment,
-                primaryRegion, secondaryRegion
-            ).distinct()
+            // TODO : à changer pour la territo
+            return emptyList()
+//            return listOfNotNull(
+//                Pays.FRANCE, primaryDepartment, secondaryDepartment,
+//                primaryRegion, secondaryRegion
+//            ).distinct()
         }
     }
 
