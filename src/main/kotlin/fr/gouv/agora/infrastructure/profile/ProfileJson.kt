@@ -19,4 +19,8 @@ data class ProfileJson(
     val publicMeetingFrequency: String?,
     @JsonProperty("consultationFrequency")
     val consultationFrequency: String?,
+    @JsonProperty("primaryDepartment")
+    val primaryDepartment: String?,
+    @JsonProperty("secondaryDepartment")
+    val secondaryDepartment: String?,
 )

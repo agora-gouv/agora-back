@@ -4,59 +4,38 @@ import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
 import fr.gouv.agora.domain.ConsultationPreviewPage
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
+import fr.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.springframework.stereotype.Service
 
 @Service
 class ConsultationPreviewUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
-    private val cacheRepository: ConsultationPreviewPageRepository,
     private val authentificationHelper: AuthentificationHelper,
+    private val profileRepository: ProfileRepository,
 ) {
-    fun getConsultationPreviewPage(userId: String): ConsultationPreviewPage {
-        val cachedOngoingConsultations = cacheRepository.getConsultationPreviewOngoingList()
-        val cachedFinishedConsultations = cacheRepository.getConsultationPreviewFinishedList()
-        val answeredList = cacheRepository.getConsultationPreviewAnsweredList(userId)
-            ?: buildAnsweredList(userId)
+    fun getConsultationPreviewPage(): ConsultationPreviewPage {
+        val userId = authentificationHelper.getUserId()!!
+        val profile = profileRepository.getProfile(userId)
+
+        val userTerritoires = Territoire.of(profile)
+
+        val answeredConsultations = consultationInfoRepository.getAnsweredConsultations(userId)
+        val ongoingConsultations = consultationInfoRepository.getOngoingConsultationsWithUnpublished(userTerritoires)
+            .removeAnsweredConsultation(answeredConsultations)
+            .sortedBy { it.endDate }
+        val finishedConsultations = consultationInfoRepository.getFinishedConsultationsWithUnpublished(userTerritoires)
 
         if (authentificationHelper.canViewUnpublishedConsultations()) {
-            val onGoingConsultations = consultationInfoRepository.getOngoingConsultationsWithUnpublished()
-                .sortedBy { it.endDate }
-            val finishedConsultations = consultationInfoRepository.getFinishedConsultationsWithUnpublished()
-            val answeredConsultations = consultationInfoRepository.getAnsweredConsultations(userId)
-
-            return ConsultationPreviewPage(
-                ongoingList = onGoingConsultations.removeAnsweredConsultation(answeredConsultations),
-                finishedList = finishedConsultations,
-                answeredList = answeredConsultations,
-            )
+            return ConsultationPreviewPage(ongoingConsultations, finishedConsultations, answeredConsultations)
         }
 
         return ConsultationPreviewPage(
-            ongoingList = (cachedOngoingConsultations
-                ?: getOngoingConsultationsAndCacheThem()).removeAnsweredConsultation(answeredList),
-            finishedList = cachedFinishedConsultations ?: buildFinishedList(),
-            answeredList = answeredList,
+            ongoingConsultations.filter { it.isPublished },
+            finishedConsultations.filter { it.isPublished },
+            answeredConsultations
         )
-    }
-
-    private fun getOngoingConsultationsAndCacheThem(): List<ConsultationPreview> {
-        return consultationInfoRepository.getOngoingConsultations()
-            .sortedBy { it.endDate }
-            .also { cacheRepository.insertConsultationPreviewOngoingList(it) }
-    }
-
-    private fun buildFinishedList(): List<ConsultationPreviewFinished> {
-        return consultationInfoRepository.getFinishedConsultations()
-            .also { finishedList -> cacheRepository.insertConsultationPreviewFinishedList(finishedList) }
-    }
-
-    private fun buildAnsweredList(userId: String): List<ConsultationPreviewFinished> {
-        val answeredConsultationsWithThematique = consultationInfoRepository.getAnsweredConsultations(userId)
-        cacheRepository.insertConsultationPreviewAnsweredList(userId, answeredConsultationsWithThematique)
-
-        return answeredConsultationsWithThematique
     }
 
     private fun List<ConsultationPreview>.removeAnsweredConsultation(answeredList: List<ConsultationPreviewFinished>): List<ConsultationPreview> {

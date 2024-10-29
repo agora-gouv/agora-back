@@ -8,7 +8,6 @@ import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationPreviewPageRepository
 import fr.gouv.agora.usecase.consultationPaginated.repository.ConsultationAnsweredPaginatedListCacheRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository.InsertResult
@@ -30,7 +29,6 @@ class InsertReponseConsultationUseCase(
     private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val questionRepository: QuestionRepository,
     private val insertConsultationResponseParametersMapper: InsertConsultationResponseParametersMapper,
-    private val consultationPreviewPageRepository: ConsultationPreviewPageRepository,
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository,
     private val consultationAnsweredPaginatedListCacheRepository: ConsultationAnsweredPaginatedListCacheRepository,
@@ -69,7 +67,6 @@ class InsertReponseConsultationUseCase(
             consultationResponses = consultationResponses,
             questionList = questionList,
         )
-        consultationPreviewPageRepository.evictConsultationPreviewAnsweredList(userId)
         consultationAnsweredPaginatedListCacheRepository.clearCache(userId)
         consultationDetailsV2CacheRepository.evictHasAnsweredConsultation(
             consultationId = consultationId,

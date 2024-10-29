@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
+import fr.gouv.agora.infrastructure.common.StrapiSingleTypeDTO
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -35,13 +36,30 @@ class CmsStrapiHttpClient(
         }
     }
 
+    fun <T> requestSingleType(builder: StrapiRequestBuilder, typeReference: TypeReference<*>): StrapiSingleTypeDTO<T> {
+        return try {
+            val uri = builder.build()
+            val request = getClientRequest(uri).GET().build()
+            val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+            logger.debug("requête Strapi vers {}", request)
+
+            objectMapper.readValue(httpResponse.body(), typeReference) as StrapiSingleTypeDTO<T>
+        } catch (e: Exception) {
+            logger.error("Erreur lors de la requête du builder $builder: ", e)
+            throw e
+        }
+    }
+
     private fun getClientRequest(uri: String): HttpRequest.Builder {
         val authToken = System.getenv("CMS_AUTH_TOKEN")
         val apiUrl = System.getenv("CMS_API_URL")
-        logger.debug("Requête Strapi vers l'URI : $uri")
+
+        val uriWithoutSpace = uri.replace(" ", "%20")
+        logger.info("Requête Strapi vers l'URI : $uriWithoutSpace")
 
         return HttpRequest.newBuilder()
-            .uri(URI("$apiUrl$uri"))
+            .uri(URI("$apiUrl$uriWithoutSpace"))
             .setHeader("Authorization", "Bearer $authToken")
     }
 }

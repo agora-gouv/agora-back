@@ -29,6 +29,7 @@ class ResponseQagMapper {
                 transcription = dto.transcription,
                 feedbackQuestion = dto.feedbackQuestion,
                 qagId = dto.qagId.toString(),
+                videoTitle = "Réponse du Gouvernement",
                 additionalInfo = if (dto.additionalInfoTitle != null && dto.additionalInfoDescription != null) ResponseQagAdditionalInfo(
                     additionalInfoTitle = dto.additionalInfoTitle,
                     additionalInfoDescription = dto.additionalInfoDescription
@@ -76,6 +77,7 @@ class ResponseQagMapper {
                         videoWidth = responseContent.videoWidth,
                         videoHeight = responseContent.videoHeight,
                         transcription = responseContent.transcription,
+                        videoTitle = responseContent.pageTitle,
                         additionalInfo = if (responseContent.hasInformationAdditionnelle()) {
                             ResponseQagAdditionalInfo(
                                 responseContent.informationAdditionnelleTitre!!,

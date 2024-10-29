@@ -228,9 +228,9 @@ class ConsultationUpdateInfoV2Mapper {
             hasQuestionsInfo = true,
             hasParticipationInfo = false,
             responsesInfo = null,
-            sectionsHeader = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml())),
-            body = sections,
-            bodyPreview = emptyList(),
+            sectionsHeader = emptyList(),
+            body = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml()), *sections.toTypedArray()),
+            bodyPreview = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml().split("<br/>").take(2).joinToString("<br/>"))),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = null,
@@ -262,7 +262,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = emptyList(),
+            bodyPreview = htmlSections.take(5),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -310,7 +310,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = responsesInfo,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = emptyList(),
+            bodyPreview = htmlSections.take(5),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -341,7 +341,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = emptyList(),
+            bodyPreview = htmlSections.take(5),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -372,7 +372,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = emptyList(),
+            bodyPreview = htmlSections.take(5),
             infoHeader = null,
             downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
             feedbackQuestion = FeedbackQuestion(

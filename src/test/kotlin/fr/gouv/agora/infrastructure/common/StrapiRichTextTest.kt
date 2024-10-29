@@ -422,13 +422,13 @@ class StrapiRichTextTest {
                     <li>sous liste 1</li>
                     <ul>
                         <li>sous sous liste 1-1</li>
-                    </ul><br/>
+                    </ul>
                     <li>sous liste 2</li>
                     <ul>
                         <li>sous sous liste 2-1</li>
                     </ul>
                 </ul>
-            </ul><br/>
+            </ul>
             <br/>
             <ol>
                 <li>liste ordonnée 1</li>
@@ -437,12 +437,12 @@ class StrapiRichTextTest {
                     <ol>
                         <li>liste ordonnée 1-a-I</li>
                         <li>liste ordonnée 1-a-II</li>
-                    </ol><br/>
+                    </ol>
                     <li>liste ordonnée 1-b</li>
-                </ol><br/>
+                </ol>
                 <li>liste ordonnée 2</li>
                 <li>liste ordonnée 3 avec du <b>gras </b>et un<b> </b><a href="http://localhost-gras/"><b>lien gras</b></a></li>
-            </ol><br/>
+            </ol>
             <blockquote>Je suis un citation avec du <b>gras</b></blockquote>Je suis un block de code <b>gras</b>.
         """.trimIndent()
         assertThat(actual).isEqualToIgnoringWhitespace(expected)

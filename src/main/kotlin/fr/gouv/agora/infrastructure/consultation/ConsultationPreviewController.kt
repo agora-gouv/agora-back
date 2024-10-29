@@ -13,14 +13,11 @@ import org.springframework.web.bind.annotation.RestController
 class ConsultationPreviewController(
     private val consultationPreviewUseCase: ConsultationPreviewUseCase,
     private val consultationPreviewJsonMapper: ConsultationPreviewJsonMapper,
-    private val authentificationHelper: AuthentificationHelper,
 ) {
     @Operation(summary = "Get Consultation Preview")
     @GetMapping("/consultations")
     fun getConsultationPreviewOngoingList(): ResponseEntity<ConsultationPreviewJson> {
-        val consultationPreviewPage = consultationPreviewUseCase.getConsultationPreviewPage(
-            userId = authentificationHelper.getUserId()!!,
-        )
+        val consultationPreviewPage = consultationPreviewUseCase.getConsultationPreviewPage()
 
         return ResponseEntity.ok().body(
             consultationPreviewJsonMapper.toJson(

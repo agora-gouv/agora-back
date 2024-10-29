@@ -47,7 +47,7 @@ class ProfileController(
 
     @PostMapping("/profile/departments")
     fun updateDepartments(
-        @RequestBody departments: List<String>,
+        @RequestBody departments: ProfileDepartmentJson,
     ): HttpEntity<Nothing> {
         updateDepartementsUseCase.execute(departments)
         return ResponseEntity.ok().build()
