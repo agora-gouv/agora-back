@@ -39,7 +39,6 @@ class QuestionRepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            // TODO est-ce possible qu'il y ait une fuite ?
             val consultation = consultationStrapiRepository.getConsultationByIdWithUnpublished(consultationId)
                 ?: return Questions(questionCount = 0, questions = emptyList())
 

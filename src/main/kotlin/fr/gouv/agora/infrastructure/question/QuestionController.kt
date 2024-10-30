@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.question
 
-import fr.gouv.agora.infrastructure.question.repository.ConsultationQuestionJsonCacheRepository
 import fr.gouv.agora.usecase.question.ListQuestionConsultationUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -14,15 +13,11 @@ import org.springframework.web.bind.annotation.RestController
 class QuestionController(
     private val listQuestionConsultationUseCase: ListQuestionConsultationUseCase,
     private val jsonMapper: QuestionJsonMapper,
-    private val cacheRepository: ConsultationQuestionJsonCacheRepository,
 ) {
     @Operation(summary = "Get Consultations Questions")
     @GetMapping("/consultations/{consultationId}/questions")
     fun getQuestions(@PathVariable consultationId: String): ResponseEntity<QuestionsJson> {
-        val questionsJson = cacheRepository.getConsultationQuestions(consultationId)
-            ?: jsonMapper.toJson(listQuestionConsultationUseCase.getConsultationQuestions(consultationId))
-
-        cacheRepository.insertConsultationQuestions(consultationId, questionsJson)
+        val questionsJson = jsonMapper.toJson(listQuestionConsultationUseCase.getConsultationQuestions(consultationId))
 
         return ResponseEntity.ok().body(questionsJson)
     }
