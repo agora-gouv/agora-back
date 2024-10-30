@@ -28,7 +28,7 @@ internal class ConsultationPreviewMapperTest {
         endDate = LocalDateTime.MIN,
         slug = "slug",
         isPublished = true,
-        territory = "National"
+        territory = "France"
     )
 
     companion object {
@@ -142,7 +142,7 @@ internal class ConsultationPreviewMapperTest {
             given(it.slug).willReturn("slug")
             given(it.coverUrl).willReturn("coverUrl")
             given(it.endDate).willReturn(endDate)
-            given(it.territory).willReturn("National")
+            given(it.territory).willReturn("France")
         }
     }
 
