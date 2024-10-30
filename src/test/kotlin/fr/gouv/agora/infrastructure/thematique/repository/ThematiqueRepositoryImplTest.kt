@@ -1,12 +1,10 @@
 package fr.gouv.agora.infrastructure.thematique.repository
 
-import fr.gouv.agora.domain.AgoraFeature
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueCacheRepository.CacheListResult
 import fr.gouv.agora.infrastructure.utils.UuidUtils.NOT_FOUND_UUID
-import fr.gouv.agora.usecase.featureFlags.repository.FeatureFlagsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -30,13 +28,7 @@ internal class ThematiqueRepositoryImplTest {
     private lateinit var cacheRepository: ThematiqueCacheRepository
 
     @Mock
-    private lateinit var databaseRepository: ThematiqueDatabaseRepository
-
-    @Mock
     private lateinit var strapiRepository: ThematiqueStrapiRepository
-
-    @Mock
-    private lateinit var featureFlagsRepository: FeatureFlagsRepository
 
     @Mock
     private lateinit var mapper: ThematiqueMapper
@@ -57,7 +49,6 @@ internal class ThematiqueRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(listOf(thematique))
             then(cacheRepository).should(only()).getThematiqueList()
-            then(databaseRepository).shouldHaveNoInteractions()
             then(strapiRepository).shouldHaveNoInteractions()
         }
 
@@ -69,7 +60,6 @@ internal class ThematiqueRepositoryImplTest {
             val thematiqueStrapiDTO = mock(StrapiDTO::class.java) as StrapiDTO<ThematiqueStrapiDTO>
             given(strapiRepository.getThematiques()).willReturn(thematiqueStrapiDTO)
             given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(emptyList())
-            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
 
             // When
             val result = repository.getThematiqueList()
@@ -87,7 +77,6 @@ internal class ThematiqueRepositoryImplTest {
             val thematique = mock(Thematique::class.java)
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
             given(strapiRepository.getThematiques()).willReturn(strapiThematiqueDTO)
-            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
 
             given(mapper.toDomain(strapiThematiqueDTO)).willReturn(listOf(thematique))
 
@@ -160,8 +149,6 @@ internal class ThematiqueRepositoryImplTest {
             }
             given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(listOf(thematique))
 
-            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
-
             // When
             val result = repository.getThematique(thematiqueId)
 
@@ -180,7 +167,6 @@ internal class ThematiqueRepositoryImplTest {
             given(mapper.toDomain(thematiqueStrapiDTO)).willReturn(listOf(thematique))
 
             given(cacheRepository.getThematiqueList()).willReturn(CacheListResult.CacheNotInitialized)
-            given(featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiThematiques)).willReturn(true)
 
             // When
             val result = repository.getThematique(UUID.randomUUID().toString())
