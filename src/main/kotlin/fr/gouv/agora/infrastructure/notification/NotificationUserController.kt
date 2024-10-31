@@ -98,7 +98,7 @@ class NotificationUserController(
 }
 
 enum class TypeNotification {
-    ALL_REPONSES_QAGS,//  ???,
+    ALL_REPONSES_QAGS,
     HOME_QAGS,
     DETAILS_QAG,
     HOME_CONSULTATIONS,

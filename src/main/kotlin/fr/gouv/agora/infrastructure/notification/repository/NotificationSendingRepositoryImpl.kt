@@ -4,7 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingException
 import com.google.firebase.messaging.MulticastMessage
 import com.google.firebase.messaging.Notification
-import fr.gouv.agora.usecase.notification.repository.GenericMultiNotificationRequest
+import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
 import org.slf4j.Logger
@@ -29,10 +29,24 @@ class NotificationSendingRepositoryImpl(
         private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 300
     }
 
-    override fun sendGenericMultiNotification(request: GenericMultiNotificationRequest): NotificationResult {
-        logger.info("📩 Sending multi-notification: ${request.title}")
+    override fun sendGenericMultiNotification(
+        title: String,
+        description: String,
+        fcmTokenList: List<String>,
+        type: TypeNotification,
+        pageArgument: String?
+    ): NotificationResult {
+        logger.info("📩 Sending multi-notification: $title")
         return try {
-            sendMultiNotifications(createMultiMessage(request = request))
+            sendMultiNotifications(
+                createMultiMessage(
+                    title = title,
+                    description = description,
+                    fcmTokenList = fcmTokenList,
+                    type = type,
+                    pageArgument = pageArgument,
+                )
+            )
             NotificationResult.SUCCESS
         } catch (e: Exception) {
             logger.error("⚠️ Send réponse support notification error: ${e.message}")
@@ -40,9 +54,14 @@ class NotificationSendingRepositoryImpl(
         }
     }
 
-    private fun createMultiMessage(request: GenericMultiNotificationRequest): List<MulticastMessage> {
-        val chunkedFcmTokenList = request
-            .fcmTokenList
+    private fun createMultiMessage(
+        title: String,
+        description: String,
+        fcmTokenList: List<String>,
+        type: TypeNotification,
+        pageArgument: String?
+    ): List<MulticastMessage> {
+        val chunkedFcmTokenList = fcmTokenList
             .filter { it.isNotBlank() }
             .distinct()
             .chunked(MAX_SIMULTANEOUS_NOTIFICATIONS)
@@ -52,15 +71,15 @@ class NotificationSendingRepositoryImpl(
                 val messageBuilder = MulticastMessage.builder()
                     .setNotification(
                         Notification.builder()
-                            .setTitle(request.title)
-                            .setBody(request.description)
+                            .setTitle(title)
+                            .setBody(description)
                             .build()
                     )
-                    .putData(NOTIFICATION_TYPE_KEY, request.type.name)
+                    .putData(NOTIFICATION_TYPE_KEY, type.name)
                     .addAllTokens(fcmTokenSubList)
 
-                if (request.pageArgument != null) {
-                    messageBuilder.putData("pageArgument", request.pageArgument)
+                if (pageArgument != null) {
+                    messageBuilder.putData("pageArgument", pageArgument)
                 }
 
                 messageBuilder.build()
