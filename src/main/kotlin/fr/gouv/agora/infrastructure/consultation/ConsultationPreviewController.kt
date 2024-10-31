@@ -22,7 +22,7 @@ class ConsultationPreviewController(
         val consultationPreviewPage = consultationPreviewUseCase.getConsultationPreviewPage()
 
         return ResponseEntity.ok()
-            .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
+            .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
             .body(
             consultationPreviewJsonMapper.toJson(
                 domainOngoingList = consultationPreviewPage.ongoingList,

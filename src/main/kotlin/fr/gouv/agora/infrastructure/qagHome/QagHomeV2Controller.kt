@@ -7,10 +7,12 @@ import fr.gouv.agora.usecase.qag.GetQagErrorTextUseCase
 import fr.gouv.agora.usecase.qagPaginated.QagPaginatedV2UseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.CacheControl
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.concurrent.TimeUnit
 
 @RestController
 @Tag(name = "QaG")
@@ -58,7 +60,9 @@ class QagHomeV2Controller(
 
                 else -> null
             }?.let { qagsAndMaxPageCount ->
-                ResponseEntity.ok().body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
+                ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
+                    .body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
             } ?: ResponseEntity.badRequest().body(Unit)
         } ?: ResponseEntity.badRequest().body(Unit)
     }
