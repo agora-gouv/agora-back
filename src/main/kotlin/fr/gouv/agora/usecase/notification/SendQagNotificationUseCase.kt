@@ -4,12 +4,10 @@ import fr.gouv.agora.domain.NotificationInserting
 import fr.gouv.agora.domain.NotificationType
 import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.usecase.login.repository.UserRepository
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationMessageRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
-import fr.gouv.agora.usecase.notification.repository.QagNotificationRequest
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 
@@ -57,27 +55,24 @@ class SendQagNotificationUseCase(
 
         val (userId, fcmToken) = getQagAuthorFcmToken(qagId = qagId)
 
-        val sendingNotificationResult = fcmToken?.let {
-            notificationSendingRepository.sendGenericMultiNotification(
-                request = MultiNotificationRequest.GenericMultiNotificationRequest(
-                    title = title,
-                    description = description,
-                    fcmTokenList = listOf(fcmToken),
-                    type = TypeNotification.DETAILS_QAG,
-                    pageArgument = qagId,
-                ),
+        if (fcmToken == null || userId == null) return NotificationResult.FAILURE
+
+        val sendingNotificationResult = notificationSendingRepository.sendGenericMultiNotification(
+            title = title,
+            description = description,
+            fcmTokenList = listOf(fcmToken),
+            type = TypeNotification.DETAILS_QAG,
+            pageArgument = qagId,
+        )
+
+        notificationRepository.insertNotifications(
+            NotificationInserting(
+                title = title,
+                description = description,
+                type = NotificationType.QAG,
+                userIds = listOf(userId),
             )
-        } ?: NotificationResult.FAILURE
-        userId?.let {
-            notificationRepository.insertNotifications(
-                NotificationInserting(
-                    title = title,
-                    description = description,
-                    type = NotificationType.QAG,
-                    userIds = listOf(userId),
-                )
-            )
-        }
+        )
 
         return sendingNotificationResult
     }

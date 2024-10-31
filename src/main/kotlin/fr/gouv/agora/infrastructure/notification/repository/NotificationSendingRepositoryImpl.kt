@@ -4,7 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingException
 import com.google.firebase.messaging.MulticastMessage
 import com.google.firebase.messaging.Notification
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.GenericMultiNotificationRequest
+import fr.gouv.agora.usecase.notification.repository.GenericMultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
 import org.slf4j.Logger

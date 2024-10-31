@@ -4,9 +4,7 @@ import fr.gouv.agora.domain.NotificationInserting
 import fr.gouv.agora.domain.NotificationType
 import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.usecase.login.repository.UserRepository
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
-import fr.gouv.agora.usecase.notification.repository.NotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
 import org.springframework.stereotype.Service
@@ -22,13 +20,11 @@ class SendUserNotificationUseCase(
         if (user.fcmToken.isBlank()) throw FcmTokenVideException()
 
         notificationSendingRepository.sendGenericMultiNotification(
-            MultiNotificationRequest.GenericMultiNotificationRequest(
-                title = title,
-                description = description,
-                fcmTokenList = listOf(user.fcmToken),
-                type = TypeNotification.REPONSE_SUPPORT,
-                pageArgument = null
-            )
+            title = title,
+            description = description,
+            fcmTokenList = listOf(user.fcmToken),
+            type = TypeNotification.REPONSE_SUPPORT,
+            pageArgument = null
         )
         notificationRepository.insertNotifications(
             NotificationInserting(

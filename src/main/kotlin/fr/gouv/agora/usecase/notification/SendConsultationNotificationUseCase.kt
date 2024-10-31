@@ -7,7 +7,6 @@ import fr.gouv.agora.usecase.consultation.exception.ConsultationNotFoundExceptio
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.login.repository.UserRepository
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
@@ -35,13 +34,11 @@ class SendConsultationNotificationUseCase(
             .filter { userInfo -> userAnsweredConsultationIds.contains(userInfo.userId) }
 
         notificationSendingRepository.sendGenericMultiNotification(
-            request = MultiNotificationRequest.GenericMultiNotificationRequest(
-                title = title,
-                description = description,
-                fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
-                type = TypeNotification.DETAILS_CONSULTATION,
-                pageArgument = consultationId
-            )
+            title = title,
+            description = description,
+            fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
+            type = TypeNotification.DETAILS_CONSULTATION,
+            pageArgument = consultationId
         )
 
         notificationRepository.insertNotifications(
@@ -67,13 +64,11 @@ class SendConsultationNotificationUseCase(
         val userList = userRepository.getUsersNotAnsweredConsultation(consultationId = consultationId)
 
         notificationSendingRepository.sendGenericMultiNotification(
-            request = MultiNotificationRequest.GenericMultiNotificationRequest(
-                title = title,
-                description = description,
-                fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
-                type = TypeNotification.DETAILS_CONSULTATION,
-                pageArgument = consultationId,
-            )
+            title = title,
+            description = description,
+            fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
+            type = TypeNotification.DETAILS_CONSULTATION,
+            pageArgument = consultationId,
         )
         notificationRepository.insertNotifications(
             NotificationInserting(
