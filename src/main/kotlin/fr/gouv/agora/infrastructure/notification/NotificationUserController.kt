@@ -80,14 +80,14 @@ class NotificationUserController(
     fun notifyAllUsers(
         @RequestParam("title", defaultValue = "Une nouvelle consultation est disponible") title: String,
         @RequestParam("description", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") description: String,
-        @RequestParam("routeName", defaultValue = "/consultationsPage") page: String,
+        @RequestParam("type", defaultValue = "Type de la notification pour rediriger l'utilisateur vers la bonne page") type: TypeNotification,
         @RequestParam("routeArgument", defaultValue = "f55a68a7-8ec3-46c8-ba6b-1484fbd77ec6") pageArgument: String?,
     ): ResponseEntity<*> {
         val result = sendUsersNotificationUseCase.execute(
             title = title,
             description = description,
-            page = page,
             pageArgument = pageArgument,
+            typeNotification = type,
         )
 
         return when (result) {
@@ -95,4 +95,13 @@ class NotificationUserController(
             NotificationResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
         }
     }
+}
+
+enum class TypeNotification {
+    ALL_REPONSES_QAGS,//  ???,
+    HOME_QAGS,
+    DETAILS_QAG,
+    HOME_CONSULTATIONS,
+    DETAILS_CONSULTATION,
+    REPONSE_SUPPORT,
 }

@@ -2,7 +2,9 @@ package fr.gouv.agora.usecase.notification
 
 import fr.gouv.agora.domain.NotificationInserting
 import fr.gouv.agora.domain.NotificationType
+import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.usecase.login.repository.UserRepository
+import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
@@ -19,11 +21,13 @@ class SendUserNotificationUseCase(
         val user = userRepository.getUserById(userId) ?: throw UserIdInconnuException(userId)
         if (user.fcmToken.isBlank()) throw FcmTokenVideException()
 
-        notificationSendingRepository.sendUserNotification(
-            request = NotificationRequest(
+        notificationSendingRepository.sendGenericMultiNotification(
+            MultiNotificationRequest.GenericMultiNotificationRequest(
                 title = title,
                 description = description,
-                fcmToken = user.fcmToken,
+                fcmTokenList = listOf(user.fcmToken),
+                type = TypeNotification.REPONSE_SUPPORT,
+                pageArgument = null
             )
         )
         notificationRepository.insertNotifications(
@@ -34,6 +38,7 @@ class SendUserNotificationUseCase(
                 userIds = listOf(userId),
             )
         )
+
         return NotificationResult.SUCCESS
     }
 }

@@ -2,6 +2,7 @@ package fr.gouv.agora.usecase.notification
 
 import fr.gouv.agora.domain.NotificationInserting
 import fr.gouv.agora.domain.NotificationType
+import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.usecase.login.repository.UserRepository
 import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationMessageRepository
@@ -20,30 +21,6 @@ class SendQagNotificationUseCase(
     private val notificationMessageRepository: NotificationMessageRepository,
     private val notificationRepository: NotificationRepository,
 ) {
-    fun sendNotificationQagUpdate(title: String, description: String, qagId: String): NotificationResult {
-        if (qagInfoRepository.getQagInfo(qagId) == null) throw QagIdInconnuException(qagId)
-
-        val userList = userRepository.getAllUsers()
-        notificationSendingRepository.sendQagDetailsMultiNotification(
-            request = MultiNotificationRequest.QagMultiNotificationRequest(
-                title = title,
-                description = description,
-                fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
-                qagId = qagId,
-            )
-        )
-        notificationRepository.insertNotifications(
-            NotificationInserting(
-                title = title,
-                description = description,
-                type = NotificationType.QAG,
-                userIds = userList.map { userInfo -> userInfo.userId },
-            )
-        )
-
-        return NotificationResult.SUCCESS
-    }
-
     fun sendNotificationQagRejected(qagId: String): NotificationResult {
         val notificationMessage = notificationMessageRepository.getQagRejected()
 
@@ -79,13 +56,15 @@ class SendQagNotificationUseCase(
         if (qagInfoRepository.getQagInfo(qagId) == null) throw QagIdInconnuException(qagId)
 
         val (userId, fcmToken) = getQagAuthorFcmToken(qagId = qagId)
+
         val sendingNotificationResult = fcmToken?.let {
-            notificationSendingRepository.sendQagDetailsNotification(
-                request = QagNotificationRequest(
+            notificationSendingRepository.sendGenericMultiNotification(
+                request = MultiNotificationRequest.GenericMultiNotificationRequest(
                     title = title,
                     description = description,
-                    fcmToken = fcmToken,
-                    qagId = qagId,
+                    fcmTokenList = listOf(fcmToken),
+                    type = TypeNotification.DETAILS_QAG,
+                    pageArgument = qagId,
                 ),
             )
         } ?: NotificationResult.FAILURE
@@ -99,6 +78,7 @@ class SendQagNotificationUseCase(
                 )
             )
         }
+
         return sendingNotificationResult
     }
 
