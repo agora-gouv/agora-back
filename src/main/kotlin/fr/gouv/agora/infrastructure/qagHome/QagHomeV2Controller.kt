@@ -36,35 +36,39 @@ class QagHomeV2Controller(
         val usedThematiqueId = thematiqueId.takeUnless { it.isNullOrBlank() }
         val usedFilterType = filterType.takeUnless { it.isBlank() }
 
-        return pageNumber.toIntOrNull()?.let { pageNumberInt ->
-            when (usedFilterType) {
-                "top" -> qagPaginatedV2UseCase.getPopularQagPaginated(
-                    userId = userId,
-                    pageNumber = pageNumberInt,
-                    thematiqueId = usedThematiqueId,
-                )
+        val pageNumberInt = pageNumber.toIntOrNull() ?: return ResponseEntity.badRequest().body(Unit)
 
-                "latest" -> qagPaginatedV2UseCase.getLatestQagPaginated(
-                    userId = userId,
-                    pageNumber = pageNumberInt,
-                    thematiqueId = usedThematiqueId,
-                )
+        val qagsAndMaxPageCount = when (usedFilterType) {
+            "top" -> qagPaginatedV2UseCase.getPopularQagPaginated(
+                userId = userId,
+                pageNumber = pageNumberInt,
+                thematiqueId = usedThematiqueId,
+            )
 
-                "supporting" -> qagPaginatedV2UseCase.getSupportedQagPaginated(
-                    userId = userId,
-                    pageNumber = pageNumberInt,
-                    thematiqueId = usedThematiqueId,
-                )
+            "latest" -> qagPaginatedV2UseCase.getLatestQagPaginated(
+                userId = userId,
+                pageNumber = pageNumberInt,
+                thematiqueId = usedThematiqueId,
+            )
 
-                "trending" -> qagPaginatedV2UseCase.getTrendingQag(userId = userId)
+            "supporting" -> qagPaginatedV2UseCase.getSupportedQagPaginated(
+                userId = userId,
+                pageNumber = pageNumberInt,
+                thematiqueId = usedThematiqueId,
+            )
 
-                else -> null
-            }?.let { qagsAndMaxPageCount ->
-                ResponseEntity.ok()
-                    .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
-                    .body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
-            } ?: ResponseEntity.badRequest().body(Unit)
-        } ?: ResponseEntity.badRequest().body(Unit)
+            "trending" -> qagPaginatedV2UseCase.getTrendingQag(userId = userId)
+
+            else -> null
+        }
+
+        if (qagsAndMaxPageCount == null) {
+            return ResponseEntity.badRequest().body(Unit)
+        }
+
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
+            .body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
     }
 
     @Operation(summary = "Get QaG Status")
