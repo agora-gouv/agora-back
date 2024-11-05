@@ -27,6 +27,7 @@ class NotificationMapper {
                 QAG_NOTIFICATION_TYPE -> NotificationType.QAG
                 CONSULTATION_NOTIFICATION_TYPE -> NotificationType.CONSULTATION
                 REPONSE_SUPPORT_NOTIFICATION_TYPE -> NotificationType.REPONSE_SUPPORT
+                GENERIC_TYPE -> NotificationType.GENERIC
                 else -> throw IllegalArgumentException("Invalid Notification type : ${dto.type}")
             },
             date = dto.date,
