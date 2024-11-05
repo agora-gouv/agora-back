@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.notification
 
 import fr.gouv.agora.domain.NotificationInserting
-import fr.gouv.agora.domain.NotificationType
 import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.usecase.consultation.exception.ConsultationNotFoundException
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
@@ -45,7 +44,7 @@ class SendConsultationNotificationUseCase(
             NotificationInserting(
                 title = title,
                 description = description,
-                type = NotificationType.CONSULTATION,
+                type = TypeNotification.DETAILS_CONSULTATION,
                 userIds = userList.map { userInfo -> userInfo.userId },
             )
         )
@@ -74,7 +73,7 @@ class SendConsultationNotificationUseCase(
             NotificationInserting(
                 title = title,
                 description = description,
-                type = NotificationType.CONSULTATION,
+                type = TypeNotification.DETAILS_CONSULTATION,
                 userIds = userList.map { userInfo -> userInfo.userId },
             )
         )

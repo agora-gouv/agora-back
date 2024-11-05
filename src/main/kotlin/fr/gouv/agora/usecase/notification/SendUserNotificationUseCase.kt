@@ -1,7 +1,6 @@
 package fr.gouv.agora.usecase.notification
 
 import fr.gouv.agora.domain.NotificationInserting
-import fr.gouv.agora.domain.NotificationType
 import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.usecase.login.repository.UserRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
@@ -30,7 +29,7 @@ class SendUserNotificationUseCase(
             NotificationInserting(
                 title = title,
                 description = description,
-                type = NotificationType.REPONSE_SUPPORT,
+                type = TypeNotification.REPONSE_SUPPORT,
                 userIds = listOf(userId),
             )
         )
