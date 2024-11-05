@@ -20,9 +20,6 @@ class QagHomeController(
     fun getQagResponses(): ResponseEntity<QagResponsesJson> {
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
-            .body(
-            qagHomeJsonMapper.toResponsesJson(responseQagPreviewListUseCase.getResponseQagPreviewList())
-        )
+            .body(qagHomeJsonMapper.toResponsesJson(responseQagPreviewListUseCase.getResponseQagPreviewList()))
     }
-
 }
