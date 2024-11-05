@@ -1,13 +1,19 @@
 package fr.gouv.agora.infrastructure.notification.repository
 
-import com.google.firebase.messaging.*
-import fr.gouv.agora.usecase.notification.repository.*
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest.*
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingException
+import com.google.firebase.messaging.MulticastMessage
+import com.google.firebase.messaging.Notification
+import fr.gouv.agora.infrastructure.notification.TypeNotification
+import fr.gouv.agora.usecase.notification.repository.NotificationResult
+import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.stereotype.Component
-import java.time.*
+import java.time.Clock
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.concurrent.RejectedExecutionException
 
 @Component
@@ -20,146 +26,67 @@ class NotificationSendingRepositoryImpl(
     companion object {
         private const val NOTIFICATION_TYPE_KEY = "type"
 
-        private const val QAG_DETAILS_ID_KEY = "qagId"
-        private const val CONSULTATION_DETAILS_ID_KEY = "consultationId"
-
-        private const val QAG_DETAILS_NOTIFICATION_TYPE = "qagDetails"
-        private const val CONSULTATION_DETAILS_NOTIFICATION_TYPE = "consultationDetails"
-        private const val GENERIC_NOTIFICATION_TYPE = "generic"
-        private const val CONSULTATION_RESULTS_NOTIFICATION_TYPE = "consultationResults"
-        private const val REPONSE_SUPPORT_NOTIFICATION_TYPE = "reponseSupport"
-
         private const val MAX_SIMULTANEOUS_NOTIFICATIONS = 300
     }
 
-    override fun sendQagDetailsNotification(request: QagNotificationRequest): NotificationResult {
+    override fun sendGenericMultiNotification(
+        title: String,
+        description: String,
+        fcmTokenList: List<String>,
+        type: TypeNotification,
+        pageArgument: String?
+    ): NotificationResult {
+        logger.info("📩 Sending multi-notification: $title")
         return try {
-            sendNotification(
-                notificationMessage = createQagNotificationBaseMessage(request)
-                    .putData(NOTIFICATION_TYPE_KEY, QAG_DETAILS_NOTIFICATION_TYPE)
-                    .putData(QAG_DETAILS_ID_KEY, request.qagId)
-                    .build()
+            sendMultiNotifications(
+                createMultiMessage(
+                    title = title,
+                    description = description,
+                    fcmTokenList = fcmTokenList,
+                    type = type,
+                    pageArgument = pageArgument,
+                )
             )
-        } catch (e: IllegalArgumentException) {
-            logger.error("⚠️ Send notification error: ${e.message}")
-            NotificationResult.FAILURE
-        }
-    }
-
-    override fun sendGenericMultiNotification(request: GenericMultiNotificationRequest) {
-        logger.info("📩 Sending multi-notification: ${request.title}")
-        sendMultiNotifications(
-            createMultiMessage(request = request, type = GENERIC_NOTIFICATION_TYPE)
-        )
-    }
-
-    override fun sendQagDetailsMultiNotification(request: QagMultiNotificationRequest) {
-        logger.info("📩 Sending multi-notification: ${request.title}")
-        sendMultiNotifications(
-            createMultiMessage(request = request, type = QAG_DETAILS_NOTIFICATION_TYPE)
-        )
-    }
-
-    override fun sendConsultationDetailsMultiNotification(request: ConsultationMultiNotificationRequest) {
-        logger.info("📩 Sending multi-notification: ${request.title}")
-        sendMultiNotifications(
-            createMultiMessage(request = request, type = CONSULTATION_DETAILS_NOTIFICATION_TYPE)
-        )
-    }
-
-    override fun sendConsultationUpdateMultiNotification(request: ConsultationMultiNotificationRequest) {
-        logger.info("📩 Sending multi-notification: ${request.title}")
-        sendMultiNotifications(
-            createMultiMessage(request = request, type = CONSULTATION_RESULTS_NOTIFICATION_TYPE)
-        )
-    }
-
-    override fun sendUserNotification(request: NotificationRequest): NotificationResult {
-        return try {
-            sendNotification(
-                notificationMessage = createBaseMessage(request)
-                    .putData(NOTIFICATION_TYPE_KEY, REPONSE_SUPPORT_NOTIFICATION_TYPE)
-                    .build()
-            )
-        } catch (e: IllegalArgumentException) {
+            NotificationResult.SUCCESS
+        } catch (e: Exception) {
             logger.error("⚠️ Send réponse support notification error: ${e.message}")
             NotificationResult.FAILURE
         }
     }
 
-    private fun createQagNotificationBaseMessage(request: QagNotificationRequest): Message.Builder {
-        return Message.builder()
-            .setNotification(
-                Notification.builder()
-                    .setTitle(request.title)
-                    .setBody(request.description)
-                    .build()
-            )
-            .setToken(request.fcmToken)
-    }
-
-    private fun createBaseMessage(request: NotificationRequest): Message.Builder {
-        return Message.builder()
-            .setNotification(
-                Notification.builder()
-                    .setTitle(request.title)
-                    .setBody(request.description)
-                    .build()
-            )
-            .setToken(request.fcmToken)
-    }
-
-    private fun createMultiMessage(request: MultiNotificationRequest, type: String): List<MulticastMessage> {
-        val chunkedFcmTokenList = request
-            .fcmTokenList
+    private fun createMultiMessage(
+        title: String,
+        description: String,
+        fcmTokenList: List<String>,
+        type: TypeNotification,
+        pageArgument: String?
+    ): List<MulticastMessage> {
+        val chunkedFcmTokenList = fcmTokenList
             .filter { it.isNotBlank() }
             .distinct()
             .chunked(MAX_SIMULTANEOUS_NOTIFICATIONS)
+
         return chunkedFcmTokenList.mapIndexedNotNull { index, fcmTokenSubList ->
             try {
                 val messageBuilder = MulticastMessage.builder()
                     .setNotification(
                         Notification.builder()
-                            .setTitle(request.title)
-                            .setBody(request.description)
+                            .setTitle(title)
+                            .setBody(description)
                             .build()
                     )
-                    .putData(NOTIFICATION_TYPE_KEY, type)
+                    .putData(NOTIFICATION_TYPE_KEY, type.name)
                     .addAllTokens(fcmTokenSubList)
 
-                when (request) {
-                    is ConsultationMultiNotificationRequest -> messageBuilder.putData(
-                        CONSULTATION_DETAILS_ID_KEY,
-                        request.consultationId,
-                    )
-
-                    is QagMultiNotificationRequest -> messageBuilder.putData(
-                        QAG_DETAILS_ID_KEY,
-                        request.qagId,
-                    )
-
-                    is GenericMultiNotificationRequest -> {
-                        messageBuilder.putData("page", request.page)
-                        messageBuilder.putData("pageArgument", request.pageArgument)
-                    }
+                if (pageArgument != null) {
+                    messageBuilder.putData("pageArgument", pageArgument)
                 }
+
                 messageBuilder.build()
             } catch (e: IllegalArgumentException) {
                 logger.error("⚠️ Build multi-notification error on batch n°${index + 1}/${chunkedFcmTokenList.size}: ${e.message}")
                 null
             }
-        }
-    }
-
-    private fun sendNotification(notificationMessage: Message): NotificationResult {
-        return try {
-            val response = FirebaseMessaging.getInstance().send(notificationMessage)
-            if (response.isNullOrEmpty())
-                NotificationResult.FAILURE
-            else NotificationResult.SUCCESS
-        } catch (e: Exception) {
-            logger.error("⚠️ Send notification error: ${e.message}")
-            NotificationResult.FAILURE
         }
     }
 
@@ -197,5 +124,4 @@ class SendNotificationTask(
             logger.error("⚠️ Send multi-notification error on batch n°${batchIndex + 1}/$batchCount ${e.message}")
         }
     }
-
 }

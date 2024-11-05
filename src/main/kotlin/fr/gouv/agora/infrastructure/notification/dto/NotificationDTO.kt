@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.notification.dto
 
+import fr.gouv.agora.infrastructure.notification.TypeNotification
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -22,7 +23,7 @@ data class NotificationDTO(
     @Column(columnDefinition = "TEXT")
     val description: String,
     @Column(columnDefinition = "TEXT")
-    val type: String,
+    val type: TypeNotification,
     val date: Date,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,

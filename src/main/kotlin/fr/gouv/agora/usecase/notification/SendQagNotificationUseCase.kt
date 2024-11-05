@@ -1,14 +1,12 @@
 package fr.gouv.agora.usecase.notification
 
 import fr.gouv.agora.domain.NotificationInserting
-import fr.gouv.agora.domain.NotificationType
+import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.usecase.login.repository.UserRepository
-import fr.gouv.agora.usecase.notification.repository.MultiNotificationRequest
 import fr.gouv.agora.usecase.notification.repository.NotificationMessageRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationRepository
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
 import fr.gouv.agora.usecase.notification.repository.NotificationSendingRepository
-import fr.gouv.agora.usecase.notification.repository.QagNotificationRequest
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import org.springframework.stereotype.Service
 
@@ -20,30 +18,6 @@ class SendQagNotificationUseCase(
     private val notificationMessageRepository: NotificationMessageRepository,
     private val notificationRepository: NotificationRepository,
 ) {
-    fun sendNotificationQagUpdate(title: String, description: String, qagId: String): NotificationResult {
-        if (qagInfoRepository.getQagInfo(qagId) == null) throw QagIdInconnuException(qagId)
-
-        val userList = userRepository.getAllUsers()
-        notificationSendingRepository.sendQagDetailsMultiNotification(
-            request = MultiNotificationRequest.QagMultiNotificationRequest(
-                title = title,
-                description = description,
-                fcmTokenList = userList.map { userInfo -> userInfo.fcmToken },
-                qagId = qagId,
-            )
-        )
-        notificationRepository.insertNotifications(
-            NotificationInserting(
-                title = title,
-                description = description,
-                type = NotificationType.QAG,
-                userIds = userList.map { userInfo -> userInfo.userId },
-            )
-        )
-
-        return NotificationResult.SUCCESS
-    }
-
     fun sendNotificationQagRejected(qagId: String): NotificationResult {
         val notificationMessage = notificationMessageRepository.getQagRejected()
 
@@ -79,26 +53,26 @@ class SendQagNotificationUseCase(
         if (qagInfoRepository.getQagInfo(qagId) == null) throw QagIdInconnuException(qagId)
 
         val (userId, fcmToken) = getQagAuthorFcmToken(qagId = qagId)
-        val sendingNotificationResult = fcmToken?.let {
-            notificationSendingRepository.sendQagDetailsNotification(
-                request = QagNotificationRequest(
-                    title = title,
-                    description = description,
-                    fcmToken = fcmToken,
-                    qagId = qagId,
-                ),
+
+        if (fcmToken == null || userId == null) return NotificationResult.FAILURE
+
+        val sendingNotificationResult = notificationSendingRepository.sendGenericMultiNotification(
+            title = title,
+            description = description,
+            fcmTokenList = listOf(fcmToken),
+            type = TypeNotification.DETAILS_QAG,
+            pageArgument = qagId,
+        )
+
+        notificationRepository.insertNotifications(
+            NotificationInserting(
+                title = title,
+                description = description,
+                type = TypeNotification.DETAILS_QAG,
+                userIds = listOf(userId),
             )
-        } ?: NotificationResult.FAILURE
-        userId?.let {
-            notificationRepository.insertNotifications(
-                NotificationInserting(
-                    title = title,
-                    description = description,
-                    type = NotificationType.QAG,
-                    userIds = listOf(userId),
-                )
-            )
-        }
+        )
+
         return sendingNotificationResult
     }
 
