@@ -24,7 +24,6 @@ class QagHomeV2Controller(
     private val qagHomeJsonMapper: QagHomeJsonMapper,
     private val authentificationHelper: AuthentificationHelper,
 ) {
-
     @Operation(summary = "Get QaG Détails")
     @GetMapping("/v2/qags")
     fun getQagDetails(
@@ -67,7 +66,6 @@ class QagHomeV2Controller(
         }
 
         return ResponseEntity.ok()
-            .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
             .body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
     }
 
