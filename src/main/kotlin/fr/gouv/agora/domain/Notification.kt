@@ -1,11 +1,12 @@
 package fr.gouv.agora.domain
 
+import fr.gouv.agora.infrastructure.notification.TypeNotification
 import java.util.*
 
 data class Notification(
     val title: String,
     val description: String,
-    val type: NotificationType,
+    val type: TypeNotification,
     val date: Date,
     val userId: String,
 )
@@ -13,13 +14,6 @@ data class Notification(
 data class NotificationInserting(
     val title: String,
     val description: String,
-    val type: NotificationType,
+    val type: TypeNotification,
     val userIds: List<String>,
 )
-
-enum class NotificationType {
-    CONSULTATION,
-    QAG,
-    REPONSE_SUPPORT,
-    GENERIC,
-}
