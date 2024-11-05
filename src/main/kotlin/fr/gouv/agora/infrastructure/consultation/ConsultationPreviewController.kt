@@ -3,9 +3,11 @@ package fr.gouv.agora.infrastructure.consultation
 import fr.gouv.agora.usecase.consultation.ConsultationPreviewUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.CacheControl
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.concurrent.TimeUnit
 
 @RestController
 @Tag(name = "Consultations")
@@ -19,11 +21,12 @@ class ConsultationPreviewController(
         val consultationPreviewPage = consultationPreviewUseCase.getConsultationPreviewPage()
 
         return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePrivate())
             .body(
                 consultationPreviewJsonMapper.toJson(
-                    domainOngoingList = consultationPreviewPage.ongoingList,
-                    domainFinishedList = consultationPreviewPage.finishedList,
-                    domainAnsweredList = consultationPreviewPage.answeredList,
+                    consultationPreviewPage.ongoingList,
+                    consultationPreviewPage.finishedList,
+                    consultationPreviewPage.answeredList,
                 )
             )
     }

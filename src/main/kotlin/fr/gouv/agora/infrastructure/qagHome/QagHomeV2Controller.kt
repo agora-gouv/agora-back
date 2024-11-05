@@ -66,13 +66,16 @@ class QagHomeV2Controller(
         }
 
         return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePrivate())
             .body(qagPaginatedJsonMapper.toJson(qagsAndMaxPageCount))
     }
 
     @Operation(summary = "Get QaG Status")
     @GetMapping("/qags/ask_status")
     fun askStatus(): ResponseEntity<*> {
-        return ResponseEntity.ok().body(
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePrivate())
+            .body(
             qagHomeJsonMapper.toQagAskStatusJson(
                 getQagErrorTextUseCase.getGetQagErrorText(
                     userId = authentificationHelper.getUserId()!!
