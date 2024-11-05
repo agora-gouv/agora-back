@@ -1,7 +1,6 @@
 package fr.gouv.agora.infrastructure.notification
 
 import fr.gouv.agora.domain.Notification
-import fr.gouv.agora.domain.NotificationType
 import fr.gouv.agora.infrastructure.common.DateMapper
 import fr.gouv.agora.usecase.notification.NotificationListAndHasMoreNotificationsFlag
 import org.springframework.stereotype.Component
@@ -13,7 +12,6 @@ class NotificationPaginatedJsonMapper(private val dateMapper: DateMapper) {
         private const val QAG_NOTIFICATION_TYPE = "Questions citoyennes"
         private const val CONSULTATION_NOTIFICATION_TYPE = "Consultations"
         private const val REPONSE_SUPPORT_NOTIFICATION_TYPE = "Réponse du support"
-        private const val GENERIC_NOTIFICATION_TYPE = "Notification générique"
     }
 
     fun toJson(notificationListAndHasMoreNotificationsFlag: NotificationListAndHasMoreNotificationsFlag): NotificationPaginatedJson {
@@ -28,10 +26,12 @@ class NotificationPaginatedJsonMapper(private val dateMapper: DateMapper) {
             title = domain.title,
             description = domain.description,
             type = when (domain.type) {
-                NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
-                NotificationType.QAG -> QAG_NOTIFICATION_TYPE
-                NotificationType.REPONSE_SUPPORT -> REPONSE_SUPPORT_NOTIFICATION_TYPE
-                NotificationType.GENERIC -> GENERIC_NOTIFICATION_TYPE
+                TypeNotification.ALL_REPONSES_QAGS -> QAG_NOTIFICATION_TYPE
+                TypeNotification.HOME_QAGS -> QAG_NOTIFICATION_TYPE
+                TypeNotification.DETAILS_QAG -> QAG_NOTIFICATION_TYPE
+                TypeNotification.HOME_CONSULTATIONS -> CONSULTATION_NOTIFICATION_TYPE
+                TypeNotification.DETAILS_CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
+                TypeNotification.REPONSE_SUPPORT -> REPONSE_SUPPORT_NOTIFICATION_TYPE
             },
             date = dateMapper.toFormattedDate(domain.date),
         )
