@@ -31,8 +31,7 @@ data class ConsultationDTO(
     val description: String,
     @Column(columnDefinition = "TEXT")
     val tipsDescription: String,
-    @JoinTable(joinColumns = [JoinColumn(table = "thematiques", referencedColumnName = "id")])
-    val thematiqueId: UUID,
+    val thematiqueId: String,
 ) : Serializable {
 
     override fun equals(other: Any?): Boolean {

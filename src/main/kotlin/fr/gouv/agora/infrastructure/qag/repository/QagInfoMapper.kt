@@ -24,7 +24,7 @@ class QagInfoMapper {
     fun toDomain(dto: QagDTO): QagInfo {
         return QagInfo(
             id = dto.id.toString(),
-            thematiqueId = dto.thematiqueId.toString(),
+            thematiqueId = dto.thematiqueId,
             title = dto.title,
             description = dto.description,
             date = dto.postDate,
@@ -57,7 +57,7 @@ class QagInfoMapper {
                 postDate = domain.date,
                 status = STATUS_OPEN,
                 username = domain.username,
-                thematiqueId = UUID.fromString(domain.thematiqueId),
+                thematiqueId = domain.thematiqueId,
                 userId = UUID.fromString(domain.userId),
             )
         } catch (e: IllegalArgumentException) {

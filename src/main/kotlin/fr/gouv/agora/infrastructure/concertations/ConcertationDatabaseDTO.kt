@@ -24,7 +24,6 @@ data class ConcertationDatabaseDTO(
     val externalLink: String,
     @Column(columnDefinition = "TEXT")
     val updateLabel: String?,
-    @JoinTable(joinColumns = [JoinColumn(table = "thematiques", referencedColumnName = "id")])
-    val thematiqueId: UUID,
+    val thematiqueId: String,
     val lastUpdateDate: LocalDate,
 )

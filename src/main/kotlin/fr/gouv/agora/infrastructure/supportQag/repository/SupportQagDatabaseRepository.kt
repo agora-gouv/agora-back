@@ -50,7 +50,7 @@ interface SupportQagDatabaseRepository : JpaRepository<SupportQagDTO, UUID> {
             AND user_id = :userId """,
         nativeQuery = true
     )
-    fun getSupportedQagCountByThematique(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: UUID): Int
+    fun getSupportedQagCountByThematique(@Param("userId") userId: UUID, @Param("thematiqueId") thematiqueId: String): Int
 
     @Query(
         value = """SELECT count(*) FROM supports_qag 
