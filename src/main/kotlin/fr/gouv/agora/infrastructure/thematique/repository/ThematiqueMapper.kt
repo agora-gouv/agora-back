@@ -4,7 +4,6 @@ import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiData
-import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueDatabaseDTO
 import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import org.springframework.stereotype.Component
 
