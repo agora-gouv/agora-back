@@ -10,7 +10,6 @@ enum class AgoraFeature {
     DeleteBannedUsersSupports,
     StrapiConsultations,
     StrapiReponsesQag,
-    StrapiThematiques,
     StrapiNews,
     StrapiHeaders,
     StrapiParticipationCharter,
