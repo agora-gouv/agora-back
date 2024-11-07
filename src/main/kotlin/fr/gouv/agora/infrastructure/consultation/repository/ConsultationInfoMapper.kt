@@ -71,7 +71,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         thematiques: List<Thematique>,
     ): List<ConsultationPreviewFinished> {
         return consultations.mapNotNull { consultation ->
-            val thematique = thematiques.find { it.id == consultation.thematiqueId.toString() }
+            val thematique = thematiques.find { it.id == consultation.thematiqueId }
 
             if (thematique == null) {
                 logger.error("ConsultationPreviewFinished Database - Thematique id '${consultation.thematiqueId}' non trouvée")
@@ -159,7 +159,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         slug = consultation.attributes.slug,
         title = consultation.attributes.titre,
         coverUrl = consultation.attributes.urlImageDeCouverture,
-        thematiqueId = consultation.attributes.thematique.data.attributes.databaseId,
+        thematiqueId = consultation.attributes.thematique.data.id,
         endDate = consultation.attributes.dateDeFin,
         updateDate = consultation.attributes.dateDeDebut,
         updateLabel = consultation.attributes.getFlammeLabel(now),

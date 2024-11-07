@@ -10,7 +10,7 @@ interface QagWithSupportCountDTO {
     val postDate: Date
     val status: Int
     val username: String
-    val thematiqueId: UUID
+    val thematiqueId: String
     val userId: UUID
     val supportCount: Int
 }

@@ -49,8 +49,7 @@ class ConsultationStrapiDTOTest {
                         "pictogramme": "🗳",
                         "createdAt": "2024-05-29T10:19:13.352Z",
                         "updatedAt": "2024-05-29T10:19:13.352Z",
-                        "publishedAt": "2024-05-29T10:19:13.352Z",
-                        "id_base_de_donnees": "30671310-ee62-11ed-a05b-0242ac120003"
+                        "publishedAt": "2024-05-29T10:19:13.352Z"
                       }
                     }
                   },

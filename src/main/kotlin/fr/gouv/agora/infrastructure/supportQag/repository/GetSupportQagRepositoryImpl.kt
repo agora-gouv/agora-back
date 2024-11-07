@@ -25,7 +25,7 @@ class GetSupportQagRepositoryImpl(
 
     override fun getSupportedQagCount(userId: String, thematiqueId: String?): Int {
         return userId.toUuidOrNull()?.let { userUUID ->
-            thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+            thematiqueId?.let { thematiqueUUID ->
                 databaseRepository.getSupportedQagCountByThematique(
                     userId = userUUID,
                     thematiqueId = thematiqueUUID
