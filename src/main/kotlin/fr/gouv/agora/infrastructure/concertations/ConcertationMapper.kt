@@ -27,7 +27,7 @@ class ConcertationMapper {
     fun toConcertations(concertations: StrapiDTO<ConcertationStrapiDTO>, thematiques: List<Thematique>): List<Concertation> {
         return concertations.data.mapNotNull { conceration ->
             val thematique = thematiques.firstOrNull {
-                it.id == conceration.attributes.thematique.data.attributes.databaseId
+                it.id == conceration.attributes.thematique.data.id
             } ?: return@mapNotNull null
 
             Concertation(

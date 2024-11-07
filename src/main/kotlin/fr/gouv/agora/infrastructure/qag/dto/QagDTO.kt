@@ -18,8 +18,7 @@ data class QagDTO(
     val status: Int,
     @Column(columnDefinition = "TEXT")
     val username: String,
-    @JoinTable(joinColumns = [JoinColumn(table = "thematiques", referencedColumnName = "id")])
-    val thematiqueId: UUID,
+    val thematiqueId: String,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
 ) {
