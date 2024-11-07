@@ -10,7 +10,7 @@ import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.qag.repository.QagInsertionResult
 import fr.gouv.agora.usecase.qag.repository.QagUpdateResult
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Date
 
 @Component
 class QagInfoRepositoryImpl(
@@ -38,7 +38,7 @@ class QagInfoRepositoryImpl(
         offset: Int,
         thematiqueId: String?,
     ): List<QagInfoWithSupportCount> {
-        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+        val qagList = thematiqueId?.let { thematiqueUUID ->
             databaseRepository.getPopularQagsPaginatedV2(
                 offset = offset,
                 thematiqueId = thematiqueUUID,
@@ -53,7 +53,7 @@ class QagInfoRepositoryImpl(
         offset: Int,
         thematiqueId: String?,
     ): List<QagInfoWithSupportCount> {
-        val qagList = thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+        val qagList = thematiqueId?.let { thematiqueUUID ->
             databaseRepository.getLatestQagsPaginatedV2(
                 offset = offset,
                 thematiqueId = thematiqueUUID,
@@ -70,7 +70,7 @@ class QagInfoRepositoryImpl(
         thematiqueId: String?,
     ): List<QagInfoWithSupportCount> {
         val qagList = userId.toUuidOrNull()?.let { userUUID ->
-            thematiqueId?.toUuidOrNull()?.let { thematiqueUUID ->
+            thematiqueId?.let { thematiqueUUID ->
                 databaseRepository.getSupportedQagsPaginatedV2(
                     userId = userUUID,
                     offset = offset,
@@ -85,7 +85,7 @@ class QagInfoRepositoryImpl(
     }
 
     override fun getQagsCount(thematiqueId: String?): Int {
-        return thematiqueId?.toUuidOrNull()
+        return thematiqueId
             ?.let { thematiqueUUId -> databaseRepository.getQagsCountByThematique(thematiqueUUId) }
             ?: databaseRepository.getQagsCount()
     }

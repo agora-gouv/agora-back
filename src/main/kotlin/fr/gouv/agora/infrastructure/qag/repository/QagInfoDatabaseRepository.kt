@@ -78,7 +78,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     )
     fun getPopularQagsPaginatedV2(
         @Param("offset") offset: Int,
-        @Param("thematiqueId") thematiqueId: UUID,
+        @Param("thematiqueId") thematiqueId: String,
     ): List<QagWithSupportCountDTO>
 
     @Query(
@@ -108,7 +108,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     )
     fun getLatestQagsPaginatedV2(
         @Param("offset") offset: Int,
-        @Param("thematiqueId") thematiqueId: UUID,
+        @Param("thematiqueId") thematiqueId: String,
     ): List<QagWithSupportCountDTO>
 
     @Query(
@@ -146,14 +146,14 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     fun getSupportedQagsPaginatedV2(
         @Param("userId") userId: UUID,
         @Param("offset") offset: Int,
-        @Param("thematiqueId") thematiqueId: UUID,
+        @Param("thematiqueId") thematiqueId: String,
     ): List<QagWithSupportCountDTO>
 
     @Query(value = "SELECT count(*) FROM qags WHERE status = 1", nativeQuery = true)
     fun getQagsCount(): Int
 
     @Query(value = "SELECT count(*) FROM qags WHERE status = 1 AND thematique_id = :thematiqueId", nativeQuery = true)
-    fun getQagsCountByThematique(@Param("thematiqueId") thematiqueId: UUID): Int
+    fun getQagsCountByThematique(@Param("thematiqueId") thematiqueId: String): Int
 
     @Query(value = "SELECT * from qags WHERE id = :qagId", nativeQuery = true)
     fun getQagById(@Param("qagId") qagId: UUID): QagDTO?
