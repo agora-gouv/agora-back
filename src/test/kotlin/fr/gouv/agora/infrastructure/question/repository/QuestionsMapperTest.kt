@@ -538,8 +538,7 @@ internal class QuestionsMapperTest {
                             "pictogramme": "👵",
                             "createdAt": "2024-05-23T15:48:53.092Z",
                             "updatedAt": "2024-05-23T15:48:53.092Z",
-                            "publishedAt": "2024-05-23T15:48:53.090Z",
-                            "id_base_de_donnees": "3953a966-015e-11ee-be56-0242ac120002"
+                            "publishedAt": "2024-05-23T15:48:53.090Z"
                           }
                         }
                       },
