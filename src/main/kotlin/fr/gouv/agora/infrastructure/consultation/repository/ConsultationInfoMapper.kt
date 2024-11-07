@@ -2,6 +2,7 @@ package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
@@ -36,7 +37,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             participantCountGoal = consultation.participantCountGoal,
             thematique = thematique,
             isPublished = true,
-            territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+            territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
         )
     }
 
@@ -60,7 +61,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 thematique = thematique,
                 endDate = consultation.endDate.toLocalDateTime(),
                 isPublished = true,
-                territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+                territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
             )
         }
     }
@@ -70,7 +71,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         thematiques: List<Thematique>,
     ): List<ConsultationPreviewFinished> {
         return consultations.mapNotNull { consultation ->
-            val thematique = thematiques.find { it.id == consultation.thematiqueId.toString() }
+            val thematique = thematiques.find { it.id == consultation.thematiqueId }
 
             if (thematique == null) {
                 logger.error("ConsultationPreviewFinished Database - Thematique id '${consultation.thematiqueId}' non trouvée")
@@ -87,7 +88,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 lastUpdateDate = consultation.updateDate.toLocalDateTime(),
                 endDate = consultation.endDate.toLocalDateTime(),
                 isPublished = true,
-                territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+                territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
             )
         }
     }
@@ -150,7 +151,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         endDate = dto.endDate.toLocalDateTime(),
         updateDate = dto.updateDate.toLocalDateTime(),
         updateLabel = dto.updateLabel,
-        territory = "National", // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+        territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
     )
 
     fun toConsultationWithUpdateInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>, now: LocalDateTime) = ConsultationWithUpdateInfo(
@@ -158,7 +159,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         slug = consultation.attributes.slug,
         title = consultation.attributes.titre,
         coverUrl = consultation.attributes.urlImageDeCouverture,
-        thematiqueId = consultation.attributes.thematique.data.attributes.databaseId,
+        thematiqueId = consultation.attributes.thematique.data.id,
         endDate = consultation.attributes.dateDeFin,
         updateDate = consultation.attributes.dateDeDebut,
         updateLabel = consultation.attributes.getFlammeLabel(now),

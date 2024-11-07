@@ -81,7 +81,7 @@ internal class InsertReponseConsultationUseCaseTest {
         participantCountGoal = 1,
         thematique = Thematique(),
         isPublished = true,
-        territory = "National",
+        territory = "France",
     )
 
     @Test

@@ -19,42 +19,6 @@ class ConsultationNotificationController(
     private val sendConsultationNotificationUseCase: SendConsultationNotificationUseCase,
 ) {
     @Operation(
-        summary = "Envoyer une notification pour avertir qu'une nouvelle Consultation est disponible", responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Success",
-                content = [Content(mediaType = "application/json")]
-            ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad Request : L'id de consultation fourni n'existe pas",
-                content = [Content(mediaType = "application/json")]
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized : Votre compte ne possède pas les droits administrateur",
-                content = [Content(mediaType = "application/json")]
-            )
-        ]
-    )
-    @GetMapping("/admin/notifyNewConsultation/{consultationId}")
-    fun newConsultationNotification(
-        @RequestParam("title", defaultValue = "Une nouvelle consultation est disponible") title: String,
-        @RequestParam("description", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") description: String,
-        @PathVariable("consultationId") @Parameter(example = "db0f2d59-7962-43ff-a69f-878204b7be95") consultationId: String,
-    ): ResponseEntity<*> {
-        val result = sendConsultationNotificationUseCase.sendNewConsultationNotification(
-            title = title,
-            description = description,
-            consultationId = consultationId,
-        )
-        return when (result) {
-            NotificationResult.SUCCESS -> ResponseEntity.ok().body(Unit)
-            NotificationResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
-        }
-    }
-
-    @Operation(
         summary = "Envoyer une notification pour avertir qu'une nouvelle Consultation a été mise à jour", responses = [
             ApiResponse(
                 responseCode = "200",

@@ -2,7 +2,7 @@ package fr.gouv.agora.infrastructure.notification.repository
 
 import fr.gouv.agora.domain.Notification
 import fr.gouv.agora.domain.NotificationInserting
-import fr.gouv.agora.domain.NotificationType
+import fr.gouv.agora.infrastructure.notification.TypeNotification
 import fr.gouv.agora.infrastructure.notification.dto.NotificationDTO
 import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
@@ -12,23 +12,11 @@ import java.util.*
 @Component
 class NotificationMapper {
 
-    companion object {
-        private const val QAG_NOTIFICATION_TYPE = "Questions citoyennes"
-        private const val CONSULTATION_NOTIFICATION_TYPE = "Consultations"
-        private const val REPONSE_SUPPORT_NOTIFICATION_TYPE = "Réponse du support"
-        private const val GENERIC_TYPE = "Notification générique"
-    }
-
     fun toDomain(dto: NotificationDTO): Notification {
         return Notification(
             title = dto.title,
             description = dto.description,
-            type = when (dto.type) {
-                QAG_NOTIFICATION_TYPE -> NotificationType.QAG
-                CONSULTATION_NOTIFICATION_TYPE -> NotificationType.CONSULTATION
-                REPONSE_SUPPORT_NOTIFICATION_TYPE -> NotificationType.REPONSE_SUPPORT
-                else -> throw IllegalArgumentException("Invalid Notification type : ${dto.type}")
-            },
+            type = dto.type,
             date = dto.date,
             userId = dto.userId.toString(),
         )
@@ -42,12 +30,7 @@ class NotificationMapper {
                     id = UuidUtils.NOT_FOUND_UUID,
                     title = domain.title,
                     description = domain.description,
-                    type = when (domain.type) {
-                        NotificationType.QAG -> QAG_NOTIFICATION_TYPE
-                        NotificationType.CONSULTATION -> CONSULTATION_NOTIFICATION_TYPE
-                        NotificationType.REPONSE_SUPPORT -> REPONSE_SUPPORT_NOTIFICATION_TYPE
-                        NotificationType.GENERIC -> GENERIC_TYPE
-                    },
+                    type = domain.type,
                     date = nowDate,
                     userId = userUUID,
                 )

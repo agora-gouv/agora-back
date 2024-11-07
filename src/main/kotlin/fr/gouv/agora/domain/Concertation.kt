@@ -10,5 +10,5 @@ data class Concertation(
     val thematique: Thematique,
     val updateLabel: String?,
     val updateDate: LocalDateTime,
-    val territory: String = "National", // toutes les concertations sont nationales
+    val territory: String = Territoire.Pays.FRANCE.value, // toutes les concertations sont nationales
 )
