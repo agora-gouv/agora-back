@@ -23,7 +23,7 @@ class ConsultationUpdateHistoryRepositoryImpl(
         }
 
         if (featureFlagsRepository.isFeatureEnabled(AgoraFeature.StrapiConsultations)) {
-            val consultation = consultationStrapiRepository.getConsultationById(consultationId)
+            val consultation = consultationStrapiRepository.getConsultationByIdWithUnpublished(consultationId)
                 ?: return emptyList()
 
             return mapper.toDomain(consultation)
