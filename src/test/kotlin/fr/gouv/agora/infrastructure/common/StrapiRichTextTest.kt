@@ -411,8 +411,8 @@ class StrapiRichTextTest {
             <h5>titre 5</h5>
             <h6>titre 6</h6>
             Bonjour, je suis un paragraphe<br/>
-            Bonsoir, je suis un autre paragraphe, avec du <b>gras</b>, et du <b>gras à moi</b><em><b>tié italique</b></em>, puis
-                un peu de <del><u><em><b>tout.</b></em></u></del><br/>
+            Bonsoir, je suis un autre paragraphe, avec du <b>gras</b>, et du <b>gras à moi</b><i><b>tié italique</b></i>, puis
+                un peu de <del><u><i><b>tout.</b></i></u></del><br/>
             <code>Je suis du code</code><br/>
             <a href="http://localhost/">Je suis un lien</a><br/>
             <ul>
