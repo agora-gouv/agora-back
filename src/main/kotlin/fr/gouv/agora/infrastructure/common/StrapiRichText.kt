@@ -52,7 +52,7 @@ data class StrapiRichTextNode(
             htmlText = "<b>$htmlText</b>"
         }
         if (italic != null && italic) {
-            htmlText = "<em>$htmlText</em>"
+            htmlText = "<i>$htmlText</i>"
         }
         if (underline != null && underline) {
             htmlText = "<u>$htmlText</u>"
