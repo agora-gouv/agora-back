@@ -55,7 +55,7 @@ class ConsultationDetailsUpdateV2UseCase(
             update = details.update,
             feedbackStats = details.feedbackStats,
             history = historyRepository.getConsultationUpdateHistory(details.getConsultationId()),
-            participantCount = getParticipantCount(consultationIdOrSlug),
+            participantCount = getParticipantCount(details.consultation.id),
             isUserFeedbackPositive = getUserFeedback(details.update),
         )
     }
@@ -77,7 +77,7 @@ class ConsultationDetailsUpdateV2UseCase(
             update = update,
             feedbackStats = getFeedbackStats(update),
             history = history,
-            participantCount = getParticipantCount(consultationIdOrSlug),
+            participantCount = getParticipantCount(consultationInfo.id),
             isUserFeedbackPositive = getUserFeedback(update),
         )
     }
