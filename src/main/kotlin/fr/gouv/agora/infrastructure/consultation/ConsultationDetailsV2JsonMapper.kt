@@ -102,7 +102,6 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
     }
 
     private fun buildParticipationInfo(consultationDetails: ConsultationDetailsV2WithInfo): ParticipationInfo? {
-        if (!consultationDetails.update.hasParticipationInfo) return null
         return ParticipationInfo(
             participantCount = consultationDetails.participantCount,
             participantCountGoal = consultationDetails.consultation.participantCountGoal,
