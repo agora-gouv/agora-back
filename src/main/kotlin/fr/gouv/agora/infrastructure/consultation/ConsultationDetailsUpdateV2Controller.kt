@@ -25,11 +25,7 @@ class ConsultationDetailsUpdateV2Controller(
         @PathVariable consultationIdOrSlug: String,
         @PathVariable consultationUpdateIdOrSlug: String,
     ): ResponseEntity<ConsultationDetailsV2Json> {
-        val consultationDetails = if (authentificationHelper.canViewUnpublishedConsultations()) {
-            useCase.getConsultationUnpublishedDetailsUpdate(consultationIdOrSlug, consultationUpdateIdOrSlug)
-        } else {
-            useCase.getConsultationDetailsUpdate(consultationIdOrSlug, consultationUpdateIdOrSlug)
-        }
+        val consultationDetails = useCase.getConsultationUnpublishedDetailsUpdate(consultationIdOrSlug, consultationUpdateIdOrSlug)
 
         return ResponseEntity.ok().body(mapper.toJson(consultationDetails))
     }
