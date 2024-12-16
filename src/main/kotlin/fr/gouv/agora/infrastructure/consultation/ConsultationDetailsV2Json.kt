@@ -23,9 +23,9 @@ data class ConsultationDetailsV2Json(
     @JsonProperty("thematique")
     val thematique: ThematiqueNoIdJson,
     @JsonProperty("questionsInfo")
-    val questionsInfo: QuestionsInfo?,
+    val questionsInfo: QuestionsInfo,
     @JsonProperty("consultationDates")
-    val consultationDates: ConsultationDates?,
+    val consultationDates: ConsultationDates,
     @JsonProperty("responsesInfo")
     val responsesInfo: ResponsesInfo?,
     @JsonProperty("infoHeader")
@@ -33,7 +33,7 @@ data class ConsultationDetailsV2Json(
     @JsonProperty("body")
     val body: Body,
     @JsonProperty("participationInfo")
-    val participationInfo: ParticipationInfo?,
+    val participationInfo: ParticipationInfo,
     @JsonProperty("downloadAnalysisUrl")
     val downloadAnalysisUrl: String?,
     @JsonProperty("feedbackQuestion")

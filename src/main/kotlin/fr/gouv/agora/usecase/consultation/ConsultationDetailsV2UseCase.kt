@@ -110,8 +110,6 @@ class ConsultationDetailsV2UseCase(
     }
 
     private fun getParticipantCount(consultationWithInfo: ConsultationDetailsV2): Int {
-        if (!consultationWithInfo.hasQuestionsOrParticipationInfos()) return 0
-
         val consultationId = consultationWithInfo.getConsultationId()
         val participantCount = cacheRepository.getParticipantCount(consultationId)
                 ?: userRepository.getParticipantCount(consultationId)
