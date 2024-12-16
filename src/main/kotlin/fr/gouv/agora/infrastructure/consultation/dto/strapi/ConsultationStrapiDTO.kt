@@ -51,6 +51,10 @@ data class ConsultationStrapiDTO(
     val consultationContenuAVenir: StrapiDataNullable<StrapiConsultationAVenir>,
     @JsonProperty("territoire")
     val territoire: String,
+    @JsonProperty("titre_page_web")
+    val titrePageWeb: String,
+    @JsonProperty("sous_titre_page_web")
+    val sousTitrePageWeb: String,
 ) {
     fun isPublished(): Boolean {
         return publishedAt != null
@@ -70,7 +74,8 @@ data class ConsultationStrapiDTO(
             return questions.firstOrNull { question.numero + 1 == it.numero }?.id
         }
 
-        if (question.numeroQuestionSuivante == 999) return null
+        val numeroDerniereQuestion = 999
+        if (question.numeroQuestionSuivante == numeroDerniereQuestion) return null
 
         return questions.firstOrNull { question.numeroQuestionSuivante == it.numero }?.id
     }

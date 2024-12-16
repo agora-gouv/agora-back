@@ -14,7 +14,7 @@ data class FeedbackQagDTO(
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
     @JoinTable(joinColumns = [JoinColumn(table = "qags", referencedColumnName = "id")])
-    val qagId: UUID,
+    val qagId: String,
     @Column(columnDefinition = "SMALLINT")
     val isHelpful: Int,
     val createdDate: Date,

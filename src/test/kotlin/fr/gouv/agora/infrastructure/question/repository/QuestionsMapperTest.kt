@@ -683,7 +683,9 @@ internal class QuestionsMapperTest {
                       },
                       "consultation_contenu_a_venir": {
                         "data": null
-                      }
+                      },
+                      "titre_page_web": "Grande Consultation",
+                      "sous_titre_page_web": "par le Gouvernement"
                     }
                   }
             """.trimIndent()
