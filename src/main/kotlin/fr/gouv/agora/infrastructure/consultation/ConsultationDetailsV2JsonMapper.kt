@@ -53,6 +53,8 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             lastUpdateSlug = consultationDetails.update.slug,
             shareText = buildShareText(consultationDetails),
             territory = consultationDetails.consultation.territory,
+            titrePageWeb = consultationDetails.consultation.titreWeb,
+            sousTitrePageWeb = consultationDetails.consultation.sousTitreWeb,
         )
     }
 

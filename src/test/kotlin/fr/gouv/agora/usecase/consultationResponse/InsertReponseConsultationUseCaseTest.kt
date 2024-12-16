@@ -82,6 +82,8 @@ internal class InsertReponseConsultationUseCaseTest {
         thematique = Thematique(),
         isPublished = true,
         territory = "France",
+        titreWeb = "Grande Consultation",
+        sousTitreWeb = "par le Gouvernement",
     )
 
     @Test

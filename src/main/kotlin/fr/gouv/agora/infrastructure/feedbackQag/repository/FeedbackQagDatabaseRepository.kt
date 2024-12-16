@@ -23,11 +23,11 @@ interface FeedbackQagDatabaseRepository : JpaRepository<FeedbackQagDTO, UUID> {
         value = "SELECT * FROM feedbacks_qag WHERE qag_id = :qagId and user_id = :userId",
         nativeQuery = true
     )
-    fun getFeedbackForQagAndUser(@Param("qagId") qagId: UUID, @Param("userId") userId: UUID): List<FeedbackQagDTO>
+    fun getFeedbackForQagAndUser(@Param("qagId") qagId: String, @Param("userId") userId: UUID): List<FeedbackQagDTO>
 
     @Query(
         value = "SELECT * FROM feedbacks_qag WHERE qag_id = :qagId",
         nativeQuery = true
     )
-    fun getFeedbackQagList(@Param("qagId") qagId: UUID): List<FeedbackQagDTO>
+    fun getFeedbackQagList(@Param("qagId") qagId: String): List<FeedbackQagDTO>
 }

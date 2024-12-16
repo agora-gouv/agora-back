@@ -26,7 +26,7 @@ class FeedbackQagMapper {
             val createdDate = Date()
             FeedbackQagDTO(
                 id = UUID.randomUUID(),
-                qagId = UUID.fromString(domain.qagId),
+                qagId = domain.qagId,
                 userId = UUID.fromString(domain.userId),
                 isHelpful = toInt(domain.isHelpful),
                 createdDate = createdDate,
@@ -39,7 +39,7 @@ class FeedbackQagMapper {
 
     fun toDomain(dto: FeedbackQagDTO): FeedbackQag {
         return FeedbackQag(
-            qagId = dto.qagId.toString(),
+            qagId = dto.qagId,
             userId = dto.userId.toString(),
             isHelpful = toBoolean(dto.isHelpful),
         )
