@@ -46,6 +46,10 @@ data class ConsultationDetailsV2Json(
     val history: List<History>,
     @JsonProperty("territory")
     val territory: String,
+    @JsonProperty("titrePageWeb")
+    val titrePageWeb: String,
+    @JsonProperty("sousTitrePageWeb")
+    val sousTitrePageWeb: String,
 ) {
 
     data class QuestionsInfo(

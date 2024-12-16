@@ -18,17 +18,14 @@ class FeedbackQagRepositoryImpl(
     }
 
     override fun getFeedbackResponseForUser(qagId: String, userId: String): Boolean? {
-        val qagUuid = qagId.toUuidOrNull() ?: return null
         val userUuid = userId.toUuidOrNull() ?: return null
 
-        return databaseRepository.getFeedbackForQagAndUser(qagId = qagUuid, userId = userUuid)
+        return databaseRepository.getFeedbackForQagAndUser(qagId = qagId, userId = userUuid)
             .firstOrNull()?.let(mapper::toDomain)?.isHelpful
     }
 
     override fun getFeedbackQagList(qagId: String): List<FeedbackQag> {
-        return qagId.toUuidOrNull()?.let { qagUUID ->
-            databaseRepository.getFeedbackQagList(qagUUID).map(mapper::toDomain)
-        } ?: emptyList()
+        return databaseRepository.getFeedbackQagList(qagId).map(mapper::toDomain)
     }
 
     override fun insertFeedbackQag(feedbackQagInserting: FeedbackQagInserting): FeedbackQagResult {
@@ -39,10 +36,9 @@ class FeedbackQagRepositoryImpl(
     }
 
     override fun updateFeedbackQag(qagId: String, userId: String, isHelpful: Boolean): FeedbackQagResult {
-        val qagUuid = qagId.toUuidOrNull() ?: return FeedbackQagResult.FAILURE
         val userUuid = userId.toUuidOrNull() ?: return FeedbackQagResult.FAILURE
 
-        return databaseRepository.getFeedbackForQagAndUser(qagUuid, userUuid).firstOrNull()?.let { dto ->
+        return databaseRepository.getFeedbackForQagAndUser(qagId, userUuid).firstOrNull()?.let { dto ->
             databaseRepository.save(mapper.modifyIsHelpful(dto, isHelpful))
             FeedbackQagResult.SUCCESS
         } ?: FeedbackQagResult.FAILURE
