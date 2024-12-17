@@ -22,7 +22,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
     private val logger = LoggerFactory.getLogger(ConsultationInfoMapper::class.java)
 
     fun toConsultationInfo(consultation: ConsultationDTO, thematiques: List<Thematique>): ConsultationInfo {
-        val thematique = thematiques.first { it.id == consultation.thematiqueId.toString() }
+        val thematique = thematiques.first { it.id == consultation.thematiqueId }
 
         return ConsultationInfo(
             id = consultation.id.toString(),
@@ -38,6 +38,8 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             thematique = thematique,
             isPublished = true,
             territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
+            titreWeb = "Grande consultation citoyenne",
+            sousTitreWeb = "lancée par le Gouvernement",
         )
     }
 
@@ -46,7 +48,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         thematiques: List<Thematique>
     ): List<ConsultationPreview> {
         return consultations.mapNotNull { consultation ->
-            val thematique = thematiques.find { it.id == consultation.thematiqueId.toString() }
+            val thematique = thematiques.find { it.id == consultation.thematiqueId }
 
             if (thematique == null) {
                 logger.error("ConsultationPreviewOngoing Database - Thematique id '${consultation.thematiqueId}' non trouvée")
@@ -181,6 +183,8 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
             isPublished = consultation.attributes.isPublished(),
             territory = consultation.attributes.territoire,
+            titreWeb = consultation.attributes.titrePageWeb,
+            sousTitreWeb = consultation.attributes.sousTitrePageWeb,
         )
     }
 }

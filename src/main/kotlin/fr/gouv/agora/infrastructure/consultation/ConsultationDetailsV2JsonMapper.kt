@@ -53,6 +53,8 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             lastUpdateSlug = consultationDetails.update.slug,
             shareText = buildShareText(consultationDetails),
             territory = consultationDetails.consultation.territory,
+            titrePageWeb = consultationDetails.consultation.titreWeb,
+            sousTitrePageWeb = consultationDetails.consultation.sousTitreWeb,
         )
     }
 
@@ -65,8 +67,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             .replace(SHARE_TEXT_REPLACE_TITLE_PATTERN, consultationDetails.consultation.title)
     }
 
-    private fun buildQuestionsInfo(consultationDetails: ConsultationDetailsV2WithInfo): QuestionsInfo? {
-        if (!consultationDetails.update.hasQuestionsInfo) return null
+    private fun buildQuestionsInfo(consultationDetails: ConsultationDetailsV2WithInfo): QuestionsInfo {
         return QuestionsInfo(
             endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate.toLocalDate()),
             questionCount = consultationDetails.consultation.questionCount,
@@ -76,8 +77,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
         )
     }
 
-    private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDates? {
-        if (!consultationDetails.update.hasQuestionsInfo) return null
+    private fun buildConsultationDates(consultationDetails: ConsultationDetailsV2WithInfo): ConsultationDates {
         return ConsultationDates(
             startDate = dateMapper.toFormattedDate(consultationDetails.consultation.startDate.toLocalDate()),
             endDate = dateMapper.toFormattedDate(consultationDetails.consultation.endDate.toLocalDate()),
@@ -103,8 +103,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
         }
     }
 
-    private fun buildParticipationInfo(consultationDetails: ConsultationDetailsV2WithInfo): ParticipationInfo? {
-        if (!consultationDetails.update.hasParticipationInfo) return null
+    private fun buildParticipationInfo(consultationDetails: ConsultationDetailsV2WithInfo): ParticipationInfo {
         return ParticipationInfo(
             participantCount = consultationDetails.participantCount,
             participantCountGoal = consultationDetails.consultation.participantCountGoal,

@@ -33,12 +33,8 @@ class ConsultationDetailsV2UseCase(
     private val authentificationHelper: AuthentificationHelper,
 ) {
     fun getConsultation(consultationIdOrSlug: String): ConsultationDetailsV2WithInfo {
-        val consultationInfo = if (authentificationHelper.canViewUnpublishedConsultations()) {
-            infoRepository.getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
-        } else {
-            infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)
-        }
-        if (consultationInfo == null) throw ConsultationNotFoundException(consultationIdOrSlug)
+        val consultationInfo = infoRepository.getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
+            ?: throw ConsultationNotFoundException(consultationIdOrSlug)
 
         val consultationWithInfo = getConsultationDetails(consultationInfo)
 
@@ -114,8 +110,6 @@ class ConsultationDetailsV2UseCase(
     }
 
     private fun getParticipantCount(consultationWithInfo: ConsultationDetailsV2): Int {
-        if (!consultationWithInfo.hasQuestionsOrParticipationInfos()) return 0
-
         val consultationId = consultationWithInfo.getConsultationId()
         val participantCount = cacheRepository.getParticipantCount(consultationId)
                 ?: userRepository.getParticipantCount(consultationId)

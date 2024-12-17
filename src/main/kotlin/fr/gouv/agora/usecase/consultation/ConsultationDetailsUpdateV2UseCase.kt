@@ -29,49 +29,18 @@ class ConsultationDetailsUpdateV2UseCase(
     private val authentificationHelper: AuthentificationHelper,
     private val historyRepository: ConsultationUpdateHistoryRepository,
 ) {
-    fun getConsultationDetailsUpdate(
-        consultationIdOrSlug: String,
-        consultationUpdateIdOrSlug: String,
-    ): ConsultationDetailsV2WithInfo {
-        val cacheResult = cacheRepository
-            .getConsultationDetails(consultationIdOrSlug, consultationUpdateIdOrSlug)
-
-        val details = when (cacheResult) {
-            is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
-            is ConsultationUpdateCacheResult.CacheNotInitialized -> buildConsultationDetails(
-                consultationIdOrSlug = consultationIdOrSlug,
-                consultationUpdateIdOrSlug = consultationUpdateIdOrSlug
-            ).also { details ->
-                cacheRepository.initConsultationDetails(
-                    consultationId = consultationIdOrSlug,
-                    consultationUpdateId = consultationUpdateIdOrSlug,
-                    details = details,
-                )
-            }
-        }
-
-        return ConsultationDetailsV2WithInfo(
-            consultation = details.consultation,
-            update = details.update,
-            feedbackStats = details.feedbackStats,
-            history = historyRepository.getConsultationUpdateHistory(details.getConsultationId()),
-            participantCount = if (details.update.hasParticipationInfo || details.update.hasQuestionsInfo) {
-                getParticipantCount(consultationIdOrSlug)
-            } else 0,
-            isUserFeedbackPositive = getUserFeedback(details.update),
-        )
-    }
-
     fun getConsultationUnpublishedDetailsUpdate(
         consultationIdOrSlug: String,
         consultationUpdateIdOrSlug: String,
     ): ConsultationDetailsV2WithInfo {
         val consultationInfo = infoRepository.getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
             ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
+
         val update = updateRepository.getConsultationUpdateBySlugOrIdWithUnpublished(
             consultationInfo.id,
             consultationUpdateIdOrSlug,
         ) ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
+
         val history = historyRepository.getConsultationUpdateHistory(consultationInfo.id)
 
         return ConsultationDetailsV2WithInfo(
@@ -79,29 +48,9 @@ class ConsultationDetailsUpdateV2UseCase(
             update = update,
             feedbackStats = getFeedbackStats(update),
             history = history,
-            participantCount = if (update.hasParticipationInfo || update.hasQuestionsInfo) {
-                getParticipantCount(consultationIdOrSlug)
-            } else 0,
+            participantCount = getParticipantCount(consultationInfo.id),
             isUserFeedbackPositive = getUserFeedback(update),
         )
-    }
-
-    private fun buildConsultationDetails(
-        consultationIdOrSlug: String,
-        consultationUpdateIdOrSlug: String
-    ): ConsultationDetailsV2 {
-        return infoRepository.getConsultationByIdOrSlug(consultationIdOrSlug)?.let { consultationInfo ->
-            updateRepository.getConsultationUpdateBySlugOrId(
-                consultationInfo.id,
-                consultationUpdateIdOrSlug,
-            )?.let { update ->
-                ConsultationDetailsV2(
-                    consultation = consultationInfo,
-                    update = update,
-                    feedbackStats = getFeedbackStats(update),
-                )
-            }
-        } ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
     }
 
     private fun getFeedbackStats(consultationUpdate: ConsultationUpdateInfoV2): FeedbackConsultationUpdateStats? {
