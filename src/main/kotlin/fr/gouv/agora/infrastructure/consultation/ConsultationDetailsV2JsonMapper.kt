@@ -55,6 +55,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             territory = consultationDetails.consultation.territory,
             titrePageWeb = consultationDetails.consultation.titreWeb,
             sousTitrePageWeb = consultationDetails.consultation.sousTitreWeb,
+            isAnsweredByUser = consultationDetails.isAnsweredByUser,
         )
     }
 

@@ -19,4 +19,5 @@ data class ConsultationDetailsV2WithInfo(
     val history: List<ConsultationUpdateHistory>,
     val participantCount: Int,
     val isUserFeedbackPositive: Boolean?,
+    val isAnsweredByUser: Boolean,
 )
