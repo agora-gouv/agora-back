@@ -25,6 +25,7 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
+import kotlin.sequences.EmptySequence.take
 
 @Component
 class ConsultationUpdateInfoV2Mapper {
@@ -251,6 +252,7 @@ class ConsultationUpdateInfoV2Mapper {
         val contenu = contentDTO.attributes
 
         val htmlSections = toSections(contenu.sections)
+        val previewHtmlSections = toPreviewSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
             id = contentDTO.id,
@@ -262,7 +264,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = htmlSections.take(5),
+            bodyPreview = previewHtmlSections,
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -300,6 +302,8 @@ class ConsultationUpdateInfoV2Mapper {
             )
         }
 
+        val previewHtmlSections = toPreviewSections(contenu.sections)
+
         return ConsultationUpdateInfoV2(
             id = contenuId,
             slug = contenu.slug,
@@ -310,7 +314,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = responsesInfo,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = htmlSections.take(5),
+            bodyPreview = previewHtmlSections,
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -330,6 +334,7 @@ class ConsultationUpdateInfoV2Mapper {
             ?: return null
         val contenuId = consultation.attributes.consultationContenuReponseDuCommanditaire.data.id
         val htmlSections = toSections(contenu.sections)
+        val previewHtmlSections = toPreviewSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
             id = contenuId,
@@ -341,7 +346,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = htmlSections.take(5),
+            bodyPreview = previewHtmlSections,
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
@@ -361,6 +366,7 @@ class ConsultationUpdateInfoV2Mapper {
             ?: return null
         val contenuId = consultation.attributes.consultationContenuAnalyseDesReponses.data.id
         val htmlSections = toSections(contenu.sections)
+        val previewHtmlSections = toPreviewSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
             id = contenuId,
@@ -372,7 +378,7 @@ class ConsultationUpdateInfoV2Mapper {
             responsesInfo = null,
             sectionsHeader = emptyList(),
             body = htmlSections,
-            bodyPreview = htmlSections.take(5),
+            bodyPreview = previewHtmlSections,
             infoHeader = null,
             downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
             feedbackQuestion = FeedbackQuestion(
@@ -424,5 +430,13 @@ class ConsultationUpdateInfoV2Mapper {
             }
         }
         return sectionHeader
+    }
+
+    private fun toPreviewSections(sections: List<StrapiConsultationSection>): List<Section> {
+        val sectionsHtml = toSections(sections)
+
+        if (sectionsHtml.size < 8) return emptyList()
+
+        return sectionsHtml.take(5)
     }
 }
