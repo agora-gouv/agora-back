@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 class ConsultationDetailsUpdateV2Controller(
     private val useCase: ConsultationDetailsUpdateV2UseCase,
     private val mapper: ConsultationDetailsV2JsonMapper,
-    private val authentificationHelper: AuthentificationHelper,
 ) {
     @Operation(summary = "Get Détails Consultation Update")
     @GetMapping(

@@ -50,6 +50,8 @@ data class ConsultationDetailsV2Json(
     val titrePageWeb: String,
     @JsonProperty("sousTitrePageWeb")
     val sousTitrePageWeb: String,
+    @JsonProperty("isAnsweredByUser")
+    val isAnsweredByUser: Boolean,
 ) {
 
     data class QuestionsInfo(

@@ -2,14 +2,12 @@ package fr.gouv.agora.usecase.consultation
 
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.domain.AgoraFeature
-import fr.gouv.agora.domain.ConsultationDetailsV2
 import fr.gouv.agora.domain.ConsultationDetailsV2WithInfo
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2
 import fr.gouv.agora.domain.FeedbackConsultationUpdateStats
 import fr.gouv.agora.usecase.consultation.exception.ConsultationUpdateNotFoundException
 import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheRepository
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
-import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedbackCacheResult
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.consultationUpdate.repository.ConsultationUpdateHistoryRepository
@@ -41,6 +39,10 @@ class ConsultationDetailsUpdateV2UseCase(
             consultationUpdateIdOrSlug,
         ) ?: throw ConsultationUpdateNotFoundException(consultationIdOrSlug, consultationUpdateIdOrSlug)
 
+        val userId = authentificationHelper.getUserId()
+        val userHasAnsweredConsultation =
+            userId != null && userAnsweredRepository.hasAnsweredConsultation(consultationInfo.id, userId)
+
         val history = historyRepository.getConsultationUpdateHistory(consultationInfo.id)
 
         return ConsultationDetailsV2WithInfo(
@@ -50,6 +52,7 @@ class ConsultationDetailsUpdateV2UseCase(
             history = history,
             participantCount = getParticipantCount(consultationInfo.id),
             isUserFeedbackPositive = getUserFeedback(update),
+            isAnsweredByUser = userHasAnsweredConsultation,
         )
     }
 
