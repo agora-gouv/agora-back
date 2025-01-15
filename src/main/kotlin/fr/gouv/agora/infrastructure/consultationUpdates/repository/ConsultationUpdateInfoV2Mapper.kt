@@ -25,7 +25,6 @@ import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDateTime
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
-import kotlin.sequences.EmptySequence.take
 
 @Component
 class ConsultationUpdateInfoV2Mapper {
