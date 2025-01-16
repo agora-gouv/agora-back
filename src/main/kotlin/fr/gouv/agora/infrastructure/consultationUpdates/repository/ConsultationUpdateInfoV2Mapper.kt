@@ -220,6 +220,8 @@ class ConsultationUpdateInfoV2Mapper {
 
         val sections = toSections(contentBeforeResponse.sections)
 
+        val sectionPourquoi = Section.Title("Pourquoi cette consultation ?")
+
         return ConsultationUpdateInfoV2(
             id = consultation.contenuAvantReponse.data.id,
             slug = contentBeforeResponse.slug,
@@ -229,8 +231,8 @@ class ConsultationUpdateInfoV2Mapper {
             hasParticipationInfo = false,
             responsesInfo = null,
             sectionsHeader = emptyList(),
-            body = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml()), *sections.toTypedArray()),
-            bodyPreview = listOf(Section.RichText(contentBeforeResponse.presentation.toHtml().split("<br/>").take(2).joinToString("<br/>"))),
+            body = listOf(sectionPourquoi, Section.RichText(contentBeforeResponse.presentation.toHtml()), *sections.toTypedArray()),
+            bodyPreview = listOf(sectionPourquoi, Section.RichText(contentBeforeResponse.presentation.toHtml().split("<br/>").take(2).joinToString("<br/>"))),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = null,

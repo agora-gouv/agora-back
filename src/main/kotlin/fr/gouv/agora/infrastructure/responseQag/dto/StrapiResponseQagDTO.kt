@@ -59,6 +59,6 @@ data class StrapiResponseQagVideo(
     val informationAdditionnelleDescription: List<StrapiRichText>?,
 ) : StrapiResponseQagType {
     fun hasInformationAdditionnelle(): Boolean {
-        return informationAdditionnelleTitre != null && informationAdditionnelleDescription != null
+        return !informationAdditionnelleTitre.isNullOrBlank() && !informationAdditionnelleDescription.isNullOrEmpty()
     }
 }
