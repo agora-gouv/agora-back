@@ -266,7 +266,7 @@ class ConsultationUpdateInfoV2Mapper {
             sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = previewHtmlSections,
-            infoHeader = null,
+            infoHeader = InfoHeader(contenu.recapEmoji, contenu.recapLabel),
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
                 contentDTO.id,
@@ -348,7 +348,7 @@ class ConsultationUpdateInfoV2Mapper {
             sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = previewHtmlSections,
-            infoHeader = null,
+            infoHeader = InfoHeader(contenu.recapEmoji, contenu.recapLabel),
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
                 contenuId,
@@ -380,7 +380,7 @@ class ConsultationUpdateInfoV2Mapper {
             sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = previewHtmlSections,
-            infoHeader = null,
+            infoHeader = InfoHeader(contenu.recapEmoji, contenu.recapLabel),
             downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
             feedbackQuestion = FeedbackQuestion(
                 contenuId,
