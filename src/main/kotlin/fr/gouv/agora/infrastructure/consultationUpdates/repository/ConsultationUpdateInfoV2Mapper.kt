@@ -231,8 +231,17 @@ class ConsultationUpdateInfoV2Mapper {
             hasParticipationInfo = false,
             responsesInfo = null,
             sectionsHeader = emptyList(),
-            body = listOf(sectionPourquoi, Section.RichText(contentBeforeResponse.presentation.toHtml()), *sections.toTypedArray()),
-            bodyPreview = listOf(sectionPourquoi, Section.RichText(contentBeforeResponse.presentation.toHtml().split("<br/>").take(2).joinToString("<br/>"))),
+            body = listOf(
+                sectionPourquoi,
+                Section.RichText(contentBeforeResponse.presentation.toHtml()),
+                *sections.toTypedArray()
+            ),
+            bodyPreview = listOf(
+                sectionPourquoi,
+                Section.RichText(
+                    contentBeforeResponse.presentation.toHtml().split("<br/>").take(2).joinToString("<br/>")
+                )
+            ),
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = null,
@@ -255,6 +264,10 @@ class ConsultationUpdateInfoV2Mapper {
         val htmlSections = toSections(contenu.sections)
         val previewHtmlSections = toPreviewSections(contenu.sections)
 
+        val infoHeader = if (contenu.recapEmoji != null && contenu.recapLabel != null)
+            InfoHeader(contenu.recapEmoji, contenu.recapLabel)
+        else null
+
         return ConsultationUpdateInfoV2(
             id = contentDTO.id,
             slug = contenu.slug,
@@ -266,7 +279,7 @@ class ConsultationUpdateInfoV2Mapper {
             sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = previewHtmlSections,
-            infoHeader = null,
+            infoHeader = infoHeader,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
                 contentDTO.id,
@@ -336,6 +349,9 @@ class ConsultationUpdateInfoV2Mapper {
         val contenuId = consultation.attributes.consultationContenuReponseDuCommanditaire.data.id
         val htmlSections = toSections(contenu.sections)
         val previewHtmlSections = toPreviewSections(contenu.sections)
+        val infoHeader = if (contenu.recapEmoji != null && contenu.recapLabel != null)
+            InfoHeader(contenu.recapEmoji, contenu.recapLabel)
+        else null
 
         return ConsultationUpdateInfoV2(
             id = contenuId,
@@ -348,7 +364,7 @@ class ConsultationUpdateInfoV2Mapper {
             sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = previewHtmlSections,
-            infoHeader = null,
+            infoHeader = infoHeader,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
                 contenuId,
@@ -368,6 +384,9 @@ class ConsultationUpdateInfoV2Mapper {
         val contenuId = consultation.attributes.consultationContenuAnalyseDesReponses.data.id
         val htmlSections = toSections(contenu.sections)
         val previewHtmlSections = toPreviewSections(contenu.sections)
+        val infoHeader = if (contenu.recapEmoji != null && contenu.recapLabel != null)
+            InfoHeader(contenu.recapEmoji, contenu.recapLabel)
+        else null
 
         return ConsultationUpdateInfoV2(
             id = contenuId,
@@ -380,7 +399,7 @@ class ConsultationUpdateInfoV2Mapper {
             sectionsHeader = emptyList(),
             body = htmlSections,
             bodyPreview = previewHtmlSections,
-            infoHeader = null,
+            infoHeader = infoHeader,
             downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
             feedbackQuestion = FeedbackQuestion(
                 contenuId,
