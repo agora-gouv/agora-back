@@ -199,10 +199,6 @@ interface Territoire {
             )
         );
 
-        fun getDepartementsNames(): List<String> {
-            return this.departements.map { it.value }
-        }
-
         companion object {
             fun getByDepartment(departement: Departement?): Region? {
                 if (departement == null) return null
