@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.profile.repository
 
+import fr.gouv.agora.config.DatabaseConfig
 import fr.gouv.agora.domain.Profile
 import fr.gouv.agora.domain.ProfileInserting
 import fr.gouv.agora.domain.Territoire
@@ -7,6 +8,8 @@ import fr.gouv.agora.infrastructure.profile.repository.ProfileCacheRepository.Ca
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.profile.repository.ProfileEditResult
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.util.UUID
 
@@ -16,7 +19,6 @@ class ProfileRepositoryImpl(
     private val cacheRepository: ProfileCacheRepository,
     private val mapper: ProfileMapper,
 ) : ProfileRepository {
-
     override fun getProfile(userId: String): Profile? {
         return try {
             val userUUID = UUID.fromString(userId)
