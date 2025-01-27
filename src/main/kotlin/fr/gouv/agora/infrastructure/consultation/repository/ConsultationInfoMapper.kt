@@ -149,24 +149,36 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         slug = dto.slug,
         title = dto.title,
         coverUrl = dto.coverUrl,
-        thematiqueId = dto.thematiqueId.toString(),
+        thematiqueId = dto.thematiqueId,
         endDate = dto.endDate.toLocalDateTime(),
         updateDate = dto.updateDate.toLocalDateTime(),
         updateLabel = dto.updateLabel,
         territory = Territoire.Pays.FRANCE.value, // les consultations de la db ne sont plus maintenues et sont toutes en "national"
     )
 
-    fun toConsultationWithUpdateInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>, now: LocalDateTime) = ConsultationWithUpdateInfo(
-        id = consultation.id,
-        slug = consultation.attributes.slug,
-        title = consultation.attributes.titre,
-        coverUrl = consultation.attributes.urlImageDeCouverture,
-        thematiqueId = consultation.attributes.thematique.data.id,
-        endDate = consultation.attributes.dateDeFin,
-        updateDate = consultation.attributes.dateDeDebut,
-        updateLabel = consultation.attributes.getFlammeLabel(now),
-        territory = consultation.attributes.territoire,
-    )
+    fun toConsultationsWithUpdateInfo(consultations: StrapiDTO<ConsultationStrapiDTO>, now: LocalDateTime): List<ConsultationWithUpdateInfo> {
+        return consultations.data.mapNotNull {
+            val consultationAttributes = it.attributes
+
+            val updateDate = consultationAttributes.getLatestUpdateDate(now)
+            if (updateDate == null) {
+                logger.error("toConsultationWithUpdateInfo - Impossible de générer une updateDate pour la consultation id '${it.id}'")
+                return@mapNotNull null
+            }
+
+            return@mapNotNull ConsultationWithUpdateInfo(
+                id = it.id,
+                slug = consultationAttributes.slug,
+                title = consultationAttributes.titre,
+                coverUrl = consultationAttributes.urlImageDeCouverture,
+                thematiqueId = consultationAttributes.thematique.data.id,
+                endDate = consultationAttributes.dateDeFin,
+                updateDate = updateDate,
+                updateLabel = consultationAttributes.getFlammeLabel(now),
+                territory = consultationAttributes.territoire,
+            )
+        }
+    }
 
     fun toConsultationInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationInfo {
         return ConsultationInfo(

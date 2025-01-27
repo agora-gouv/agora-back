@@ -34,8 +34,8 @@ class ConsultationPreviewAnsweredRepositoryImpl(
 
         val now = LocalDateTime.now(clock)
         val strapiConsultationsAnsweredIds = databaseRepository.getConsultationAnsweredIds(userUUID)
-        val strapiConsultationsAnswered = strapiRepository.getConsultationsByIds(strapiConsultationsAnsweredIds).data
-            .map { mapper.toConsultationWithUpdateInfo(it, now) }
+        val strapiConsultationsAnswered = strapiRepository.getConsultationsByIds(strapiConsultationsAnsweredIds)
+            .let { mapper.toConsultationsWithUpdateInfo(it, now) }
         val databaseAnsweredConsultations = databaseRepository.getConsultationsAnsweredWithUpdateInfo(userUUID, offset)
             .map(mapper::toConsultationWithUpdateInfo)
 
