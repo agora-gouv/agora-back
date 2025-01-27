@@ -38,8 +38,8 @@ class ConsultationPreviewFinishedRepositoryImpl(
         }
 
         val now = LocalDateTime.now(clock)
-        val strapiConsultationFinished = strapiRepository.getConsultationsFinishedByTerritories(now, territories).data
-            .map { mapper.toConsultationWithUpdateInfo(it, now) }
+        val strapiConsultationFinished = strapiRepository.getConsultationsFinishedByTerritories(now, territories)
+            .let { mapper.toConsultationsWithUpdateInfo(it, now) }
 
         return databaseConsultationFinished + strapiConsultationFinished
     }
@@ -55,8 +55,8 @@ class ConsultationPreviewFinishedRepositoryImpl(
         }
 
         val now = LocalDateTime.now(clock)
-        val strapiConsultationFinished = strapiRepository.getConsultationsFinished(now, territory).data
-            .map { mapper.toConsultationWithUpdateInfo(it, now) }
+        val strapiConsultationFinished = strapiRepository.getConsultationsFinished(now, territory)
+            .let { mapper.toConsultationsWithUpdateInfo(it, now) }
 
         return databaseConsultationFinished + strapiConsultationFinished
     }
