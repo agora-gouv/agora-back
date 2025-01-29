@@ -11,7 +11,14 @@ data class Profile(
     val consultationFrequency: Frequency?,
     val primaryDepartment: Territoire.Departement?,
     val secondaryDepartment: Territoire.Departement?,
-)
+) {
+    fun isCompleted(): Boolean {
+        return gender != null || yearOfBirth != null || department != null
+                || cityType != null || jobCategory != null
+                || voteFrequency != null || publicMeetingFrequency != null
+                || consultationFrequency != null
+    }
+}
 
 data class ProfileInserting(
     val gender: Gender?,

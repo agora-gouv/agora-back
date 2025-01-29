@@ -16,7 +16,6 @@ class ProfileRepositoryImpl(
     private val cacheRepository: ProfileCacheRepository,
     private val mapper: ProfileMapper,
 ) : ProfileRepository {
-
     override fun getProfile(userId: String): Profile? {
         return try {
             val userUUID = UUID.fromString(userId)

@@ -1,5 +1,4 @@
 DELETE FROM qags WHERE id = 'f29c5d6f-9838-4c57-a7ec-0612145bb0c8';
-DELETE FROM responses_qag WHERE id = '38990baf-b0ed-4db0-99a5-7ec01790720e';
 DELETE FROM qags WHERE id = '996436ca-ee69-11ed-a05b-0242ac120003';
 DELETE FROM qags WHERE id = 'f8776dd0-ee69-11ed-a05b-0242ac120003';
 DELETE FROM qags WHERE id = '40c04882-ee6a-11ed-a05b-0242ac120003';
@@ -10,16 +9,6 @@ DELETE FROM qags WHERE id = '96e8341c-ee6b-11ed-a05b-0242ac120003';
 DELETE FROM qags WHERE id = 'd09f2788-ee6b-11ed-a05b-0242ac120003';
 DELETE FROM qags WHERE id = '1cde43fe-ee6c-11ed-a05b-0242ac120003';
 DELETE FROM qags WHERE id = '59028e08-ee6c-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = '996436ca-ee69-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = 'f8776dd0-ee69-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = '40c04882-ee6a-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = '8171c50e-ee6a-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = '1731a370-ee6b-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = '5c5f5460-ee6b-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = '96e8341c-ee6b-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = 'd09f2788-ee6b-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = '1cde43fe-ee6c-11ed-a05b-0242ac120003';
-DELETE FROM qag_updates WHERE id = '59028e08-ee6c-11ed-a05b-0242ac120003';
 
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id, user_id) VALUES (
     'f29c5d6f-9838-4c57-a7ec-0612145bb0c8',
@@ -31,42 +20,6 @@ INSERT INTO qags(id, title, description, post_date, status, username, thematique
     '30671310-ee62-11ed-a05b-0242ac120003',
     '00000000-0000-0000-0000-000000000000'
 ) ON CONFLICT DO NOTHING;
-
-INSERT INTO responses_qag(id, author, author_portrait_url, author_description, response_date, video_url, video_width, video_height, transcription, feedback_question, additional_info_title, additional_info_description, qag_id) VALUES (
-    '38990baf-b0ed-4db0-99a5-7ec01790720e',
-    'Olivier Véran',
-    'https://content.agora.incubateur.net/portraits/QaG-OlivierVeran.png',
-    'Ministre délégué auprès de la Première ministre, chargé du Renouveau démocratique, porte-parole du Gouvernement',
-    '2023-06-05',
-    'https://content.agora.incubateur.net/qag_responses/pourquoiCreerAgoraQagResponse.mp4',
-    479,
-    690,
-    'Sur votre téléphone, vous avez sans doute des applis pour plein de choses : pour commander un train, pour réserver un hôtel, pour noter un restaurant, pour faire des jeux… Mais jusqu’ici, vous n’aviez pas d’application pour la démocratie !
-
-Vous n’aviez pas d’application qui vous permette de donner votre avis sur les sujets qui vous préoccupent : sujets environnementaux, d’emploi, d’immigration, de santé…
-
-Et nous, on est le Gouvernement du « avec vous », c’est-à-dire on est le Gouvernement qui veut avancer avec les Français.
-
-Vous avez envie d’être utile ? Vous aimez la politique ? Vous en parlez autour de vous avec vos collègues, dans les repas de famille, à la machine à café ? Maintenant, vous allez pouvoir aussi en parler sur cette application qui va vous permettre de donner vos avis.
-
-A nous d’avoir vos opinions, d’avoir aussi les idées que vous pouvez porter et de mieux faire le travail de loi pour être plus en contact avec vous.
-
-C’est dans la continuité de ce que le Président de la République a commencé à faire avec le Grand débat national, plus de 2 millions de Français y ont participé, mais aussi avec les conventions citoyennes. La dernière en date sur la fin de vie va d’ailleurs permettre d’éclairer le travail de la loi.                                     +
-
-Et donc chaque semaine, on va vous poser des questions. On va vous interroger sur des thématiques particulières pour nous aider à pré
-parer des lois qui vous correspondent.
-
-L’autre fonctionnalité, c’est celle à laquelle je me prête actuellement, vous allez pouvoir nous interroger. Et vous allez pouvoir vo
-ter pour la ou les meilleures questions qui vous semblent devoir être posées au Gouvernement. Et moi, chaque semaine, j’irai chercher
-mes collègues pour qu’ils puissent vous répondre directement en vidéo.
-
-Donc on va aussi rapprocher le politique du citoyen et le citoyen du politique. C’est ça, aussi, le Renouveau démocratique !',
-    'Le ministre a-t-il répondu à votre question ?',
-    null,
-    null,
-    'f29c5d6f-9838-4c57-a7ec-0612145bb0c8'
-) ON CONFLICT DO NOTHING;
-
 
 INSERT INTO qags(id, title, description, post_date, status, username, thematique_id, user_id) VALUES (
     '996436ca-ee69-11ed-a05b-0242ac120003',

@@ -1,9 +1,7 @@
 package fr.gouv.agora.usecase.concertations
 
 import fr.gouv.agora.domain.Concertation
-import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.common.DateMapper
-import fr.gouv.agora.infrastructure.concertations.ConcertationDatabaseDTO
 import fr.gouv.agora.infrastructure.concertations.ConcertationJson
 import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component

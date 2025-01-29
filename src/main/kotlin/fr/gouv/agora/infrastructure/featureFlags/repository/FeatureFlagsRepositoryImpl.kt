@@ -31,12 +31,6 @@ class FeatureFlagsRepositoryImpl(
         AgoraFeature.FeedbackConsultationUpdate -> "IS_FEEDBACK_ON_CONSULTATION_UPDATE_ENABLED"
         AgoraFeature.SuspiciousUserDetection -> "IS_SUSPICIOUS_USER_DETECTION_ENABLED"
         AgoraFeature.DeleteBannedUsersSupports -> "IS_DELETE_BANNED_USERS_SUPPORTS_ENABLED"
-        AgoraFeature.StrapiConsultations -> "IS_STRAPI_CONSULTATIONS_ENABLED"
-        AgoraFeature.StrapiReponsesQag -> "IS_STRAPI_REPONSES_QAG_ENABLED"
-        AgoraFeature.StrapiNews -> "IS_STRAPI_NEWS_ENABLED"
-        AgoraFeature.StrapiHeaders -> "IS_STRAPI_HEADERS_ENABLED"
-        AgoraFeature.StrapiParticipationCharter -> "IS_STRAPI_PARTICIPATION_CHARTER_ENABLED"
-        AgoraFeature.StrapiConcertations -> "IS_STRAPI_CONCERTATIONS_ENABLED"
     }
 
     private fun getCache() = cacheManager.getCache(FEATURE_FLAGS_CACHE_NAME)

@@ -54,4 +54,11 @@ interface UserAnsweredConsultationDatabaseRepository : JpaRepository<UserAnswere
     )
     fun getUsersAnsweredConsultation(@Param("consultationId") consultationId: String): List<UUID>
 
+    @Query(
+        value = """
+            SELECT count(distinct consultation_id) FROM user_answered_consultation WHERE user_id = :userId
+        """,
+        nativeQuery = true
+    )
+    fun getConsultationAnsweredCount(@Param("userId") userId: UUID): Int
 }

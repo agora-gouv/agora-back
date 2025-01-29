@@ -8,10 +8,4 @@ enum class AgoraFeature {
     FeedbackConsultationUpdate,
     SuspiciousUserDetection,
     DeleteBannedUsersSupports,
-    StrapiConsultations,
-    StrapiReponsesQag,
-    StrapiNews,
-    StrapiHeaders,
-    StrapiParticipationCharter,
-    StrapiConcertations,
 }
