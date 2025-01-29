@@ -10,7 +10,7 @@ import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.infrastructure.utils.StringUtils
 import fr.gouv.agora.usecase.qag.repository.QagInsertionResult
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Calendar
 
 @Component
 class QagJsonMapper(
