@@ -2,7 +2,6 @@ package fr.gouv.agora.usecase.welcomePage
 
 import fr.gouv.agora.TestUtils
 import fr.gouv.agora.domain.News
-import fr.gouv.agora.infrastructure.welcomePage.repository.NewsDTO
 import fr.gouv.agora.infrastructure.welcomePage.repository.NewsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -13,7 +12,6 @@ import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @ExtendWith(MockitoExtension::class)

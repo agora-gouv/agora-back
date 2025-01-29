@@ -37,7 +37,7 @@ class QagInfoMapper {
     fun toDomain(dto: QagWithSupportCountDTO): QagInfoWithSupportCount {
         return QagInfoWithSupportCount(
             id = dto.id.toString(),
-            thematiqueId = dto.thematiqueId.toString(),
+            thematiqueId = dto.thematiqueId,
             title = dto.title,
             description = dto.description,
             date = dto.postDate,

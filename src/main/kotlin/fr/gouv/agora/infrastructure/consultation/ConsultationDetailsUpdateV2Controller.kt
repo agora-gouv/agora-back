@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.consultation
 
-import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.usecase.consultation.ConsultationDetailsUpdateV2UseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
