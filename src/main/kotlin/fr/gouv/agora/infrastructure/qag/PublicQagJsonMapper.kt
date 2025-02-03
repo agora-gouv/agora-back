@@ -36,6 +36,7 @@ class PublicQagJsonMapper(private val dateMapper: DateMapper) {
             videoUrl = responseQag.videoUrl,
             videoWidth = responseQag.videoWidth,
             videoHeight = responseQag.videoHeight,
+            videoTitle = responseQag.videoTitle,
             transcription = responseQag.transcription,
             additionalInfo = responseQag.additionalInfo?.let {
                 PublicQagResponseVideoAdditionalInfoJson(
