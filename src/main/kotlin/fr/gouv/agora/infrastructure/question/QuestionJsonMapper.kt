@@ -114,6 +114,7 @@ class QuestionJsonMapper {
             description = domain.description,
             nextQuestionId = domain.nextQuestionId,
             imageUrl = domain.urlImage,
+            imageTranscription = domain.transcriptionImage,
         )
     }
 
