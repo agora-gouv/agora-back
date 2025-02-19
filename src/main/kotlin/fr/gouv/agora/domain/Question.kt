@@ -67,4 +67,5 @@ data class QuestionChapter(
     override val consultationId: String,
     val urlImage: String?,
     val description: String,
+    val transcriptionImage: String?,
 ) : Question()

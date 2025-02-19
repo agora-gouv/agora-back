@@ -132,7 +132,7 @@ data class StrapiRichParagraphNode(
     val children: List<StrapiRichText>, // TextNode | LinkNode
 ) : StrapiRichText {
     override fun toHtml(): String {
-        return "${children.toHtml()}<br/>"
+        return "${children.toHtml()}<br/><br/>"
     }
 }
 
