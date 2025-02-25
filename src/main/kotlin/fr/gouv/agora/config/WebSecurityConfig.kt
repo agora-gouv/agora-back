@@ -36,6 +36,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .requestMatchers("/moderatus/**").permitAll()
             .requestMatchers("/api/public/**").permitAll()
             .requestMatchers("/welcome_page/last_news").permitAll()
+            .requestMatchers("/consultations/{consultationId}/questions").permitAll()
             .requestMatchers("/error").permitAll()
             .requestMatchers("/referentiels/regions-et-departements").permitAll()
             .requestMatchers("/content/**").permitAll()

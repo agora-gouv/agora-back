@@ -90,6 +90,7 @@ data class QuestionChapterJson(
     val nextQuestionId: String?,
     @JsonProperty("imageUrl")
     val imageUrl: String?,
+    @JsonProperty("imageTranscription")
     val imageTranscription: String?,
 )
 
