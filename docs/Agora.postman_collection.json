@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e873341c-954c-49b8-8b14-7bb6da1a2e18",
+		"_postman_id": "66775621-cd8e-4981-a1a3-d4399ac1adca",
 		"name": "Agora",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26529867"
+		"_exporter_id": "21273965"
 	},
 	"item": [
 		{
@@ -35,24 +35,20 @@
 						"header": [
 							{
 								"key": "fcmToken",
-								"value": "{{fcmToken}}",
-								"type": "text"
+								"value": "{{fcmToken}}"
 							},
 							{
 								"key": "versionName",
 								"value": "",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "versionCode",
-								"value": "1",
-								"type": "text"
+								"value": "1"
 							},
 							{
 								"key": "platform",
-								"value": "web",
-								"type": "text"
+								"value": "web"
 							}
 						],
 						"url": {
@@ -91,24 +87,20 @@
 						"header": [
 							{
 								"key": "fcmToken",
-								"value": "{{fcmToken}}",
-								"type": "text"
+								"value": "{{fcmToken}}"
 							},
 							{
 								"key": "versionName",
 								"value": "",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "versionCode",
-								"value": "1",
-								"type": "text"
+								"value": "1"
 							},
 							{
 								"key": "platform",
-								"value": "web",
-								"type": "text"
+								"value": "web"
 							}
 						],
 						"body": {
@@ -145,8 +137,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -169,8 +160,39 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"gender\": \"A\",\n\t\"yearOfBirth\": 1998,\n\t\"department\": \"75\",\n\t\"cityType\": \"U\",\n\t\"jobCategory\": \"UN\",\n\t\"voteFrequency\": \"S\",\n\t\"publicMeetingFrequency\": \"P\",\n\t\"consultationFrequency\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/profile",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/profile/departments",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -202,8 +224,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -235,8 +256,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -254,38 +274,13 @@
 					"response": []
 				},
 				{
-					"name": "/participation_charter",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/participation_charter",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"participation_charter"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "feedback",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -322,8 +317,53 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/public/consultations/{slug}/updates/{slug}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/public/consultations/{slug}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -346,8 +386,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -372,8 +411,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -398,8 +436,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -424,8 +461,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -446,58 +482,13 @@
 					"response": []
 				},
 				{
-					"name": "/public/consultations/ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/api/public/consultations/{{consultationId}}",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"public",
-								"consultations",
-								"{{consultationId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/public/consultations/ID/updates/ID Copy",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/api/public/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"public",
-								"consultations",
-								"{{consultationId2}}",
-								"updates",
-								"{{consultationUpdateId2}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "/consultations/ID/questions",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -527,7 +518,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n   \"consultationId\":\"f5fd9c1d-6583-494c-8b0f-78129d6a0382\",\n   \"responses\":[\n      {\n         \"questionId\":\"32a4b9b4-e9aa-4930-9983-31f477abc279\",\n         \"choiceIds\":[\n            \"865b3e7b-1fe8-4c55-b056-3042ca34bc36\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"7bb4b993-6cc1-44d3-adf2-338df840dca0\",\n         \"choiceIds\":[\n            \"25a8f600-d71a-409d-b403-e266d1639235\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"cde0382a-206d-4d3a-9c4e-665d336fbd21\",\n         \"choiceIds\":[\n            \"695a7d4f-e5d3-49db-b7bd-5a6d29c54314\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n        \"questionId\": \"b16627fa-1a46-43f7-a179-5e72c6105aa6\",\n        \"choiceIds\":[\n            \"a7b035b0-a518-4299-a1b2-9323f064d386\",\n            \"cb766cbe-f52d-4783-ae05-69ad8a198745\",\n            \"0eba1b17-7603-4838-8bc3-8b16ee17c70a\",\n            \"b8f35a89-0a33-46c4-8601-4136a686a274\"\n        ],\n        \"responseText\":\"Selon ce qui reste dans le placard\"\n      },\n      {\n         \"questionId\":\"12f262e7-7a2e-4318-914b-825cddbab3e8\",\n         \"choiceIds\":[],\n         \"responseText\":\"¯⁠\\\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯\"\n      }\n   ]\n}",
+							"raw": "{\n   \"consultationId\":\"f5fd9c1d-6583-494c-8b0f-78129d6a0382\",\n   \"responses\":[\n      {\n         \"questionId\":\"32a4b9b4-e9aa-4930-9983-31f477abc279\",\n         \"choiceIds\":[\n            \"865b3e7b-1fe8-4c55-b056-3042ca34bc36\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"7bb4b993-6cc1-44d3-adf2-338df840dca0\",\n         \"choiceIds\":[\n            \"25a8f600-d71a-409d-b403-e266d1639235\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"cde0382a-206d-4d3a-9c4e-665d336fbd21\",\n         \"choiceIds\":[\n            \"695a7d4f-e5d3-49db-b7bd-5a6d29c54314\"\n         ],\n         \"responseText\":\"\"\n      },\n      {\n         \"questionId\":\"12f262e7-7a2e-4318-914b-825cddbab3e8\",\n         \"choiceIds\":[],\n         \"responseText\":\"¯⁠\\\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯\"\n      }\n   ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -556,8 +547,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -587,14 +577,40 @@
 					"response": []
 				},
 				{
+					"name": "/consultations/ID/updates/ID/feedback",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId2}}",
+								"updates",
+								"{{consultationUpdateId2}}",
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/v2/consultations/ID/responses",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -616,38 +632,6 @@
 			]
 		},
 		{
-			"name": "Consultations (admin)",
-			"item": [
-				{
-					"name": "/admin/consultations/ID/responses",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/admin/consultations/{{consultationId}}/responses",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"consultations",
-								"{{consultationId}}",
-								"responses"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "QaGs",
 			"item": [
 				{
@@ -657,8 +641,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -681,8 +664,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -700,14 +682,13 @@
 					"response": []
 				},
 				{
-					"name": "/qas/response/<page>",
+					"name": "/qags/response/<page>",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -732,8 +713,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -757,8 +737,57 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/v2/qags?pageNumber=1&thematiqueId&filterType=top",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v2",
+								"qags"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "thematiqueId",
+									"value": "1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15",
+									"description": "Travail & emploi",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": "bb051bf2-644b-47b6-9488-7759fa727dc0",
+									"description": "Transition écologique",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": null
+								},
+								{
+									"key": "filterType",
+									"value": "top"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/count",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -808,8 +837,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -841,8 +869,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -875,8 +902,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -894,35 +920,13 @@
 					"response": []
 				},
 				{
-					"name": "/public/qags/ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/api/public/qags/{{qagId}}",
-							"protocol": "{{scheme}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"public",
-								"qags",
-								"{{qagId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "/qags/ID (with response)",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -946,8 +950,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -972,8 +975,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -998,8 +1000,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -1041,8 +1042,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -1083,8 +1083,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -1129,8 +1128,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -1172,7 +1170,7 @@
 			]
 		},
 		{
-			"name": "Notifications",
+			"name": "Admin Notifications",
 			"item": [
 				{
 					"name": "/admin/notifyNewConsultation/ID",
@@ -1181,8 +1179,77 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/notifyNewConsultation/{{consultationId}}?title=Nouvelle consultation !&description=Une nouvelle consultation est disponible",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifyNewConsultation",
+								"{{consultationId}}"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Nouvelle consultation !"
+								},
+								{
+									"key": "description",
+									"value": "Une nouvelle consultation est disponible"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/admin/notififyAllUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/notifyNewConsultation/{{consultationId}}?title=Nouvelle consultation !&description=Une nouvelle consultation est disponible",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifyNewConsultation",
+								"{{consultationId}}"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Nouvelle consultation !"
+								},
+								{
+									"key": "description",
+									"value": "Une nouvelle consultation est disponible"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/admin/notififyUser",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -1217,12 +1284,11 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/admin/notifyConsultationDeadline/{{consultationId}}?title=Nouvelle consultation !&description=Une nouvelle consultation est disponible",
+							"raw": "{{scheme}}://{{baseUrl}}/admin/notifyConsultationDeadline/566e468d-637e-4843-892d-18b02238ceaa?title=🧑‍🌾 Vos idées pour les agriculteurs&description=Dernier jour pour participer à la consultation ! ",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{baseUrl}}"
@@ -1230,16 +1296,16 @@
 							"path": [
 								"admin",
 								"notifyConsultationDeadline",
-								"{{consultationId}}"
+								"566e468d-637e-4843-892d-18b02238ceaa"
 							],
 							"query": [
 								{
 									"key": "title",
-									"value": "Nouvelle consultation !"
+									"value": "🧑‍🌾 Vos idées pour les agriculteurs"
 								},
 								{
 									"key": "description",
-									"value": "Une nouvelle consultation est disponible"
+									"value": "Dernier jour pour participer à la consultation ! "
 								}
 							]
 						}
@@ -1253,8 +1319,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -1289,8 +1354,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
@@ -1324,14 +1388,72 @@
 			"name": "Admin",
 			"item": [
 				{
+					"name": "/admin/consultations/ID/responses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/consultations/db0f2d59-7962-43ff-a69f-878204b7be95/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"consultations",
+								"db0f2d59-7962-43ff-a69f-878204b7be95",
+								"responses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/admin/delete_users",
 					"request": {
 						"method": "DELETE",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/admin/delete_users",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"delete_users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/admin/delete_users Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
 							}
 						],
 						"body": {
@@ -1363,28 +1485,711 @@
 			"name": "Deprecated",
 			"item": [
 				{
-					"name": "/consultations/ID/updates/ID/feedback",
+					"name": "/admin/testNotification",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwtToken}}",
-								"type": "text"
+								"value": "{{jwtToken}}"
 							}
 						],
 						"url": {
-							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId2}}/updates/{{consultationUpdateId2}}/feedback",
+							"raw": "{{scheme}}://{{baseUrl}}/admin/testNotification?userId=&title=Titre !&description=Description de la notification&type=qagDetails&qagId=f29c5d6f-9838-4c57-a7ec-0612145bb0c8&consultationId=6d85522a-ee71-11ed-a05b-0242ac120003&step=1",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"testNotification"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "title",
+									"value": "Titre !"
+								},
+								{
+									"key": "description",
+									"value": "Description de la notification"
+								},
+								{
+									"key": "type",
+									"value": "qagDetails",
+									"description": "qagDetails\nconsultationDetails\nconsultationResults"
+								},
+								{
+									"key": "qagId",
+									"value": "f29c5d6f-9838-4c57-a7ec-0612145bb0c8"
+								},
+								{
+									"key": "consultationId",
+									"value": "6d85522a-ee71-11ed-a05b-0242ac120003"
+								},
+								{
+									"key": "step",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"consultations",
-								"{{consultationId2}}",
-								"updates",
-								"{{consultationUpdateId2}}",
-								"feedback"
+								"{{consultationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/consultations/ID/responses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/consultations/{{consultationId}}/responses",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations",
+								"{{consultationId}}",
+								"responses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags?thematiqueId",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags"
+							],
+							"query": [
+								{
+									"key": "thematiqueId",
+									"value": "1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15",
+									"description": "Travail & emploi",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": "bb051bf2-644b-47b6-9488-7759fa727dc0",
+									"description": "Transition écologique",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/qags/page/<nb>",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/qags/page/1?filterType=popular&thematiqueId&keywords=",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"qags",
+								"page",
+								"1"
+							],
+							"query": [
+								{
+									"key": "filterType",
+									"value": "popular"
+								},
+								{
+									"key": "filterType",
+									"value": "latest",
+									"disabled": true
+								},
+								{
+									"key": "filterType",
+									"value": "supporting",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": "1f3dbdc6-cff7-4d6a-88b5-c5ec84c55d15",
+									"description": "Travail & emploi",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": "bb051bf2-644b-47b6-9488-7759fa727dc0",
+									"description": "Transition écologique",
+									"disabled": true
+								},
+								{
+									"key": "thematiqueId",
+									"value": null
+								},
+								{
+									"key": "keywords",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WelcomePage",
+			"item": [
+				{
+					"name": "/welcome_page/last_news",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/welcome_page/last_news",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"welcome_page",
+								"last_news"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Concertations",
+			"item": [
+				{
+					"name": "/welcome_page/last_news",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/welcome_page/last_news",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"welcome_page",
+								"last_news"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/concertations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/concertations",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"concertations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Content",
+			"item": [
+				{
+					"name": "/referentiels/regions-et-departements",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/referentiels/regions-et-departements",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"referentiels",
+								"regions-et-departements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-questions-au-gouvernement",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-questions-au-gouvernement",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-questions-au-gouvernement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-reponses-aux-qags",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-reponses-aux-qags",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-reponses-aux-qags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-poser-ma-question",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-poser-ma-question",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-poser-ma-question"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-site-vitrine-accueil",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-site-vitrine-accueil",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-site-vitrine-accueil"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-site-vitrine-conditions-generales",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-site-vitrine-conditions-generales",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-site-vitrine-conditions-generales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-site-vitrine-consultation",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-site-vitrine-consultation",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-site-vitrine-consultation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-site-vitrine-declaration-accessibilite",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-site-vitrine-declaration-accessibilite",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-site-vitrine-declaration-accessibilite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-site-vitrine-mentions-legales",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-site-vitrine-mentions-legales",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-site-vitrine-mentions-legales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-site-vitrine-politique-confidentialite",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-site-vitrine-politique-confidentialite",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-site-vitrine-politique-confidentialite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/content/page-site-vitrine-question-au-gouvernement",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userIDsToDelete\": [\"1234\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/content/page-site-vitrine-question-au-gouvernement",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"page-site-vitrine-question-au-gouvernement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/participation_charter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{scheme}}://{{baseUrl}}/participation_charter",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"participation_charter"
 							]
 						}
 					},
