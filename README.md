@@ -7,7 +7,7 @@
 - [4. Add some data](#4-add-some-data)
 
 ## 1. Pre-requisites
-- Java 17
+- Java (version described in [build.gradle.kts:14](./build.gradle.kts))
 - Docker
 
 ## 2. Set-up
@@ -15,8 +15,13 @@
 - launch databases via `docker compose up -d`
 
 ## 3. Launch back-end server
-- Simply open the project using IntelliJ or your favorite IDE
-- Run `AgoraBackApplication`
+With the proper env variables :
+```bash
+./gradlew bootRun
+```
+To inject the .env file without `source`-ing it, you can check out [dotenvx](https://dotenvx.com/).
+
+You can also run everything directly inside IntelliJ with the shared config `AgoraBackApplication`.
 
 ## 4. Endpoints
 You can use a Postman collection provided in `/docs` directory to have a list of this back-end's endpoints.
