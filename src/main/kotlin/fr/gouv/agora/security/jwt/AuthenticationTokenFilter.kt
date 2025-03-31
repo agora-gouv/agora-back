@@ -22,6 +22,7 @@ class AuthenticationTokenFilter(
 
     companion object {
         private const val JWT_HEADER_KEY = "Authorization"
+        const val JWT_COOKIE_KEY = "auth-jwt"
     }
 
     override fun doFilterInternal(
@@ -43,7 +44,17 @@ class AuthenticationTokenFilter(
     }
 
     private fun extractJwt(request: HttpServletRequest): String? {
-        return request.getHeader(JWT_HEADER_KEY)?.let(JwtTokenUtils::extractJwtFromHeader)
+        val jwtHeader = request.getHeader(JWT_HEADER_KEY)
+        if (jwtHeader !== null) {
+            return jwtHeader.let(JwtTokenUtils::extractJwtFromHeader)
+        }
+
+        val cookies = request.cookies
+        if (cookies != null) {
+            return cookies.find { it.name == JWT_COOKIE_KEY }?.let { return it.value }
+        }
+
+        return null
     }
 
     private fun loginWithUserId(userId: String) {
