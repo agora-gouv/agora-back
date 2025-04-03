@@ -68,7 +68,7 @@ data class StrapiConsultationSectionImage(
 ) : StrapiConsultationSection {
     fun getImageUrl(): String {
         return if (image.data == null) url
-        else System.getenv("CMS_URL") + image.data.attributes.formats.medium.url
+        else image.data.attributes.formats.medium.url
     }
 }
 
@@ -126,6 +126,6 @@ data class StrapiConsultationSectionVideo(
 ) : StrapiConsultationSection {
     fun getVideoUrl(): String {
         return if (video.data == null) url
-        else System.getenv("CMS_URL") + video.data.attributes.url
+        else video.data.attributes.url
     }
 }

@@ -63,12 +63,12 @@ data class ConsultationStrapiDTO(
 ) {
     fun getImageCouverture(): String {
         return if (imageDeCouverture.data == null) urlImageDeCouverture
-        else System.getenv("CMS_URL") + imageDeCouverture.data.attributes.formats.medium.url
+        else imageDeCouverture.data.attributes.formats.medium.url
     }
 
     fun getImagePageContenu(): String {
         return if (imagePageDeContenu.data == null) urlImagePageDeContenu
-        else System.getenv("CMS_URL") + imagePageDeContenu.data.attributes.formats.medium.url
+        else imagePageDeContenu.data.attributes.formats.medium.url
     }
 
     fun isPublished(): Boolean {

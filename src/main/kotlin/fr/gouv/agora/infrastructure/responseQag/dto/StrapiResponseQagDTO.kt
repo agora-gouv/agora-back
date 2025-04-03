@@ -28,7 +28,7 @@ data class StrapiResponseQag(
 ) {
     fun getAuthorPortraitUrl(): String {
         return if (auteurPortrait.data == null) auteurPortraitUrl
-        else System.getenv("CMS_URL") + auteurPortrait.data.attributes.formats.medium.url
+        else auteurPortrait.data.attributes.formats.medium.url
     }
 }
 
@@ -77,6 +77,6 @@ data class StrapiResponseQagVideo(
 
     fun getVideoUrl(): String {
         return if (video.data == null) urlVideo
-        else System.getenv("CMS_URL") + video.data.attributes.url
+        else video.data.attributes.url
     }
 }

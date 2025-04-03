@@ -105,7 +105,7 @@ data class StrapiConsultationAnalyseDesReponses(
 ) {
     fun getAnalysePdfUrl(): String {
         return if (analysePdf.data == null) lienTelechargementAnalyse
-        else System.getenv("CMS_URL") + analysePdf.data.attributes.url
+        else analysePdf.data.attributes.url
     }
 }
 
