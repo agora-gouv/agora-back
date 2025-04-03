@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import fr.gouv.agora.infrastructure.common.StrapiDataNullable
+import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
+import fr.gouv.agora.infrastructure.common.StrapiMediaVideo
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 import java.time.LocalDate
 
@@ -60,7 +63,14 @@ data class StrapiConsultationSectionImage(
     val url: String,
     @JsonProperty("description_accessible_de_l_image")
     val descriptionImage: String,
-) : StrapiConsultationSection
+    @JsonProperty(value = "image")
+    val image: StrapiDataNullable<StrapiMediaPicture>,
+) : StrapiConsultationSection {
+    fun getImageUrl(): String {
+        return if (image.data == null) url
+        else System.getenv("CMS_URL") + image.data.attributes.formats.medium.url
+    }
+}
 
 data class StrapiConsultationSectionRichText(
     @JsonProperty("id")
@@ -111,4 +121,11 @@ data class StrapiConsultationSectionVideo(
     val dateTournage: LocalDate,
     @JsonProperty("transcription")
     val transcription: String,
-) : StrapiConsultationSection
+    @JsonProperty(value = "image")
+    val video: StrapiDataNullable<StrapiMediaVideo>,
+) : StrapiConsultationSection {
+    fun getVideoUrl(): String {
+        return if (video.data == null) url
+        else System.getenv("CMS_URL") + video.data.attributes.url
+    }
+}

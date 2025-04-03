@@ -57,3 +57,34 @@ data class StrapiMetaPagination(
     @JsonProperty("total")
     val total: Int,
 )
+
+data class StrapiMediaVideo(
+    @JsonProperty("url")
+    val url: String,
+)
+
+data class StrapiMediaPdf(
+    @JsonProperty("url")
+    val url: String,
+)
+
+data class StrapiMediaPicture(
+    @JsonProperty("formats")
+    val formats: StrapiMediaPictureFormats,
+)
+
+data class StrapiMediaPictureFormats(
+    @JsonProperty("medium")
+    val medium: StrapiMediaPictureFormatMedium,
+)
+
+data class StrapiMediaPictureFormatMedium(
+    @JsonProperty("url")
+    val url: String,
+    @JsonProperty("hash")
+    val hash: String,
+    @JsonProperty("width")
+    val width: Int,
+    @JsonProperty("height")
+    val height: Int,
+)

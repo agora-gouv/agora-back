@@ -158,3 +158,7 @@ fun List<StrapiRichText>.toHtml(): String {
     return this.joinToString("") { it.toHtml() }
         .removeSuffix("<br/>")
 }
+
+fun List<StrapiRichText>.toHtmlBody(): String {
+    return "<body>${this.toHtml()}</body>"
+}

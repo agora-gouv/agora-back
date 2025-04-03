@@ -4,11 +4,11 @@ import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.domain.ResponseQagAdditionalInfo
 import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.ResponseQagVideo
+import fr.gouv.agora.infrastructure.common.StrapiDTO
+import fr.gouv.agora.infrastructure.common.toHtmlBody
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQag
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagText
 import fr.gouv.agora.infrastructure.responseQag.dto.StrapiResponseQagVideo
-import fr.gouv.agora.infrastructure.common.StrapiDTO
-import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
 import org.springframework.stereotype.Component
 
@@ -22,11 +22,11 @@ class ResponseQagMapper {
                 is StrapiResponseQagText -> {
                     ResponseQagText(
                         author = response.auteur,
-                        authorPortraitUrl = response.auteurPortraitUrl,
+                        authorPortraitUrl = response.getAuthorPortraitUrl(),
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
-                        responseText = "<body>${responseContent.text.toHtml()}</body>",
+                        responseText = responseContent.text.toHtmlBody(),
                         responseLabel = responseContent.label,
                     )
                 }
@@ -39,7 +39,7 @@ class ResponseQagMapper {
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
                         authorDescription = responseContent.auteurDescription,
-                        videoUrl = responseContent.urlVideo,
+                        videoUrl = responseContent.getVideoUrl(),
                         videoWidth = responseContent.videoWidth,
                         videoHeight = responseContent.videoHeight,
                         transcription = responseContent.transcription,
@@ -47,7 +47,7 @@ class ResponseQagMapper {
                         additionalInfo = if (responseContent.hasInformationAdditionnelle()) {
                             ResponseQagAdditionalInfo(
                                 responseContent.informationAdditionnelleTitre!!,
-                                "<body>${responseContent.informationAdditionnelleDescription!!.toHtml()}</body>"
+                                responseContent.informationAdditionnelleDescription!!.toHtmlBody()
                             )
                         } else null
                     )
