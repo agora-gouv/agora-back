@@ -209,7 +209,7 @@ class ConsultationUpdateInfoV2Mapper {
             body = htmlSections,
             bodyPreview = previewHtmlSections,
             infoHeader = infoHeader,
-            downloadAnalysisUrl = contenu.lienTelechargementAnalyse,
+            downloadAnalysisUrl = contenu.getAnalysePdfUrl(),
             feedbackQuestion = FeedbackQuestion(
                 contenuId,
                 "Donnez votre avis",
@@ -236,12 +236,12 @@ class ConsultationUpdateInfoV2Mapper {
                 }
 
                 is StrapiConsultationSectionImage -> {
-                    Section.Image(it.url, it.descriptionImage)
+                    Section.Image(it.getImageUrl(), it.descriptionImage)
                 }
 
                 is StrapiConsultationSectionVideo -> {
                     Section.Video(
-                        it.url,
+                        it.getVideoUrl(),
                         it.largeur,
                         it.hauteur,
                         Section.Video.AuthorInfo(it.nomAuteur, it.posteAuteur, it.dateTournage),

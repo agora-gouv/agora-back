@@ -16,7 +16,7 @@ class ConcertationMapper {
             Concertation(
                 conceration.id,
                 conceration.attributes.titre,
-                conceration.attributes.urlImageDeCouverture,
+                conceration.attributes.getUrlImageDeCouverture(),
                 conceration.attributes.urlExterne,
                 thematique,
                 conceration.attributes.flammeLabel,
