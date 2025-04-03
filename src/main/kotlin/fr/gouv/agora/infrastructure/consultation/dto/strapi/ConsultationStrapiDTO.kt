@@ -7,7 +7,6 @@ import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiDataList
 import fr.gouv.agora.infrastructure.common.StrapiDataNullable
 import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
-import fr.gouv.agora.infrastructure.common.StrapiMediaVideo
 import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import java.time.LocalDateTime
 
@@ -62,12 +61,12 @@ data class ConsultationStrapiDTO(
     @JsonProperty(value = "image_page_de_contenu")
     val imagePageDeContenu: StrapiDataNullable<StrapiMediaPicture>,
 ) {
-    fun getImageDeCouverture(): String {
+    fun getImageCouverture(): String {
         return if (imageDeCouverture.data == null) urlImageDeCouverture
         else System.getenv("CMS_URL") + imageDeCouverture.data.attributes.formats.medium.url
     }
 
-    fun getImagePageDeContenu(): String {
+    fun getImagePageContenu(): String {
         return if (imagePageDeContenu.data == null) urlImagePageDeContenu
         else System.getenv("CMS_URL") + imagePageDeContenu.data.attributes.formats.medium.url
     }

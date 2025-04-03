@@ -25,7 +25,7 @@ data class ConcertationStrapiDTO(
     @JsonProperty(value = "image")
     val image: StrapiDataNullable<StrapiMediaPicture>,
 ) {
-    fun getUrlImageDeCouverture(): String {
+    fun getUrlImageCouverture(): String {
         return if (image.data == null) urlImageDeCouverture
         else System.getenv("CMS_URL") + image.data.attributes.formats.medium.url
     }

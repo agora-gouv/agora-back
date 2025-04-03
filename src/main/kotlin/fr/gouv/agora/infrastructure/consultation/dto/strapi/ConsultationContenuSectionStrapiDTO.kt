@@ -121,7 +121,7 @@ data class StrapiConsultationSectionVideo(
     val dateTournage: LocalDate,
     @JsonProperty("transcription")
     val transcription: String,
-    @JsonProperty(value = "image")
+    @JsonProperty(value = "video")
     val video: StrapiDataNullable<StrapiMediaVideo>,
 ) : StrapiConsultationSection {
     fun getVideoUrl(): String {
