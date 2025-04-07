@@ -90,10 +90,7 @@ internal class QuestionsMapperTest {
                               "attributes": {
                                 "formats": {
                                   "medium": {
-                                    "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg",
-                                    "hash": "medium_20240215_095657_ef8160b276",
-                                    "width": 750,
-                                    "height": 449
+                                    "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
                                   }
                                 }
                               }

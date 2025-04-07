@@ -1,6 +1,5 @@
 package fr.gouv.agora.infrastructure.common
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class StrapiDTO<T>(
@@ -82,10 +81,4 @@ data class StrapiMediaPictureFormats(
 data class StrapiMediaPictureFormatMedium(
     @JsonProperty("url")
     val url: String,
-    @JsonProperty("hash")
-    val hash: String,
-    @JsonProperty("width")
-    val width: Int,
-    @JsonProperty("height")
-    val height: Int,
 )

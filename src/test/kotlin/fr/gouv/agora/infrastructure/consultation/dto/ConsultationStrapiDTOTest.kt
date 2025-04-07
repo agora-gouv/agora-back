@@ -35,10 +35,7 @@ class ConsultationStrapiDTOTest {
                       "attributes": {
                         "formats": {
                           "medium": {
-                            "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg",
-                            "hash": "medium_20240215_095657_ef8160b276",
-                            "width": 750,
-                            "height": 563
+                            "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
                           }
                         }
                       }
@@ -50,10 +47,7 @@ class ConsultationStrapiDTOTest {
                       "attributes": {
                         "formats": {
                           "medium": {
-                            "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_IMG_4029_f2bca5feed.jpg",
-                            "hash": "medium_IMG_4029_f2bca5feed",
-                            "width": 750,
-                            "height": 563
+                            "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_IMG_4029_f2bca5feed.jpg"
                           }
                         }
                       }
@@ -341,7 +335,7 @@ class ConsultationStrapiDTOTest {
     fun `parse sections`() {
         // GIVEN
         @Language("JSON")
-        val jsonSections ="""
+        val jsonSections = """
             [
               {
                 "id": 2,
@@ -385,10 +379,7 @@ class ConsultationStrapiDTOTest {
                     "attributes": {
                       "formats": {
                         "medium": {
-                          "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg",
-                          "hash": "medium_20240215_095657_ef8160b276",
-                          "width": 750,
-                          "height": 449
+                          "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
                         }
                       }
                     }
