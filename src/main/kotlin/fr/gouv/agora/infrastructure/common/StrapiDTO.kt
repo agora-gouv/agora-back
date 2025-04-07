@@ -2,7 +2,7 @@ package fr.gouv.agora.infrastructure.common
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class StrapiDTO <T>(
+data class StrapiDTO<T>(
     @JsonProperty("data")
     val data: List<StrapiAttributes<T>>,
     @JsonProperty("meta")
@@ -15,22 +15,22 @@ data class StrapiDTO <T>(
     }
 }
 
-data class StrapiSingleTypeDTO <T>(
+data class StrapiSingleTypeDTO<T>(
     @JsonProperty("data")
     val data: StrapiAttributes<T>,
 )
 
-data class StrapiDataList <T>(
+data class StrapiDataList<T>(
     @JsonProperty("data")
     val data: List<StrapiAttributes<T>>,
 )
 
-data class StrapiData <T>(
+data class StrapiData<T>(
     @JsonProperty("data")
     val data: StrapiAttributes<T>,
 )
 
-data class StrapiDataNullable <T>(
+data class StrapiDataNullable<T>(
     @JsonProperty("data")
     val data: StrapiAttributes<T>?,
 )
@@ -56,4 +56,29 @@ data class StrapiMetaPagination(
     val pageCount: Int,
     @JsonProperty("total")
     val total: Int,
+)
+
+data class StrapiMediaVideo(
+    @JsonProperty("url")
+    val url: String,
+)
+
+data class StrapiMediaPdf(
+    @JsonProperty("url")
+    val url: String,
+)
+
+data class StrapiMediaPicture(
+    @JsonProperty("formats")
+    val formats: StrapiMediaPictureFormats,
+)
+
+data class StrapiMediaPictureFormats(
+    @JsonProperty("medium")
+    val medium: StrapiMediaPictureFormatMedium,
+)
+
+data class StrapiMediaPictureFormatMedium(
+    @JsonProperty("url")
+    val url: String,
 )
