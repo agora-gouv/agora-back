@@ -47,6 +47,12 @@ internal class QuestionsMapperTest {
                       "slug": "",
                       "url_image_de_couverture": "",
                       "url_image_page_de_contenu": "",
+                      "image_de_couverture": {
+                        "data": null
+                      },
+                      "image_page_de_contenu": {
+                        "data": null
+                      },
                       "nombre_de_questions": 5,
                       "estimation_nombre_de_questions": "5",
                       "estimation_temps": "5 minutes",
@@ -77,7 +83,22 @@ internal class QuestionsMapperTest {
                           "titre": "Description",
                           "numero": 1,
                           "description": [],
-                          "question_suivante": null
+                          "question_suivante": null,
+                          "image": {
+                            "data": {
+                              "id": 3,
+                              "attributes": {
+                                "formats": {
+                                  "medium": {
+                                    "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg",
+                                    "hash": "medium_20240215_095657_ef8160b276",
+                                    "width": 750,
+                                    "height": 449
+                                  }
+                                }
+                              }
+                            }
+                          }
                         },
                         {
                           "id": 20002,
