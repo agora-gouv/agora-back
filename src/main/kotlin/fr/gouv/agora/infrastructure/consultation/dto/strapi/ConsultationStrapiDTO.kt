@@ -6,6 +6,7 @@ import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiDataList
 import fr.gouv.agora.infrastructure.common.StrapiDataNullable
+import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import java.time.LocalDateTime
 
@@ -55,7 +56,21 @@ data class ConsultationStrapiDTO(
     val titrePageWeb: String,
     @JsonProperty("sous_titre_page_web")
     val sousTitrePageWeb: String,
+    @JsonProperty(value = "image_de_couverture")
+    val imageDeCouverture: StrapiDataNullable<StrapiMediaPicture>,
+    @JsonProperty(value = "image_page_de_contenu")
+    val imagePageDeContenu: StrapiDataNullable<StrapiMediaPicture>,
 ) {
+    fun getImageCouverture(): String {
+        return if (imageDeCouverture.data == null) urlImageDeCouverture
+        else imageDeCouverture.data.attributes.formats.medium.url
+    }
+
+    fun getImagePageContenu(): String {
+        return if (imagePageDeContenu.data == null) urlImagePageDeContenu
+        else imagePageDeContenu.data.attributes.formats.medium.url
+    }
+
     fun isPublished(): Boolean {
         return publishedAt != null
     }

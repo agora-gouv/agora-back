@@ -2,6 +2,9 @@ package fr.gouv.agora.infrastructure.consultation.dto.strapi
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.gouv.agora.infrastructure.common.StrapiDataNullable
+import fr.gouv.agora.infrastructure.common.StrapiMediaPdf
+import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 import java.time.LocalDateTime
 
@@ -97,7 +100,14 @@ data class StrapiConsultationAnalyseDesReponses(
     val recapEmoji: String?,
     @JsonProperty("recap_label")
     val recapLabel: String?,
-)
+    @JsonProperty(value = "pdf_analyse")
+    val analysePdf: StrapiDataNullable<StrapiMediaPdf>,
+) {
+    fun getAnalysePdfUrl(): String {
+        return if (analysePdf.data == null) lienTelechargementAnalyse
+        else analysePdf.data.attributes.url
+    }
+}
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "nom_strapi")
 data class StrapiConsultationReponseCommanditaire(

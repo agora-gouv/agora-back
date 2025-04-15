@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import fr.gouv.agora.infrastructure.common.StrapiDataNullable
+import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 
 @JsonTypeInfo(
@@ -101,7 +103,14 @@ data class StrapiConsultationQuestionDescription(
     val description: List<StrapiRichText>,
     @JsonProperty("question_suivante")
     override val numeroQuestionSuivante: Int?,
-) : StrapiConsultationQuestion
+    @JsonProperty(value = "image")
+    val image: StrapiDataNullable<StrapiMediaPicture>,
+) : StrapiConsultationQuestion {
+    fun getImageUrl(): String? {
+        return if (image.data == null) urlImage
+        else image.data.attributes.formats.medium.url
+    }
+}
 
 data class StrapiConsultationQuestionConditionnelle(
     @JsonProperty("id")

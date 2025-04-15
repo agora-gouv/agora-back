@@ -29,6 +29,30 @@ class ConsultationStrapiDTOTest {
                 "attributes": {
                   "url_image_de_couverture": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_professionnels.jpg",
                   "url_image_page_de_contenu": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
+                  "image_de_couverture": {
+                    "data": {
+                      "id": 3,
+                      "attributes": {
+                        "formats": {
+                          "medium": {
+                            "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "image_page_de_contenu": {
+                    "data": {
+                      "id": 4,
+                      "attributes": {
+                        "formats": {
+                          "medium": {
+                            "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_IMG_4029_f2bca5feed.jpg"
+                          }
+                        }
+                      }
+                    }
+                  },
                   "nombre_de_questions": 3,
                   "estimation_nombre_de_questions": "2 à 3 questions",
                   "estimation_temps": "8 minutes",
@@ -252,7 +276,15 @@ class ConsultationStrapiDTOTest {
                               }
                             ]
                           }
-                        ]
+                        ],
+                        "pdf_analyse": {
+                          "data": {
+                            "id": 2,
+                            "attributes": {
+                              "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/Contenu_consultation_Agora_8ab0f8f61b.doc"
+                            }
+                          }
+                        }
                       }
                     }
                   },
@@ -303,7 +335,7 @@ class ConsultationStrapiDTOTest {
     fun `parse sections`() {
         // GIVEN
         @Language("JSON")
-        val jsonSections ="""
+        val jsonSections = """
             [
               {
                 "id": 2,
@@ -340,7 +372,19 @@ class ConsultationStrapiDTOTest {
                 "id": 1,
                 "__component": "consultation-section.section-image",
                 "url": "url image",
-                "description_accessible_de_l_image": "Description image"
+                "description_accessible_de_l_image": "Description image",
+                "image": {
+                  "data": {
+                    "id": 3,
+                    "attributes": {
+                      "formats": {
+                        "medium": {
+                          "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
+                        }
+                      }
+                    }
+                  }
+                }
               },
               {
                 "id": 1,
@@ -371,7 +415,15 @@ class ConsultationStrapiDTOTest {
                 "nom_auteur": "nom",
                 "poste_auteur": "poste",
                 "date_tournage": "2024-08-26",
-                "transcription": "transcription vidéo"
+                "transcription": "transcription vidéo",
+                "video": {
+                  "data": {
+                    "id": 1,
+                    "attributes": {
+                      "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/reponse.mp4"
+                    }
+                  }
+                }
               },
               {
                 "id": 1,

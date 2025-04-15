@@ -1,6 +1,11 @@
 package fr.gouv.agora.usecase.consultationResponse
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.Question
+import fr.gouv.agora.domain.QuestionConditional
+import fr.gouv.agora.domain.QuestionMultipleChoices
+import fr.gouv.agora.domain.QuestionOpen
+import fr.gouv.agora.domain.QuestionUniqueChoice
+import fr.gouv.agora.domain.ReponseConsultationInserting
 import org.springframework.stereotype.Component
 
 abstract class ResponseQuestionValidator {
@@ -14,52 +19,49 @@ abstract class ResponseQuestionWithChoicesValidator : ResponseQuestionValidator(
 
     fun isValidOpenTextFieldLength(response: ReponseConsultationInserting) =
         response.responseText.length <= OPEN_FIELD_TEXT_MAX_LENGTH
-
 }
+
 @Component
 class QuestionMultipleChoicesValidator : ResponseQuestionWithChoicesValidator() {
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
-        return if (question is QuestionMultipleChoices)
-            response.choiceIds?.let {
-                isChoiceIdListUnique(it)
-                        && isChoiceIdListUnderMaxChoices(it, question)
-                        && isValidOpenTextFieldLength(response)
-            } == true
-        else false
-    }
+        if (question !is QuestionMultipleChoices || response.choiceIds == null) {
+            return false
+        }
 
-    private fun isChoiceIdListUnique(listChoices: List<String>): Boolean {
-        return (listChoices.toSet().size == listChoices.size)
-    }
+        val isChoiceIdListUnderMaxChoices = (response.choiceIds.size <= question.maxChoices)
+        val isChoiceIdListUnique = (response.choiceIds.toSet().size == response.choiceIds.size)
 
-    private fun isChoiceIdListUnderMaxChoices(listChoices: List<String>, question: QuestionMultipleChoices): Boolean {
-        return (listChoices.size <= question.maxChoices)
+        return isChoiceIdListUnique
+                && isChoiceIdListUnderMaxChoices
+                && isValidOpenTextFieldLength(response)
     }
 }
 
 @Component
 class QuestionUniqueChoiceAndConditionalValidator : ResponseQuestionWithChoicesValidator() {
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
-        return if (question is QuestionUniqueChoice || question is QuestionConditional)
-            response.choiceIds?.let { hasOneChoiceId(it) && isValidOpenTextFieldLength(response) } == true
-        else false
-    }
+        if (question !is QuestionUniqueChoice && question !is QuestionConditional) {
+            return false
+        }
+        if (response.choiceIds == null) return false
 
-    private fun hasOneChoiceId(listChoices: List<String>) = listChoices.size == 1
+        val hasOneChoiceId = response.choiceIds.size == 1
+
+        return hasOneChoiceId && isValidOpenTextFieldLength(response)
+    }
 }
 
 @Component
 class QuestionOpenValidator : ResponseQuestionValidator() {
-
     companion object {
         private const val OPEN_QUESTION_MAX_TEXT_LENGTH = 400
     }
 
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
-        return if (question is QuestionOpen) isValidOpenTextFieldLength(response) else false
+        if (question !is QuestionOpen) return false
+
+        val isValidOpenTextFieldLength = response.responseText.length <= OPEN_QUESTION_MAX_TEXT_LENGTH
+
+        return isValidOpenTextFieldLength
     }
-
-    private fun isValidOpenTextFieldLength(response: ReponseConsultationInserting) =
-        response.responseText.length <= OPEN_QUESTION_MAX_TEXT_LENGTH
 }
-

@@ -16,12 +16,17 @@ class ConsultationPreviewUseCase(
     private val profileRepository: ProfileRepository,
 ) {
     fun getConsultationPreviewPage(): ConsultationPreviewPage {
-        val userId = authentificationHelper.getUserId()!!
-        val profile = profileRepository.getProfile(userId)
+        val userId = authentificationHelper.getUserId()
 
+        val profile = if (userId != null) {
+             profileRepository.getProfile(userId)
+        } else null
         val userTerritoires = Territoire.of(profile)
 
-        val answeredConsultations = consultationInfoRepository.getAnsweredConsultations(userId)
+        val answeredConsultations = if (userId != null) {
+            consultationInfoRepository.getAnsweredConsultations(userId)
+        } else { emptyList() }
+
         val ongoingConsultations = consultationInfoRepository.getOngoingConsultationsWithUnpublished(userTerritoires)
             .removeAnsweredConsultation(answeredConsultations)
             .sortedBy { it.endDate }
