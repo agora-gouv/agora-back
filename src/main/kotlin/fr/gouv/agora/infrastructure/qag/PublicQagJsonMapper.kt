@@ -1,21 +1,25 @@
 package fr.gouv.agora.infrastructure.qag
 
-import fr.gouv.agora.domain.*
+import fr.gouv.agora.domain.QagDetails
+import fr.gouv.agora.domain.QagStatus
+import fr.gouv.agora.domain.ResponseQag
+import fr.gouv.agora.domain.ResponseQagText
+import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.infrastructure.common.DateMapper
-import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
+import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
-class PublicQagJsonMapper(private val dateMapper: DateMapper) {
+class PublicQagJsonMapper(
+    private val dateMapper: DateMapper,
+    private val thematiqueJsonMapper: ThematiqueJsonMapper,
+) {
 
     fun toJson(qagDetails: QagDetails): PublicQagJson {
         return PublicQagJson(
             id = qagDetails.id,
             status = toResponseStatusJson(qagDetails),
-            thematique = ThematiqueNoIdJson(
-                label = qagDetails.thematique.label,
-                picto = qagDetails.thematique.picto,
-            ),
+            thematique = thematiqueJsonMapper.toNoIdJson(qagDetails.thematique),
             title = qagDetails.title,
             description = qagDetails.description,
             date = dateMapper.toFormattedDate(qagDetails.date),
@@ -57,7 +61,7 @@ class PublicQagJsonMapper(private val dateMapper: DateMapper) {
         )
     }
 
-    private fun toResponseStatusJson(qagDetails: QagDetails): String{
+    private fun toResponseStatusJson(qagDetails: QagDetails): String {
         if (qagDetails.response != null)
             return "responseAvailable"
         if (qagDetails.status == QagStatus.SELECTED_FOR_RESPONSE)

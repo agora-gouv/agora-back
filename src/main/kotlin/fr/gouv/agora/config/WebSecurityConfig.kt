@@ -43,6 +43,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .requestMatchers("/referentiels/regions-et-departements").permitAll()
             .requestMatchers("/content/**").permitAll()
             .requestMatchers("/participation_charter").permitAll()
+            .requestMatchers("/fiches-inventaire").permitAll()
             .requestMatchers(HttpMethod.GET, "/v2/consultations/**").permitAll()
             .anyRequest().authenticated()
             .and()

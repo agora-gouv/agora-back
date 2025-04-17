@@ -16,11 +16,15 @@ import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.Parti
 import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.QuestionsInfo
 import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.ResponsesInfo
 import fr.gouv.agora.infrastructure.consultation.ConsultationDetailsV2Json.Section
+import fr.gouv.agora.infrastructure.thematique.ThematiqueJsonMapper
 import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
 import org.springframework.stereotype.Component
 
 @Component
-class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
+class ConsultationDetailsV2JsonMapper(
+    private val dateMapper: DateMapper,
+    private val thematiqueJsonMapper: ThematiqueJsonMapper,
+) {
 
     companion object {
         private const val SHARE_TEXT_REPLACE_TITLE_PATTERN = "{title}"
@@ -34,10 +38,7 @@ class ConsultationDetailsV2JsonMapper(private val dateMapper: DateMapper) {
             slug = consultationDetails.consultation.slug,
             title = consultationDetails.consultation.title,
             coverUrl = consultationDetails.consultation.detailsCoverUrl,
-            thematique = ThematiqueNoIdJson(
-                label = consultationDetails.consultation.thematique.label,
-                picto = consultationDetails.consultation.thematique.picto,
-            ),
+            thematique = thematiqueJsonMapper.toNoIdJson(consultationDetails.consultation.thematique),
             questionsInfo = buildQuestionsInfo(consultationDetails),
             consultationDates = buildConsultationDates(consultationDetails),
             responsesInfo = buildResponsesInfo(consultationDetails),
