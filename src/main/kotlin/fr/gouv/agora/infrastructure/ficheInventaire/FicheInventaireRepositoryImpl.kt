@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.ficheInventaire
 
 import fr.gouv.agora.domain.FicheInventaire
+import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueMapper
 import fr.gouv.agora.usecase.ficheInventaire.FicheInventaireRepository
@@ -13,19 +14,33 @@ class FicheInventaireRepositoryImpl(
 ): FicheInventaireRepository {
     override fun getAll(): List<FicheInventaire> {
         return ficheInventaireStrapiRepository.getFichesInventaire().data
-            .map { FicheInventaire(
-                etapeLancement = it.attributes.etapeLancement.toHtml(),
-                etapeAnalyse = it.attributes.etapeAnalyse.toHtml(),
-                etapeSuivi = it.attributes.etapeSuivi.toHtml(),
-                titre = it.attributes.titre,
-                debut = it.attributes.debut,
-                fin = it.attributes.fin,
-                porteur = it.attributes.porteur,
-                lienSite = it.attributes.lienSite,
-                conditionParticipation = it.attributes.conditionParticipation,
-                modaliteParticipation = it.attributes.modaliteParticipation,
-                objectif = it.attributes.objectif,
-                thematique = thematiqueMapper.toDomain(it.attributes.thematique),
-            ) }
+            .map { toFicheInventaire(it) }
+    }
+
+    override fun get(id: String): FicheInventaire? {
+        val ficheInventaire = ficheInventaireStrapiRepository.getFicheInventaire(id)
+            ?: return null
+        return toFicheInventaire(ficheInventaire)
+    }
+
+    private fun toFicheInventaire(fiche: StrapiAttributes<FicheInventaireStrapiDTO>): FicheInventaire {
+        return FicheInventaire(
+            etapeLancement = fiche.attributes.etapeLancement.toHtml(),
+            etapeAnalyse = fiche.attributes.etapeAnalyse.toHtml(),
+            etapeSuivi = fiche.attributes.etapeSuivi.toHtml(),
+            titre = fiche.attributes.titre,
+            debut = fiche.attributes.debut,
+            fin = fiche.attributes.fin,
+            porteur = fiche.attributes.porteur,
+            lienSite = fiche.attributes.lienSite,
+            conditionParticipation = fiche.attributes.conditionParticipation,
+            modaliteParticipation = fiche.attributes.modaliteParticipation,
+            objectif = fiche.attributes.objectif,
+            thematique = thematiqueMapper.toDomain(fiche.attributes.thematique),
+            illustration = fiche.attributes.illustration.data.attributes.formats.medium.url,
+            etape = fiche.attributes.etape,
+            anneeDeLancement = fiche.attributes.anneeDeLancement,
+            statut = fiche.attributes.statut,
+        )
     }
 }

@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.ficheInventaire
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.agora.infrastructure.thematique.ThematiqueNoIdJson
-import java.time.LocalDate
 
 data class FicheInventaireJson(
     @JsonProperty("etapeLancementHtml")
@@ -29,4 +28,12 @@ data class FicheInventaireJson(
     val objectif: String,
     @JsonProperty("thematique")
     val thematique: ThematiqueNoIdJson,
+    @JsonProperty("illustrationUrl")
+    val illustrationUrl: String,
+    @JsonProperty("etape")
+    val etape: String,
+    @JsonProperty("anneeDeLancement")
+    val anneeDeLancement: String,
+    @JsonProperty("statut")
+    val statut: String,
 )

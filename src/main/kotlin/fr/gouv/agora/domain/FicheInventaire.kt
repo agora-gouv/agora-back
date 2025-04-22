@@ -15,4 +15,8 @@ data class FicheInventaire(
     val modaliteParticipation: String,
     val objectif: String,
     val thematique: Thematique,
+    val illustration: String,
+    val etape: String,
+    val anneeDeLancement: String,
+    val statut: String,
 )
