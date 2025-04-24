@@ -25,6 +25,7 @@ class FicheInventaireRepositoryImpl(
 
     private fun toFicheInventaire(fiche: StrapiAttributes<FicheInventaireStrapiDTO>): FicheInventaire {
         return FicheInventaire(
+            id = fiche.id,
             etapeLancement = fiche.attributes.etapeLancement.toHtml(),
             etapeAnalyse = fiche.attributes.etapeAnalyse.toHtml(),
             etapeSuivi = fiche.attributes.etapeSuivi.toHtml(),

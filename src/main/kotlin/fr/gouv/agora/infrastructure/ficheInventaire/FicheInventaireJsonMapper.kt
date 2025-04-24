@@ -12,6 +12,7 @@ class FicheInventaireJsonMapper(
 ) {
     fun toFicheInventaireJson(fiche: FicheInventaire): FicheInventaireJson {
         return FicheInventaireJson(
+            id = fiche.id,
             etapeLancementHtml = fiche.etapeLancement,
             etapeAnalyseHtml = fiche.etapeAnalyse,
             etapeSuiviHtml = fiche.etapeSuivi,

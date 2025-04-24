@@ -19,4 +19,5 @@ data class FicheInventaire(
     val etape: String,
     val anneeDeLancement: String,
     val statut: String,
+    val id: String,
 )
