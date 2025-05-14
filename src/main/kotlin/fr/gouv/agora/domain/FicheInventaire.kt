@@ -13,11 +13,10 @@ data class FicheInventaire(
     val lienSite: String,
     val conditionParticipation: String,
     val modaliteParticipation: String,
-    val objectif: String,
     val thematique: Thematique,
     val illustration: String,
     val etape: String,
     val anneeDeLancement: String,
-    val statut: String,
+    val type: String,
     val id: String,
 )

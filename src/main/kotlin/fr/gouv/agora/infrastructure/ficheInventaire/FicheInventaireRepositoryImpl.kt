@@ -36,12 +36,11 @@ class FicheInventaireRepositoryImpl(
             lienSite = fiche.attributes.lienSite,
             conditionParticipation = fiche.attributes.conditionParticipation,
             modaliteParticipation = fiche.attributes.modaliteParticipation,
-            objectif = fiche.attributes.objectif,
             thematique = thematiqueMapper.toDomain(fiche.attributes.thematique),
             illustration = fiche.attributes.illustration.data.attributes.formats.medium.url,
             etape = fiche.attributes.etape,
             anneeDeLancement = fiche.attributes.anneeDeLancement,
-            statut = fiche.attributes.statut,
+            type = fiche.attributes.type,
         )
     }
 }
