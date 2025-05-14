@@ -114,7 +114,7 @@ class ConsultationUpdateInfoV2Mapper {
         val responsesInfo = if (consultationIsEnded) {
             ResponsesInfo(
                 "🏁",
-                "<body><b>Cette consultation est maintenant terminée.</b> Les résultats sont en cours d’analyse. Vous serez notifié(e) dès que la synthèse sera disponible.</body>",
+                "<body><b>Cette consultation est maintenant terminée.</b> Les résultats sont en cours d’analyse. Vous serez prévenu(e) dès que la synthèse sera disponible.</body>",
                 "Voir tous les résultats"
             )
         } else {

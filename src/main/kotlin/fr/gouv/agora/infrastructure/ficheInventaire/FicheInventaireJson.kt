@@ -26,8 +26,6 @@ data class FicheInventaireJson(
     val conditionParticipation: String,
     @JsonProperty("modaliteParticipation")
     val modaliteParticipation: String,
-    @JsonProperty("objectif")
-    val objectif: String,
     @JsonProperty("thematique")
     val thematique: ThematiqueNoIdJson,
     @JsonProperty("illustrationUrl")
@@ -36,6 +34,6 @@ data class FicheInventaireJson(
     val etape: String,
     @JsonProperty("anneeDeLancement")
     val anneeDeLancement: String,
-    @JsonProperty("statut")
-    val statut: String,
+    @JsonProperty("type")
+    val type: String,
 )

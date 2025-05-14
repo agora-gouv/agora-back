@@ -30,8 +30,6 @@ data class FicheInventaireStrapiDTO(
     val conditionParticipation: String,
     @JsonProperty(value = "modalite_participation")
     val modaliteParticipation: String,
-    @JsonProperty(value = "objectif")
-    val objectif: String,
     @JsonProperty(value = "thematique")
     val thematique: StrapiData<ThematiqueStrapiDTO>,
     @JsonProperty("illustration")
@@ -40,6 +38,6 @@ data class FicheInventaireStrapiDTO(
     val etape: String,
     @JsonProperty("annee_de_lancement")
     val anneeDeLancement: String,
-    @JsonProperty("statut")
-    val statut: String,
+    @JsonProperty("type")
+    val type: String,
 )

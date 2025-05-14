@@ -23,12 +23,11 @@ class FicheInventaireJsonMapper(
             lienSite = fiche.lienSite,
             conditionParticipation = fiche.conditionParticipation,
             modaliteParticipation = fiche.modaliteParticipation,
-            objectif = fiche.objectif,
             thematique = thematiqueJsonMapper.toNoIdJson(fiche.thematique),
             illustrationUrl = fiche.illustration,
             etape = fiche.etape,
             anneeDeLancement = fiche.anneeDeLancement,
-            statut = fiche.statut,
+            type = fiche.type,
         )
     }
 }
