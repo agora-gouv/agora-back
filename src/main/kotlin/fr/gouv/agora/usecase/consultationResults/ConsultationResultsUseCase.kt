@@ -94,6 +94,7 @@ class ConsultationResultsUseCase(
 
         // TODO 20 mai 2025 : désactiver les seenRatio jusqu'au fix des formulaires front qui n'envoient
         // pas les questions vues mais pas répondues
+        // + remettre les tests correspondants (chercher "TODO 20 mai 2025")
         // ancien code :
         // if (participantCount > 0) {
         //     1 - (notApplicableCount.toDouble() / participantCount)
