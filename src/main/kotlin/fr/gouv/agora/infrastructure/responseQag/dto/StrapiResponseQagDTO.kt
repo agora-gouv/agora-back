@@ -7,7 +7,6 @@ import fr.gouv.agora.infrastructure.common.StrapiDataNullable
 import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.common.StrapiMediaVideo
 import fr.gouv.agora.infrastructure.common.StrapiRichText
-import fr.gouv.agora.infrastructure.common.StrapiSingleTypeDTO
 import java.time.LocalDate
 
 data class StrapiResponseQag(
@@ -28,7 +27,7 @@ data class StrapiResponseQag(
 ) {
     fun getAuthorPortraitUrl(): String {
         return if (auteurPortrait.data == null) auteurPortraitUrl
-        else auteurPortrait.data.attributes.getUrl()
+        else auteurPortrait.data.attributes.mediaUrl()
     }
 }
 

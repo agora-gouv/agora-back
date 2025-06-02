@@ -37,7 +37,7 @@ class FicheInventaireRepositoryImpl(
             conditionParticipation = fiche.attributes.conditionParticipation,
             modaliteParticipation = fiche.attributes.modaliteParticipation,
             thematique = thematiqueMapper.toDomain(fiche.attributes.thematique),
-            illustration = fiche.attributes.illustration.data.attributes.getUrl(),
+            illustration = fiche.attributes.illustration.data.attributes.mediaUrl(),
             etape = fiche.attributes.etape,
             anneeDeLancement = fiche.attributes.anneeDeLancement,
             type = fiche.attributes.type,

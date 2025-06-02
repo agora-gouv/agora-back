@@ -74,7 +74,7 @@ data class StrapiMediaPicture(
     @JsonProperty("url")
     val pictureUrlNotOptimized: String,
 ) {
-    fun getUrl(): String {
+    fun mediaUrl(): String {
         return formats.medium?.url ?: pictureUrlNotOptimized
     }
 }

@@ -68,7 +68,7 @@ data class StrapiConsultationSectionImage(
 ) : StrapiConsultationSection {
     fun getImageUrl(): String {
         return if (image.data == null) url
-        else image.data.attributes.getUrl()
+        else image.data.attributes.mediaUrl()
     }
 }
 
