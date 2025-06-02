@@ -71,11 +71,17 @@ data class StrapiMediaPdf(
 data class StrapiMediaPicture(
     @JsonProperty("formats")
     val formats: StrapiMediaPictureFormats,
-)
+    @JsonProperty("url")
+    val pictureUrlNotOptimized: String,
+) {
+    fun mediaUrl(): String {
+        return formats.medium?.url ?: pictureUrlNotOptimized
+    }
+}
 
 data class StrapiMediaPictureFormats(
     @JsonProperty("medium")
-    val medium: StrapiMediaPictureFormatMedium,
+    val medium: StrapiMediaPictureFormatMedium?,
 )
 
 data class StrapiMediaPictureFormatMedium(

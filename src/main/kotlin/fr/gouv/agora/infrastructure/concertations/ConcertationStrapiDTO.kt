@@ -27,6 +27,6 @@ data class ConcertationStrapiDTO(
 ) {
     fun getUrlImageCouverture(): String {
         return if (image.data == null) urlImageDeCouverture
-        else image.data.attributes.formats.medium.url
+        else image.data.attributes.mediaUrl()
     }
 }
