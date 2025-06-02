@@ -37,7 +37,8 @@ class ConsultationStrapiDTOTest {
                           "medium": {
                             "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
                           }
-                        }
+                        },
+                        "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
                       }
                     }
                   },
@@ -49,7 +50,8 @@ class ConsultationStrapiDTOTest {
                           "medium": {
                             "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_IMG_4029_f2bca5feed.jpg"
                           }
-                        }
+                        },
+                        "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
                       }
                     }
                   },
@@ -381,7 +383,8 @@ class ConsultationStrapiDTOTest {
                         "medium": {
                           "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
                         }
-                      }
+                      },
+                      "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
                     }
                   }
                 }
