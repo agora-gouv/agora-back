@@ -2,8 +2,10 @@ package fr.gouv.agora.infrastructure.common
 
 import fr.gouv.agora.domain.exceptions.InvalidNumberOfDepartmentsException
 import fr.gouv.agora.domain.exceptions.InvalidTerritoryException
+import fr.gouv.agora.infrastructure.ficheInventaire.FicheInventaireJsonMapper
 import fr.gouv.agora.usecase.consultation.exception.ConsultationNotFoundException
 import fr.gouv.agora.usecase.consultation.exception.ConsultationUpdateNotFoundException
+import fr.gouv.agora.usecase.ficheInventaire.FicheInventaireNotFound
 import fr.gouv.agora.usecase.notification.FcmTokenVideException
 import fr.gouv.agora.usecase.notification.QagIdInconnuException
 import fr.gouv.agora.usecase.notification.UserIdInconnuException
@@ -18,6 +20,12 @@ class DefaultControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handler(e: ConsultationNotFoundException): ErrorResponse {
         return ErrorResponse("Veuillez renseigner un id de consultation existant.")
+    }
+
+    @ExceptionHandler(FicheInventaireNotFound::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handler(e: FicheInventaireNotFound): ErrorResponse {
+        return ErrorResponse("Veuillez renseigner un id de fiche inventaire existant.")
     }
 
     @ExceptionHandler(QagIdInconnuException::class)
