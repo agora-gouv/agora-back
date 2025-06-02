@@ -108,7 +108,7 @@ data class StrapiConsultationQuestionDescription(
 ) : StrapiConsultationQuestion {
     fun getImageUrl(): String? {
         return if (image.data == null) urlImage
-        else image.data.attributes.formats.medium.url
+        else image.data.attributes.getUrl()
     }
 }
 

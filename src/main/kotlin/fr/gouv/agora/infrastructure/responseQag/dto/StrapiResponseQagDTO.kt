@@ -28,7 +28,7 @@ data class StrapiResponseQag(
 ) {
     fun getAuthorPortraitUrl(): String {
         return if (auteurPortrait.data == null) auteurPortraitUrl
-        else auteurPortrait.data.attributes.formats.medium.url
+        else auteurPortrait.data.attributes.getUrl()
     }
 }
 
