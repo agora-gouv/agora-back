@@ -19,7 +19,8 @@ With the proper env variables :
 ```bash
 ./gradlew bootRun
 ```
-To inject the .env file without `source`-ing it, you can check out [dotenvx](https://dotenvx.com/).
+To inject the .env file without `source`-ing it, you can check out [dotenvx](https://dotenvx.com/), or run in a subshell
+with `(source .env && ./gradlew bootRun)`.
 
 You can also run everything directly inside IntelliJ with the shared config `AgoraBackApplication`.
 

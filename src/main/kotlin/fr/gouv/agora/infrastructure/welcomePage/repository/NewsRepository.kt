@@ -12,6 +12,7 @@ class NewsRepository(
         return newsStrapiRepository.getNews().map {
             News(
                 it.attributes.message.toHtml(),
+                it.attributes.short_message,
                 it.attributes.callToAction,
                 it.attributes.pageRouteMobile,
                 it.attributes.pageRouteArgumentMobile,
