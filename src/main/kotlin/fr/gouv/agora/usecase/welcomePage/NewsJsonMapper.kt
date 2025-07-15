@@ -9,6 +9,7 @@ class NewsJsonMapper {
     fun toJson(newsDTO: News): NewsJson {
         return NewsJson(
             newsDTO.description,
+            newsDTO.short_description,
             newsDTO.callToActionText,
             newsDTO.routeName,
             newsDTO.routeArgument
