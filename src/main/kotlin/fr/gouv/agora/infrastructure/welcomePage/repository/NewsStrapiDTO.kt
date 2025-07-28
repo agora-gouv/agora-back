@@ -9,6 +9,8 @@ import java.time.LocalDateTime
 data class NewsStrapiDTO(
     @JsonProperty("message")
     val message: List<StrapiRichText>,
+    @JsonProperty("short_message")
+    val short_message: String,
     @JsonProperty("call_to_action")
     val callToAction: String,
     @JsonProperty("date_de_debut")
