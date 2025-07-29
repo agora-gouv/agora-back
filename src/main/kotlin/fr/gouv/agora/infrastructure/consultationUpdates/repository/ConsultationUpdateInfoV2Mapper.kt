@@ -29,7 +29,7 @@ class ConsultationUpdateInfoV2Mapper {
 
         val sections = toSections(contentBeforeResponse.sections)
 
-        val sectionPourquoi = Section.Title("Pourquoi cette consultation ?")
+        val sectionPourquoi = Section.Title("Pourquoi cette initiative ?")
 
         return ConsultationUpdateInfoV2(
             id = consultation.contenuAvantReponse.data.id,
@@ -56,7 +56,7 @@ class ConsultationUpdateInfoV2Mapper {
             feedbackQuestion = null,
             footer = null,
             goals = listOf(
-                Goal("🗣️", "Consultation proposée par " + contentBeforeResponse.commanditaire.toHtml()),
+                Goal("🗣️", contentBeforeResponse.commanditaire.toHtml()),
                 Goal("🎯", "<b>Objectif : </b>" + contentBeforeResponse.objectif.toHtml()),
                 Goal("🚀", "<b>Axe gouvernemental : </b>" + contentBeforeResponse.axeGouvernemental.toHtml()),
             ),
@@ -120,7 +120,7 @@ class ConsultationUpdateInfoV2Mapper {
         } else {
             ResponsesInfo(
                 "🙌",
-                "<body><b>Merci pour votre participation</b> à cette consultation !</body>",
+                "<body><b>Merci pour votre participation</b> !</body>",
                 "Voir les premiers résultats"
             )
         }
