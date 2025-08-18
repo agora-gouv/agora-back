@@ -3,6 +3,7 @@ package fr.gouv.agora.usecase.qag.repository
 import fr.gouv.agora.domain.QagInserting
 import fr.gouv.agora.domain.QagStatus
 import java.util.*
+import kotlin.time.Duration
 
 interface QagInfoRepository {
     fun getQagInfoToModerateList(): List<QagInfo>
@@ -32,7 +33,7 @@ interface QagInfoRepository {
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun getMostPopularQags(): List<QagInfoWithSupportCount>
-    fun getTrendingQags(): List<QagInfoWithSupportCount>
+    fun getTrendingQags(interval: Duration): List<QagInfoWithSupportCount>
     fun selectQagForResponse(qagId: String): QagUpdateResult
     fun archiveOldQags(resetDate: Date)
     fun deleteQag(qagId: String): QagDeleteResult
