@@ -11,6 +11,7 @@ import fr.gouv.agora.usecase.qag.repository.QagInsertionResult
 import fr.gouv.agora.usecase.qag.repository.QagUpdateResult
 import org.springframework.stereotype.Component
 import java.util.Date
+import kotlin.time.Duration
 
 @Component
 class QagInfoRepositoryImpl(
@@ -133,9 +134,9 @@ class QagInfoRepositoryImpl(
         return databaseRepository.getMostPopularQags().map(mapper::toDomain)
     }
 
-    override fun getTrendingQags(): List<QagInfoWithSupportCount> {
+    override fun getTrendingQags(interval: Duration): List<QagInfoWithSupportCount> {
         return databaseRepository
-            .getTrendingQags()
+            .getTrendingQags("${interval.inWholeHours} HOUR")
             .map(mapper::toDomain)
             .removeDuplicates()
     }

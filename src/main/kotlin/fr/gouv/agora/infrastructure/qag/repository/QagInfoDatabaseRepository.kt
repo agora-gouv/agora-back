@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import kotlin.time.Duration
 
 @Repository
 interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
@@ -229,7 +230,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
                     FROM (qags LEFT JOIN qag_updates ON qags.id = qag_updates.qag_id) LEFT JOIN supports_qag ON qags.id = supports_qag.qag_id
                     WHERE qags.status = 1
                     AND qag_updates.status = 1
-                    AND moderated_date >= (CURRENT_TIMESTAMP - INTERVAL '72 HOUR')
+                    AND moderated_date >= (CURRENT_TIMESTAMP - CAST(:interval as INTERVAL))
                     GROUP BY qags.id
                     ORDER BY supportCount DESC
                 ) as rowNumber
@@ -239,7 +240,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             ORDER BY columnOrder ASC, supportCount DESC
         """, nativeQuery = true
     )
-    fun getTrendingQags(): List<QagWithSupportCountDTO>
+    fun getTrendingQags(@Param("interval") interval: String): List<QagWithSupportCountDTO>
 
     @Modifying
     @Transactional
