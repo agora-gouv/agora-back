@@ -34,7 +34,7 @@ class ResponseQagMapper {
                 is StrapiResponseQagVideo -> {
                     ResponseQagVideo(
                         author = response.auteur,
-                        authorPortraitUrl = response.auteurPortraitUrl,
+                        authorPortraitUrl = response.getAuthorPortraitUrl(),
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
