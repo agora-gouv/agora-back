@@ -136,7 +136,7 @@ class QagInfoRepositoryImpl(
 
     override fun getTrendingQags(interval: Duration): List<QagInfoWithSupportCount> {
         return databaseRepository
-            .getTrendingQags("${interval.inWholeHours} HOUR")
+            .getTrendingQags(interval.inWholeHours)
             .map(mapper::toDomain)
             .removeDuplicates()
     }
