@@ -13,6 +13,8 @@ import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
 import kotlin.math.ceil
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @Service
 class QagPaginatedV2UseCase(
@@ -31,6 +33,7 @@ class QagPaginatedV2UseCase(
         private const val LATEST = "latest"
         private const val SUPPORTING = "supporting"
         private const val TRENDING = "trending"
+        private const val DEFAULT_TRENDING_INTERVAL = 168
     }
 
     fun getPopularQagPaginated(
@@ -80,8 +83,15 @@ class QagPaginatedV2UseCase(
     fun getTrendingQag(
         userId: String,
     ): QagsAndMaxPageCountV2? {
+        val trendingInterval = (System.getenv("TRENDING_QAG_INTERVAL_HOURS").toIntOrNull() ?: DEFAULT_TRENDING_INTERVAL)
+            .toDuration(DurationUnit.HOURS)
+
+        fun curriedGetTrendingQags(): List<QagInfoWithSupportCount> {
+            return this.qagInfoRepository.getTrendingQags(trendingInterval)
+        }
+
         val qagListWithMaxPageCount = getQagPaginated(
-            getQagMethod = RetrieveQagMethod.WithoutParams(QagInfoRepository::getTrendingQags),
+            getQagMethod = RetrieveQagMethod.WithoutParams({ curriedGetTrendingQags() }),
             userId = userId,
             pageNumber = 1,
             thematiqueId = null,

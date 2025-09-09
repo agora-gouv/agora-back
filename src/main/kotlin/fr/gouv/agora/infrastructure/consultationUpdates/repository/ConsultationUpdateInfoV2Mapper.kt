@@ -29,7 +29,7 @@ class ConsultationUpdateInfoV2Mapper {
 
         val sections = toSections(contentBeforeResponse.sections)
 
-        val sectionPourquoi = Section.Title("Pourquoi cette initiative ?")
+        val sectionPourquoi = Section.Title("Pourquoi cette consultation ?")
 
         return ConsultationUpdateInfoV2(
             id = consultation.contenuAvantReponse.data.id,
@@ -120,7 +120,7 @@ class ConsultationUpdateInfoV2Mapper {
         } else {
             ResponsesInfo(
                 "🙌",
-                "<body><b>Merci pour votre participation</b> !</body>",
+                "<body><b>Merci pour votre participation</b> à cette consultation !</body>",
                 "Voir les premiers résultats"
             )
         }
