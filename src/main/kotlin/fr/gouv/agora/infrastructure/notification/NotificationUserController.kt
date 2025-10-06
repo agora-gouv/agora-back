@@ -123,7 +123,7 @@ class NotificationUserController(
         @PathVariable("codeDepartement") @Parameter(example = "01") codeDepartement: String,
         @RequestParam("title", defaultValue = "Une nouvelle consultation est disponible") title: String,
         @RequestParam("description", defaultValue = "Venez découvrir la nouvelle consultation sur l'Ain") description: String,
-        @RequestParam("type", defaultValue = "Type de la notification pour rediriger l'utilisateur vers la bonne page ALL_REPONSES_QAGS, HOME_QAGS, DETAILS_QAG, HOME_CONSULTATIONS, DETAILS_CONSULTATION, REPONSE_SUPPORT") type: TypeNotification,
+        @RequestParam("type", defaultValue = "HOME_QAGS") type: TypeNotification,
         @RequestParam("routeArgument", defaultValue = "f55a68a7-8ec3-46c8-ba6b-1484fbd77ec6") pageArgument: String?,
     ): ResponseEntity<*> {
         val departement = Department.findByCode(codeDepartement)

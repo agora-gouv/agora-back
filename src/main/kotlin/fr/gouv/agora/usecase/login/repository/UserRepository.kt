@@ -15,4 +15,5 @@ interface UserRepository {
     fun deleteUsers(userIDs: List<String>)
     fun changeAuthorizationLevel(userIDs: List<String>, authorizationLevel: AuthorizationLevel): Int
     fun getUsersLivingInDepartement(departement: Department): List<UserInfo>
+    fun getUsersInterestedInDepartement(departement: Department): List<UserInfo>
 }

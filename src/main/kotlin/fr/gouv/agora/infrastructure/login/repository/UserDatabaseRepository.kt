@@ -56,6 +56,27 @@ interface UserDatabaseRepository : JpaRepository<UserDTO, UUID> {
     )
     fun getUsersLivingInDepartement(@Param("departementId") departementId: String): List<UserDTO>
 
+    @Query(
+        value = """
+        WITH unique_fcm_token_users AS (
+            SELECT
+                *,
+                ROW_NUMBER() OVER (PARTITION BY fcm_token ORDER BY created_date DESC) AS created_date_rank
+            FROM agora_users
+        )
+
+        SELECT * FROM unique_fcm_token_users
+        WHERE created_date_rank = 1
+        AND id IN (
+             SELECT user_id FROM users_profile
+             WHERE primary_department = :departementId
+                OR secondary_department = :departementId
+        )
+        """,
+        nativeQuery = true,
+    )
+    fun getUsersInterestedInDepartement(@Param("departementId") departementId: String): List<UserDTO>
+
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM agora_users WHERE id IN :userIDs", nativeQuery = true)

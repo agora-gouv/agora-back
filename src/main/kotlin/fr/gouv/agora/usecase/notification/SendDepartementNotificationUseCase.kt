@@ -22,7 +22,9 @@ class SendDepartementNotificationUseCase(
         pageArgument: String?,
         typeNotification: TypeNotification
     ): NotificationResult {
-        val userList = userRepository.getUsersLivingInDepartement(departement)
+        val userList =
+            userRepository.getUsersLivingInDepartement(departement) +
+                    userRepository.getUsersInterestedInDepartement(departement)
 
         notificationSendingRepository.sendGenericMultiNotification(
             title = title,
