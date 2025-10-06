@@ -328,6 +328,10 @@ interface Territoire {
                 Departement.values().firstOrNull { it.value.lowercase() == departement.lowercase() }
                     .let { return it }
             }
+            fun fromCodePostal(codePostal: String): Departement? {
+                Departement.values().firstOrNull { it.codePostal == codePostal }
+                    .let { return it }
+            }
         }
     }
 }
