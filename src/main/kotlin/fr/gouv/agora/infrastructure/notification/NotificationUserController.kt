@@ -1,5 +1,7 @@
 package fr.gouv.agora.infrastructure.notification
 
+import fr.gouv.agora.domain.Department
+import fr.gouv.agora.usecase.notification.SendDepartementNotificationUseCase
 import fr.gouv.agora.usecase.notification.SendUserNotificationUseCase
 import fr.gouv.agora.usecase.notification.SendUsersNotificationUseCase
 import fr.gouv.agora.usecase.notification.repository.NotificationResult
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 class NotificationUserController(
     private val sendUserNotificationUseCase: SendUserNotificationUseCase,
     private val sendUsersNotificationUseCase: SendUsersNotificationUseCase,
+    private val sendDepartementNotificationUseCase: SendDepartementNotificationUseCase
 ) {
     @Operation(
         summary = "Envoyer une notification à un utilisateur précis", responses = [
@@ -76,7 +79,7 @@ class NotificationUserController(
             )
         ]
     )
-    @GetMapping("/admin/notififyAllUsers")
+    @GetMapping("/admin/notifyAllUsers")
     fun notifyAllUsers(
         @RequestParam("title", defaultValue = "Une nouvelle consultation est disponible") title: String,
         @RequestParam("description", defaultValue = "Venez découvrir la nouvelle consultation sur l'éducation") description: String,
@@ -84,6 +87,49 @@ class NotificationUserController(
         @RequestParam("routeArgument", defaultValue = "f55a68a7-8ec3-46c8-ba6b-1484fbd77ec6") pageArgument: String?,
     ): ResponseEntity<*> {
         val result = sendUsersNotificationUseCase.execute(
+            title = title,
+            description = description,
+            pageArgument = pageArgument,
+            typeNotification = type,
+        )
+
+        return when (result) {
+            NotificationResult.SUCCESS -> ResponseEntity.ok().body(Unit)
+            NotificationResult.FAILURE -> ResponseEntity.badRequest().body(Unit)
+        }
+    }
+
+    @Operation(
+        summary = "Envoyer une notification à tous les utilisateurs d'un département", responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Success",
+                content = [Content(mediaType = "application/json")]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "La requête est incorrecte",
+                content = [Content(mediaType = "application/json")]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized : Votre compte ne possède pas les droits administrateur",
+                content = [Content(mediaType = "application/json")]
+            )
+        ]
+    )
+    @GetMapping("/admin/notifyUsersInDepartement/{codeDepartement}")
+    fun notifyUsersInDepartement(
+        @PathVariable("codeDepartement") @Parameter(example = "01") codeDepartement: String,
+        @RequestParam("title", defaultValue = "Une nouvelle consultation est disponible") title: String,
+        @RequestParam("description", defaultValue = "Venez découvrir la nouvelle consultation sur l'Ain") description: String,
+        @RequestParam("type", defaultValue = "Type de la notification pour rediriger l'utilisateur vers la bonne page ALL_REPONSES_QAGS, HOME_QAGS, DETAILS_QAG, HOME_CONSULTATIONS, DETAILS_CONSULTATION, REPONSE_SUPPORT") type: TypeNotification,
+        @RequestParam("routeArgument", defaultValue = "f55a68a7-8ec3-46c8-ba6b-1484fbd77ec6") pageArgument: String?,
+    ): ResponseEntity<*> {
+        val departement = Department.findByCode(codeDepartement)
+        if (departement == null) { return ResponseEntity.badRequest().body(Unit) }
+        val result = sendDepartementNotificationUseCase.execute(
+            departement = departement,
             title = title,
             description = description,
             pageArgument = pageArgument,

@@ -1,5 +1,6 @@
 package fr.gouv.agora.usecase.login.repository
 
+import fr.gouv.agora.domain.Department
 import fr.gouv.agora.domain.LoginRequest
 import fr.gouv.agora.domain.SignupRequest
 import fr.gouv.agora.domain.UserInfo
@@ -13,4 +14,5 @@ interface UserRepository {
     fun getUsersNotAnsweredConsultation(consultationId: String): List<UserInfo>
     fun deleteUsers(userIDs: List<String>)
     fun changeAuthorizationLevel(userIDs: List<String>, authorizationLevel: AuthorizationLevel): Int
+    fun getUsersLivingInDepartement(departement: Department): List<UserInfo>
 }
