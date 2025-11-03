@@ -1,7 +1,9 @@
 package fr.gouv.agora.infrastructure.login.repository
 
+import fr.gouv.agora.domain.Department
 import fr.gouv.agora.domain.LoginRequest
 import fr.gouv.agora.domain.SignupRequest
+import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.domain.UserInfo
 import fr.gouv.agora.infrastructure.login.dto.UserDTO
 import fr.gouv.agora.infrastructure.login.repository.LoginCacheRepository.CacheResult
@@ -68,6 +70,26 @@ class UserRepositoryImpl(
         return numberOfChange
     }
 
+    override fun getUsersLivingInDepartement(
+        departement: Department
+    ): List<UserInfo> {
+        val departementId = Department.getDepartmentCode(departement)
+        if (departementId == null) { return emptyList() }
+        return databaseRepository.getUsersLivingInDepartement(departementId)
+            .map(mapper::toDomain)
+    }
+
+    override fun getUsersInterestedInDepartement(
+        departement: Department
+    ): List<UserInfo> {
+        val codePostal = Department.getDepartmentCode(departement);
+        if (codePostal == null) { return emptyList() }
+        val departementId = Territoire.Departement.fromCodePostal(codePostal)
+        if (departementId == null) { return emptyList() }
+        return databaseRepository.getUsersInterestedInDepartement(departementId.value)
+            .map(mapper::toDomain)
+    }
+
     private fun getUserDTO(userUUID: UUID): UserDTO? {
         return when (val cacheResult = cacheRepository.getUser(userUUID)) {
             is CacheResult.CachedUser -> cacheResult.userDTO
@@ -80,5 +102,4 @@ class UserRepositoryImpl(
             }
         }
     }
-
 }
