@@ -12,8 +12,8 @@ class FicheInventaireRepositoryImpl(
     private val ficheInventaireStrapiRepository: FicheInventaireStrapiRepository,
     private val thematiqueMapper: ThematiqueMapper,
 ): FicheInventaireRepository {
-    override fun getAll(thematique: String?, etape: String?): List<FicheInventaire> {
-        return ficheInventaireStrapiRepository.getFichesInventaire(thematique, etape).data
+    override fun getAll(thematique: String?, etape: String?, modalite_participation: List<String>?): List<FicheInventaire> {
+        return ficheInventaireStrapiRepository.getFichesInventaire(thematique, etape, modalite_participation).data
             .map { toFicheInventaire(it) }
     }
 

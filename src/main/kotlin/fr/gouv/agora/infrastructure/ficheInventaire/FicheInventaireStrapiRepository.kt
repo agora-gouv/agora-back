@@ -13,13 +13,16 @@ class FicheInventaireStrapiRepository(
 ) {
     val ref = object : TypeReference<StrapiDTO<FicheInventaireStrapiDTO>>() {}
 
-    fun getFichesInventaire(thematique: String?, etape: String?): StrapiDTO<FicheInventaireStrapiDTO> {
+    fun getFichesInventaire(thematique: String?, etape: String?, modalite_participation: List<String>?): StrapiDTO<FicheInventaireStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("fiche-inventaires")
             if (thematique != null) {
                 uriBuilder.filterBy(listOf("thematique", "id_base_de_donnees"), listOf(thematique))
             }
             if (etape != null) {
-                uriBuilder.filterBy(listOf("etape"), listOf(etape))
+                uriBuilder.filterBy("etape", listOf(etape))
+            }
+            if (!modalite_participation.isNullOrEmpty()) {
+                uriBuilder.filterBy("modalite_participation", modalite_participation)
             }
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)

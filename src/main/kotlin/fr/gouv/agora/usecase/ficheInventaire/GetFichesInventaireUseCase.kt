@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 class GetFichesInventaireUseCase(
     private val ficheInventaireRepository: FicheInventaireRepository
 ) {
-    fun execute(thematique: String?, etape: String?): List<FicheInventaire> {
-        return ficheInventaireRepository.getAll(thematique, etape)
+    fun execute(thematique: String?, etape: String?, modalite_participation: List<String>?): List<FicheInventaire> {
+        return ficheInventaireRepository.getAll(thematique, etape, modalite_participation)
     }
 }

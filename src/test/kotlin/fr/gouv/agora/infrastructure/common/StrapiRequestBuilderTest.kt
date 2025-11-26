@@ -22,7 +22,7 @@ class StrapiRequestBuilderTest {
     @Test
     fun `when there is a complex field to filter, then add filters to URI`() {
         // When
-        val uri = StrapiRequestBuilder("consultations")
+        val uri = StrapiRequestBuilder("fiche-inventaires")
             .filterBy(listOf("thematique", "label"), listOf("thematique"))
             .build()
 
@@ -34,13 +34,25 @@ class StrapiRequestBuilderTest {
     @Test
     fun `when there is a complex field with thematique and etape, then add filters to URI`() {
         // When
-        val uri = StrapiRequestBuilder("consultations")
-            .filterBy(listOf("etape", "label"), listOf("etape"))
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .filterBy(listOf("etape"), listOf("etape"))
             .build()
 
         // Then
         assertThat(uri)
-            .contains("filters[etape][label][\$in]=etape")
+            .contains("filters[etape][\$in]=etape")
+    }
+
+    @Test
+    fun `when there is a complex field with thematique and etape and modalite_participation, then add filters to URI`() {
+        // When
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .filterBy(listOf("modalite_participation"), listOf("modalite_participation"))
+            .build()
+
+        // Then
+        assertThat(uri)
+            .contains("filters[modalite_participation][\$in]=modalite_participation")
     }
 
     @Test
