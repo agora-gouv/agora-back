@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -19,8 +19,8 @@ class FicheInventaireController(
 ) {
     @Operation(summary = "Get all Fiches Inventaire")
     @GetMapping("/fiches_inventaire")
-    fun getFichesInventaire(): ResponseEntity<List<FicheInventaireJson>> {
-        val fichesInventaire = getFichesInventaireUseCase.execute()
+    fun getFichesInventaireList(@RequestParam("thematique") thematique: String?): ResponseEntity<List<FicheInventaireJson>> {
+        val fichesInventaire = getFichesInventaireUseCase.execute(thematique)
         val fichesInventaireJson = fichesInventaire.map {
             ficheInventaireJsonMapper.toFicheInventaireJson(it)
         }

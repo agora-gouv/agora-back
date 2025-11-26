@@ -17,9 +17,10 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
 
     private val logger = LoggerFactory.getLogger(StrapiRequestBuilder::class.java)
 
-    fun filterBy(field: String, values: List<String>): StrapiRequestBuilder {
+    fun filterBy(fields: List<String>, values: List<String>): StrapiRequestBuilder {
+        var fieldParam = fields.joinToString("") { "[$it]" }
         if (values.isEmpty()) {
-            builderError = "filterBy : aucune valeur donnée pour le champs $field"
+            builderError = "filterBy : aucune valeur donnée pour le champs $fieldParam"
             return this
         }
 
@@ -28,9 +29,12 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
 
         filters += values
             .map { URLEncoder.encode(it, UTF_8) }
-            .joinToString("") { "&filters[$field][\$in]=$it" }
+            .joinToString("") { "&filters$fieldParam[\$in]=$it" }
 
         return this
+    }
+    fun filterBy(field: String, values: List<String>): StrapiRequestBuilder {
+        return this.filterBy(listOf(field), values)
     }
 
     fun getByIds(ids: List<Int>): StrapiRequestBuilder {
