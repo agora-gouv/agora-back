@@ -19,8 +19,8 @@ class FicheInventaireController(
 ) {
     @Operation(summary = "Get all Fiches Inventaire")
     @GetMapping("/fiches_inventaire")
-    fun getFichesInventaireList(@RequestParam("thematique") thematique: String?, @RequestParam("etape") etape: String?, @RequestParam("modalite_participation") modalite_participation: List<String>?): ResponseEntity<List<FicheInventaireJson>> {
-        val fichesInventaire = getFichesInventaireUseCase.execute(thematique, etape, modalite_participation)
+    fun getFichesInventaireList(@RequestParam("thematique") thematique: String?, @RequestParam("etape") etape: String?, @RequestParam("modaliteParticipation") modaliteParticipation: List<String>?, @RequestParam("anneeDeLancement") anneeDeLancement: String?): ResponseEntity<List<FicheInventaireJson>> {
+        val fichesInventaire = getFichesInventaireUseCase.execute(thematique, etape, modaliteParticipation, anneeDeLancement)
         val fichesInventaireJson = fichesInventaire.map {
             ficheInventaireJsonMapper.toFicheInventaireJson(it)
         }
