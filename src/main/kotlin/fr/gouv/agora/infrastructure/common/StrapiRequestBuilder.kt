@@ -17,8 +17,8 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
 
     private val logger = LoggerFactory.getLogger(StrapiRequestBuilder::class.java)
 
-    fun filterBy(fields: List<String>, values: List<String>): StrapiRequestBuilder {
-        var fieldParam = fields.joinToString("") { "[$it]" }
+    fun filterBy(fields: List<String>, values: List<String>, mode: String = ""): StrapiRequestBuilder {
+        val fieldParam = fields.joinToString("") { "[$it]" }
         if (values.isEmpty()) {
             builderError = "filterBy : aucune valeur donnée pour le champs $fieldParam"
             return this
@@ -27,14 +27,22 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
         if (values.size > 80)
             logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url (${values.size}/100)")
 
-        filters += values
+        filters += when (mode) {
+            "contains" -> values
+                .map { URLEncoder.encode(it, UTF_8) }
+                .joinToString("") { "&filters$fieldParam[\$contains]=$it" }
+            else -> values
             .map { URLEncoder.encode(it, UTF_8) }
             .joinToString("") { "&filters$fieldParam[\$in]=$it" }
+        }
 
         return this
     }
     fun filterBy(field: String, values: List<String>): StrapiRequestBuilder {
         return this.filterBy(listOf(field), values)
+    }
+    fun filterIn(field: String, values: List<String>): StrapiRequestBuilder {
+        return this.filterBy(listOf(field), values,  "contains" )
     }
 
     fun getByIds(ids: List<Int>): StrapiRequestBuilder {

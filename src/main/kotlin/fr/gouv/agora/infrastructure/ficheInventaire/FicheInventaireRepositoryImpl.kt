@@ -13,12 +13,13 @@ class FicheInventaireRepositoryImpl(
     private val thematiqueMapper: ThematiqueMapper,
 ): FicheInventaireRepository {
     override fun getAll(
+        titre: String?,
         thematique: String?,
         etape: String?,
         modaliteParticipation: List<String>?,
         anneeDeLancement: String?
     ): List<FicheInventaire> {
-        return ficheInventaireStrapiRepository.getFichesInventaire(thematique, etape, modaliteParticipation, anneeDeLancement).data
+        return ficheInventaireStrapiRepository.getFichesInventaire(titre, thematique, etape, modaliteParticipation, anneeDeLancement).data
             .map { toFicheInventaire(it) }
     }
 
