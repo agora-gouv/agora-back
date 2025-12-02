@@ -22,7 +22,7 @@ class FicheInventaireStrapiRepository(
     ): StrapiDTO<FicheInventaireStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("fiche-inventaires")
         if (thematique != null) {
-            uriBuilder.filterBy(listOf("thematique", "id_base_de_donnees"), listOf(thematique))
+            uriBuilder.filterBy(listOf("thematique", "id"), listOf(thematique))
         }
         if (etape != null) {
             uriBuilder.filterBy("etape", listOf(etape))
@@ -36,7 +36,6 @@ class FicheInventaireStrapiRepository(
         if (titre != null) {
             uriBuilder.filterIn("titre", listOf(titre))
         }
-println("uriBuilder ${uriBuilder}")
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
