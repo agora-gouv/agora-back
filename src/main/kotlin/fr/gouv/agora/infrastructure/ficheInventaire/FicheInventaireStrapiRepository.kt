@@ -16,7 +16,7 @@ class FicheInventaireStrapiRepository(
     fun getFichesInventaire(
         titre: String?,
         thematique: String?,
-        etape: String?,
+        etape: List<String>?,
         modaliteParticipation: List<String>?,
         anneeDeLancement: String?
     ): StrapiDTO<FicheInventaireStrapiDTO> {
@@ -24,8 +24,8 @@ class FicheInventaireStrapiRepository(
         if (thematique != null) {
             uriBuilder.filterBy(listOf("thematique", "id"), listOf(thematique))
         }
-        if (etape != null) {
-            uriBuilder.filterBy("etape", listOf(etape))
+        if (!etape.isNullOrEmpty()) {
+            uriBuilder.filterBy("etape", etape)
         }
         if (!modaliteParticipation.isNullOrEmpty()) {
             uriBuilder.filterBy("modalite_participation", modaliteParticipation)

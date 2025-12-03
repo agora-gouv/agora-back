@@ -15,7 +15,7 @@ class FicheInventaireRepositoryImpl(
     override fun getAll(
         titre: String?,
         thematique: String?,
-        etape: String?,
+        etape: List<String>?,
         modaliteParticipation: List<String>?,
         anneeDeLancement: String?
     ): List<FicheInventaire> {

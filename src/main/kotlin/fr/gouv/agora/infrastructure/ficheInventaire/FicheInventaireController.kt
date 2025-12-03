@@ -25,11 +25,11 @@ class FicheInventaireController(
 
     @Operation(summary = "Get all Fiches Inventaire")
     @GetMapping("/fiches_inventaire")
-    fun getFichesInventaireList(@RequestParam("titre") titre: String?, @RequestParam("thematique") thematique: String?, @RequestParam("etape") etape: String?, @RequestParam("modaliteParticipation") modaliteParticipation: List<String>?, @RequestParam("anneeDeLancement") anneeDeLancement: String?): ResponseEntity<List<FicheInventaireJson>> {
+    fun getFichesInventaireList(@RequestParam("titre") titre: String?, @RequestParam("thematique") thematique: String?, @RequestParam("etape") etape: List<String>?, @RequestParam("modaliteParticipation") modaliteParticipation: List<String>?, @RequestParam("anneeDeLancement") anneeDeLancement: String?): ResponseEntity<List<FicheInventaireJson>> {
 
         var titreFiltre = titre.takeUnless { it.isNullOrBlank() }
         var thematiqueFiltre = thematique.takeUnless { it.isNullOrBlank() }
-        var etapeFiltre = etape.takeUnless { it.isNullOrBlank() }
+        var etapeFiltre = cleanList(etape)
         var anneeDeLancementFiltre = anneeDeLancement.takeUnless { it.isNullOrBlank() }
         val modaliteFiltre = cleanList(modaliteParticipation)
 
