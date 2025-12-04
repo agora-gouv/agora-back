@@ -17,7 +17,43 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
 
     private val logger = LoggerFactory.getLogger(StrapiRequestBuilder::class.java)
 
-    fun filterBy(fields: List<String>, values: List<String>, mode: String = ""): StrapiRequestBuilder {
+    inner class FiltersDsl internal constructor() {
+        fun addThematique(thematique: String?) = apply { andThematique(thematique) }
+        fun addEtape(etape: List<String>?) = apply { andEtape(etape) }
+        fun addModalite(modaliteParticipation: List<String>?) = apply { andModalite(modaliteParticipation) }
+        fun addAnneeDeLancement(annee: String?) = apply { andAnneeDeLancement(annee) }
+        fun addTitre(titre: String?) = apply { andTitre(titre) }
+    }
+    fun filters(attribut: FiltersDsl.() -> Unit): StrapiRequestBuilder {
+        FiltersDsl().apply(attribut)
+        return this
+    }
+    fun andThematique(thematique: String?) {
+        if (thematique != null) {
+            filterBy(listOf("thematique", "id"), listOf(thematique))
+        }
+    }
+    fun andEtape(etape: List<String>?) {
+        if (!etape.isNullOrEmpty()) {
+            filterBy("etape", etape)
+        }
+    }
+    fun andModalite(modaliteParticipation: List<String>?) {
+        if (!modaliteParticipation.isNullOrEmpty()) {
+            filterBy("modalite_participation", modaliteParticipation)
+        }
+    }
+    fun andAnneeDeLancement(anneeDeLancement: String?) {
+        if (anneeDeLancement != null) {
+            filterBy("annee_de_lancement", listOf(anneeDeLancement))
+        }
+    }
+    fun andTitre(titre: String?) {
+        if (titre != null) {
+            withContains("titre", listOf(titre))
+        }
+    }
+    fun filterBy(fields: List<String>, values: List<String>): StrapiRequestBuilder {
         val fieldParam = fields.joinToString("") { "[$it]" }
         if (values.isEmpty()) {
             builderError = "filterBy : aucune valeur donnée pour le champs $fieldParam"
@@ -27,22 +63,29 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
         if (values.size > 80)
             logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url (${values.size}/100)")
 
-        filters += when (mode) {
-            "contains" -> values
-                .map { URLEncoder.encode(it, UTF_8) }
-                .joinToString("") { "&filters$fieldParam[\$contains]=$it" }
-            else -> values
+        filters += values
             .map { URLEncoder.encode(it, UTF_8) }
             .joinToString("") { "&filters$fieldParam[\$in]=$it" }
-        }
 
         return this
     }
     fun filterBy(field: String, values: List<String>): StrapiRequestBuilder {
         return this.filterBy(listOf(field), values)
     }
-    fun filterIn(field: String, values: List<String>): StrapiRequestBuilder {
-        return this.filterBy(listOf(field), values,  "contains" )
+    fun withContains(field: String, values: List<String>): StrapiRequestBuilder {
+        if (values.isEmpty()) {
+            builderError = "filterBy : aucune valeur donnée pour le champs $field"
+            return this
+        }
+
+        if (values.size > 80)
+            logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url (${values.size}/100)")
+
+        filters += values
+                .map { URLEncoder.encode(it, UTF_8) }
+                .joinToString("") { "&filters$field[\$contains]=$it" }
+
+        return this
     }
 
     fun getByIds(ids: List<Int>): StrapiRequestBuilder {

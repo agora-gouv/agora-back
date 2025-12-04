@@ -21,21 +21,15 @@ class FicheInventaireStrapiRepository(
         anneeDeLancement: String?
     ): StrapiDTO<FicheInventaireStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("fiche-inventaires")
-        if (thematique != null) {
-            uriBuilder.filterBy(listOf("thematique", "id"), listOf(thematique))
-        }
-        if (!etape.isNullOrEmpty()) {
-            uriBuilder.filterBy("etape", etape)
-        }
-        if (!modaliteParticipation.isNullOrEmpty()) {
-            uriBuilder.filterBy("modalite_participation", modaliteParticipation)
-        }
-        if (anneeDeLancement != null) {
-            uriBuilder.filterBy("annee_de_lancement", listOf(anneeDeLancement))
-        }
-        if (titre != null) {
-            uriBuilder.filterIn("titre", listOf(titre))
-        }
+            .filters {
+                addThematique(thematique)
+                addEtape(etape)
+                addModalite(modaliteParticipation)
+                addAnneeDeLancement(anneeDeLancement)
+                addTitre(titre)
+            }
+
+
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
