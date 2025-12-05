@@ -20,6 +20,7 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     inner class FiltersDsl internal constructor() {
         fun addThematique(thematique: String?) = apply { andThematique(thematique) }
         fun addEtape(etape: List<String>?) = apply { andEtape(etape) }
+        fun addCondition(conditionParticipation: List<String>?) = apply { andCondition(conditionParticipation) }
         fun addModalite(modaliteParticipation: List<String>?) = apply { andModalite(modaliteParticipation) }
         fun addAnneeDeLancement(annee: String?) = apply { andAnneeDeLancement(annee) }
         fun addTitre(titre: String?) = apply { andTitre(titre) }
@@ -36,6 +37,11 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     fun andEtape(etape: List<String>?) {
         if (!etape.isNullOrEmpty()) {
             filterBy("etape", etape)
+        }
+    }
+    fun andCondition(conditionParticipation: List<String>?) {
+        if (!conditionParticipation.isNullOrEmpty()) {
+            filterBy("condition_participation", conditionParticipation)
         }
     }
     fun andModalite(modaliteParticipation: List<String>?) {

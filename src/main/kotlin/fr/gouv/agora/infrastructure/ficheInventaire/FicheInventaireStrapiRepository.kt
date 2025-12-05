@@ -17,6 +17,7 @@ class FicheInventaireStrapiRepository(
         titre: String?,
         thematique: String?,
         etape: List<String>?,
+        conditionParticipation: List<String>?,
         modaliteParticipation: List<String>?,
         anneeDeLancement: String?
     ): StrapiDTO<FicheInventaireStrapiDTO> {
@@ -24,6 +25,7 @@ class FicheInventaireStrapiRepository(
             .filters {
                 addThematique(thematique)
                 addEtape(etape)
+                addCondition(conditionParticipation)
                 addModalite(modaliteParticipation)
                 addAnneeDeLancement(anneeDeLancement)
                 addTitre(titre)

@@ -16,10 +16,11 @@ class FicheInventaireRepositoryImpl(
         titre: String?,
         thematique: String?,
         etape: List<String>?,
+        conditionParticipation: List<String>?,
         modaliteParticipation: List<String>?,
         anneeDeLancement: String?
     ): List<FicheInventaire> {
-        return ficheInventaireStrapiRepository.getFichesInventaire(titre, thematique, etape, modaliteParticipation, anneeDeLancement).data
+        return ficheInventaireStrapiRepository.getFichesInventaire(titre, thematique, etape, conditionParticipation, modaliteParticipation, anneeDeLancement).data
             .map { toFicheInventaire(it) }
     }
 

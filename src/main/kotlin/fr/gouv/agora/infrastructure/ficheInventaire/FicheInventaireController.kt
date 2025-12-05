@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.ficheInventaire
 
+import fr.gouv.agora.infrastructure.notification.dto.NotificationMessageDTO
 import fr.gouv.agora.usecase.ficheInventaire.GetFicheInventaireUseCase
 import fr.gouv.agora.usecase.ficheInventaire.GetFichesInventaireUseCase
 import io.swagger.v3.oas.annotations.Operation
@@ -17,23 +18,21 @@ class FicheInventaireController(
     private val getFicheInventaireUseCase: GetFicheInventaireUseCase,
     private val ficheInventaireJsonMapper: FicheInventaireJsonMapper,
 ) {
-    fun cleanList(fieldParam: List<String>?): List<String>? {
-        val fieldParamFiltre = fieldParam?.filter { it.isNotBlank() }
-        val result = if (fieldParamFiltre.isNullOrEmpty()) null else fieldParamFiltre
-        return result
-    }
+    private val MODALITES = setOf("En présentiel", "En ligne" )
+    private val CONDITIONS = setOf("Ouvert à tous", "Tirage au sort représentatif" )
 
     @Operation(summary = "Get all Fiches Inventaire")
     @GetMapping("/fiches_inventaire")
-    fun getFichesInventaireList(@RequestParam("titre") titre: String?, @RequestParam("thematique") thematique: String?, @RequestParam("etape") etape: List<String>?, @RequestParam("modaliteParticipation") modaliteParticipation: List<String>?, @RequestParam("anneeDeLancement") anneeDeLancement: String?): ResponseEntity<List<FicheInventaireJson>> {
+    fun getFichesInventaireList(@RequestParam("titre") titre: String?, @RequestParam("thematique") thematique: String?, @RequestParam("etape") etape: List<String>?, @RequestParam("participation") participation: List<String>?, @RequestParam("anneeDeLancement") anneeDeLancement: String?): ResponseEntity<List<FicheInventaireJson>> {
 
         var titreFiltre = titre.takeUnless { it.isNullOrBlank() }
         var thematiqueFiltre = thematique.takeUnless { it.isNullOrBlank() }
-        var etapeFiltre = cleanList(etape)
+        var etapeFiltre = etape.takeUnless { it?.filterNot { it.isEmpty() }.isNullOrEmpty() }
         var anneeDeLancementFiltre = anneeDeLancement.takeUnless { it.isNullOrBlank() }
-        val modaliteFiltre = cleanList(modaliteParticipation)
+        val modaliteFiltre = participation.takeUnless { it?.filterNot { it.isEmpty() }.isNullOrEmpty() }?.filter {MODALITES.contains(it)}
+        val conditionFiltre = participation.takeUnless { it?.filterNot { it.isEmpty() }.isNullOrEmpty() }?.filter {CONDITIONS.contains(it)}
 
-        val fichesInventaire = getFichesInventaireUseCase.execute(titreFiltre, thematiqueFiltre, etapeFiltre, modaliteFiltre, anneeDeLancementFiltre)
+        val fichesInventaire = getFichesInventaireUseCase.execute(titreFiltre, thematiqueFiltre, etapeFiltre, conditionFiltre,modaliteFiltre, anneeDeLancementFiltre)
         val fichesInventaireJson = fichesInventaire.map {
             ficheInventaireJsonMapper.toFicheInventaireJson(it)
         }
