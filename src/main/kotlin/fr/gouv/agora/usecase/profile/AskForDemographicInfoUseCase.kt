@@ -24,6 +24,7 @@ class AskForDemographicInfoUseCase(
     }
 
     fun askForDemographicInfo(userId: String): Boolean {
+        return false;
         return when (processAskDemographicInfoState(userId)) {
             HAS_DEMOGRAPHIC_INFO -> false
             HAS_NOT_ANSWERED_ENOUGH_CONSULTATIONS -> false
