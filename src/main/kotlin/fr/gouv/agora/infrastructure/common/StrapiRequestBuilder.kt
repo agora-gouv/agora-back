@@ -21,15 +21,11 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
 
     private fun applyFilter(key: String, operator: String, value: String?): StrapiRequestBuilder {
         if (value.isNullOrEmpty()) {
+            builderError = "filterIn : aucune valeur donnée pour le champs $key"
             return this
         }
-        filters += "&filters$key[\$$operator]=$value"
-        return this
-    }
-    fun equals(field: String, value: String? ): StrapiRequestBuilder {
-        val fieldParam = field.let { "[$it]" }
-        applyFilter(fieldParam, "eq", value)
-
+        val it = URLEncoder.encode(value, UTF_8)
+        filters += "&filters$key[\$$operator]=$it"
         return this
     }
     fun filterIn(field: String, values: List<String?>?): StrapiRequestBuilder {
@@ -41,7 +37,12 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
         if (values != null && values.size > 80)
             logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url (${values.size}/100)")
 
-        values?.forEach { value -> applyFilter(fieldParam, "in", value) }
+        if (values.isNullOrEmpty()) {
+            builderError = "filterIn : aucune valeur donnée pour le champs $field"
+            return this
+        }
+
+        values.forEach { value -> applyFilter(fieldParam, "in", value) }
 
         return this
     }
@@ -51,29 +52,8 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
 
         return this
     }
-
-    fun filterBy(fields: List<String>, values: List<String>): StrapiRequestBuilder {
-        val fieldParam = fields.joinToString("") { "[$it]" }
-        if (values.isEmpty()) {
-            builderError = "filterBy : aucune valeur donnée pour le champs $fieldParam"
-            return this
-        }
-
-        if (values.size > 80)
-            logger.warn("attention : ne peut pas gérer plus de ~100 filtres dans l'url (${values.size}/100)")
-
-        filters += values
-            .map { URLEncoder.encode(it, UTF_8) }
-            .joinToString("") { "&filters$fieldParam[\$in]=$it" }
-
-        return this
-    }
-    fun filterBy(field: String, values: List<String>): StrapiRequestBuilder {
-        return this.filterBy(listOf(field), values)
-    }
-
     fun getByIds(ids: List<Int>): StrapiRequestBuilder {
-        return filterBy("id", ids.map { it.toString() })
+        return filterIn("id", ids.map { it.toString() })
     }
 
     fun withDateBefore(date: LocalDateTime, fieldBeforeDate: String): StrapiRequestBuilder {

@@ -15,13 +15,12 @@ class FicheInventaireStrapiRepository(
 
     fun getFichesInventaire(filters: FicheInventaireFilters): StrapiDTO<FicheInventaireStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("fiche-inventaires")
-            .contains("titre", filters.titre)
-            .filterIn(listOf("thematique", "id"), listOf(filters.thematique) )
-            .filterIn("etape", filters.etape)
-            .filterIn("condition_participation", filters.conditionParticipation)
-            .filterIn("modalite_participation", filters.modaliteParticipation)
-            .filterIn("annee_de_lancement", listOf(filters.anneeDeLancement))
-
+            if (filters.titre != null) uriBuilder.contains("titre", filters.titre)
+            if (filters.thematique != null) uriBuilder.filterIn(listOf("thematique", "id"), listOf(filters.thematique) )
+            if (filters.etape != null) uriBuilder.filterIn("etape", filters.etape)
+            if (filters.conditionParticipation != null) uriBuilder.filterIn("condition_participation", filters.conditionParticipation)
+            if (filters.modaliteParticipation != null) uriBuilder.filterIn("modalite_participation", filters.modaliteParticipation)
+            if (filters.anneeDeLancement != null) uriBuilder.filterIn("annee_de_lancement", listOf(filters.anneeDeLancement))
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }

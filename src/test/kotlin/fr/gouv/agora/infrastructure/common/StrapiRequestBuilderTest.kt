@@ -11,7 +11,7 @@ class StrapiRequestBuilderTest {
     fun `when there is multiple values to filter, then add filters to URI`() {
         // When
         val uri = StrapiRequestBuilder("consultations")
-            .filterBy("nom", listOf("article", "titre", "loi"))
+            .filterIn("nom", listOf("article", "titre", "loi"))
             .build()
 
         // Then
@@ -76,19 +76,7 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri)
-            .contains("filterstitre[\$contains]=titre")
-    }
-
-    @Test
-    fun `when there is a complex field with anneeDeLancement, then add filters to URI`() {
-        // When
-        val uri = StrapiRequestBuilder("fiche-inventaires")
-            .equals("anneeDeLancement", "2022")
-            .build()
-
-        // Then
-        assertThat(uri)
-            .contains("filtersanneeDeLancement[\$eq]=2022")
+            .contains("filters[titre][\$contains]=titre")
     }
 
     @Test
@@ -96,7 +84,7 @@ class StrapiRequestBuilderTest {
         // When & Then
         assertThatThrownBy {
             StrapiRequestBuilder("consultations")
-                .filterBy("nom", emptyList())
+                .filterIn("nom", emptyList())
                 .build()
         }.isInstanceOf(Exception::class.java)
     }
