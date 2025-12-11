@@ -45,6 +45,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
             .requestMatchers("/participation_charter").permitAll()
             .requestMatchers("/fiches_inventaire/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/v2/consultations/**").permitAll()
+            .requestMatchers("/thematiques/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter::class.java)

@@ -16,7 +16,7 @@ class ResponseQagStrapiRepository(
 
     fun getResponsesQag(qagIds: List<UUID>): StrapiDTO<StrapiResponseQag> {
         val uriBuilder = StrapiRequestBuilder("reponse-du-gouvernements")
-            .filterBy("questionId", qagIds.map { it.toString() })
+            .filterIn("questionId", qagIds.map { it.toString() })
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }

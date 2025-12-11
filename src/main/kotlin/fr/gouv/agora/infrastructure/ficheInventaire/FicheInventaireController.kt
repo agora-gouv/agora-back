@@ -1,5 +1,6 @@
 package fr.gouv.agora.infrastructure.ficheInventaire
 
+import fr.gouv.agora.infrastructure.notification.dto.NotificationMessageDTO
 import fr.gouv.agora.usecase.ficheInventaire.GetFicheInventaireUseCase
 import fr.gouv.agora.usecase.ficheInventaire.GetFichesInventaireUseCase
 import io.swagger.v3.oas.annotations.Operation
@@ -7,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -17,10 +18,14 @@ class FicheInventaireController(
     private val getFicheInventaireUseCase: GetFicheInventaireUseCase,
     private val ficheInventaireJsonMapper: FicheInventaireJsonMapper,
 ) {
+
     @Operation(summary = "Get all Fiches Inventaire")
     @GetMapping("/fiches_inventaire")
-    fun getFichesInventaire(): ResponseEntity<List<FicheInventaireJson>> {
-        val fichesInventaire = getFichesInventaireUseCase.execute()
+    fun getFichesInventaireList(@RequestParam("titre") titre: String?, @RequestParam("thematique") thematique: String?, @RequestParam("etape") etape: List<String>?, @RequestParam("conditionParticipation") conditionParticipation: List<String>?, @RequestParam("modaliteParticipation") modaliteParticipation: List<String>?, @RequestParam("anneeDeLancement") anneeDeLancement: String?): ResponseEntity<List<FicheInventaireJson>> {
+
+        val filters = FicheInventaireFilters(titre, thematique, etape, conditionParticipation, modaliteParticipation, anneeDeLancement)
+
+        val fichesInventaire = getFichesInventaireUseCase.execute(filters)
         val fichesInventaireJson = fichesInventaire.map {
             ficheInventaireJsonMapper.toFicheInventaireJson(it)
         }

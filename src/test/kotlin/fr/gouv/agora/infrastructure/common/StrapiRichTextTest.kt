@@ -410,11 +410,11 @@ class StrapiRichTextTest {
             <h4>titre 4</h4>
             <h5>titre 5</h5>
             <h6>titre 6</h6>
-            Bonjour, je suis un paragraphe<br/><br/>
-            Bonsoir, je suis un autre paragraphe, avec du <b>gras</b>, et du <b>gras à moi</b><i><b>tié italique</b></i>, puis
-                un peu de <del><u><i><b>tout.</b></i></u></del><br/><br/>
-            <code>Je suis du code</code><br/><br/>
-            <a href="http://localhost/">Je suis un lien</a><br/><br/>
+            <p>Bonjour, je suis un paragraphe</p>
+            <p>Bonsoir, je suis un autre paragraphe, avec du <b>gras</b>, et du <b>gras à moi</b><i><b>tié italique</b></i>, puis
+                un peu de <del><u><i><b>tout.</b></i></u></del></p>
+            <p><code>Je suis du code</code></p>
+            <p><a href="http://localhost/">Je suis un lien</a></p>
             <ul>
                 <li>Liste non ordonnée 1</li>
                 <li>Liste non ordonnée 2</li>
@@ -429,7 +429,7 @@ class StrapiRichTextTest {
                     </ul>
                 </ul>
             </ul>
-            <br/><br/>
+            <p></p>
             <ol>
                 <li>liste ordonnée 1</li>
                 <ol>

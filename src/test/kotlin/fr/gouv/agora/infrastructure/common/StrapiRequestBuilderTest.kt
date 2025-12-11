@@ -11,7 +11,7 @@ class StrapiRequestBuilderTest {
     fun `when there is multiple values to filter, then add filters to URI`() {
         // When
         val uri = StrapiRequestBuilder("consultations")
-            .filterBy("nom", listOf("article", "titre", "loi"))
+            .filterIn("nom", listOf("article", "titre", "loi"))
             .build()
 
         // Then
@@ -20,11 +20,71 @@ class StrapiRequestBuilderTest {
     }
 
     @Test
+    fun `when there is a complex field to filter, then add filters to URI`() {
+        // When
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .filterIn(listOf("thematique", "label"), listOf("thematique"))
+            .build()
+
+        // Then
+        assertThat(uri)
+            .contains("filters[thematique][label][\$in]=thematique")
+    }
+
+    @Test
+    fun `when there is a complex field with thematique and etape, then add filters to URI`() {
+        // When
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .filterIn(listOf("etape"), listOf("etape"))
+            .build()
+
+        // Then
+        assertThat(uri)
+            .contains("filters[etape][\$in]=etape")
+    }
+
+    @Test
+    fun `when there is a complex field with thematique and etape and modalite_participation, then add filters to URI`() {
+        // When
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .filterIn(listOf("modalite_participation"), listOf("modalite_participation"))
+            .build()
+
+        // Then
+        assertThat(uri)
+            .contains("filters[modalite_participation][\$in]=modalite_participation")
+    }
+
+    @Test
+    fun `when there is a complex field with annee de lancement, then add filters to URI`() {
+        // When
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .filterIn(listOf("annee_de_lancement"), listOf("annee_de_lancement"))
+            .build()
+
+        // Then
+        assertThat(uri)
+            .contains("filters[annee_de_lancement][\$in]=annee_de_lancement")
+    }
+
+    @Test
+    fun `when there is a complex field with titre, then add filters to URI`() {
+        // When
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .contains("titre", "titre")
+            .build()
+
+        // Then
+        assertThat(uri)
+            .contains("filters[titre][\$contains]=titre")
+    }
+
+    @Test
     fun `when there is no values to filter, then throw exception`() {
         // When & Then
         assertThatThrownBy {
             StrapiRequestBuilder("consultations")
-                .filterBy("nom", emptyList())
+                .filterIn("nom", emptyList())
                 .build()
         }.isInstanceOf(Exception::class.java)
     }

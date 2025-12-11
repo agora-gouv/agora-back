@@ -26,7 +26,7 @@ class ConsultationStrapiRepository(
             .withUnpublished()
 
         if (territories.isNotEmpty())
-            uriBuilder.filterBy("territoire", territories.map { it.value })
+            uriBuilder.filterIn("territoire", territories.map { it.value })
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -40,7 +40,7 @@ class ConsultationStrapiRepository(
             .withUnpublished()
 
         if (territories.isNotEmpty())
-            uriBuilder.filterBy("territoire", territories.map { it.value })
+            uriBuilder.filterIn("territoire", territories.map { it.value })
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -53,7 +53,7 @@ class ConsultationStrapiRepository(
             .withDateBefore(date, "datetime_de_fin")
 
         if (territory != null)
-            uriBuilder.filterBy("territoire", listOf(territory.value))
+            uriBuilder.filterIn("territoire", listOf(territory.value))
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -66,7 +66,7 @@ class ConsultationStrapiRepository(
             .withDateBefore(date, "datetime_de_fin")
 
         if (territories.isNotEmpty())
-            uriBuilder.filterBy("territoire", territories.map { it.value })
+            uriBuilder.filterIn("territoire", territories.map { it.value })
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -83,7 +83,7 @@ class ConsultationStrapiRepository(
 
     fun getConsultationBySlugWithUnpublished(slug: String): StrapiAttributes<ConsultationStrapiDTO>? {
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .filterBy("slug", listOf(slug))
+            .filterIn("slug", listOf(slug))
             .withUnpublished()
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
