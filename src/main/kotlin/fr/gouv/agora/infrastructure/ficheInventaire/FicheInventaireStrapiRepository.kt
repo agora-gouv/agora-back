@@ -22,6 +22,7 @@ class FicheInventaireStrapiRepository(
             if (filters.modaliteParticipation != null) uriBuilder.filterIn("modalite_participation", filters.modaliteParticipation)
             if (filters.anneeDeLancement != null) uriBuilder.filterIn("annee_de_lancement", listOf(filters.anneeDeLancement))
 
+        uriBuilder.sortBy("debut", "desc")
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
