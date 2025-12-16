@@ -48,7 +48,7 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     }
     fun contains(field: String, value: String?): StrapiRequestBuilder {
         val fieldParam = field.let { "[$it]" }
-        applyFilter(fieldParam, "contains", value)
+        applyFilter(fieldParam, "containsi", value)
 
         return this
     }

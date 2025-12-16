@@ -76,7 +76,7 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri)
-            .contains("filters[titre][\$contains]=titre")
+            .contains("filters[titre][\$containsi]=titre")
     }
 
     @Test
