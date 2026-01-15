@@ -48,7 +48,8 @@ class ConsultationUpdateInfoV2Mapper {
             bodyPreview = listOf(
                 sectionPourquoi,
                 Section.RichText(
-                    contentBeforeResponse.presentation.toHtml().split("<br/>").take(2).joinToString("<br/>")
+                    contentBeforeResponse.presentation.toHtml().split("</p>").firstOrNull()?.let { "$it</p>" }
+                        ?: contentBeforeResponse.presentation.toHtml()
                 )
             ),
             infoHeader = null,
@@ -56,9 +57,9 @@ class ConsultationUpdateInfoV2Mapper {
             feedbackQuestion = null,
             footer = null,
             goals = listOf(
-                Goal("🗣️", contentBeforeResponse.commanditaire.toHtml()),
-                Goal("🎯", "<b>Objectif : </b>" + contentBeforeResponse.objectif.toHtml()),
-                Goal("🚀", "<b>Axe gouvernemental : </b>" + contentBeforeResponse.axeGouvernemental.toHtml()),
+                Goal("🗣️", contentBeforeResponse.commanditaire.toHtml().removePrefix("<p>").removeSuffix("</p>")),
+                Goal("🎯", contentBeforeResponse.objectif.toHtml().removePrefix("<p>").removeSuffix("</p>")),
+                Goal("🚀", contentBeforeResponse.axeGouvernemental.toHtml().removePrefix("<p>").removeSuffix("</p>")),
             ),
             isPublished = consultation.isPublished(),
         )
@@ -265,7 +266,6 @@ class ConsultationUpdateInfoV2Mapper {
         val sectionsHtml = toSections(sections)
 
         if (sectionsHtml.size < 8) return emptyList()
-
         return sectionsHtml.take(5)
     }
 }
