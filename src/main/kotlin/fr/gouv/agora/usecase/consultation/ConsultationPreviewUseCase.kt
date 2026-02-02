@@ -31,6 +31,7 @@ class ConsultationPreviewUseCase(
             .removeAnsweredConsultation(answeredConsultations)
             .sortedBy { it.endDate }
         val finishedConsultations = consultationInfoRepository.getFinishedConsultationsWithUnpublished(userTerritoires)
+            .sortedBy { it.lastUpdateDate }
 
         if (authentificationHelper.canViewUnpublishedConsultations()) {
             return ConsultationPreviewPage(ongoingConsultations, finishedConsultations, answeredConsultations)
