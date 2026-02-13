@@ -74,7 +74,7 @@ class QagHomeV2Controller(
     @GetMapping("/qags/ask_status")
     fun askStatus(): ResponseEntity<*> {
         return ResponseEntity.ok()
-            .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePrivate())
+            .cacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES).cachePrivate())
             .body(
             qagHomeJsonMapper.toQagAskStatusJson(
                 getQagErrorTextUseCase.getGetQagErrorText(
