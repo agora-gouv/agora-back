@@ -4,7 +4,6 @@ import fr.gouv.agora.usecase.qagArchive.ArchiveAllModeratedQagsUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
@@ -25,8 +24,18 @@ class ArchiveAllModeratedQagsController(
         ]
     )
     @PostMapping("/admin/archive_all_moderated_qags")
-    fun archiveAllModeratedQags(): HttpEntity<*> {
+    fun archiveAllModeratedQags(): ResponseEntity<ArchiveQagsResponse> {
         val result = archiveAllModeratedQagsUseCase.archiveAllModeratedQags()
-        return ResponseEntity.ok().body("${result.archivedCount} questions archivées")
+        return ResponseEntity.ok(
+            ArchiveQagsResponse(
+                archivedCount = result.archivedCount,
+                message = "${result.archivedCount} questions archivées"
+            )
+        )
     }
 }
+
+data class ArchiveQagsResponse(
+    val archivedCount: Int,
+    val message: String,
+)
