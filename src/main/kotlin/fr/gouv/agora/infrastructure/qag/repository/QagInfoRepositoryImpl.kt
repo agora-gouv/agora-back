@@ -157,6 +157,10 @@ class QagInfoRepositoryImpl(
         databaseRepository.anonymizeRejectedQagsBeforeDate(resetDate)
     }
 
+    override fun archiveAllModeratedAcceptedQags(): Int {
+        return databaseRepository.archiveQagsBeforeDate(Date())
+    }
+
     override fun deleteQag(qagId: String): QagDeleteResult {
         return qagId.toUuidOrNull()?.let { qagUUID ->
             databaseRepository.getQagById(qagUUID)?.let { qagDTO ->
