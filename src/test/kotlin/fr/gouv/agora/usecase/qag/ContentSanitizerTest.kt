@@ -57,4 +57,58 @@ internal class ContentSanitizerTest {
         assertThat(result).isEqualTo("You're welcome !")
     }
 
+    @Test
+    fun `sanitizeRichText - when has safe HTML tags - should keep HTML tags`() {
+        // When
+        val result = contentSanitizer.sanitizeRichText("<p>Il y a {} questions posées</p>", 100)
+
+        // Then
+        assertThat(result).isEqualTo("<p>Il y a {} questions posées</p>")
+    }
+
+    @Test
+    fun `sanitizeRichText - when has formatting tags - should keep formatting tags`() {
+        // When
+        val result = contentSanitizer.sanitizeRichText("<p>Texte en <b>gras</b> et en <i>italique</i></p>", 100)
+
+        // Then
+        assertThat(result).isEqualTo("<p>Texte en <b>gras</b> et en <i>italique</i></p>")
+    }
+
+    @Test
+    fun `sanitizeRichText - when has links - should keep links with href attribute`() {
+        // When
+        val result = contentSanitizer.sanitizeRichText("<p>Visitez <a href=\"https://example.com\">notre site</a></p>", 200)
+
+        // Then
+        assertThat(result).isEqualTo("<p>Visitez <a href=\"https://example.com\">notre site</a></p>")
+    }
+
+    @Test
+    fun `sanitizeRichText - when has script tag - should remove script`() {
+        // When
+        val result = contentSanitizer.sanitizeRichText("<p>Il y a {} questions <script>alert('XSS')</script></p>", 100)
+
+        // Then
+        assertThat(result).isEqualTo("<p>Il y a {} questions </p>")
+    }
+
+    @Test
+    fun `sanitizeRichText - when has event handlers - should remove event handlers`() {
+        // When
+        val result = contentSanitizer.sanitizeRichText("<p onclick=\"alert('XSS')\">Click me</p>", 100)
+
+        // Then
+        assertThat(result).isEqualTo("<p>Click me</p>")
+    }
+
+    @Test
+    fun `sanitizeRichText - when has more than indicated maxLength - should return trim text to maxLength`() {
+        // When
+        val result = contentSanitizer.sanitizeRichText("<p>1234567890</p>", 10)
+
+        // Then
+        assertThat(result).isEqualTo("<p>1234567")
+    }
+
 }

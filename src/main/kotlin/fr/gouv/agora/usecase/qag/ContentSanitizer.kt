@@ -12,4 +12,12 @@ class ContentSanitizer {
         return HtmlUtils.htmlUnescape(policyFactory.sanitize(content)).take(maxLength)
     }
 
+    fun sanitizeRichText(content: String, maxLength: Int): String {
+        val policyFactory = HtmlPolicyBuilder()
+            .allowElements("p", "b", "i", "u", "del", "code", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "blockquote")
+            .allowElements("a").allowAttributes("href").onElements("a")
+            .toFactory()
+        return HtmlUtils.htmlUnescape(policyFactory.sanitize(content)).take(maxLength)
+    }
+
 }
