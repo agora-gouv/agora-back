@@ -15,7 +15,7 @@ import org.springframework.dao.DataAccessException
 internal class ArchiveAllModeratedQagsUseCaseTest {
 
     @InjectMocks
-    private lateinit var useCase: ArchiveAllModeratedQagsUseCase
+    private lateinit var useCase: ArchiveAllQagsUseCase
 
     @Mock
     private lateinit var qagInfoRepository: QagInfoRepository
@@ -26,7 +26,7 @@ internal class ArchiveAllModeratedQagsUseCaseTest {
         given(qagInfoRepository.archiveAllAcceptedQags()).willReturn(3)
 
         // When
-        val result = useCase.archiveAllModeratedQags()
+        val result = useCase.execute()
 
         // Then
         assertThat(result.archivedCount).isEqualTo(3)
@@ -39,7 +39,7 @@ internal class ArchiveAllModeratedQagsUseCaseTest {
         given(qagInfoRepository.archiveAllAcceptedQags()).willReturn(0)
 
         // When
-        val result = useCase.archiveAllModeratedQags()
+        val result = useCase.execute()
 
         // Then
         assertThat(result.archivedCount).isEqualTo(0)
@@ -53,7 +53,7 @@ internal class ArchiveAllModeratedQagsUseCaseTest {
             .willThrow(object : DataAccessException("Database connection failed") {})
 
         // When/Then
-        assertThatThrownBy { useCase.archiveAllModeratedQags() }
+        assertThatThrownBy { useCase.execute() }
             .isInstanceOf(DataAccessException::class.java)
             .hasMessageContaining("Database connection failed")
     }
