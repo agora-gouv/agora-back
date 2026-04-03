@@ -23,33 +23,33 @@ internal class ArchiveAllModeratedQagsUseCaseTest {
     @Test
     fun `archiveAllModeratedQags - when has multiple moderated qags - should archive all of them`() {
         // Given
-        given(qagInfoRepository.archiveAllModeratedAcceptedQags()).willReturn(3)
+        given(qagInfoRepository.archiveAllAcceptedQags()).willReturn(3)
 
         // When
         val result = useCase.archiveAllModeratedQags()
 
         // Then
         assertThat(result.archivedCount).isEqualTo(3)
-        then(qagInfoRepository).should(only()).archiveAllModeratedAcceptedQags()
+        then(qagInfoRepository).should(only()).archiveAllAcceptedQags()
     }
 
     @Test
     fun `archiveAllModeratedQags - when has no moderated qags - should return zero archived`() {
         // Given
-        given(qagInfoRepository.archiveAllModeratedAcceptedQags()).willReturn(0)
+        given(qagInfoRepository.archiveAllAcceptedQags()).willReturn(0)
 
         // When
         val result = useCase.archiveAllModeratedQags()
 
         // Then
         assertThat(result.archivedCount).isEqualTo(0)
-        then(qagInfoRepository).should(only()).archiveAllModeratedAcceptedQags()
+        then(qagInfoRepository).should(only()).archiveAllAcceptedQags()
     }
 
     @Test
     fun `archiveAllModeratedQags - when database exception occurs - should propagate exception`() {
         // Given
-        given(qagInfoRepository.archiveAllModeratedAcceptedQags())
+        given(qagInfoRepository.archiveAllAcceptedQags())
             .willThrow(object : DataAccessException("Database connection failed") {})
 
         // When/Then

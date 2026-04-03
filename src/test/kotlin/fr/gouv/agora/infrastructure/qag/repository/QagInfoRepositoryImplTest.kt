@@ -310,6 +310,34 @@ internal class QagInfoRepositoryImplTest {
     }
 
     @Test
+    fun `archiveAllAcceptedQags - should call database archiveAllAcceptedQags and return count`() {
+        // Given
+        given(databaseRepository.archiveAllAcceptedQags()).willReturn(5)
+
+        // When
+        val result = repository.archiveAllAcceptedQags()
+
+        // Then
+        assertThat(result).isEqualTo(5)
+        then(databaseRepository).should(only()).archiveAllAcceptedQags()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `archiveAllAcceptedQags - when no qags to archive - should return zero`() {
+        // Given
+        given(databaseRepository.archiveAllAcceptedQags()).willReturn(0)
+
+        // When
+        val result = repository.archiveAllAcceptedQags()
+
+        // Then
+        assertThat(result).isEqualTo(0)
+        then(databaseRepository).should(only()).archiveAllAcceptedQags()
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
     fun `deleteQag - when invalid qag UUID - should return FAILURE`() {
         // When
         val result = repository.deleteQag(qagId = "Invalid qag UUID")
