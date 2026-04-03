@@ -255,25 +255,34 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     @Modifying
     @Transactional
     @Query(
-        value = """UPDATE qags 
+        value = """UPDATE qags
             SET status = 2, username = ''
             WHERE status = 1
             AND id IN (
-                SELECT qag_id FROM qag_updates 
-                WHERE status = 1 
-                AND moderated_date < :resetDate 
+                SELECT qag_id FROM qag_updates
+                WHERE status = 1
+                AND moderated_date < :resetDate
             )""", nativeQuery = true
     )
-    fun archiveQagsBeforeDate(@Param("resetDate") date: Date)
+    fun archiveQagsBeforeDate(@Param("resetDate") date: Date): Int
 
     @Modifying
     @Transactional
     @Query(
-        value = """UPDATE qags 
-            SET username = '', user_id = '00000000-0000-0000-0000-000000000000' 
-            WHERE status = -1 
+        value = """UPDATE qags
+            SET status = 2, username = ''
+            WHERE status = 1""", nativeQuery = true
+    )
+    fun archiveAllAcceptedQags(): Int
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """UPDATE qags
+            SET username = '', user_id = '00000000-0000-0000-0000-000000000000'
+            WHERE status = -1
             AND id IN (
-                SELECT qag_id FROM qag_updates 
+                SELECT qag_id FROM qag_updates
                 WHERE status = -1
                 AND moderated_date < :resetDate
             )""", nativeQuery = true
