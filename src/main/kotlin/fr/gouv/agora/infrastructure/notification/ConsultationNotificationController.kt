@@ -19,7 +19,7 @@ class ConsultationNotificationController(
     private val sendConsultationNotificationUseCase: SendConsultationNotificationUseCase,
 ) {
     @Operation(
-        summary = "Envoyer une notification pour avertir qu'une nouvelle Consultation a été mise à jour", responses = [
+        summary = "Envoyer une notification pour avertir qu'une nouvelle Consultation a été mise à jour à ceux qui ont répondu à la consultation", responses = [
             ApiResponse(
                 responseCode = "200",
                 description = "Success",
@@ -55,7 +55,7 @@ class ConsultationNotificationController(
     }
 
     @Operation(
-        summary = "Envoyer une notification pour rappeler la date de fin d'une consultation", responses = [
+        summary = "Envoyer une notification pour rappeler la date de fin d'une consultation à ceux qui n'ont pas répondu à la consultation", responses = [
             ApiResponse(
                 responseCode = "200",
                 description = "Success",

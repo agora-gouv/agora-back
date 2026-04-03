@@ -6,16 +6,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class ArchiveAllModeratedQagsUseCase(
+class ArchiveAllQagsUseCase(
     private val qagInfoRepository: QagInfoRepository,
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(ArchiveAllModeratedQagsUseCase::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(ArchiveAllQagsUseCase::class.java)
 
     data class ArchiveResult(
         val archivedCount: Int
     )
 
-    fun archiveAllModeratedQags(): ArchiveResult {
+    fun execute(): ArchiveResult {
         logger.info("📦 Archiving all moderated QaGs...")
         val archivedCount = qagInfoRepository.archiveAllAcceptedQags()
 
