@@ -9,15 +9,15 @@ class GetThemeHebdoUseCase {
 
     fun getThemeHebdo(): ThematiqueHebdo {
         return ThematiqueHebdo(
-                titre = "Le thème hebdo de la semaine",
-                sousTitre = "Découvrez le sujet de la semaine",
-                periode = "Du 19 au 25 mai 2026",
+                titre = "Cette semaine",
+                sousTitre = "Cette semaine posez vos questions sur...",
+                periode = "19-25 mai 2026",
                 theme = "Éducation",
-                avatarUrl = "https://example.com/avatar.png",
+                avatarUrl = "https://picsum.photos/40",
                 nom = "Jean Dupont",
                 fonction = "Ministre de l'Éducation nationale",
                 prochainsThemes = listOf("Santé", "Environnement", "Économie"),
-                titreCompteur = "questions posées cette semaine",
+                titreCompteur = "Cloture des votes",
                 dateFinTheme =
                         Date.from(
                                 java.time.LocalDate.of(2026, 5, 25)
