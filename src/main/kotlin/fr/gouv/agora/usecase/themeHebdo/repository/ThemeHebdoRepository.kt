@@ -1,7 +1,7 @@
 package fr.gouv.agora.usecase.themeHebdo.repository
 
-import fr.gouv.agora.domain.ThematiqueHebdo
+import fr.gouv.agora.domain.ThemeHebdo
 
 interface ThemeHebdoRepository {
-    fun getThemeHebdoList(): List<ThematiqueHebdo>
+    fun getThemeHebdoList(): List<ThemeHebdo>
 }
