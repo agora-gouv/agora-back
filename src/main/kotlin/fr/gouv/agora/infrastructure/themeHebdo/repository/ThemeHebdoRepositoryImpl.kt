@@ -1,6 +1,6 @@
 package fr.gouv.agora.infrastructure.themeHebdo.repository
 
-import fr.gouv.agora.domain.ThematiqueHebdo
+import fr.gouv.agora.domain.ThemeHebdo
 import fr.gouv.agora.infrastructure.themeHebdo.repository.ThemeHebdoCacheRepository.CacheResult
 import fr.gouv.agora.usecase.themeHebdo.repository.ThemeHebdoRepository
 import org.springframework.stereotype.Component
@@ -12,13 +12,13 @@ class ThemeHebdoRepositoryImpl(
         private val mapper: ThemeHebdoMapper,
 ) : ThemeHebdoRepository {
 
-    override fun getThemeHebdoList(): List<ThematiqueHebdo> =
+    override fun getThemeHebdoList(): List<ThemeHebdo> =
             when (val cacheResult = cacheRepository.getThemeHebdoList()) {
                 is CacheResult.CachedThemeHebdoList -> cacheResult.themeHebdoList
                 is CacheResult.CacheNotInitialized -> getThemeHebdoListAndCacheIt()
             }
 
-    private fun getThemeHebdoListAndCacheIt(): List<ThematiqueHebdo> {
+    private fun getThemeHebdoListAndCacheIt(): List<ThemeHebdo> {
         val themeHebdoList = strapiRepository.getThemeHebdo().let(mapper::toDomain)
 
         if (themeHebdoList.isNotEmpty()) {

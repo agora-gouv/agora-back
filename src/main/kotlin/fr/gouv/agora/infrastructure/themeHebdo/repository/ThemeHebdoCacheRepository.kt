@@ -1,6 +1,6 @@
 package fr.gouv.agora.infrastructure.themeHebdo.repository
 
-import fr.gouv.agora.domain.ThematiqueHebdo
+import fr.gouv.agora.domain.ThemeHebdo
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 
@@ -13,7 +13,7 @@ class ThemeHebdoCacheRepository(private val cacheManager: CacheManager) {
     }
 
     sealed class CacheResult {
-        data class CachedThemeHebdoList(val themeHebdoList: List<ThematiqueHebdo>) : CacheResult()
+        data class CachedThemeHebdoList(val themeHebdoList: List<ThemeHebdo>) : CacheResult()
         object CacheNotInitialized : CacheResult()
     }
 
@@ -21,7 +21,7 @@ class ThemeHebdoCacheRepository(private val cacheManager: CacheManager) {
     fun getThemeHebdoList(): CacheResult {
         val cachedList =
                 try {
-                    getCache()?.get(CACHE_KEY, List::class.java) as? List<ThematiqueHebdo>
+                    getCache()?.get(CACHE_KEY, List::class.java) as? List<ThemeHebdo>
                 } catch (e: IllegalStateException) {
                     null
                 }
@@ -29,7 +29,7 @@ class ThemeHebdoCacheRepository(private val cacheManager: CacheManager) {
                 ?: CacheResult.CacheNotInitialized
     }
 
-    fun insertThemeHebdoList(themeHebdoList: List<ThematiqueHebdo>) {
+    fun insertThemeHebdoList(themeHebdoList: List<ThemeHebdo>) {
         getCache()?.put(CACHE_KEY, themeHebdoList)
     }
 

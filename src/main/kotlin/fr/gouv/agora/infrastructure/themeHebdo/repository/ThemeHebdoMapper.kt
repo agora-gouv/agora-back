@@ -1,6 +1,6 @@
 package fr.gouv.agora.infrastructure.themeHebdo.repository
 
-import fr.gouv.agora.domain.ThematiqueHebdo
+import fr.gouv.agora.domain.ThemeHebdo
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import java.time.OffsetDateTime
 import java.util.Date
@@ -8,21 +8,23 @@ import org.springframework.stereotype.Component
 
 @Component
 class ThemeHebdoMapper {
-    fun toDomain(strapiDTO: StrapiDTO<ThemeHebdoStrapiDTO>): List<ThematiqueHebdo> {
+    fun toDomain(strapiDTO: StrapiDTO<ThemeHebdoStrapiDTO>): List<ThemeHebdo> {
         return strapiDTO.data.map { item ->
             val attributes = item.attributes
-            ThematiqueHebdo(
-                    titre = attributes.titre,
-                    sousTitre = attributes.sousTitre,
+            ThemeHebdo(
                     periode = attributes.periode,
                     theme = attributes.theme,
-                    avatarUrl = attributes.avatarUrl,
-                    nom = attributes.nom,
+                    avatarUrl = attributes.photo,
+                    nom = attributes.nom_ministre,
                     fonction = attributes.fonction,
-                    prochainsThemes = attributes.prochainsThemes,
-                    titreCompteur = attributes.titreCompteur,
-                    dateFinTheme =
-                            Date.from(OffsetDateTime.parse(attributes.dateFinTheme).toInstant()),
+                dateDebutTheme =
+                    Date.from(OffsetDateTime.parse(attributes.date_debut).toInstant()),
+                dateFinTheme =
+                    Date.from(OffsetDateTime.parse(attributes.date_fin).toInstant()),
+                titre = "",
+                sousTitre = "",
+                prochainsThemes =  emptyList(),
+                titreCompteur = "",
             )
         }
     }

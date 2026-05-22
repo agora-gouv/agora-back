@@ -1,6 +1,6 @@
 package fr.gouv.agora.usecase.themeHebdo
 
-import fr.gouv.agora.domain.ThematiqueHebdo
+import fr.gouv.agora.domain.ThemeHebdo
 import fr.gouv.agora.usecase.themeHebdo.repository.ThemeHebdoRepository
 import java.util.Date
 import org.assertj.core.api.Assertions.assertThat
@@ -19,7 +19,7 @@ internal class GetThemeHebdoUseCaseTest {
         @Mock private lateinit var themeHebdoRepository: ThemeHebdoRepository
 
         private val themeHebdo =
-                ThematiqueHebdo(
+                ThemeHebdo(
                         titre = "Cette semaine",
                         sousTitre = "Cette semaine posez vos questions sur...",
                         periode = "19-25 mai 2026",
@@ -30,6 +30,7 @@ internal class GetThemeHebdoUseCaseTest {
                         prochainsThemes = listOf("Santé", "Environnement", "Économie"),
                         titreCompteur = "Cloture des votes",
                         dateFinTheme = Date(),
+                        dateDebutTheme = Date()
                 )
 
         @Test
