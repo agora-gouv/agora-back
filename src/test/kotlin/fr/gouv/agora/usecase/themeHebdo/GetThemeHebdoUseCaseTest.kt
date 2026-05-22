@@ -1,11 +1,14 @@
 package fr.gouv.agora.usecase.themeHebdo
 
-import java.time.LocalDate
-import java.time.ZoneId
+import fr.gouv.agora.domain.ThematiqueHebdo
+import fr.gouv.agora.usecase.themeHebdo.repository.ThemeHebdoRepository
+import java.util.Date
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
@@ -13,29 +16,43 @@ internal class GetThemeHebdoUseCaseTest {
 
         @InjectMocks private lateinit var useCase: GetThemeHebdoUseCase
 
+        @Mock private lateinit var themeHebdoRepository: ThemeHebdoRepository
+
+        private val themeHebdo =
+                ThematiqueHebdo(
+                        titre = "Cette semaine",
+                        sousTitre = "Cette semaine posez vos questions sur...",
+                        periode = "19-25 mai 2026",
+                        theme = "Éducation",
+                        avatarUrl = "https://picsum.photos/40",
+                        nom = "Jean Dupont",
+                        fonction = "Ministre de l'Éducation nationale",
+                        prochainsThemes = listOf("Santé", "Environnement", "Économie"),
+                        titreCompteur = "Cloture des votes",
+                        dateFinTheme = Date(),
+                )
+
         @Test
-        fun `getThemeHebdo - when called - should return a ThematiqueHebdo with expected fields`() {
+        fun `getThemeHebdo - when repository returns a non-empty list - should return the first item`() {
+                // Given
+                `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(themeHebdo))
+
                 // When
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.titre).isEqualTo("Cette semaine")
-                assertThat(result.sousTitre).isEqualTo("Cette semaine posez vos questions sur...")
-                assertThat(result.periode).isEqualTo("19-25 mai 2026")
-                assertThat(result.theme).isEqualTo("Éducation")
-                assertThat(result.avatarUrl).isEqualTo("https://picsum.photos/40")
-                assertThat(result.nom).isEqualTo("Jean Dupont")
-                assertThat(result.fonction).isEqualTo("Ministre de l'Éducation nationale")
-                assertThat(result.prochainsThemes)
-                        .isEqualTo(listOf("Santé", "Environnement", "Économie"))
-                assertThat(result.titreCompteur).isEqualTo("Cloture des votes")
-                assertThat(result.dateFinTheme)
-                        .isEqualTo(
-                                java.util.Date.from(
-                                        LocalDate.of(2026, 5, 25)
-                                                .atStartOfDay(ZoneId.of("Europe/Paris"))
-                                                .toInstant()
-                                )
-                        )
+                assertThat(result).isEqualTo(themeHebdo)
+        }
+
+        @Test
+        fun `getThemeHebdo - when repository returns an empty list - should return null`() {
+                // Given
+                `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(emptyList())
+
+                // When
+                val result = useCase.getThemeHebdo()
+
+                // Then
+                assertThat(result).isNull()
         }
 }
