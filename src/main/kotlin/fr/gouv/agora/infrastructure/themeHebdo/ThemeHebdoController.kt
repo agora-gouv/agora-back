@@ -16,8 +16,7 @@ class ThemeHebdoController(
 ) {
     @GetMapping("/theme_hebdo")
     fun getThemeHebdo(): ResponseEntity<ThemeHebdoJson> {
-        val themeHebdo =
-                getThemeHebdoUseCase.getThemeHebdo() ?: return ResponseEntity.notFound().build()
+        val themeHebdo = getThemeHebdoUseCase.getThemeHebdo()
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
                 .body(jsonMapper.toJson(themeHebdo))
