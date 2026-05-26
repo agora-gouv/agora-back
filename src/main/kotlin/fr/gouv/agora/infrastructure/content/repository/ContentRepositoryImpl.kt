@@ -20,7 +20,7 @@ class ContentRepositoryImpl(
             PageQuestionAuGouvernementContent(
                 it.informationBottomsheet,
                 it.nombreDeQuestions,
-                it.programmeDuMois,
+                it.programmeDuMois?.toHtml(),
                 it.commentCaMarche,
             )
         }
