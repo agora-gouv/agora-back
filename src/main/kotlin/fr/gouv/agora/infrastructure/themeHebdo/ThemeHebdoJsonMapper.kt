@@ -22,8 +22,8 @@ class ThemeHebdoJsonMapper {
                 fonction = domain.fonction,
                 prochainsThemes = domain.prochainsThemes,
                 titreCompteur = domain.titreCompteur,
-                dateFinTheme = formatter.format(domain.dateFinTheme.toInstant()),
-                dateDebutTheme =   formatter.format(domain.dateDebutTheme.toInstant()),
+                dateFinTheme = formatter.format(domain.dateFinTheme?.toInstant()),
+                dateDebutTheme =   formatter.format(domain.dateDebutTheme?.toInstant()),
         )
     }
 }

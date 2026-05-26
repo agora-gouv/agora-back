@@ -17,14 +17,8 @@ class ThemeHebdoMapper {
                     avatarUrl = attributes.photo,
                     nom = attributes.nom_ministre,
                     fonction = attributes.fonction,
-                dateDebutTheme =
-                    Date.from(OffsetDateTime.parse(attributes.date_debut).toInstant()),
-                dateFinTheme =
-                    Date.from(OffsetDateTime.parse(attributes.date_fin).toInstant()),
-                titre = "",
-                sousTitre = "",
-                prochainsThemes =  emptyList(),
-                titreCompteur = "",
+                    dateDebutTheme = Date.from(OffsetDateTime.parse(attributes.date_debut).toInstant()),
+                    dateFinTheme = Date.from(OffsetDateTime.parse(attributes.date_fin).toInstant()),
             )
         }
     }
