@@ -16,6 +16,11 @@ class GetContentQuestionsAuGouvernementUseCase(
         val nombreDeQuestions = qagInfoRepository.getQagsCount(null)
         val texteAvecNombreDeQuestions = content.texteTotalQuestions.replace("{}", nombreDeQuestions.toString())
 
-        return PageQuestionAuGouvernementContent(content.informationBottomsheet, texteAvecNombreDeQuestions)
+        return PageQuestionAuGouvernementContent(
+            content.informationBottomsheet,
+            texteAvecNombreDeQuestions,
+            content.programmeDuMois,
+            content.commentCaMarche,
+        )
     }
 }

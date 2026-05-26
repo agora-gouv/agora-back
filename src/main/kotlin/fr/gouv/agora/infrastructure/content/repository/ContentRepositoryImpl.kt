@@ -17,7 +17,12 @@ class ContentRepositoryImpl(
 
     override fun getPageQuestionsAuGouvernement(): PageQuestionAuGouvernementContent {
         return contentStrapiRepository.getPageQuestionsAuGouvernement().attributes.let {
-            PageQuestionAuGouvernementContent(it.informationBottomsheet, it.nombreDeQuestions)
+            PageQuestionAuGouvernementContent(
+                it.informationBottomsheet,
+                it.nombreDeQuestions,
+                it.programmeDuMois,
+                it.commentCaMarche,
+            )
         }
     }
 

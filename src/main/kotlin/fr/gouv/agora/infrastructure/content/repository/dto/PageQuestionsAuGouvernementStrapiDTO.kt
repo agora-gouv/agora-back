@@ -9,4 +9,8 @@ data class PageQuestionsAuGouvernementStrapiDTO(
     val informationBottomsheet: String,
     @JsonProperty(value = "nombre_de_questions")
     val nombreDeQuestions: String,
+    @JsonProperty(value = "programme_du_mois")
+    val programmeDuMois: String?,
+    @JsonProperty(value = "comment_ca_marche")
+    val commentCaMarche: String?,
 )

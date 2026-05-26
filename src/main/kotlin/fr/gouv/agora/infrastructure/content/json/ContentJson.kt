@@ -1,6 +1,11 @@
 package fr.gouv.agora.infrastructure.content.json
 
-data class QuestionsAuGouvernementContentJson(val info: String, val texteTotalQuestions: String)
+data class QuestionsAuGouvernementContentJson(
+    val info: String,
+    val texteTotalQuestions: String,
+    val programmeDuMois: String? = null,
+    val commentCaMarche: String? = null,
+)
 data class ReponseAuxQagsJson(val infoReponsesAVenir: String)
 data class PoserMaQuestionJson(val regles: String)
 
