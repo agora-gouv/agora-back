@@ -12,7 +12,7 @@ class ThemeHebdoMapper {
         return strapiDTO.data.map { item ->
             val attributes = item.attributes
             ThemeHebdo(
-                    periode = attributes.periode,
+                    periode = attributes.periode?.toString()?: "",
                     theme = attributes.theme,
                     avatarUrl = attributes.photo,
                     nom = attributes.nom_ministre,

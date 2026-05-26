@@ -77,7 +77,7 @@ internal class GetThemeHebdoUseCaseTest {
         }
 
         @Test
-        fun `getThemeHebdo - when repository returns exactly one item - should return it without date check`() {
+        fun `getThemeHebdo - when repository returns exactly one item and it is within date range - should return it`() {
                 // Given
                 `when`(clock.millis()).thenReturn(now.toEpochMilli())
                 `when`(clock.instant()).thenReturn(now)
@@ -90,6 +90,22 @@ internal class GetThemeHebdoUseCaseTest {
                 // Then
                 assertThat(result.dateDebutTheme).isEqualTo(yesterday)
                 assertThat(result.dateFinTheme).isEqualTo(tomorrow)
+        }
+
+        @Test
+        fun `getThemeHebdo - when repository returns exactly one item and it is outside date range - should return default ThemeHebdo with default dates`() {
+                // Given
+                `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                `when`(clock.instant()).thenReturn(now)
+                val outdatedTheme = buildThemeHebdo(dateDebutTheme = lastWeek, dateFinTheme = yesterday, titre = "Passé")
+                `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(outdatedTheme))
+
+                // When
+                val result = useCase.getThemeHebdo()
+
+                // Then
+                assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
+                assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
         }
 
         @Test
@@ -143,7 +159,7 @@ internal class GetThemeHebdoUseCaseTest {
         }
 
         @Test
-        fun `getThemeHebdoWithDefaultDates - when dateDebutTheme is null - should set it to monday 0h05 UTC`() {
+        fun `getThemeHebdoWithDefaultDates - when dateDebutTheme is null - item is excluded from range check, should return default ThemeHebdo with default dates`() {
                 // Given
                 `when`(clock.millis()).thenReturn(now.toEpochMilli())
                 `when`(clock.instant()).thenReturn(now)
@@ -155,11 +171,11 @@ internal class GetThemeHebdoUseCaseTest {
 
                 // Then
                 assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
-                assertThat(result.dateFinTheme).isEqualTo(tomorrow)
+                assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
         }
 
         @Test
-        fun `getThemeHebdoWithDefaultDates - when dateFinTheme is null - should set it to sunday 23h55 UTC`() {
+        fun `getThemeHebdoWithDefaultDates - when dateFinTheme is null - item is excluded from range check, should return default ThemeHebdo with default dates`() {
                 // Given
                 `when`(clock.millis()).thenReturn(now.toEpochMilli())
                 `when`(clock.instant()).thenReturn(now)
@@ -170,12 +186,12 @@ internal class GetThemeHebdoUseCaseTest {
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.dateDebutTheme).isEqualTo(yesterday)
+                assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
                 assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
         }
 
         @Test
-        fun `getThemeHebdoWithDefaultDates - when both dates are null - should set both to monday 0h05 and sunday 23h55 UTC`() {
+        fun `getThemeHebdoWithDefaultDates - when both dates are null - should return default ThemeHebdo with default dates`() {
                 // Given
                 `when`(clock.millis()).thenReturn(now.toEpochMilli())
                 `when`(clock.instant()).thenReturn(now)
@@ -191,7 +207,7 @@ internal class GetThemeHebdoUseCaseTest {
         }
 
         @Test
-        fun `getThemeHebdoWithDefaultDates - when both dates are defined - should keep original dates`() {
+        fun `getThemeHebdoWithDefaultDates - when both dates are defined and within range - should keep original dates`() {
                 // Given
                 `when`(clock.millis()).thenReturn(now.toEpochMilli())
                 `when`(clock.instant()).thenReturn(now)
@@ -211,9 +227,9 @@ internal class GetThemeHebdoUseCaseTest {
                 // Given
                 `when`(clock.millis()).thenReturn(now.toEpochMilli())
                 `when`(clock.instant()).thenReturn(now)
-                // 10 mai → 16 mai
-                val debut = Date.from(LocalDateTime.of(2026, 5, 10, 0, 5).toInstant(ZoneOffset.UTC))
-                val fin = Date.from(LocalDateTime.of(2026, 5, 16, 23, 55).toInstant(ZoneOffset.UTC))
+                // 19 mai → 25 mai (autour du 22 mai)
+                val debut = Date.from(LocalDateTime.of(2026, 5, 19, 0, 5).toInstant(ZoneOffset.UTC))
+                val fin = Date.from(LocalDateTime.of(2026, 5, 25, 23, 55).toInstant(ZoneOffset.UTC))
                 val themeHebdo = buildThemeHebdo(dateDebutTheme = debut, dateFinTheme = fin, periode = "")
                 `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(themeHebdo))
 
@@ -221,16 +237,18 @@ internal class GetThemeHebdoUseCaseTest {
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.periode).isEqualTo("10-16 mai")
+                assertThat(result.periode).isEqualTo("19-25 mai")
         }
 
         @Test
         fun `generatePeriodeFromDates - when debut and fin are in different months - should return extended format`() {
                 // Given
-                `when`(clock.millis()).thenReturn(now.toEpochMilli())
-                `when`(clock.instant()).thenReturn(now)
-                // 24 mai → 1 juin
-                val debut = Date.from(LocalDateTime.of(2026, 5, 24, 0, 5).toInstant(ZoneOffset.UTC))
+                // now is set to 2026-05-29 so the range spans two months
+                val nowSpanningMonths = Instant.parse("2026-05-29T10:00:00Z")
+                `when`(clock.millis()).thenReturn(nowSpanningMonths.toEpochMilli())
+                `when`(clock.instant()).thenReturn(nowSpanningMonths)
+                // 26 mai → 1 juin
+                val debut = Date.from(LocalDateTime.of(2026, 5, 26, 0, 5).toInstant(ZoneOffset.UTC))
                 val fin = Date.from(LocalDateTime.of(2026, 6, 1, 23, 55).toInstant(ZoneOffset.UTC))
                 val themeHebdo = buildThemeHebdo(dateDebutTheme = debut, dateFinTheme = fin, periode = "")
                 `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(themeHebdo))
@@ -239,7 +257,7 @@ internal class GetThemeHebdoUseCaseTest {
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.periode).isEqualTo("24 mai - 1 juin")
+                assertThat(result.periode).isEqualTo("26 mai - 1 juin")
         }
 
         @Test
@@ -247,8 +265,9 @@ internal class GetThemeHebdoUseCaseTest {
                 // Given
                 `when`(clock.millis()).thenReturn(now.toEpochMilli())
                 `when`(clock.instant()).thenReturn(now)
-                val debut = Date.from(LocalDateTime.of(2026, 5, 10, 0, 5).toInstant(ZoneOffset.UTC))
-                val fin = Date.from(LocalDateTime.of(2026, 5, 16, 23, 55).toInstant(ZoneOffset.UTC))
+                // 19 mai → 25 mai (autour du 22 mai)
+                val debut = Date.from(LocalDateTime.of(2026, 5, 19, 0, 5).toInstant(ZoneOffset.UTC))
+                val fin = Date.from(LocalDateTime.of(2026, 5, 25, 23, 55).toInstant(ZoneOffset.UTC))
                 val themeHebdo = buildThemeHebdo(dateDebutTheme = debut, dateFinTheme = fin, periode = "Période personnalisée")
                 `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(themeHebdo))
 

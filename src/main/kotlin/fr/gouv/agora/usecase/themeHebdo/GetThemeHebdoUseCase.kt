@@ -20,11 +20,7 @@ class GetThemeHebdoUseCase(
 
     fun getThemeHebdo(): ThemeHebdo {
         val themeHebdoList = themeHebdoRepository.getThemeHebdoList()
-        val result = when {
-            themeHebdoList.isEmpty() -> ThemeHebdo()
-            themeHebdoList.size == 1 -> themeHebdoList.first()
-            else -> themeHebdoList.firstOrNull { isCurrentDateInRange(it) } ?: ThemeHebdo()
-        }
+        val result = themeHebdoList.firstOrNull { isCurrentDateInRange(it) } ?: ThemeHebdo()
         return getThemeHebdoWithDefaultDates(result).let { getThemeHebdoWithPeriode(it) }
     }
 
