@@ -18,7 +18,7 @@ class ThemeHebdoController(
     fun getThemeHebdo(): ResponseEntity<ThemeHebdoJson> {
         val themeHebdo = getThemeHebdoUseCase.getThemeHebdo()
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
                 .body(jsonMapper.toJson(themeHebdo))
     }
 }

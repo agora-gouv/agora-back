@@ -12,11 +12,24 @@ class ThemeHebdoRepositoryImpl(
         private val mapper: ThemeHebdoMapper,
 ) : ThemeHebdoRepository {
 
-    override fun getThemeHebdoList(): List<ThemeHebdo> =
-            when (val cacheResult = cacheRepository.getThemeHebdoList()) {
-                is CacheResult.CachedThemeHebdoList -> cacheResult.themeHebdoList
-                is CacheResult.CacheNotInitialized -> getThemeHebdoListAndCacheIt()
-            }
+    companion object {
+        private const val THEME_HEBDO_CACHE_ENABLED_KEY = "THEME_HEBDO_CACHE_ENABLED"
+    }
+
+    override fun getThemeHebdoList(): List<ThemeHebdo> {
+        if (!isCacheEnabled()) {
+            return strapiRepository.getThemeHebdo().let(mapper::toDomain)
+        }
+
+        return when (val cacheResult = cacheRepository.getThemeHebdoList()) {
+            is CacheResult.CachedThemeHebdoList -> cacheResult.themeHebdoList
+            is CacheResult.CacheNotInitialized -> getThemeHebdoListAndCacheIt()
+        }
+    }
+
+    private fun isCacheEnabled(): Boolean {
+        return System.getenv(THEME_HEBDO_CACHE_ENABLED_KEY).toBoolean()
+    }
 
     private fun getThemeHebdoListAndCacheIt(): List<ThemeHebdo> {
         val themeHebdoList = strapiRepository.getThemeHebdo().let(mapper::toDomain)
