@@ -14,7 +14,7 @@ class ThemeHebdoMapper {
             ThemeHebdo(
                     periode = attributes.periode?.toString()?: "",
                     theme = attributes.theme,
-                    avatarUrl = attributes.photo,
+                    avatarUrl = attributes.photo.data?.attributes?.mediaUrl(),
                     nom = attributes.nom_ministre,
                     fonction = attributes.fonction,
                     dateDebutTheme = Date.from(OffsetDateTime.parse(attributes.date_debut).toInstant()),
