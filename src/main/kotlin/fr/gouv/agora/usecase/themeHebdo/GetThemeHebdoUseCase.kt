@@ -20,8 +20,10 @@ class GetThemeHebdoUseCase(
 
     fun getThemeHebdo(): ThemeHebdo {
         val themeHebdoList = themeHebdoRepository.getThemeHebdoList()
-        val result = themeHebdoList.firstOrNull { isCurrentDateInRange(it) } ?: ThemeHebdo()
-        return getThemeHebdoWithDefaultDates(result).let { getThemeHebdoWithPeriode(it) }
+        val current = themeHebdoList.firstOrNull { isCurrentDateInRange(it) } ?: ThemeHebdo()
+        val result = getThemeHebdoWithDefaultDates(current).let { getThemeHebdoWithPeriode(it) }
+        val prochainsThemes = getProchainsThemes(themeHebdoList, result)
+        return result.copy(prochainsThemes = prochainsThemes)
     }
 
     private fun isCurrentDateInRange(themeHebdo: ThemeHebdo): Boolean {
@@ -50,6 +52,15 @@ class GetThemeHebdoUseCase(
         val debut = themeHebdo.dateDebutTheme ?: return themeHebdo
         val fin = themeHebdo.dateFinTheme ?: return themeHebdo
         return themeHebdo.copy(periode = generatePeriodeFromDates(debut, fin))
+    }
+
+    private fun getProchainsThemes(allThemes: List<ThemeHebdo>, current: ThemeHebdo): List<String> {
+        val currentFin = current.dateFinTheme ?: return emptyList()
+        return allThemes
+            .filter { it.dateDebutTheme != null && it.dateDebutTheme.after(currentFin) }
+            .sortedBy { it.dateDebutTheme }
+            .take(3)
+            .map { it.theme }
     }
 
     private fun generatePeriodeFromDates(debut: Date, fin: Date): String {

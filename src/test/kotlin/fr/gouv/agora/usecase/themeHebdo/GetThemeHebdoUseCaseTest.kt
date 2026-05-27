@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Date
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -46,16 +47,17 @@ internal class GetThemeHebdoUseCaseTest {
                 dateDebutTheme: Date? = null,
                 dateFinTheme: Date? = null,
                 titre: String = "Titre",
+                theme: String = "Éducation",
                 periode: String = "19-25 mai 2026",
         ) = ThemeHebdo(
                 titre = titre,
                 sousTitre = "Sous-titre",
                 periode = periode,
-                theme = "Éducation",
+                theme = theme,
                 avatarUrl = "https://picsum.photos/40",
                 nom = "Jean Dupont",
                 fonction = "Ministre de l'Éducation nationale",
-                prochainsThemes = listOf("Santé", "Environnement", "Économie"),
+                prochainsThemes = emptyList(),
                 titreCompteur = "Cloture des votes",
                 dateDebutTheme = dateDebutTheme,
                 dateFinTheme = dateFinTheme,
@@ -276,5 +278,110 @@ internal class GetThemeHebdoUseCaseTest {
 
                 // Then
                 assertThat(result.periode).isEqualTo("Période personnalisée")
+        }
+
+        @Nested
+        inner class GetProchainsThemesTest {
+
+                @Test
+                fun `getProchainsThemes - when no future themes exist - should return empty list`() {
+                        // Given
+                        `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                        `when`(clock.instant()).thenReturn(now)
+                        val currentTheme = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, theme = "Éducation")
+                        `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(currentTheme))
+
+                        // When
+                        val result = useCase.getThemeHebdo()
+
+                        // Then
+                        assertThat(result.prochainsThemes).isEmpty()
+                }
+
+                @Test
+                fun `getProchainsThemes - when one future theme exists - should return a list with its title`() {
+                        // Given
+                        `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                        `when`(clock.instant()).thenReturn(now)
+                        val currentTheme = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, theme = "Éducation")
+                        val futureTheme = buildThemeHebdo(dateDebutTheme = nextWeek, dateFinTheme = Date.from(now.plusSeconds(14 * 86400)), theme = "Santé")
+                        `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(currentTheme, futureTheme))
+
+                        // When
+                        val result = useCase.getThemeHebdo()
+
+                        // Then
+                        assertThat(result.prochainsThemes).containsExactly("Santé")
+                }
+
+                @Test
+                fun `getProchainsThemes - when exactly 3 future themes exist - should return all 3 titles in ascending date order`() {
+                        // Given
+                        `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                        `when`(clock.instant()).thenReturn(now)
+                        val currentTheme = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, theme = "Éducation")
+                        val future1 = buildThemeHebdo(dateDebutTheme = Date.from(now.plusSeconds(2 * 86400)), dateFinTheme = Date.from(now.plusSeconds(9 * 86400)), theme = "Santé")
+                        val future2 = buildThemeHebdo(dateDebutTheme = Date.from(now.plusSeconds(9 * 86400)), dateFinTheme = Date.from(now.plusSeconds(16 * 86400)), theme = "Environnement")
+                        val future3 = buildThemeHebdo(dateDebutTheme = Date.from(now.plusSeconds(16 * 86400)), dateFinTheme = Date.from(now.plusSeconds(23 * 86400)), theme = "Économie")
+                        `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(currentTheme, future2, future3, future1))
+
+                        // When
+                        val result = useCase.getThemeHebdo()
+
+                        // Then
+                        assertThat(result.prochainsThemes).containsExactly("Santé", "Environnement", "Économie")
+                }
+
+                @Test
+                fun `getProchainsThemes - when more than 3 future themes exist - should return only the 3 closest ones in ascending date order`() {
+                        // Given
+                        `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                        `when`(clock.instant()).thenReturn(now)
+                        val currentTheme = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, theme = "Éducation")
+                        val future1 = buildThemeHebdo(dateDebutTheme = Date.from(now.plusSeconds(2 * 86400)), dateFinTheme = Date.from(now.plusSeconds(9 * 86400)), theme = "Santé")
+                        val future2 = buildThemeHebdo(dateDebutTheme = Date.from(now.plusSeconds(9 * 86400)), dateFinTheme = Date.from(now.plusSeconds(16 * 86400)), theme = "Environnement")
+                        val future3 = buildThemeHebdo(dateDebutTheme = Date.from(now.plusSeconds(16 * 86400)), dateFinTheme = Date.from(now.plusSeconds(23 * 86400)), theme = "Économie")
+                        val future4 = buildThemeHebdo(dateDebutTheme = Date.from(now.plusSeconds(23 * 86400)), dateFinTheme = Date.from(now.plusSeconds(30 * 86400)), theme = "Logement")
+                        `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(currentTheme, future4, future2, future1, future3))
+
+                        // When
+                        val result = useCase.getThemeHebdo()
+
+                        // Then
+                        assertThat(result.prochainsThemes).containsExactly("Santé", "Environnement", "Économie")
+                }
+
+                @Test
+                fun `getProchainsThemes - when current theme has no dateFinTheme - should return empty list`() {
+                        // Given
+                        `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                        `when`(clock.instant()).thenReturn(now)
+                        // No current theme found → default ThemeHebdo has dateFinTheme = defaultFin (sunday)
+                        // But we test explicitly with no theme in range and a future theme
+                        `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(emptyList())
+
+                        // When
+                        val result = useCase.getThemeHebdo()
+
+                        // Then
+                        // default ThemeHebdo gets default dates, so dateFinTheme is set → prochainsThemes may be empty (no items after defaultFin)
+                        assertThat(result.prochainsThemes).isEmpty()
+                }
+
+                @Test
+                fun `getProchainsThemes - when future themes have null dateDebutTheme - should exclude them`() {
+                        // Given
+                        `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                        `when`(clock.instant()).thenReturn(now)
+                        val currentTheme = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, theme = "Éducation")
+                        val futureWithNullDebut = buildThemeHebdo(dateDebutTheme = null, dateFinTheme = Date.from(now.plusSeconds(14 * 86400)), theme = "Santé")
+                        `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(currentTheme, futureWithNullDebut))
+
+                        // When
+                        val result = useCase.getThemeHebdo()
+
+                        // Then
+                        assertThat(result.prochainsThemes).isEmpty()
+                }
         }
 }
