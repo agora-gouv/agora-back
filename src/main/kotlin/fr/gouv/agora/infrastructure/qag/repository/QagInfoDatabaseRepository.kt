@@ -256,7 +256,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     @Transactional
     @Query(
         value = """UPDATE qags 
-            SET status = 2, username = ''
+            SET status = 2
             WHERE status = 1
             AND id IN (
                 SELECT qag_id FROM qag_updates 
