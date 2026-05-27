@@ -8,4 +8,5 @@ enum class AgoraFeature {
     FeedbackConsultationUpdate,
     SuspiciousUserDetection,
     DeleteBannedUsersSupports,
+    QagAnonymization,
 }

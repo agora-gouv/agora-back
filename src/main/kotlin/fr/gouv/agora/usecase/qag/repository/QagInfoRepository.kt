@@ -36,6 +36,7 @@ interface QagInfoRepository {
     fun getTrendingQags(interval: Duration): List<QagInfoWithSupportCount>
     fun selectQagForResponse(qagId: String): QagUpdateResult
     fun archiveOldQags(resetDate: Date)
+    fun anonymizeOldQags(date: Date)
     fun deleteQag(qagId: String): QagDeleteResult
     fun getQagByKeywordsList(keywords: List<String>): List<QagInfoWithSupportCount>
     fun deleteUsersQag(userIDs: List<String>)

@@ -283,6 +283,14 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     @Modifying
     @Transactional
     @Query(
+        value = """UPDATE qags SET username = '' WHERE post_date < :date""",
+        nativeQuery = true
+    )
+    fun anonymizeOldQagsBeforeDate(@Param("date") date: Date)
+
+    @Modifying
+    @Transactional
+    @Query(
         value = """DELETE FROM qags 
             WHERE user_id IN :userIDs
             AND status <> 7""", nativeQuery = true
