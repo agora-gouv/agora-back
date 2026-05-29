@@ -60,9 +60,9 @@ class GetThemeHebdoUseCase(
     }
 
     private fun getProchainsThemes(allThemes: List<ThemeHebdo>, current: ThemeHebdo): List<String> {
-        val currentFin = current.dateFinTheme ?: return emptyList()
+        val currentDebut = current.dateDebutTheme ?: return emptyList()
         return allThemes
-            .filter { it.dateDebutTheme != null && it.dateDebutTheme.after(currentFin) }
+            .filter { it.dateDebutTheme != null && it.dateDebutTheme.after(currentDebut) }
             .sortedBy { it.dateDebutTheme }
             .take(3)
             .map { it.theme }
