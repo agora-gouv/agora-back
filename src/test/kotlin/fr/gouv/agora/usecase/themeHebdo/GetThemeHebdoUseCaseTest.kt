@@ -241,7 +241,7 @@ internal class GetThemeHebdoUseCaseTest {
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.periode).isEqualTo("19-25 mai")
+                assertThat(result.periode).isEqualTo("19-25 MAI")
         }
 
         @Test
@@ -261,7 +261,7 @@ internal class GetThemeHebdoUseCaseTest {
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.periode).isEqualTo("26 mai - 1 juin")
+                assertThat(result.periode).isEqualTo("26 MAI - 1 JUIN")
         }
 
         @Test
@@ -279,7 +279,7 @@ internal class GetThemeHebdoUseCaseTest {
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.periode).isEqualTo("Période personnalisée")
+                assertThat(result.periode).isEqualTo("PÉRIODE PERSONNALISÉE")
         }
 
         @Test

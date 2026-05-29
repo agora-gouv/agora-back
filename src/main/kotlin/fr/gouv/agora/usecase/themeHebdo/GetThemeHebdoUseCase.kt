@@ -27,6 +27,7 @@ class GetThemeHebdoUseCase(
         if (result.estThemeLibre) {
             result.sousTitre = "Posez les questions qui vous tiennent à coeur. Tous les thèmes, tous les ministères"
         }
+        result.periode = result.periode.uppercase()
         return result
     }
 
