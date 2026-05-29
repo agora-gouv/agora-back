@@ -6,7 +6,7 @@ data class ThemeHebdo(
         var titre: String ="CETTE SEMAINE",
         var sousTitre: String = "Posez toutes vos questions sur",
         val periode: String = "",
-        val theme: String ="Thème libre",
+        val theme: String ="Semaine libre",
         val avatarUrl: String? = null,
         val nom: String?  = null,
         val fonction: String?  = null,
@@ -14,4 +14,5 @@ data class ThemeHebdo(
         var titreCompteur: String = "Fin des votes le",
         val dateDebutTheme: Date? = null,
         val dateFinTheme: Date? = null,
+        val estThemeLibre: Boolean = true,
 )

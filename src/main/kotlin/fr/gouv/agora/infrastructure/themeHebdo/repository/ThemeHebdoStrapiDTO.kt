@@ -11,5 +11,6 @@ data class ThemeHebdoStrapiDTO(
         val nom_ministre: String? = null,
         val fonction: String? = null,
         val date_fin: String,
-        val date_debut: String
+        val date_debut: String,
+        val est_theme_libre: Boolean = false,
 )

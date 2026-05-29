@@ -14,4 +14,5 @@ data class ThemeHebdoJson(
         @JsonProperty("titreCompteur") val titreCompteur: String,
         @JsonProperty("dateFinTheme") val dateFinTheme: String?,
         @JsonProperty("dateDebutTheme") val dateDebutTheme: String?,
+        @JsonProperty("estThemeLibre") val estThemeLibre: Boolean,
 )

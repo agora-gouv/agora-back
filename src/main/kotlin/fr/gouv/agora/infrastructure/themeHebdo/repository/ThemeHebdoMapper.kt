@@ -19,6 +19,7 @@ class ThemeHebdoMapper {
                     fonction = attributes.fonction,
                     dateDebutTheme = Date.from(OffsetDateTime.parse(attributes.date_debut).toInstant()),
                     dateFinTheme = Date.from(OffsetDateTime.parse(attributes.date_fin).toInstant()),
+                    estThemeLibre = attributes.est_theme_libre,
             )
         }
     }

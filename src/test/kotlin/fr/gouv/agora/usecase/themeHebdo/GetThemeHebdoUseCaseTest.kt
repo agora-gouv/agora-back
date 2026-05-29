@@ -49,6 +49,7 @@ internal class GetThemeHebdoUseCaseTest {
                 titre: String = "Titre",
                 theme: String = "Éducation",
                 periode: String = "19-25 mai 2026",
+                estThemeLibre: Boolean = false,
         ) = ThemeHebdo(
                 titre = titre,
                 sousTitre = "Sous-titre",
@@ -61,6 +62,7 @@ internal class GetThemeHebdoUseCaseTest {
                 titreCompteur = "Cloture des votes",
                 dateDebutTheme = dateDebutTheme,
                 dateFinTheme = dateFinTheme,
+                estThemeLibre = estThemeLibre,
         )
 
         @Test

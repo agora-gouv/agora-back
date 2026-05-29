@@ -134,6 +134,36 @@ internal class ThemeHebdoMapperTest {
         }
     }
 
+    @Nested
+    inner class `toDomain - est_theme_libre` {
+
+        @Test
+        fun `toDomain - when est_theme_libre is true - should set estThemeLibre to true`() {
+            // Given
+            val dto = buildStrapiDTO(estThemeLibre = true)
+
+            // When
+            val result = mapper.toDomain(dto)
+
+            // Then
+            assertThat(result).hasSize(1)
+            assertThat(result[0].estThemeLibre).isTrue()
+        }
+
+        @Test
+        fun `toDomain - when est_theme_libre is false - should set estThemeLibre to false`() {
+            // Given
+            val dto = buildStrapiDTO(estThemeLibre = false)
+
+            // When
+            val result = mapper.toDomain(dto)
+
+            // Then
+            assertThat(result).hasSize(1)
+            assertThat(result[0].estThemeLibre).isFalse()
+        }
+    }
+
     private fun buildStrapiDTO(
         theme: String = "Thème libre",
         periode: String? = "19-25 mai 2026",
@@ -142,6 +172,7 @@ internal class ThemeHebdoMapperTest {
         dateDebut: String = "2026-05-19T00:00:00+02:00",
         dateFin: String = "2026-05-25T23:59:00+02:00",
         photo: StrapiDataNullable<StrapiMediaPicture> = StrapiDataNullable(data = null),
+        estThemeLibre: Boolean = false,
     ): StrapiDTO<ThemeHebdoStrapiDTO> {
         return StrapiDTO(
             data = listOf(
@@ -155,6 +186,7 @@ internal class ThemeHebdoMapperTest {
                         fonction = fonction,
                         date_debut = dateDebut,
                         date_fin = dateFin,
+                        est_theme_libre = estThemeLibre,
                     )
                 )
             ),

@@ -23,7 +23,8 @@ class ThemeHebdoJsonMapper {
                 prochainsThemes = domain.prochainsThemes,
                 titreCompteur = domain.titreCompteur,
                 dateFinTheme = formatter.format(domain.dateFinTheme?.toInstant()),
-                dateDebutTheme =   formatter.format(domain.dateDebutTheme?.toInstant()),
+                dateDebutTheme = formatter.format(domain.dateDebutTheme?.toInstant()),
+                estThemeLibre = domain.estThemeLibre,
         )
     }
 }
