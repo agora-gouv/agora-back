@@ -23,7 +23,11 @@ class GetThemeHebdoUseCase(
         val current = themeHebdoList.firstOrNull { isCurrentDateInRange(it) } ?: ThemeHebdo()
         val result = getThemeHebdoWithDefaultDates(current).let { getThemeHebdoWithPeriode(it) }
         val prochainsThemes = getProchainsThemes(themeHebdoList, result)
-        return result.copy(prochainsThemes = prochainsThemes)
+        result.prochainsThemes = prochainsThemes
+        if (result.estThemeLibre) {
+            result.sousTitre = "Posez les questions qui vous tiennent à coeur. Tous les thèmes, tous les ministères"
+        }
+        return result
     }
 
     private fun isCurrentDateInRange(themeHebdo: ThemeHebdo): Boolean {

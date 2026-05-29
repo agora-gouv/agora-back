@@ -282,6 +282,36 @@ internal class GetThemeHebdoUseCaseTest {
                 assertThat(result.periode).isEqualTo("Période personnalisée")
         }
 
+        @Test
+        fun `getThemeHebdo - when estThemeLibre is true - should override sousTitre with theme libre message`() {
+                // Given
+                `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                `when`(clock.instant()).thenReturn(now)
+                val themeHebdo = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, estThemeLibre = true)
+                `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(themeHebdo))
+
+                // When
+                val result = useCase.getThemeHebdo()
+
+                // Then
+                assertThat(result.sousTitre).isEqualTo("Posez les questions qui vous tiennent à coeur. Tous les thèmes, tous les ministères")
+        }
+
+        @Test
+        fun `getThemeHebdo - when estThemeLibre is false - should keep original sousTitre`() {
+                // Given
+                `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                `when`(clock.instant()).thenReturn(now)
+                val themeHebdo = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, estThemeLibre = false)
+                `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(themeHebdo))
+
+                // When
+                val result = useCase.getThemeHebdo()
+
+                // Then
+                assertThat(result.sousTitre).isEqualTo("Sous-titre")
+        }
+
         @Nested
         inner class GetProchainsThemesTest {
 
