@@ -95,7 +95,7 @@ Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail com
 - [x] 2.1 — Adapter `StrapiRequestBuilder.kt` (`populate=deep`→`populate=*`, `publicationState`→`status=draft`, `getByIds(List<Int>)`→`getByIds(List<String>)`)
 - [x] 2.2 — Refactoriser `StrapiDTO.kt` (supprimer `StrapiAttributes`, `StrapiData`, etc.)
 - [x] 2.3 — Adapter tous les DTOs Strapi
-- [ ] 2.4 — Adapter `StrapiMediaPicture`
+- [x] 2.4 — Adapter `StrapiMediaPicture`
 - [ ] 2.5 — Adapter tous les mappers
 - [ ] 2.6 — Adapter les repositories (IDs entiers → `documentId` string)
 - [ ] 2.7 — Supprimer le header de compatibilité ajouté en Phase 1
@@ -239,9 +239,55 @@ fun getByIds(ids: List<String>): StrapiRequestBuilder {
 
 ---
 
+### ✅ Étape 2.4 — Adapter `StrapiMediaPicture`
+
+- **Date :** 2026-06-01
+- **Statut :** ✅ Terminée
+- **Tests :** ✅ `BUILD SUCCESSFUL` — tous les tests passent (exit code 0)
+
+**Constat :** `StrapiMediaPicture` était déjà au format v5 natif (champs à plat, sans wrapper `data`/`attributes`). L'étape consistait à sécuriser la désérialisation pour les cas où le champ `formats` est absent ou `null` en v5 (images uploadées sans traitement de redimensionnement).
+
+**Fichiers modifiés :**
+
+| Fichier | Modification |
+|---|---|
+| `src/main/kotlin/fr/gouv/agora/infrastructure/common/StrapiDTO.kt` | Ajout de `@JsonIgnoreProperties(ignoreUnknown = true)` sur `StrapiMediaPicture` + `formats` rendu nullable (`StrapiMediaPictureFormats?`) + adaptation de `mediaUrl()` (`formats?.medium?.url`) |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/common/StrapiMediaPictureTest.kt` | Nouveau fichier : 7 tests unitaires couvrant `mediaUrl()` (formats présent/absent/null) et la désérialisation JSON (formats présent, absent, null, vide) |
+
+**Changement dans `StrapiDTO.kt` :**
+
+```kotlin
+// AVANT
+data class StrapiMediaPicture(
+    @JsonProperty("formats")
+    val formats: StrapiMediaPictureFormats,
+    @JsonProperty("url")
+    val pictureUrlNotOptimized: String,
+) {
+    fun mediaUrl(): String {
+        return formats.medium?.url ?: pictureUrlNotOptimized
+    }
+}
+
+// APRÈS
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class StrapiMediaPicture(
+    @JsonProperty("formats")
+    val formats: StrapiMediaPictureFormats?,
+    @JsonProperty("url")
+    val pictureUrlNotOptimized: String,
+) {
+    fun mediaUrl(): String {
+        return formats?.medium?.url ?: pictureUrlNotOptimized
+    }
+}
+```
+
+---
+
 ## Résumé de l'état actuel
 
 | Phase | Statut |
 |-------|--------|
 | Phase 1 — Header de compatibilité | ✅ Terminée |
-| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅) |
+| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅) |
