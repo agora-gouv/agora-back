@@ -98,7 +98,7 @@ Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail com
 - [x] 2.4 — Adapter `StrapiMediaPicture`
 - [x] 2.5 — Adapter tous les mappers
 - [x] 2.6 — Adapter les repositories (IDs entiers → `documentId` string)
-- [ ] 2.7 — Supprimer le header de compatibilité ajouté en Phase 1
+- [x] 2.7 — Supprimer le header de compatibilité ajouté en Phase 1
 - [ ] 2.8 — Valider (`./gradlew test` + tests manuels sur staging)
 
 ---
@@ -332,9 +332,40 @@ if (filters.thematique != null) uriBuilder.filterIn(listOf("thematique", "docume
 
 ---
 
+### ✅ Étape 2.7 — Supprimer le header de compatibilité
+
+- **Date :** 2026-06-01
+- **Statut :** ✅ Terminée
+- **Tests :** ✅ `BUILD SUCCESSFUL` — tous les tests passent (exit code 0)
+
+**Fichier modifié :**
+
+| Fichier | Modification |
+|---|---|
+| `src/main/kotlin/fr/gouv/agora/config/CmsStrapiHttpClient.kt` | Suppression de `.setHeader("Strapi-Response-Format", "v4")` |
+
+**Changement dans `CmsStrapiHttpClient.kt` :**
+
+```kotlin
+// AVANT
+return HttpRequest.newBuilder()
+    .uri(URI("$apiUrl$uriWithoutSpace"))
+    .setHeader("Authorization", "Bearer $authToken")
+    .setHeader("Strapi-Response-Format", "v4")  // ← supprimé
+
+// APRÈS
+return HttpRequest.newBuilder()
+    .uri(URI("$apiUrl$uriWithoutSpace"))
+    .setHeader("Authorization", "Bearer $authToken")
+```
+
+Le backend utilise désormais le format de réponse natif Strapi v5. Le header de rétrocompatibilité n'est plus nécessaire.
+
+---
+
 ## Résumé de l'état actuel
 
 | Phase | Statut |
 |-------|--------|
 | Phase 1 — Header de compatibilité | ✅ Terminée |
-| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅, 2.5 ✅, 2.6 ✅) |
+| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅, 2.5 ✅, 2.6 ✅, 2.7 ✅) |

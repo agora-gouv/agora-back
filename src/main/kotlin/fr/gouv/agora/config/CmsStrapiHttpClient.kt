@@ -61,6 +61,5 @@ class CmsStrapiHttpClient(
         return HttpRequest.newBuilder()
             .uri(URI("$apiUrl$uriWithoutSpace"))
             .setHeader("Authorization", "Bearer $authToken")
-            .setHeader("Strapi-Response-Format", "v4")
     }
 }
