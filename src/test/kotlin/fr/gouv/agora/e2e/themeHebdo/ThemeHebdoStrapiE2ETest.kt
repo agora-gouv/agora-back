@@ -31,9 +31,9 @@ class ThemeHebdoStrapiE2ETest : StrapiE2ETestBase() {
         assertThat(result).isNotNull
         assertThat(result.data).isNotEmpty
         result.data.forEach { themeHebdo ->
-            assertThat(themeHebdo.attributes.theme).isNotBlank
-            assertThat(themeHebdo.attributes.date_debut).isNotBlank
-            assertThat(themeHebdo.attributes.date_fin).isNotBlank
+            assertThat(themeHebdo.theme).isNotBlank
+            assertThat(themeHebdo.date_debut).isNotBlank
+            assertThat(themeHebdo.date_fin).isNotBlank
         }
     }
 }

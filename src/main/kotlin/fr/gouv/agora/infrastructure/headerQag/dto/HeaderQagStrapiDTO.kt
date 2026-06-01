@@ -6,6 +6,8 @@ import java.time.LocalDateTime
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class HeaderQagStrapiDTO(
+    @JsonProperty("documentId")
+    val documentId: String,
     @JsonProperty("titre")
     val titre: String,
     @JsonProperty("message")

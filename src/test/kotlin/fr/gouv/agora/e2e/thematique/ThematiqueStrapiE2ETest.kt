@@ -31,8 +31,8 @@ class ThematiqueStrapiE2ETest : StrapiE2ETestBase() {
         assertThat(result).isNotNull
         assertThat(result.data).isNotEmpty
         result.data.forEach { thematique ->
-            assertThat(thematique.attributes.label).isNotBlank
-            assertThat(thematique.attributes.pictogramme).isNotBlank
+            assertThat(thematique.label).isNotBlank
+            assertThat(thematique.pictogramme).isNotBlank
         }
     }
 }

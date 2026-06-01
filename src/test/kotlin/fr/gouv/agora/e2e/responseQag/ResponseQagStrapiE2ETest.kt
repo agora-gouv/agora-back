@@ -31,9 +31,9 @@ class ResponseQagStrapiE2ETest : StrapiE2ETestBase() {
         assertThat(result).isNotNull
         assertThat(result.data).isNotEmpty
         result.data.forEach { response ->
-            assertThat(response.attributes.auteur).isNotBlank
-            assertThat(response.attributes.questionId).isNotBlank
-            assertThat(response.attributes.reponseDate).isNotNull
+            assertThat(response.auteur).isNotBlank
+            assertThat(response.questionId).isNotBlank
+            assertThat(response.reponseDate).isNotNull
         }
     }
 

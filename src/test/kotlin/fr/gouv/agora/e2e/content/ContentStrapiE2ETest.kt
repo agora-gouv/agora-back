@@ -29,8 +29,8 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageQuestionsAuGouvernement()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.informationBottomsheet).isNotBlank
-        assertThat(result.attributes.nombreDeQuestions).isNotBlank
+        assertThat(result.informationBottomsheet).isNotBlank
+        assertThat(result.nombreDeQuestions).isNotBlank
     }
 
     // ---- page-reponse-aux-questions-au-gouvernement ----
@@ -42,7 +42,7 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageReponseAuxQaG()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.informationReponseAVenirBottomsheet).isNotBlank
+        assertThat(result.informationReponseAVenirBottomsheet).isNotBlank
     }
 
     // ---- page-poser-ma-question ----
@@ -54,7 +54,7 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPagePoserMaQuestion()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.texteRegles).isNotEmpty
+        assertThat(result.texteRegles).isNotEmpty
     }
 
     // ---- site-vitrine-accueil ----
@@ -66,9 +66,9 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageSiteVitrineAccueil()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.titreHeader).isNotBlank
-        assertThat(result.attributes.sousTitreHeader).isNotBlank
-        assertThat(result.attributes.titreBody).isNotBlank
+        assertThat(result.titreHeader).isNotBlank
+        assertThat(result.sousTitreHeader).isNotBlank
+        assertThat(result.titreBody).isNotBlank
     }
 
     // ---- site-vitrine-conditions-generales-d-utilisation ----
@@ -80,7 +80,7 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageSiteVitrineConditionGenerales()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.conditionsGeneralesDUtilisation).isNotEmpty
+        assertThat(result.conditionsGeneralesDUtilisation).isNotEmpty
     }
 
     // ---- site-vitrine-consultation ----
@@ -92,7 +92,7 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageSiteVitrineConsultation()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.donnezVotreAvis).isNotEmpty
+        assertThat(result.donnezVotreAvis).isNotEmpty
     }
 
     // ---- site-vitrine-declaration-d-accessibilite ----
@@ -104,7 +104,7 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageSiteVitrineDeclarationAccessibilite()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.declaration).isNotEmpty
+        assertThat(result.declaration).isNotEmpty
     }
 
     // ---- site-vitrine-mentions-legale ----
@@ -116,7 +116,7 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageSiteVitrineMentionsLegales()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.mentionsLegales).isNotEmpty
+        assertThat(result.mentionsLegales).isNotEmpty
     }
 
     // ---- site-vitrine-politique-de-confidentialite ----
@@ -128,7 +128,7 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageSiteVitrinePolitiqueConfidentialite()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.politiqueDeConfidentialite).isNotEmpty
+        assertThat(result.politiqueDeConfidentialite).isNotEmpty
     }
 
     // ---- site-vitrine-question-au-gouvernement ----
@@ -140,7 +140,7 @@ class ContentStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getPageSiteVitrineQuestionAuGouvernement()
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.titre).isNotBlank
-        assertThat(result.attributes.sousTitre).isNotBlank
+        assertThat(result.titre).isNotBlank
+        assertThat(result.sousTitre).isNotBlank
     }
 }

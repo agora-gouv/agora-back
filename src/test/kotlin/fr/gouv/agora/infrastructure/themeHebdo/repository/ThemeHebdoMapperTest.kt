@@ -1,8 +1,6 @@
 package fr.gouv.agora.infrastructure.themeHebdo.repository
 
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
-import fr.gouv.agora.infrastructure.common.StrapiDataNullable
 import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.common.StrapiMediaPictureFormats
 import fr.gouv.agora.infrastructure.common.StrapiMediaPictureFormatMedium
@@ -31,7 +29,7 @@ internal class ThemeHebdoMapperTest {
         @Test
         fun `toDomain - when photo data is null - should return avatarUrl null`() {
             // Given
-            val dto = buildStrapiDTO(photo = StrapiDataNullable(data = null))
+            val dto = buildStrapiDTO(photo = null)
 
             // When
             val result = mapper.toDomain(dto)
@@ -45,16 +43,11 @@ internal class ThemeHebdoMapperTest {
         fun `toDomain - when photo has medium format - should return medium url`() {
             // Given
             val mediumUrl = "https://example.com/medium.jpg"
-            val photo = StrapiDataNullable(
-                data = StrapiAttributes(
-                    id = "1",
-                    attributes = StrapiMediaPicture(
-                        formats = StrapiMediaPictureFormats(
-                            medium = StrapiMediaPictureFormatMedium(url = mediumUrl)
-                        ),
-                        pictureUrlNotOptimized = "https://example.com/original.jpg"
-                    )
-                )
+            val photo = StrapiMediaPicture(
+                formats = StrapiMediaPictureFormats(
+                    medium = StrapiMediaPictureFormatMedium(url = mediumUrl)
+                ),
+                pictureUrlNotOptimized = "https://example.com/original.jpg"
             )
             val dto = buildStrapiDTO(photo = photo)
 
@@ -70,14 +63,9 @@ internal class ThemeHebdoMapperTest {
         fun `toDomain - when photo has no medium format - should return raw url`() {
             // Given
             val rawUrl = "https://example.com/original.jpg"
-            val photo = StrapiDataNullable(
-                data = StrapiAttributes(
-                    id = "1",
-                    attributes = StrapiMediaPicture(
-                        formats = StrapiMediaPictureFormats(medium = null),
-                        pictureUrlNotOptimized = rawUrl
-                    )
-                )
+            val photo = StrapiMediaPicture(
+                formats = StrapiMediaPictureFormats(medium = null),
+                pictureUrlNotOptimized = rawUrl
             )
             val dto = buildStrapiDTO(photo = photo)
 
@@ -103,7 +91,7 @@ internal class ThemeHebdoMapperTest {
                 fonction = "Ministre de la santé",
                 dateDebut = "2026-05-19T00:00:00+02:00",
                 dateFin = "2026-05-25T23:59:00+02:00",
-                photo = StrapiDataNullable(data = null)
+                photo = null
             )
 
             // When
@@ -123,7 +111,7 @@ internal class ThemeHebdoMapperTest {
         @Test
         fun `toDomain - when periode is null - should return empty string for periode`() {
             // Given
-            val dto = buildStrapiDTO(periode = null, photo = StrapiDataNullable(data = null))
+            val dto = buildStrapiDTO(periode = null, photo = null)
 
             // When
             val result = mapper.toDomain(dto)
@@ -171,23 +159,20 @@ internal class ThemeHebdoMapperTest {
         fonction: String? = null,
         dateDebut: String = "2026-05-19T00:00:00+02:00",
         dateFin: String = "2026-05-25T23:59:00+02:00",
-        photo: StrapiDataNullable<StrapiMediaPicture> = StrapiDataNullable(data = null),
+        photo: StrapiMediaPicture? = null,
         estThemeLibre: Boolean = false,
     ): StrapiDTO<ThemeHebdoStrapiDTO> {
         return StrapiDTO(
             data = listOf(
-                StrapiAttributes(
-                    id = "1",
-                    attributes = ThemeHebdoStrapiDTO(
-                        theme = theme,
-                        periode = periode,
-                        photo = photo,
-                        nom_ministre = nomMinistre,
-                        fonction = fonction,
-                        date_debut = dateDebut,
-                        date_fin = dateFin,
-                        est_theme_libre = estThemeLibre,
-                    )
+                ThemeHebdoStrapiDTO(
+                    theme = theme,
+                    periode = periode,
+                    photo = photo,
+                    nom_ministre = nomMinistre,
+                    fonction = fonction,
+                    date_debut = dateDebut,
+                    date_fin = dateFin,
+                    est_theme_libre = estThemeLibre,
                 )
             ),
             meta = StrapiMetadata(StrapiMetaPagination(page = 1, pageSize = 10, pageCount = 1, total = 1))

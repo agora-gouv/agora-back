@@ -24,36 +24,26 @@ class ConsultationStrapiDTOTest {
         @Language("JSON")
         val jsonConsultation = """
             {
-              "data": [{
-                "id": 1,
-                "attributes": {
+              "data": [
+                {
+                  "documentId": "agri-pro-1",
                   "url_image_de_couverture": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_professionnels.jpg",
                   "url_image_page_de_contenu": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
                   "image_de_couverture": {
-                    "data": {
-                      "id": 3,
-                      "attributes": {
-                        "formats": {
-                          "medium": {
-                            "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
-                          }
-                        },
-                        "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
+                    "formats": {
+                      "medium": {
+                        "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
                       }
-                    }
+                    },
+                    "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
                   },
                   "image_page_de_contenu": {
-                    "data": {
-                      "id": 4,
-                      "attributes": {
-                        "formats": {
-                          "medium": {
-                            "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_IMG_4029_f2bca5feed.jpg"
-                          }
-                        },
-                        "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
+                    "formats": {
+                      "medium": {
+                        "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_IMG_4029_f2bca5feed.jpg"
                       }
-                    }
+                    },
+                    "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
                   },
                   "nombre_de_questions": 3,
                   "estimation_nombre_de_questions": "2 à 3 questions",
@@ -68,16 +58,12 @@ class ConsultationStrapiDTOTest {
                   "slug": "agriculture-professionnel",
                   "territoire": "Nord",
                   "thematique": {
-                    "data": {
-                      "id": 9,
-                      "attributes": {
-                        "label": "Démocratie",
-                        "pictogramme": "🗳",
-                        "createdAt": "2024-05-29T10:19:13.352Z",
-                        "updatedAt": "2024-05-29T10:19:13.352Z",
-                        "publishedAt": "2024-05-29T10:19:13.352Z"
-                      }
-                    }
+                    "documentId": "thema-9",
+                    "label": "Démocratie",
+                    "pictogramme": "🗳",
+                    "createdAt": "2024-05-29T10:19:13.352Z",
+                    "updatedAt": "2024-05-29T10:19:13.352Z",
+                    "publishedAt": "2024-05-29T10:19:13.352Z"
                   },
                   "questions": [
                     {
@@ -97,221 +83,192 @@ class ConsultationStrapiDTOTest {
                     }
                   ],
                   "consultation_avant_reponse": {
-                    "data": {
-                      "id": 6003,
-                      "attributes": {
-                        "template_partage": "Comme moi, tu peux participer à la Consultation : {title} {url}",
-                        "historique_titre": "Lancement",
-                        "historique_call_to_action": "Voir les objectifs",
-                        "createdAt": "2024-08-23T12:10:24.430Z",
-                        "updatedAt": "2024-08-23T13:01:55.776Z",
-                        "slug": "lancement",
-                        "commanditaire": [
+                    "documentId": "avant-rep-1",
+                    "template_partage": "Comme moi, tu peux participer à la Consultation : {title} {url}",
+                    "historique_titre": "Lancement",
+                    "historique_call_to_action": "Voir les objectifs",
+                    "createdAt": "2024-08-23T12:10:24.430Z",
+                    "updatedAt": "2024-08-23T13:01:55.776Z",
+                    "slug": "lancement",
+                    "commanditaire": [
+                      {
+                        "type": "paragraph",
+                        "children": [
                           {
-                            "type": "paragraph",
-                            "children": [
-                              {
-                                "text": "Gouvernement",
-                                "type": "text"
-                              }
-                            ]
-                          }
-                        ],
-                        "objectif": [
-                          {
-                            "type": "paragraph",
-                            "children": [
-                              {
-                                "text": "sdsdsd",
-                                "type": "text",
-                                "italic": true
-                              },
-                              {
-                                "bold": true,
-                                "text": "qdsdsds",
-                                "type": "text"
-                              }
-                            ]
-                          }
-                        ],
-                        "axe_gouvernemental": [
-                          {
-                            "type": "paragraph",
-                            "children": [
-                              {
-                                "text": "Culture",
-                                "type": "text"
-                              }
-                            ]
-                          }
-                        ],
-                        "presentation": [
-                          {
-                            "type": "paragraph",
-                            "children": [
-                              {
-                                "text": "Pouet",
-                                "type": "text"
-                              }
-                            ]
-                          }
-                        ],
-                        "nom_strapi": "Agriculture pro - objectifs",
-                        "sections": [
-                          {
-                            "id": 1,
-                            "__component": "consultation-section.section-titre",
-                            "titre": "Titre"
+                            "text": "Gouvernement",
+                            "type": "text"
                           }
                         ]
                       }
-                    }
+                    ],
+                    "objectif": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "sdsdsd",
+                            "type": "text",
+                            "italic": true
+                          },
+                          {
+                            "bold": true,
+                            "text": "qdsdsds",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "axe_gouvernemental": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "Culture",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "presentation": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "text": "Pouet",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "nom_strapi": "Agriculture pro - objectifs",
+                    "sections": [
+                      {
+                        "id": 1,
+                        "__component": "consultation-section.section-titre",
+                        "titre": "Titre"
+                      }
+                    ]
                   },
                   "consultation_apres_reponse_ou_terminee": {
-                    "data": {
-                      "id": 2,
-                      "attributes": {
-                        "historique_titre": "Fin de consultation",
-                        "historique_call_to_action": "Consulter toutes les réponses",
-                        "createdAt": "2024-08-23T13:01:07.218Z",
-                        "updatedAt": "2024-08-23T13:01:44.327Z",
-                        "slug": "fin-de-la-consultation",
-                        "feedback_message": "Êtes-vous satisfait(e) de cette consultation ?",
-                        "nom_strapi": "Agriculture pro - plus loin",
-                        "template_partage": "Comme moi, tu peux participer à la Consultation : {title} {url}",
-                        "sections": [
+                    "documentId": "apres-rep-2",
+                    "historique_titre": "Fin de consultation",
+                    "historique_call_to_action": "Consulter toutes les réponses",
+                    "createdAt": "2024-08-23T13:01:07.218Z",
+                    "updatedAt": "2024-08-23T13:01:44.327Z",
+                    "slug": "fin-de-la-consultation",
+                    "feedback_message": "Êtes-vous satisfait(e) de cette consultation ?",
+                    "nom_strapi": "Agriculture pro - plus loin",
+                    "template_partage": "Comme moi, tu peux participer à la Consultation : {title} {url}",
+                    "sections": [
+                      {
+                        "id": 1,
+                        "__component": "consultation-section.section-chiffre",
+                        "titre": "12%",
+                        "description": [
                           {
-                            "id": 1,
-                            "__component": "consultation-section.section-chiffre",
-                            "titre": "12%",
-                            "description": [
+                            "type": "paragraph",
+                            "children": [
                               {
-                                "type": "paragraph",
-                                "children": [
-                                  {
-                                    "text": "Bienvenue",
-                                    "type": "text"
-                                  }
-                                ]
+                                "text": "Bienvenue",
+                                "type": "text"
                               }
                             ]
                           }
                         ]
                       }
-                    }
+                    ]
                   },
-                  "consultation_contenu_autres": {
-                    "data": [
-                      {
-                        "id": 2,
-                        "attributes": {
-                          "template_partage": "Cela peut t’intéresser : l’analyse des réponses de la consultation {title} {url}",
-                          "historique_titre": "Nouveau contenu autre",
-                          "historique_call_to_action": "cliquez ici",
-                          "createdAt": "2024-08-23T13:03:40.424Z",
-                          "updatedAt": "2024-08-23T13:03:49.338Z",
-                          "datetime_publication": "2024-08-22T15:00:00.000Z",
-                          "slug": "cliquez-ici",
-                          "feedback_message": "Êtes-vous satisfait(e) de cette consultation ?",
-                          "nom_strapi": "Agriculture pro - autre",
-                          "flamme_label": "Trop bien",
-                          "sections": [
+                  "consultation_contenu_autres": [
+                    {
+                      "documentId": "autre-2",
+                      "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
+                      "historique_titre": "Nouveau contenu autre",
+                      "historique_call_to_action": "cliquez ici",
+                      "createdAt": "2024-08-23T13:03:40.424Z",
+                      "updatedAt": "2024-08-23T13:03:49.338Z",
+                      "datetime_publication": "2024-08-22T15:00:00.000Z",
+                      "slug": "cliquez-ici",
+                      "feedback_message": "Êtes-vous satisfait(e) de cette consultation ?",
+                      "nom_strapi": "Agriculture pro - autre",
+                      "flamme_label": "Trop bien",
+                      "sections": [
+                        {
+                          "id": 1,
+                          "__component": "consultation-section.section-accordeon",
+                          "titre": "Accord",
+                          "description": [
                             {
-                              "id": 1,
-                              "__component": "consultation-section.section-accordeon",
-                              "titre": "Accord",
-                              "description": [
+                              "type": "paragraph",
+                              "children": [
                                 {
-                                  "type": "paragraph",
-                                  "children": [
-                                    {
-                                      "text": "éon",
-                                      "type": "text"
-                                    }
-                                  ]
+                                  "text": "éon",
+                                  "type": "text"
                                 }
                               ]
                             }
                           ]
                         }
-                      }
-                    ]
-                  },
-                  "consultation_contenu_a_venir": {
-                    "data": {
-                      "id": 3,
-                      "attributes": {
-                        "titre_historique": "Ca arrive",
-                        "createdAt": "2024-08-23T13:03:57.597Z",
-                        "updatedAt": "2024-08-23T13:03:57.597Z"
-                      }
+                      ]
                     }
+                  ],
+                  "consultation_contenu_a_venir": {
+                    "documentId": "a-venir-3",
+                    "titre_historique": "Ca arrive",
+                    "createdAt": "2024-08-23T13:03:57.597Z",
+                    "updatedAt": "2024-08-23T13:03:57.597Z"
                   },
                   "consultation_contenu_analyse_des_reponse": {
-                    "data": {
-                      "id": 3,
-                      "attributes": {
-                        "lien_telechargement_analyse": "https://content.agora.incubateur.net/consultation-syntheses/20240605-agora_handicap_synthese_VF.pdf",
-                        "createdAt": "2024-08-23T13:01:25.877Z",
-                        "updatedAt": "2024-08-23T13:01:33.261Z",
-                        "template_partage": "Cela peut t’intéresser : l’analyse des réponses de la consultation {title} {url}",
-                        "datetime_publication": "2024-08-21T22:00:00.000Z",
-                        "slug": "analyse-disponible",
-                        "feedback_message": "Êtes-vous satisfait(e) de l'analyse de cette consultation ?",
-                        "historique_titre": "Analyse des réponses",
-                        "historique_call_to_action": "Consulter la synthèse",
-                        "nom_strapi": "Agriculture pro - analyse",
-                        "flamme_label": "Venez répondre !!",
-                        "sections": [
+                    "documentId": "analyse-3",
+                    "lien_telechargement_analyse": "https://content.agora.incubateur.net/consultation-syntheses/20240605-agora_handicap_synthese_VF.pdf",
+                    "createdAt": "2024-08-23T13:01:25.877Z",
+                    "updatedAt": "2024-08-23T13:01:33.261Z",
+                    "template_partage": "Cela peut t'intéresser : l'analyse des réponses de la consultation {title} {url}",
+                    "datetime_publication": "2024-08-21T22:00:00.000Z",
+                    "slug": "analyse-disponible",
+                    "feedback_message": "Êtes-vous satisfait(e) de l'analyse de cette consultation ?",
+                    "historique_titre": "Analyse des réponses",
+                    "historique_call_to_action": "Consulter la synthèse",
+                    "nom_strapi": "Agriculture pro - analyse",
+                    "flamme_label": "Venez répondre !!",
+                    "sections": [
+                      {
+                        "id": 1,
+                        "__component": "consultation-section.section-citation",
+                        "description": [
                           {
-                            "id": 1,
-                            "__component": "consultation-section.section-citation",
-                            "description": [
+                            "type": "paragraph",
+                            "children": [
                               {
-                                "type": "paragraph",
-                                "children": [
-                                  {
-                                    "text": "Oui",
-                                    "type": "text"
-                                  }
-                                ]
+                                "text": "Oui",
+                                "type": "text"
                               }
                             ]
                           }
-                        ],
-                        "pdf_analyse": {
-                          "data": {
-                            "id": 2,
-                            "attributes": {
-                              "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/Contenu_consultation_Agora_8ab0f8f61b.doc"
-                            }
-                          }
-                        }
+                        ]
                       }
+                    ],
+                    "pdf_analyse": {
+                      "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/Contenu_consultation_Agora_8ab0f8f61b.doc"
                     }
                   },
                   "contenu_reponse_du_commanditaires": {
-                    "data": {
-                      "id": 2,
-                      "attributes": {
-                        "template_partage": "Cela peut t’intéresser : la réponse du gouvernement sur la consultation {title} {url}",
-                        "datetime_publication": "2024-08-21T23:00:00.000Z",
-                        "slug": "reponse-du-gouvernement",
-                        "feedback_message": "Êtes-vous satisfait(e) de la réponse de la ministre ?",
-                        "createdAt": "2024-08-23T13:03:01.978Z",
-                        "updatedAt": "2024-08-23T13:03:07.029Z",
-                        "historique_titre": "Réponse du Gouvernement",
-                        "historique_call_to_action": "Actions mises en place",
-                        "nom_strapi": "Agriculture pro - réponse du gouv",
-                        "flamme_label": "Ils ont répondu !!",
-                        "sections": []
-                      }
-                    }
+                    "documentId": "rep-cmd-2",
+                    "template_partage": "Cela peut t'intéresser : la réponse du gouvernement sur la consultation {title} {url}",
+                    "datetime_publication": "2024-08-21T23:00:00.000Z",
+                    "slug": "reponse-du-gouvernement",
+                    "feedback_message": "Êtes-vous satisfait(e) de la réponse de la ministre ?",
+                    "createdAt": "2024-08-23T13:03:01.978Z",
+                    "updatedAt": "2024-08-23T13:03:07.029Z",
+                    "historique_titre": "Réponse du Gouvernement",
+                    "historique_call_to_action": "Actions mises en place",
+                    "nom_strapi": "Agriculture pro - réponse du gouv",
+                    "flamme_label": "Ils ont répondu !!",
+                    "sections": []
                   },
                   "titre_page_web": "Grande Consultation",
                   "sous_titre_page_web": "par le Gouvernement"
                 }
-              }],
+              ],
               "meta": {
                 "pagination": {
                   "page": 1,
@@ -328,9 +285,9 @@ class ConsultationStrapiDTOTest {
         val actual = objectMapper.readValue(jsonConsultation, ref)
 
         // THEN
-        assertThat(actual.data[0].attributes.titre).isEqualTo("Agriculture professionnel")
-        assertThat(actual.data[0].attributes.consultationContenuAutres.data).hasSize(1)
-        assertThat(actual.data[0].attributes.consultationContenuAVenir).isNotNull
+        assertThat(actual.data[0].titre).isEqualTo("Agriculture professionnel")
+        assertThat(actual.data[0].consultationContenuAutres).hasSize(1)
+        assertThat(actual.data[0].consultationContenuAVenir).isNotNull
     }
 
     @Test
@@ -376,17 +333,12 @@ class ConsultationStrapiDTOTest {
                 "url": "url image",
                 "description_accessible_de_l_image": "Description image",
                 "image": {
-                  "data": {
-                    "id": 3,
-                    "attributes": {
-                      "formats": {
-                        "medium": {
-                          "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
-                        }
-                      },
-                      "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
+                  "formats": {
+                    "medium": {
+                      "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/medium_20240215_095657_ef8160b276.jpg"
                     }
-                  }
+                  },
+                  "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/20240215_095657_ef8160b276.jpg"
                 }
               },
               {
@@ -420,12 +372,7 @@ class ConsultationStrapiDTOTest {
                 "date_tournage": "2024-08-26",
                 "transcription": "transcription vidéo",
                 "video": {
-                  "data": {
-                    "id": 1,
-                    "attributes": {
-                      "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/reponse.mp4"
-                    }
-                  }
+                  "url": "https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/reponse.mp4"
                 }
               },
               {

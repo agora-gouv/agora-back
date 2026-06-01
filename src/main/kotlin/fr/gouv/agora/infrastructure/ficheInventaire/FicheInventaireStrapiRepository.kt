@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.ficheInventaire
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.gouv.agora.config.CmsStrapiHttpClient
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import org.springframework.stereotype.Repository
@@ -26,7 +25,7 @@ class FicheInventaireStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getFicheInventaire(ficheId: String): StrapiAttributes<FicheInventaireStrapiDTO>? {
+    fun getFicheInventaire(ficheId: String): FicheInventaireStrapiDTO? {
         val uriBuilder = StrapiRequestBuilder("fiche-inventaires")
             .getByIds(listOf(ficheId))
 

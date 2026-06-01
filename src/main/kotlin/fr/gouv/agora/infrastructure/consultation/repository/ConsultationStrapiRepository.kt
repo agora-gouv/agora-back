@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.consultation.repository
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.gouv.agora.config.CmsStrapiHttpClient
 import fr.gouv.agora.domain.Territoire
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
@@ -80,7 +79,7 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getConsultationBySlugWithUnpublished(slug: String): StrapiAttributes<ConsultationStrapiDTO>? {
+    fun getConsultationBySlugWithUnpublished(slug: String): ConsultationStrapiDTO? {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .filterIn("slug", listOf(slug))
             .withUnpublished()
@@ -89,7 +88,7 @@ class ConsultationStrapiRepository(
             .firstOrNull()
     }
 
-    fun getConsultationById(consultationId: String): StrapiAttributes<ConsultationStrapiDTO>? {
+    fun getConsultationById(consultationId: String): ConsultationStrapiDTO? {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .getByIds(listOf(consultationId))
 
@@ -97,7 +96,7 @@ class ConsultationStrapiRepository(
             .firstOrNull()
     }
 
-    fun getConsultationByIdWithUnpublished(consultationId: String): StrapiAttributes<ConsultationStrapiDTO>? {
+    fun getConsultationByIdWithUnpublished(consultationId: String): ConsultationStrapiDTO? {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .getByIds(listOf(consultationId))
             .withUnpublished()

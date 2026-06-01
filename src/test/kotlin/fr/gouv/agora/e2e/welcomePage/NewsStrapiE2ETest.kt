@@ -30,9 +30,9 @@ class NewsStrapiE2ETest : StrapiE2ETestBase() {
 
         assertThat(result).isNotEmpty
         result.forEach { news ->
-            assertThat(news.attributes.short_message).isNotBlank
-            assertThat(news.attributes.callToAction).isNotBlank
-            assertThat(news.attributes.pageRouteMobile).isNotBlank
+            assertThat(news.short_message).isNotBlank
+            assertThat(news.callToAction).isNotBlank
+            assertThat(news.pageRouteMobile).isNotBlank
         }
     }
 }

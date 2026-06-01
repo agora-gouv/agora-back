@@ -34,8 +34,8 @@ class FicheInventaireStrapiE2ETest : StrapiE2ETestBase() {
         assertThat(result).isNotNull
         assertThat(result.data).isNotEmpty
         result.data.forEach { fiche ->
-            assertThat(fiche.attributes.titre).isNotBlank
-            assertThat(fiche.attributes.porteur).isNotBlank
+            assertThat(fiche.titre).isNotBlank
+            assertThat(fiche.porteur).isNotBlank
         }
     }
 
@@ -50,11 +50,11 @@ class FicheInventaireStrapiE2ETest : StrapiE2ETestBase() {
         val liste = repository.getFichesInventaire(emptyFilters)
         assertThat(liste.data).isNotEmpty
 
-        val firstId = liste.data.first().id
+        val firstId = liste.data.first().documentId
         val result = repository.getFicheInventaire(firstId)
 
         assertThat(result).isNotNull
-        assertThat(result!!.attributes.titre).isNotBlank
-        assertThat(result.id).isEqualTo(firstId)
+        assertThat(result!!.titre).isNotBlank
+        assertThat(result.documentId).isEqualTo(firstId)
     }
 }

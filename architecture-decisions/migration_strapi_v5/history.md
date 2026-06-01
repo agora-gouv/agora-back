@@ -93,7 +93,7 @@ Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail com
 
 Étapes à réaliser (dans l'ordre) :
 - [x] 2.1 — Adapter `StrapiRequestBuilder.kt` (`populate=deep`→`populate=*`, `publicationState`→`status=draft`, `getByIds(List<Int>)`→`getByIds(List<String>)`)
-- [ ] 2.2 — Refactoriser `StrapiDTO.kt` (supprimer `StrapiAttributes`, `StrapiData`, etc.)
+- [x] 2.2 — Refactoriser `StrapiDTO.kt` (supprimer `StrapiAttributes`, `StrapiData`, etc.)
 - [ ] 2.3 — Adapter tous les DTOs Strapi
 - [ ] 2.4 — Adapter `StrapiMediaPicture`
 - [ ] 2.5 — Adapter tous les mappers
@@ -150,9 +150,71 @@ fun getByIds(ids: List<String>): StrapiRequestBuilder {
 
 ---
 
+### ✅ Étape 2.2 — Refactoriser `StrapiDTO.kt`
+
+- **Date :** 2026-06-01
+- **Statut :** ✅ Terminée
+- **Tests :** ✅ `BUILD SUCCESSFUL` — tous les tests passent (exit code 0)
+
+**Objectif :** Supprimer les classes `StrapiData`, `StrapiAttributes` et `StrapiSingleData` qui modélisaient le format v4 (`data.attributes`), et les remplacer par `StrapiDTO<T>` et `StrapiSingleDTO<T>` qui contiennent directement les données à plat (format v5).
+
+**Fichiers modifiés :**
+
+| Fichier | Modification |
+|---|---|
+| `src/main/kotlin/fr/gouv/agora/infrastructure/common/StrapiDTO.kt` | Suppression de `StrapiData`, `StrapiAttributes`, `StrapiSingleData` ; `StrapiDTO<T>` contient désormais `data: List<T>` directement |
+| `src/main/kotlin/fr/gouv/agora/infrastructure/common/StrapiMediaPicture.kt` | Suppression du wrapper `data`/`attributes`, `formats` devient non-nullable avec `@JsonIgnoreProperties` |
+| `src/main/kotlin/fr/gouv/agora/infrastructure/common/StrapiMediaVideo.kt` | Idem : suppression du wrapper v4 |
+| `src/main/kotlin/fr/gouv/agora/infrastructure/common/StrapiMediaPdf.kt` | Idem |
+| Tous les DTOs Strapi (consultation, thematique, thème hebdo, header QAG, news, etc.) | Suppression des `.attributes` dans les champs relationnels ; les relations sont désormais des types directs |
+| `src/main/kotlin/fr/gouv/agora/infrastructure/consultation/dto/strapi/ConsultationContenuStrapiDTO.kt` | `StrapiConsultationAVenir` passe à `@JsonIgnoreProperties(ignoreUnknown = true)` |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/themeHebdo/repository/ThemeHebdoMapperTest.kt` | JSON de test mis à jour (format v5 à plat) |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/question/repository/QuestionsMapperTest.kt` | JSON de test mis à jour (format v5 à plat) |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/consultation/dto/ConsultationStrapiDTOTest.kt` | JSON de test mis à jour (format v5 à plat, suppression `data`/`attributes` dans images et vidéos) |
+
+**Avant (format v4) :**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "attributes": {
+        "label": "Démocratie",
+        "pictogramme": "🗳",
+        "image": {
+          "data": {
+            "id": 3,
+            "attributes": { "url": "...", "formats": { "medium": { "url": "..." } } }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+**Après (format v5 natif) :**
+```json
+{
+  "data": [
+    {
+      "documentId": "thema-9",
+      "label": "Démocratie",
+      "pictogramme": "🗳",
+      "image": {
+        "url": "...",
+        "formats": { "medium": { "url": "..." } }
+      }
+    }
+  ]
+}
+```
+
+---
+
 ## Résumé de l'état actuel
 
 | Phase | Statut |
 |-------|--------|
 | Phase 1 — Header de compatibilité | ✅ Terminée |
-| Phase 2 — Migration format natif v5 | 🔄 En cours (étape 2.1 ✅) |
+| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅) |

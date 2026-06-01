@@ -6,7 +6,6 @@ import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Goal
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2.InfoHeader
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2.ResponsesInfo
 import fr.gouv.agora.domain.ConsultationUpdateInfoV2.Section
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationContenuAutre
@@ -23,18 +22,17 @@ import java.time.LocalDateTime
 
 @Component
 class ConsultationUpdateInfoV2Mapper {
-    fun toDomainUnanswered(consultationDTO: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2 {
-        val consultation = consultationDTO.attributes
-        val contentBeforeResponse = consultation.contenuAvantReponse.data.attributes
+    fun toDomainUnanswered(consultationDTO: ConsultationStrapiDTO): ConsultationUpdateInfoV2 {
+        val contentBeforeResponse = consultationDTO.contenuAvantReponse
 
         val sections = toSections(contentBeforeResponse.sections)
 
         val sectionPourquoi = Section.Title("Pourquoi cette consultation ?")
 
         return ConsultationUpdateInfoV2(
-            id = consultation.contenuAvantReponse.data.id,
+            id = contentBeforeResponse.documentId,
             slug = contentBeforeResponse.slug,
-            updateDate = consultation.dateDeDebut,
+            updateDate = consultationDTO.dateDeDebut,
             shareTextTemplate = contentBeforeResponse.templatePartage,
             hasQuestionsInfo = true,
             hasParticipationInfo = false,
@@ -61,28 +59,26 @@ class ConsultationUpdateInfoV2Mapper {
                 Goal("🎯", contentBeforeResponse.objectif.toHtml().removePrefix("<p>").removeSuffix("</p>")),
                 Goal("🚀", contentBeforeResponse.axeGouvernemental.toHtml().removePrefix("<p>").removeSuffix("</p>")),
             ),
-            isPublished = consultation.isPublished(),
+            isPublished = consultationDTO.isPublished(),
         )
     }
 
     fun toDomainContenuAutre(
-        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>,
-        contentDTO: StrapiAttributes<StrapiConsultationContenuAutre>
+        consultationDTO: ConsultationStrapiDTO,
+        contentDTO: StrapiConsultationContenuAutre
     ): ConsultationUpdateInfoV2 {
-        val contenu = contentDTO.attributes
+        val htmlSections = toSections(contentDTO.sections)
+        val previewHtmlSections = toPreviewSections(contentDTO.sections)
 
-        val htmlSections = toSections(contenu.sections)
-        val previewHtmlSections = toPreviewSections(contenu.sections)
-
-        val infoHeader = if (contenu.recapEmoji != null && contenu.recapLabel != null)
-            InfoHeader(contenu.recapEmoji, contenu.recapLabel)
+        val infoHeader = if (contentDTO.recapEmoji != null && contentDTO.recapLabel != null)
+            InfoHeader(contentDTO.recapEmoji, contentDTO.recapLabel)
         else null
 
         return ConsultationUpdateInfoV2(
-            id = contentDTO.id,
-            slug = contenu.slug,
-            updateDate = contenu.datetimePublication,
-            shareTextTemplate = contenu.templatePartage,
+            id = contentDTO.documentId,
+            slug = contentDTO.slug,
+            updateDate = contentDTO.datetimePublication,
+            shareTextTemplate = contentDTO.templatePartage,
             hasQuestionsInfo = false,
             hasParticipationInfo = false,
             responsesInfo = null,
@@ -92,30 +88,29 @@ class ConsultationUpdateInfoV2Mapper {
             infoHeader = infoHeader,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
-                contentDTO.id,
+                contentDTO.documentId,
                 "Donnez votre avis",
                 "💬",
-                "<body>${contenu.feedbackMessage}</body>"
+                "<body>${contentDTO.feedbackMessage}</body>"
             ),
             footer = null,
             goals = null,
-            isPublished = consultationDTO.attributes.isPublished(),
+            isPublished = consultationDTO.isPublished(),
         )
     }
 
     fun toDomainAnsweredOrEnded(
-        consultation: StrapiAttributes<ConsultationStrapiDTO>,
+        consultation: ConsultationStrapiDTO,
         now: LocalDateTime,
     ): ConsultationUpdateInfoV2? {
-        val contenu = consultation.attributes.contenuApresReponseOuTerminee.data.attributes
-        val contenuId = consultation.attributes.contenuApresReponseOuTerminee.data.id
+        val contenu = consultation.contenuApresReponseOuTerminee
         val htmlSections = toSections(contenu.sections)
 
-        val consultationIsEnded = consultation.attributes.dateDeFin.isBefore(now)
+        val consultationIsEnded = consultation.dateDeFin.isBefore(now)
         val responsesInfo = if (consultationIsEnded) {
             ResponsesInfo(
                 "🏁",
-                "<body><b>Cette consultation est maintenant terminée.</b> Les résultats sont en cours d’analyse. Vous serez prévenu(e) dès que la synthèse sera disponible.</body>",
+                "<body><b>Cette consultation est maintenant terminée.</b> Les résultats sont en cours d'analyse. Vous serez prévenu(e) dès que la synthèse sera disponible.</body>",
                 "Voir tous les résultats"
             )
         } else {
@@ -129,9 +124,9 @@ class ConsultationUpdateInfoV2Mapper {
         val previewHtmlSections = toPreviewSections(contenu.sections)
 
         return ConsultationUpdateInfoV2(
-            id = contenuId,
+            id = contenu.documentId,
             slug = contenu.slug,
-            updateDate = consultation.attributes.dateDeDebut,
+            updateDate = consultation.dateDeDebut,
             shareTextTemplate = contenu.templatePartage,
             hasQuestionsInfo = false,
             hasParticipationInfo = false,
@@ -142,21 +137,19 @@ class ConsultationUpdateInfoV2Mapper {
             infoHeader = null,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
-                contenuId,
+                contenu.documentId,
                 "Donnez votre avis",
                 "💬",
                 "<body>${contenu.feedbackMessage}</body>"
             ),
             footer = null,
             goals = null,
-            isPublished = consultation.attributes.isPublished(),
+            isPublished = consultation.isPublished(),
         )
     }
 
-    fun toDomainReponseDuCommanditaire(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2? {
-        val contenu = consultation.attributes.consultationContenuReponseDuCommanditaire.data?.attributes
-            ?: return null
-        val contenuId = consultation.attributes.consultationContenuReponseDuCommanditaire.data.id
+    fun toDomainReponseDuCommanditaire(consultation: ConsultationStrapiDTO): ConsultationUpdateInfoV2? {
+        val contenu = consultation.consultationContenuReponseDuCommanditaire ?: return null
         val htmlSections = toSections(contenu.sections)
         val previewHtmlSections = toPreviewSections(contenu.sections)
         val infoHeader = if (contenu.recapEmoji != null && contenu.recapLabel != null)
@@ -164,7 +157,7 @@ class ConsultationUpdateInfoV2Mapper {
         else null
 
         return ConsultationUpdateInfoV2(
-            id = contenuId,
+            id = contenu.documentId,
             slug = contenu.slug,
             updateDate = contenu.datetimePublication,
             shareTextTemplate = contenu.templatePartage,
@@ -177,21 +170,19 @@ class ConsultationUpdateInfoV2Mapper {
             infoHeader = infoHeader,
             downloadAnalysisUrl = null,
             feedbackQuestion = FeedbackQuestion(
-                contenuId,
+                contenu.documentId,
                 "Donnez votre avis",
                 "💬",
                 "<body>${contenu.feedbackMessage}</body>"
             ),
             footer = null,
             goals = null,
-            isPublished = consultation.attributes.isPublished(),
+            isPublished = consultation.isPublished(),
         )
     }
 
-    fun toDomainAnalyseDesReponses(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationUpdateInfoV2? {
-        val contenu = consultation.attributes.consultationContenuAnalyseDesReponses.data?.attributes
-            ?: return null
-        val contenuId = consultation.attributes.consultationContenuAnalyseDesReponses.data.id
+    fun toDomainAnalyseDesReponses(consultation: ConsultationStrapiDTO): ConsultationUpdateInfoV2? {
+        val contenu = consultation.consultationContenuAnalyseDesReponses ?: return null
         val htmlSections = toSections(contenu.sections)
         val previewHtmlSections = toPreviewSections(contenu.sections)
         val infoHeader = if (contenu.recapEmoji != null && contenu.recapLabel != null)
@@ -199,7 +190,7 @@ class ConsultationUpdateInfoV2Mapper {
         else null
 
         return ConsultationUpdateInfoV2(
-            id = contenuId,
+            id = contenu.documentId,
             slug = contenu.slug,
             updateDate = contenu.datetimePublication,
             shareTextTemplate = contenu.templatePartage,
@@ -212,14 +203,14 @@ class ConsultationUpdateInfoV2Mapper {
             infoHeader = infoHeader,
             downloadAnalysisUrl = contenu.getAnalysePdfUrl(),
             feedbackQuestion = FeedbackQuestion(
-                contenuId,
+                contenu.documentId,
                 "Donnez votre avis",
                 "💬",
                 "<body>${contenu.feedbackMessage}</body>"
             ),
             footer = null,
             goals = null,
-            isPublished = consultation.attributes.isPublished(),
+            isPublished = consultation.isPublished(),
         )
     }
 

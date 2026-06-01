@@ -32,8 +32,8 @@ class ConsultationStrapiE2ETest : StrapiE2ETestBase() {
 
         assertThat(result).isNotNull
         result.data.forEach { consultation ->
-            assertThat(consultation.attributes.titre).isNotBlank
-            assertThat(consultation.attributes.slug).isNotBlank
+            assertThat(consultation.titre).isNotBlank
+            assertThat(consultation.slug).isNotBlank
         }
     }
 
@@ -49,7 +49,7 @@ class ConsultationStrapiE2ETest : StrapiE2ETestBase() {
         assertThat(result).isNotNull
         assertThat(result.data).isNotEmpty
         result.data.forEach { consultation ->
-            assertThat(consultation.attributes.titre).isNotBlank
+            assertThat(consultation.titre).isNotBlank
         }
     }
 
@@ -63,12 +63,12 @@ class ConsultationStrapiE2ETest : StrapiE2ETestBase() {
         val liste = repository.getConsultationsFinishedWithUnpublished(now, emptyList())
         assertThat(liste.data).isNotEmpty
 
-        val firstId = liste.data.first().id.toString()
+        val firstId = liste.data.first().documentId
         val result = repository.getConsultationById(firstId)
 
         assertThat(result).isNotNull
-        assertThat(result!!.attributes.titre).isNotBlank
-        assertThat(result.id.toString()).isEqualTo(firstId)
+        assertThat(result!!.titre).isNotBlank
+        assertThat(result.documentId).isEqualTo(firstId)
     }
 
     // ---- isConsultationExists ----
@@ -81,7 +81,7 @@ class ConsultationStrapiE2ETest : StrapiE2ETestBase() {
         val liste = repository.getConsultationsFinishedWithUnpublished(now, emptyList())
         assertThat(liste.data).isNotEmpty
 
-        val firstId = liste.data.first().id.toString()
+        val firstId = liste.data.first().documentId
         val result = repository.isConsultationExists(firstId)
 
         assertThat(result).isTrue()

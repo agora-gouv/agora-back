@@ -31,8 +31,8 @@ class ConcertationStrapiE2ETest : StrapiE2ETestBase() {
         assertThat(result).isNotNull
         assertThat(result.data).isNotEmpty
         result.data.forEach { concertation ->
-            assertThat(concertation.attributes.titre).isNotBlank
-            assertThat(concertation.attributes.urlExterne).isNotBlank
+            assertThat(concertation.titre).isNotBlank
+            assertThat(concertation.urlExterne).isNotBlank
         }
     }
 }

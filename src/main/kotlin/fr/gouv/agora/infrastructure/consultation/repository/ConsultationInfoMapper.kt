@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.consultation.repository
 
 import fr.gouv.agora.domain.ConsultationPreview
 import fr.gouv.agora.domain.ConsultationPreviewFinished
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueMapper
@@ -20,17 +19,17 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         consultations: StrapiDTO<ConsultationStrapiDTO>,
     ): List<ConsultationPreview> {
         return consultations.data.map { consultation ->
-            val thematique = thematiqueMapper.toDomain(consultation.attributes.thematique)
+            val thematique = thematiqueMapper.toDomain(consultation.thematique)
 
             ConsultationPreview(
-                id = consultation.id,
-                slug = consultation.attributes.slug,
-                title = consultation.attributes.titre,
-                coverUrl = consultation.attributes.getImageCouverture(),
+                id = consultation.documentId,
+                slug = consultation.slug,
+                title = consultation.titre,
+                coverUrl = consultation.getImageCouverture(),
                 thematique = thematique,
-                endDate = consultation.attributes.dateDeFin,
-                isPublished = consultation.attributes.isPublished(),
-                territory = consultation.attributes.territoire,
+                endDate = consultation.dateDeFin,
+                isPublished = consultation.isPublished(),
+                territory = consultation.territoire,
             )
         }
     }
@@ -40,72 +39,68 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         now: LocalDateTime,
     ): List<ConsultationPreviewFinished> {
         return consultations.data.mapNotNull { consultation ->
-            val consultationFields = consultation.attributes
+            val thematique = thematiqueMapper.toDomain(consultation.thematique)
 
-            val thematique = thematiqueMapper.toDomain(consultation.attributes.thematique)
-
-            val updateDate = consultationFields.getLatestUpdateDate(now)
+            val updateDate = consultation.getLatestUpdateDate(now)
             if (updateDate == null) {
-                logger.error("ConsultationPreviewFinished - Impossible de générer une updateDate pour la consultation id '${consultation.id}'")
+                logger.error("ConsultationPreviewFinished - Impossible de générer une updateDate pour la consultation id '${consultation.documentId}'")
                 return@mapNotNull null
             }
 
             ConsultationPreviewFinished(
-                id = consultation.id,
-                slug = consultation.attributes.slug,
-                title = consultationFields.titre,
-                coverUrl = consultationFields.getImageCouverture(),
+                id = consultation.documentId,
+                slug = consultation.slug,
+                title = consultation.titre,
+                coverUrl = consultation.getImageCouverture(),
                 thematique = thematique,
-                updateLabel = consultationFields.getFlammeLabel(now),
+                updateLabel = consultation.getFlammeLabel(now),
                 lastUpdateDate = updateDate,
-                endDate = consultationFields.dateDeFin,
-                isPublished = consultation.attributes.isPublished(),
-                territory = consultation.attributes.territoire,
+                endDate = consultation.dateDeFin,
+                isPublished = consultation.isPublished(),
+                territory = consultation.territoire,
             )
         }
     }
 
     fun toConsultationsWithUpdateInfo(consultations: StrapiDTO<ConsultationStrapiDTO>, now: LocalDateTime): List<ConsultationWithUpdateInfo> {
-        return consultations.data.mapNotNull {
-            val consultationAttributes = it.attributes
-
-            val updateDate = consultationAttributes.getLatestUpdateDate(now)
+        return consultations.data.mapNotNull { consultation ->
+            val updateDate = consultation.getLatestUpdateDate(now)
             if (updateDate == null) {
-                logger.error("toConsultationWithUpdateInfo - Impossible de générer une updateDate pour la consultation id '${it.id}'")
+                logger.error("toConsultationWithUpdateInfo - Impossible de générer une updateDate pour la consultation id '${consultation.documentId}'")
                 return@mapNotNull null
             }
 
             return@mapNotNull ConsultationWithUpdateInfo(
-                id = it.id,
-                slug = consultationAttributes.slug,
-                title = consultationAttributes.titre,
-                coverUrl = consultationAttributes.getImageCouverture(),
-                thematiqueId = consultationAttributes.thematique.data.id,
-                endDate = consultationAttributes.dateDeFin,
+                id = consultation.documentId,
+                slug = consultation.slug,
+                title = consultation.titre,
+                coverUrl = consultation.getImageCouverture(),
+                thematiqueId = consultation.thematique.documentId,
+                endDate = consultation.dateDeFin,
                 updateDate = updateDate,
-                updateLabel = consultationAttributes.getFlammeLabel(now),
-                territory = consultationAttributes.territoire,
+                updateLabel = consultation.getFlammeLabel(now),
+                territory = consultation.territoire,
             )
         }
     }
 
-    fun toConsultationInfo(consultation: StrapiAttributes<ConsultationStrapiDTO>): ConsultationInfo {
+    fun toConsultationInfo(consultation: ConsultationStrapiDTO): ConsultationInfo {
         return ConsultationInfo(
-            id = consultation.id,
-            title = consultation.attributes.titre,
-            slug = consultation.attributes.slug,
-            coverUrl = consultation.attributes.getImageCouverture(),
-            detailsCoverUrl = consultation.attributes.getImagePageContenu(),
-            startDate = consultation.attributes.dateDeDebut,
-            endDate = consultation.attributes.dateDeFin,
-            questionCount = consultation.attributes.estimationNombreDeQuestions,
-            estimatedTime = consultation.attributes.estimationTemps,
-            participantCountGoal = consultation.attributes.nombreParticipantsCible,
-            thematique = thematiqueMapper.toDomain(consultation.attributes.thematique),
-            isPublished = consultation.attributes.isPublished(),
-            territory = consultation.attributes.territoire,
-            titreWeb = consultation.attributes.titrePageWeb,
-            sousTitreWeb = consultation.attributes.sousTitrePageWeb,
+            id = consultation.documentId,
+            title = consultation.titre,
+            slug = consultation.slug,
+            coverUrl = consultation.getImageCouverture(),
+            detailsCoverUrl = consultation.getImagePageContenu(),
+            startDate = consultation.dateDeDebut,
+            endDate = consultation.dateDeFin,
+            questionCount = consultation.estimationNombreDeQuestions,
+            estimatedTime = consultation.estimationTemps,
+            participantCountGoal = consultation.nombreParticipantsCible,
+            thematique = thematiqueMapper.toDomain(consultation.thematique),
+            isPublished = consultation.isPublished(),
+            territory = consultation.territoire,
+            titreWeb = consultation.titrePageWeb,
+            sousTitreWeb = consultation.sousTitrePageWeb,
         )
     }
 }

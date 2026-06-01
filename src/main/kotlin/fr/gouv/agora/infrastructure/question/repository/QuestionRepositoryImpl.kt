@@ -17,6 +17,6 @@ class QuestionRepositoryImpl(
 
         val questions = questionMapper.toDomain(consultation)
 
-        return Questions(consultation.attributes.nombreDeQuestion, questions)
+        return Questions(consultation.nombreDeQuestion, questions)
     }
 }

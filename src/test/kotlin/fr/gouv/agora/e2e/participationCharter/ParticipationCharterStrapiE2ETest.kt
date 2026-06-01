@@ -31,7 +31,7 @@ class ParticipationCharterStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getLastParticipationCharter(now)
 
         assertThat(result).isNotNull
-        assertThat(result.attributes.charte).isNotEmpty
-        assertThat(result.attributes.datetimeDebut).isNotNull
+        assertThat(result.charte).isNotEmpty
+        assertThat(result.datetimeDebut).isNotNull
     }
 }

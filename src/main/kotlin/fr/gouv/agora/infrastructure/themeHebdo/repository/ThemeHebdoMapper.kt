@@ -10,16 +10,15 @@ import org.springframework.stereotype.Component
 class ThemeHebdoMapper {
     fun toDomain(strapiDTO: StrapiDTO<ThemeHebdoStrapiDTO>): List<ThemeHebdo> {
         return strapiDTO.data.map { item ->
-            val attributes = item.attributes
             ThemeHebdo(
-                    periode = attributes.periode?.toString()?: "",
-                    theme = attributes.theme,
-                    avatarUrl = attributes.photo.data?.attributes?.mediaUrl(),
-                    nom = attributes.nom_ministre,
-                    fonction = attributes.fonction,
-                    dateDebutTheme = Date.from(OffsetDateTime.parse(attributes.date_debut).toInstant()),
-                    dateFinTheme = Date.from(OffsetDateTime.parse(attributes.date_fin).toInstant()),
-                    estThemeLibre = attributes.est_theme_libre,
+                    periode = item.periode?.toString() ?: "",
+                    theme = item.theme,
+                    avatarUrl = item.photo?.mediaUrl(),
+                    nom = item.nom_ministre,
+                    fonction = item.fonction,
+                    dateDebutTheme = Date.from(OffsetDateTime.parse(item.date_debut).toInstant()),
+                    dateFinTheme = Date.from(OffsetDateTime.parse(item.date_fin).toInstant()),
+                    estThemeLibre = item.est_theme_libre,
             )
         }
     }

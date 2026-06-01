@@ -31,9 +31,9 @@ class HeaderQagStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getLastHeader("top", now)
 
         assertThat(result).isNotNull
-        assertThat(result!!.attributes.titre).isNotBlank
-        assertThat(result.attributes.message).isNotBlank
-        assertThat(result.attributes.type).isNotBlank
+        assertThat(result!!.titre).isNotBlank
+        assertThat(result.message).isNotBlank
+        assertThat(result.type).isNotBlank
     }
 
     @Test
@@ -44,7 +44,7 @@ class HeaderQagStrapiE2ETest : StrapiE2ETestBase() {
         val result = repository.getLastHeader("top", now)
 
         assertThat(result).isNotNull
-        assertThat(result!!.attributes.titre).isNotBlank
-        assertThat(result.attributes.message).isNotBlank
+        assertThat(result!!.titre).isNotBlank
+        assertThat(result.message).isNotBlank
     }
 }

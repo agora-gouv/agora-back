@@ -12,11 +12,11 @@ class ContentRepositoryImpl(
     val contentStrapiRepository: ContentStrapiRepository,
 ) : ContentRepository {
     override fun getPagePoserMaQuestion(): String {
-        return contentStrapiRepository.getPagePoserMaQuestion().attributes.texteRegles.toHtml()
+        return contentStrapiRepository.getPagePoserMaQuestion().texteRegles.toHtml()
     }
 
     override fun getPageQuestionsAuGouvernement(): PageQuestionAuGouvernementContent {
-        return contentStrapiRepository.getPageQuestionsAuGouvernement().attributes.let {
+        return contentStrapiRepository.getPageQuestionsAuGouvernement().let {
             PageQuestionAuGouvernementContent(
                 it.informationBottomsheet,
                 it.nombreDeQuestions,
@@ -27,11 +27,11 @@ class ContentRepositoryImpl(
     }
 
     override fun getPageReponseAuxQuestionsAuGouvernement(): String {
-        return contentStrapiRepository.getPageReponseAuxQaG().attributes.informationReponseAVenirBottomsheet
+        return contentStrapiRepository.getPageReponseAuxQaG().informationReponseAVenirBottomsheet
     }
 
     override fun getPageSiteVitrineAccueil(): SiteVitrineAccueilContent {
-        return contentStrapiRepository.getPageSiteVitrineAccueil().attributes.let {
+        return contentStrapiRepository.getPageSiteVitrineAccueil().let {
             SiteVitrineAccueilContent(
                 it.titreHeader,
                 it.sousTitreHeader,
@@ -45,32 +45,31 @@ class ContentRepositoryImpl(
     }
 
     override fun getPageSiteVitrineConditionGenerales(): String {
-        return contentStrapiRepository.getPageSiteVitrineConditionGenerales().attributes.conditionsGeneralesDUtilisation.toHtml()
+        return contentStrapiRepository.getPageSiteVitrineConditionGenerales().conditionsGeneralesDUtilisation.toHtml()
     }
 
     override fun getPageSiteVitrineConsultation(): String {
-        return contentStrapiRepository.getPageSiteVitrineConsultation().attributes.donnezVotreAvis.toHtml()
+        return contentStrapiRepository.getPageSiteVitrineConsultation().donnezVotreAvis.toHtml()
     }
 
     override fun getPageSiteVitrineDeclarationAccessibilite(): String {
-        return contentStrapiRepository.getPageSiteVitrineDeclarationAccessibilite().attributes.declaration.toHtml()
+        return contentStrapiRepository.getPageSiteVitrineDeclarationAccessibilite().declaration.toHtml()
     }
 
     override fun getPageSiteVitrineMentionsLegales(): String {
-        return contentStrapiRepository.getPageSiteVitrineMentionsLegales().attributes.mentionsLegales.toHtml()
+        return contentStrapiRepository.getPageSiteVitrineMentionsLegales().mentionsLegales.toHtml()
     }
 
     override fun getPageSiteVitrinePolitiqueConfidentialite(): String {
-        return contentStrapiRepository.getPageSiteVitrinePolitiqueConfidentialite().attributes.politiqueDeConfidentialite.toHtml()
+        return contentStrapiRepository.getPageSiteVitrinePolitiqueConfidentialite().politiqueDeConfidentialite.toHtml()
     }
 
     override fun getPageSiteVitrineQuestionAuGouvernement(): SiteVitrineQuestionAuGouvernementContent {
-        return contentStrapiRepository.getPageSiteVitrineQuestionAuGouvernement().attributes.let {
-            SiteVitrineQuestionAuGouvernementContent(
-                it.titre,
-                it.sousTitre,
-                it.texteSoutien.toHtml(),
-            )
-        }
+        val dto = contentStrapiRepository.getPageSiteVitrineQuestionAuGouvernement()
+        return SiteVitrineQuestionAuGouvernementContent(
+            dto.titre,
+            dto.sousTitre,
+            dto.texteSoutien.toHtml(),
+        )
     }
 }
