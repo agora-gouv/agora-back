@@ -96,7 +96,7 @@ Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail com
 - [x] 2.2 — Refactoriser `StrapiDTO.kt` (supprimer `StrapiAttributes`, `StrapiData`, etc.)
 - [x] 2.3 — Adapter tous les DTOs Strapi
 - [x] 2.4 — Adapter `StrapiMediaPicture`
-- [ ] 2.5 — Adapter tous les mappers
+- [x] 2.5 — Adapter tous les mappers
 - [ ] 2.6 — Adapter les repositories (IDs entiers → `documentId` string)
 - [ ] 2.7 — Supprimer le header de compatibilité ajouté en Phase 1
 - [ ] 2.8 — Valider (`./gradlew test` + tests manuels sur staging)
@@ -285,9 +285,29 @@ data class StrapiMediaPicture(
 
 ---
 
+### ✅ Étape 2.5 — Adapter tous les mappers
+
+- **Date :** 2026-06-01
+- **Statut :** ✅ Terminée
+- **Tests :** ✅ `BUILD SUCCESSFUL` — tous les tests passent (exit code 0)
+
+**Constat :** Les mappers Strapi étaient déjà adaptés au format v5 natif (utilisation de `documentId` comme identifiant, accès direct aux champs sans `.attributes`). L'étape consistait à créer la couverture de tests unitaires manquante pour ces mappers.
+
+**Fichiers de tests créés :**
+
+| Fichier | Tests couverts |
+|---|---|
+| `src/test/kotlin/fr/gouv/agora/infrastructure/thematique/repository/ThematiqueMapperTest.kt` | `ThematiqueMapper.toDomain()` : mapping complet, `documentId` comme id |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/concertations/ConcertationMapperTest.kt` | `ConcertationMapper.toDomain()` : thematique imbriquée, image avec/sans format medium, flammeLabel |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/ficheInventaire/FicheInventaireRepositoryImplTest.kt` | `FicheInventaireRepositoryImpl.getAll()` + `get()` : liste vide, mapping thematique, illustration medium/fallback, null handling |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/consultationUpdates/repository/ConsultationUpdateHistoryMapperTest.kt` | `ConsultationUpdateHistoryMapper.toDomain()` : statuts DONE/CURRENT/INCOMING, filtrage futur, analyse des réponses |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/consultationUpdates/repository/ConsultationUpdateInfoV2MapperTest.kt` | `ConsultationUpdateInfoV2Mapper` : `toDomainUnanswered`, `toDomainAnsweredOrEnded`, `toDomainAnalyseDesReponses`, `toDomainReponseDuCommanditaire`, `toDomainContenuAutre` |
+
+---
+
 ## Résumé de l'état actuel
 
 | Phase | Statut |
 |-------|--------|
 | Phase 1 — Header de compatibilité | ✅ Terminée |
-| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅) |
+| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅, 2.5 ✅) |
