@@ -97,7 +97,7 @@ Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail com
 - [x] 2.3 — Adapter tous les DTOs Strapi
 - [x] 2.4 — Adapter `StrapiMediaPicture`
 - [x] 2.5 — Adapter tous les mappers
-- [ ] 2.6 — Adapter les repositories (IDs entiers → `documentId` string)
+- [x] 2.6 — Adapter les repositories (IDs entiers → `documentId` string)
 - [ ] 2.7 — Supprimer le header de compatibilité ajouté en Phase 1
 - [ ] 2.8 — Valider (`./gradlew test` + tests manuels sur staging)
 
@@ -305,9 +305,36 @@ data class StrapiMediaPicture(
 
 ---
 
+### ✅ Étape 2.6 — Adapter les repositories (IDs entiers → `documentId` string)
+
+- **Date :** 2026-06-01
+- **Statut :** ✅ Terminée
+- **Tests :** ✅ `BUILD SUCCESSFUL` — tous les tests passent (exit code 0)
+
+**Constat :** `ConsultationStrapiRepository.kt` et `FicheInventaireStrapiRepository.kt` étaient déjà migrés (plus de `toIntOrNull()`, IDs passés en `String` directement à `getByIds`). Une anomalie résiduelle a été corrigée :
+
+**Fichiers modifiés :**
+
+| Fichier | Modification |
+|---|---|
+| `src/main/kotlin/fr/gouv/agora/infrastructure/ficheInventaire/FicheInventaireStrapiRepository.kt` | Filtre thématique : `listOf("thematique", "id")` → `listOf("thematique", "documentId")` |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/common/StrapiRequestBuilderTest.kt` | Nouveau test : filtre `thematique.documentId` produit `filters[thematique][documentId][$in]=...` |
+
+**Changement dans `FicheInventaireStrapiRepository.kt` :**
+
+```kotlin
+// AVANT — filtre sur l'id numérique (v4)
+if (filters.thematique != null) uriBuilder.filterIn(listOf("thematique", "id"), listOf(filters.thematique))
+
+// APRÈS — filtre sur le documentId (v5)
+if (filters.thematique != null) uriBuilder.filterIn(listOf("thematique", "documentId"), listOf(filters.thematique))
+```
+
+---
+
 ## Résumé de l'état actuel
 
 | Phase | Statut |
 |-------|--------|
 | Phase 1 — Header de compatibilité | ✅ Terminée |
-| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅, 2.5 ✅) |
+| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅, 2.5 ✅, 2.6 ✅) |

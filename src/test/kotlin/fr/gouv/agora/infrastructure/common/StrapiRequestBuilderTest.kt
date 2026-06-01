@@ -32,6 +32,21 @@ class StrapiRequestBuilderTest {
     }
 
     @Test
+    fun `filterIn thematique documentId - when given a documentId - should filter on thematique documentId`() {
+        // Given
+        val documentId = "thema-abc123"
+
+        // When
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .filterIn(listOf("thematique", "documentId"), listOf(documentId))
+            .build()
+
+        // Then
+        assertThat(uri)
+            .contains("filters[thematique][documentId][\$in]=thema-abc123")
+    }
+
+    @Test
     fun `when there is a complex field with thematique and etape, then add filters to URI`() {
         // When
         val uri = StrapiRequestBuilder("fiche-inventaires")
