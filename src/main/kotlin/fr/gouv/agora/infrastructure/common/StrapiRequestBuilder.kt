@@ -11,7 +11,7 @@ import kotlin.text.isNullOrEmpty
 data class StrapiRequestBuilder(private val cmsModel: String) {
     private var filters = ""
     private var sort = ""
-    private var populate = "&populate=deep"
+    private var populate = "&populate=*"
     private var pageSize = "pagination[pageSize]=100"
     private var unpublished = ""
 
@@ -52,8 +52,8 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
 
         return this
     }
-    fun getByIds(ids: List<Int>): StrapiRequestBuilder {
-        return filterIn("id", ids.map { it.toString() })
+    fun getByIds(ids: List<String>): StrapiRequestBuilder {
+        return filterIn("documentId", ids)
     }
 
     fun withDateBefore(date: LocalDateTime, fieldBeforeDate: String): StrapiRequestBuilder {
@@ -86,7 +86,7 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     }
 
     fun withUnpublished(): StrapiRequestBuilder {
-        unpublished = "&publicationState=preview"
+        unpublished = "&status=draft"
         return this
     }
 

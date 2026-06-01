@@ -87,12 +87,12 @@ tasks.withType<Test> {
 
 ## Phase 2 — Migration complète vers le format natif v5
 
-**Statut : ⏳ À faire**
+**Statut : 🔄 En cours**
 
 Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail complet.
 
 Étapes à réaliser (dans l'ordre) :
-- [ ] 2.1 — Adapter `StrapiRequestBuilder.kt` (`populate=deep`→`populate=*`, `publicationState`→`status=draft`, `getByIds(List<Int>)`→`getByIds(List<String>)`)
+- [x] 2.1 — Adapter `StrapiRequestBuilder.kt` (`populate=deep`→`populate=*`, `publicationState`→`status=draft`, `getByIds(List<Int>)`→`getByIds(List<String>)`)
 - [ ] 2.2 — Refactoriser `StrapiDTO.kt` (supprimer `StrapiAttributes`, `StrapiData`, etc.)
 - [ ] 2.3 — Adapter tous les DTOs Strapi
 - [ ] 2.4 — Adapter `StrapiMediaPicture`
@@ -103,9 +103,56 @@ Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail com
 
 ---
 
+### ✅ Étape 2.1 — Adapter `StrapiRequestBuilder.kt`
+
+- **Date :** 2026-06-01
+- **Statut :** ✅ Terminée
+- **Tests :** ✅ `BUILD SUCCESSFUL` — tous les tests passent (exit code 0)
+
+**Fichiers modifiés :**
+
+| Fichier | Modification |
+|---|---|
+| `src/main/kotlin/fr/gouv/agora/infrastructure/common/StrapiRequestBuilder.kt` | 3 changements (voir ci-dessous) |
+| `src/main/kotlin/fr/gouv/agora/infrastructure/consultation/repository/ConsultationStrapiRepository.kt` | Suppression des `toIntOrNull()` sur les 4 appels à `getByIds` |
+| `src/main/kotlin/fr/gouv/agora/infrastructure/ficheInventaire/FicheInventaireStrapiRepository.kt` | Suppression du `toIntOrNull()` sur l'appel à `getByIds` |
+| `src/test/kotlin/fr/gouv/agora/infrastructure/common/StrapiRequestBuilderTest.kt` | Mise à jour des assertions + 2 nouveaux tests |
+
+**Changements dans `StrapiRequestBuilder.kt` :**
+
+1. `populate=deep` → `populate=*`
+```kotlin
+// AVANT
+private var populate = "&populate=deep"
+// APRÈS
+private var populate = "&populate=*"
+```
+
+2. `publicationState=preview` → `status=draft`
+```kotlin
+// AVANT
+unpublished = "&publicationState=preview"
+// APRÈS
+unpublished = "&status=draft"
+```
+
+3. `getByIds(List<Int>)` → `getByIds(List<String>)` filtrant sur `documentId`
+```kotlin
+// AVANT
+fun getByIds(ids: List<Int>): StrapiRequestBuilder {
+    return filterIn("id", ids.map { it.toString() })
+}
+// APRÈS
+fun getByIds(ids: List<String>): StrapiRequestBuilder {
+    return filterIn("documentId", ids)
+}
+```
+
+---
+
 ## Résumé de l'état actuel
 
 | Phase | Statut |
 |-------|--------|
 | Phase 1 — Header de compatibilité | ✅ Terminée |
-| Phase 2 — Migration format natif v5 | ⏳ À démarrer |
+| Phase 2 — Migration format natif v5 | 🔄 En cours (étape 2.1 ✅) |

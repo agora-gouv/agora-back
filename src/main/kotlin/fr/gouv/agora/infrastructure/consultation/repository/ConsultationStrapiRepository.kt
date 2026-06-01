@@ -72,11 +72,10 @@ class ConsultationStrapiRepository(
     }
 
     fun getConsultationsByIds(consultationIds: List<String>): StrapiDTO<ConsultationStrapiDTO> {
-        val strapiConsultationsId = consultationIds.mapNotNull { it.toIntOrNull() }
-        if (strapiConsultationsId.isEmpty()) return StrapiDTO.ofEmpty()
+        if (consultationIds.isEmpty()) return StrapiDTO.ofEmpty()
 
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByIds(strapiConsultationsId)
+            .getByIds(consultationIds)
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -91,18 +90,16 @@ class ConsultationStrapiRepository(
     }
 
     fun getConsultationById(consultationId: String): StrapiAttributes<ConsultationStrapiDTO>? {
-        val strapiConsultationId = consultationId.toIntOrNull() ?: return null
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByIds(listOf(strapiConsultationId))
+            .getByIds(listOf(consultationId))
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
             .firstOrNull()
     }
 
     fun getConsultationByIdWithUnpublished(consultationId: String): StrapiAttributes<ConsultationStrapiDTO>? {
-        val strapiConsultationId = consultationId.toIntOrNull() ?: return null
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByIds(listOf(strapiConsultationId))
+            .getByIds(listOf(consultationId))
             .withUnpublished()
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
@@ -117,9 +114,8 @@ class ConsultationStrapiRepository(
     }
 
     fun isConsultationExists(consultationId: String): Boolean {
-        val strapiConsultationId = consultationId.toIntOrNull() ?: return false
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByIds(listOf(strapiConsultationId))
+            .getByIds(listOf(consultationId))
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)
             .meta.pagination.total == 1

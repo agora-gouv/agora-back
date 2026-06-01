@@ -16,7 +16,7 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri)
-            .isEqualTo("consultations?pagination[pageSize]=100&populate=deep&filters[nom][\$in]=article&filters[nom][\$in]=titre&filters[nom][\$in]=loi")
+            .isEqualTo("consultations?pagination[pageSize]=100&populate=*&filters[nom][\$in]=article&filters[nom][\$in]=titre&filters[nom][\$in]=loi")
     }
 
     @Test
@@ -100,7 +100,7 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri)
-            .isEqualTo("consultations?pagination[pageSize]=100&populate=deep&filters[date_de_debut][\$lt]=2024-12-25T12:10:00&filters[date_de_fin][\$gt]=2024-12-25T12:10:00")
+            .isEqualTo("consultations?pagination[pageSize]=100&populate=*&filters[date_de_debut][\$lt]=2024-12-25T12:10:00&filters[date_de_fin][\$gt]=2024-12-25T12:10:00")
     }
 
     @Test
@@ -111,7 +111,7 @@ class StrapiRequestBuilderTest {
             .build()
 
         // Then
-        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=deep&sort[0]=date_de_debut:desc")
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=*&sort[0]=date_de_debut:desc")
     }
 
     @Test
@@ -122,7 +122,7 @@ class StrapiRequestBuilderTest {
             .build()
 
         // Then
-        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=8&populate=deep")
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=8&populate=*")
     }
 
     @Test
@@ -134,5 +134,31 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=0")
+    }
+
+    @Test
+    fun `getByIds - when given a list of documentIds - should filter by documentId`() {
+        // Given
+        val ids = listOf("abc123def456", "xyz789ghi012")
+
+        // When
+        val uri = StrapiRequestBuilder("consultations")
+            .getByIds(ids)
+            .build()
+
+        // Then
+        assertThat(uri)
+            .isEqualTo("consultations?pagination[pageSize]=100&populate=*&filters[documentId][\$in]=abc123def456&filters[documentId][\$in]=xyz789ghi012")
+    }
+
+    @Test
+    fun `withUnpublished - when called - should use status=draft`() {
+        // When
+        val uri = StrapiRequestBuilder("consultations")
+            .withUnpublished()
+            .build()
+
+        // Then
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&status=draft&populate=*")
     }
 }

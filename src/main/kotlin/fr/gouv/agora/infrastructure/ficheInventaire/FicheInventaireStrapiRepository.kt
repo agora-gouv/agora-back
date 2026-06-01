@@ -27,9 +27,8 @@ class FicheInventaireStrapiRepository(
     }
 
     fun getFicheInventaire(ficheId: String): StrapiAttributes<FicheInventaireStrapiDTO>? {
-        val strapiFicheId = ficheId.toIntOrNull() ?: return null
         val uriBuilder = StrapiRequestBuilder("fiche-inventaires")
-            .getByIds(listOf(strapiFicheId))
+            .getByIds(listOf(ficheId))
 
         return cmsStrapiHttpClient.request<FicheInventaireStrapiDTO>(uriBuilder, ref).data
             .firstOrNull()
