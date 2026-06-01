@@ -94,7 +94,7 @@ Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail com
 Étapes à réaliser (dans l'ordre) :
 - [x] 2.1 — Adapter `StrapiRequestBuilder.kt` (`populate=deep`→`populate=*`, `publicationState`→`status=draft`, `getByIds(List<Int>)`→`getByIds(List<String>)`)
 - [x] 2.2 — Refactoriser `StrapiDTO.kt` (supprimer `StrapiAttributes`, `StrapiData`, etc.)
-- [ ] 2.3 — Adapter tous les DTOs Strapi
+- [x] 2.3 — Adapter tous les DTOs Strapi
 - [ ] 2.4 — Adapter `StrapiMediaPicture`
 - [ ] 2.5 — Adapter tous les mappers
 - [ ] 2.6 — Adapter les repositories (IDs entiers → `documentId` string)
@@ -212,9 +212,36 @@ fun getByIds(ids: List<String>): StrapiRequestBuilder {
 
 ---
 
+### ✅ Étape 2.3 — Adapter tous les DTOs Strapi
+
+- **Date :** 2026-06-01
+- **Statut :** ✅ Terminée (réalisée dans le cadre de l'étape 2.2)
+- **Tests :** ✅ `BUILD SUCCESSFUL` — tous les tests passent (exit code 0)
+
+**Constat :** Tous les DTOs Strapi avaient déjà été migrés vers le format v5 natif lors de l'étape 2.2. Vérification complète effectuée sur chacun des DTOs listés dans le plan de migration.
+
+**DTOs vérifiés :**
+
+| DTO | État |
+|---|---|
+| `ThematiqueStrapiDTO.kt` | ✅ `documentId: String` présent, aucune relation imbriquée |
+| `ConcertationStrapiDTO.kt` | ✅ `thematique: ThematiqueStrapiDTO`, `image: StrapiMediaPicture?`, `getUrlImageCouverture()` correcte |
+| `FicheInventaireStrapiDTO.kt` | ✅ `thematique: ThematiqueStrapiDTO`, `illustration: StrapiMediaPicture` |
+| `ThemeHebdoStrapiDTO.kt` | ✅ `photo: StrapiMediaPicture?` direct (sans wrapper) |
+| `ConsultationStrapiDTO.kt` | ✅ Tous les champs directs : `thematique`, `contenuAvantReponse`, `consultationContenuAutres: List<...>`, `imageDeCouverture: StrapiMediaPicture?`, méthodes corrigées |
+| `ConsultationContenuStrapiDTO.kt` | ✅ `analysePdf: StrapiMediaPdf?` direct, `getAnalysePdfUrl()` correcte |
+| `ConsultationQuestionStrapiDTO.kt` | ✅ `image: StrapiMediaPicture?` direct, `getImageUrl()` correcte |
+
+**Tests de désérialisation validant le format v5 :**
+- `ConsultationStrapiDTOTest` — JSON v5 à plat (sans `data`/`attributes`)
+- `ThemeHebdoMapperTest` — `StrapiMediaPicture` directement dans le DTO
+- `QuestionsMapperTest` — `image: StrapiMediaPicture?` directement dans `StrapiConsultationQuestionDescription`
+
+---
+
 ## Résumé de l'état actuel
 
 | Phase | Statut |
 |-------|--------|
 | Phase 1 — Header de compatibilité | ✅ Terminée |
-| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅) |
+| Phase 2 — Migration format natif v5 | 🔄 En cours (étapes 2.1 ✅, 2.2 ✅, 2.3 ✅) |
