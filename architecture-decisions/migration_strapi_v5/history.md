@@ -32,6 +32,59 @@ return HttpRequest.newBuilder()
 
 ---
 
+## Harnais de tests E2E Strapi
+
+**Objectif :** Poser un filet de sécurité sur les endpoints Strapi pour détecter toute régression lors de la Phase 2.
+
+### ✅ Mise en place du harnais (2026-06-01)
+
+**Fichiers créés :**
+
+| Fichier | Rôle |
+|---|---|
+| `src/test/kotlin/fr/gouv/agora/e2e/StrapiE2ETestBase.kt` | Classe de base : setup `CmsStrapiHttpClient`, skip automatique si credentials absents |
+| `src/test/kotlin/fr/gouv/agora/e2e/content/ContentStrapiE2ETest.kt` | 10 tests E2E — tag `Content` |
+| `src/test/kotlin/fr/gouv/agora/e2e/ficheInventaire/FicheInventaireStrapiE2ETest.kt` | 2 tests E2E — tag `FicheInventaire` |
+
+**Modification `build.gradle.kts` :**
+```kotlin
+tasks.withType<Test> {
+    useJUnitPlatform {
+        if (!project.hasProperty("e2e")) {
+            excludeTags("e2e")  // E2E exclus par défaut
+        }
+    }
+}
+```
+
+**Commandes :**
+- `./gradlew test` → tests unitaires uniquement (E2E exclus)
+- `./gradlew test -Pe2e` → tests E2E uniquement (unitaires exclus), relancés à chaque fois sans cache (nécessite `CMS_AUTH_TOKEN` + `CMS_API_URL`)
+
+**Résultats de validation (2026-06-01) :**
+- `./gradlew test` → ✅ `BUILD SUCCESSFUL` (E2E bien exclus)
+- `./gradlew test -Pe2e` → ✅ `BUILD SUCCESSFUL` — **12/12 tests E2E passés** (0 skipped, 0 failures)
+  - `ContentStrapiE2ETest` : 10/10 ✅
+  - `FicheInventaireStrapiE2ETest` : 2/2 ✅
+
+**Endpoints Strapi couverts :**
+- `page-questions-au-gouvernement`
+- `page-reponse-aux-questions-au-gouvernement`
+- `page-poser-ma-question`
+- `site-vitrine-accueil`
+- `site-vitrine-conditions-generales-d-utilisation`
+- `site-vitrine-consultation`
+- `site-vitrine-declaration-d-accessibilite`
+- `site-vitrine-mentions-legale`
+- `site-vitrine-politique-de-confidentialite`
+- `site-vitrine-question-au-gouvernement`
+- `fiche-inventaires` (liste)
+- `fiche-inventaires/{id}` (détail)
+
+> ⚠️ **Note :** Ces tests constituent la baseline v4. Ils doivent être relancés après chaque étape de la Phase 2 pour s'assurer qu'il n'y a pas de régression.
+
+---
+
 ## Phase 2 — Migration complète vers le format natif v5
 
 **Statut : ⏳ À faire**

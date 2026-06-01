@@ -49,7 +49,20 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        if (project.hasProperty("e2e")) {
+            includeTags("e2e")
+        } else {
+            excludeTags("e2e")
+        }
+    }
+    if (project.hasProperty("e2e")) {
+        testLogging {
+            showStandardStreams = true
+            events("passed", "skipped", "failed")
+        }
+        outputs.upToDateWhen { false }
+    }
 }
 
 tasks.getByName<Jar>("bootJar") {
