@@ -141,14 +141,14 @@ class StrapiRequestBuilderTest {
     }
 
     @Test
-    fun `returns objects with depth`() {
+    fun `returns objects with custom populate`() {
         // When
         val uri = StrapiRequestBuilder("consultations")
-            .populate("0")
+            .populate("[thematique]=*&populate[questions][populate]=*")
             .build()
 
         // Then
-        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=0")
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate[thematique]=*&populate[questions][populate]=*")
     }
 
     @Test

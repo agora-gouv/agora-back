@@ -58,8 +58,9 @@ class CmsStrapiHttpClient(
         val uriWithoutSpace = uri.replace(" ", "%20")
         logger.info("Requête Strapi vers l'URI : $uriWithoutSpace")
 
-        return HttpRequest.newBuilder()
+        val result = HttpRequest.newBuilder()
             .uri(URI("$apiUrl$uriWithoutSpace"))
             .setHeader("Authorization", "Bearer $authToken")
+        return result
     }
 }

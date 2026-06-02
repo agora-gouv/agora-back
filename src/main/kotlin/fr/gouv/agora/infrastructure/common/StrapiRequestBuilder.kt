@@ -81,7 +81,7 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     }
 
     fun populate(newPopulate: String): StrapiRequestBuilder {
-        populate = "&populate=$newPopulate"
+        populate = "&populate$newPopulate"
         return this
     }
 

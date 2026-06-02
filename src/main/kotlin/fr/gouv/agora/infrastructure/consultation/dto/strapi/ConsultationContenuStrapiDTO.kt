@@ -28,7 +28,7 @@ data class StrapiConsultationContenuAvantReponse(
     @JsonProperty("presentation")
     val presentation: List<StrapiRichText>,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
 )
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "nom_strapi")
@@ -46,7 +46,7 @@ data class StrapiConsultationContenuApresReponse(
     @JsonProperty("historique_call_to_action")
     val historiqueCallToAction: String,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
 )
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "nom_strapi")
@@ -66,9 +66,9 @@ data class StrapiConsultationContenuAutre(
     @JsonProperty("datetime_publication")
     val datetimePublication: LocalDateTime,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
     @JsonProperty("flamme_label")
-    val flammeLabel: String,
+    val flammeLabel: String?,
     @JsonProperty("recap_emoji")
     val recapEmoji: String?,
     @JsonProperty("recap_label")
@@ -102,7 +102,7 @@ data class StrapiConsultationAnalyseDesReponses(
     @JsonProperty("flamme_label")
     val flammeLabel: String?,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
     @JsonProperty("recap_emoji")
     val recapEmoji: String?,
     @JsonProperty("recap_label")
@@ -134,7 +134,7 @@ data class StrapiConsultationReponseCommanditaire(
     @JsonProperty("flamme_label")
     val flammeLabel: String?,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
     @JsonProperty("recap_emoji")
     val recapEmoji: String?,
     @JsonProperty("recap_label")
