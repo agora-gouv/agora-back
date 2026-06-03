@@ -56,6 +56,10 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
         return filterIn("documentId", ids)
     }
 
+    fun getByNumericIds(ids: List<String>): StrapiRequestBuilder {
+        return filterIn("id", ids)
+    }
+
     fun withDateBefore(date: LocalDateTime, fieldBeforeDate: String): StrapiRequestBuilder {
         val formattedDate = date.format(DateTimeFormatter.ISO_DATE_TIME)
         filters += "&filters[$fieldBeforeDate][\$lt]=$formattedDate"

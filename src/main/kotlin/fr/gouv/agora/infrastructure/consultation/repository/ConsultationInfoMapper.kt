@@ -22,7 +22,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             val thematique = thematiqueMapper.toDomain(consultation.thematique)
 
             ConsultationPreview(
-                id = consultation.documentId,
+                id = consultation.id.toString(),
                 slug = consultation.slug,
                 title = consultation.titre,
                 coverUrl = consultation.getImageCouverture(),
@@ -43,12 +43,12 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
 
             val updateDate = consultation.getLatestUpdateDate(now)
             if (updateDate == null) {
-                logger.error("ConsultationPreviewFinished - Impossible de générer une updateDate pour la consultation id '${consultation.documentId}'")
+                logger.error("ConsultationPreviewFinished - Impossible de générer une updateDate pour la consultation id '${consultation.id}'")
                 return@mapNotNull null
             }
 
             ConsultationPreviewFinished(
-                id = consultation.documentId,
+                id = consultation.id.toString(),
                 slug = consultation.slug,
                 title = consultation.titre,
                 coverUrl = consultation.getImageCouverture(),
@@ -66,12 +66,12 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         return consultations.data.mapNotNull { consultation ->
             val updateDate = consultation.getLatestUpdateDate(now)
             if (updateDate == null) {
-                logger.error("toConsultationWithUpdateInfo - Impossible de générer une updateDate pour la consultation id '${consultation.documentId}'")
+                logger.error("toConsultationWithUpdateInfo - Impossible de générer une updateDate pour la consultation id '${consultation.id}'")
                 return@mapNotNull null
             }
 
             return@mapNotNull ConsultationWithUpdateInfo(
-                id = consultation.documentId,
+                id = consultation.id.toString(),
                 slug = consultation.slug,
                 title = consultation.titre,
                 coverUrl = consultation.getImageCouverture(),
@@ -86,7 +86,7 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
 
     fun toConsultationInfo(consultation: ConsultationStrapiDTO): ConsultationInfo {
         return ConsultationInfo(
-            id = consultation.documentId,
+            id = consultation.id.toString(),
             title = consultation.titre,
             slug = consultation.slug,
             coverUrl = consultation.getImageCouverture(),

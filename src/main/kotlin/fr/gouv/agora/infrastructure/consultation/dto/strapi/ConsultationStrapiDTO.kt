@@ -8,6 +8,8 @@ import java.time.LocalDateTime
 
 @JsonIgnoreProperties("createdAt", "updatedAt")
 data class ConsultationStrapiDTO(
+    @JsonProperty(value = "id")
+    val id: Int,
     @JsonProperty(value = "documentId")
     val documentId: String,
     @JsonProperty(value = "titre_consultation")

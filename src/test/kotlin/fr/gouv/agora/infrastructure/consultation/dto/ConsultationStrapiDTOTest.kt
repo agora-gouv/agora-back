@@ -26,6 +26,7 @@ class ConsultationStrapiDTOTest {
             {
               "data": [
                 {
+                  "id": 42,
                   "documentId": "agri-pro-1",
                   "url_image_de_couverture": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_professionnels.jpg",
                   "url_image_page_de_contenu": "https://content.agora.beta.gouv.fr/consultation_covers/agriculteurs_consommateurs.jpg",
