@@ -130,7 +130,7 @@ class ConsultationStrapiRepository(
         if (consultationIds.isEmpty()) return StrapiDTO.ofEmpty()
 
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByNumericIds(consultationIds)
+            .getByIds(consultationIds)
             .populate(LIST_POPULATE)
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
@@ -148,7 +148,7 @@ class ConsultationStrapiRepository(
 
     fun getConsultationById(consultationId: String): ConsultationStrapiDTO? {
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByNumericIds(listOf(consultationId))
+            .getByIds(listOf(consultationId))
             .withUnpublished()
             .populate(DETAIL_POPULATE)
 
@@ -158,7 +158,7 @@ class ConsultationStrapiRepository(
 
     fun getConsultationByIdWithUnpublished(consultationId: String): ConsultationStrapiDTO? {
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByNumericIds(listOf(consultationId))
+            .getByIds(listOf(consultationId))
             .withUnpublished()
             .populate(DETAIL_POPULATE)
 
@@ -176,7 +176,7 @@ class ConsultationStrapiRepository(
 
     fun isConsultationExists(consultationId: String): Boolean {
         val uriBuilder = StrapiRequestBuilder("consultations")
-            .getByNumericIds(listOf(consultationId))
+            .getByIds(listOf(consultationId))
             .withUnpublished()
 
         return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref)

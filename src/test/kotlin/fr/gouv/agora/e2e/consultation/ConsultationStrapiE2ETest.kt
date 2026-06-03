@@ -63,13 +63,12 @@ class ConsultationStrapiE2ETest : StrapiE2ETestBase() {
         val liste = repository.getConsultationsFinishedWithUnpublished(now, emptyList())
         assertThat(liste.data).isNotEmpty
 
-        val firstConsultation = liste.data.first()
-        val firstId = firstConsultation.id.toString()
+        val firstId = liste.data.first().documentId
         val result = repository.getConsultationById(firstId)
 
         assertThat(result).isNotNull
         assertThat(result!!.titre).isNotBlank
-        assertThat(result.id).isEqualTo(firstConsultation.id)
+        assertThat(result.documentId).isEqualTo(firstId)
     }
 
     // ---- isConsultationExists ----
@@ -82,7 +81,7 @@ class ConsultationStrapiE2ETest : StrapiE2ETestBase() {
         val liste = repository.getConsultationsFinishedWithUnpublished(now, emptyList())
         assertThat(liste.data).isNotEmpty
 
-        val firstId = liste.data.first().id.toString()
+        val firstId = liste.data.first().documentId
         val result = repository.isConsultationExists(firstId)
 
         assertThat(result).isTrue()

@@ -13,7 +13,7 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     private var sort = ""
     private var populate = "&populate=*"
     private var pageSize = "pagination[pageSize]=100"
-    private var status = "&status=published"
+    private var unpublished = ""
 
     private var builderError = ""
 
@@ -56,10 +56,6 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
         return filterIn("documentId", ids)
     }
 
-    fun getByNumericIds(ids: List<String>): StrapiRequestBuilder {
-        return filterIn("id", ids)
-    }
-
     fun withDateBefore(date: LocalDateTime, fieldBeforeDate: String): StrapiRequestBuilder {
         val formattedDate = date.format(DateTimeFormatter.ISO_DATE_TIME)
         filters += "&filters[$fieldBeforeDate][\$lt]=$formattedDate"
@@ -90,13 +86,13 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     }
 
     fun withUnpublished(): StrapiRequestBuilder {
-        status += "&status=draft"
+        unpublished = "&status=draft"
         return this
     }
 
     fun build(): String {
         if (builderError.isNotBlank()) throw Exception(builderError)
 
-        return "${cmsModel}?$pageSize$status$populate$filters$sort"
+        return "${cmsModel}?$pageSize$unpublished$populate$filters$sort"
     }
 }

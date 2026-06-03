@@ -41,7 +41,6 @@ internal class QuestionsMapperTest {
             @Language("JSON")
             val consultationAvecTousTypesDeQuestionJson = """
                 {
-                  "id": 1,
                   "documentId": "abc123",
                   "slug": "",
                   "url_image_de_couverture": "",

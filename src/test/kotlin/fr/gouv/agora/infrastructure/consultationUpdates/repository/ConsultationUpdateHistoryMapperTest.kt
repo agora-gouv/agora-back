@@ -228,7 +228,6 @@ internal class ConsultationUpdateHistoryMapperTest {
         reponseDuCommanditaire: StrapiConsultationReponseCommanditaire? = null,
         dateDeFin: LocalDateTime = pastDate.plusDays(30),
     ): ConsultationStrapiDTO = ConsultationStrapiDTO(
-        id = 1,
         documentId = "consult-1",
         titre = "Consultation test",
         slug = "consultation-test",

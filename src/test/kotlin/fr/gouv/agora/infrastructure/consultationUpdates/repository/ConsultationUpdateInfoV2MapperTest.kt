@@ -328,7 +328,6 @@ internal class ConsultationUpdateInfoV2MapperTest {
         analyseDesReponses: StrapiConsultationAnalyseDesReponses? = null,
         reponseDuCommanditaire: StrapiConsultationReponseCommanditaire? = null,
     ): ConsultationStrapiDTO = ConsultationStrapiDTO(
-        id = 1,
         documentId = "consult-1",
         titre = "Consultation test",
         slug = "consultation-test",
