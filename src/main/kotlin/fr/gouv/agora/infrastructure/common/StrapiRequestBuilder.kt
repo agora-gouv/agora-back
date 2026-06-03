@@ -13,7 +13,7 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     private var sort = ""
     private var populate = "&populate=*"
     private var pageSize = "pagination[pageSize]=100"
-    private var unpublished = ""
+    private var status = "&status=published"
 
     private var builderError = ""
 
@@ -90,13 +90,13 @@ data class StrapiRequestBuilder(private val cmsModel: String) {
     }
 
     fun withUnpublished(): StrapiRequestBuilder {
-        unpublished = "&status=draft"
+        status += "&status=draft"
         return this
     }
 
     fun build(): String {
         if (builderError.isNotBlank()) throw Exception(builderError)
 
-        return "${cmsModel}?$pageSize$unpublished$populate$filters$sort"
+        return "${cmsModel}?$pageSize$status$populate$filters$sort"
     }
 }
