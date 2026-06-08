@@ -20,4 +20,5 @@ data class ResponseQagPreviewWithoutOrder(
     val authorPortraitUrl: String,
     val responseDate: Date,
     val responseText: String?,
+    val username: String,
 )

@@ -43,6 +43,7 @@ class ResponseQagPreviewListMapper {
             authorPortraitUrl = responseQag.authorPortraitUrl,
             responseDate = responseQag.responseDate,
             responseText = (responseQag as? ResponseQagText)?.responseText,
+            username = qagInfo.username,
         )
     }
 

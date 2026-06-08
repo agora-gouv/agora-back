@@ -67,6 +67,7 @@ class ResponseQagPreviewListMapperTest {
                     authorPortraitUrl = "portraitUrl",
                     responseDate = responseDate,
                     responseText = "Le texte de la réponse",
+                    username = "username",
                 )
             )
         }
@@ -108,6 +109,7 @@ class ResponseQagPreviewListMapperTest {
                     authorPortraitUrl = "portraitUrl",
                     responseDate = responseDate,
                     responseText = null,
+                    username = "username",
                 )
             )
         }
