@@ -15,7 +15,7 @@ data class ReponseConsultationJson(
     @JsonProperty("choiceIds")
     val choiceIds: List<String>,
     @JsonProperty("responseText")
-    val responseText: String,
+    val responseText: String?,
 )
 
 data class ResponseConsultationResultJson(
