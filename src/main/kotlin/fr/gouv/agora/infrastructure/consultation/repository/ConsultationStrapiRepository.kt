@@ -74,7 +74,6 @@ class ConsultationStrapiRepository(
         val uriBuilder = StrapiRequestBuilder("consultations")
             .withDateBefore(date, "datetime_de_debut")
             .withDateAfter(date, "datetime_de_fin")
-            .withUnpublished()
             .populate(LIST_POPULATE)
 
         if (territories.isNotEmpty())
@@ -89,7 +88,6 @@ class ConsultationStrapiRepository(
     ): StrapiDTO<ConsultationStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .withDateBefore(date, "datetime_de_fin")
-            .withUnpublished()
             .populate(LIST_POPULATE)
 
         if (territories.isNotEmpty())

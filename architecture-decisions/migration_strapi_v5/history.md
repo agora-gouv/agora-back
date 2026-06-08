@@ -99,7 +99,7 @@ Voir `architecture-decisions/migration-strapi-v4-vers-v5.md` pour le détail com
 - [x] 2.5 — Adapter tous les mappers
 - [x] 2.6 — Adapter les repositories (IDs entiers → `documentId` string)
 - [x] 2.7 — Supprimer le header de compatibilité ajouté en Phase 1
-- [ ] 2.8 — Valider (`./gradlew test` + tests manuels sur staging)
+- [x] 2.8 — Valider (`./gradlew test` + tests manuels sur staging)
 
 ---
 
