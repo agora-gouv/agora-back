@@ -27,7 +27,6 @@ internal class ConsultationPreviewMapperTest {
         thematique = thematique,
         endDate = LocalDateTime.MIN,
         slug = "slug",
-        isPublished = true,
         territory = "France"
     )
 

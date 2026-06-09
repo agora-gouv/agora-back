@@ -86,8 +86,37 @@ class ConsultationUpdateV2RepositoryImpl(
         consultationId: String,
         consultationUpdateIdOrSlug: String,
     ): ConsultationUpdateInfoV2? {
-        return getConsultationUpdateBySlugOrIdWithUnpublished(consultationId, consultationUpdateIdOrSlug)
-            ?.takeIf { it.isPublished }
+        val consultationFromStrapi = consultationStrapiRepository.getConsultationById(consultationId)
+            ?: return null
+
+        val contenuAvantReponse = consultationFromStrapi.contenuAvantReponse
+        val contenuApresReponse = consultationFromStrapi.contenuApresReponseOuTerminee
+        val contenuAnalyseReponses = consultationFromStrapi.consultationContenuAnalyseDesReponses
+        val contenuReponseCommanditaire = consultationFromStrapi.consultationContenuReponseDuCommanditaire
+
+        val foundContenuAvantReponse =
+            contenuAvantReponse.documentId == consultationUpdateIdOrSlug || contenuAvantReponse.slug == consultationUpdateIdOrSlug
+        val foundContenuApresReponse =
+            contenuApresReponse.documentId == consultationUpdateIdOrSlug || contenuApresReponse.slug == consultationUpdateIdOrSlug
+        val foundContenuAnalyseReponses =
+            contenuAnalyseReponses?.documentId == consultationUpdateIdOrSlug || contenuAnalyseReponses?.slug == consultationUpdateIdOrSlug
+        val foundContenuReponseCommanditaire =
+            contenuReponseCommanditaire?.documentId == consultationUpdateIdOrSlug || contenuReponseCommanditaire?.slug == consultationUpdateIdOrSlug
+
+        return if (foundContenuAvantReponse) {
+            mapper.toDomainUnanswered(consultationFromStrapi)
+        } else if (foundContenuApresReponse) {
+            mapper.toDomainAnsweredOrEnded(consultationFromStrapi, LocalDateTime.now(clock))
+        } else if (foundContenuAnalyseReponses) {
+            mapper.toDomainAnalyseDesReponses(consultationFromStrapi)
+        } else if (foundContenuReponseCommanditaire) {
+            mapper.toDomainReponseDuCommanditaire(consultationFromStrapi)
+        } else {
+            val contenuAutre = consultationFromStrapi.consultationContenuAutres
+                .firstOrNull { it.documentId == consultationUpdateIdOrSlug || it.slug == consultationUpdateIdOrSlug }
+                ?: return null
+            mapper.toDomainContenuAutre(consultationFromStrapi, contenuAutre)
+        }
     }
 
     override fun getConsultationUpdate(

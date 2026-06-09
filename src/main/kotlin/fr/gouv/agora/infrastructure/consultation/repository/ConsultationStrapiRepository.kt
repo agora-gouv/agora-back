@@ -151,6 +151,15 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
+    fun getConsultationBySlug(slug: String): ConsultationStrapiDTO? {
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .filterIn("slug", listOf(slug))
+            .populate(DETAIL_POPULATE)
+
+        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
+            .firstOrNull()
+    }
+
     fun getConsultationBySlugWithUnpublished(slug: String): ConsultationStrapiDTO? {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .filterIn("slug", listOf(slug))

@@ -6,7 +6,7 @@ import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import java.time.LocalDateTime
 
-@JsonIgnoreProperties("createdAt", "updatedAt")
+@JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class ConsultationStrapiDTO(
     @JsonProperty(value = "documentId")
     val documentId: String,
@@ -18,8 +18,6 @@ data class ConsultationStrapiDTO(
     val dateDeDebut: LocalDateTime,
     @JsonProperty(value = "datetime_de_fin")
     val dateDeFin: LocalDateTime,
-    @JsonProperty(value = "publishedAt")
-    val publishedAt: LocalDateTime?,
     @JsonProperty(value = "url_image_de_couverture")
     val urlImageDeCouverture: String,
     @JsonProperty(value = "url_image_page_de_contenu")
@@ -65,10 +63,6 @@ data class ConsultationStrapiDTO(
 
     fun getImagePageContenu(): String {
         return imagePageDeContenu?.mediaUrl() ?: urlImagePageDeContenu
-    }
-
-    fun isPublished(): Boolean {
-        return publishedAt != null
     }
 
     fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime? {

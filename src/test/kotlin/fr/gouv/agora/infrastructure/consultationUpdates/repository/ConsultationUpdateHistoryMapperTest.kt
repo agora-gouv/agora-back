@@ -233,7 +233,6 @@ internal class ConsultationUpdateHistoryMapperTest {
         slug = "consultation-test",
         dateDeDebut = pastDate,
         dateDeFin = dateDeFin,
-        publishedAt = pastDate,
         urlImageDeCouverture = "https://cover.jpg",
         urlImagePageDeContenu = "https://page.jpg",
         nombreDeQuestion = 5,

@@ -28,7 +28,6 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 coverUrl = consultation.getImageCouverture(),
                 thematique = thematique,
                 endDate = consultation.dateDeFin,
-                isPublished = consultation.isPublished(),
                 territory = consultation.territoire,
             )
         }
@@ -56,7 +55,6 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
                 updateLabel = consultation.getFlammeLabel(now),
                 lastUpdateDate = updateDate,
                 endDate = consultation.dateDeFin,
-                isPublished = consultation.isPublished(),
                 territory = consultation.territoire,
             )
         }
@@ -97,7 +95,6 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
             estimatedTime = consultation.estimationTemps,
             participantCountGoal = consultation.nombreParticipantsCible,
             thematique = thematiqueMapper.toDomain(consultation.thematique),
-            isPublished = consultation.isPublished(),
             territory = consultation.territoire,
             titreWeb = consultation.titrePageWeb,
             sousTitreWeb = consultation.sousTitrePageWeb,

@@ -59,7 +59,6 @@ class ConsultationUpdateInfoV2Mapper {
                 Goal("🎯", contentBeforeResponse.objectif.toHtml().removePrefix("<p>").removeSuffix("</p>")),
                 Goal("🚀", contentBeforeResponse.axeGouvernemental.toHtml().removePrefix("<p>").removeSuffix("</p>")),
             ),
-            isPublished = consultationDTO.isPublished(),
         )
     }
 
@@ -95,7 +94,6 @@ class ConsultationUpdateInfoV2Mapper {
             ),
             footer = null,
             goals = null,
-            isPublished = consultationDTO.isPublished(),
         )
     }
 
@@ -144,7 +142,6 @@ class ConsultationUpdateInfoV2Mapper {
             ),
             footer = null,
             goals = null,
-            isPublished = consultation.isPublished(),
         )
     }
 
@@ -177,7 +174,6 @@ class ConsultationUpdateInfoV2Mapper {
             ),
             footer = null,
             goals = null,
-            isPublished = consultation.isPublished(),
         )
     }
 
@@ -210,7 +206,6 @@ class ConsultationUpdateInfoV2Mapper {
             ),
             footer = null,
             goals = null,
-            isPublished = consultation.isPublished(),
         )
     }
 

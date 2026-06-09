@@ -80,20 +80,6 @@ internal class ConsultationUpdateInfoV2MapperTest {
             assertThat(result.downloadAnalysisUrl).isNull()
         }
 
-        @Test
-        fun `toDomainUnanswered - should use consultation publishedAt to determine isPublished`() {
-            // Given
-            val consultationPublished = buildConsultationDTO(publishedAt = pastDate)
-            val consultationUnpublished = buildConsultationDTO(publishedAt = null)
-
-            // When
-            val resultPublished = mapper.toDomainUnanswered(consultationPublished)
-            val resultUnpublished = mapper.toDomainUnanswered(consultationUnpublished)
-
-            // Then
-            assertThat(resultPublished.isPublished).isTrue()
-            assertThat(resultUnpublished.isPublished).isFalse()
-        }
     }
 
     @Nested
@@ -321,7 +307,6 @@ internal class ConsultationUpdateInfoV2MapperTest {
     // ---- Helpers ----
 
     private fun buildConsultationDTO(
-        publishedAt: LocalDateTime? = pastDate,
         dateDeFin: LocalDateTime = futureDate,
         contenuAvantReponseDocumentId: String = "avant-rep-1",
         contenuApresReponseDocumentId: String = "apres-rep-1",
@@ -333,7 +318,6 @@ internal class ConsultationUpdateInfoV2MapperTest {
         slug = "consultation-test",
         dateDeDebut = pastDate,
         dateDeFin = dateDeFin,
-        publishedAt = publishedAt,
         urlImageDeCouverture = "https://cover.jpg",
         urlImagePageDeContenu = "https://page.jpg",
         nombreDeQuestion = 5,

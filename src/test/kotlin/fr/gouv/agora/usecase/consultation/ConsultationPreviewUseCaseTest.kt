@@ -82,16 +82,16 @@ internal class ConsultationPreviewUseCaseTest {
         @Test
         fun `getConsultationPreviewPage - when canViewUnpublishedConsultations - should return all consultations including unpublished`() {
             // Given
-            val publishedOngoing = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true)
-            val unpublishedOngoing = mockConsultationPreview(id = "ongoingDraft", endDate = LocalDateTime.now().plusDays(5), isPublished = false)
-            val publishedFinished = mockConsultationPreviewFinished(id = "finished1", isPublished = true)
-            val unpublishedFinished = mockConsultationPreviewFinished(id = "finishedDraft", isPublished = false)
+            val ongoing1 = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10))
+            val ongoingDraft = mockConsultationPreview(id = "ongoingDraft", endDate = LocalDateTime.now().plusDays(5))
+            val finished1 = mockConsultationPreviewFinished(id = "finished1")
+            val finishedDraft = mockConsultationPreviewFinished(id = "finishedDraft")
 
             given(authentificationHelper.getUserId()).willReturn(null)
             given(consultationInfoRepository.getOngoingConsultationsWithUnpublished(anyList()))
-                .willReturn(listOf(publishedOngoing, unpublishedOngoing))
+                .willReturn(listOf(ongoing1, ongoingDraft))
             given(consultationInfoRepository.getFinishedConsultationsWithUnpublished(anyList()))
-                .willReturn(listOf(publishedFinished, unpublishedFinished))
+                .willReturn(listOf(finished1, finishedDraft))
 
             // When
             val result = useCase.getConsultationPreviewPage()
@@ -105,9 +105,9 @@ internal class ConsultationPreviewUseCaseTest {
         fun `getConsultationPreviewPage - when user connected and canViewUnpublishedConsultations - should remove answered from ongoing`() {
             // Given
             val userId = "user123"
-            val answeredConsultation = mockConsultationPreviewFinished(id = "answered1", isPublished = true)
-            val ongoingNotAnswered = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true)
-            val ongoingAnswered = mockConsultationPreview(id = "answered1", endDate = LocalDateTime.now().plusDays(5), isPublished = true)
+            val answeredConsultation = mockConsultationPreviewFinished(id = "answered1")
+            val ongoingNotAnswered = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10))
+            val ongoingAnswered = mockConsultationPreview(id = "answered1", endDate = LocalDateTime.now().plusDays(5))
 
             given(authentificationHelper.getUserId()).willReturn(userId)
             given(profileRepository.getProfile(userId)).willReturn(null)
@@ -188,8 +188,8 @@ internal class ConsultationPreviewUseCaseTest {
         @Test
         fun `getConsultationPreviewPage - when cannot view unpublished - should return only published consultations`() {
             // Given
-            val publishedOngoing = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true)
-            val publishedFinished = mockConsultationPreviewFinished(id = "finished1", isPublished = true)
+            val publishedOngoing = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10))
+            val publishedFinished = mockConsultationPreviewFinished(id = "finished1")
 
             given(authentificationHelper.getUserId()).willReturn(null)
             given(consultationInfoRepository.getOngoingConsultations(anyList()))
@@ -209,9 +209,9 @@ internal class ConsultationPreviewUseCaseTest {
         fun `getConsultationPreviewPage - when user connected and cannot view unpublished - should remove answered from ongoing`() {
             // Given
             val userId = "user123"
-            val answeredConsultation = mockConsultationPreviewFinished(id = "answered1", isPublished = true)
-            val ongoingNotAnswered = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true)
-            val ongoingAnswered = mockConsultationPreview(id = "answered1", endDate = LocalDateTime.now().plusDays(5), isPublished = true)
+            val answeredConsultation = mockConsultationPreviewFinished(id = "answered1")
+            val ongoingNotAnswered = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10))
+            val ongoingAnswered = mockConsultationPreview(id = "answered1", endDate = LocalDateTime.now().plusDays(5))
 
             given(authentificationHelper.getUserId()).willReturn(userId)
             given(profileRepository.getProfile(userId)).willReturn(null)
@@ -275,7 +275,6 @@ internal class ConsultationPreviewUseCaseTest {
         private fun mockConsultationPreview(
             id: String,
             endDate: LocalDateTime = LocalDateTime.now(),
-            isPublished: Boolean = true,
         ) = ConsultationPreview(
             id = id,
             slug = "slug-$id",
@@ -283,13 +282,11 @@ internal class ConsultationPreviewUseCaseTest {
             coverUrl = "cover-$id",
             thematique = Thematique(id = "thematiqueId", label = "label", picto = "picto"),
             endDate = endDate,
-            isPublished = isPublished,
             territory = "France",
         )
 
         private fun mockConsultationPreviewFinished(
             id: String,
-            isPublished: Boolean = true,
         ) = ConsultationPreviewFinished(
             id = id,
             slug = "slug-$id",
@@ -299,7 +296,6 @@ internal class ConsultationPreviewUseCaseTest {
             updateLabel = "updateLabel",
             lastUpdateDate = LocalDateTime.now(),
             endDate = LocalDateTime.now().minusDays(1),
-            isPublished = isPublished,
             territory = "France",
         )
     }

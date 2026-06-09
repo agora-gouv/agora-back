@@ -10,7 +10,6 @@ data class ConsultationPreview(
     val coverUrl: String,
     val thematique: Thematique,
     val endDate: LocalDateTime,
-    val isPublished: Boolean,
     val territory: String,
 ) {
     fun highlightLabel(today: LocalDateTime): String? {
@@ -37,7 +36,6 @@ data class ConsultationPreviewFinished(
     val updateLabel: String?,
     val lastUpdateDate: LocalDateTime,
     val endDate: LocalDateTime,
-    val isPublished: Boolean,
     val territory: String,
 ) {
     fun getStep(now: LocalDateTime): ConsultationStatus {

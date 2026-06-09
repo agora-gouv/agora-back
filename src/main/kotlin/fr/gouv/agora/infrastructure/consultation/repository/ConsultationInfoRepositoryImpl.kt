@@ -70,8 +70,20 @@ class ConsultationInfoRepositoryImpl(
     }
 
     override fun getConsultationByIdOrSlug(consultationIdOrSlug: String): ConsultationInfo? {
-        return getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug)
-            ?.takeIf { it.isPublished }
+        val cachedConsultationInfo = try {
+            getCache()?.get(consultationIdOrSlug, ConsultationInfo::class.java)
+        } catch (e: IllegalStateException) {
+            null
+        }
+        if (cachedConsultationInfo != null) return cachedConsultationInfo
+
+        val consultationFromStrapi = strapiRepository.getConsultationBySlug(consultationIdOrSlug)
+            ?: strapiRepository.getConsultationById(consultationIdOrSlug)
+            ?: return null
+        val consultationsInfo = consultationInfoMapper.toConsultationInfo(consultationFromStrapi)
+        getCache()?.put(consultationIdOrSlug, consultationsInfo)
+
+        return consultationsInfo
     }
 
     override fun getConsultationByIdOrSlugWithUnpublished(consultationIdOrSlug: String): ConsultationInfo? {
