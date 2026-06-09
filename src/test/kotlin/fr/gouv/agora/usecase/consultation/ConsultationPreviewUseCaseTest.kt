@@ -5,12 +5,14 @@ import fr.gouv.agora.domain.*
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.ArgumentMatchers.anyList
 import org.mockito.BDDMockito.given
-import org.mockito.Mockito.mock
+import org.mockito.BDDMockito.then
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 
@@ -19,84 +21,257 @@ internal class ConsultationPreviewUseCaseTest {
 
     private lateinit var useCase: ConsultationPreviewUseCase
 
-    private val consultationInfoRepository: ConsultationInfoRepository = mock(ConsultationInfoRepository::class.java)
-    private val authentificationHelper: AuthentificationHelper = mock(AuthentificationHelper::class.java)
-    private val profileRepository: ProfileRepository = mock(ProfileRepository::class.java)
+    @Mock
+    private lateinit var consultationInfoRepository: ConsultationInfoRepository
+
+    @Mock
+    private lateinit var authentificationHelper: AuthentificationHelper
+
+    @Mock
+    private lateinit var profileRepository: ProfileRepository
+
+    @BeforeEach
+    fun setUp() {
+        useCase = ConsultationPreviewUseCase(
+            consultationInfoRepository = consultationInfoRepository,
+            authentificationHelper = authentificationHelper,
+            profileRepository = profileRepository,
+        )
+    }
+
+    @Nested
+    inner class `getConsultationPreviewPage - when canViewUnpublishedConsultations is true` {
+
+        @BeforeEach
+        fun setUp() {
+            given(authentificationHelper.canViewUnpublishedConsultations()).willReturn(true)
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when canViewUnpublishedConsultations - should use WithUnpublished queries`() {
+            // Given
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(consultationInfoRepository.getOngoingConsultationsWithUnpublished(anyList())).willReturn(emptyList())
+            given(consultationInfoRepository.getFinishedConsultationsWithUnpublished(anyList())).willReturn(emptyList())
+
+            // When
+            useCase.getConsultationPreviewPage()
+
+            // Then
+            then(consultationInfoRepository).should().getOngoingConsultationsWithUnpublished(anyList())
+            then(consultationInfoRepository).should().getFinishedConsultationsWithUnpublished(anyList())
+            then(consultationInfoRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when canViewUnpublishedConsultations - should NOT use Published-only queries`() {
+            // Given
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(consultationInfoRepository.getOngoingConsultationsWithUnpublished(anyList())).willReturn(emptyList())
+            given(consultationInfoRepository.getFinishedConsultationsWithUnpublished(anyList())).willReturn(emptyList())
+
+            // When
+            useCase.getConsultationPreviewPage()
+
+            // Then
+            then(consultationInfoRepository).should().getOngoingConsultationsWithUnpublished(anyList())
+            then(consultationInfoRepository).should().getFinishedConsultationsWithUnpublished(anyList())
+            then(consultationInfoRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when canViewUnpublishedConsultations - should return all consultations including unpublished`() {
+            // Given
+            val publishedOngoing = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true)
+            val unpublishedOngoing = mockConsultationPreview(id = "ongoingDraft", endDate = LocalDateTime.now().plusDays(5), isPublished = false)
+            val publishedFinished = mockConsultationPreviewFinished(id = "finished1", isPublished = true)
+            val unpublishedFinished = mockConsultationPreviewFinished(id = "finishedDraft", isPublished = false)
+
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(consultationInfoRepository.getOngoingConsultationsWithUnpublished(anyList()))
+                .willReturn(listOf(publishedOngoing, unpublishedOngoing))
+            given(consultationInfoRepository.getFinishedConsultationsWithUnpublished(anyList()))
+                .willReturn(listOf(publishedFinished, unpublishedFinished))
+
+            // When
+            val result = useCase.getConsultationPreviewPage()
+
+            // Then
+            assertThat(result.ongoingList.map { it.id }).containsExactlyInAnyOrder("ongoing1", "ongoingDraft")
+            assertThat(result.finishedList.map { it.id }).containsExactlyInAnyOrder("finished1", "finishedDraft")
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when user connected and canViewUnpublishedConsultations - should remove answered from ongoing`() {
+            // Given
+            val userId = "user123"
+            val answeredConsultation = mockConsultationPreviewFinished(id = "answered1", isPublished = true)
+            val ongoingNotAnswered = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true)
+            val ongoingAnswered = mockConsultationPreview(id = "answered1", endDate = LocalDateTime.now().plusDays(5), isPublished = true)
+
+            given(authentificationHelper.getUserId()).willReturn(userId)
+            given(profileRepository.getProfile(userId)).willReturn(null)
+            given(consultationInfoRepository.getAnsweredConsultations(userId)).willReturn(listOf(answeredConsultation))
+            given(consultationInfoRepository.getOngoingConsultationsWithUnpublished(anyList()))
+                .willReturn(listOf(ongoingNotAnswered, ongoingAnswered))
+            given(consultationInfoRepository.getFinishedConsultationsWithUnpublished(anyList())).willReturn(emptyList())
+
+            // When
+            val result = useCase.getConsultationPreviewPage()
+
+            // Then
+            assertThat(result.ongoingList.map { it.id }).containsExactly("ongoing1")
+            assertThat(result.answeredList.map { it.id }).containsExactly("answered1")
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when canViewUnpublishedConsultations - should sort ongoing by endDate asc`() {
+            // Given
+            val now = LocalDateTime.now()
+            val ongoing1 = mockConsultationPreview(id = "ongoing1", endDate = now.plusDays(10))
+            val ongoing2 = mockConsultationPreview(id = "ongoing2", endDate = now.plusDays(5))
+            val ongoing3 = mockConsultationPreview(id = "ongoing3", endDate = now.plusDays(7))
+
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(consultationInfoRepository.getOngoingConsultationsWithUnpublished(anyList()))
+                .willReturn(listOf(ongoing1, ongoing2, ongoing3))
+            given(consultationInfoRepository.getFinishedConsultationsWithUnpublished(anyList())).willReturn(emptyList())
+
+            // When
+            val result = useCase.getConsultationPreviewPage()
+
+            // Then
+            assertThat(result.ongoingList.map { it.id }).containsExactly("ongoing2", "ongoing3", "ongoing1")
+        }
+    }
+
+    @Nested
+    inner class `getConsultationPreviewPage - when canViewUnpublishedConsultations is false` {
+
+        @BeforeEach
+        fun setUp() {
+            given(authentificationHelper.canViewUnpublishedConsultations()).willReturn(false)
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when cannot view unpublished - should use Published-only queries`() {
+            // Given
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(consultationInfoRepository.getOngoingConsultations(anyList())).willReturn(emptyList())
+            given(consultationInfoRepository.getFinishedConsultations(anyList())).willReturn(emptyList())
+
+            // When
+            useCase.getConsultationPreviewPage()
+
+            // Then
+            then(consultationInfoRepository).should().getOngoingConsultations(anyList())
+            then(consultationInfoRepository).should().getFinishedConsultations(anyList())
+            then(consultationInfoRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when cannot view unpublished - should NOT use WithUnpublished queries`() {
+            // Given
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(consultationInfoRepository.getOngoingConsultations(anyList())).willReturn(emptyList())
+            given(consultationInfoRepository.getFinishedConsultations(anyList())).willReturn(emptyList())
+
+            // When
+            useCase.getConsultationPreviewPage()
+
+            // Then
+            then(consultationInfoRepository).should().getOngoingConsultations(anyList())
+            then(consultationInfoRepository).should().getFinishedConsultations(anyList())
+            then(consultationInfoRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when cannot view unpublished - should return only published consultations`() {
+            // Given
+            val publishedOngoing = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true)
+            val publishedFinished = mockConsultationPreviewFinished(id = "finished1", isPublished = true)
+
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(consultationInfoRepository.getOngoingConsultations(anyList()))
+                .willReturn(listOf(publishedOngoing))
+            given(consultationInfoRepository.getFinishedConsultations(anyList()))
+                .willReturn(listOf(publishedFinished))
+
+            // When
+            val result = useCase.getConsultationPreviewPage()
+
+            // Then
+            assertThat(result.ongoingList.map { it.id }).containsExactly("ongoing1")
+            assertThat(result.finishedList.map { it.id }).containsExactly("finished1")
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when user connected and cannot view unpublished - should remove answered from ongoing`() {
+            // Given
+            val userId = "user123"
+            val answeredConsultation = mockConsultationPreviewFinished(id = "answered1", isPublished = true)
+            val ongoingNotAnswered = mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true)
+            val ongoingAnswered = mockConsultationPreview(id = "answered1", endDate = LocalDateTime.now().plusDays(5), isPublished = true)
+
+            given(authentificationHelper.getUserId()).willReturn(userId)
+            given(profileRepository.getProfile(userId)).willReturn(null)
+            given(consultationInfoRepository.getAnsweredConsultations(userId)).willReturn(listOf(answeredConsultation))
+            given(consultationInfoRepository.getOngoingConsultations(anyList()))
+                .willReturn(listOf(ongoingNotAnswered, ongoingAnswered))
+            given(consultationInfoRepository.getFinishedConsultations(anyList())).willReturn(emptyList())
+
+            // When
+            val result = useCase.getConsultationPreviewPage()
+
+            // Then
+            assertThat(result.ongoingList.map { it.id }).containsExactly("ongoing1")
+            assertThat(result.answeredList.map { it.id }).containsExactly("answered1")
+        }
+
+        @Test
+        fun `getConsultationPreviewPage - when cannot view unpublished - should sort ongoing by endDate asc`() {
+            // Given
+            val now = LocalDateTime.now()
+            val ongoing1 = mockConsultationPreview(id = "ongoing1", endDate = now.plusDays(10))
+            val ongoing2 = mockConsultationPreview(id = "ongoing2", endDate = now.plusDays(5))
+            val ongoing3 = mockConsultationPreview(id = "ongoing3", endDate = now.plusDays(7))
+
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(consultationInfoRepository.getOngoingConsultations(anyList()))
+                .willReturn(listOf(ongoing1, ongoing2, ongoing3))
+            given(consultationInfoRepository.getFinishedConsultations(anyList())).willReturn(emptyList())
+
+            // When
+            val result = useCase.getConsultationPreviewPage()
+
+            // Then
+            assertThat(result.ongoingList.map { it.id }).containsExactly("ongoing2", "ongoing3", "ongoing1")
+        }
+    }
+
+    @Nested
+    inner class `getConsultationPreviewPage - user not connected` {
+
+        @Test
+        fun `getConsultationPreviewPage - when user not connected - should return empty answeredList`() {
+            // Given
+            given(authentificationHelper.getUserId()).willReturn(null)
+            given(authentificationHelper.canViewUnpublishedConsultations()).willReturn(false)
+            given(consultationInfoRepository.getOngoingConsultations(anyList())).willReturn(emptyList())
+            given(consultationInfoRepository.getFinishedConsultations(anyList())).willReturn(emptyList())
+
+            // When
+            val result = useCase.getConsultationPreviewPage()
+
+            // Then
+            assertThat(result.answeredList).isEmpty()
+            then(consultationInfoRepository).should().getOngoingConsultations(anyList())
+            then(consultationInfoRepository).should().getFinishedConsultations(anyList())
+            then(consultationInfoRepository).shouldHaveNoMoreInteractions()
+        }
+    }
 
     companion object {
-        @JvmStatic
-        fun getConsultationPreviewPageCases() = arrayOf(
-            input(
-                whenTestDescription = "utilisateur connecté, peut voir les non publiées",
-                userId = "user123",
-                canViewUnpublished = true,
-                answeredConsultations = listOf(mockConsultationPreviewFinished(id = "answered1", isPublished = true)),
-                ongoingConsultations = listOf(
-                    mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true),
-                    mockConsultationPreview(id = "ongoing2", endDate = LocalDateTime.now().plusDays(5), isPublished = true),
-                    mockConsultationPreview(id = "ongoingUnpublished", endDate = LocalDateTime.now().plusDays(7), isPublished = false),
-                ),
-                finishedConsultations = listOf(
-                    mockConsultationPreviewFinished(id = "finished1", isPublished = true),
-                    mockConsultationPreviewFinished(id = "finishedUnpublished", isPublished = false),
-                ),
-                expectedOngoingIds = listOf("ongoing2", "ongoingUnpublished", "ongoing1"),
-                expectedFinishedIds = listOf("finished1", "finishedUnpublished"),
-                expectedAnsweredIds = listOf("answered1"),
-            ),
-            input(
-                whenTestDescription = "utilisateur connecté, ne peut voir que les publiées",
-                userId = "user123",
-                canViewUnpublished = false,
-                answeredConsultations = listOf(mockConsultationPreviewFinished(id = "answered1", isPublished = true)),
-                ongoingConsultations = listOf(
-                    mockConsultationPreview(id = "ongoing1", endDate = LocalDateTime.now().plusDays(10), isPublished = true),
-                    mockConsultationPreview(id = "ongoing2", endDate = LocalDateTime.now().plusDays(5), isPublished = true),
-                    mockConsultationPreview(id = "ongoingUnpublished", endDate = LocalDateTime.now().plusDays(7), isPublished = false),
-                ),
-                finishedConsultations = listOf(
-                    mockConsultationPreviewFinished(id = "finished1", isPublished = true),
-                    mockConsultationPreviewFinished(id = "finishedUnpublished", isPublished = false),
-                ),
-                expectedOngoingIds = listOf("ongoing2", "ongoing1"),
-                expectedFinishedIds = listOf("finished1"),
-                expectedAnsweredIds = listOf("answered1"),
-            ),
-            input(
-                whenTestDescription = "utilisateur non connecté - should return empty answeredList",
-                userId = null,
-                canViewUnpublished = false,
-                answeredConsultations = emptyList(),
-                ongoingConsultations = emptyList(),
-                finishedConsultations = emptyList(),
-                expectedOngoingIds = emptyList(),
-                expectedFinishedIds = emptyList(),
-                expectedAnsweredIds = emptyList(),
-            ),
-        )
-
-        private fun input(
-            whenTestDescription: String,
-            userId: String?,
-            canViewUnpublished: Boolean,
-            answeredConsultations: List<ConsultationPreviewFinished>,
-            ongoingConsultations: List<ConsultationPreview>,
-            finishedConsultations: List<ConsultationPreviewFinished>,
-            expectedOngoingIds: List<String>,
-            expectedFinishedIds: List<String>,
-            expectedAnsweredIds: List<String>,
-        ) = arrayOf(
-            whenTestDescription,
-            userId,
-            canViewUnpublished,
-            answeredConsultations,
-            ongoingConsultations,
-            finishedConsultations,
-            expectedOngoingIds,
-            expectedFinishedIds,
-            expectedAnsweredIds
-        )
-
         private fun mockConsultationPreview(
             id: String,
             endDate: LocalDateTime = LocalDateTime.now(),
@@ -127,43 +302,5 @@ internal class ConsultationPreviewUseCaseTest {
             isPublished = isPublished,
             territory = "France",
         )
-    }
-
-    @ParameterizedTest(name = "getConsultationPreviewPage - when {0} - should return expected page")
-    @MethodSource("getConsultationPreviewPageCases")
-    fun `getConsultationPreviewPage - should return expected page`(
-        @Suppress("UNUSED_PARAMETER")
-        whenTestDescription: String,
-        userId: String?,
-        canViewUnpublished: Boolean,
-        answeredConsultations: List<ConsultationPreviewFinished>,
-        ongoingConsultations: List<ConsultationPreview>,
-        finishedConsultations: List<ConsultationPreviewFinished>,
-        expectedOngoingIds: List<String>,
-        expectedFinishedIds: List<String>,
-        expectedAnsweredIds: List<String>,
-    ) {
-        // Given
-        useCase = ConsultationPreviewUseCase(
-            consultationInfoRepository = consultationInfoRepository,
-            authentificationHelper = authentificationHelper,
-            profileRepository = profileRepository,
-        )
-        given(authentificationHelper.getUserId()).willReturn(userId)
-        given(authentificationHelper.canViewUnpublishedConsultations()).willReturn(canViewUnpublished)
-        if (userId != null) {
-            given(profileRepository.getProfile(userId)).willReturn(null)
-            given(consultationInfoRepository.getAnsweredConsultations(userId)).willReturn(answeredConsultations)
-        }
-        given(consultationInfoRepository.getOngoingConsultationsWithUnpublished(anyList())).willReturn(ongoingConsultations)
-        given(consultationInfoRepository.getFinishedConsultationsWithUnpublished(anyList())).willReturn(finishedConsultations)
-
-        // When
-        val result = useCase.getConsultationPreviewPage()
-
-        // Then
-        assertThat(result.ongoingList.map { it.id }).containsExactlyElementsOf(expectedOngoingIds)
-        assertThat(result.finishedList.map { it.id }).containsExactlyElementsOf(expectedFinishedIds)
-        assertThat(result.answeredList.map { it.id }).containsExactlyElementsOf(expectedAnsweredIds)
     }
 }

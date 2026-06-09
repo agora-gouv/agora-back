@@ -24,23 +24,32 @@ class ConsultationInfoRepositoryImpl(
         const val CONSULTATION_CACHE_NAME = "consultationCache"
     }
 
+    override fun getOngoingConsultations(userTerritoires: List<Territoire>): List<ConsultationPreview> {
+        val today = LocalDateTime.now(clock)
+
+        return strapiRepository.getConsultationsOngoing(today, userTerritoires)
+            .let { consultationInfoMapper.toConsultationPreview(it) }
+    }
+
     override fun getOngoingConsultationsWithUnpublished(userTerritoires: List<Territoire>): List<ConsultationPreview> {
         val today = LocalDateTime.now(clock)
 
-        val strapiOngoingConsultations = strapiRepository.getConsultationsOngoingWithUnpublished(today, userTerritoires)
+        return strapiRepository.getConsultationsOngoingWithUnpublished(today, userTerritoires)
             .let { consultationInfoMapper.toConsultationPreview(it) }
+    }
 
-        return strapiOngoingConsultations
+    override fun getFinishedConsultations(userTerritoires: List<Territoire>): List<ConsultationPreviewFinished> {
+        val now = LocalDateTime.now(clock)
+
+        return strapiRepository.getConsultationsFinished(now, userTerritoires)
+            .let { consultationInfoMapper.toDomainFinished(it, now) }
     }
 
     override fun getFinishedConsultationsWithUnpublished(userTerritoires: List<Territoire>): List<ConsultationPreviewFinished> {
         val now = LocalDateTime.now(clock)
 
-        val consultationsStrapi = strapiRepository.getConsultationsFinishedWithUnpublished(now, userTerritoires)
-        val strapiConsultations = consultationsStrapi
+        return strapiRepository.getConsultationsFinishedWithUnpublished(now, userTerritoires)
             .let { consultationInfoMapper.toDomainFinished(it, now) }
-
-        return strapiConsultations
     }
 
     override fun getAnsweredConsultations(userId: String): List<ConsultationPreviewFinished> {

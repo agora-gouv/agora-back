@@ -67,7 +67,7 @@ class ConsultationStrapiRepository(
 
     val ref = object : TypeReference<StrapiDTO<ConsultationStrapiDTO>>() {}
 
-    fun getConsultationsOngoingWithUnpublished(
+    fun getConsultationsOngoing(
         date: LocalDateTime,
         territories: List<Territoire>
     ): StrapiDTO<ConsultationStrapiDTO> {
@@ -82,7 +82,23 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getConsultationsFinishedWithUnpublished(
+    fun getConsultationsOngoingWithUnpublished(
+        date: LocalDateTime,
+        territories: List<Territoire>
+    ): StrapiDTO<ConsultationStrapiDTO> {
+        val uriBuilder = StrapiRequestBuilder("consultations")
+            .withDateBefore(date, "datetime_de_debut")
+            .withDateAfter(date, "datetime_de_fin")
+            .withUnpublished()
+            .populate(LIST_POPULATE)
+
+        if (territories.isNotEmpty())
+            uriBuilder.filterIn("territoire", territories.map { it.value })
+
+        return cmsStrapiHttpClient.request(uriBuilder, ref)
+    }
+
+    fun getConsultationsFinished(
         date: LocalDateTime,
         territories: List<Territoire>
     ): StrapiDTO<ConsultationStrapiDTO> {
@@ -96,16 +112,17 @@ class ConsultationStrapiRepository(
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
 
-    fun getConsultationsFinished(
+    fun getConsultationsFinishedWithUnpublished(
         date: LocalDateTime,
-        territory: Territoire?
+        territories: List<Territoire>
     ): StrapiDTO<ConsultationStrapiDTO> {
         val uriBuilder = StrapiRequestBuilder("consultations")
             .withDateBefore(date, "datetime_de_fin")
+            .withUnpublished()
             .populate(LIST_POPULATE)
 
-        if (territory != null)
-            uriBuilder.filterIn("territoire", listOf(territory.value))
+        if (territories.isNotEmpty())
+            uriBuilder.filterIn("territoire", territories.map { it.value })
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
