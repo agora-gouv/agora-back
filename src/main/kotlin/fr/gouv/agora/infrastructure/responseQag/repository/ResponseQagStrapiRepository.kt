@@ -16,8 +16,8 @@ class ResponseQagStrapiRepository(
         private val POPULATE = listOf(
             "[auteurPortrait][fields][0]=url",
             "[auteurPortrait][fields][1]=formats",
-            "[reponseType][populate][on][reponse.reponse-video][populate][video]=*",
-            "[reponseType][populate][on][reponse.reponsetextuelle]=*",
+            "[reponseType][on][reponse.reponse-video][populate]=*",
+            "[reponseType][on][reponse.reponsetextuelle][populate]=*",
         ).joinToString("&populate") { it }
     }
 
