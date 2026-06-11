@@ -11,7 +11,7 @@ class ReponseConsultationJsonMapper {
             ReponseConsultationInserting(
                 questionId = response.questionId,
                 choiceIds = response.choiceIds,
-                responseText = response.responseText,
+                responseText = response.responseText ?: "",
             )
         }
     }

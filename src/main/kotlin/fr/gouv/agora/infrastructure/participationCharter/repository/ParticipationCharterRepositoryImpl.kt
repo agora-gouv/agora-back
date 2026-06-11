@@ -15,7 +15,7 @@ class ParticipationCharterRepositoryImpl(
 
     override fun getLatestParticipationCharter(): ParticipationCharter {
         val now = LocalDateTime.now(clock)
-        val lastParticipationCharter = participationCharterStrapiRepository.getLastParticipationCharter(now).attributes
+        val lastParticipationCharter = participationCharterStrapiRepository.getLastParticipationCharter(now)
         val charte = lastParticipationCharter.charte.toHtml()
         val preview = lastParticipationCharter.chartePreview.toHtml()
 

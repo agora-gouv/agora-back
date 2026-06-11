@@ -16,7 +16,7 @@ class HeaderQagRepositoryImpl(
         val now = LocalDateTime.now(clock)
 
         return headerQagStrapiRepository.getLastHeader(filterType, now)?.let {
-            HeaderQag(it.id, it.attributes.titre, it.attributes.message)
+            HeaderQag(it.documentId, it.titre, it.message)
         }
     }
 }

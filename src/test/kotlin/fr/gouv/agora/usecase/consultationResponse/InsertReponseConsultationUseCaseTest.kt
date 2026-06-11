@@ -80,7 +80,6 @@ internal class InsertReponseConsultationUseCaseTest {
         estimatedTime = "",
         participantCountGoal = 1,
         thematique = Thematique(),
-        isPublished = true,
         territory = "France",
         titreWeb = "Grande Consultation",
         sousTitreWeb = "par le Gouvernement",

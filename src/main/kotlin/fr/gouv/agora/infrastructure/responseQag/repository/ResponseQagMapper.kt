@@ -15,9 +15,7 @@ import org.springframework.stereotype.Component
 @Component
 class ResponseQagMapper {
     fun toDomain(responseBody: StrapiDTO<StrapiResponseQag>): List<ResponseQag> {
-        return responseBody.data.map {
-            val response = it.attributes
-
+        return responseBody.data.map { response: StrapiResponseQag ->
             when (val responseContent = response.reponseType.first()) {
                 is StrapiResponseQagText -> {
                     ResponseQagText(

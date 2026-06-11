@@ -12,11 +12,21 @@ import java.util.UUID
 class ResponseQagStrapiRepository(
     private val cmsStrapiHttpClient: CmsStrapiHttpClient,
 ) {
+    companion object {
+        private val POPULATE = listOf(
+            "[auteurPortrait][fields][0]=url",
+            "[auteurPortrait][fields][1]=formats",
+            "[reponseType][on][reponse.reponse-video][populate]=*",
+            "[reponseType][on][reponse.reponsetextuelle][populate]=*",
+        ).joinToString("&populate") { it }
+    }
+
     val ref = object : TypeReference<StrapiDTO<StrapiResponseQag>>() {}
 
     fun getResponsesQag(qagIds: List<UUID>): StrapiDTO<StrapiResponseQag> {
         val uriBuilder = StrapiRequestBuilder("reponse-du-gouvernements")
             .filterIn("questionId", qagIds.map { it.toString() })
+            .populate(POPULATE)
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }
@@ -24,6 +34,7 @@ class ResponseQagStrapiRepository(
     fun getResponsesQag(): StrapiDTO<StrapiResponseQag> {
         val uriBuilder = StrapiRequestBuilder("reponse-du-gouvernements")
             .sortBy("reponseDate", "desc")
+            .populate(POPULATE)
 
         return cmsStrapiHttpClient.request(uriBuilder, ref)
     }

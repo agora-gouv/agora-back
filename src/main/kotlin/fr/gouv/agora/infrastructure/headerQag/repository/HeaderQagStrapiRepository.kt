@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.headerQag.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.gouv.agora.config.CmsStrapiHttpClient
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import fr.gouv.agora.infrastructure.headerQag.dto.HeaderQagStrapiDTO
@@ -15,7 +14,7 @@ class HeaderQagStrapiRepository(
 ) {
     val ref = object : TypeReference<StrapiDTO<HeaderQagStrapiDTO>>() {}
 
-    fun getLastHeader(type: String, date: LocalDateTime): StrapiAttributes<HeaderQagStrapiDTO>? {
+    fun getLastHeader(type: String, date: LocalDateTime): HeaderQagStrapiDTO? {
         val uriBuilder = StrapiRequestBuilder("qa-g-headers-onglets")
             .withDateBefore(date, "datetime_publication")
             .filterIn("type", listOf(type))

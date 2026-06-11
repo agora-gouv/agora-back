@@ -1,10 +1,11 @@
 package fr.gouv.agora.infrastructure.common
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class StrapiDTO<T>(
     @JsonProperty("data")
-    val data: List<StrapiAttributes<T>>,
+    val data: List<T>,
     @JsonProperty("meta")
     val meta: StrapiMetadata,
 ) {
@@ -17,29 +18,7 @@ data class StrapiDTO<T>(
 
 data class StrapiSingleTypeDTO<T>(
     @JsonProperty("data")
-    val data: StrapiAttributes<T>,
-)
-
-data class StrapiDataList<T>(
-    @JsonProperty("data")
-    val data: List<StrapiAttributes<T>>,
-)
-
-data class StrapiData<T>(
-    @JsonProperty("data")
-    val data: StrapiAttributes<T>,
-)
-
-data class StrapiDataNullable<T>(
-    @JsonProperty("data")
-    val data: StrapiAttributes<T>?,
-)
-
-data class StrapiAttributes<T>(
-    @JsonProperty(value = "attributes")
-    val attributes: T,
-    @JsonProperty(value = "id")
-    val id: String
+    val data: T,
 )
 
 data class StrapiMetadata(
@@ -68,14 +47,15 @@ data class StrapiMediaPdf(
     val url: String,
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class StrapiMediaPicture(
     @JsonProperty("formats")
-    val formats: StrapiMediaPictureFormats,
+    val formats: StrapiMediaPictureFormats?,
     @JsonProperty("url")
     val pictureUrlNotOptimized: String,
 ) {
     fun mediaUrl(): String {
-        return formats.medium?.url ?: pictureUrlNotOptimized
+        return formats?.medium?.url ?: pictureUrlNotOptimized
     }
 }
 

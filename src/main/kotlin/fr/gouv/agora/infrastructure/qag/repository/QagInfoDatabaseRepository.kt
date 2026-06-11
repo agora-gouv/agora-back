@@ -256,7 +256,7 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     @Transactional
     @Query(
         value = """UPDATE qags 
-            SET status = 2, username = ''
+            SET status = 2
             WHERE status = 1
             AND id IN (
                 SELECT qag_id FROM qag_updates 
@@ -279,6 +279,20 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
             )""", nativeQuery = true
     )
     fun anonymizeRejectedQagsBeforeDate(@Param("resetDate") date: Date)
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = """UPDATE qags 
+            SET username = ''
+            WHERE status = 2
+            AND id IN (
+                SELECT qag_id FROM qag_updates
+                WHERE moderated_date < :date
+            )""",
+        nativeQuery = true
+    )
+    fun anonymizeOldQagsBeforeDate(@Param("date") date: Date)
 
     @Modifying
     @Transactional

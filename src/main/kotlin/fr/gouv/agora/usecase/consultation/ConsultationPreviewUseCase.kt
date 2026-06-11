@@ -27,19 +27,21 @@ class ConsultationPreviewUseCase(
             consultationInfoRepository.getAnsweredConsultations(userId)
         } else { emptyList() }
 
-        val ongoingConsultations = consultationInfoRepository.getOngoingConsultationsWithUnpublished(userTerritoires)
-            .removeAnsweredConsultation(answeredConsultations)
-            .sortedBy { it.endDate }
-        val finishedConsultations = consultationInfoRepository.getFinishedConsultationsWithUnpublished(userTerritoires)
-            .sortedBy { it.lastUpdateDate }
-
-        if (authentificationHelper.canViewUnpublishedConsultations()) {
-            return ConsultationPreviewPage(ongoingConsultations, finishedConsultations, answeredConsultations)
+        val (ongoingConsultations, finishedConsultations) = if (authentificationHelper.canViewUnpublishedConsultations()) {
+            Pair(
+                consultationInfoRepository.getOngoingConsultationsWithUnpublished(userTerritoires),
+                consultationInfoRepository.getFinishedConsultationsWithUnpublished(userTerritoires),
+            )
+        } else {
+            Pair(
+                consultationInfoRepository.getOngoingConsultations(userTerritoires),
+                consultationInfoRepository.getFinishedConsultations(userTerritoires),
+            )
         }
 
         return ConsultationPreviewPage(
-            ongoingConsultations.filter { it.isPublished },
-            finishedConsultations.filter { it.isPublished },
+            ongoingConsultations.removeAnsweredConsultation(answeredConsultations).sortedBy { it.endDate },
+            finishedConsultations.sortedBy { it.lastUpdateDate },
             answeredConsultations
         )
     }

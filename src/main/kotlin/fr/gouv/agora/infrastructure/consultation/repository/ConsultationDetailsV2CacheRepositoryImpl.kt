@@ -231,7 +231,6 @@ class ConsultationDetailsV2CacheRepositoryImpl(
                 feedbackQuestion = cacheable.update.feedbackQuestion,
                 goals = cacheable.update.goals,
                 footer = cacheable.update.footer,
-                isPublished = true,
             ),
             feedbackStats = cacheable.feedbackStats,
         )

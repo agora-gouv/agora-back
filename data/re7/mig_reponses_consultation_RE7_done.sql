@@ -1,0 +1,21 @@
+-- UPDATE reponses_consultation SET consultation_id = 'hhlayt2dbga74kkh285cg9am' WHERE consultation_id = '1';
+-- UPDATE reponses_consultation SET consultation_id = 'ginncw42mlvrq6zc0ek9la86' WHERE consultation_id = '2';
+-- UPDATE reponses_consultation SET consultation_id = 'xfl0y6g1rmdz9plz1j34zo4i' WHERE consultation_id = '3';
+-- UPDATE reponses_consultation SET consultation_id = 'zy1thssr59hi2t03ejlazanw' WHERE consultation_id = '10';
+UPDATE reponses_consultation SET consultation_id = 'myb9mtg8i3ebmv2hmf3belrl' WHERE consultation_id = '10';
+UPDATE reponses_consultation SET consultation_id = 'l48mhj70zoz9kddxcw3zmd3a' WHERE consultation_id = '11';
+UPDATE reponses_consultation SET consultation_id = 'l6q1642ptkx9sy4r6bmrtljs' WHERE consultation_id = '12';
+UPDATE reponses_consultation SET consultation_id = 'uaww9qz0b7xfazuzqa2mlxen' WHERE consultation_id = '13';
+UPDATE reponses_consultation SET consultation_id = 'in02kwhokbxvbvu401qpdv7i' WHERE consultation_id = '14';
+UPDATE reponses_consultation SET consultation_id = 'xti458o2hwsg395mg77867qo' WHERE consultation_id = '15';
+UPDATE reponses_consultation SET consultation_id = 'nlf7plx1cu7vfbi85pv3tc87' WHERE consultation_id = '16';
+UPDATE reponses_consultation SET consultation_id = 'f04rwxyzfbd2sela7egd43xm' WHERE consultation_id = '18';
+UPDATE reponses_consultation SET consultation_id = 'tklzrc3xyykwzij7j8pdlr60' WHERE consultation_id = '19';
+UPDATE reponses_consultation SET consultation_id = 'rpu4bwyrt4l7e5tzmj4l3rzi' WHERE consultation_id = '20';
+UPDATE reponses_consultation SET consultation_id = 'g00mzx93pfa94garln9qc725' WHERE consultation_id = '21';
+UPDATE reponses_consultation SET consultation_id = 'ln7ad84zxene09z9dpo6tcml' WHERE consultation_id = '22';
+UPDATE reponses_consultation SET consultation_id = 'i9c94zs39pzypyyw0od36smc' WHERE consultation_id = '23';
+UPDATE reponses_consultation SET consultation_id = 'drf70pelwse8lwb5sv53qwdt' WHERE consultation_id = '24';
+UPDATE reponses_consultation SET consultation_id = 'vydwr1kljb521xyvpyin561l' WHERE consultation_id = '29';
+UPDATE reponses_consultation SET consultation_id = 'evag52pk1josbq35h6dkmq6z' WHERE consultation_id = '30';
+-- TODO: documentId manquant pour A21 (consultation_id = '21') - non visible dans le tableau source

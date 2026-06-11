@@ -51,7 +51,12 @@ class ContentController(
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
             .body(
-                QuestionsAuGouvernementContentJson(content.informationBottomsheet, content.texteTotalQuestions)
+                QuestionsAuGouvernementContentJson(
+                    content.informationBottomsheet,
+                    content.texteTotalQuestions,
+                    content.programmeDuMois,
+                    content.commentCaMarche,
+                )
             )
     }
 
