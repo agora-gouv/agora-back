@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.IncomingResponsePreview
 import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.domain.ResponseQagPreview
 import fr.gouv.agora.domain.ResponseQagPreviewWithoutOrder
+import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.usecase.qag.repository.QagInfo
@@ -41,6 +42,8 @@ class ResponseQagPreviewListMapper {
             author = responseQag.author,
             authorPortraitUrl = responseQag.authorPortraitUrl,
             responseDate = responseQag.responseDate,
+            responseText = (responseQag as? ResponseQagText)?.responseText,
+            username = qagInfo.username,
         )
     }
 

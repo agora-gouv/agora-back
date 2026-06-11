@@ -2,15 +2,118 @@ package fr.gouv.agora.usecase.responseQag
 
 import fr.gouv.agora.domain.IncomingResponsePreview
 import fr.gouv.agora.domain.QagStatus
+import fr.gouv.agora.domain.ResponseQagPreviewWithoutOrder
+import fr.gouv.agora.domain.ResponseQagText
+import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toDate
+import fr.gouv.agora.usecase.qag.repository.QagInfo
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import java.time.LocalDate
+import java.util.Date
 
 class ResponseQagPreviewListMapperTest {
+
+    private val mapper = ResponseQagPreviewListMapper()
+
+    private val qagInfo = QagInfo(
+        id = "qagId",
+        thematiqueId = "thematiqueId",
+        title = "title",
+        description = "description",
+        date = Date(0),
+        status = QagStatus.SELECTED_FOR_RESPONSE,
+        username = "username",
+        userId = "userId",
+    )
+
+    @Nested
+    inner class ToResponseQagPreviewWithoutOrder {
+
+        @Test
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagText - should set responseText`() {
+            // Given
+            val thematique = mock(Thematique::class.java)
+            val responseDate = Date(1000)
+            val responseQag = ResponseQagText(
+                author = "author",
+                authorPortraitUrl = "portraitUrl",
+                responseDate = responseDate,
+                feedbackQuestion = "feedbackQuestion",
+                qagId = "qagId",
+                responseLabel = "label",
+                responseText = "Le texte de la réponse",
+            )
+
+            // When
+            val result = mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qagInfo,
+                responseQag = responseQag,
+                thematique = thematique,
+            )
+
+            // Then
+            assertThat(result).isEqualTo(
+                ResponseQagPreviewWithoutOrder(
+                    qagId = "qagId",
+                    thematique = thematique,
+                    title = "title",
+                    author = "author",
+                    authorPortraitUrl = "portraitUrl",
+                    responseDate = responseDate,
+                    responseText = "Le texte de la réponse",
+                    username = "username",
+                )
+            )
+        }
+
+        @Test
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagVideo - should set responseText to null`() {
+            // Given
+            val thematique = mock(Thematique::class.java)
+            val responseDate = Date(1000)
+            val responseQag = ResponseQagVideo(
+                author = "author",
+                authorPortraitUrl = "portraitUrl",
+                responseDate = responseDate,
+                feedbackQuestion = "feedbackQuestion",
+                qagId = "qagId",
+                authorDescription = "description",
+                videoUrl = "videoUrl",
+                videoTitle = "videoTitle",
+                videoWidth = 1280,
+                videoHeight = 720,
+                transcription = "transcription",
+                additionalInfo = null,
+            )
+
+            // When
+            val result = mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qagInfo,
+                responseQag = responseQag,
+                thematique = thematique,
+            )
+
+            // Then
+            assertThat(result).isEqualTo(
+                ResponseQagPreviewWithoutOrder(
+                    qagId = "qagId",
+                    thematique = thematique,
+                    title = "title",
+                    author = "author",
+                    authorPortraitUrl = "portraitUrl",
+                    responseDate = responseDate,
+                    responseText = null,
+                    username = "username",
+                )
+            )
+        }
+    }
 
     @Test
     fun `toIncomingResponsePreview si la question gagne un jour hors lundi, renvoi le lundi precedent et le lundi suivant`() {

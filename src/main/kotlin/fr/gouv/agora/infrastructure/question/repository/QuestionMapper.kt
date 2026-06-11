@@ -7,7 +7,6 @@ import fr.gouv.agora.domain.QuestionConditional
 import fr.gouv.agora.domain.QuestionMultipleChoices
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionChoixMultiples
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component
 class QuestionMapper {
     fun toQuestionChoixMultiple(
         questionChoixMultipleStrapi: StrapiConsultationQuestionChoixMultiples,
-        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+        consultationDTO: ConsultationStrapiDTO
     ): QuestionMultipleChoices {
         val choix = questionChoixMultipleStrapi.choix.mapIndexed { index, choice ->
             ChoixPossibleDefault(
@@ -38,8 +37,8 @@ class QuestionMapper {
             questionChoixMultipleStrapi.titre,
             questionChoixMultipleStrapi.popupExplication?.toHtml(),
             questionChoixMultipleStrapi.numero,
-            consultationDTO.attributes.getNextQuestionId(questionChoixMultipleStrapi),
-            consultationDTO.id,
+            consultationDTO.getNextQuestionId(questionChoixMultipleStrapi),
+            consultationDTO.documentId,
             choix,
             questionChoixMultipleStrapi.nombreMaximumDeChoix
         )
@@ -47,7 +46,7 @@ class QuestionMapper {
 
     fun toQuestionChoixUnique(
         questionChoixUniqueStrapi: StrapiConsultationQuestionChoixUnique,
-        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+        consultationDTO: ConsultationStrapiDTO
     ): QuestionUniqueChoice {
         val choix = questionChoixUniqueStrapi.choix.mapIndexed { index, choice ->
             ChoixPossibleDefault(
@@ -64,37 +63,37 @@ class QuestionMapper {
             questionChoixUniqueStrapi.titre,
             questionChoixUniqueStrapi.popupExplication?.toHtml(),
             questionChoixUniqueStrapi.numero,
-            consultationDTO.attributes.getNextQuestionId(questionChoixUniqueStrapi),
-            consultationDTO.id,
+            consultationDTO.getNextQuestionId(questionChoixUniqueStrapi),
+            consultationDTO.documentId,
             choix,
         )
     }
 
     fun toQuestionOuverte(
         questionOuverteStrapi: StrapiConsultationQuestionOuverte,
-        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+        consultationDTO: ConsultationStrapiDTO
     ): QuestionOpen {
         return QuestionOpen(
             questionOuverteStrapi.id,
             questionOuverteStrapi.titre,
             questionOuverteStrapi.popupExplication?.toHtml(),
             questionOuverteStrapi.numero,
-            consultationDTO.attributes.getNextQuestionId(questionOuverteStrapi),
-            consultationDTO.id,
+            consultationDTO.getNextQuestionId(questionOuverteStrapi),
+            consultationDTO.documentId,
         )
     }
 
     fun toQuestionDescription(
         questionDescriptionStrapi: StrapiConsultationQuestionDescription,
-        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+        consultationDTO: ConsultationStrapiDTO
     ): QuestionChapter {
         return QuestionChapter(
             questionDescriptionStrapi.id,
             questionDescriptionStrapi.titre,
             null,
             questionDescriptionStrapi.numero,
-            consultationDTO.attributes.getNextQuestionId(questionDescriptionStrapi),
-            consultationDTO.id,
+            consultationDTO.getNextQuestionId(questionDescriptionStrapi),
+            consultationDTO.documentId,
             questionDescriptionStrapi.getImageUrl(),
             questionDescriptionStrapi.description.toHtml(),
             questionDescriptionStrapi.transcriptionImage,
@@ -103,7 +102,7 @@ class QuestionMapper {
 
     fun toQuestionConditionnelle(
         questionConditionnelleStrapi: StrapiConsultationQuestionConditionnelle,
-        consultationDTO: StrapiAttributes<ConsultationStrapiDTO>
+        consultationDTO: ConsultationStrapiDTO
     ): QuestionConditional {
         val choices = questionConditionnelleStrapi.choix.mapIndexed { index, choice ->
             ChoixPossibleConditional(
@@ -112,7 +111,7 @@ class QuestionMapper {
                 index,
                 questionConditionnelleStrapi.id,
                 choice.ouvert,
-                consultationDTO.attributes.questions.first { it.numero == choice.numeroDeLaQuestionSuivante }.id
+                consultationDTO.questions.first { q -> q.numero == choice.numeroDeLaQuestionSuivante }.id
             )
         }
 
@@ -122,7 +121,7 @@ class QuestionMapper {
             questionConditionnelleStrapi.popupExplication?.toHtml(),
             questionConditionnelleStrapi.numero,
             null,
-            consultationDTO.id,
+            consultationDTO.documentId,
             choices
         )
     }

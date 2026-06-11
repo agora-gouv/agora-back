@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.ficheInventaire
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.gouv.agora.infrastructure.common.StrapiData
 import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
@@ -10,6 +9,8 @@ import java.time.LocalDate
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class FicheInventaireStrapiDTO(
+    @JsonProperty(value = "documentId")
+    val documentId: String,
     @JsonProperty(value = "etape_1_lancement")
     val etapeLancement: List<StrapiRichText>,
     @JsonProperty(value = "etape_2_analyse")
@@ -31,9 +32,9 @@ data class FicheInventaireStrapiDTO(
     @JsonProperty(value = "modalite_participation")
     val modaliteParticipation: String,
     @JsonProperty(value = "thematique")
-    val thematique: StrapiData<ThematiqueStrapiDTO>,
+    val thematique: ThematiqueStrapiDTO,
     @JsonProperty("illustration")
-    val illustration: StrapiData<StrapiMediaPicture>,
+    val illustration: StrapiMediaPicture,
     @JsonProperty("etape")
     val etape: String,
     @JsonProperty("annee_de_lancement")

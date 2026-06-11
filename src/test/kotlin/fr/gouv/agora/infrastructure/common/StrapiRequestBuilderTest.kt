@@ -16,7 +16,7 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri)
-            .isEqualTo("consultations?pagination[pageSize]=100&populate=deep&filters[nom][\$in]=article&filters[nom][\$in]=titre&filters[nom][\$in]=loi")
+            .isEqualTo("consultations?pagination[pageSize]=100&populate=*&filters[nom][\$in]=article&filters[nom][\$in]=titre&filters[nom][\$in]=loi")
     }
 
     @Test
@@ -29,6 +29,21 @@ class StrapiRequestBuilderTest {
         // Then
         assertThat(uri)
             .contains("filters[thematique][label][\$in]=thematique")
+    }
+
+    @Test
+    fun `filterIn thematique documentId - when given a documentId - should filter on thematique documentId`() {
+        // Given
+        val documentId = "thema-abc123"
+
+        // When
+        val uri = StrapiRequestBuilder("fiche-inventaires")
+            .filterIn(listOf("thematique", "documentId"), listOf(documentId))
+            .build()
+
+        // Then
+        assertThat(uri)
+            .contains("filters[thematique][documentId][\$in]=thema-abc123")
     }
 
     @Test
@@ -100,7 +115,7 @@ class StrapiRequestBuilderTest {
 
         // Then
         assertThat(uri)
-            .isEqualTo("consultations?pagination[pageSize]=100&populate=deep&filters[date_de_debut][\$lt]=2024-12-25T12:10:00&filters[date_de_fin][\$gt]=2024-12-25T12:10:00")
+            .isEqualTo("consultations?pagination[pageSize]=100&populate=*&filters[date_de_debut][\$lt]=2024-12-25T12:10:00&filters[date_de_fin][\$gt]=2024-12-25T12:10:00")
     }
 
     @Test
@@ -111,7 +126,7 @@ class StrapiRequestBuilderTest {
             .build()
 
         // Then
-        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=deep&sort[0]=date_de_debut:desc")
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=*&sort[0]=date_de_debut:desc")
     }
 
     @Test
@@ -122,17 +137,43 @@ class StrapiRequestBuilderTest {
             .build()
 
         // Then
-        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=8&populate=deep")
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=8&populate=*")
     }
 
     @Test
-    fun `returns objects with depth`() {
+    fun `returns objects with custom populate`() {
         // When
         val uri = StrapiRequestBuilder("consultations")
-            .populate("0")
+            .populate("[thematique]=*&populate[questions][populate]=*")
             .build()
 
         // Then
-        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate=0")
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&populate[thematique]=*&populate[questions][populate]=*")
+    }
+
+    @Test
+    fun `getByIds - when given a list of documentIds - should filter by documentId`() {
+        // Given
+        val ids = listOf("abc123def456", "xyz789ghi012")
+
+        // When
+        val uri = StrapiRequestBuilder("consultations")
+            .getByIds(ids)
+            .build()
+
+        // Then
+        assertThat(uri)
+            .isEqualTo("consultations?pagination[pageSize]=100&populate=*&filters[documentId][\$in]=abc123def456&filters[documentId][\$in]=xyz789ghi012")
+    }
+
+    @Test
+    fun `withUnpublished - when called - should use status=draft`() {
+        // When
+        val uri = StrapiRequestBuilder("consultations")
+            .withUnpublished()
+            .build()
+
+        // Then
+        assertThat(uri).isEqualTo("consultations?pagination[pageSize]=100&status=draft&populate=*")
     }
 }

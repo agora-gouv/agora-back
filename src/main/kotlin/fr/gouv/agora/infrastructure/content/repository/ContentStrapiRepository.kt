@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.content.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.gouv.agora.config.CmsStrapiHttpClient
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import fr.gouv.agora.infrastructure.common.StrapiSingleTypeDTO
 import fr.gouv.agora.infrastructure.content.repository.dto.PagePoserMaQuestionStrapiDTO
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Repository
 class ContentStrapiRepository(
     private val cmsStrapiHttpClient: CmsStrapiHttpClient,
 ) {
-    fun getPageReponseAuxQaG(): StrapiAttributes<PageReponseAuxQuestionsAuGouvernementStrapiDTO> {
+    fun getPageReponseAuxQaG(): PageReponseAuxQuestionsAuGouvernementStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageReponseAuxQuestionsAuGouvernementStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("page-reponse-aux-questions-au-gouvernement")
 
@@ -31,42 +30,42 @@ class ContentStrapiRepository(
         ).data
     }
 
-    fun getPagePoserMaQuestion(): StrapiAttributes<PagePoserMaQuestionStrapiDTO> {
+    fun getPagePoserMaQuestion(): PagePoserMaQuestionStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PagePoserMaQuestionStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("page-poser-ma-question")
 
         return cmsStrapiHttpClient.requestSingleType<PagePoserMaQuestionStrapiDTO>(uriBuilder, ref).data
     }
 
-    fun getPageQuestionsAuGouvernement(): StrapiAttributes<PageQuestionsAuGouvernementStrapiDTO> {
+    fun getPageQuestionsAuGouvernement(): PageQuestionsAuGouvernementStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageQuestionsAuGouvernementStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("page-questions-au-gouvernement")
 
         return cmsStrapiHttpClient.requestSingleType<PageQuestionsAuGouvernementStrapiDTO>(uriBuilder, ref).data
     }
 
-    fun getPageSiteVitrineAccueil(): StrapiAttributes<PageSiteVitrineAccueilStrapiDTO> {
+    fun getPageSiteVitrineAccueil(): PageSiteVitrineAccueilStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageSiteVitrineAccueilStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("site-vitrine-accueil")
 
         return cmsStrapiHttpClient.requestSingleType<PageSiteVitrineAccueilStrapiDTO>(uriBuilder, ref).data
     }
 
-    fun getPageSiteVitrineConditionGenerales(): StrapiAttributes<PageSiteVitrineConditionGeneralesStrapiDTO> {
+    fun getPageSiteVitrineConditionGenerales(): PageSiteVitrineConditionGeneralesStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageSiteVitrineConditionGeneralesStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("site-vitrine-conditions-generales-d-utilisation")
 
         return cmsStrapiHttpClient.requestSingleType<PageSiteVitrineConditionGeneralesStrapiDTO>(uriBuilder, ref).data
     }
 
-    fun getPageSiteVitrineConsultation(): StrapiAttributes<PageSiteVitrineConsultationStrapiDTO> {
+    fun getPageSiteVitrineConsultation(): PageSiteVitrineConsultationStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageSiteVitrineConsultationStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("site-vitrine-consultation")
 
         return cmsStrapiHttpClient.requestSingleType<PageSiteVitrineConsultationStrapiDTO>(uriBuilder, ref).data
     }
 
-    fun getPageSiteVitrineDeclarationAccessibilite(): StrapiAttributes<PageSiteVitrineDeclarationAccessibiliteStrapiDTO> {
+    fun getPageSiteVitrineDeclarationAccessibilite(): PageSiteVitrineDeclarationAccessibiliteStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageSiteVitrineDeclarationAccessibiliteStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("site-vitrine-declaration-d-accessibilite")
 
@@ -76,14 +75,14 @@ class ContentStrapiRepository(
         ).data
     }
 
-    fun getPageSiteVitrineMentionsLegales(): StrapiAttributes<PageSiteVitrineMentionsLegalesStrapiDTO> {
+    fun getPageSiteVitrineMentionsLegales(): PageSiteVitrineMentionsLegalesStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageSiteVitrineMentionsLegalesStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("site-vitrine-mentions-legale")
 
         return cmsStrapiHttpClient.requestSingleType<PageSiteVitrineMentionsLegalesStrapiDTO>(uriBuilder, ref).data
     }
 
-    fun getPageSiteVitrinePolitiqueConfidentialite(): StrapiAttributes<PageSiteVitrinePolitiqueConfidentialiteStrapiDTO> {
+    fun getPageSiteVitrinePolitiqueConfidentialite(): PageSiteVitrinePolitiqueConfidentialiteStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageSiteVitrinePolitiqueConfidentialiteStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("site-vitrine-politique-de-confidentialite")
 
@@ -93,7 +92,7 @@ class ContentStrapiRepository(
         ).data
     }
 
-    fun getPageSiteVitrineQuestionAuGouvernement(): StrapiAttributes<PageSiteVitrineQuestionAuGouvernementStrapiDTO> {
+    fun getPageSiteVitrineQuestionAuGouvernement(): PageSiteVitrineQuestionAuGouvernementStrapiDTO {
         val ref = object : TypeReference<StrapiSingleTypeDTO<PageSiteVitrineQuestionAuGouvernementStrapiDTO>>() {}
         val uriBuilder = StrapiRequestBuilder("site-vitrine-question-au-gouvernement")
 

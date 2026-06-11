@@ -2,16 +2,14 @@ package fr.gouv.agora.infrastructure.consultation.dto.strapi
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
-import fr.gouv.agora.infrastructure.common.StrapiData
-import fr.gouv.agora.infrastructure.common.StrapiDataList
-import fr.gouv.agora.infrastructure.common.StrapiDataNullable
 import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.thematique.dto.ThematiqueStrapiDTO
 import java.time.LocalDateTime
 
-@JsonIgnoreProperties("createdAt", "updatedAt")
+@JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
 data class ConsultationStrapiDTO(
+    @JsonProperty(value = "documentId")
+    val documentId: String,
     @JsonProperty(value = "titre_consultation")
     val titre: String,
     @JsonProperty(value = "slug")
@@ -20,8 +18,6 @@ data class ConsultationStrapiDTO(
     val dateDeDebut: LocalDateTime,
     @JsonProperty(value = "datetime_de_fin")
     val dateDeFin: LocalDateTime,
-    @JsonProperty(value = "publishedAt")
-    val publishedAt: LocalDateTime?,
     @JsonProperty(value = "url_image_de_couverture")
     val urlImageDeCouverture: String,
     @JsonProperty(value = "url_image_page_de_contenu")
@@ -35,21 +31,21 @@ data class ConsultationStrapiDTO(
     @JsonProperty(value = "nombre_participants_cible")
     val nombreParticipantsCible: Int,
     @JsonProperty(value = "thematique")
-    val thematique: StrapiData<ThematiqueStrapiDTO>,
+    val thematique: ThematiqueStrapiDTO,
     @JsonProperty(value = "questions")
     val questions: List<StrapiConsultationQuestion>,
     @JsonProperty(value = "consultation_avant_reponse")
-    val contenuAvantReponse: StrapiData<StrapiConsultationContenuAvantReponse>,
+    val contenuAvantReponse: StrapiConsultationContenuAvantReponse,
     @JsonProperty(value = "consultation_apres_reponse_ou_terminee")
-    val contenuApresReponseOuTerminee: StrapiData<StrapiConsultationContenuApresReponse>,
+    val contenuApresReponseOuTerminee: StrapiConsultationContenuApresReponse,
     @JsonProperty("consultation_contenu_analyse_des_reponse")
-    val consultationContenuAnalyseDesReponses: StrapiDataNullable<StrapiConsultationAnalyseDesReponses>,
+    val consultationContenuAnalyseDesReponses: StrapiConsultationAnalyseDesReponses?,
     @JsonProperty("contenu_reponse_du_commanditaires")
-    val consultationContenuReponseDuCommanditaire: StrapiDataNullable<StrapiConsultationReponseCommanditaire>,
+    val consultationContenuReponseDuCommanditaire: StrapiConsultationReponseCommanditaire?,
     @JsonProperty("consultation_contenu_autres")
-    val consultationContenuAutres: StrapiDataList<StrapiConsultationContenuAutre>,
+    val consultationContenuAutres: List<StrapiConsultationContenuAutre>,
     @JsonProperty("consultation_contenu_a_venir")
-    val consultationContenuAVenir: StrapiDataNullable<StrapiConsultationAVenir>,
+    val consultationContenuAVenir: StrapiConsultationAVenir?,
     @JsonProperty("territoire")
     val territoire: String,
     @JsonProperty("titre_page_web")
@@ -57,29 +53,23 @@ data class ConsultationStrapiDTO(
     @JsonProperty("sous_titre_page_web")
     val sousTitrePageWeb: String,
     @JsonProperty(value = "image_de_couverture")
-    val imageDeCouverture: StrapiDataNullable<StrapiMediaPicture>,
+    val imageDeCouverture: StrapiMediaPicture?,
     @JsonProperty(value = "image_page_de_contenu")
-    val imagePageDeContenu: StrapiDataNullable<StrapiMediaPicture>,
+    val imagePageDeContenu: StrapiMediaPicture?,
 ) {
     fun getImageCouverture(): String {
-        return if (imageDeCouverture.data == null) urlImageDeCouverture
-        else imageDeCouverture.data.attributes.mediaUrl()
+        return imageDeCouverture?.mediaUrl() ?: urlImageDeCouverture
     }
 
     fun getImagePageContenu(): String {
-        return if (imagePageDeContenu.data == null) urlImagePageDeContenu
-        else imagePageDeContenu.data.attributes.mediaUrl()
-    }
-
-    fun isPublished(): Boolean {
-        return publishedAt != null
+        return imagePageDeContenu?.mediaUrl() ?: urlImagePageDeContenu
     }
 
     fun getLatestUpdateDate(now: LocalDateTime): LocalDateTime? {
         return listOfNotNull(
-            *consultationContenuAutres.data.map { it.attributes.datetimePublication }.toTypedArray(),
-            consultationContenuAnalyseDesReponses.data?.attributes?.datetimePublication,
-            consultationContenuReponseDuCommanditaire.data?.attributes?.datetimePublication,
+            *consultationContenuAutres.map { it.datetimePublication }.toTypedArray(),
+            consultationContenuAnalyseDesReponses?.datetimePublication,
+            consultationContenuReponseDuCommanditaire?.datetimePublication,
             dateDeDebut,
         ).filter { it.isBefore(now) }.maxOrNull()
     }
@@ -95,15 +85,15 @@ data class ConsultationStrapiDTO(
         return questions.firstOrNull { question.numeroQuestionSuivante == it.numero }?.id
     }
 
-    private fun getLastContenuAutre(now: LocalDateTime): StrapiAttributes<StrapiConsultationContenuAutre>? {
-        return consultationContenuAutres.data
-            .filter { it.attributes.datetimePublication.isBefore(now) }
-            .maxByOrNull { it.attributes.datetimePublication }
+    private fun getLastContenuAutre(now: LocalDateTime): StrapiConsultationContenuAutre? {
+        return consultationContenuAutres
+            .filter { it.datetimePublication.isBefore(now) }
+            .maxByOrNull { it.datetimePublication }
     }
 
     fun getFlammeLabel(now: LocalDateTime): String? {
-        return this.getLastContenuAutre(now)?.attributes?.flammeLabel
-            ?: consultationContenuReponseDuCommanditaire.data?.attributes?.flammeLabel
-            ?: consultationContenuAnalyseDesReponses.data?.attributes?.flammeLabel
+        return this.getLastContenuAutre(now)?.flammeLabel
+            ?: consultationContenuReponseDuCommanditaire?.flammeLabel
+            ?: consultationContenuAnalyseDesReponses?.flammeLabel
     }
 }

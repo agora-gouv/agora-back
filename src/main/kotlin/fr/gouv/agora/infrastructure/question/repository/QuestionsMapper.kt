@@ -1,7 +1,6 @@
 package fr.gouv.agora.infrastructure.question.repository
 
 import fr.gouv.agora.domain.Question
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionChoixMultiples
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestionChoixUnique
@@ -14,8 +13,8 @@ import org.springframework.stereotype.Component
 class QuestionsMapper(
     private val questionMapper: QuestionMapper
 ) {
-    fun toDomain(consultationDTO: StrapiAttributes<ConsultationStrapiDTO>): List<Question> {
-        return consultationDTO.attributes.questions.map { questionStrapi ->
+    fun toDomain(consultationDTO: ConsultationStrapiDTO): List<Question> {
+        return consultationDTO.questions.map { questionStrapi: fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationQuestion ->
             when (questionStrapi) {
                 is StrapiConsultationQuestionChoixMultiples -> questionMapper.toQuestionChoixMultiple(
                     questionStrapi,

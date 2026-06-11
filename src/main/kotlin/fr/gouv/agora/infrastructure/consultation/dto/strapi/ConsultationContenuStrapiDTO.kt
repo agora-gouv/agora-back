@@ -2,7 +2,6 @@ package fr.gouv.agora.infrastructure.consultation.dto.strapi
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.gouv.agora.infrastructure.common.StrapiDataNullable
 import fr.gouv.agora.infrastructure.common.StrapiMediaPdf
 import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.common.StrapiRichText
@@ -10,6 +9,8 @@ import java.time.LocalDateTime
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "nom_strapi")
 data class StrapiConsultationContenuAvantReponse(
+    @JsonProperty("documentId")
+    val documentId: String,
     @JsonProperty("slug")
     val slug: String,
     @JsonProperty("template_partage")
@@ -27,11 +28,13 @@ data class StrapiConsultationContenuAvantReponse(
     @JsonProperty("presentation")
     val presentation: List<StrapiRichText>,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
 )
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "nom_strapi")
 data class StrapiConsultationContenuApresReponse(
+    @JsonProperty("documentId")
+    val documentId: String,
     @JsonProperty("slug")
     val slug: String,
     @JsonProperty("template_partage")
@@ -43,11 +46,13 @@ data class StrapiConsultationContenuApresReponse(
     @JsonProperty("historique_call_to_action")
     val historiqueCallToAction: String,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
 )
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "nom_strapi")
 data class StrapiConsultationContenuAutre(
+    @JsonProperty("documentId")
+    val documentId: String,
     @JsonProperty("slug")
     val slug: String,
     @JsonProperty("template_partage")
@@ -61,16 +66,16 @@ data class StrapiConsultationContenuAutre(
     @JsonProperty("datetime_publication")
     val datetimePublication: LocalDateTime,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
     @JsonProperty("flamme_label")
-    val flammeLabel: String,
+    val flammeLabel: String?,
     @JsonProperty("recap_emoji")
     val recapEmoji: String?,
     @JsonProperty("recap_label")
     val recapLabel: String?,
 )
 
-@JsonIgnoreProperties("createdAt", "updatedAt", "publishedAt")
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class StrapiConsultationAVenir(
     @JsonProperty("titre_historique")
     val titreHistorique: String,
@@ -78,6 +83,8 @@ data class StrapiConsultationAVenir(
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "nom_strapi")
 data class StrapiConsultationAnalyseDesReponses(
+    @JsonProperty("documentId")
+    val documentId: String,
     @JsonProperty("lien_telechargement_analyse")
     val lienTelechargementAnalyse: String,
     @JsonProperty("slug")
@@ -95,22 +102,23 @@ data class StrapiConsultationAnalyseDesReponses(
     @JsonProperty("flamme_label")
     val flammeLabel: String?,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
     @JsonProperty("recap_emoji")
     val recapEmoji: String?,
     @JsonProperty("recap_label")
     val recapLabel: String?,
     @JsonProperty(value = "pdf_analyse")
-    val analysePdf: StrapiDataNullable<StrapiMediaPdf>,
+    val analysePdf: StrapiMediaPdf?,
 ) {
     fun getAnalysePdfUrl(): String {
-        return if (analysePdf.data == null) lienTelechargementAnalyse
-        else analysePdf.data.attributes.url
+        return analysePdf?.url ?: lienTelechargementAnalyse
     }
 }
 
 @JsonIgnoreProperties("createdAt", "updatedAt", "nom_strapi")
 data class StrapiConsultationReponseCommanditaire(
+    @JsonProperty("documentId")
+    val documentId: String,
     @JsonProperty("slug")
     val slug: String,
     @JsonProperty("template_partage")
@@ -126,7 +134,7 @@ data class StrapiConsultationReponseCommanditaire(
     @JsonProperty("flamme_label")
     val flammeLabel: String?,
     @JsonProperty("sections")
-    val sections: List<StrapiConsultationSection>,
+    val sections: List<StrapiConsultationSection> = emptyList(),
     @JsonProperty("recap_emoji")
     val recapEmoji: String?,
     @JsonProperty("recap_label")

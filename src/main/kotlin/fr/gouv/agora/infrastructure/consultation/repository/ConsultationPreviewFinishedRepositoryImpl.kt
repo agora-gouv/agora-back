@@ -33,7 +33,7 @@ class ConsultationPreviewFinishedRepositoryImpl(
         territory: Territoire
     ): List<ConsultationWithUpdateInfo> {
         val now = LocalDateTime.now(clock)
-        val strapiConsultationFinished = strapiRepository.getConsultationsFinished(now, territory)
+        val strapiConsultationFinished = strapiRepository.getConsultationsFinished(now, listOf(territory))
             .let { mapper.toConsultationsWithUpdateInfo(it, now) }
 
         return strapiConsultationFinished

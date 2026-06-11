@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import fr.gouv.agora.infrastructure.common.StrapiDataNullable
 import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.common.StrapiRichText
 
@@ -53,7 +52,7 @@ data class StrapiConsultationQuestionChoixMultiples(
     @JsonProperty("nombre_maximum_de_choix")
     val nombreMaximumDeChoix: Int,
     @JsonProperty("choix")
-    val choix: List<StrapiConsultationChoixSimple>,
+    val choix: List<StrapiConsultationChoixSimple> = emptyList(),
     @JsonProperty("popup_explication")
     val popupExplication: List<StrapiRichText>?,
     @JsonProperty("question_suivante")
@@ -68,7 +67,7 @@ data class StrapiConsultationQuestionChoixUnique(
     @JsonProperty("numero")
     override val numero: Int,
     @JsonProperty("choix")
-    val choix: List<StrapiConsultationChoixSimple>,
+    val choix: List<StrapiConsultationChoixSimple> = emptyList(),
     @JsonProperty("popup_explication")
     val popupExplication: List<StrapiRichText>?,
     @JsonProperty("question_suivante")
@@ -104,11 +103,10 @@ data class StrapiConsultationQuestionDescription(
     @JsonProperty("question_suivante")
     override val numeroQuestionSuivante: Int?,
     @JsonProperty(value = "image")
-    val image: StrapiDataNullable<StrapiMediaPicture>,
+    val image: StrapiMediaPicture?,
 ) : StrapiConsultationQuestion {
     fun getImageUrl(): String? {
-        return if (image.data == null) urlImage
-        else image.data.attributes.mediaUrl()
+        return image?.mediaUrl() ?: urlImage
     }
 }
 
@@ -120,7 +118,7 @@ data class StrapiConsultationQuestionConditionnelle(
     @JsonProperty("numero")
     override val numero: Int,
     @JsonProperty("choix")
-    val choix: List<StrapiConsultationChoixConditionnel>,
+    val choix: List<StrapiConsultationChoixConditionnel> = emptyList(),
     @JsonProperty("popup_explication")
     val popupExplication: List<StrapiRichText>?,
     override val numeroQuestionSuivante: Int? = null,

@@ -3,7 +3,6 @@ package fr.gouv.agora.infrastructure.responseQag.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import fr.gouv.agora.infrastructure.common.StrapiDataNullable
 import fr.gouv.agora.infrastructure.common.StrapiMediaPicture
 import fr.gouv.agora.infrastructure.common.StrapiMediaVideo
 import fr.gouv.agora.infrastructure.common.StrapiRichText
@@ -23,11 +22,10 @@ data class StrapiResponseQag(
     @JsonProperty("reponseType")
     val reponseType: List<StrapiResponseQagType>,
     @JsonProperty("auteurPortrait")
-    val auteurPortrait: StrapiDataNullable<StrapiMediaPicture>,
+    val auteurPortrait: StrapiMediaPicture?,
 ) {
     fun getAuthorPortraitUrl(): String {
-        return if (auteurPortrait.data == null) auteurPortraitUrl
-        else auteurPortrait.data.attributes.mediaUrl()
+        return auteurPortrait?.mediaUrl() ?: auteurPortraitUrl
     }
 }
 
@@ -68,14 +66,13 @@ data class StrapiResponseQagVideo(
     @JsonProperty("informationAdditionnelleDescription")
     val informationAdditionnelleDescription: List<StrapiRichText>?,
     @JsonProperty("video")
-    val video: StrapiDataNullable<StrapiMediaVideo>,
+    val video: StrapiMediaVideo?,
 ) : StrapiResponseQagType {
     fun hasInformationAdditionnelle(): Boolean {
         return !informationAdditionnelleTitre.isNullOrBlank() && !informationAdditionnelleDescription.isNullOrEmpty()
     }
 
     fun getVideoUrl(): String {
-        return if (video.data == null) urlVideo
-        else video.data.attributes.url
+        return video?.url ?: urlVideo
     }
 }

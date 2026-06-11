@@ -11,12 +11,12 @@ class NewsRepository(
     fun getNews(): List<News> {
         return newsStrapiRepository.getNews().map {
             News(
-                it.attributes.message.toHtml(),
-                it.attributes.short_message,
-                it.attributes.callToAction,
-                it.attributes.pageRouteMobile,
-                it.attributes.pageRouteArgumentMobile,
-                it.attributes.dateDeDebut,
+                it.message.toHtml(),
+                it.short_message,
+                it.callToAction,
+                it.pageRouteMobile,
+                it.pageRouteArgumentMobile,
+                it.dateDeDebut,
             )
         }
     }

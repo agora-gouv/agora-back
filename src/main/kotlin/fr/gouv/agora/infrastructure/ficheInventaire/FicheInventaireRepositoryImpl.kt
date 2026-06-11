@@ -1,7 +1,6 @@
 package fr.gouv.agora.infrastructure.ficheInventaire
 
 import fr.gouv.agora.domain.FicheInventaire
-import fr.gouv.agora.infrastructure.common.StrapiAttributes
 import fr.gouv.agora.infrastructure.common.toHtml
 import fr.gouv.agora.infrastructure.thematique.repository.ThematiqueMapper
 import fr.gouv.agora.usecase.ficheInventaire.FicheInventaireRepository
@@ -23,24 +22,24 @@ class FicheInventaireRepositoryImpl(
         return toFicheInventaire(ficheInventaire)
     }
 
-    private fun toFicheInventaire(fiche: StrapiAttributes<FicheInventaireStrapiDTO>): FicheInventaire {
+    private fun toFicheInventaire(fiche: FicheInventaireStrapiDTO): FicheInventaire {
         return FicheInventaire(
-            id = fiche.id,
-            etapeLancement = fiche.attributes.etapeLancement.toHtml(),
-            etapeAnalyse = fiche.attributes.etapeAnalyse.toHtml(),
-            etapeSuivi = fiche.attributes.etapeSuivi.toHtml(),
-            titre = fiche.attributes.titre,
-            debut = fiche.attributes.debut,
-            fin = fiche.attributes.fin,
-            porteur = fiche.attributes.porteur,
-            lienSite = fiche.attributes.lienSite,
-            conditionParticipation = fiche.attributes.conditionParticipation,
-            modaliteParticipation = fiche.attributes.modaliteParticipation,
-            thematique = thematiqueMapper.toDomain(fiche.attributes.thematique),
-            illustration = fiche.attributes.illustration.data.attributes.mediaUrl(),
-            etape = fiche.attributes.etape,
-            anneeDeLancement = fiche.attributes.anneeDeLancement,
-            type = fiche.attributes.type,
+            id = fiche.documentId,
+            etapeLancement = fiche.etapeLancement.toHtml(),
+            etapeAnalyse = fiche.etapeAnalyse.toHtml(),
+            etapeSuivi = fiche.etapeSuivi.toHtml(),
+            titre = fiche.titre,
+            debut = fiche.debut,
+            fin = fiche.fin,
+            porteur = fiche.porteur,
+            lienSite = fiche.lienSite,
+            conditionParticipation = fiche.conditionParticipation,
+            modaliteParticipation = fiche.modaliteParticipation,
+            thematique = thematiqueMapper.toDomain(fiche.thematique),
+            illustration = fiche.illustration.mediaUrl(),
+            etape = fiche.etape,
+            anneeDeLancement = fiche.anneeDeLancement,
+            type = fiche.type,
         )
     }
 }
