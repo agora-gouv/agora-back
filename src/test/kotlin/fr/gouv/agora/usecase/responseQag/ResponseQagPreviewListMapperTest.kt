@@ -206,7 +206,7 @@ class ResponseQagPreviewListMapperTest {
         }
 
         @Test
-        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagVideo - should set responseText to null`() {
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagVideo - should use transcription as responseText`() {
             // Given
             val thematique = mock(Thematique::class.java)
             val responseDate = Date(1000)
@@ -221,7 +221,7 @@ class ResponseQagPreviewListMapperTest {
                 videoTitle = "videoTitle",
                 videoWidth = 1280,
                 videoHeight = 720,
-                transcription = "transcription",
+                transcription = "La transcription de la vidéo",
                 additionalInfo = null,
             )
 
@@ -233,18 +233,39 @@ class ResponseQagPreviewListMapperTest {
             )
 
             // Then
-            assertThat(result).isEqualTo(
-                ResponseQagPreviewWithoutOrder(
-                    qagId = "qagId",
-                    thematique = thematique,
-                    title = "title",
-                    author = "author",
-                    authorPortraitUrl = "portraitUrl",
-                    responseDate = responseDate,
-                    responseText = null,
-                    username = "username",
-                )
+            assertThat(result.responseText).isEqualTo("La transcription de la vidéo")
+        }
+
+        @Test
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagVideo with transcription longer than 200 characters - should truncate to 200 characters and add ellipsis`() {
+            // Given
+            val thematique = mock(Thematique::class.java)
+            val responseDate = Date(1000)
+            val longTranscription = "c".repeat(250)
+            val responseQag = ResponseQagVideo(
+                author = "author",
+                authorPortraitUrl = "portraitUrl",
+                responseDate = responseDate,
+                feedbackQuestion = "feedbackQuestion",
+                qagId = "qagId",
+                authorDescription = "description",
+                videoUrl = "videoUrl",
+                videoTitle = "videoTitle",
+                videoWidth = 1280,
+                videoHeight = 720,
+                transcription = longTranscription,
+                additionalInfo = null,
             )
+
+            // When
+            val result = mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qagInfo,
+                responseQag = responseQag,
+                thematique = thematique,
+            )
+
+            // Then
+            assertThat(result.responseText).isEqualTo("c".repeat(200) + "...")
         }
     }
 
