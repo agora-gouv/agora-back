@@ -99,6 +99,32 @@ class ResponseQagPreviewListMapperTest {
         }
 
         @Test
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagText with multiple paragraph tags - should separate paragraphs with a space`() {
+            // Given
+            val thematique = mock(Thematique::class.java)
+            val responseDate = Date(1000)
+            val responseQag = ResponseQagText(
+                author = "author",
+                authorPortraitUrl = "portraitUrl",
+                responseDate = responseDate,
+                feedbackQuestion = "feedbackQuestion",
+                qagId = "qagId",
+                responseLabel = "label",
+                responseText = "<p>premier paragraphe</p><p>deuxième paragraphe</p>",
+            )
+
+            // When
+            val result = mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qagInfo,
+                responseQag = responseQag,
+                thematique = thematique,
+            )
+
+            // Then
+            assertThat(result.responseText).isEqualTo("premier paragraphe deuxième paragraphe")
+        }
+
+        @Test
         fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagText with text shorter than 200 characters - should not add ellipsis`() {
             // Given
             val thematique = mock(Thematique::class.java)

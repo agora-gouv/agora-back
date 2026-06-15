@@ -8,12 +8,15 @@ import fr.gouv.agora.domain.ResponseQagText
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.usecase.qag.repository.QagInfo
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.DayOfWeek
 import java.time.temporal.TemporalAdjusters
 
 @Component
 class ResponseQagPreviewListMapper {
+
+    private val logger = LoggerFactory.getLogger(ResponseQagPreviewListMapper::class.java)
 
     companion object {
         private const val MAX_RESPONSE_TEXT_LENGTH = 200
@@ -53,7 +56,10 @@ class ResponseQagPreviewListMapper {
 
     private fun sanitizeResponseText(html: String?): String? {
         if (html == null) return null
-        val plainText = Regex("<[^>]*>").replace(html, "")
+        logger.info("sanitizeResponseText - texte brut avant nettoyage : $html")
+        val plainText = Regex("<[^>]*>").replace(html, " ")
+            .replace(Regex("\\s+"), " ")
+            .trim()
         return if (plainText.length > MAX_RESPONSE_TEXT_LENGTH) {
             plainText.take(MAX_RESPONSE_TEXT_LENGTH) + "..."
         } else {
