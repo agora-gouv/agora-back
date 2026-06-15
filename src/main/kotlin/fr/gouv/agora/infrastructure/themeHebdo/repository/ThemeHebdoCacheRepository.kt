@@ -1,11 +1,12 @@
 package fr.gouv.agora.infrastructure.themeHebdo.repository
 
 import fr.gouv.agora.domain.ThemeHebdo
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Repository
 
 @Repository
-class ThemeHebdoCacheRepository(private val cacheManager: CacheManager) {
+class ThemeHebdoCacheRepository(@Qualifier("shortTermCacheManager") private val cacheManager: CacheManager) {
 
     companion object {
         private const val THEME_HEBDO_CACHE_NAME = "themeHebdoCache"
