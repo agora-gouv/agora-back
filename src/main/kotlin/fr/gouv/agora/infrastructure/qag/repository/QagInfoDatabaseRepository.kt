@@ -242,6 +242,25 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     )
     fun getTrendingQags(@Param("interval") interval: Long): List<QagWithSupportCountDTO>
 
+    @Query(
+        value = """
+            SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION
+            FROM $QAG_WITH_SUPPORT_JOIN
+            WHERE qags.status = 1
+            GROUP BY qags.id
+            HAVING count(
+                CASE WHEN supports_qag.support_date >= (CURRENT_TIMESTAMP - CAST((:interval || ' HOURS') AS INTERVAL))
+                     THEN 1 END
+            ) > :minLikes
+            ORDER BY supportCount DESC
+            LIMIT 20
+        """, nativeQuery = true
+    )
+    fun getTrendingQagsWithRecentLikes(
+        @Param("interval") interval: Long,
+        @Param("minLikes") minLikes: Int,
+    ): List<QagWithSupportCountDTO>
+
     @Modifying
     @Transactional
     @Query(

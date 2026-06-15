@@ -141,6 +141,13 @@ class QagInfoRepositoryImpl(
             .removeDuplicates()
     }
 
+    override fun getTrendingQagsWithRecentLikes(interval: Duration, minLikes: Int): List<QagInfoWithSupportCount> {
+        return databaseRepository
+            .getTrendingQagsWithRecentLikes(interval.inWholeHours, minLikes)
+            .map(mapper::toDomain)
+            .removeDuplicates()
+    }
+
     override fun selectQagForResponse(qagId: String): QagUpdateResult {
         return qagId.toUuidOrNull()?.let { qagUUID ->
             val updatedQagsCount = databaseRepository.selectQagForResponse(qagUUID)

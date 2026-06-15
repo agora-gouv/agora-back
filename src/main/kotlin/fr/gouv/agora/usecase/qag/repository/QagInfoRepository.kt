@@ -34,6 +34,7 @@ interface QagInfoRepository {
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
     fun getMostPopularQags(): List<QagInfoWithSupportCount>
     fun getTrendingQags(interval: Duration): List<QagInfoWithSupportCount>
+    fun getTrendingQagsWithRecentLikes(interval: Duration, minLikes: Int): List<QagInfoWithSupportCount>
     fun selectQagForResponse(qagId: String): QagUpdateResult
     fun archiveOldQags(resetDate: Date)
     fun anonymizeOldQags(date: Date)
