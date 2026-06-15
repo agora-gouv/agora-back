@@ -15,6 +15,10 @@ import java.time.temporal.TemporalAdjusters
 @Component
 class ResponseQagPreviewListMapper {
 
+    companion object {
+        private const val MAX_RESPONSE_TEXT_LENGTH = 200
+    }
+
     fun toResponseQagPreview(
         qagWithResponseAndOrder: QagWithResponseAndOrder,
         thematique: Thematique,
@@ -42,9 +46,19 @@ class ResponseQagPreviewListMapper {
             author = responseQag.author,
             authorPortraitUrl = responseQag.authorPortraitUrl,
             responseDate = responseQag.responseDate,
-            responseText = (responseQag as? ResponseQagText)?.responseText,
+            responseText = sanitizeResponseText((responseQag as? ResponseQagText)?.responseText),
             username = qagInfo.username,
         )
+    }
+
+    private fun sanitizeResponseText(html: String?): String? {
+        if (html == null) return null
+        val plainText = Regex("<[^>]*>").replace(html, "")
+        return if (plainText.length > MAX_RESPONSE_TEXT_LENGTH) {
+            plainText.take(MAX_RESPONSE_TEXT_LENGTH) + "..."
+        } else {
+            plainText
+        }
     }
 
     fun toIncomingResponsePreview(

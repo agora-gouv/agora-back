@@ -73,6 +73,113 @@ class ResponseQagPreviewListMapperTest {
         }
 
         @Test
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagText with HTML tags - should strip HTML tags`() {
+            // Given
+            val thematique = mock(Thematique::class.java)
+            val responseDate = Date(1000)
+            val responseQag = ResponseQagText(
+                author = "author",
+                authorPortraitUrl = "portraitUrl",
+                responseDate = responseDate,
+                feedbackQuestion = "feedbackQuestion",
+                qagId = "qagId",
+                responseLabel = "label",
+                responseText = "<p>Le texte de la <strong>réponse</strong></p>",
+            )
+
+            // When
+            val result = mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qagInfo,
+                responseQag = responseQag,
+                thematique = thematique,
+            )
+
+            // Then
+            assertThat(result.responseText).isEqualTo("Le texte de la réponse")
+        }
+
+        @Test
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagText with text shorter than 200 characters - should not add ellipsis`() {
+            // Given
+            val thematique = mock(Thematique::class.java)
+            val responseDate = Date(1000)
+            val shortText = "a".repeat(100)
+            val responseQag = ResponseQagText(
+                author = "author",
+                authorPortraitUrl = "portraitUrl",
+                responseDate = responseDate,
+                feedbackQuestion = "feedbackQuestion",
+                qagId = "qagId",
+                responseLabel = "label",
+                responseText = shortText,
+            )
+
+            // When
+            val result = mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qagInfo,
+                responseQag = responseQag,
+                thematique = thematique,
+            )
+
+            // Then
+            assertThat(result.responseText).isEqualTo("a".repeat(100))
+        }
+
+        @Test
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagText with text longer than 200 characters - should truncate to 200 characters and add ellipsis`() {
+            // Given
+            val thematique = mock(Thematique::class.java)
+            val responseDate = Date(1000)
+            val longText = "a".repeat(250)
+            val responseQag = ResponseQagText(
+                author = "author",
+                authorPortraitUrl = "portraitUrl",
+                responseDate = responseDate,
+                feedbackQuestion = "feedbackQuestion",
+                qagId = "qagId",
+                responseLabel = "label",
+                responseText = longText,
+            )
+
+            // When
+            val result = mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qagInfo,
+                responseQag = responseQag,
+                thematique = thematique,
+            )
+
+            // Then
+            assertThat(result.responseText).isEqualTo("a".repeat(200) + "...")
+        }
+
+        @Test
+        fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagText with HTML tags and text longer than 200 characters - should strip HTML then truncate to 200 characters and add ellipsis`() {
+            // Given
+            val thematique = mock(Thematique::class.java)
+            val responseDate = Date(1000)
+            val longText = "b".repeat(250)
+            val responseQag = ResponseQagText(
+                author = "author",
+                authorPortraitUrl = "portraitUrl",
+                responseDate = responseDate,
+                feedbackQuestion = "feedbackQuestion",
+                qagId = "qagId",
+                responseLabel = "label",
+                responseText = "<p>$longText</p>",
+            )
+
+            // When
+            val result = mapper.toResponseQagPreviewWithoutOrder(
+                qagInfo = qagInfo,
+                responseQag = responseQag,
+                thematique = thematique,
+            )
+
+            // Then
+            assertThat(result.responseText).isEqualTo("b".repeat(200) + "...")
+        }
+
+        @Test
         fun `toResponseQagPreviewWithoutOrder - when responseQag is ResponseQagVideo - should set responseText to null`() {
             // Given
             val thematique = mock(Thematique::class.java)
