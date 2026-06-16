@@ -42,7 +42,7 @@ class NotificationMessageRepositoryImpl : NotificationMessageRepository {
             ),
             NotificationMessageDTO(
                 title = "🥁 Question publiée avec succès",
-                message = "Sera-t-elle en tête lundi à 14h ? Proposez à vos amis de la soutenir."
+                message = "Sera-t-elle en tête lundi à 10h ? Proposez à vos amis de la soutenir."
             ),
         )
 

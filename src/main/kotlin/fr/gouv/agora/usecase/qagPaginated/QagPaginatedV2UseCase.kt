@@ -34,6 +34,8 @@ class QagPaginatedV2UseCase(
         private const val SUPPORTING = "supporting"
         private const val TRENDING = "trending"
         private const val DEFAULT_TRENDING_INTERVAL = 168
+        private const val DEFAULT_TRENDING_RECENT_HOURS = 24
+        private const val DEFAULT_MIN_RECENT_LIKES = 5
     }
 
     fun getPopularQagPaginated(
@@ -83,11 +85,12 @@ class QagPaginatedV2UseCase(
     fun getTrendingQag(
         userId: String,
     ): QagsAndMaxPageCountV2? {
-        val trendingInterval = (System.getenv("TRENDING_QAG_INTERVAL_HOURS").toIntOrNull() ?: DEFAULT_TRENDING_INTERVAL)
+        val trendingInterval = (System.getenv("TRENDING_QAG_RECENT_HOURS")?.toIntOrNull() ?: DEFAULT_TRENDING_RECENT_HOURS)
             .toDuration(DurationUnit.HOURS)
+        val minLikes = System.getenv("TRENDING_QAG_MIN_LIKES")?.toIntOrNull() ?: DEFAULT_MIN_RECENT_LIKES
 
         fun curriedGetTrendingQags(): List<QagInfoWithSupportCount> {
-            return this.qagInfoRepository.getTrendingQags(trendingInterval)
+            return this.qagInfoRepository.getTrendingQagsWithRecentLikes(trendingInterval, minLikes)
         }
 
         val qagListWithMaxPageCount = getQagPaginated(

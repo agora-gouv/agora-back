@@ -13,6 +13,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @ExtendWith(MockitoExtension::class)
 internal class QagInfoRepositoryImplTest {
@@ -371,6 +373,68 @@ internal class QagInfoRepositoryImplTest {
         then(databaseRepository).should().deleteQagById(qagId = qagUUID)
         then(databaseRepository).shouldHaveNoMoreInteractions()
         then(mapper).should(only()).toDomain(qagDTO)
+    }
+
+    @Test
+    fun `getTrendingQagsWithRecentLikes - when database returns empty list - should return empty list`() {
+        // Given
+        given(databaseRepository.getTrendingQagsWithRecentLikes(interval = 24L, minLikes = 5)).willReturn(emptyList())
+
+        // When
+        val result = repository.getTrendingQagsWithRecentLikes(
+            interval = 24.toDuration(DurationUnit.HOURS),
+            minLikes = 5,
+        )
+
+        // Then
+        assertThat(result).isEqualTo(emptyList<QagInfoWithSupportCount>())
+        then(databaseRepository).should(only()).getTrendingQagsWithRecentLikes(interval = 24L, minLikes = 5)
+        then(mapper).shouldHaveNoInteractions()
+    }
+
+    @Test
+    fun `getTrendingQagsWithRecentLikes - when database returns qags - should return mapped qags`() {
+        // Given
+        val qagWithSupportCountDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getTrendingQagsWithRecentLikes(interval = 24L, minLikes = 5)).willReturn(
+            listOf(qagWithSupportCountDTO)
+        )
+
+        val qagInfoWithSupportCount = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagWithSupportCountDTO)).willReturn(qagInfoWithSupportCount)
+
+        // When
+        val result = repository.getTrendingQagsWithRecentLikes(
+            interval = 24.toDuration(DurationUnit.HOURS),
+            minLikes = 5,
+        )
+
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfoWithSupportCount))
+        then(databaseRepository).should(only()).getTrendingQagsWithRecentLikes(interval = 24L, minLikes = 5)
+        then(mapper).should(only()).toDomain(qagWithSupportCountDTO)
+    }
+
+    @Test
+    fun `getTrendingQagsWithRecentLikes - when database returns duplicate qags - should return deduplicated list`() {
+        // Given
+        val qagWithSupportCountDTO = mock(QagWithSupportCountDTO::class.java)
+        given(databaseRepository.getTrendingQagsWithRecentLikes(interval = 24L, minLikes = 5)).willReturn(
+            listOf(qagWithSupportCountDTO, qagWithSupportCountDTO)
+        )
+
+        val qagInfoWithSupportCount = mock(QagInfoWithSupportCount::class.java)
+        given(mapper.toDomain(qagWithSupportCountDTO)).willReturn(qagInfoWithSupportCount)
+
+        // When
+        val result = repository.getTrendingQagsWithRecentLikes(
+            interval = 24.toDuration(DurationUnit.HOURS),
+            minLikes = 5,
+        )
+
+        // Then
+        assertThat(result).isEqualTo(listOf(qagInfoWithSupportCount))
+        then(databaseRepository).should(only()).getTrendingQagsWithRecentLikes(interval = 24L, minLikes = 5)
     }
 
     @Test

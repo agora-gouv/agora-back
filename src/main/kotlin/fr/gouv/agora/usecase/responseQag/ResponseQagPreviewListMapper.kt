@@ -5,15 +5,23 @@ import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.domain.ResponseQagPreview
 import fr.gouv.agora.domain.ResponseQagPreviewWithoutOrder
 import fr.gouv.agora.domain.ResponseQagText
+import fr.gouv.agora.domain.ResponseQagVideo
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.infrastructure.utils.DateUtils.toLocalDate
 import fr.gouv.agora.usecase.qag.repository.QagInfo
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.DayOfWeek
 import java.time.temporal.TemporalAdjusters
 
 @Component
 class ResponseQagPreviewListMapper {
+
+    private val logger = LoggerFactory.getLogger(ResponseQagPreviewListMapper::class.java)
+
+    companion object {
+        private const val MAX_RESPONSE_TEXT_LENGTH = 200
+    }
 
     fun toResponseQagPreview(
         qagWithResponseAndOrder: QagWithResponseAndOrder,
@@ -42,9 +50,27 @@ class ResponseQagPreviewListMapper {
             author = responseQag.author,
             authorPortraitUrl = responseQag.authorPortraitUrl,
             responseDate = responseQag.responseDate,
-            responseText = (responseQag as? ResponseQagText)?.responseText,
+            responseText = sanitizeResponseText(
+                when (responseQag) {
+                    is ResponseQagText -> responseQag.responseText
+                    is ResponseQagVideo -> responseQag.transcription
+                }
+            ),
             username = qagInfo.username,
         )
+    }
+
+    private fun sanitizeResponseText(html: String?): String? {
+        if (html == null) return null
+        logger.info("sanitizeResponseText - texte brut avant nettoyage : $html")
+        val plainText = Regex("<[^>]*>").replace(html, " ")
+            .replace(Regex("\\s+"), " ")
+            .trim()
+        return if (plainText.length > MAX_RESPONSE_TEXT_LENGTH) {
+            plainText.take(MAX_RESPONSE_TEXT_LENGTH) + "..."
+        } else {
+            plainText
+        }
     }
 
     fun toIncomingResponsePreview(
