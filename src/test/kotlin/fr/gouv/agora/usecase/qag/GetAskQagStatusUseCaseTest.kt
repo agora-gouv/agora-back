@@ -34,8 +34,8 @@ internal class GetAskQagStatusUseCaseTest {
                 testWhenDescription = "qagPostDate < serverDate < resetDate, same week",
                 qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 1, 0, 0, 0),
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 1, 12, 30, 0),
-                // resetDate = January 1st 14h
-                expectedStatus = AskQagStatus.WEEKLY_LIMIT_REACHED,
+                // resetDate = January 1st 10h - qagPostDate is before the window, so ENABLED
+                expectedStatus = AskQagStatus.ENABLED,
             ),
             input(
                 testWhenDescription = "qagPostDate < resetDate < serverDate, same week",
@@ -48,8 +48,8 @@ internal class GetAskQagStatusUseCaseTest {
                 testWhenDescription = "qagPostDate < serverDate < resetDate, across a week",
                 qagPostDate = LocalDateTime.of(2024, Month.JANUARY, 1, 22, 0, 0),
                 serverDate = LocalDateTime.of(2024, Month.JANUARY, 8, 12, 30, 0),
-                // resetDate = January 8th 14h
-                expectedStatus = AskQagStatus.WEEKLY_LIMIT_REACHED,
+                // resetDate = January 8th 10h - qagPostDate is before the window, so ENABLED
+                expectedStatus = AskQagStatus.ENABLED,
             ),
             input(
                 testWhenDescription = "qagPostDate < serverDate < resetDate, qagPostDate is 1 second before weekly reset and serverDate is at weekly reset",
