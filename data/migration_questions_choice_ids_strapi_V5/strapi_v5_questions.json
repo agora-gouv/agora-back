@@ -1,0 +1,3138 @@
+[
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20007,
+    "question_titre": "Pour vous, quelle est la plus grande réussite, jusqu’ici, de l’Union européenne ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20008,
+    "question_titre": "Selon vous, qu’est-ce qui encouragerait les citoyens à voter aux élections européennes ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20009,
+    "question_titre": "Selon vous, quels sont les inconvénients concrets de la France à être membre de l’Union européenne ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20010,
+    "question_titre": "Selon vous, quels sont les avantages concrets de la France à être membre de l’Union européenne ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20011,
+    "question_titre": "Selon vous, à quoi l’Union européenne doit-elle servir en priorité ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20012,
+    "question_titre": "Comment souhaiteriez-vous être informé des actions de l’Union européenne ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20013,
+    "question_titre": "Parmi les mesures proposées, quelles sont celles que vous aimeriez voir défendues par la France au sein de l’Union européenne ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20148,
+    "question_titre": "Pour vous, quelle est la plus grande réussite, jusqu’ici, de l’Union européenne ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20149,
+    "question_titre": "Selon vous, qu’est-ce qui encouragerait les citoyens à voter aux élections européennes ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20150,
+    "question_titre": "Selon vous, à quoi l’Union européenne doit-elle servir en priorité ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20151,
+    "question_titre": "Selon vous, quels sont les avantages concrets de la France à être membre de l’Union européenne ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20152,
+    "question_titre": "Selon vous, quels sont les inconvénients concrets de la France à être membre de l’Union européenne ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20153,
+    "question_titre": "Comment souhaiteriez-vous être informé des actions de l’Union européenne ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 20158,
+    "question_titre": "Parmi les mesures proposées, quelles sont celles que vous aimeriez voir défendues par la France au sein de l’Union européenne ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30012,
+    "question_titre": " Vous sentez-vous… ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30013,
+    "question_titre": "Pour vous, l’Europe, c’est d’abord… ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30014,
+    "question_titre": "Des élections européennes auront lieu en juin prochain : comptez-vous aller voter ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30015,
+    "question_titre": "Pensez-vous que rajouter un angle européen dans le traitement des informations dans l’audiovisuel public (France Télévisions et Radio France) devrait être rendu obligatoire ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30016,
+    "question_titre": "Vous sentez-vous concerné par la guerre en Ukraine ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30017,
+    "question_titre": "Selon vous, l’Union européenne est-elle suffisamment présente dans les médias français ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30134,
+    "question_titre": " Vous sentez-vous… ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30135,
+    "question_titre": "Pour vous, l’Europe, c’est d’abord… ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30136,
+    "question_titre": "Des élections européennes auront lieu en juin prochain : comptez-vous aller voter ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30137,
+    "question_titre": "Selon vous, l’Union européenne est-elle suffisamment présente dans les médias français ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30138,
+    "question_titre": "Pensez-vous que rajouter un angle européen dans le traitement des informations dans l’audiovisuel public (France Télévisions et Radio France) devrait être rendu obligatoire ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 30139,
+    "question_titre": "Vous sentez-vous concerné par la guerre en Ukraine ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 2,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 40000,
+    "question_titre": "Pensez-vous que l’Ukraine a sa place dans le projet européen, au même titre que la Moldavie et les pays candidats des Balkans occidentaux ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 44,
+    "consultation_document_id": "cmgxi3u8u7oc67qlwsiw7wk2",
+    "new_question_id": 40051,
+    "question_titre": "Pensez-vous que l’Ukraine a sa place dans le projet européen, au même titre que la Moldavie et les pays candidats des Balkans occidentaux ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 20000,
+    "question_titre": "Selon vous, renouveler la démocratie passe d’abord par… ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 20001,
+    "question_titre": "Lors de ces consultations, vous préférez ... ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 20002,
+    "question_titre": "Lorsqu’une consultation est terminée, le Gouvernement revient vers les citoyens pour l’informer des suites de la consultation. Qu’est-ce qui vous importe de savoir à ce moment-là ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 20189,
+    "question_titre": "Selon vous, renouveler la démocratie passe d’abord par… ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 20190,
+    "question_titre": "Lors de ces consultations, vous préférez ... ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 20191,
+    "question_titre": "Lorsqu’une consultation est terminée, le Gouvernement revient vers les citoyens pour l’informer des suites de la consultation. Qu’est-ce qui vous importe de savoir à ce moment-là ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30000,
+    "question_titre": "A quelle fréquence vous informez-vous sur l’actualité politique ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30001,
+    "question_titre": "Quelle est votre principale source d’information ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30002,
+    "question_titre": "Avez-vous l’impression que les décisions politiques ont un impact sur votre quotidien ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30003,
+    "question_titre": "Avez-vous déjà participé à une démarche de participation citoyenne ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30004,
+    "question_titre": "Selon vous, recueillir l’avis des citoyens pendant la préparation d’un projet du Gouvernement est :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30005,
+    "question_titre": "Pensez-vous que recueillir l’avis des citoyens ait un impact sur la décision politique ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30006,
+    "question_titre": "Sur cette application, vous pouvez répondre aux consultations en ligne. Vous vous exprimez ainsi sur les grands projets du Gouvernement. Selon vous, est-ce une bonne idée ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30007,
+    "question_titre": "Sur quels thèmes aimeriez-vous participer en priorité ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 1,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30008,
+    "question_titre": "Sur cette application, chaque semaine, le Gouvernement s’engage à répondre à une question posée par les citoyens (celle qui obtient le plus de soutiens). Selon vous, est-ce une bonne idée ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30168,
+    "question_titre": "A quelle fréquence vous informez-vous sur l’actualité politique ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30169,
+    "question_titre": "Quelle est votre principale source d’information ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30170,
+    "question_titre": "Avez-vous l’impression que les décisions politiques ont un impact sur votre quotidien ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30171,
+    "question_titre": "Avez-vous déjà participé à une démarche de participation citoyenne ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30172,
+    "question_titre": "Selon vous, recueillir l’avis des citoyens pendant la préparation d’un projet du Gouvernement est :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30173,
+    "question_titre": "Pensez-vous que recueillir l’avis des citoyens ait un impact sur la décision politique ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30174,
+    "question_titre": "Sur cette application, vous pouvez répondre aux consultations en ligne. Vous vous exprimez ainsi sur les grands projets du Gouvernement. Selon vous, est-ce une bonne idée ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30175,
+    "question_titre": "Sur quels thèmes aimeriez-vous participer en priorité ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 41,
+    "consultation_document_id": "dy9l5rzk9r3ocurra7xanvi7",
+    "new_question_id": 30176,
+    "question_titre": "Sur cette application, chaque semaine, le Gouvernement s’engage à répondre à une question posée par les citoyens (celle qui obtient le plus de soutiens). Selon vous, est-ce une bonne idée ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 20101,
+    "question_titre": "Pour attirer d’autres élèves, que pensez-vous qu’il faudrait mettre en place en priorité ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 20102,
+    "question_titre": "D’après vous, que faudrait-il faire pour renforcer l’attractivité de l’enseignement agricole ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 20103,
+    "question_titre": "Sur le sujet des transitions, comment imaginez-vous le lien entre le monde de la recherche et l’enseignement agricole à notre échelle régionale ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 20203,
+    "question_titre": "Pour attirer d’autres élèves, que pensez-vous qu’il faudrait mettre en place en priorité ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 20204,
+    "question_titre": "D’après vous, que faudrait-il faire pour renforcer l’attractivité de l’enseignement agricole ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 20205,
+    "question_titre": "Sur le sujet des transitions, comment imaginez-vous le lien entre le monde de la recherche et l’enseignement agricole à notre échelle régionale ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40021,
+    "question_titre": "Vous êtes : ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40022,
+    "question_titre": "Y a-t-il des choses que vous auriez aimé savoir avant de vous lancer dans votre formation ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40023,
+    "question_titre": "Vous rappelez-vous d’un message ou d’une campagne de l’enseignement agricole qui vous a marqué ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40024,
+    "question_titre": "Avez-vous repéré une action ou un évènement mis en place dans votre établissement sur le sujet des transitions climatique ou environnementale ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40025,
+    "question_titre": "Avez-vous été sensible à une communication spécifique de l’enseignement agricole ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40026,
+    "question_titre": "Avez-vous repéré des secteurs professionnels et/ou des formations qui ont plus de difficulté à attirer des élèves ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40027,
+    "question_titre": "Quelle image avez-vous spontanément de l’enseignement agricole ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 25,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40028,
+    "question_titre": "Avez-vous une idée pour améliorer l’attractivité des formations et des métiers agricoles ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40061,
+    "question_titre": "Vous êtes : ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40062,
+    "question_titre": "Vous rappelez-vous d’un message ou d’une campagne de l’enseignement agricole qui vous a marqué ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40063,
+    "question_titre": "Y a-t-il des choses que vous auriez aimé savoir avant de vous lancer dans votre formation ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40064,
+    "question_titre": "Avez-vous repéré une action ou un évènement mis en place dans votre établissement sur le sujet des transitions climatique ou environnementale ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40065,
+    "question_titre": "Avez-vous été sensible à une communication spécifique de l’enseignement agricole ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40066,
+    "question_titre": "Avez-vous repéré des secteurs professionnels et/ou des formations qui ont plus de difficulté à attirer des élèves ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40067,
+    "question_titre": "Quelle image avez-vous spontanément de l’enseignement agricole ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 30,
+    "consultation_document_id": "edujpj0n68x5n4ro2tpaxqr0",
+    "new_question_id": 40070,
+    "question_titre": "Avez-vous une idée pour améliorer l’attractivité des formations et des métiers agricoles ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20054,
+    "question_titre": "Selon vous, que faut-il proposer aux parents en priorité pour prévenir les violences faites aux enfants ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20055,
+    "question_titre": "Pour mieux sensibiliser les enfants et les adolescents aux violences, quelles actions vous semblent les plus efficaces et prioritaires ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20056,
+    "question_titre": "Pour prévenir les violences, quelles actions à destination des professionnels de l’enfance vous semblent les plus efficaces et prioritaires ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20058,
+    "question_titre": "Pour mieux sensibiliser l’ensemble de la société aux violences sexuelles, quelles actions vous semblent les plus efficaces et prioritaires ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20059,
+    "question_titre": "Pour mieux protéger les enfants face aux violences sexuelles, quelles actions vous semblent les plus efficaces et prioritaires ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20060,
+    "question_titre": "Un enfant victime de violences peut avoir besoin de tiers de confiance pour se (re)construire. Que seriez-vous prêt(e) à faire personnellement ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20217,
+    "question_titre": "Selon vous, que faut-il proposer aux parents en priorité pour prévenir les violences faites aux enfants ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20218,
+    "question_titre": "Pour prévenir les violences, quelles actions à destination des professionnels de l’enfance vous semblent les plus efficaces et prioritaires ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20219,
+    "question_titre": "Pour mieux sensibiliser les enfants et les adolescents aux violences, quelles actions vous semblent les plus efficaces et prioritaires ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20220,
+    "question_titre": "Pour mieux protéger les enfants face aux violences sexuelles, quelles actions vous semblent les plus efficaces et prioritaires ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20221,
+    "question_titre": "Pour mieux sensibiliser l’ensemble de la société aux violences sexuelles, quelles actions vous semblent les plus efficaces et prioritaires ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 20222,
+    "question_titre": "Un enfant victime de violences peut avoir besoin de tiers de confiance pour se (re)construire. Que seriez-vous prêt(e) à faire personnellement ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30087,
+    "question_titre": "Vous sentez-vous prêt(e) à accueillir la parole d’un enfant qui vous confie être victime de violence ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30088,
+    "question_titre": "Vous sentez-vous plus sensibilisé(e) sur ce sujet qu’il y a quelques années ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30089,
+    "question_titre": "Avez-vous déjà été inquiet que votre enfant subisse des violences sexuelles, tout cercle confondu : proches, famille, lors d’activités ou autre ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30090,
+    "question_titre": "Savez-vous comment dénoncer un acte de violence sur un enfant ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30091,
+    "question_titre": "Avez-vous connaissance des chiffres de violence sur enfants en France ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30092,
+    "question_titre": "Depuis 2019, la France interdit les violences éducatives ordinaires (fessée, gifle, brimade, etc.). Le saviez-vous ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 12,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30093,
+    "question_titre": "Connaissez-vous le syndrome du bébé sécoué ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30218,
+    "question_titre": "Avez-vous connaissance des chiffres de violence sur enfants en France ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30219,
+    "question_titre": "Depuis 2019, la France interdit les violences éducatives ordinaires (fessée, gifle, brimade, etc.). Le saviez-vous ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30220,
+    "question_titre": "Connaissez-vous le syndrome du bébé sécoué ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30221,
+    "question_titre": "Avez-vous déjà été inquiet que votre enfant subisse des violences sexuelles, tout cercle confondu : proches, famille, lors d’activités ou autre ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30222,
+    "question_titre": "Vous sentez-vous plus sensibilisé(e) sur ce sujet qu’il y a quelques années ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30223,
+    "question_titre": "Vous sentez-vous prêt(e) à accueillir la parole d’un enfant qui vous confie être victime de violence ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 43,
+    "consultation_document_id": "ei80m02y5koialuq4e30n4q6",
+    "new_question_id": 30224,
+    "question_titre": "Savez-vous comment dénoncer un acte de violence sur un enfant ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 26,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20107,
+    "question_titre": "Quels domaines du quotidien doivent être prioritaires pour les politiques publiques afin d’améliorer la qualité de vie d’ici 2050 ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 26,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20108,
+    "question_titre": "Quelles innovations devraient être prioritaires pour améliorer l’accès et la qualité des services publics d’ici 2050 ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 26,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20109,
+    "question_titre": "Selon vous, sur quels atouts la France devrait-elle miser en priorité pour renforcer son économie d’ici 2050 ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 26,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20110,
+    "question_titre": "Face à la nécessité de maîtriser nos finances publiques, quels domaines stratégiques devraient, selon vous, être prioritairement financés ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 26,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20111,
+    "question_titre": "Et d'ici 2050 ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 26,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20112,
+    "question_titre": "Selon vous, quelles sont les deux principales menaces sécuritaires à laquelle le pays doit se préparer en 2035 ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 31,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20186,
+    "question_titre": "Quels domaines du quotidien doivent être prioritaires pour les politiques publiques afin d’améliorer la qualité de vie d’ici 2050 ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 31,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20195,
+    "question_titre": "Selon vous, sur quels atouts la France devrait-elle miser en priorité pour renforcer son économie d’ici 2050 ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 31,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20202,
+    "question_titre": "Quelles innovations devraient être prioritaires pour améliorer l’accès et la qualité des services publics d’ici 2050 ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 31,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20206,
+    "question_titre": "Face à la nécessité de maîtriser nos finances publiques, quels domaines stratégiques devraient, selon vous, être prioritairement financés ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 31,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20207,
+    "question_titre": "Selon vous, quelles sont les deux principales menaces sécuritaires à laquelle le pays doit se préparer en 2035 ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 31,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 20208,
+    "question_titre": "Et d'ici 2050 ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 26,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 40037,
+    "question_titre": "Selon vous, la France doit-elle agir face au déclin démographique qui se profile dans les années à venir ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 31,
+    "consultation_document_id": "esg67bdrkzh0n29j2c858ryj",
+    "new_question_id": 40057,
+    "question_titre": "Selon vous, la France doit-elle agir face au déclin démographique qui se profile dans les années à venir ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20118,
+    "question_titre": "Pour vous la souveraineté alimentaire, c’est surtout… ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20119,
+    "question_titre": "Selon vous, pourquoi la France dépend-elle autant de l’étranger pour se nourrir ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20120,
+    "question_titre": "Selon vous, qui doit agir en priorité pour que nous achetions plus de produits issus de nos territoires ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20121,
+    "question_titre": "Que devraient faire les entreprises alimentaires (supermarchés, industriels, etc.) ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20122,
+    "question_titre": "Que devrait faire le Gouvernement pour soutenir la souveraineté alimentaire ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20212,
+    "question_titre": "Pour vous la souveraineté alimentaire, c’est surtout… ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20223,
+    "question_titre": "Selon vous, pourquoi la France dépend-elle autant de l’étranger pour se nourrir ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20224,
+    "question_titre": "Selon vous, qui doit agir en priorité pour que nous achetions plus de produits issus de nos territoires ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20225,
+    "question_titre": "Que devrait faire le Gouvernement pour soutenir la souveraineté alimentaire ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 20226,
+    "question_titre": "Que devraient faire les entreprises alimentaires (supermarchés, industriels, etc.) ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30113,
+    "question_titre": "Vous êtes :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30116,
+    "question_titre": "Selon vous, quel pourcentage des produits alimentaires consommés en France importons-nous aujourd’hui ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30117,
+    "question_titre": "Que devraient faire les agriculteurs pour renforcer notre souveraineté alimentaire ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30118,
+    "question_titre": "Savez-vous que la France dépend de l’étranger pour certains aliments ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30119,
+    "question_titre": "Pensez-vous que vous manquez d’informations sur l’origine au moment de vos achats ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30120,
+    "question_titre": "Lors de vos achats, tenez-vous compte de l’origine des produits ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30212,
+    "question_titre": "Vous êtes :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30213,
+    "question_titre": "Savez-vous que la France dépend de l’étranger pour certains aliments ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30214,
+    "question_titre": "Selon vous, quel pourcentage des produits alimentaires consommés en France importons-nous aujourd’hui ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30225,
+    "question_titre": "Que devraient faire les agriculteurs pour renforcer notre souveraineté alimentaire ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30226,
+    "question_titre": "Lors de vos achats, tenez-vous compte de l’origine des produits ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 30227,
+    "question_titre": "Pensez-vous que vous manquez d’informations sur l’origine au moment de vos achats ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 40043,
+    "question_titre": "Quelle image avez-vous de l’agroalimentaire en France ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 27,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 40044,
+    "question_titre": "Avez-vous le sentiment d'acheter des produits de meilleure qualité lorsque vous achetez des produits venant de nos territoires ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 40068,
+    "question_titre": "Quelle image avez-vous de l’agroalimentaire en France ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 37,
+    "consultation_document_id": "eykw95ahuc3fb5husp5wnjp7",
+    "new_question_id": 40069,
+    "question_titre": "Avez-vous le sentiment d'acheter des produits de meilleure qualité lorsque vous achetez des produits venant de nos territoires ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 20042,
+    "question_titre": "Selon vous, quelles sont les principales difficultés auxquelles sont confrontées les personnes en situation de handicap au quotidien ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 20043,
+    "question_titre": "Ecole : parmi les mesures suivantes, lesquelles vous semblent prioritaires pour améliorer la scolarité des élèves en situation de handicap ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 20044,
+    "question_titre": "Emploi : parmi les mesures suivantes, lesquelles vous semblent prioritaires pour améliorer l’embauche des personnes en situation de handicap ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 20045,
+    "question_titre": "Quelles actions seriez-vous prêt(e) à entreprendre personnellement pour améliorer le quotidien des personnes handicapées dans la vie de tous les jours ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 20180,
+    "question_titre": "Selon vous, quelles sont les principales difficultés auxquelles sont confrontées les personnes en situation de handicap au quotidien ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 20181,
+    "question_titre": "Ecole : parmi les mesures suivantes, lesquelles vous semblent prioritaires pour améliorer la scolarité des élèves en situation de handicap ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 20182,
+    "question_titre": "Emploi : parmi les mesures suivantes, lesquelles vous semblent prioritaires pour améliorer l’embauche des personnes en situation de handicap ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 20183,
+    "question_titre": "Quelles actions seriez-vous prêt(e) à entreprendre personnellement pour améliorer le quotidien des personnes handicapées dans la vie de tous les jours ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30072,
+    "question_titre": "Comment souhaiteriez-vous être mieux informé(e) sur le handicap ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30073,
+    "question_titre": "Selon vous, combien de personnes sont en situation de handicap en France ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30074,
+    "question_titre": "Pensez-vous être suffisamment sensibilisé(e) au handicap ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30075,
+    "question_titre": "Selon vous, la société française est-elle suffisamment sensibilisée au handicap ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30076,
+    "question_titre": "Est-ce que vous pensez que les politiques en faveur des personnes en situation de handicap sont suffisantes en France ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30077,
+    "question_titre": "Selon vous, quelle doit être la priorité du Gouvernement pour améliorer l’inclusion des personnes en situation de handicap dans notre société ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30078,
+    "question_titre": "Selon vous, qu’est-ce qui pourrait inciter les Français à mieux prendre en compte les personnes en situation de handicap ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30079,
+    "question_titre": "Les Jeux olympiques et paralympiques auront lieu en France l’été prochain. Selon vous, que cet événement induira-t-il ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 9,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30080,
+    "question_titre": "Politique : parmi les mesures suivantes, laquelle vous semble prioritaire pour garantir la participation des personnes en situation de handicap au débat public ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30157,
+    "question_titre": "Pensez-vous être suffisamment sensibilisé(e) au handicap ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30158,
+    "question_titre": "Selon vous, combien de personnes sont en situation de handicap en France ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30159,
+    "question_titre": "Selon vous, la société française est-elle suffisamment sensibilisée au handicap ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30160,
+    "question_titre": "Comment souhaiteriez-vous être mieux informé(e) sur le handicap ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30161,
+    "question_titre": "Est-ce que vous pensez que les politiques en faveur des personnes en situation de handicap sont suffisantes en France ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30162,
+    "question_titre": "Selon vous, quelle doit être la priorité du Gouvernement pour améliorer l’inclusion des personnes en situation de handicap dans notre société ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30163,
+    "question_titre": "Politique : parmi les mesures suivantes, laquelle vous semble prioritaire pour garantir la participation des personnes en situation de handicap au débat public ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30164,
+    "question_titre": "Selon vous, qu’est-ce qui pourrait inciter les Français à mieux prendre en compte les personnes en situation de handicap ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 45,
+    "consultation_document_id": "g8w8ivfieyvs3ajinnbk4015",
+    "new_question_id": 30165,
+    "question_titre": "Les Jeux olympiques et paralympiques auront lieu en France l’été prochain. Selon vous, que cet événement induira-t-il ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20091,
+    "question_titre": "À quoi sont liées ces difficultés selon vous ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20092,
+    "question_titre": "Que faudrait-il mettre en place dans les formations ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20093,
+    "question_titre": "Selon vous, quelles sont les actions prioritaires à mettre en œuvre pour répondre aux besoins de santé des agricultrices ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20094,
+    "question_titre": "Selon vous, quelles sont les actions prioritaires à mettre en œuvre pour encourager davantage de femmes à s’engager dans les instances agricoles ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20095,
+    "question_titre": "Selon vous, que faudrait-il mettre en place prioritairement pour améliorer l’accès à un statut professionnel protecteur pour les agricultrices ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20137,
+    "question_titre": "À quoi sont liées ces difficultés selon vous ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20138,
+    "question_titre": "Que faudrait-il mettre en place dans les formations ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20143,
+    "question_titre": "Selon vous, quelles sont les actions prioritaires à mettre en œuvre pour encourager davantage de femmes à s’engager dans les instances agricoles ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20178,
+    "question_titre": "Selon vous, quelles sont les actions prioritaires à mettre en œuvre pour répondre aux besoins de santé des agricultrices ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 20179,
+    "question_titre": "Selon vous, que faudrait-il mettre en place prioritairement pour améliorer l’accès à un statut professionnel protecteur pour les agricultrices ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 30106,
+    "question_titre": "Vous êtes :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 30108,
+    "question_titre": "Selon vous, quelle est la principale raison qui freinerait les jeunes filles à s’orienter vers les métiers agricoles ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 30109,
+    "question_titre": "Connaissez-vous les différents statuts professionnels possibles pour les agricultrices ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 30125,
+    "question_titre": "Vous êtes :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 30126,
+    "question_titre": "Selon vous, quelle est la principale raison qui freinerait les jeunes filles à s’orienter vers les métiers agricoles ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 30156,
+    "question_titre": "Connaissez-vous les différents statuts professionnels possibles pour les agricultrices ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40011,
+    "question_titre": "Globalement, avez-vous l’impression que c’est aujourd’hui difficile pour une femme de travailler dans l’agriculture ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40012,
+    "question_titre": "Avez-vous suivi une formation agricole ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40013,
+    "question_titre": "Dans votre entourage, la transmission des exploitations bénéficie-t-elle autant aux femmes qu’aux hommes ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40014,
+    "question_titre": "Avez-vous rencontré ou constaté des difficultés particulières pour l’installation des femmes en agriculture ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 22,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40015,
+    "question_titre": "Diriez-vous que les formations sont adaptées à l’exercice d’une activité agricole en tant que femme ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40046,
+    "question_titre": "Globalement, avez-vous l’impression que c’est aujourd’hui difficile pour une femme de travailler dans l’agriculture ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40047,
+    "question_titre": "Avez-vous suivi une formation agricole ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40048,
+    "question_titre": "Diriez-vous que les formations sont adaptées à l’exercice d’une activité agricole en tant que femme ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40049,
+    "question_titre": "Avez-vous rencontré ou constaté des difficultés particulières pour l’installation des femmes en agriculture ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 36,
+    "consultation_document_id": "hxec8jg448kdtr5uy4jhxt8y",
+    "new_question_id": 40050,
+    "question_titre": "Dans votre entourage, la transmission des exploitations bénéficie-t-elle autant aux femmes qu’aux hommes ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20084,
+    "question_titre": "🔶 Selon vous, quelle devrait être la priorité de la stratégie nationale pour améliorer l’attractivité du secteur ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20085,
+    "question_titre": "🔶 Selon vous, quelle devrait être la priorité de la stratégie nationale pour améliorer le financement des acteurs de l'ESS ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20086,
+    "question_titre": "🔷 Selon vous, quelles devraient être les 3 priorités de cette stratégie ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20087,
+    "question_titre": "🔷 Qu’est-ce qui vous encouragerait à vous engager dans une structure de l’Économie sociale et solidaire, en tant que bénévole ou salarié ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20088,
+    "question_titre": "🔶 Selon vous, quelle devrait être la priorité de la stratégie nationale pour mener les transitions écologique, numérique et sociale ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20089,
+    "question_titre": "🔶 Selon vous, quelle devrait être la priorité de la stratégie nationale pour améliorer la gouvernance du secteur ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20090,
+    "question_titre": "🔷 Dans quels secteurs d’activité souhaitez-vous que le Gouvernement encourage, en priorité, le respect des principes de fonctionnement de l’ESS (solidarité, gestion démocratique et réinvestissement des bénéfices dans le projet collectif) ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20184,
+    "question_titre": "🔶 Selon vous, quelle devrait être la priorité de la stratégie nationale pour améliorer la gouvernance du secteur ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20185,
+    "question_titre": "🔶 Selon vous, quelle devrait être la priorité de la stratégie nationale pour améliorer le financement des acteurs de l'ESS ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20187,
+    "question_titre": "🔶 Selon vous, quelle devrait être la priorité de la stratégie nationale pour améliorer l’attractivité du secteur ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20188,
+    "question_titre": "🔶 Selon vous, quelle devrait être la priorité de la stratégie nationale pour mener les transitions écologique, numérique et sociale ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20192,
+    "question_titre": "🔷 Selon vous, quelles devraient être les 3 priorités de cette stratégie ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20193,
+    "question_titre": "🔷 Qu’est-ce qui vous encouragerait à vous engager dans une structure de l’Économie sociale et solidaire, en tant que bénévole ou salarié ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 20194,
+    "question_titre": "🔷 Dans quels secteurs d’activité souhaitez-vous que le Gouvernement encourage, en priorité, le respect des principes de fonctionnement de l’ESS (solidarité, gestion démocratique et réinvestissement des bénéfices dans le projet collectif) ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 30105,
+    "question_titre": "🔷 À quel point connaissez-vous l’Économie sociale et solidaire ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 30177,
+    "question_titre": "🔷 À quel point connaissez-vous l’Économie sociale et solidaire ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 21,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 40010,
+    "question_titre": "Êtes-vous un acteur engagé (dirigeant, administrateur, salarié, bénévole) de l’Économie sociale et solidaire ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 47,
+    "consultation_document_id": "jf84upj9qutugwkce773m8dt",
+    "new_question_id": 40056,
+    "question_titre": "Êtes-vous un acteur engagé (dirigeant, administrateur, salarié, bénévole) de l’Économie sociale et solidaire ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20124,
+    "question_titre": "Pour vous le développement des technologies numériques et de l’intelligence artificielle est synonyme de...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20125,
+    "question_titre": "Pour vous, les technologies numériques et l’intelligence artificielle, c’est plutôt...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20126,
+    "question_titre": "D’après vous, l’État devrait avant tout...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20127,
+    "question_titre": "Parmi les enjeux économiques, quels sont pour vous les trois sujets que le Conseil de l’intelligence artificielle et du numérique devrait traiter en priorité l’année prochaine ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20128,
+    "question_titre": "Sur les sujets économiques, vous attendez du Conseil de l’intelligence artificielle et du numérique qu’il propose en priorité...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20129,
+    "question_titre": "Parmi les enjeux de société, quels sont pour vous les trois sujets que le Conseil de l’intelligence artificielle et du numérique devrait traiter en priorité l’année prochaine ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20130,
+    "question_titre": "Sur les sujets sociétaux, vous attendez du Conseil de l’intelligence artificielle et du numérique qu’il propose en priorité...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20131,
+    "question_titre": "Quels principes devraient guider le développement des technologies numériques en France ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20132,
+    "question_titre": "Selon vous, comment le Conseil de l'intelligence artificielle et du numérique peut-il garantir la transparence de ses travaux et l’implication des citoyens dans ses réflexions ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20136,
+    "question_titre": "Pour vous le développement des technologies numériques et de l’intelligence artificielle est synonyme de...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20159,
+    "question_titre": "Pour vous, les technologies numériques et l’intelligence artificielle, c’est plutôt...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20164,
+    "question_titre": "D’après vous, l’État devrait avant tout...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20170,
+    "question_titre": "Parmi les enjeux économiques, quels sont pour vous les trois sujets que le Conseil de l’intelligence artificielle et du numérique devrait traiter en priorité l’année prochaine ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20171,
+    "question_titre": "Sur les sujets économiques, vous attendez du Conseil de l’intelligence artificielle et du numérique qu’il propose en priorité...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20174,
+    "question_titre": "Parmi les enjeux de société, quels sont pour vous les trois sujets que le Conseil de l’intelligence artificielle et du numérique devrait traiter en priorité l’année prochaine ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20175,
+    "question_titre": "Sur les sujets sociétaux, vous attendez du Conseil de l’intelligence artificielle et du numérique qu’il propose en priorité...",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20176,
+    "question_titre": "Quels principes devraient guider le développement des technologies numériques en France ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 20177,
+    "question_titre": "Selon vous, comment le Conseil de l'intelligence artificielle et du numérique peut-il garantir la transparence de ses travaux et l’implication des citoyens dans ses réflexions ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 30121,
+    "question_titre": "Pour vous, les enjeux économiques liés aux technologies numériques et à l’intelligence artificielle sont...",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 30122,
+    "question_titre": "Pour vous, la question de l’impact environnemental des technologies numériques et de l’intelligence artificielle est...",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 30154,
+    "question_titre": "Pour vous, la question de l’impact environnemental des technologies numériques et de l’intelligence artificielle est...",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 30155,
+    "question_titre": "Pour vous, les enjeux économiques liés aux technologies numériques et à l’intelligence artificielle sont...",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 28,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 40045,
+    "question_titre": "Selon vous, quelles conséquences auront les technologies numériques et l’intelligence artificielle sur notre démocratie et ses pratiques (débat public, élections, pluralisme de l’information, etc.) ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 33,
+    "consultation_document_id": "js6vc1xuysnj4kl5n9tdcfrq",
+    "new_question_id": 40053,
+    "question_titre": "Selon vous, quelles conséquences auront les technologies numériques et l’intelligence artificielle sur notre démocratie et ses pratiques (débat public, élections, pluralisme de l’information, etc.) ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20028,
+    "question_titre": "🏥 Selon vous, parmi les activités exercées par un infirmier en établissement de santé aujourd’hui, lesquelles sont les plus importantes ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20029,
+    "question_titre": "🏠 Selon vous, parmi les activités exercées par un infirmier en ville aujourd’hui, lesquelles sont les plus importantes ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20030,
+    "question_titre": "Par quels moyens souhaiteriez-vous être davantage informé(e) sur le métier d’infirmier ou d’infirmière et ce qu’ils peuvent réaliser auprès des patients ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20031,
+    "question_titre": "Selon vous, quelles devraient être les missions prioritaires d’un infirmier « de demain » ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20032,
+    "question_titre": "Selon vous, quels sont les principaux enjeux dans les prochaines années pour le métier d'infirmier ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20165,
+    "question_titre": "🏥 Selon vous, parmi les activités exercées par un infirmier en établissement de santé aujourd’hui, lesquelles sont les plus importantes ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20166,
+    "question_titre": "🏠 Selon vous, parmi les activités exercées par un infirmier en ville aujourd’hui, lesquelles sont les plus importantes ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20167,
+    "question_titre": "Par quels moyens souhaiteriez-vous être davantage informé(e) sur le métier d’infirmier ou d’infirmière et ce qu’ils peuvent réaliser auprès des patients ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20168,
+    "question_titre": "Selon vous, quels sont les principaux enjeux dans les prochaines années pour le métier d'infirmier ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 20169,
+    "question_titre": "Selon vous, quelles devraient être les missions prioritaires d’un infirmier « de demain » ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 30032,
+    "question_titre": "Quelle profession exercez-vous ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 30033,
+    "question_titre": "🏠 Aujourd’hui, avez-vous le sentiment de connaître les activités réalisées par un infirmier en ville et à domicile ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 30034,
+    "question_titre": "🏥 Aujourd’hui, avez-vous le sentiment de connaître les activités réalisées par un infirmier à l'hôpital ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 30035,
+    "question_titre": "Selon vous, quelle est la source de motivation principale pour envisager d’exercer comme infirmier ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 30146,
+    "question_titre": "Quelle profession exercez-vous ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 30147,
+    "question_titre": "🏥 Aujourd’hui, avez-vous le sentiment de connaître les activités réalisées par un infirmier à l'hôpital ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 30148,
+    "question_titre": "🏠 Aujourd’hui, avez-vous le sentiment de connaître les activités réalisées par un infirmier en ville et à domicile ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 30149,
+    "question_titre": "Selon vous, quelle est la source de motivation principale pour envisager d’exercer comme infirmier ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 6,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 40003,
+    "question_titre": "Êtes-vous :",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 29,
+    "consultation_document_id": "kmbc0ie5zsx94dejoiv1wcnv",
+    "new_question_id": 40054,
+    "question_titre": "Êtes-vous :",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20020,
+    "question_titre": "Utilisez-vous des outils d’intelligence artificielle générative (permettant notamment de créer du texte, des images, des vidéos, du code, etc.), comme ChatGPT, Midjourney, etc. ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20021,
+    "question_titre": "Pour vous, l’IA générative, c’est plutôt :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20022,
+    "question_titre": "Selon vous, dans quels domaines le Gouvernement devrait-il encourager en priorité le développement des outils d’intelligence artificielle ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20023,
+    "question_titre": "Selon vous, dans quels domaines le Gouvernement devrait-il réguler en priorité le développement des outils d’intelligence artificielle ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20024,
+    "question_titre": "Selon vous, à quelles conditions le Gouvernement devrait-il accompagner le développement des outils d’intelligence artificielle ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20025,
+    "question_titre": "Qu’est-ce qui vous inciterait à tester et à utiliser les outils d’intelligence artificielle au travail ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20026,
+    "question_titre": "A quelles conditions acceptez-vous la collecte et l’utilisation de données personnelles par le service public ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20133,
+    "question_titre": "Utilisez-vous des outils d’intelligence artificielle générative (permettant notamment de créer du texte, des images, des vidéos, du code, etc.), comme ChatGPT, Midjourney, etc. ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20134,
+    "question_titre": "Pour vous, l’IA générative, c’est plutôt :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20135,
+    "question_titre": "Selon vous, dans quels domaines le Gouvernement devrait-il encourager en priorité le développement des outils d’intelligence artificielle ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20139,
+    "question_titre": "Selon vous, dans quels domaines le Gouvernement devrait-il réguler en priorité le développement des outils d’intelligence artificielle ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20140,
+    "question_titre": "Selon vous, à quelles conditions le Gouvernement devrait-il accompagner le développement des outils d’intelligence artificielle ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20141,
+    "question_titre": "Qu’est-ce qui vous inciterait à tester et à utiliser les outils d’intelligence artificielle au travail ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 20142,
+    "question_titre": "A quelles conditions acceptez-vous la collecte et l’utilisation de données personnelles par le service public ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30026,
+    "question_titre": "Que vous inspire le développement de l’IA générative ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30027,
+    "question_titre": "Selon vous, il faudrait plutôt :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30028,
+    "question_titre": "Avez-vous peur que votre emploi disparaisse à cause de l’intelligence artificielle ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30029,
+    "question_titre": "Avez-vous le sentiment que votre emploi serait plus intéressant ou valorisé grâce à l’intelligence artificielle ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30030,
+    "question_titre": "Avez-vous peur que votre emploi soit dévalorisé ou moins intéressant à cause de l’intelligence artificielle ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 5,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30031,
+    "question_titre": "Selon vous, l’IA générative peut-elle avoir un effet sur la démocratie ?  ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30123,
+    "question_titre": "Que vous inspire le développement de l’IA générative ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30124,
+    "question_titre": "Selon vous, il faudrait plutôt :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30127,
+    "question_titre": "Avez-vous peur que votre emploi disparaisse à cause de l’intelligence artificielle ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30128,
+    "question_titre": "Avez-vous peur que votre emploi soit dévalorisé ou moins intéressant à cause de l’intelligence artificielle ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30129,
+    "question_titre": "Avez-vous le sentiment que votre emploi serait plus intéressant ou valorisé grâce à l’intelligence artificielle ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 46,
+    "consultation_document_id": "pk4qi9rq5v6nuu2t39cck3mo",
+    "new_question_id": 30130,
+    "question_titre": "Selon vous, l’IA générative peut-elle avoir un effet sur la démocratie ?  ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 3,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 20003,
+    "question_titre": "Parmi les mesures proposées, quelles sont les 3 mesures qui vous convaincraient le plus de faire du vélo ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 3,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 20004,
+    "question_titre": "Parmi les mesures proposées, quelles sont les 3 mesures qui vous convaincraient le plus de faire du covoiturage ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 3,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 20005,
+    "question_titre": "Qu’est-ce qui vous inciterait à utiliser davantage les transports en commun ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 3,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 20006,
+    "question_titre": "Selon vous, parmi les actions de la stratégie nationale pour la biodiversité, lesquelles faudrait-il mettre en œuvre en priorité ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 35,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 20144,
+    "question_titre": "Parmi les mesures proposées, quelles sont les 3 mesures qui vous convaincraient le plus de faire du covoiturage ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 35,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 20145,
+    "question_titre": "Parmi les mesures proposées, quelles sont les 3 mesures qui vous convaincraient le plus de faire du vélo ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 35,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 20146,
+    "question_titre": "Qu’est-ce qui vous inciterait à utiliser davantage les transports en commun ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 35,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 20147,
+    "question_titre": "Selon vous, parmi les actions de la stratégie nationale pour la biodiversité, lesquelles faudrait-il mettre en œuvre en priorité ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 3,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 30009,
+    "question_titre": "En 2024, que seriez-vous prêt(e) à faire pour accélérer la transition écologique ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 3,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 30010,
+    "question_titre": "Selon vous, parmi les actions encourageant la réduction de la consommation de plastique, laquelle faudrait-il mettre en œuvre en priorité ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 3,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 30011,
+    "question_titre": "Afin d’assurer des logements plus sobres en eau, accepteriez-vous que l’eau utilisée par votre lave-linge soit réutilisée pour vos toilettes ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 35,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 30131,
+    "question_titre": "En 2024, que seriez-vous prêt(e) à faire pour accélérer la transition écologique ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 35,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 30132,
+    "question_titre": "Selon vous, parmi les actions encourageant la réduction de la consommation de plastique, laquelle faudrait-il mettre en œuvre en priorité ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 35,
+    "consultation_document_id": "pwr61j5qhpm6ekrf3liuw5bc",
+    "new_question_id": 30133,
+    "question_titre": "Afin d’assurer des logements plus sobres en eau, accepteriez-vous que l’eau utilisée par votre lave-linge soit réutilisée pour vos toilettes ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 11,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 20050,
+    "question_titre": "L’Etat investit 40 milliards d’euros, dont 7 milliards d’euros supplémentaires en 2024, pour financer la transition écologique. Aimeriez-vous avoir plus d’informations sur… ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 11,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 20051,
+    "question_titre": "Selon vous, le financement de la transition écologique doit reposer en priorité sur :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 11,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 20052,
+    "question_titre": "🚶 Pour les particuliers, l’augmentation des aides à destination des particuliers pour financer la rénovation énergétique devrait s’accompagner en priorité : ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 11,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 20053,
+    "question_titre": "🏭 Pour les entreprises, l’augmentation des aides à destination des entreprises pour financer la transition écologique devrait s’accompagner en priorité :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 34,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 20213,
+    "question_titre": "L’Etat investit 40 milliards d’euros, dont 7 milliards d’euros supplémentaires en 2024, pour financer la transition écologique. Aimeriez-vous avoir plus d’informations sur… ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 34,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 20214,
+    "question_titre": "Selon vous, le financement de la transition écologique doit reposer en priorité sur :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 34,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 20215,
+    "question_titre": "🚶 Pour les particuliers, l’augmentation des aides à destination des particuliers pour financer la rénovation énergétique devrait s’accompagner en priorité : ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 34,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 20216,
+    "question_titre": "🏭 Pour les entreprises, l’augmentation des aides à destination des entreprises pour financer la transition écologique devrait s’accompagner en priorité :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 11,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 30083,
+    "question_titre": "Pensez-vous que… ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 11,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 30084,
+    "question_titre": "La dette publique représente plus de 3000 milliards d’euros. Diriez-vous que… ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 11,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 30085,
+    "question_titre": "Nous avons deux dettes, la dette publique et la dette écologique, c’est-à-dire la dette liée à l’impact du changement climatique et à la dégradation de l’environnement laissée aux générations futures :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 34,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 30215,
+    "question_titre": "Pensez-vous que… ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 34,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 30216,
+    "question_titre": "Nous avons deux dettes, la dette publique et la dette écologique, c’est-à-dire la dette liée à l’impact du changement climatique et à la dégradation de l’environnement laissée aux générations futures :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 34,
+    "consultation_document_id": "rn3ib6tpe4yv3l7ofolyqh7d",
+    "new_question_id": 30217,
+    "question_titre": "La dette publique représente plus de 3000 milliards d’euros. Diriez-vous que… ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20014,
+    "question_titre": "Qu’est-ce qui pourrait vous convaincre de vous engager ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20015,
+    "question_titre": "Êtes-vous prêt(e) à donner du temps… ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20016,
+    "question_titre": "Dans votre commune, vous pourriez vous engager en priorité pour…",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20017,
+    "question_titre": "Quelles sont les principales difficultés que vous rencontrez dans votre engagement pour votre commune ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20018,
+    "question_titre": "Pour quelles actions êtes-vous engagé(e) dans votre commune ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20019,
+    "question_titre": "Par quels moyens ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20160,
+    "question_titre": "Qu’est-ce qui pourrait vous convaincre de vous engager ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20161,
+    "question_titre": "Êtes-vous prêt(e) à donner du temps… ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20162,
+    "question_titre": "Dans votre commune, vous pourriez vous engager en priorité pour…",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20163,
+    "question_titre": "Pour quelles actions êtes-vous engagé(e) dans votre commune ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20172,
+    "question_titre": "Quelles sont les principales difficultés que vous rencontrez dans votre engagement pour votre commune ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 20173,
+    "question_titre": "Par quels moyens ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30018,
+    "question_titre": "Pour votre commune, êtes-vous prêt(e) à donner du temps…",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30019,
+    "question_titre": "Pourriez-vous vous engager plus facilement si cela était rémunéré ou rétribué ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30020,
+    "question_titre": "Combien de temps consacrez-vous à votre engagement pour votre commune ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30021,
+    "question_titre": "Êtes-vous rémunéré(e) pour votre engagement ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30022,
+    "question_titre": "Considérez-vous que c’est un manque ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30023,
+    "question_titre": "Pensez-vous que votre avis compte au niveau de votre commune ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30024,
+    "question_titre": "Savez-vous quel est le rôle de la mairie et des élus locaux ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30025,
+    "question_titre": "Connaissez-vous votre maire ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30142,
+    "question_titre": "Pour votre commune, êtes-vous prêt(e) à donner du temps…",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30143,
+    "question_titre": "Pourriez-vous vous engager plus facilement si cela était rémunéré ou rétribué ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30144,
+    "question_titre": "Combien de temps consacrez-vous à votre engagement pour votre commune ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30145,
+    "question_titre": "Êtes-vous rémunéré(e) pour votre engagement ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30150,
+    "question_titre": "Considérez-vous que c’est un manque ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30151,
+    "question_titre": "Pensez-vous que votre avis compte au niveau de votre commune ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30152,
+    "question_titre": "Connaissez-vous votre maire ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 30153,
+    "question_titre": "Savez-vous quel est le rôle de la mairie et des élus locaux ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 40001,
+    "question_titre": "Êtes-vous engagé(e), aujourd’hui, pour votre commune ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 4,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 40002,
+    "question_titre": "Vous sentez-vous intégré(e) à la vie de votre commune et informé(e) de ses actualités ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 40052,
+    "question_titre": "Êtes-vous engagé(e), aujourd’hui, pour votre commune ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 40,
+    "consultation_document_id": "vciluo7jt2hiavx7wuqbfwh1",
+    "new_question_id": 40055,
+    "question_titre": "Vous sentez-vous intégré(e) à la vie de votre commune et informé(e) de ses actualités ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 10,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 20046,
+    "question_titre": "Pour baisser votre facture de carburant, vous êtes prêt(e), en priorité, à :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 10,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 20047,
+    "question_titre": "Pour baisser la consommation de votre logement, en priorité, vous êtes prêt(e) à : ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 10,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 20048,
+    "question_titre": "Pour réduire vos usages numériques, vous êtes prêt(e), en priorité, à :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 10,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 20049,
+    "question_titre": "Quels sont les principaux obstacles qui vous empêchent de passer à un véhicule moins polluant ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 42,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 20198,
+    "question_titre": "Pour baisser la consommation de votre logement, en priorité, vous êtes prêt(e) à : ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 42,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 20199,
+    "question_titre": "Pour baisser votre facture de carburant, vous êtes prêt(e), en priorité, à :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 42,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 20200,
+    "question_titre": "Pour réduire vos usages numériques, vous êtes prêt(e), en priorité, à :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 42,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 20201,
+    "question_titre": "Quels sont les principaux obstacles qui vous empêchent de passer à un véhicule moins polluant ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 10,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 30081,
+    "question_titre": "Si vous vous engagez pour la sobriété énergétique, c’est en priorité pour :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 10,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 30082,
+    "question_titre": "Quelle méthode vous paraît la plus adaptée pour réduire notre consommation d’énergie ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 42,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 30202,
+    "question_titre": "Si vous vous engagez pour la sobriété énergétique, c’est en priorité pour :",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 42,
+    "consultation_document_id": "vkp77x0ognt41xyjicz9wwba",
+    "new_question_id": 30203,
+    "question_titre": "Quelle méthode vous paraît la plus adaptée pour réduire notre consommation d’énergie ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 7,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 20033,
+    "question_titre": "Que priorisez-vous dans l’achat d’un produit alimentaire ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 7,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 20034,
+    "question_titre": "A quelles conditions seriez-vous prêt(e) à payer plus cher vos produits alimentaires pour mieux rémunérer les agriculteurs ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 7,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 20035,
+    "question_titre": "Selon vous, pour garantir la rémunération des agriculteurs, il serait préférable de :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 7,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 20036,
+    "question_titre": "Quels produits seriez-vous prêt(e) à payer un peu plus cher pour mieux rémunérer les agriculteurs ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 39,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 20154,
+    "question_titre": "Que priorisez-vous dans l’achat d’un produit alimentaire ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 39,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 20155,
+    "question_titre": "A quelles conditions seriez-vous prêt(e) à payer plus cher vos produits alimentaires pour mieux rémunérer les agriculteurs ? ",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 39,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 20156,
+    "question_titre": "Quels produits seriez-vous prêt(e) à payer un peu plus cher pour mieux rémunérer les agriculteurs ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 39,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 20157,
+    "question_titre": "Selon vous, pour garantir la rémunération des agriculteurs, il serait préférable de :",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 7,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 30036,
+    "question_titre": "Quelle est la première raison de votre choix de lieu de courses ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 7,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 30037,
+    "question_titre": "La présence d’un label (Label rouge, Bio, AOP) sur un produit alimentaire vous rassure-t-elle quant à la rémunération de l’agriculteur ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 39,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 30140,
+    "question_titre": "Quelle est la première raison de votre choix de lieu de courses ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 39,
+    "consultation_document_id": "w5d0rrhdlqby9shpt4wdk5oj",
+    "new_question_id": 30141,
+    "question_titre": "La présence d’un label (Label rouge, Bio, AOP) sur un produit alimentaire vous rassure-t-elle quant à la rémunération de l’agriculteur ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20037,
+    "question_titre": "👨🏽‍🌾 Qui sont vos premiers acheteurs ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20038,
+    "question_titre": "🚜 Qui sont vos acheteurs ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20039,
+    "question_titre": "🏭 Qui sont vos principaux clients ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20040,
+    "question_titre": "🏭 Qui sont vos principaux fournisseurs de matière première agricole ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20041,
+    "question_titre": "🛒 Avec quel secteur avez-vous le plus de difficultés dans les négociations ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20196,
+    "question_titre": "👨🏽‍🌾 Qui sont vos premiers acheteurs ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20197,
+    "question_titre": "🚜 Qui sont vos acheteurs ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20209,
+    "question_titre": "🏭 Qui sont vos principaux clients ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20210,
+    "question_titre": "🏭 Qui sont vos principaux fournisseurs de matière première agricole ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 20211,
+    "question_titre": "🛒 Avec quel secteur avez-vous le plus de difficultés dans les négociations ?",
+    "question_type": "question-a-choix-multiples"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30038,
+    "question_titre": "Estimez-vous que la structure actuelle des obligations réparties entre le code rural et de la pêche maritime, et le code de commerce est satisfaisante ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30039,
+    "question_titre": "Estimez-vous que les contrats tripartites devraient être généralisés ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30040,
+    "question_titre": "La durée du contrat devrait être de : ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30041,
+    "question_titre": "Si la contractualisation écrite demeure obligatoire, estimez-vous que : ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30042,
+    "question_titre": "Estimez-vous que la contractualisation écrite devrait être rendue obligatoire pour tous les secteurs agricoles ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30043,
+    "question_titre": "La construction du prix des produits agricoles avec le premier acheteur doit-elle uniquement se fonder sur des indicateurs de coûts de production agricole ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30044,
+    "question_titre": "Les contrats à l'amont doivent-ils suivre un modèle obligatoire ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30045,
+    "question_titre": "La part que représentent les coûts de production dans le prix de vente des produits agricoles au premier acheteur doit-elle être sanctuarisée ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30046,
+    "question_titre": "👨🏽‍🌾 Vos premiers acheteurs vous imposent-ils des conditions de livraison ou de collecte des produits que vous jugez défavorables ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30047,
+    "question_titre": "👨🏽‍🌾 Les clauses de révision automatique et de renégociation vous ont-elles permis de faire face aux changements au cours de la vie du contrat ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30048,
+    "question_titre": "👨🏽‍🌾 Parvenez-vous à négocier votre prix de vente avec vos premiers acheteurs ou celui-ci vous est-il imposé ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30049,
+    "question_titre": "👨🏽‍🌾 Avez-vous adressé à votre premier acheteur une proposition de contrat ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30050,
+    "question_titre": "👨🏽‍🌾 Vos premiers acheteurs vous imposent-ils des conditions de contrôles de la qualité ...",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30051,
+    "question_titre": "👨🏽‍🌾 Avec quelle catégorie d'acheteurs éprouvez-vous le plus de difficultés dans vos relations commerciales ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30052,
+    "question_titre": "🚜 Avez-vous adressé à votre premier acheteur une proposition de contrat ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30053,
+    "question_titre": "🚜 Les clauses de révision automatique et de renégociation vous ont-elles permis de faire face aux changements au cours de la vie du contrat ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30054,
+    "question_titre": "🚜 Vos cocontractants vous imposent-ils des conditions de contrôles de la qualité ...",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30055,
+    "question_titre": "🚜 Vos cocontractants vous imposent-ils des conditions de livraison ou de collecte des produits que vous jugez défavorables ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30056,
+    "question_titre": "🚜 Parvenez-vous à négocier votre prix de vente avec vos premiers acheteurs ou celui-ci vous est-il imposé ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30057,
+    "question_titre": "🏭 La non-négociabilité de la matière première agricole dans les contrats aval a-t-elle été correctement mise en œuvre dans les contrats que vous avez conclus avec vos acheteurs ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30058,
+    "question_titre": "🚜 Avec quelle catégorie d'acheteurs éprouvez-vous le plus de difficultés dans vos relations commerciales ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30059,
+    "question_titre": "🏭 Quelle simplification souhaiteriez-vous dans les options de transparence prévues à l'article L. 441-1-1 du code de commerce ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30060,
+    "question_titre": "🏭 Avez-vous reçu une proposition de contrat de la part de vos fournisseurs / producteurs agricoles ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30061,
+    "question_titre": "🏭 Les clauses de révision automatique du prix et de renégociation ont-elles permis de faire face aux évolutions conjoncturelles avec vos cocontractants ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30062,
+    "question_titre": "🏭 Souhaitez-vous la pérennisation du dispositif d'encadrement des promotions pour les produits alimentaires ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30063,
+    "question_titre": "🏭 Souhaitez-vous la pérennisation du relèvement du seuil de revente à perte (SRP+10) ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30064,
+    "question_titre": "🏭 Souhaitez-vous le maintien du calendrier des négociations commerciales avec une date butoir au 1er mars ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30065,
+    "question_titre": "🛒 Souhaitez-vous le maintien du calendrier des négociations commerciales avec une date butoir au 1er mars ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30066,
+    "question_titre": "🛒 La non-négociabilité de la matière première agricole dans les contrats aval a-t-elle été correctement mise en œuvre dans les contrats que vous avez conclus avec les acheteurs ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30067,
+    "question_titre": "🛒 Quelle simplification souhaiteriez-vous dans les options de transparence prévues à l'article L. 441-1-1 du code de commerce ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30068,
+    "question_titre": "🛒 Les clauses de révision automatique du prix et de renégociation ont-elles permis de faire face aux évolutions conjoncturelles avec vos cocontractants ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30069,
+    "question_titre": "🛒 Souhaitez-vous la pérennisation du relèvement du seuil de revente à perte (SRP+10) ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30070,
+    "question_titre": "🛒 Souhaitez-vous la pérennisation du dispositif d'encadrement des promotions pour les produits alimentaires ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30071,
+    "question_titre": "🛒 Souhaitez-vous la pérennisation du dispositif d'encadrement des promotions pour les produits non-alimentaires ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30166,
+    "question_titre": "Estimez-vous que la structure actuelle des obligations réparties entre le code rural et de la pêche maritime, et le code de commerce est satisfaisante ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30167,
+    "question_titre": "Estimez-vous que les contrats tripartites devraient être généralisés ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30178,
+    "question_titre": "Estimez-vous que la contractualisation écrite devrait être rendue obligatoire pour tous les secteurs agricoles ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30179,
+    "question_titre": "Si la contractualisation écrite demeure obligatoire, estimez-vous que : ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30180,
+    "question_titre": "La durée du contrat devrait être de : ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30181,
+    "question_titre": "Les contrats à l'amont doivent-ils suivre un modèle obligatoire ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30182,
+    "question_titre": "La construction du prix des produits agricoles avec le premier acheteur doit-elle uniquement se fonder sur des indicateurs de coûts de production agricole ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30183,
+    "question_titre": "La part que représentent les coûts de production dans le prix de vente des produits agricoles au premier acheteur doit-elle être sanctuarisée ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30184,
+    "question_titre": "👨🏽‍🌾 Avez-vous adressé à votre premier acheteur une proposition de contrat ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30185,
+    "question_titre": "👨🏽‍🌾 Les clauses de révision automatique et de renégociation vous ont-elles permis de faire face aux changements au cours de la vie du contrat ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30186,
+    "question_titre": "👨🏽‍🌾 Vos premiers acheteurs vous imposent-ils des conditions de livraison ou de collecte des produits que vous jugez défavorables ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30187,
+    "question_titre": "👨🏽‍🌾 Vos premiers acheteurs vous imposent-ils des conditions de contrôles de la qualité ...",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30188,
+    "question_titre": "👨🏽‍🌾 Parvenez-vous à négocier votre prix de vente avec vos premiers acheteurs ou celui-ci vous est-il imposé ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30189,
+    "question_titre": "👨🏽‍🌾 Avec quelle catégorie d'acheteurs éprouvez-vous le plus de difficultés dans vos relations commerciales ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30190,
+    "question_titre": "🚜 Avez-vous adressé à votre premier acheteur une proposition de contrat ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30191,
+    "question_titre": "🚜 Les clauses de révision automatique et de renégociation vous ont-elles permis de faire face aux changements au cours de la vie du contrat ? ",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30192,
+    "question_titre": "🚜 Vos cocontractants vous imposent-ils des conditions de livraison ou de collecte des produits que vous jugez défavorables ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30193,
+    "question_titre": "🚜 Vos cocontractants vous imposent-ils des conditions de contrôles de la qualité ...",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30194,
+    "question_titre": "🚜 Parvenez-vous à négocier votre prix de vente avec vos premiers acheteurs ou celui-ci vous est-il imposé ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30195,
+    "question_titre": "🚜 Avec quelle catégorie d'acheteurs éprouvez-vous le plus de difficultés dans vos relations commerciales ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30196,
+    "question_titre": "🏭 Avez-vous reçu une proposition de contrat de la part de vos fournisseurs / producteurs agricoles ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30197,
+    "question_titre": "🏭 La non-négociabilité de la matière première agricole dans les contrats aval a-t-elle été correctement mise en œuvre dans les contrats que vous avez conclus avec vos acheteurs ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30198,
+    "question_titre": "🏭 Quelle simplification souhaiteriez-vous dans les options de transparence prévues à l'article L. 441-1-1 du code de commerce ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30199,
+    "question_titre": "🏭 Les clauses de révision automatique du prix et de renégociation ont-elles permis de faire face aux évolutions conjoncturelles avec vos cocontractants ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30200,
+    "question_titre": "🏭 Souhaitez-vous le maintien du calendrier des négociations commerciales avec une date butoir au 1er mars ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30201,
+    "question_titre": "🏭 Souhaitez-vous la pérennisation du relèvement du seuil de revente à perte (SRP+10) ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30204,
+    "question_titre": "🏭 Souhaitez-vous la pérennisation du dispositif d'encadrement des promotions pour les produits alimentaires ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30205,
+    "question_titre": "🛒 La non-négociabilité de la matière première agricole dans les contrats aval a-t-elle été correctement mise en œuvre dans les contrats que vous avez conclus avec les acheteurs ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30206,
+    "question_titre": "🛒 Quelle simplification souhaiteriez-vous dans les options de transparence prévues à l'article L. 441-1-1 du code de commerce ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30207,
+    "question_titre": "🛒 Les clauses de révision automatique du prix et de renégociation ont-elles permis de faire face aux évolutions conjoncturelles avec vos cocontractants ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30208,
+    "question_titre": "🛒 Souhaitez-vous le maintien du calendrier des négociations commerciales avec une date butoir au 1er mars ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30209,
+    "question_titre": "🛒 Souhaitez-vous la pérennisation du relèvement du seuil de revente à perte (SRP+10) ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30210,
+    "question_titre": "🛒 Souhaitez-vous la pérennisation du dispositif d'encadrement des promotions pour les produits alimentaires ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 30211,
+    "question_titre": "🛒 Souhaitez-vous la pérennisation du dispositif d'encadrement des promotions pour les produits non-alimentaires ?",
+    "question_type": "question-a-choix-unique"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 40004,
+    "question_titre": "Êtes-vous :",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 40005,
+    "question_titre": "🚜 Parvenez-vous à faire respecter par les premiers acheteurs les contrats-cadres ou les contrats que vous concluez ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 8,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 40006,
+    "question_titre": "🚜 Considérez-vous que le niveau de structuration de votre organisation de producteur est satisfaisant ?",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 40058,
+    "question_titre": "Êtes-vous :",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 40059,
+    "question_titre": "🚜 Parvenez-vous à faire respecter par les premiers acheteurs les contrats-cadres ou les contrats que vous concluez ? ",
+    "question_type": "question-conditionnelle"
+  },
+  {
+    "consultation_new_internal_id": 38,
+    "consultation_document_id": "wv0ul09acpw4f38v6s4uudqn",
+    "new_question_id": 40060,
+    "question_titre": "🚜 Considérez-vous que le niveau de structuration de votre organisation de producteur est satisfaisant ?",
+    "question_type": "question-conditionnelle"
+  }
+]
