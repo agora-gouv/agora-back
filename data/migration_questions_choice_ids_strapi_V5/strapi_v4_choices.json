@@ -1,0 +1,5697 @@
+[
+  {
+    "old_question_id": 20000,
+    "old_choice_id": 13,
+    "choice_label": "Un changement de pratiques politiques ou de profils des responsables politiques"
+  },
+  {
+    "old_question_id": 20000,
+    "old_choice_id": 14,
+    "choice_label": "Davantage de participation des citoyens aux décisions politiques"
+  },
+  {
+    "old_question_id": 20000,
+    "old_choice_id": 15,
+    "choice_label": "Un changement de nos institutions politiques"
+  },
+  {
+    "old_question_id": 20000,
+    "old_choice_id": 16,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20001,
+    "old_choice_id": 31,
+    "choice_label": "Vous positionner sur des choix de société"
+  },
+  {
+    "old_question_id": 20001,
+    "old_choice_id": 32,
+    "choice_label": "Réagir sur des hypothèses de travail actuellement à l’étude"
+  },
+  {
+    "old_question_id": 20001,
+    "old_choice_id": 33,
+    "choice_label": "Donner votre avis sur des questions controversées"
+  },
+  {
+    "old_question_id": 20001,
+    "old_choice_id": 34,
+    "choice_label": "Réagir à l’actualité du Gouvernement"
+  },
+  {
+    "old_question_id": 20001,
+    "old_choice_id": 35,
+    "choice_label": "Faire des propositions et partager vos idées"
+  },
+  {
+    "old_question_id": 20001,
+    "old_choice_id": 36,
+    "choice_label": "Evaluer une action de l’Etat"
+  },
+  {
+    "old_question_id": 20001,
+    "old_choice_id": 37,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20002,
+    "old_choice_id": 47,
+    "choice_label": "Les actions mises en œuvre sur le sujet"
+  },
+  {
+    "old_question_id": 20002,
+    "old_choice_id": 48,
+    "choice_label": " Si les contributions citoyennes ont modifié ce que le Gouvernement avait prévu"
+  },
+  {
+    "old_question_id": 20002,
+    "old_choice_id": 49,
+    "choice_label": "Si une proposition citoyenne précise a été retenue"
+  },
+  {
+    "old_question_id": 20002,
+    "old_choice_id": 50,
+    "choice_label": "Ce que les décisions politiques vont changer pour moi"
+  },
+  {
+    "old_question_id": 20002,
+    "old_choice_id": 52,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20003,
+    "old_choice_id": 93,
+    "choice_label": "Le renforcement des incitations financières pour aller au travail en vélo"
+  },
+  {
+    "old_question_id": 20003,
+    "old_choice_id": 94,
+    "choice_label": "L’élargissement des aides pour acheter un vélo au-delà des vélos électriques"
+  },
+  {
+    "old_question_id": 20003,
+    "old_choice_id": 95,
+    "choice_label": "La prolongation ou l’installation de pistes cyclables sur mon trajet"
+  },
+  {
+    "old_question_id": 20003,
+    "old_choice_id": 96,
+    "choice_label": "L’ouverture d’ateliers de réparation et de recyclage de vélos"
+  },
+  {
+    "old_question_id": 20003,
+    "old_choice_id": 97,
+    "choice_label": "Des itinéraires prévus pour combiner des trajets en vélo et en transports en commun (pour les plus grandes distances)"
+  },
+  {
+    "old_question_id": 20003,
+    "old_choice_id": 98,
+    "choice_label": "Des douches sur mon lieu de travail"
+  },
+  {
+    "old_question_id": 20003,
+    "old_choice_id": 99,
+    "choice_label": "Aucune de ces mesures"
+  },
+  {
+    "old_question_id": 20004,
+    "old_choice_id": 83,
+    "choice_label": "Des places de stationnement au départ et à l’arrivée"
+  },
+  {
+    "old_question_id": 20004,
+    "old_choice_id": 84,
+    "choice_label": "Des voies sur les routes ou les autoroutes réservées au covoiturage"
+  },
+  {
+    "old_question_id": 20004,
+    "old_choice_id": 87,
+    "choice_label": "Une plateforme unique de mise en relation sur votre territoire"
+  },
+  {
+    "old_question_id": 20004,
+    "old_choice_id": 88,
+    "choice_label": "Une incitation financière pour le conducteur et/ou le passager"
+  },
+  {
+    "old_question_id": 20004,
+    "old_choice_id": 89,
+    "choice_label": "Davantage d’accompagnement et d’information sur le fonctionnement et les aides au covoiturage"
+  },
+  {
+    "old_question_id": 20004,
+    "old_choice_id": 90,
+    "choice_label": "Des arrêts d’autostop le long d’un axe routier (ligne de covoiturage)"
+  },
+  {
+    "old_question_id": 20004,
+    "old_choice_id": 91,
+    "choice_label": "L’intégration du covoiturage dans une offre plus large de transports (horaires et points de contacts proches des transports en commun)"
+  },
+  {
+    "old_question_id": 20004,
+    "old_choice_id": 92,
+    "choice_label": "Aucune de ces mesures"
+  },
+  {
+    "old_question_id": 20005,
+    "old_choice_id": 100,
+    "choice_label": "Proposer une offre d’abonnement abordable"
+  },
+  {
+    "old_question_id": 20005,
+    "old_choice_id": 101,
+    "choice_label": "Renforcer la sécurité"
+  },
+  {
+    "old_question_id": 20005,
+    "old_choice_id": 102,
+    "choice_label": "Optimiser les conditions de trajet (retard, affluence, circuit)"
+  },
+  {
+    "old_question_id": 20005,
+    "old_choice_id": 103,
+    "choice_label": "Augmenter l’offre de transport en dehors des grandes agglomérations"
+  },
+  {
+    "old_question_id": 20005,
+    "old_choice_id": 104,
+    "choice_label": "Développer des parkings aux abords des gares pour laisser sa voiture en périphérie"
+  },
+  {
+    "old_question_id": 20005,
+    "old_choice_id": 105,
+    "choice_label": "Aucune de ces mesures"
+  },
+  {
+    "old_question_id": 20006,
+    "old_choice_id": 106,
+    "choice_label": "Réduire l’usage des pesticides dans l’agriculture"
+  },
+  {
+    "old_question_id": 20006,
+    "old_choice_id": 107,
+    "choice_label": "Limiter l’urbanisation et l’imperméabilisation des sols"
+  },
+  {
+    "old_question_id": 20006,
+    "old_choice_id": 108,
+    "choice_label": "Lutter contre la pollution lumineuse"
+  },
+  {
+    "old_question_id": 20006,
+    "old_choice_id": 109,
+    "choice_label": "Créer des nouveaux parcs naturels"
+  },
+  {
+    "old_question_id": 20006,
+    "old_choice_id": 110,
+    "choice_label": "Trouver et développer des alternatives aux pesticides"
+  },
+  {
+    "old_question_id": 20006,
+    "old_choice_id": 111,
+    "choice_label": "Aucune de ces mesures"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 125,
+    "choice_label": "L’euro"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 126,
+    "choice_label": "La politique de l’UE en matière de transition écologique (le Pacte vert)"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 127,
+    "choice_label": "La paix depuis 1945"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 128,
+    "choice_label": "La libre circulation des citoyens"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 129,
+    "choice_label": "La Politique agricole commune"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 130,
+    "choice_label": "Le Pass Interrail permettant la circulation illimitée sur les réseaux ferroviaires européens à un prix réduit"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 131,
+    "choice_label": "Le programme Erasmus qui permet aux jeunes de partir se former à l’étranger"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 132,
+    "choice_label": "Le Règlement général sur la protection des données (RGPD) qui permet aux citoyens de mieux contrôler le traitement qui peut être fait de leurs données"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 133,
+    "choice_label": "L'élargissement à 27 pays"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 134,
+    "choice_label": "Le chargeur unique"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 135,
+    "choice_label": "Les vaccins contre la Covid-19"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 136,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20007,
+    "old_choice_id": 137,
+    "choice_label": "Aucune"
+  },
+  {
+    "old_question_id": 20008,
+    "old_choice_id": 142,
+    "choice_label": "Renforcer les pouvoirs du Parlement européen pour lui permettre, par exemple, de proposer un budget ou des projets de lois européens"
+  },
+  {
+    "old_question_id": 20008,
+    "old_choice_id": 143,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20008,
+    "old_choice_id": 144,
+    "choice_label": "Présenter des listes européennes à la place des listes nationales aux élections européennes"
+  },
+  {
+    "old_question_id": 20008,
+    "old_choice_id": 145,
+    "choice_label": "Proposer, entre les élections, des référendums sur l’adoption de certaines lois de l’Union européenne"
+  },
+  {
+    "old_question_id": 20008,
+    "old_choice_id": 146,
+    "choice_label": "Je ne souhaite pas encourager les citoyens à voter aux élections européennes"
+  },
+  {
+    "old_question_id": 20009,
+    "old_choice_id": 163,
+    "choice_label": "La règle de l’unanimité pour faire avancer certains projets à 27 pays"
+  },
+  {
+    "old_question_id": 20009,
+    "old_choice_id": 165,
+    "choice_label": "Les écarts de revenus et de niveaux de vie entre Etats membres"
+  },
+  {
+    "old_question_id": 20009,
+    "old_choice_id": 166,
+    "choice_label": "Des normes trop nombreuses ou trop complexes"
+  },
+  {
+    "old_question_id": 20009,
+    "old_choice_id": 167,
+    "choice_label": "Les traités européens trop rigides sur certaines règles économiques"
+  },
+  {
+    "old_question_id": 20009,
+    "old_choice_id": 168,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20009,
+    "old_choice_id": 169,
+    "choice_label": "Les risques de conflits aux frontières de l’Union européenne"
+  },
+  {
+    "old_question_id": 20009,
+    "old_choice_id": 170,
+    "choice_label": "Aucun"
+  },
+  {
+    "old_question_id": 20010,
+    "old_choice_id": 156,
+    "choice_label": "La stabilité des économies"
+  },
+  {
+    "old_question_id": 20010,
+    "old_choice_id": 157,
+    "choice_label": "La protection contre les conflits internationaux"
+  },
+  {
+    "old_question_id": 20010,
+    "old_choice_id": 158,
+    "choice_label": "La mise en œuvre des réglementations qui protègent l’environnement"
+  },
+  {
+    "old_question_id": 20010,
+    "old_choice_id": 159,
+    "choice_label": "L’accès à la culture pour tous"
+  },
+  {
+    "old_question_id": 20010,
+    "old_choice_id": 160,
+    "choice_label": "Le financement de l’agriculture française"
+  },
+  {
+    "old_question_id": 20010,
+    "old_choice_id": 161,
+    "choice_label": "Le commerce"
+  },
+  {
+    "old_question_id": 20010,
+    "old_choice_id": 162,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20010,
+    "old_choice_id": 164,
+    "choice_label": "Aucun"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 147,
+    "choice_label": "Lutter contre le risque de pénurie de médicaments"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 148,
+    "choice_label": "Protéger les citoyens européens à l’intérieur et à l’extérieur de l’Union européenne"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 149,
+    "choice_label": "Réduire le chômage et renforcer la protection sociale des travailleurs"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 150,
+    "choice_label": "Assurer une transition écologique équitable et socialement juste"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 151,
+    "choice_label": "Développer le commerce et les échanges de biens et de services"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 152,
+    "choice_label": "Défendre les libertés et les droits fondamentaux en Europe et dans le monde"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 153,
+    "choice_label": "Favoriser la coopération et la bonne entente entre les Etats membres"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 154,
+    "choice_label": "Rien"
+  },
+  {
+    "old_question_id": 20011,
+    "old_choice_id": 155,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20012,
+    "old_choice_id": 177,
+    "choice_label": "Par les médias classiques, pour être informé en continu"
+  },
+  {
+    "old_question_id": 20012,
+    "old_choice_id": 178,
+    "choice_label": "Par des lieux physiques comme les maisons de l’Europe, pour être informé ponctuellement quand j’en ai besoin"
+  },
+  {
+    "old_question_id": 20012,
+    "old_choice_id": 179,
+    "choice_label": "Par des débats réguliers au Parlement européen retransmis à la radio ou à la télévision aux heures de grande écoute"
+  },
+  {
+    "old_question_id": 20012,
+    "old_choice_id": 180,
+    "choice_label": "Par les réseaux sociaux, pour être informé par du contenu plus court et plus dynamique"
+  },
+  {
+    "old_question_id": 20012,
+    "old_choice_id": 181,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20012,
+    "old_choice_id": 183,
+    "choice_label": "Je ne souhaite pas être informé des actions de l’Union européenne"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 185,
+    "choice_label": "Permettre à tous les citoyens d’effectuer un service civique, dans leur Etat ou dans un autre Etat membre"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 186,
+    "choice_label": "Créer une « Haute autorité pour la transparence de la vie publique européenne » pour lutter contre les risques de corruption dans les institutions européennes"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 187,
+    "choice_label": "Dédier plus de financements européens à la recherche, à l’innovation et à la relocalisation des industries stratégiques en Europe"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 188,
+    "choice_label": "Créer des cafés multi-services partout dans les zones rurales européennes pour renforcer leur attractivité"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 189,
+    "choice_label": "Ajouter des visages de figures européennes ou de monuments historiques sur les billets européens"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 190,
+    "choice_label": "Mettre en œuvre un grand projet de traduction vocale pour faciliter la compréhension des Européens entre eux"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 191,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 192,
+    "choice_label": "Aucune"
+  },
+  {
+    "old_question_id": 20013,
+    "old_choice_id": 833,
+    "choice_label": "Généraliser Erasmus pour tous les étudiants"
+  },
+  {
+    "old_question_id": 20014,
+    "old_choice_id": 193,
+    "choice_label": "Avoir plus de temps"
+  },
+  {
+    "old_question_id": 20014,
+    "old_choice_id": 194,
+    "choice_label": "Qu’on me propose des façons de m’engager"
+  },
+  {
+    "old_question_id": 20014,
+    "old_choice_id": 195,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20014,
+    "old_choice_id": 196,
+    "choice_label": "Avoir plus d’informations sur les moyens de m’engager"
+  },
+  {
+    "old_question_id": 20014,
+    "old_choice_id": 197,
+    "choice_label": "Sentir que mon avis compte et peut participer à la construction de projets concrets"
+  },
+  {
+    "old_question_id": 20014,
+    "old_choice_id": 198,
+    "choice_label": "Avoir plus d’amis et de personnes dans mon entourage qui s’engagent"
+  },
+  {
+    "old_question_id": 20014,
+    "old_choice_id": 199,
+    "choice_label": "Je ne souhaite pas m’engager"
+  },
+  {
+    "old_question_id": 20015,
+    "old_choice_id": 204,
+    "choice_label": "Dans votre quartier uniquement"
+  },
+  {
+    "old_question_id": 20015,
+    "old_choice_id": 205,
+    "choice_label": "Dans toute votre commune"
+  },
+  {
+    "old_question_id": 20015,
+    "old_choice_id": 207,
+    "choice_label": "Dans des communes proches de la vôtre"
+  },
+  {
+    "old_question_id": 20015,
+    "old_choice_id": 830,
+    "choice_label": "Je n’ai pas de temps à y consacrer"
+  },
+  {
+    "old_question_id": 20016,
+    "old_choice_id": 206,
+    "choice_label": "Entretenir les espaces publics"
+  },
+  {
+    "old_question_id": 20016,
+    "old_choice_id": 208,
+    "choice_label": "Participer à la transition écologique au niveau local (installation d’un compost, végétalisation de ma rue, production d’énergies renouvelables à domicile, etc.)"
+  },
+  {
+    "old_question_id": 20016,
+    "old_choice_id": 209,
+    "choice_label": "Tisser du lien social et participer à des actions de solidarité (initiative intergénérationnelle, soutien aux plus modestes, soutien scolaire, etc.)"
+  },
+  {
+    "old_question_id": 20016,
+    "old_choice_id": 210,
+    "choice_label": "Organiser des évènements culturels, sportifs ou de loisirs"
+  },
+  {
+    "old_question_id": 20016,
+    "old_choice_id": 211,
+    "choice_label": "Contribuer à l’élaboration des futurs projets de ma commune"
+  },
+  {
+    "old_question_id": 20016,
+    "old_choice_id": 212,
+    "choice_label": "Valoriser les initiatives de ma commune sur les réseaux sociaux et plus largement les promouvoir en ligne"
+  },
+  {
+    "old_question_id": 20016,
+    "old_choice_id": 213,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20016,
+    "old_choice_id": 831,
+    "choice_label": "Améliorer la sécurité des habitants"
+  },
+  {
+    "old_question_id": 20017,
+    "old_choice_id": 229,
+    "choice_label": "Je manque de temps"
+  },
+  {
+    "old_question_id": 20017,
+    "old_choice_id": 230,
+    "choice_label": "Je manque de visibilité"
+  },
+  {
+    "old_question_id": 20017,
+    "old_choice_id": 231,
+    "choice_label": "Je manque de moyens"
+  },
+  {
+    "old_question_id": 20017,
+    "old_choice_id": 232,
+    "choice_label": "Je manque de reconnaissance"
+  },
+  {
+    "old_question_id": 20017,
+    "old_choice_id": 233,
+    "choice_label": "Je manque de sécurité"
+  },
+  {
+    "old_question_id": 20017,
+    "old_choice_id": 234,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20017,
+    "old_choice_id": 235,
+    "choice_label": "Je manque d’informations"
+  },
+  {
+    "old_question_id": 20018,
+    "old_choice_id": 220,
+    "choice_label": "Entretenir les espaces publics"
+  },
+  {
+    "old_question_id": 20018,
+    "old_choice_id": 221,
+    "choice_label": "Participer à la transition écologique au niveau local (installation d’un compost, végétalisation de ma rue, production d’énergies renouvelables à domicile, etc.)"
+  },
+  {
+    "old_question_id": 20018,
+    "old_choice_id": 222,
+    "choice_label": "Contribuer à l’élaboration des futurs projets de ma commune"
+  },
+  {
+    "old_question_id": 20018,
+    "old_choice_id": 223,
+    "choice_label": "Organiser des évènements culturels, sportifs ou de loisirs"
+  },
+  {
+    "old_question_id": 20018,
+    "old_choice_id": 224,
+    "choice_label": "Tisser du lien social et participer à des actions de solidarité (initiative intergénérationnelle, soutien aux plus modestes, soutien scolaire, etc.)"
+  },
+  {
+    "old_question_id": 20018,
+    "old_choice_id": 225,
+    "choice_label": "Valoriser les initiatives de ma commune sur les réseaux sociaux et plus largement les promouvoir en ligne"
+  },
+  {
+    "old_question_id": 20018,
+    "old_choice_id": 226,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20018,
+    "old_choice_id": 832,
+    "choice_label": "Améliorer la sécurité des habitants"
+  },
+  {
+    "old_question_id": 20019,
+    "old_choice_id": 236,
+    "choice_label": "Presse locale"
+  },
+  {
+    "old_question_id": 20019,
+    "old_choice_id": 237,
+    "choice_label": "Bouche à oreille"
+  },
+  {
+    "old_question_id": 20019,
+    "old_choice_id": 238,
+    "choice_label": "Journal municipal"
+  },
+  {
+    "old_question_id": 20019,
+    "old_choice_id": 239,
+    "choice_label": "Réseaux sociaux"
+  },
+  {
+    "old_question_id": 20019,
+    "old_choice_id": 240,
+    "choice_label": "Panneaux d'affichage"
+  },
+  {
+    "old_question_id": 20019,
+    "old_choice_id": 241,
+    "choice_label": "Rencontres publiques (réunions, tractages)"
+  },
+  {
+    "old_question_id": 20020,
+    "old_choice_id": 252,
+    "choice_label": "Souvent, pour un usage personnel"
+  },
+  {
+    "old_question_id": 20020,
+    "old_choice_id": 253,
+    "choice_label": "Souvent, pour mon activité professionnelle"
+  },
+  {
+    "old_question_id": 20020,
+    "old_choice_id": 254,
+    "choice_label": "Parfois, pour un usage personnel"
+  },
+  {
+    "old_question_id": 20020,
+    "old_choice_id": 255,
+    "choice_label": "Parfois, pour mon activité professionnelle"
+  },
+  {
+    "old_question_id": 20020,
+    "old_choice_id": 256,
+    "choice_label": "Jamais"
+  },
+  {
+    "old_question_id": 20021,
+    "old_choice_id": 257,
+    "choice_label": "Une opportunité personnelle"
+  },
+  {
+    "old_question_id": 20021,
+    "old_choice_id": 258,
+    "choice_label": "Une opportunité professionnelle"
+  },
+  {
+    "old_question_id": 20021,
+    "old_choice_id": 259,
+    "choice_label": "Une opportunité pour la France"
+  },
+  {
+    "old_question_id": 20021,
+    "old_choice_id": 260,
+    "choice_label": "Une source d’inquiétude personnelle"
+  },
+  {
+    "old_question_id": 20021,
+    "old_choice_id": 261,
+    "choice_label": "Une source d’inquiétude professionnelle"
+  },
+  {
+    "old_question_id": 20021,
+    "old_choice_id": 262,
+    "choice_label": "Une source d’inquiétude pour la France"
+  },
+  {
+    "old_question_id": 20021,
+    "old_choice_id": 263,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 274,
+    "choice_label": "La santé (dépistage, prévention, suivi de traitement…)"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 275,
+    "choice_label": "L’emploi (recherche d’emplois, recrutement, évaluation, ...)"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 276,
+    "choice_label": "La sécurité (analyse de données pour une enquête, appui à la détection d’infractions, accélération du traitement de dossiers …)"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 277,
+    "choice_label": "L’éducation (aide à l’individualisation de l’enseignement, appui aux élèves, …)"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 278,
+    "choice_label": "La justice (assistance pour l’instruction de dossiers, aide à la préparation de réponses personnalisées…)"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 279,
+    "choice_label": "Les transports (véhicules autonomes, création d’itinéraires, détection de l’état du conducteur…)"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 280,
+    "choice_label": "La culture (aide à la création artistique, interfaces de dialogue dans les médias…)"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 281,
+    "choice_label": "La finance (détection de fraudes, catégorisation des dépenses, prévision des risques…)"
+  },
+  {
+    "old_question_id": 20022,
+    "old_choice_id": 282,
+    "choice_label": "Le Gouvernement ne devrait pas encourager le développement des outils d’intelligence artificielle"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 283,
+    "choice_label": "La santé (dépistage, prévention, suivi de traitement…)"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 284,
+    "choice_label": "L’éducation (aide à l’individualisation de l’enseignement, appui aux élèves, …)"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 285,
+    "choice_label": "L’emploi (recherche d’emplois, recrutement, évaluation, ...)"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 286,
+    "choice_label": "La justice (assistance pour l’instruction de dossiers, aide à la préparation de réponses personnalisées…)"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 287,
+    "choice_label": "La sécurité (analyse de données pour une enquête, appui à la détection d’infractions, accélération du traitement de dossiers …)"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 288,
+    "choice_label": "La finance (détection de fraudes, catégorisation des dépenses, prévision des risques…)"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 289,
+    "choice_label": "Les transports (véhicules autonomes, création d’itinéraires, détection de l’état du conducteur…)"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 290,
+    "choice_label": "La culture (aide à la création artistique, interfaces de dialogue dans les médias…)"
+  },
+  {
+    "old_question_id": 20023,
+    "old_choice_id": 295,
+    "choice_label": "Le Gouvernement ne devrait pas réguler le développement des outils d’intelligence artificielle"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 291,
+    "choice_label": "Informer l’utilisateur sur les données collectées et les conditions de leur traitement"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 292,
+    "choice_label": "Réaliser un audit des outils d’intelligence artificielle une fois mis sur le marché"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 293,
+    "choice_label": "Soutenir le développement d’un champion européen de l’intelligence artificielle"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 294,
+    "choice_label": "Prévoir des recours ou une vérification humaine du traitement réalisé par l’intelligence artificielle"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 296,
+    "choice_label": "Former la population française pour en avoir un usage positif pour la société (de l’école au monde professionnel)"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 297,
+    "choice_label": "Laisser des marges de manœuvre aux entreprises pour proposer des procédures de contrôle internes"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 298,
+    "choice_label": "Réguler progressivement en attendant de voir les conséquences des outils d’intelligence artificielle dans notre quotidien"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 299,
+    "choice_label": "Prévoir un comité de garants citoyens au niveau national pour suivre l’évolution des outils d’intelligence artificielle"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 300,
+    "choice_label": "S’accorder sur un même régime de régulation avec nos concurrents internationaux"
+  },
+  {
+    "old_question_id": 20024,
+    "old_choice_id": 301,
+    "choice_label": "A aucune condition"
+  },
+  {
+    "old_question_id": 20025,
+    "old_choice_id": 311,
+    "choice_label": "Une meilleure connaissance des applications de l’intelligence artificielle"
+  },
+  {
+    "old_question_id": 20025,
+    "old_choice_id": 312,
+    "choice_label": "Une explication des bénéfices que je pourrais en tirer (productivité, conditions de travail, etc.)"
+  },
+  {
+    "old_question_id": 20025,
+    "old_choice_id": 313,
+    "choice_label": "Une plus grande confiance dans les outils et le traitement fait des données"
+  },
+  {
+    "old_question_id": 20025,
+    "old_choice_id": 314,
+    "choice_label": "La mise en œuvre d’un dialogue social au niveau de l’entreprise sur les outils, les tâches concernées, et la réorganisation du travail qu’elle provoque"
+  },
+  {
+    "old_question_id": 20025,
+    "old_choice_id": 315,
+    "choice_label": "Moins de réglementations et de régimes d’autorisations internes pour les utiliser"
+  },
+  {
+    "old_question_id": 20025,
+    "old_choice_id": 316,
+    "choice_label": "Rien, ce n’est pas pertinent dans mon métier"
+  },
+  {
+    "old_question_id": 20025,
+    "old_choice_id": 317,
+    "choice_label": "Rien, je n’en veux pas"
+  },
+  {
+    "old_question_id": 20025,
+    "old_choice_id": 318,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20026,
+    "old_choice_id": 319,
+    "choice_label": "A condition que je puisse choisir et donner mon consentement à chaque utilisation"
+  },
+  {
+    "old_question_id": 20026,
+    "old_choice_id": 320,
+    "choice_label": "A condition que les pratiques de collecte et d’utilisation soient transparentes (charte éthique, transparence sur le partage des données et l’utilisation d’algorithmes, etc.)"
+  },
+  {
+    "old_question_id": 20026,
+    "old_choice_id": 321,
+    "choice_label": "A condition que les services reposent sur des outils développés en France ou en Europe"
+  },
+  {
+    "old_question_id": 20026,
+    "old_choice_id": 322,
+    "choice_label": "Aucune condition. Je souhaite que la collecte et l’utilisation soient les plus réduites possible"
+  },
+  {
+    "old_question_id": 20026,
+    "old_choice_id": 323,
+    "choice_label": "A condition que le service public ait informé une autorité indépendante dès qu’elle souhaite collecter, traiter ou partager des données et soit contrôlé régulièrement sur ses pratiques"
+  },
+  {
+    "old_question_id": 20026,
+    "old_choice_id": 324,
+    "choice_label": "Je suis favorable à partager mes données personnelles avec le service public si cela peut améliorer nettement mon expérience en tant qu’usager et sa qualité"
+  },
+  {
+    "old_question_id": 20026,
+    "old_choice_id": 325,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20028,
+    "old_choice_id": 348,
+    "choice_label": "Former des étudiants"
+  },
+  {
+    "old_question_id": 20028,
+    "old_choice_id": 349,
+    "choice_label": "Réaliser une injection ou une perfusion"
+  },
+  {
+    "old_question_id": 20028,
+    "old_choice_id": 351,
+    "choice_label": "Soigner et accompagner des personnes en fin de vie ainsi que leur famille"
+  },
+  {
+    "old_question_id": 20028,
+    "old_choice_id": 352,
+    "choice_label": "Anticiper la sortie du patient si celui-ci a des soins infirmiers prévus au domicile en se coordonnant avec ses collègues de ville"
+  },
+  {
+    "old_question_id": 20028,
+    "old_choice_id": 353,
+    "choice_label": "Réaliser des actions d’éducation à la santé pour rendre le patient autonome dans la gestion de sa maladie"
+  },
+  {
+    "old_question_id": 20028,
+    "old_choice_id": 354,
+    "choice_label": "Evaluer la douleur du patient et la prendre en considération"
+  },
+  {
+    "old_question_id": 20028,
+    "old_choice_id": 355,
+    "choice_label": "Diminuer l’anxiété des patients, apaiser leurs craintes quelles que soit les circonstances"
+  },
+  {
+    "old_question_id": 20029,
+    "old_choice_id": 356,
+    "choice_label": "Effectuer des prises de sang"
+  },
+  {
+    "old_question_id": 20029,
+    "old_choice_id": 357,
+    "choice_label": "Participer aux soins des patients à domicile "
+  },
+  {
+    "old_question_id": 20029,
+    "old_choice_id": 358,
+    "choice_label": "Accompagner les patients dépendants dans les gestes de leur vie quotidienne (toilette, mobilité, retour à l’autonomie)"
+  },
+  {
+    "old_question_id": 20029,
+    "old_choice_id": 359,
+    "choice_label": "Prescrire et administrer un vaccin"
+  },
+  {
+    "old_question_id": 20029,
+    "old_choice_id": 360,
+    "choice_label": "Evaluer la douleur du patient et la prendre en considération"
+  },
+  {
+    "old_question_id": 20029,
+    "old_choice_id": 361,
+    "choice_label": "Soigner et accompagner des personnes en fin de vie ainsi que leur famille"
+  },
+  {
+    "old_question_id": 20029,
+    "old_choice_id": 363,
+    "choice_label": "Diminuer l’anxiété des patients, apaiser leurs craintes quelles que soient les circonstances"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 362,
+    "choice_label": "Les médias"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 364,
+    "choice_label": "Les réseaux sociaux"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 365,
+    "choice_label": "Ma mairie"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 366,
+    "choice_label": "Mon infirmier lui-même"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 367,
+    "choice_label": "Mon médecin traitant"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 368,
+    "choice_label": "Mon pharmacien"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 369,
+    "choice_label": "Des réunions citoyennes"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 370,
+    "choice_label": "Une campagne d’informations diffusée par le ministère ou l’assurance maladie"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 371,
+    "choice_label": "Sans avis"
+  },
+  {
+    "old_question_id": 20030,
+    "old_choice_id": 372,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 380,
+    "choice_label": "Contribuer, en lien avec le médecin traitant, à l’organisation et la planification du parcours du patient, ainsi que son orientation entre les différents professionnels et établissements de santé"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 381,
+    "choice_label": "Participer à la prévention et à l’éducation thérapeutique du grand public (conseils pour un mode de vie équilibré, information sur les risques sanitaires, etc.)"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 382,
+    "choice_label": "Accompagner une personne dans la réalisation de ses soins quotidiens"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 383,
+    "choice_label": "Réaliser des actes de soin de proximité (ex : vaccination, prélèvement sanguin, suivi post-opératoire, etc.)"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 384,
+    "choice_label": "Utiliser les dispositifs permettant le suivi à distance des patients pour adapter leur prise en charge en direct en communiquant avec le patient (par exemple la télésurveillance du diabète ou de l’hypertension)"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 385,
+    "choice_label": "Réaliser des études, recueillir des données pour favoriser la recherche et l’expertise des professionnels"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 386,
+    "choice_label": "Réaliser du dépistage dans le cadre d’actions de santé publique comme pour le diabète ou le cancer colorectal"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 388,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20031,
+    "old_choice_id": 390,
+    "choice_label": "Prévenir la perte d’autonomie"
+  },
+  {
+    "old_question_id": 20032,
+    "old_choice_id": 373,
+    "choice_label": "Renforcer l'attractivité"
+  },
+  {
+    "old_question_id": 20032,
+    "old_choice_id": 374,
+    "choice_label": "Accroître leur activité en matière de prévention"
+  },
+  {
+    "old_question_id": 20032,
+    "old_choice_id": 375,
+    "choice_label": "Faire évoluer la formation et les techniques de prise en charge"
+  },
+  {
+    "old_question_id": 20032,
+    "old_choice_id": 376,
+    "choice_label": "Renforcer leur place dans le parcours de soins"
+  },
+  {
+    "old_question_id": 20032,
+    "old_choice_id": 377,
+    "choice_label": "Mieux intégrer les nouvelles technologies dans les soins apportés"
+  },
+  {
+    "old_question_id": 20032,
+    "old_choice_id": 378,
+    "choice_label": "Améliorer les conditions de travail"
+  },
+  {
+    "old_question_id": 20032,
+    "old_choice_id": 379,
+    "choice_label": "Accroître le travail en collaboration avec les autres professionnels de santé"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 395,
+    "choice_label": "Le rapport quantité/prix"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 396,
+    "choice_label": "L’origine"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 397,
+    "choice_label": "La rapport qualité/prix"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 398,
+    "choice_label": "L'aspect visuel"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 399,
+    "choice_label": "Les promotions"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 400,
+    "choice_label": "La marque"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 401,
+    "choice_label": "Les conséquences sur l’environnement"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 402,
+    "choice_label": "L’apport nutritionnel"
+  },
+  {
+    "old_question_id": 20033,
+    "old_choice_id": 403,
+    "choice_label": "Les signes de qualité (labels, certifications, etc.)"
+  },
+  {
+    "old_question_id": 20034,
+    "old_choice_id": 410,
+    "choice_label": "Augmenter la part qui doit revenir à l’agriculteur dans le prix de vente"
+  },
+  {
+    "old_question_id": 20034,
+    "old_choice_id": 413,
+    "choice_label": "Améliorer la transparence sur la répartition de la valeur entre l’agriculteur, l’industriel et la grande distribution"
+  },
+  {
+    "old_question_id": 20034,
+    "old_choice_id": 414,
+    "choice_label": "Renforcer la visibilité de l’origine des produits"
+  },
+  {
+    "old_question_id": 20034,
+    "old_choice_id": 416,
+    "choice_label": "Améliorer l’information sur la qualité des produits"
+  },
+  {
+    "old_question_id": 20034,
+    "old_choice_id": 417,
+    "choice_label": "Améliorer l’information sur l’impact environnemental des produits"
+  },
+  {
+    "old_question_id": 20034,
+    "old_choice_id": 418,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20034,
+    "old_choice_id": 419,
+    "choice_label": "Je ne suis pas prêt(e) à payer plus cher"
+  },
+  {
+    "old_question_id": 20034,
+    "old_choice_id": 420,
+    "choice_label": "Je ne peux pas payer plus cher"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 433,
+    "choice_label": "Actualiser plus régulièrement les coûts de production des agriculteurs pour permettre de payer un prix juste"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 434,
+    "choice_label": "Donner plus de place aux agriculteurs dans la construction des prix des produits alimentaires"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 435,
+    "choice_label": "Encourager l’association des agriculteurs au sein de coopératives ou d’organisations de producteurs pour équilibrer le rapport de force avec les industriels et les commerçants dans la négociation des prix"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 436,
+    "choice_label": "Développer la vente directe ou les circuits courts"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 437,
+    "choice_label": "Définir un seuil en deçà duquel un industriel ou un distributeur ne peut pas acheter un produit alimentaire"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 438,
+    "choice_label": "Imposer aux produits importés hors de l’Union européenne de respecter les mêmes règles sociales et environnementales que les agriculteurs français et européens"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 439,
+    "choice_label": "Verser un complément de salaires aux agriculteurs compte tenu du fait que l’agriculture est considérée comme un enjeu de souveraineté nationale"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 440,
+    "choice_label": "Prévoir des règles plus simples et moins d’encadrement dans les contrats de vente avec les industriels et les commerçants"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 441,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20035,
+    "old_choice_id": 442,
+    "choice_label": "Autre : précisez votre réponse "
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 421,
+    "choice_label": "Les fruits et légumes"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 422,
+    "choice_label": "Les produits laitiers (laits, fromages, yaourts, etc.)"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 423,
+    "choice_label": "Les œufs"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 424,
+    "choice_label": "Les viandes"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 425,
+    "choice_label": "Les plats préparés"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 426,
+    "choice_label": "Les produits transformés sucrés (gâteaux, pâtes à tartiner, bonbons, etc.)"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 427,
+    "choice_label": "Les produits d’épicerie sèche (pâtes, riz, pois-chiches, etc.)"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 428,
+    "choice_label": "Les produits de boulangerie (pain, viennoiserie, etc.)"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 429,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 430,
+    "choice_label": "Tous les produits"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 431,
+    "choice_label": "Je ne suis pas prêt(e) à payer plus cher"
+  },
+  {
+    "old_question_id": 20036,
+    "old_choice_id": 432,
+    "choice_label": "Je ne peux pas payer plus cher "
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 484,
+    "choice_label": "Mon organisation de producteur"
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 485,
+    "choice_label": "Ma coopérative agricole (apports)"
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 486,
+    "choice_label": "Principalement des distributeurs"
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 487,
+    "choice_label": "Principalement des transformateurs"
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 488,
+    "choice_label": "Principalement des grossistes"
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 489,
+    "choice_label": "Principalement des négociants"
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 490,
+    "choice_label": "Principalement d'autres agriculteurs"
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 491,
+    "choice_label": "Principalement des restaurateurs"
+  },
+  {
+    "old_question_id": 20037,
+    "old_choice_id": 492,
+    "choice_label": "Autres (ventes directes au consommateur, cessions à prix ferme de produits agricoles sur les carreaux affectés aux producteurs, …)"
+  },
+  {
+    "old_question_id": 20038,
+    "old_choice_id": 509,
+    "choice_label": "Principalement des distributeurs"
+  },
+  {
+    "old_question_id": 20038,
+    "old_choice_id": 512,
+    "choice_label": "Principalement des transformateurs"
+  },
+  {
+    "old_question_id": 20038,
+    "old_choice_id": 515,
+    "choice_label": "Principalement des grossistes"
+  },
+  {
+    "old_question_id": 20038,
+    "old_choice_id": 516,
+    "choice_label": "Principalement des restaurateurs"
+  },
+  {
+    "old_question_id": 20039,
+    "old_choice_id": 539,
+    "choice_label": "Les distributeurs GMS alimentaires"
+  },
+  {
+    "old_question_id": 20039,
+    "old_choice_id": 541,
+    "choice_label": "Principalement d'autres transformateurs"
+  },
+  {
+    "old_question_id": 20039,
+    "old_choice_id": 542,
+    "choice_label": "Principalement des grossistes"
+  },
+  {
+    "old_question_id": 20039,
+    "old_choice_id": 543,
+    "choice_label": "Les distributeurs spécialisés"
+  },
+  {
+    "old_question_id": 20039,
+    "old_choice_id": 544,
+    "choice_label": "La restauration"
+  },
+  {
+    "old_question_id": 20040,
+    "old_choice_id": 545,
+    "choice_label": "Des exploitants individuels"
+  },
+  {
+    "old_question_id": 20040,
+    "old_choice_id": 546,
+    "choice_label": "Des coopératives agricoles"
+  },
+  {
+    "old_question_id": 20040,
+    "old_choice_id": 547,
+    "choice_label": "Des négociants"
+  },
+  {
+    "old_question_id": 20040,
+    "old_choice_id": 548,
+    "choice_label": "Des organisations de producteurs ou des associations d'organisations de producteurs"
+  },
+  {
+    "old_question_id": 20040,
+    "old_choice_id": 549,
+    "choice_label": "Des grossistes"
+  },
+  {
+    "old_question_id": 20040,
+    "old_choice_id": 550,
+    "choice_label": "D'autres industries agroalimentaires"
+  },
+  {
+    "old_question_id": 20040,
+    "old_choice_id": 551,
+    "choice_label": "Importation"
+  },
+  {
+    "old_question_id": 20041,
+    "old_choice_id": 571,
+    "choice_label": "Droguerie Parfumerie Hygiène (DPH)"
+  },
+  {
+    "old_question_id": 20041,
+    "old_choice_id": 572,
+    "choice_label": "Produits frais traditionnels"
+  },
+  {
+    "old_question_id": 20041,
+    "old_choice_id": 573,
+    "choice_label": "Epicerie"
+  },
+  {
+    "old_question_id": 20041,
+    "old_choice_id": 574,
+    "choice_label": "Fruits et Légumes"
+  },
+  {
+    "old_question_id": 20042,
+    "old_choice_id": 588,
+    "choice_label": "Le manque d’accessibilité"
+  },
+  {
+    "old_question_id": 20042,
+    "old_choice_id": 589,
+    "choice_label": "Les difficultés d’accès à la formation et à l’emploi"
+  },
+  {
+    "old_question_id": 20042,
+    "old_choice_id": 590,
+    "choice_label": "Les discriminations ou stigmatisations"
+  },
+  {
+    "old_question_id": 20042,
+    "old_choice_id": 591,
+    "choice_label": "Les difficultés d’accès à l’école et aux études supérieures"
+  },
+  {
+    "old_question_id": 20042,
+    "old_choice_id": 592,
+    "choice_label": "Les difficultés d’accès aux loisirs"
+  },
+  {
+    "old_question_id": 20042,
+    "old_choice_id": 593,
+    "choice_label": "Les difficultés d’accès aux droits"
+  },
+  {
+    "old_question_id": 20043,
+    "old_choice_id": 603,
+    "choice_label": "Former les enseignants aux handicaps et leur donner des outils pédagogiques adaptés"
+  },
+  {
+    "old_question_id": 20043,
+    "old_choice_id": 604,
+    "choice_label": "Améliorer l’accessibilité physique et pédagogique des écoles et des enseignements"
+  },
+  {
+    "old_question_id": 20043,
+    "old_choice_id": 605,
+    "choice_label": "Sensibiliser les élèves qui ne sont pas en situation de handicap aux enjeux de l’inclusion"
+  },
+  {
+    "old_question_id": 20043,
+    "old_choice_id": 606,
+    "choice_label": "Faire entrer les professionnels du médico-social (orthophonistes, etc.) dans les murs de l’école pour aider les élèves et les professeurs"
+  },
+  {
+    "old_question_id": 20043,
+    "old_choice_id": 608,
+    "choice_label": "Je pense qu’il n’y a pas besoin de proposer de mesures supplémentaires"
+  },
+  {
+    "old_question_id": 20044,
+    "old_choice_id": 607,
+    "choice_label": "Soutenir les employeurs qui adaptent leurs entreprises aux personnes handicapées"
+  },
+  {
+    "old_question_id": 20044,
+    "old_choice_id": 609,
+    "choice_label": "Sanctionner plus lourdement les entreprises qui ne respectent pas le taux d’emploi minimum de travailleurs handicapés"
+  },
+  {
+    "old_question_id": 20044,
+    "old_choice_id": 610,
+    "choice_label": "Centraliser tous les demandeurs d’emploi, qu’ils soient handicapés ou non, au sein d’un service de public unique de l’emploi"
+  },
+  {
+    "old_question_id": 20044,
+    "old_choice_id": 611,
+    "choice_label": "Investir dans des formations et des apprentissages adaptés aux personnes handicapées"
+  },
+  {
+    "old_question_id": 20044,
+    "old_choice_id": 612,
+    "choice_label": "Je pense qu’il n’y a pas besoin de proposer de mesures supplémentaires"
+  },
+  {
+    "old_question_id": 20044,
+    "old_choice_id": 614,
+    "choice_label": "Développer des initiatives tel que le DuoDay pour mobiliser toute la société"
+  },
+  {
+    "old_question_id": 20045,
+    "old_choice_id": 623,
+    "choice_label": "Participer à des formations sur le handicap ou me renseigner par moi-même"
+  },
+  {
+    "old_question_id": 20045,
+    "old_choice_id": 624,
+    "choice_label": "Aider une personne en situation de handicap dans l’espace public"
+  },
+  {
+    "old_question_id": 20045,
+    "old_choice_id": 625,
+    "choice_label": "M’engager bénévolement dans une association dédiée au handicap"
+  },
+  {
+    "old_question_id": 20045,
+    "old_choice_id": 626,
+    "choice_label": "Voter pour un candidat politique qui ferait de cet enjeu une priorité"
+  },
+  {
+    "old_question_id": 20045,
+    "old_choice_id": 627,
+    "choice_label": "Diffuser les initiatives gouvernementales et locales favorisant l’inclusion"
+  },
+  {
+    "old_question_id": 20045,
+    "old_choice_id": 628,
+    "choice_label": "Agir sur mon lieu de travail pour encourager le recrutement de personnes en situation de handicap"
+  },
+  {
+    "old_question_id": 20045,
+    "old_choice_id": 630,
+    "choice_label": "Sensibiliser mon entourage aux droits des personnes handicapées"
+  },
+  {
+    "old_question_id": 20045,
+    "old_choice_id": 631,
+    "choice_label": "Je ne suis pas prêt(e) à entreprendre des actions pour les personnes en situation de handicap"
+  },
+  {
+    "old_question_id": 20046,
+    "old_choice_id": 645,
+    "choice_label": "Passer au vélo ou à la marche pour les petits trajets"
+  },
+  {
+    "old_question_id": 20046,
+    "old_choice_id": 646,
+    "choice_label": "Adapter ma conduite pour limiter ma consommation (par exemple : si vous conduisez un véhicule à boîte de vitesse manuelle, évitez les surrégimes occasionnant une surconsommation de carburant pouvant aller jusqu’à 20 %)"
+  },
+  {
+    "old_question_id": 20046,
+    "old_choice_id": 647,
+    "choice_label": "Lever le pied à bord de mon véhicule, par exemple en roulant à 110 km/h sur autoroute (économies de 20% sur le carburant et les émissions de CO2)"
+  },
+  {
+    "old_question_id": 20046,
+    "old_choice_id": 648,
+    "choice_label": "Pratiquer le covoiturage via une application ou avec mes proches"
+  },
+  {
+    "old_question_id": 20046,
+    "old_choice_id": 649,
+    "choice_label": "Je ne suis pas concerné(e), je n’ai pas de véhicule motorisé individuel"
+  },
+  {
+    "old_question_id": 20046,
+    "old_choice_id": 650,
+    "choice_label": "Choisir les transports en commun dès lors qu’ils correspondent à mes horaires et à mon trajet"
+  },
+  {
+    "old_question_id": 20046,
+    "old_choice_id": 652,
+    "choice_label": "Ces solutions ne me conviennent pas ou ne sont pas accessibles"
+  },
+  {
+    "old_question_id": 20047,
+    "old_choice_id": 640,
+    "choice_label": "Respecter les consignes de température (19° de chauffage ; 26° de climatisation)"
+  },
+  {
+    "old_question_id": 20047,
+    "old_choice_id": 641,
+    "choice_label": "Entretenir ma chaudière (baisse de l’ordre de 10 à 15%)"
+  },
+  {
+    "old_question_id": 20047,
+    "old_choice_id": 642,
+    "choice_label": "M’équiper de thermostats (avec un gain potentiel de 5 à 10%)"
+  },
+  {
+    "old_question_id": 20047,
+    "old_choice_id": 643,
+    "choice_label": "Donner consigne à mon syndic ou à mon fournisseur d’énergie de piloter, pour moi, ma chaudière selon les indications que je lui donne"
+  },
+  {
+    "old_question_id": 20047,
+    "old_choice_id": 644,
+    "choice_label": "Ces solutions ne me conviennent pas ou ne sont pas accessibles"
+  },
+  {
+    "old_question_id": 20048,
+    "old_choice_id": 651,
+    "choice_label": "Eteindre mes appareils en veille"
+  },
+  {
+    "old_question_id": 20048,
+    "old_choice_id": 653,
+    "choice_label": "Acheter des appareils reconditionnés"
+  },
+  {
+    "old_question_id": 20048,
+    "old_choice_id": 654,
+    "choice_label": "Faire attention à mes petits usages les plus énergivores"
+  },
+  {
+    "old_question_id": 20048,
+    "old_choice_id": 655,
+    "choice_label": "Diminuer ma consommation de vidéos en streaming (réduire la qualité ou télécharger la vidéo consomme moins d’énergie)"
+  },
+  {
+    "old_question_id": 20048,
+    "old_choice_id": 661,
+    "choice_label": "Ces solutions ne me conviennent pas"
+  },
+  {
+    "old_question_id": 20049,
+    "old_choice_id": 656,
+    "choice_label": "Je ne connais pas les aides financières auxquelles j’ai le droit"
+  },
+  {
+    "old_question_id": 20049,
+    "old_choice_id": 657,
+    "choice_label": "Je connais les aides financières mais elles ne me permettent pas d’acquérir le véhicule que je souhaite"
+  },
+  {
+    "old_question_id": 20049,
+    "old_choice_id": 658,
+    "choice_label": "Même avec les aides, je n’aurais pas le prêt de mon banquier dont j’ai besoin pour avancer l’argent"
+  },
+  {
+    "old_question_id": 20049,
+    "old_choice_id": 659,
+    "choice_label": "L’absence d’infrastructures, comme les bornes de recharge, près de chez moi"
+  },
+  {
+    "old_question_id": 20049,
+    "old_choice_id": 660,
+    "choice_label": "Je ne sais pas quel véhicule choisir, les réglementations changent tout le temps"
+  },
+  {
+    "old_question_id": 20049,
+    "old_choice_id": 662,
+    "choice_label": "Je ne souhaite pas passer à un véhicule moins polluant"
+  },
+  {
+    "old_question_id": 20049,
+    "old_choice_id": 663,
+    "choice_label": "J'ai déjà un véhicule peu polluant"
+  },
+  {
+    "old_question_id": 20049,
+    "old_choice_id": 665,
+    "choice_label": "Je ne suis pas concerné(e), je n'ai pas de véhicule individuel"
+  },
+  {
+    "old_question_id": 20050,
+    "old_choice_id": 669,
+    "choice_label": "Les moyens prévus pour financer la transition écologique dans les prochaines années"
+  },
+  {
+    "old_question_id": 20050,
+    "old_choice_id": 670,
+    "choice_label": "L’utilisation concrète de ces financements et de leur efficacité pour la transition écologique"
+  },
+  {
+    "old_question_id": 20050,
+    "old_choice_id": 671,
+    "choice_label": "Ce que font les collectivités (régions, départements, communes) et les entreprises pour financer la transition écologique"
+  },
+  {
+    "old_question_id": 20050,
+    "old_choice_id": 672,
+    "choice_label": "La manière dont évoluent les dépenses mauvaises pour l’environnement"
+  },
+  {
+    "old_question_id": 20050,
+    "old_choice_id": 673,
+    "choice_label": "Aucune de ces propositions"
+  },
+  {
+    "old_question_id": 20051,
+    "old_choice_id": 684,
+    "choice_label": "Les collectivités (régions, départements, communes)"
+  },
+  {
+    "old_question_id": 20051,
+    "old_choice_id": 685,
+    "choice_label": "Les entreprises réalisant des bénéfices exceptionnels"
+  },
+  {
+    "old_question_id": 20051,
+    "old_choice_id": 686,
+    "choice_label": "L’Etat"
+  },
+  {
+    "old_question_id": 20051,
+    "old_choice_id": 687,
+    "choice_label": "Les industries polluantes"
+  },
+  {
+    "old_question_id": 20051,
+    "old_choice_id": 688,
+    "choice_label": "Les particuliers"
+  },
+  {
+    "old_question_id": 20051,
+    "old_choice_id": 689,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20052,
+    "old_choice_id": 690,
+    "choice_label": "D’une simplification des démarches pour obtenir des aides"
+  },
+  {
+    "old_question_id": 20052,
+    "old_choice_id": 691,
+    "choice_label": "D’une ouverture à un plus grand nombre de ménages"
+  },
+  {
+    "old_question_id": 20052,
+    "old_choice_id": 692,
+    "choice_label": "De plus de contrôles et de lutte contre la fraude"
+  },
+  {
+    "old_question_id": 20052,
+    "old_choice_id": 693,
+    "choice_label": "De plus d’informations sur toutes les aides disponibles"
+  },
+  {
+    "old_question_id": 20052,
+    "old_choice_id": 694,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20053,
+    "old_choice_id": 695,
+    "choice_label": "D’une priorité donnée aux entreprises les plus polluantes pour se transformer"
+  },
+  {
+    "old_question_id": 20053,
+    "old_choice_id": 696,
+    "choice_label": "De plus de transparence quant à l’efficacité des aides pour réduire l’impact sur l’environnement"
+  },
+  {
+    "old_question_id": 20053,
+    "old_choice_id": 697,
+    "choice_label": "D’une simplification des démarches pour obtenir des aides"
+  },
+  {
+    "old_question_id": 20053,
+    "old_choice_id": 698,
+    "choice_label": "De plus de contrôles et de lutte contre la fraude"
+  },
+  {
+    "old_question_id": 20053,
+    "old_choice_id": 699,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20054,
+    "old_choice_id": 703,
+    "choice_label": "Des ateliers locaux qui permettent d’évoquer ces sujets"
+  },
+  {
+    "old_question_id": 20054,
+    "old_choice_id": 704,
+    "choice_label": "Des lieux dédiés proposant des informations et des interlocuteurs formés à la prévention"
+  },
+  {
+    "old_question_id": 20054,
+    "old_choice_id": 706,
+    "choice_label": "Un site internet ressource dédié"
+  },
+  {
+    "old_question_id": 20054,
+    "old_choice_id": 707,
+    "choice_label": "Des ressources labellisées par l’Etat et proposées par des associations et organismes spécialisés"
+  },
+  {
+    "old_question_id": 20054,
+    "old_choice_id": 708,
+    "choice_label": "Un annuaire des associations de protection de l’enfance, et des établissements et services sociaux et médico-sociaux destinés aux enfants"
+  },
+  {
+    "old_question_id": 20054,
+    "old_choice_id": 709,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20054,
+    "old_choice_id": 710,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20055,
+    "old_choice_id": 717,
+    "choice_label": "En parler au sein des classes avec les professeurs"
+  },
+  {
+    "old_question_id": 20055,
+    "old_choice_id": 718,
+    "choice_label": "Confier cette sensibilisation aux associations spécialisées dans la protection de l’enfance"
+  },
+  {
+    "old_question_id": 20055,
+    "old_choice_id": 719,
+    "choice_label": "Développer des supports ludiques pour aider les parents à parler de ce sujet avec leurs enfants"
+  },
+  {
+    "old_question_id": 20055,
+    "old_choice_id": 720,
+    "choice_label": "Développer des formats courts et ludiques diffusés pendant les programmes dédiés aux enfants et aux adolescents"
+  },
+  {
+    "old_question_id": 20055,
+    "old_choice_id": 721,
+    "choice_label": "Renforcer les affichages dans tous les lieux de vie des enfants et adolescents (clubs sportifs, ateliers périscolaires…)"
+  },
+  {
+    "old_question_id": 20055,
+    "old_choice_id": 722,
+    "choice_label": "Je pense qu'il y a suffisamment de sensibilisation"
+  },
+  {
+    "old_question_id": 20055,
+    "old_choice_id": 725,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20056,
+    "old_choice_id": 712,
+    "choice_label": "Avoir des personnes-ressources dans chaque dispositif d’accueil d’enfants pour accompagner les professionnels"
+  },
+  {
+    "old_question_id": 20056,
+    "old_choice_id": 713,
+    "choice_label": "Renforcer la formation pour repérer les violences, notamment sexuelles, faites aux enfants"
+  },
+  {
+    "old_question_id": 20056,
+    "old_choice_id": 714,
+    "choice_label": "Créer une plateforme nationale d’écoute et de conseil pour les professionnels"
+  },
+  {
+    "old_question_id": 20056,
+    "old_choice_id": 715,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20056,
+    "old_choice_id": 716,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20058,
+    "old_choice_id": 744,
+    "choice_label": "Développer des programmes TV sur le sujet à heure de grande écoute"
+  },
+  {
+    "old_question_id": 20058,
+    "old_choice_id": 745,
+    "choice_label": "Développer les campagnes TV choc comme pour la sécurité routière, à l’image de celle que le gouvernement vient de diffuser"
+  },
+  {
+    "old_question_id": 20058,
+    "old_choice_id": 746,
+    "choice_label": "Instituer une journée nationale de lutte contre l’inceste et les violences sexuelles"
+  },
+  {
+    "old_question_id": 20058,
+    "old_choice_id": 747,
+    "choice_label": "Diffuser des témoignages sur les réseaux sociaux, dans des magazines ou à la radio"
+  },
+  {
+    "old_question_id": 20058,
+    "old_choice_id": 748,
+    "choice_label": "Mettre en place un recensement régulier du nombre de victimes et rendre les résultats publics"
+  },
+  {
+    "old_question_id": 20058,
+    "old_choice_id": 749,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20058,
+    "old_choice_id": 751,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20059,
+    "old_choice_id": 737,
+    "choice_label": "Renforcer significativement la sensibilisation à l’école, au collège et au lycée"
+  },
+  {
+    "old_question_id": 20059,
+    "old_choice_id": 738,
+    "choice_label": "Rendre obligatoire la vérification des antécédents judiciaires de tous les professionnels et bénévoles au contact d’enfants"
+  },
+  {
+    "old_question_id": 20059,
+    "old_choice_id": 739,
+    "choice_label": "Créer un office de police spécialisé"
+  },
+  {
+    "old_question_id": 20059,
+    "old_choice_id": 740,
+    "choice_label": "Obliger les sites de rencontres à interdire leur accès aux mineurs"
+  },
+  {
+    "old_question_id": 20059,
+    "old_choice_id": 741,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20059,
+    "old_choice_id": 742,
+    "choice_label": "Sanctionner les plateformes pornographiques qui n’empêchent pas l’accès aux mineurs en violation de la loi."
+  },
+  {
+    "old_question_id": 20059,
+    "old_choice_id": 743,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20060,
+    "old_choice_id": 756,
+    "choice_label": "Faire du mentorat"
+  },
+  {
+    "old_question_id": 20060,
+    "old_choice_id": 757,
+    "choice_label": "Parrainer un enfant"
+  },
+  {
+    "old_question_id": 20060,
+    "old_choice_id": 759,
+    "choice_label": "Accueillir un enfant pendant les vacances ou le temps d’un week-end"
+  },
+  {
+    "old_question_id": 20060,
+    "old_choice_id": 760,
+    "choice_label": "Aucune de ces actions"
+  },
+  {
+    "old_question_id": 20060,
+    "old_choice_id": 762,
+    "choice_label": "Soutenir financièrement à une association qui accompagnement des enfants vulnérables"
+  },
+  {
+    "old_question_id": 20084,
+    "old_choice_id": 1017,
+    "choice_label": "Augmenter les rémunérations dans le secteur"
+  },
+  {
+    "old_question_id": 20084,
+    "old_choice_id": 1018,
+    "choice_label": "Faciliter l’insertion professionnelle dans les métiers de l’ESS"
+  },
+  {
+    "old_question_id": 20084,
+    "old_choice_id": 1019,
+    "choice_label": "Déployer des campagnes de communication ciblées vers les étudiants et les jeunes actifs pour que le secteur soit mieux connu"
+  },
+  {
+    "old_question_id": 20084,
+    "old_choice_id": 1020,
+    "choice_label": "Mieux fidéliser les salariés"
+  },
+  {
+    "old_question_id": 20084,
+    "old_choice_id": 1021,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20084,
+    "old_choice_id": 1022,
+    "choice_label": "Développer de nouvelles alliances avec les acteurs de l’économie conventionnelle"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1023,
+    "choice_label": "Développer la commande publique et les achats responsables"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1024,
+    "choice_label": "Améliorer la visibilité, la lisibilité et la cohérence des outils de financement disponibles (publics et privés)"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1025,
+    "choice_label": "Stabiliser les financements publics et les recours aux subventions pluriannuelles à la place de marchés publics"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1026,
+    "choice_label": "Assurer un meilleur financement des structures de l'ESS par les acteurs de la finance solidaire (fonds solidaires, fonds à impact, assureurs)"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1027,
+    "choice_label": "Simplifier et sécuriser l’accès aux financements européens"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1028,
+    "choice_label": "Mieux mobiliser les financements publics (banques publiques et programme France 2030)"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1029,
+    "choice_label": "Rendre encore plus attractifs les dons et le mécénat"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1030,
+    "choice_label": "Mettre en place des mécanismes permettant de renforcer l'accompagnement des banques privées en faveur des acteurs de l'ESS"
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1031,
+    "choice_label": "Mieux financer l’innovation sociale "
+  },
+  {
+    "old_question_id": 20085,
+    "old_choice_id": 1036,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20086,
+    "old_choice_id": 1032,
+    "choice_label": "Encourager les acteurs de l'économie conventionnelle à adopter les principes de l'Économie sociale et solidaire (responsabilité sociale, fonctionnement démocratique, etc.)"
+  },
+  {
+    "old_question_id": 20086,
+    "old_choice_id": 1033,
+    "choice_label": "Renforcer le rôle moteur de la France aux niveaux européen et international"
+  },
+  {
+    "old_question_id": 20086,
+    "old_choice_id": 1034,
+    "choice_label": "Augmenter les financements de l'ESS en mobilisant l’épargne individuelle et collective (contrat d’assurance-vie, livret développement durable et solidaire, plan épargne retraite)"
+  },
+  {
+    "old_question_id": 20086,
+    "old_choice_id": 1035,
+    "choice_label": "Améliorer la visibilité de l’ESS pour renforcer sa connaissance par le grand public"
+  },
+  {
+    "old_question_id": 20086,
+    "old_choice_id": 1037,
+    "choice_label": "Renforcer le rôle de l’ESS dans les grandes transitions (économique, sociale, environnementale et démocratique)"
+  },
+  {
+    "old_question_id": 20086,
+    "old_choice_id": 1038,
+    "choice_label": "Outiller les structures de l’ESS pour répondre aux évolutions numériques, notamment l’émergence de l’intelligence artificielle"
+  },
+  {
+    "old_question_id": 20086,
+    "old_choice_id": 1039,
+    "choice_label": "Renforcer la place de la jeunesse en faisant de l’ESS un mode d’entreprendre attractif"
+  },
+  {
+    "old_question_id": 20086,
+    "old_choice_id": 1043,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20087,
+    "old_choice_id": 1070,
+    "choice_label": "Rendre les métiers de l’ESS plus attractifs : rémunération et qualité de vie au travail notamment"
+  },
+  {
+    "old_question_id": 20087,
+    "old_choice_id": 1071,
+    "choice_label": "Mieux connaitre les structures, leurs activités, leurs besoins en bénévolat et en emplois"
+  },
+  {
+    "old_question_id": 20087,
+    "old_choice_id": 1072,
+    "choice_label": "Faciliter l’insertion professionnelle et l’accès aux métiers de l’ESS"
+  },
+  {
+    "old_question_id": 20087,
+    "old_choice_id": 1073,
+    "choice_label": "Faciliter l’équilibre entre vie professionnelle et vie personnelle afin de pouvoir m’engager davantage en tant que bénévole"
+  },
+  {
+    "old_question_id": 20087,
+    "old_choice_id": 1074,
+    "choice_label": "Mieux reconnaitre les acquis de l’expérience liés au bénévolat"
+  },
+  {
+    "old_question_id": 20087,
+    "old_choice_id": 1075,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20087,
+    "old_choice_id": 1076,
+    "choice_label": "Je suis déjà engagé dans une structure de l’ESS"
+  },
+  {
+    "old_question_id": 20088,
+    "old_choice_id": 1044,
+    "choice_label": "Mesurer la contribution concrète des structures de l’ESS aux objectifs de développement durable"
+  },
+  {
+    "old_question_id": 20088,
+    "old_choice_id": 1045,
+    "choice_label": "Adapter l’offre du secteur aux besoins d’une société vieillissante pour en faire un acteur clé de la cohésion entre générations"
+  },
+  {
+    "old_question_id": 20088,
+    "old_choice_id": 1046,
+    "choice_label": "Encourager l’appropriation des innovations numériques, comme l’intelligence artificielle, en considérant leur impact éthique sur le secteur"
+  },
+  {
+    "old_question_id": 20088,
+    "old_choice_id": 1047,
+    "choice_label": "Intégrer des critères environnementaux dans les politiques et les labels relevant de l’ESS"
+  },
+  {
+    "old_question_id": 20088,
+    "old_choice_id": 1048,
+    "choice_label": "Attirer les nouvelles générations en développant des parcours professionnels attractifs qui intègrent l’impact social, la participation et l’innovation"
+  },
+  {
+    "old_question_id": 20088,
+    "old_choice_id": 1049,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20089,
+    "old_choice_id": 1050,
+    "choice_label": "Renforcer le rôle des conférences régionales et des stratégies régionales"
+  },
+  {
+    "old_question_id": 20089,
+    "old_choice_id": 1051,
+    "choice_label": "Préciser et mieux articuler les rôles de chacun des échelons de collectivités (commune, intercommunalité, département, région)"
+  },
+  {
+    "old_question_id": 20089,
+    "old_choice_id": 1052,
+    "choice_label": "Réduire le nombre d’acteurs impliqués dans la gouvernance de l’ESS"
+  },
+  {
+    "old_question_id": 20089,
+    "old_choice_id": 1053,
+    "choice_label": "Construire une diplomatie ambitieuse pour défendre des résolutions emblématiques (conditions de travail, développement durable, etc.) à l’international"
+  },
+  {
+    "old_question_id": 20089,
+    "old_choice_id": 1054,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20089,
+    "old_choice_id": 1055,
+    "choice_label": "Définir un agenda européen du secteur pour contribuer significativement aux priorités de l’Union européenne"
+  },
+  {
+    "old_question_id": 20089,
+    "old_choice_id": 1056,
+    "choice_label": "Renforcer les moyens des services déconcentrés de l’État"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1057,
+    "choice_label": "L'alimentation"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1058,
+    "choice_label": "L'éducation"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1059,
+    "choice_label": "La culture"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1060,
+    "choice_label": "L'insertion professionnelle"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1061,
+    "choice_label": "L'inclusion et l'innovation sociales"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1062,
+    "choice_label": "Le logement"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1063,
+    "choice_label": "La petite enfance"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1064,
+    "choice_label": "La reprise collective d’entreprise par des salariés"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1065,
+    "choice_label": "La santé"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1066,
+    "choice_label": "Les séniors"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1067,
+    "choice_label": "Le sport"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1068,
+    "choice_label": "La transition numérique"
+  },
+  {
+    "old_question_id": 20090,
+    "old_choice_id": 1069,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20091,
+    "old_choice_id": 1080,
+    "choice_label": "Les difficultés d’accès à un statut professionnel "
+  },
+  {
+    "old_question_id": 20091,
+    "old_choice_id": 1081,
+    "choice_label": "Les contraintes physiques du métier"
+  },
+  {
+    "old_question_id": 20091,
+    "old_choice_id": 1082,
+    "choice_label": "Les difficultés d’installation et de transmission"
+  },
+  {
+    "old_question_id": 20091,
+    "old_choice_id": 1083,
+    "choice_label": "La maternité et/ou la parentalité  "
+  },
+  {
+    "old_question_id": 20091,
+    "old_choice_id": 1084,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20092,
+    "old_choice_id": 1090,
+    "choice_label": "Sensibiliser davantage les filles à l'émancipation et à l'entreprenariat"
+  },
+  {
+    "old_question_id": 20092,
+    "old_choice_id": 1091,
+    "choice_label": "Sensibiliser les employeurs pour que les filles trouvent plus facilement un stage et un emploi "
+  },
+  {
+    "old_question_id": 20092,
+    "old_choice_id": 1093,
+    "choice_label": "Former les enseignants et formateurs aux freins rencontrés par les filles dans le secteur agricole"
+  },
+  {
+    "old_question_id": 20092,
+    "old_choice_id": 1095,
+    "choice_label": "Organiser des témoignages et rencontres avec des agricultrices installées pour valoriser des parcours féminins"
+  },
+  {
+    "old_question_id": 20092,
+    "old_choice_id": 1096,
+    "choice_label": "Autre idée : précisez votre réponse    "
+  },
+  {
+    "old_question_id": 20093,
+    "old_choice_id": 1109,
+    "choice_label": "Prévenir les accidents du travail en renforçant les formations (exemple : geste et posture)"
+  },
+  {
+    "old_question_id": 20093,
+    "old_choice_id": 1110,
+    "choice_label": "Adapter le matériel agricole à la morphologie et aux contraintes physiques des femmes (poids, ergonomie, sécurité)"
+  },
+  {
+    "old_question_id": 20093,
+    "old_choice_id": 1111,
+    "choice_label": "Sensibiliser davantage sur les droits de santé au travail et sur les démarches à suivre en cas de maladie professionnelle"
+  },
+  {
+    "old_question_id": 20093,
+    "old_choice_id": 1112,
+    "choice_label": "Développer des actions de prévention ciblées sur les agricultrices en favorisant des partenariats entre la MSA, les associations et les collectivités"
+  },
+  {
+    "old_question_id": 20093,
+    "old_choice_id": 1113,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20094,
+    "old_choice_id": 1102,
+    "choice_label": "Développer le mentorat et la mise en place de réseaux professionnels entre agricultrices"
+  },
+  {
+    "old_question_id": 20094,
+    "old_choice_id": 1103,
+    "choice_label": "Organiser des campagnes de communication valorisant les rôles et parcours de femmes engagées dans les instances agricoles"
+  },
+  {
+    "old_question_id": 20094,
+    "old_choice_id": 1104,
+    "choice_label": "Veiller à une présence équilibrée des femmes, éventuellement par des quotas, dans les instances agricoles, pour garantir leur représentation "
+  },
+  {
+    "old_question_id": 20094,
+    "old_choice_id": 1105,
+    "choice_label": "Faciliter la participation à distance (réunions visio, horaires adaptés) pour mieux concilier engagement et activité professionnelle"
+  },
+  {
+    "old_question_id": 20094,
+    "old_choice_id": 1106,
+    "choice_label": "Encourager les structures professionnelles à inclure des dispositifs de soutien à la parentalité"
+  },
+  {
+    "old_question_id": 20094,
+    "old_choice_id": 1107,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20095,
+    "old_choice_id": 1118,
+    "choice_label": "Sensibiliser et informer les femmes sur l’importance d’un statut et les conséquences en son absence"
+  },
+  {
+    "old_question_id": 20095,
+    "old_choice_id": 1121,
+    "choice_label": "Créer un dispositif de suivi personnalisé pour accompagner les femmes non déclarées vers un statut professionnel et les informer de leurs droits sociaux et retraite"
+  },
+  {
+    "old_question_id": 20095,
+    "old_choice_id": 1122,
+    "choice_label": "Promouvoir l’installation des femmes en tant que cheffe d’exploitation (entreprise individuelle, coexploitante ou associée) afin de disposer d’une couverture sociale complète et de meilleurs droits futurs à la retraite"
+  },
+  {
+    "old_question_id": 20095,
+    "old_choice_id": 1123,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1163,
+    "choice_label": "Créer des campagnes sur les réseaux sociaux"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1164,
+    "choice_label": "Organiser davantage de forums/marchés des formations"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1165,
+    "choice_label": "Valoriser les parcours d’anciens élèves"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1166,
+    "choice_label": "Mettre en avant l’innovation et la technologie dans l’agriculture"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1167,
+    "choice_label": "Développer des partenariats locaux avec des entreprises/agriculteurs"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1168,
+    "choice_label": "S’impliquer dans les dispositifs de découverte des métiers au collège et au lycée"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1169,
+    "choice_label": "Diversifier les parcours (agriculture et numérique, agriculture et environnement, etc.)"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1170,
+    "choice_label": "Développer des projets européens ou internationaux (séjours à l’étranger via Erasmus +, coopération agricole…)"
+  },
+  {
+    "old_question_id": 20101,
+    "old_choice_id": 1181,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1171,
+    "choice_label": "Développer la communication auprès des familles, précisez votre réponse"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1172,
+    "choice_label": "Valoriser les parcours d’anciens élèves"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1173,
+    "choice_label": "Organiser davantage de forums/marchés des formations"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1174,
+    "choice_label": "Créer des campagnes sur les réseaux sociaux"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1175,
+    "choice_label": "Mettre en avant l’innovation et la technologie dans l’agriculture"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1176,
+    "choice_label": "Développer des partenariats locaux avec des entreprises/agriculteurs"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1177,
+    "choice_label": "Diversifier les parcours (agriculture et numérique, agriculture et environnement, etc.)"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1178,
+    "choice_label": "S’impliquer dans les dispositifs de découverte des métiers au collège et au lycée"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1179,
+    "choice_label": "Autre idée : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20102,
+    "old_choice_id": 1180,
+    "choice_label": "Développer des projets européens ou internationaux (séjours à l’étranger via Erasmus +, coopération agricole…)"
+  },
+  {
+    "old_question_id": 20103,
+    "old_choice_id": 1182,
+    "choice_label": "Une lettre d'information des organismes de recherche"
+  },
+  {
+    "old_question_id": 20103,
+    "old_choice_id": 1183,
+    "choice_label": "Une offre régulière de rendez-vous de la recherche sous forme de webinaires techniques"
+  },
+  {
+    "old_question_id": 20103,
+    "old_choice_id": 1184,
+    "choice_label": "Une liste des sujets traités par la recherche"
+  },
+  {
+    "old_question_id": 20103,
+    "old_choice_id": 1185,
+    "choice_label": "Des rendez-vous thématiques et territorialisés ouverts aux jeunes"
+  },
+  {
+    "old_question_id": 20103,
+    "old_choice_id": 1186,
+    "choice_label": "Des journées portes ouvertes dans les lieux de recherche"
+  },
+  {
+    "old_question_id": 20103,
+    "old_choice_id": 1187,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20107,
+    "old_choice_id": 1213,
+    "choice_label": "Les transports du quotidien"
+  },
+  {
+    "old_question_id": 20107,
+    "old_choice_id": 1214,
+    "choice_label": "Le logement et l’habitat"
+  },
+  {
+    "old_question_id": 20107,
+    "old_choice_id": 1215,
+    "choice_label": "L’accès au numérique et à l’information"
+  },
+  {
+    "old_question_id": 20107,
+    "old_choice_id": 1216,
+    "choice_label": "Les loisirs, la culture et les activités de plein air"
+  },
+  {
+    "old_question_id": 20107,
+    "old_choice_id": 1217,
+    "choice_label": "L’alimentation et les modes de consommation"
+  },
+  {
+    "old_question_id": 20107,
+    "old_choice_id": 1218,
+    "choice_label": "Le lien social, les communautés et l’appartenance"
+  },
+  {
+    "old_question_id": 20107,
+    "old_choice_id": 1219,
+    "choice_label": "Le pouvoir d’achat et la qualité de vie au travail "
+  },
+  {
+    "old_question_id": 20107,
+    "old_choice_id": 1220,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20108,
+    "old_choice_id": 1228,
+    "choice_label": "Davantage de recours au numérique et à l’IA "
+  },
+  {
+    "old_question_id": 20108,
+    "old_choice_id": 1229,
+    "choice_label": "Davantage d’accès physique aux lieux du service public et de contacts directs avec les agents "
+  },
+  {
+    "old_question_id": 20108,
+    "old_choice_id": 1230,
+    "choice_label": "Une plus grande participation des citoyens à l’élaboration des politiques publiques "
+  },
+  {
+    "old_question_id": 20108,
+    "old_choice_id": 1231,
+    "choice_label": "Une plus grande inclusivité et une meilleure personnalisation des services publics "
+  },
+  {
+    "old_question_id": 20108,
+    "old_choice_id": 1232,
+    "choice_label": "Le développement de l’évaluation de la qualité des services publics"
+  },
+  {
+    "old_question_id": 20108,
+    "old_choice_id": 1233,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20108,
+    "old_choice_id": 1234,
+    "choice_label": "Une plus grande initiative laissée à l’échelon local pour la mise en œuvre des services publics "
+  },
+  {
+    "old_question_id": 20109,
+    "old_choice_id": 1221,
+    "choice_label": "L’éducation et les compétences"
+  },
+  {
+    "old_question_id": 20109,
+    "old_choice_id": 1222,
+    "choice_label": "L’innovation et les nouvelles technologies"
+  },
+  {
+    "old_question_id": 20109,
+    "old_choice_id": 1223,
+    "choice_label": "La réindustrialisation"
+  },
+  {
+    "old_question_id": 20109,
+    "old_choice_id": 1224,
+    "choice_label": "La transition écologique et énergétique"
+  },
+  {
+    "old_question_id": 20109,
+    "old_choice_id": 1225,
+    "choice_label": "L’appropriation de techniques inventées ailleurs (Etats-Unis, Chine, etc.)"
+  },
+  {
+    "old_question_id": 20109,
+    "old_choice_id": 1226,
+    "choice_label": "Son modèle social"
+  },
+  {
+    "old_question_id": 20109,
+    "old_choice_id": 1227,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1235,
+    "choice_label": "La santé"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1250,
+    "choice_label": "L'éducation"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1251,
+    "choice_label": "Les retraites"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1252,
+    "choice_label": "Les autres domaines de la protection sociale"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1253,
+    "choice_label": "La défense"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1254,
+    "choice_label": "La sécurité"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1255,
+    "choice_label": "Le logement"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1256,
+    "choice_label": "L'agriculture"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1257,
+    "choice_label": "La recherche et l'innovation"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1258,
+    "choice_label": "La transition écologique"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1259,
+    "choice_label": "La justice"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1260,
+    "choice_label": "La culture et les loisirs"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1261,
+    "choice_label": "Le soutien aux développement économique (industrie, etc.)"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1262,
+    "choice_label": "Les transports et équipements collectifs"
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1263,
+    "choice_label": "Le fonctionnement des administrations publiques "
+  },
+  {
+    "old_question_id": 20110,
+    "old_choice_id": 1264,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20111,
+    "old_choice_id": 1241,
+    "choice_label": "Un conflit armé sur le sol de l’Union européenne "
+  },
+  {
+    "old_question_id": 20111,
+    "old_choice_id": 1242,
+    "choice_label": "Le risque d’une troisième guerre mondiale, alimenté par la prolifération nucléaire "
+  },
+  {
+    "old_question_id": 20111,
+    "old_choice_id": 1245,
+    "choice_label": "La militarisation de l’espace "
+  },
+  {
+    "old_question_id": 20111,
+    "old_choice_id": 1246,
+    "choice_label": "Des conflits liés aux fortes tensions sur les ressources naturelles "
+  },
+  {
+    "old_question_id": 20111,
+    "old_choice_id": 1247,
+    "choice_label": "Des cybermenaces alimentées par des IA avancées "
+  },
+  {
+    "old_question_id": 20111,
+    "old_choice_id": 1248,
+    "choice_label": "Des migrations climatiques massives"
+  },
+  {
+    "old_question_id": 20111,
+    "old_choice_id": 1249,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20112,
+    "old_choice_id": 1236,
+    "choice_label": "Des attaques terroristes sur le sol national "
+  },
+  {
+    "old_question_id": 20112,
+    "old_choice_id": 1237,
+    "choice_label": "Une nouvelle attaque russe sur le sol européen "
+  },
+  {
+    "old_question_id": 20112,
+    "old_choice_id": 1238,
+    "choice_label": "Une attaque russe contre la France "
+  },
+  {
+    "old_question_id": 20112,
+    "old_choice_id": 1239,
+    "choice_label": "Des cyberattaques contre des infrastructures critiques "
+  },
+  {
+    "old_question_id": 20112,
+    "old_choice_id": 1240,
+    "choice_label": "Des opérations de désinformation et d’ingérences étrangères"
+  },
+  {
+    "old_question_id": 20112,
+    "old_choice_id": 1243,
+    "choice_label": "Des ruptures d’approvisionnement énergétique ou technologique "
+  },
+  {
+    "old_question_id": 20112,
+    "old_choice_id": 1244,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20118,
+    "old_choice_id": 1303,
+    "choice_label": "Produire en France ce que nous consommons"
+  },
+  {
+    "old_question_id": 20118,
+    "old_choice_id": 1304,
+    "choice_label": "Décider nous-mêmes de notre politique alimentaire"
+  },
+  {
+    "old_question_id": 20118,
+    "old_choice_id": 1305,
+    "choice_label": "Produire des aliments sains, durables et variés"
+  },
+  {
+    "old_question_id": 20118,
+    "old_choice_id": 1306,
+    "choice_label": "Réduire nos importations"
+  },
+  {
+    "old_question_id": 20118,
+    "old_choice_id": 1307,
+    "choice_label": "Pouvoir exporter nos produits"
+  },
+  {
+    "old_question_id": 20118,
+    "old_choice_id": 1308,
+    "choice_label": "Acheter français à un prix abordable"
+  },
+  {
+    "old_question_id": 20119,
+    "old_choice_id": 1316,
+    "choice_label": "Nos habitudes de consommation"
+  },
+  {
+    "old_question_id": 20119,
+    "old_choice_id": 1318,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20119,
+    "old_choice_id": 1320,
+    "choice_label": "Contexte international (guerres, accords commerciaux, etc.)"
+  },
+  {
+    "old_question_id": 20119,
+    "old_choice_id": 1321,
+    "choice_label": "Manque d’information sur l’origine des produits"
+  },
+  {
+    "old_question_id": 20120,
+    "old_choice_id": 1319,
+    "choice_label": "Les consommateurs"
+  },
+  {
+    "old_question_id": 20120,
+    "old_choice_id": 1322,
+    "choice_label": "Les agriculteurs"
+  },
+  {
+    "old_question_id": 20120,
+    "old_choice_id": 1323,
+    "choice_label": "Les restaurateurs et la restauration collective (cantines, hôpitaux, armée, etc.)"
+  },
+  {
+    "old_question_id": 20120,
+    "old_choice_id": 1324,
+    "choice_label": "L’Etat et les pouvoirs publics"
+  },
+  {
+    "old_question_id": 20120,
+    "old_choice_id": 1325,
+    "choice_label": "Les entreprises agroalimentaires"
+  },
+  {
+    "old_question_id": 20120,
+    "old_choice_id": 1326,
+    "choice_label": "Les supermarchés et commerçants"
+  },
+  {
+    "old_question_id": 20120,
+    "old_choice_id": 1327,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20121,
+    "old_choice_id": 1338,
+    "choice_label": "Acheter auprès de producteurs français (local, circuits courts, bio, etc.)"
+  },
+  {
+    "old_question_id": 20121,
+    "old_choice_id": 1340,
+    "choice_label": "Être plus transparents sur l’origine des produits"
+  },
+  {
+    "old_question_id": 20121,
+    "old_choice_id": 1341,
+    "choice_label": "Proposer des prix abordables pour les produits français"
+  },
+  {
+    "old_question_id": 20121,
+    "old_choice_id": 1342,
+    "choice_label": "Soutenir les producteurs pour garantir volumes, prix et pratiques durables"
+  },
+  {
+    "old_question_id": 20121,
+    "old_choice_id": 1343,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20122,
+    "old_choice_id": 1334,
+    "choice_label": "Aider les agriculteurs à mieux vivre de leur travail"
+  },
+  {
+    "old_question_id": 20122,
+    "old_choice_id": 1335,
+    "choice_label": "Encourager les Français à acheter local"
+  },
+  {
+    "old_question_id": 20122,
+    "old_choice_id": 1336,
+    "choice_label": "Faciliter le travail des agriculteurs (moins de paperasse, meilleures conditions)"
+  },
+  {
+    "old_question_id": 20122,
+    "old_choice_id": 1337,
+    "choice_label": "Faciliter le renouvellement des agriculteurs"
+  },
+  {
+    "old_question_id": 20122,
+    "old_choice_id": 1339,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20124,
+    "old_choice_id": 1356,
+    "choice_label": "Enthousiasme"
+  },
+  {
+    "old_question_id": 20124,
+    "old_choice_id": 1364,
+    "choice_label": "Indignation"
+  },
+  {
+    "old_question_id": 20124,
+    "old_choice_id": 1365,
+    "choice_label": "Fascination"
+  },
+  {
+    "old_question_id": 20124,
+    "old_choice_id": 1366,
+    "choice_label": "Curiosité"
+  },
+  {
+    "old_question_id": 20124,
+    "old_choice_id": 1367,
+    "choice_label": "Anxiété"
+  },
+  {
+    "old_question_id": 20124,
+    "old_choice_id": 1368,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20124,
+    "old_choice_id": 1369,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 20124,
+    "old_choice_id": 1370,
+    "choice_label": "Indifférence"
+  },
+  {
+    "old_question_id": 20125,
+    "old_choice_id": 1357,
+    "choice_label": "Une opportunité personnelle"
+  },
+  {
+    "old_question_id": 20125,
+    "old_choice_id": 1358,
+    "choice_label": "Une opportunité professionnelle"
+  },
+  {
+    "old_question_id": 20125,
+    "old_choice_id": 1359,
+    "choice_label": "Une opportunité pour la France et l’Europe"
+  },
+  {
+    "old_question_id": 20125,
+    "old_choice_id": 1360,
+    "choice_label": "Une source d’inquiétude professionnelle"
+  },
+  {
+    "old_question_id": 20125,
+    "old_choice_id": 1361,
+    "choice_label": "Une source d’inquiétude personnelle"
+  },
+  {
+    "old_question_id": 20125,
+    "old_choice_id": 1362,
+    "choice_label": "Une source d’inquiétude pour la France et l’Europe"
+  },
+  {
+    "old_question_id": 20125,
+    "old_choice_id": 1363,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 20126,
+    "old_choice_id": 1371,
+    "choice_label": "Sanctionner plus durement les acteurs qui ne respectent pas les règles françaises et européennes."
+  },
+  {
+    "old_question_id": 20126,
+    "old_choice_id": 1372,
+    "choice_label": "Soutenir le développement des entreprises technologiques françaises et européennes."
+  },
+  {
+    "old_question_id": 20126,
+    "old_choice_id": 1386,
+    "choice_label": "Mieux protéger les publics les plus vulnérables* en ligne."
+  },
+  {
+    "old_question_id": 20126,
+    "old_choice_id": 1387,
+    "choice_label": "Laisser les acteurs agir librement et s’auto-réguler."
+  },
+  {
+    "old_question_id": 20126,
+    "old_choice_id": 1388,
+    "choice_label": "Renforcer la coopération internationale pour harmoniser les règles à l’échelle mondiale."
+  },
+  {
+    "old_question_id": 20126,
+    "old_choice_id": 1389,
+    "choice_label": "Sensibiliser et former la population à leurs usages. "
+  },
+  {
+    "old_question_id": 20126,
+    "old_choice_id": 1390,
+    "choice_label": "Moderniser les services publics via le numérique et l’IA."
+  },
+  {
+    "old_question_id": 20126,
+    "old_choice_id": 1391,
+    "choice_label": "Autre : précisez votre réponse."
+  },
+  {
+    "old_question_id": 20127,
+    "old_choice_id": 1373,
+    "choice_label": "La compétitivité des entreprises françaises et européennes."
+  },
+  {
+    "old_question_id": 20127,
+    "old_choice_id": 1374,
+    "choice_label": "Les mutations du travail et du marché de l’emploi."
+  },
+  {
+    "old_question_id": 20127,
+    "old_choice_id": 1375,
+    "choice_label": "L’appropriation par les entreprises des technologies numériques et de l’intelligence artificielle."
+  },
+  {
+    "old_question_id": 20127,
+    "old_choice_id": 1376,
+    "choice_label": "La dépendance aux acteurs non-européens."
+  },
+  {
+    "old_question_id": 20127,
+    "old_choice_id": 1377,
+    "choice_label": "La protection des droits des utilisateurs et la concurrence."
+  },
+  {
+    "old_question_id": 20127,
+    "old_choice_id": 1378,
+    "choice_label": "Le développement des communs numériques*."
+  },
+  {
+    "old_question_id": 20127,
+    "old_choice_id": 1380,
+    "choice_label": "Autre : précisez votre réponse."
+  },
+  {
+    "old_question_id": 20128,
+    "old_choice_id": 1379,
+    "choice_label": "Des éclairages courts, pédagogiques et grand public sur les nouvelles technologies, leur fonctionnement et leurs enjeux."
+  },
+  {
+    "old_question_id": 20128,
+    "old_choice_id": 1381,
+    "choice_label": "Des rapports plus longs pour examiner en détail les évolutions en cours."
+  },
+  {
+    "old_question_id": 20128,
+    "old_choice_id": 1382,
+    "choice_label": "Des éclairages courts, techniques et précis sur certains développements technologiques."
+  },
+  {
+    "old_question_id": 20128,
+    "old_choice_id": 1383,
+    "choice_label": "Des propositions pour les décideurs publics."
+  },
+  {
+    "old_question_id": 20128,
+    "old_choice_id": 1384,
+    "choice_label": "Des outils pour les acteurs économiques."
+  },
+  {
+    "old_question_id": 20128,
+    "old_choice_id": 1385,
+    "choice_label": "Autre : précisez votre réponse."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1392,
+    "choice_label": "Les mutations dans l’éducation."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1393,
+    "choice_label": "Les enjeux relatifs à la fiabilité et la qualité de l’information."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1394,
+    "choice_label": "L’inclusion numérique, c’est-à-dire l’ensemble des actions visant à permettre à tous les individus d’accéder aux outils numériques et d’en maîtriser les usages."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1395,
+    "choice_label": "La protection des mineurs en ligne."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1396,
+    "choice_label": "Les discriminations engendrées par les algorithmes."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1397,
+    "choice_label": "La santé mentale des publics les plus vulnérables."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1398,
+    "choice_label": "La défense des libertés individuelles et la protection des citoyens."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1399,
+    "choice_label": "L’impact environnemental du numérique et de l’intelligence artificielle."
+  },
+  {
+    "old_question_id": 20129,
+    "old_choice_id": 1400,
+    "choice_label": "Autre : précisez votre réponse."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1401,
+    "choice_label": "Des éclairages courts, pédagogiques et grand public sur les nouvelles technologies, leur fonctionnement et leurs enjeux."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1402,
+    "choice_label": "Des rapports plus longs pour examiner en détail les évolutions en cours."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1403,
+    "choice_label": "Des éclairages courts, techniques et précis sur certains développements technologiques."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1404,
+    "choice_label": "Des conseils pratiques pour mieux utiliser le numérique et l’intelligence artificielle."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1405,
+    "choice_label": "Des guides pratiques pour les citoyens (ex : comment repérer une information fiable en ligne)."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1406,
+    "choice_label": "Des indicateurs pour évaluer l’impact social et environnemental des technologies."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1407,
+    "choice_label": "Une veille prospective sur les technologies émergentes et leurs impacts."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1408,
+    "choice_label": "Des outils pour les entreprises et les associations."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1409,
+    "choice_label": "Des propositions pour les décideurs publics."
+  },
+  {
+    "old_question_id": 20130,
+    "old_choice_id": 1411,
+    "choice_label": "Autre : précisez votre réponse."
+  },
+  {
+    "old_question_id": 20131,
+    "old_choice_id": 1410,
+    "choice_label": "La transparence et le paramétrage des algorithmes par l’utilisateur."
+  },
+  {
+    "old_question_id": 20131,
+    "old_choice_id": 1412,
+    "choice_label": "L’équité et la non-discrimination."
+  },
+  {
+    "old_question_id": 20131,
+    "old_choice_id": 1413,
+    "choice_label": "Le respect de la vie privée et des données personnelles."
+  },
+  {
+    "old_question_id": 20131,
+    "old_choice_id": 1414,
+    "choice_label": "Aucun, éthique et technologies me semblent incompatibles."
+  },
+  {
+    "old_question_id": 20131,
+    "old_choice_id": 1415,
+    "choice_label": "Le progrès technologique doit passer avant les considérations éthiques."
+  },
+  {
+    "old_question_id": 20131,
+    "old_choice_id": 1419,
+    "choice_label": "Autre : précisez votre réponse."
+  },
+  {
+    "old_question_id": 20132,
+    "old_choice_id": 1424,
+    "choice_label": "En organisant des consultations régulières."
+  },
+  {
+    "old_question_id": 20132,
+    "old_choice_id": 1425,
+    "choice_label": "En publiant des comptes-rendus accessibles au grand public."
+  },
+  {
+    "old_question_id": 20132,
+    "old_choice_id": 1426,
+    "choice_label": "En associant des citoyens tirés au sort à ses groupes de travail."
+  },
+  {
+    "old_question_id": 20132,
+    "old_choice_id": 1427,
+    "choice_label": "En créant une plateforme collaborative pour recueillir des contributions."
+  },
+  {
+    "old_question_id": 20132,
+    "old_choice_id": 1428,
+    "choice_label": "Autre : précisez votre réponse."
+  },
+  {
+    "old_question_id": 30000,
+    "old_choice_id": 1,
+    "choice_label": "Au quotidien"
+  },
+  {
+    "old_question_id": 30000,
+    "old_choice_id": 2,
+    "choice_label": "De temps en temps"
+  },
+  {
+    "old_question_id": 30000,
+    "old_choice_id": 3,
+    "choice_label": "Uniquement avant une élection"
+  },
+  {
+    "old_question_id": 30000,
+    "old_choice_id": 4,
+    "choice_label": "Jamais"
+  },
+  {
+    "old_question_id": 30001,
+    "old_choice_id": 5,
+    "choice_label": "La presse écrite"
+  },
+  {
+    "old_question_id": 30001,
+    "old_choice_id": 6,
+    "choice_label": "La télévision ou la radio"
+  },
+  {
+    "old_question_id": 30001,
+    "old_choice_id": 7,
+    "choice_label": "Les réseaux sociaux"
+  },
+  {
+    "old_question_id": 30001,
+    "old_choice_id": 9,
+    "choice_label": "Aucune"
+  },
+  {
+    "old_question_id": 30002,
+    "old_choice_id": 8,
+    "choice_label": "Oui, plutôt en bien"
+  },
+  {
+    "old_question_id": 30002,
+    "old_choice_id": 10,
+    "choice_label": "Oui, plutôt en mal"
+  },
+  {
+    "old_question_id": 30002,
+    "old_choice_id": 11,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30002,
+    "old_choice_id": 12,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30003,
+    "old_choice_id": 17,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30003,
+    "old_choice_id": 18,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30003,
+    "old_choice_id": 19,
+    "choice_label": "Je ne sais pas ce que c’est"
+  },
+  {
+    "old_question_id": 30004,
+    "old_choice_id": 20,
+    "choice_label": "Inutile"
+  },
+  {
+    "old_question_id": 30004,
+    "old_choice_id": 21,
+    "choice_label": "Utile, mais non prioritaire"
+  },
+  {
+    "old_question_id": 30004,
+    "old_choice_id": 22,
+    "choice_label": "Utile et prioritaire"
+  },
+  {
+    "old_question_id": 30004,
+    "old_choice_id": 23,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30005,
+    "old_choice_id": 24,
+    "choice_label": "Le plus souvent"
+  },
+  {
+    "old_question_id": 30005,
+    "old_choice_id": 25,
+    "choice_label": "Parfois"
+  },
+  {
+    "old_question_id": 30005,
+    "old_choice_id": 26,
+    "choice_label": "Jamais"
+  },
+  {
+    "old_question_id": 30005,
+    "old_choice_id": 27,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30006,
+    "old_choice_id": 28,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30006,
+    "old_choice_id": 29,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30006,
+    "old_choice_id": 30,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 38,
+    "choice_label": "Agriculture et alimentation"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 40,
+    "choice_label": "Autonomie"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 41,
+    "choice_label": "Culture"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 42,
+    "choice_label": "Démocratie"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 43,
+    "choice_label": "Discriminations"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 44,
+    "choice_label": "Education et jeunesse"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 45,
+    "choice_label": "Economie"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 46,
+    "choice_label": "Egalité femmes/hommes"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 56,
+    "choice_label": "Energie"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 57,
+    "choice_label": "Enfance"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 58,
+    "choice_label": "Enseignement supérieur et recherche"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 59,
+    "choice_label": "Handicap"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 60,
+    "choice_label": "Europe et international"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 61,
+    "choice_label": "Justice"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 62,
+    "choice_label": " Logement"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 63,
+    "choice_label": "Outre-mer"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 64,
+    "choice_label": "Santé"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 65,
+    "choice_label": " Sécurité et défense"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 66,
+    "choice_label": " Solidarités"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 67,
+    "choice_label": "Sport"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 68,
+    "choice_label": " Services publics"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 69,
+    "choice_label": "Transports"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 70,
+    "choice_label": "Transition écologique"
+  },
+  {
+    "old_question_id": 30007,
+    "old_choice_id": 71,
+    "choice_label": "Travail"
+  },
+  {
+    "old_question_id": 30008,
+    "old_choice_id": 53,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30008,
+    "old_choice_id": 54,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30008,
+    "old_choice_id": 55,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30009,
+    "old_choice_id": 72,
+    "choice_label": "Utiliser des modes de transports moins polluants"
+  },
+  {
+    "old_question_id": 30009,
+    "old_choice_id": 73,
+    "choice_label": "Rénover votre logement pour qu’il soit moins énergivore"
+  },
+  {
+    "old_question_id": 30009,
+    "old_choice_id": 74,
+    "choice_label": "Privilégier la réparation pour allonger la vie de vos équipements (appareils ménagers, électroniques, outillage, etc.)"
+  },
+  {
+    "old_question_id": 30009,
+    "old_choice_id": 75,
+    "choice_label": "Modifier vos habitudes de consommation et d’alimentation"
+  },
+  {
+    "old_question_id": 30009,
+    "old_choice_id": 76,
+    "choice_label": "Acheter une voiture électrique pour arrêter de consommer de l’essence"
+  },
+  {
+    "old_question_id": 30009,
+    "old_choice_id": 77,
+    "choice_label": "Aucune de ces actions"
+  },
+  {
+    "old_question_id": 30010,
+    "old_choice_id": 78,
+    "choice_label": "Renforcer l’obligation des magasins à disposer d’espaces de vente en vrac"
+  },
+  {
+    "old_question_id": 30010,
+    "old_choice_id": 79,
+    "choice_label": "Développer des emballages réutilisables comme c’est déjà le cas pour la vaisselle réemployable dans la restauration rapide"
+  },
+  {
+    "old_question_id": 30010,
+    "old_choice_id": 80,
+    "choice_label": "Assurer la présence de fontaines à eau dans les établissements recevant du public et dans l’espace public"
+  },
+  {
+    "old_question_id": 30010,
+    "old_choice_id": 81,
+    "choice_label": "Aucune de ces mesures"
+  },
+  {
+    "old_question_id": 30011,
+    "old_choice_id": 82,
+    "choice_label": "J’ai besoin d’être bien informé sur la qualité de l’eau usée traitée"
+  },
+  {
+    "old_question_id": 30011,
+    "old_choice_id": 85,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30011,
+    "old_choice_id": 86,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30012,
+    "old_choice_id": 112,
+    "choice_label": "Français uniquement"
+  },
+  {
+    "old_question_id": 30012,
+    "old_choice_id": 113,
+    "choice_label": "Français et européen"
+  },
+  {
+    "old_question_id": 30012,
+    "old_choice_id": 114,
+    "choice_label": "Européen uniquement"
+  },
+  {
+    "old_question_id": 30012,
+    "old_choice_id": 115,
+    "choice_label": "Français puis européen"
+  },
+  {
+    "old_question_id": 30012,
+    "old_choice_id": 116,
+    "choice_label": "Européen puis français"
+  },
+  {
+    "old_question_id": 30012,
+    "old_choice_id": 117,
+    "choice_label": "Ni l’un ni l’autre"
+  },
+  {
+    "old_question_id": 30012,
+    "old_choice_id": 118,
+    "choice_label": "Je ne suis pas français(e)"
+  },
+  {
+    "old_question_id": 30013,
+    "old_choice_id": 119,
+    "choice_label": "Permettre la libre circulation des citoyens"
+  },
+  {
+    "old_question_id": 30013,
+    "old_choice_id": 120,
+    "choice_label": "Préserver la paix sur le continent"
+  },
+  {
+    "old_question_id": 30013,
+    "old_choice_id": 121,
+    "choice_label": "Défendre des valeurs communes"
+  },
+  {
+    "old_question_id": 30013,
+    "old_choice_id": 122,
+    "choice_label": "Favoriser la croissance économique des Etats-membres"
+  },
+  {
+    "old_question_id": 30013,
+    "old_choice_id": 123,
+    "choice_label": "Des normes"
+  },
+  {
+    "old_question_id": 30013,
+    "old_choice_id": 124,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 30014,
+    "old_choice_id": 138,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30014,
+    "old_choice_id": 139,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30014,
+    "old_choice_id": 140,
+    "choice_label": "Je ne suis pas européen(ne), donc je ne peux pas voter"
+  },
+  {
+    "old_question_id": 30014,
+    "old_choice_id": 141,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30015,
+    "old_choice_id": 174,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30015,
+    "old_choice_id": 175,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30015,
+    "old_choice_id": 176,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30016,
+    "old_choice_id": 182,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30016,
+    "old_choice_id": 184,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30017,
+    "old_choice_id": 171,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30017,
+    "old_choice_id": 172,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30017,
+    "old_choice_id": 173,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30018,
+    "old_choice_id": 200,
+    "choice_label": "1 heure par mois"
+  },
+  {
+    "old_question_id": 30018,
+    "old_choice_id": 201,
+    "choice_label": "1 journée par mois"
+  },
+  {
+    "old_question_id": 30018,
+    "old_choice_id": 202,
+    "choice_label": "Plusieurs journées par mois"
+  },
+  {
+    "old_question_id": 30018,
+    "old_choice_id": 203,
+    "choice_label": "Je n’ai pas de temps à y consacrer"
+  },
+  {
+    "old_question_id": 30019,
+    "old_choice_id": 214,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30019,
+    "old_choice_id": 215,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30019,
+    "old_choice_id": 216,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30020,
+    "old_choice_id": 217,
+    "choice_label": "1 heure par mois"
+  },
+  {
+    "old_question_id": 30020,
+    "old_choice_id": 218,
+    "choice_label": "Plusieurs journées par mois"
+  },
+  {
+    "old_question_id": 30020,
+    "old_choice_id": 219,
+    "choice_label": "1 journée par mois"
+  },
+  {
+    "old_question_id": 30021,
+    "old_choice_id": 227,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30021,
+    "old_choice_id": 228,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30022,
+    "old_choice_id": 242,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30022,
+    "old_choice_id": 243,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30023,
+    "old_choice_id": 244,
+    "choice_label": "Non, et je le regrette"
+  },
+  {
+    "old_question_id": 30023,
+    "old_choice_id": 245,
+    "choice_label": "Non, et je ne pense pas que cela soit nécessaire"
+  },
+  {
+    "old_question_id": 30023,
+    "old_choice_id": 246,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30024,
+    "old_choice_id": 248,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30024,
+    "old_choice_id": 250,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30025,
+    "old_choice_id": 247,
+    "choice_label": "Oui, je l’ai déjà rencontré"
+  },
+  {
+    "old_question_id": 30025,
+    "old_choice_id": 249,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30025,
+    "old_choice_id": 251,
+    "choice_label": "Oui, même si je ne l’ai pas rencontré"
+  },
+  {
+    "old_question_id": 30026,
+    "old_choice_id": 264,
+    "choice_label": "De l’enthousiasme"
+  },
+  {
+    "old_question_id": 30026,
+    "old_choice_id": 265,
+    "choice_label": "De l’indignation"
+  },
+  {
+    "old_question_id": 30026,
+    "old_choice_id": 266,
+    "choice_label": "De la fascination"
+  },
+  {
+    "old_question_id": 30026,
+    "old_choice_id": 267,
+    "choice_label": "De la curiosité"
+  },
+  {
+    "old_question_id": 30026,
+    "old_choice_id": 268,
+    "choice_label": "De l’anxiété"
+  },
+  {
+    "old_question_id": 30026,
+    "old_choice_id": 269,
+    "choice_label": "De l’indifférence"
+  },
+  {
+    "old_question_id": 30026,
+    "old_choice_id": 270,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30027,
+    "old_choice_id": 271,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30027,
+    "old_choice_id": 272,
+    "choice_label": "Encourager pleinement le développement de l’intelligence artificielle générative, au risque de précipiter l’émergence d’outils et d’usages potentiellement néfastes pour les utilisateurs"
+  },
+  {
+    "old_question_id": 30027,
+    "old_choice_id": 273,
+    "choice_label": "Réguler, dès à présent, le développement de l’intelligence artificielle générative, au risque de retarder ou d’empêcher l’émergence d’outils français et européens"
+  },
+  {
+    "old_question_id": 30028,
+    "old_choice_id": 302,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30028,
+    "old_choice_id": 303,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30028,
+    "old_choice_id": 304,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30029,
+    "old_choice_id": 308,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30029,
+    "old_choice_id": 309,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30029,
+    "old_choice_id": 310,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30030,
+    "old_choice_id": 305,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30030,
+    "old_choice_id": 306,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30030,
+    "old_choice_id": 307,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30031,
+    "old_choice_id": 332,
+    "choice_label": "Oui, en bien, par exemple grâce à la meilleure information des citoyens"
+  },
+  {
+    "old_question_id": 30031,
+    "old_choice_id": 333,
+    "choice_label": "Oui, en mal, par exemple en générant des contenus et des images venant perturber le débat public"
+  },
+  {
+    "old_question_id": 30031,
+    "old_choice_id": 334,
+    "choice_label": "Les deux"
+  },
+  {
+    "old_question_id": 30031,
+    "old_choice_id": 335,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30032,
+    "old_choice_id": 336,
+    "choice_label": "Infirmier"
+  },
+  {
+    "old_question_id": 30032,
+    "old_choice_id": 337,
+    "choice_label": "Profession médicale"
+  },
+  {
+    "old_question_id": 30032,
+    "old_choice_id": 338,
+    "choice_label": "Aide-soignant ou Auxiliaire de puériculture"
+  },
+  {
+    "old_question_id": 30032,
+    "old_choice_id": 339,
+    "choice_label": "Autre"
+  },
+  {
+    "old_question_id": 30032,
+    "old_choice_id": 340,
+    "choice_label": "Profession de la pharmacie"
+  },
+  {
+    "old_question_id": 30033,
+    "old_choice_id": 345,
+    "choice_label": "Plutôt oui"
+  },
+  {
+    "old_question_id": 30033,
+    "old_choice_id": 346,
+    "choice_label": "Tout à fait"
+  },
+  {
+    "old_question_id": 30033,
+    "old_choice_id": 347,
+    "choice_label": "Plutôt non"
+  },
+  {
+    "old_question_id": 30033,
+    "old_choice_id": 350,
+    "choice_label": "Pas du tout"
+  },
+  {
+    "old_question_id": 30034,
+    "old_choice_id": 341,
+    "choice_label": "Plutôt oui"
+  },
+  {
+    "old_question_id": 30034,
+    "old_choice_id": 342,
+    "choice_label": "Plutôt non"
+  },
+  {
+    "old_question_id": 30034,
+    "old_choice_id": 343,
+    "choice_label": "Pas du tout"
+  },
+  {
+    "old_question_id": 30034,
+    "old_choice_id": 344,
+    "choice_label": "Tout à fait"
+  },
+  {
+    "old_question_id": 30035,
+    "old_choice_id": 387,
+    "choice_label": "L’envie de prendre soin de l’autre"
+  },
+  {
+    "old_question_id": 30035,
+    "old_choice_id": 389,
+    "choice_label": "L’intérêt pour la médecine ou les sciences du corps humain de manière plus large"
+  },
+  {
+    "old_question_id": 30035,
+    "old_choice_id": 391,
+    "choice_label": "La volonté d’être utile"
+  },
+  {
+    "old_question_id": 30035,
+    "old_choice_id": 392,
+    "choice_label": "La reconnaissance sociale ou sociétale"
+  },
+  {
+    "old_question_id": 30035,
+    "old_choice_id": 393,
+    "choice_label": "Le travail en équipe avec de nombreux professionnels"
+  },
+  {
+    "old_question_id": 30035,
+    "old_choice_id": 394,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 30036,
+    "old_choice_id": 404,
+    "choice_label": "Le prix"
+  },
+  {
+    "old_question_id": 30036,
+    "old_choice_id": 405,
+    "choice_label": "La proximité (de mon domicile ou de mon travail)"
+  },
+  {
+    "old_question_id": 30036,
+    "old_choice_id": 406,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 30036,
+    "old_choice_id": 407,
+    "choice_label": "La qualité de l'offre"
+  },
+  {
+    "old_question_id": 30036,
+    "old_choice_id": 408,
+    "choice_label": "La diversité de l’offre"
+  },
+  {
+    "old_question_id": 30037,
+    "old_choice_id": 409,
+    "choice_label": "Oui, tout à fait"
+  },
+  {
+    "old_question_id": 30037,
+    "old_choice_id": 411,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 30037,
+    "old_choice_id": 412,
+    "choice_label": "Oui, plutôt"
+  },
+  {
+    "old_question_id": 30037,
+    "old_choice_id": 415,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 30038,
+    "old_choice_id": 443,
+    "choice_label": "Oui, la structure et les périmètres d’application sont clairs"
+  },
+  {
+    "old_question_id": 30038,
+    "old_choice_id": 444,
+    "choice_label": "Non, il faut mieux préciser ce qui relève du code rural et de la pêche maritime, et ce qui relève du code de commerce"
+  },
+  {
+    "old_question_id": 30038,
+    "old_choice_id": 445,
+    "choice_label": "Non, le code rural et de la pêche maritime devrait concerner plus de niveaux de relations commerciales portant sur les produits agricoles et alimentaires"
+  },
+  {
+    "old_question_id": 30039,
+    "old_choice_id": 446,
+    "choice_label": "Oui, tout à fait"
+  },
+  {
+    "old_question_id": 30039,
+    "old_choice_id": 447,
+    "choice_label": "Oui, plutôt"
+  },
+  {
+    "old_question_id": 30039,
+    "old_choice_id": 448,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 30039,
+    "old_choice_id": 449,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 30040,
+    "old_choice_id": 457,
+    "choice_label": "1 an minimum"
+  },
+  {
+    "old_question_id": 30040,
+    "old_choice_id": 458,
+    "choice_label": "2 ans minimum"
+  },
+  {
+    "old_question_id": 30040,
+    "old_choice_id": 459,
+    "choice_label": "3 ans minimum (situation actuelle, sauf pour le lait et le vin)"
+  },
+  {
+    "old_question_id": 30040,
+    "old_choice_id": 460,
+    "choice_label": "La durée doit être librement définie par les parties"
+  },
+  {
+    "old_question_id": 30040,
+    "old_choice_id": 461,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30041,
+    "old_choice_id": 453,
+    "choice_label": "Les exclusions et dérogations actuelles sont suffisantes"
+  },
+  {
+    "old_question_id": 30041,
+    "old_choice_id": 454,
+    "choice_label": "De nouvelles dérogations sont nécessaires"
+  },
+  {
+    "old_question_id": 30041,
+    "old_choice_id": 456,
+    "choice_label": "Il faut réduire le nombre de dérogations"
+  },
+  {
+    "old_question_id": 30042,
+    "old_choice_id": 450,
+    "choice_label": "Oui, tout à fait"
+  },
+  {
+    "old_question_id": 30042,
+    "old_choice_id": 451,
+    "choice_label": "Oui, plutôt"
+  },
+  {
+    "old_question_id": 30042,
+    "old_choice_id": 452,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 30042,
+    "old_choice_id": 455,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 30043,
+    "old_choice_id": 464,
+    "choice_label": "Oui, les indicateurs de coût de production sont suffisants"
+  },
+  {
+    "old_question_id": 30043,
+    "old_choice_id": 465,
+    "choice_label": "Les indicateurs de coûts de production ne sont pas suffisants, il faut plusieurs indicateurs (qualité, marchés etc.)"
+  },
+  {
+    "old_question_id": 30044,
+    "old_choice_id": 462,
+    "choice_label": "Oui, un modèle établi par les organisations interprofessionnelles"
+  },
+  {
+    "old_question_id": 30044,
+    "old_choice_id": 463,
+    "choice_label": "Non, la loi doit simplement détailler les clauses obligatoires (situation actuelle)"
+  },
+  {
+    "old_question_id": 30044,
+    "old_choice_id": 466,
+    "choice_label": "Non, la forme des contrats et leur contenu doivent être librement déterminés par les parties"
+  },
+  {
+    "old_question_id": 30045,
+    "old_choice_id": 467,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30045,
+    "old_choice_id": 468,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30046,
+    "old_choice_id": 476,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30046,
+    "old_choice_id": 477,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30047,
+    "old_choice_id": 472,
+    "choice_label": "Non, car mon cocontractant n'a pas accepté de les mettre en œuvre"
+  },
+  {
+    "old_question_id": 30047,
+    "old_choice_id": 473,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30047,
+    "old_choice_id": 474,
+    "choice_label": "Non, car les clauses ne sont pas opérationnelles"
+  },
+  {
+    "old_question_id": 30047,
+    "old_choice_id": 475,
+    "choice_label": "Non, car le contrat que j'ai conclu ne comporte pas de telles clauses (ou je n'ai pas conclu de contrat)"
+  },
+  {
+    "old_question_id": 30048,
+    "old_choice_id": 480,
+    "choice_label": "Oui, je parviens à négocier mon prix"
+  },
+  {
+    "old_question_id": 30048,
+    "old_choice_id": 481,
+    "choice_label": "Non, c'est l'acheteur qui m'impose le prix"
+  },
+  {
+    "old_question_id": 30048,
+    "old_choice_id": 482,
+    "choice_label": "Je suis associé coopérateur, le prix est décidé dans le cadre des instances de ma coopérative"
+  },
+  {
+    "old_question_id": 30048,
+    "old_choice_id": 483,
+    "choice_label": "Le prix est négocié par ma coopérative"
+  },
+  {
+    "old_question_id": 30049,
+    "old_choice_id": 469,
+    "choice_label": "Non car cette formalité est trop complexe"
+  },
+  {
+    "old_question_id": 30049,
+    "old_choice_id": 470,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30049,
+    "old_choice_id": 471,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 30050,
+    "old_choice_id": 478,
+    "choice_label": "Qui constituent selon vous des pratiques déloyales"
+  },
+  {
+    "old_question_id": 30050,
+    "old_choice_id": 479,
+    "choice_label": "Transparentes et conformes au contrat"
+  },
+  {
+    "old_question_id": 30051,
+    "old_choice_id": 493,
+    "choice_label": "Des PME et ETI de transformation"
+  },
+  {
+    "old_question_id": 30051,
+    "old_choice_id": 494,
+    "choice_label": "Des grossistes/des négociants"
+  },
+  {
+    "old_question_id": 30051,
+    "old_choice_id": 495,
+    "choice_label": "Des distributeurs spécialisés"
+  },
+  {
+    "old_question_id": 30051,
+    "old_choice_id": 496,
+    "choice_label": "Des grandes entreprises de transformation"
+  },
+  {
+    "old_question_id": 30051,
+    "old_choice_id": 497,
+    "choice_label": "Des distributeurs généralistes"
+  },
+  {
+    "old_question_id": 30052,
+    "old_choice_id": 499,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30052,
+    "old_choice_id": 500,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 30052,
+    "old_choice_id": 502,
+    "choice_label": "Non car cette formalité est trop complexe"
+  },
+  {
+    "old_question_id": 30053,
+    "old_choice_id": 498,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30053,
+    "old_choice_id": 501,
+    "choice_label": "Non, car mon cocontractant n'a pas accepté de les mettre en œuvre"
+  },
+  {
+    "old_question_id": 30053,
+    "old_choice_id": 503,
+    "choice_label": "Non, car les clauses ne sont pas opérationnelles"
+  },
+  {
+    "old_question_id": 30053,
+    "old_choice_id": 504,
+    "choice_label": "Non, car le contrat que j'ai conclu ne comporte pas de telles clauses (ou je n'ai pas conclu de contrat)"
+  },
+  {
+    "old_question_id": 30054,
+    "old_choice_id": 507,
+    "choice_label": "Transparentes et conformes au contrat"
+  },
+  {
+    "old_question_id": 30054,
+    "old_choice_id": 508,
+    "choice_label": "Qui constituent selon vous des pratiques déloyales"
+  },
+  {
+    "old_question_id": 30055,
+    "old_choice_id": 505,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30055,
+    "old_choice_id": 506,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30056,
+    "old_choice_id": 510,
+    "choice_label": "Non, c'est l'acheteur qui m'impose le prix"
+  },
+  {
+    "old_question_id": 30056,
+    "old_choice_id": 511,
+    "choice_label": "Oui, je parviens à négocier mon prix"
+  },
+  {
+    "old_question_id": 30057,
+    "old_choice_id": 522,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30057,
+    "old_choice_id": 523,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30058,
+    "old_choice_id": 513,
+    "choice_label": "Des distributeurs généralistes"
+  },
+  {
+    "old_question_id": 30058,
+    "old_choice_id": 514,
+    "choice_label": "Des grandes entreprises de transformation"
+  },
+  {
+    "old_question_id": 30058,
+    "old_choice_id": 517,
+    "choice_label": "Des PME et ETI de transformation"
+  },
+  {
+    "old_question_id": 30058,
+    "old_choice_id": 518,
+    "choice_label": "Des grossistes/des négociants"
+  },
+  {
+    "old_question_id": 30058,
+    "old_choice_id": 519,
+    "choice_label": "Des distributeurs spécialisés"
+  },
+  {
+    "old_question_id": 30059,
+    "old_choice_id": 524,
+    "choice_label": "Aucune"
+  },
+  {
+    "old_question_id": 30059,
+    "old_choice_id": 525,
+    "choice_label": "Ne conserver que les options 1 et 2"
+  },
+  {
+    "old_question_id": 30059,
+    "old_choice_id": 526,
+    "choice_label": "Ne conserver que l'option 3"
+  },
+  {
+    "old_question_id": 30059,
+    "old_choice_id": 527,
+    "choice_label": "Ne conserver que l'option 2"
+  },
+  {
+    "old_question_id": 30059,
+    "old_choice_id": 528,
+    "choice_label": "Ne conserver que l'option 1"
+  },
+  {
+    "old_question_id": 30060,
+    "old_choice_id": 520,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30060,
+    "old_choice_id": 521,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30061,
+    "old_choice_id": 529,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30061,
+    "old_choice_id": 530,
+    "choice_label": "Non, car les contrats ne comportaient pas de telles clauses"
+  },
+  {
+    "old_question_id": 30061,
+    "old_choice_id": 531,
+    "choice_label": "Non, car les clauses n'ont pas été déclenchées"
+  },
+  {
+    "old_question_id": 30062,
+    "old_choice_id": 535,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30062,
+    "old_choice_id": 540,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30063,
+    "old_choice_id": 536,
+    "choice_label": "Non, car je souhaite la suppression de ce dispositif"
+  },
+  {
+    "old_question_id": 30063,
+    "old_choice_id": 537,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30064,
+    "old_choice_id": 532,
+    "choice_label": "Non, je souhaite un calendrier de négociation différencié selon la taille des entreprises comme cela a été mis en œuvre pour les négociations 2024 (loi du 19 novembre 2023) "
+  },
+  {
+    "old_question_id": 30064,
+    "old_choice_id": 533,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30064,
+    "old_choice_id": 534,
+    "choice_label": "Non, je souhaite une date-butoir unique pour toutes les entreprises mais plus précoce que le 1er mars"
+  },
+  {
+    "old_question_id": 30064,
+    "old_choice_id": 538,
+    "choice_label": "Non, le calendrier des négociations commerciales devrait être supprimé"
+  },
+  {
+    "old_question_id": 30065,
+    "old_choice_id": 562,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30065,
+    "old_choice_id": 563,
+    "choice_label": "Non, je souhaite un calendrier de négociation différencié selon la taille des entreprises comme cela a été mis en œuvre pour les négociations 2024 (loi du 19 novembre 2023) "
+  },
+  {
+    "old_question_id": 30065,
+    "old_choice_id": 564,
+    "choice_label": "Non, le calendrier des négociations commerciales devrait être supprimé"
+  },
+  {
+    "old_question_id": 30066,
+    "old_choice_id": 552,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30066,
+    "old_choice_id": 553,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30067,
+    "old_choice_id": 554,
+    "choice_label": "Ne conserver que l'option 3"
+  },
+  {
+    "old_question_id": 30067,
+    "old_choice_id": 555,
+    "choice_label": "Ne conserver que l'option 2"
+  },
+  {
+    "old_question_id": 30067,
+    "old_choice_id": 556,
+    "choice_label": "Ne conserver que les options 1 et 2"
+  },
+  {
+    "old_question_id": 30067,
+    "old_choice_id": 557,
+    "choice_label": "Ne conserver que l'option 1"
+  },
+  {
+    "old_question_id": 30067,
+    "old_choice_id": 558,
+    "choice_label": "Aucune"
+  },
+  {
+    "old_question_id": 30068,
+    "old_choice_id": 559,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30068,
+    "old_choice_id": 560,
+    "choice_label": "Non, car les contrats ne comportaient pas de telles clauses"
+  },
+  {
+    "old_question_id": 30068,
+    "old_choice_id": 561,
+    "choice_label": "Non, car les clauses n'ont pas été déclenchées"
+  },
+  {
+    "old_question_id": 30069,
+    "old_choice_id": 565,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30069,
+    "old_choice_id": 566,
+    "choice_label": "Non, car je souhaite la suppression de ce dispositif"
+  },
+  {
+    "old_question_id": 30070,
+    "old_choice_id": 567,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30070,
+    "old_choice_id": 569,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30071,
+    "old_choice_id": 568,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30071,
+    "old_choice_id": 570,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30072,
+    "old_choice_id": 584,
+    "choice_label": "Grâce à une campagne de sensibilisation nationale portée par le Gouvernement"
+  },
+  {
+    "old_question_id": 30072,
+    "old_choice_id": 585,
+    "choice_label": "En donnant la parole aux personnes concernées dans les médias et sur Internet"
+  },
+  {
+    "old_question_id": 30072,
+    "old_choice_id": 586,
+    "choice_label": "À travers des formations continues à l’école, lors des études supérieures ou au travail"
+  },
+  {
+    "old_question_id": 30072,
+    "old_choice_id": 587,
+    "choice_label": "Grâce au travail des associations de personnes en situation de handicap"
+  },
+  {
+    "old_question_id": 30073,
+    "old_choice_id": 577,
+    "choice_label": "6 millions"
+  },
+  {
+    "old_question_id": 30073,
+    "old_choice_id": 578,
+    "choice_label": "2 millions"
+  },
+  {
+    "old_question_id": 30073,
+    "old_choice_id": 579,
+    "choice_label": "12 millions"
+  },
+  {
+    "old_question_id": 30074,
+    "old_choice_id": 575,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30074,
+    "old_choice_id": 576,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30075,
+    "old_choice_id": 580,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30075,
+    "old_choice_id": 581,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30075,
+    "old_choice_id": 582,
+    "choice_label": "Cela dépend du handicap"
+  },
+  {
+    "old_question_id": 30075,
+    "old_choice_id": 583,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30076,
+    "old_choice_id": 594,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30076,
+    "old_choice_id": 595,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30076,
+    "old_choice_id": 596,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30077,
+    "old_choice_id": 597,
+    "choice_label": "Simplifier l’accès aux droits"
+  },
+  {
+    "old_question_id": 30077,
+    "old_choice_id": 598,
+    "choice_label": "Améliorer l’accessibilité des personnes concernées au quotidien (logement, transports…)"
+  },
+  {
+    "old_question_id": 30077,
+    "old_choice_id": 599,
+    "choice_label": "Faire « changer les regards » et les représentations du handicap"
+  },
+  {
+    "old_question_id": 30077,
+    "old_choice_id": 600,
+    "choice_label": "Lutter contre les incivilités et faire respecter les accès prioritaires dans l’espace public"
+  },
+  {
+    "old_question_id": 30077,
+    "old_choice_id": 601,
+    "choice_label": "Mieux prendre en compte les besoins des aidants, des proches et des familles"
+  },
+  {
+    "old_question_id": 30077,
+    "old_choice_id": 602,
+    "choice_label": "Augmenter les ressources et aider financièrement les personnes en situation de handicap"
+  },
+  {
+    "old_question_id": 30078,
+    "old_choice_id": 619,
+    "choice_label": "Avoir une meilleure compréhension de leurs défis quotidiens"
+  },
+  {
+    "old_question_id": 30078,
+    "old_choice_id": 620,
+    "choice_label": "Disposer de plus de temps ou de ressources"
+  },
+  {
+    "old_question_id": 30078,
+    "old_choice_id": 621,
+    "choice_label": "Connaître des moyens concrets d’aide et de soutien"
+  },
+  {
+    "old_question_id": 30078,
+    "old_choice_id": 622,
+    "choice_label": "Être sensibilisé aux stéréotypes sur le handicap"
+  },
+  {
+    "old_question_id": 30079,
+    "old_choice_id": 629,
+    "choice_label": "Un changement radical de la perception du handicap"
+  },
+  {
+    "old_question_id": 30079,
+    "old_choice_id": 632,
+    "choice_label": "Quelques changements positifs, mais limités"
+  },
+  {
+    "old_question_id": 30079,
+    "old_choice_id": 633,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30079,
+    "old_choice_id": 634,
+    "choice_label": "Pas d'impact notable"
+  },
+  {
+    "old_question_id": 30080,
+    "old_choice_id": 613,
+    "choice_label": "Accompagner les élus en situation de handicap dans l’exercice de leur mandat (frais, aides techniques et humaines…)"
+  },
+  {
+    "old_question_id": 30080,
+    "old_choice_id": 615,
+    "choice_label": "Donner prioritairement la parole aux associations, aux familles et aux proches aidants dans l’espace public"
+  },
+  {
+    "old_question_id": 30080,
+    "old_choice_id": 616,
+    "choice_label": "Je pense qu’il n’y a pas besoin de mesures supplémentaires"
+  },
+  {
+    "old_question_id": 30080,
+    "old_choice_id": 617,
+    "choice_label": "Donner prioritairement la parole aux personnes en situation de handicap dans l’espace public"
+  },
+  {
+    "old_question_id": 30080,
+    "old_choice_id": 618,
+    "choice_label": "Imposer des quotas à la télévision pour améliorer la représentativité des personnes en situation de handicap"
+  },
+  {
+    "old_question_id": 30081,
+    "old_choice_id": 635,
+    "choice_label": "Le climat"
+  },
+  {
+    "old_question_id": 30081,
+    "old_choice_id": 636,
+    "choice_label": "Le pouvoir d'achat"
+  },
+  {
+    "old_question_id": 30081,
+    "old_choice_id": 637,
+    "choice_label": "Mon confort de vie"
+  },
+  {
+    "old_question_id": 30081,
+    "old_choice_id": 638,
+    "choice_label": "D'autres raisons"
+  },
+  {
+    "old_question_id": 30081,
+    "old_choice_id": 639,
+    "choice_label": "Je ne souhaite pas m'engager"
+  },
+  {
+    "old_question_id": 30082,
+    "old_choice_id": 664,
+    "choice_label": "L’incitation : plus de primes pour les comportements vertueux"
+  },
+  {
+    "old_question_id": 30082,
+    "old_choice_id": 666,
+    "choice_label": "L’accompagnement : plus de pédagogie et de sensibilisation"
+  },
+  {
+    "old_question_id": 30082,
+    "old_choice_id": 667,
+    "choice_label": "La contrainte : plus de sanctions pour les comportements les moins vertueux"
+  },
+  {
+    "old_question_id": 30082,
+    "old_choice_id": 668,
+    "choice_label": "Les règles : plus de normes pour encadrer les usages"
+  },
+  {
+    "old_question_id": 30083,
+    "old_choice_id": 674,
+    "choice_label": "L’Etat doit continuer à augmenter les dépenses pour financer la transition écologique"
+  },
+  {
+    "old_question_id": 30083,
+    "old_choice_id": 675,
+    "choice_label": "L’Etat doit d’abord réduire les dépenses qui sont mauvaises pour l’environnement"
+  },
+  {
+    "old_question_id": 30083,
+    "old_choice_id": 677,
+    "choice_label": "Le montant des dépenses publiques doit rester le même mais doit être réorienté (par exemple investir dans l’offre de transports en commun et réduire la construction de nouvelles routes)"
+  },
+  {
+    "old_question_id": 30084,
+    "old_choice_id": 681,
+    "choice_label": "Le niveau de dette publique n’est pas une priorité"
+  },
+  {
+    "old_question_id": 30084,
+    "old_choice_id": 682,
+    "choice_label": "Il est normal de réduire la dette publique mais il faut continuer d’investir dans les services publics et la transition écologique"
+  },
+  {
+    "old_question_id": 30084,
+    "old_choice_id": 683,
+    "choice_label": "La dette publique vous inquiète et devrait baisser plus vite"
+  },
+  {
+    "old_question_id": 30085,
+    "old_choice_id": 676,
+    "choice_label": "Je ne suis pas d’accord avec cette affirmation"
+  },
+  {
+    "old_question_id": 30085,
+    "old_choice_id": 678,
+    "choice_label": "Je suis d’accord et la dette publique doit être la priorité"
+  },
+  {
+    "old_question_id": 30085,
+    "old_choice_id": 679,
+    "choice_label": "Je suis d’accord et la dette écologique doit être la priorité"
+  },
+  {
+    "old_question_id": 30085,
+    "old_choice_id": 680,
+    "choice_label": "La dette écologique et la dette publique sont aussi importantes l’une que l’autre"
+  },
+  {
+    "old_question_id": 30087,
+    "old_choice_id": 730,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30087,
+    "old_choice_id": 732,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30087,
+    "old_choice_id": 733,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30088,
+    "old_choice_id": 728,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30088,
+    "old_choice_id": 729,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30088,
+    "old_choice_id": 731,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30089,
+    "old_choice_id": 724,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30089,
+    "old_choice_id": 726,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30089,
+    "old_choice_id": 727,
+    "choice_label": "Je ne suis pas parent"
+  },
+  {
+    "old_question_id": 30090,
+    "old_choice_id": 734,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30090,
+    "old_choice_id": 735,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30091,
+    "old_choice_id": 763,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30091,
+    "old_choice_id": 765,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30092,
+    "old_choice_id": 764,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30092,
+    "old_choice_id": 766,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30093,
+    "old_choice_id": 767,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30093,
+    "old_choice_id": 768,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30105,
+    "old_choice_id": 1013,
+    "choice_label": "Je m'y connais peu"
+  },
+  {
+    "old_question_id": 30105,
+    "old_choice_id": 1014,
+    "choice_label": "Je m'y connais très peu"
+  },
+  {
+    "old_question_id": 30105,
+    "old_choice_id": 1015,
+    "choice_label": "Je m'y connais très bien"
+  },
+  {
+    "old_question_id": 30105,
+    "old_choice_id": 1016,
+    "choice_label": "Je m'y connais bien"
+  },
+  {
+    "old_question_id": 30106,
+    "old_choice_id": 1077,
+    "choice_label": "Une agricultrice ou un agriculteur"
+  },
+  {
+    "old_question_id": 30106,
+    "old_choice_id": 1078,
+    "choice_label": "Une étudiante ou un étudiant dans le secteur agricole"
+  },
+  {
+    "old_question_id": 30106,
+    "old_choice_id": 1079,
+    "choice_label": "Ni l'un, ni l'autre"
+  },
+  {
+    "old_question_id": 30108,
+    "old_choice_id": 1097,
+    "choice_label": "Manque de modèles féminins"
+  },
+  {
+    "old_question_id": 30108,
+    "old_choice_id": 1098,
+    "choice_label": "Méconnaissance des métiers"
+  },
+  {
+    "old_question_id": 30108,
+    "old_choice_id": 1099,
+    "choice_label": "Image masculine du secteur"
+  },
+  {
+    "old_question_id": 30108,
+    "old_choice_id": 1100,
+    "choice_label": "Conditions de travail"
+  },
+  {
+    "old_question_id": 30108,
+    "old_choice_id": 1101,
+    "choice_label": "Autre raison : précisez "
+  },
+  {
+    "old_question_id": 30109,
+    "old_choice_id": 1114,
+    "choice_label": "Oui, tout à fait"
+  },
+  {
+    "old_question_id": 30109,
+    "old_choice_id": 1115,
+    "choice_label": "Oui, plutôt"
+  },
+  {
+    "old_question_id": 30109,
+    "old_choice_id": 1116,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 30109,
+    "old_choice_id": 1117,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 30109,
+    "old_choice_id": 1119,
+    "choice_label": "Je ne suis pas concerné(e)"
+  },
+  {
+    "old_question_id": 30113,
+    "old_choice_id": 1265,
+    "choice_label": "Citoyen, consommateur"
+  },
+  {
+    "old_question_id": 30113,
+    "old_choice_id": 1266,
+    "choice_label": "Une agricultrice ou un agriculteur"
+  },
+  {
+    "old_question_id": 30113,
+    "old_choice_id": 1267,
+    "choice_label": "Acteur de la chaîne alimentaire (industriel, distributeur, restaurateur, etc.)"
+  },
+  {
+    "old_question_id": 30116,
+    "old_choice_id": 1313,
+    "choice_label": "Nous importons 10% des poulets et 20% des fruits et légumes consommés"
+  },
+  {
+    "old_question_id": 30116,
+    "old_choice_id": 1315,
+    "choice_label": "Nous importons 20% des poulets et 30% des fruits et légumes consommés"
+  },
+  {
+    "old_question_id": 30116,
+    "old_choice_id": 1317,
+    "choice_label": "Nous importons 50 % des poulets et 35% des fruits et légumes consommés"
+  },
+  {
+    "old_question_id": 30117,
+    "old_choice_id": 1328,
+    "choice_label": "Produire plus"
+  },
+  {
+    "old_question_id": 30117,
+    "old_choice_id": 1329,
+    "choice_label": "Diversifier leurs productions en lien avec les attentes des consommateurs"
+  },
+  {
+    "old_question_id": 30117,
+    "old_choice_id": 1330,
+    "choice_label": "Produire autrement (bio, agriculture durable)"
+  },
+  {
+    "old_question_id": 30117,
+    "old_choice_id": 1331,
+    "choice_label": "Rien de tout cela"
+  },
+  {
+    "old_question_id": 30117,
+    "old_choice_id": 1332,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 30117,
+    "old_choice_id": 1333,
+    "choice_label": "Vendre autrement (circuits courts)"
+  },
+  {
+    "old_question_id": 30118,
+    "old_choice_id": 1309,
+    "choice_label": "Oui, tout à fait"
+  },
+  {
+    "old_question_id": 30118,
+    "old_choice_id": 1310,
+    "choice_label": "Oui, plutôt"
+  },
+  {
+    "old_question_id": 30118,
+    "old_choice_id": 1311,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 30118,
+    "old_choice_id": 1312,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 30118,
+    "old_choice_id": 1314,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 30119,
+    "old_choice_id": 1348,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 30119,
+    "old_choice_id": 1349,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 30120,
+    "old_choice_id": 1351,
+    "choice_label": "Toujours"
+  },
+  {
+    "old_question_id": 30120,
+    "old_choice_id": 1352,
+    "choice_label": "Parfois"
+  },
+  {
+    "old_question_id": 30120,
+    "old_choice_id": 1353,
+    "choice_label": "Jamais"
+  },
+  {
+    "old_question_id": 30120,
+    "old_choice_id": 1354,
+    "choice_label": "Souvent"
+  },
+  {
+    "old_question_id": 30120,
+    "old_choice_id": 1355,
+    "choice_label": "Rarement"
+  },
+  {
+    "old_question_id": 30121,
+    "old_choice_id": 1420,
+    "choice_label": "Plus importants que les préoccupations sociales et environnementales."
+  },
+  {
+    "old_question_id": 30121,
+    "old_choice_id": 1422,
+    "choice_label": "Moins importants que les préoccupations sociales et environnementales."
+  },
+  {
+    "old_question_id": 30121,
+    "old_choice_id": 1423,
+    "choice_label": "Les enjeux économiques, sociaux et environnementaux sont indissociables et doivent être traités ensemble."
+  },
+  {
+    "old_question_id": 30122,
+    "old_choice_id": 1416,
+    "choice_label": "Particulièrement préoccupante et doit conduire à une régulation plus stricte et une évolution des usages individuels."
+  },
+  {
+    "old_question_id": 30122,
+    "old_choice_id": 1417,
+    "choice_label": "Plutôt préoccupante mais reste à éclaircir."
+  },
+  {
+    "old_question_id": 30122,
+    "old_choice_id": 1418,
+    "choice_label": "Peu préoccupante et ne constitue pas une priorité parmi les politiques à mener."
+  },
+  {
+    "old_question_id": 30122,
+    "old_choice_id": 1421,
+    "choice_label": "Autre : précisez votre réponse."
+  },
+  {
+    "old_question_id": 40000,
+    "old_choice_id": 1,
+    "choice_label": "Absolument"
+  },
+  {
+    "old_question_id": 40000,
+    "old_choice_id": 2,
+    "choice_label": "Oui, à condition qu’elle réponde aux exigences prévues par les traités européens (respect de l’Etat de droit, équilibre budgétaire, etc.)"
+  },
+  {
+    "old_question_id": 40000,
+    "old_choice_id": 3,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 40000,
+    "old_choice_id": 4,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40001,
+    "old_choice_id": 5,
+    "choice_label": "Je fais partie d’une association"
+  },
+  {
+    "old_question_id": 40001,
+    "old_choice_id": 6,
+    "choice_label": "Je suis élu (maire, adjoint, conseiller municipal) dans ma commune"
+  },
+  {
+    "old_question_id": 40001,
+    "old_choice_id": 7,
+    "choice_label": "Je m’implique dans la vie locale (je participe aux événements organisés par la mairie, je donne de mon temps à des initiatives solidaires ou d’intérêt général, je donne mon avis lors de consultations municipales, etc.)"
+  },
+  {
+    "old_question_id": 40001,
+    "old_choice_id": 8,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 40001,
+    "old_choice_id": 9,
+    "choice_label": "Je ne suis pas engagé(e)"
+  },
+  {
+    "old_question_id": 40002,
+    "old_choice_id": 10,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40002,
+    "old_choice_id": 11,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40003,
+    "old_choice_id": 12,
+    "choice_label": "Professionnel(le) de santé "
+  },
+  {
+    "old_question_id": 40003,
+    "old_choice_id": 13,
+    "choice_label": "Etudiant(e) en sciences infirmières"
+  },
+  {
+    "old_question_id": 40003,
+    "old_choice_id": 14,
+    "choice_label": "Elu(e), représentant(e) de collectivités"
+  },
+  {
+    "old_question_id": 40003,
+    "old_choice_id": 15,
+    "choice_label": "Sans lien avec le milieu de la santé"
+  },
+  {
+    "old_question_id": 40003,
+    "old_choice_id": 16,
+    "choice_label": "Autre : précisez votre réponse"
+  },
+  {
+    "old_question_id": 40004,
+    "old_choice_id": 17,
+    "choice_label": "👨🏽‍🌾 Un agriculteur"
+  },
+  {
+    "old_question_id": 40004,
+    "old_choice_id": 18,
+    "choice_label": "🚜 Une organisation de producteur ou une association d’organisation de producteur avec transfert de propriété"
+  },
+  {
+    "old_question_id": 40004,
+    "old_choice_id": 19,
+    "choice_label": "🚜 Une organisation de producteur ou une association d’organisation de producteur sans transfert de propriété"
+  },
+  {
+    "old_question_id": 40004,
+    "old_choice_id": 20,
+    "choice_label": "🏭 Un industriel agroalimentaire"
+  },
+  {
+    "old_question_id": 40004,
+    "old_choice_id": 21,
+    "choice_label": "🛒 Un distributeur"
+  },
+  {
+    "old_question_id": 40005,
+    "old_choice_id": 22,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40005,
+    "old_choice_id": 23,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40006,
+    "old_choice_id": 24,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40006,
+    "old_choice_id": 25,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40010,
+    "old_choice_id": 32,
+    "choice_label": "🔶 Oui"
+  },
+  {
+    "old_question_id": 40010,
+    "old_choice_id": 33,
+    "choice_label": "🔷 Non"
+  },
+  {
+    "old_question_id": 40011,
+    "old_choice_id": 34,
+    "choice_label": "Oui, très clairement "
+  },
+  {
+    "old_question_id": 40011,
+    "old_choice_id": 35,
+    "choice_label": "Oui, plutôt "
+  },
+  {
+    "old_question_id": 40011,
+    "old_choice_id": 36,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 40011,
+    "old_choice_id": 37,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 40011,
+    "old_choice_id": 55,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 40012,
+    "old_choice_id": 38,
+    "choice_label": "Oui, il y a plus de 5 ans"
+  },
+  {
+    "old_question_id": 40012,
+    "old_choice_id": 39,
+    "choice_label": "Oui, il y a moins de 5 ans"
+  },
+  {
+    "old_question_id": 40012,
+    "old_choice_id": 40,
+    "choice_label": "Je suis en train de suivre une formation"
+  },
+  {
+    "old_question_id": 40012,
+    "old_choice_id": 41,
+    "choice_label": "Je n’ai pas suivi de formation"
+  },
+  {
+    "old_question_id": 40013,
+    "old_choice_id": 45,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40013,
+    "old_choice_id": 47,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40013,
+    "old_choice_id": 48,
+    "choice_label": "Je ne suis pas concerné(e)"
+  },
+  {
+    "old_question_id": 40014,
+    "old_choice_id": 42,
+    "choice_label": "Oui, plutôt"
+  },
+  {
+    "old_question_id": 40014,
+    "old_choice_id": 43,
+    "choice_label": "Oui, tout à fait"
+  },
+  {
+    "old_question_id": 40014,
+    "old_choice_id": 44,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 40014,
+    "old_choice_id": 46,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 40014,
+    "old_choice_id": 49,
+    "choice_label": "Je ne suis pas concerné(e)"
+  },
+  {
+    "old_question_id": 40015,
+    "old_choice_id": 50,
+    "choice_label": "Oui, tout à fait"
+  },
+  {
+    "old_question_id": 40015,
+    "old_choice_id": 51,
+    "choice_label": "Oui, plutôt"
+  },
+  {
+    "old_question_id": 40015,
+    "old_choice_id": 52,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 40015,
+    "old_choice_id": 53,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 40015,
+    "old_choice_id": 54,
+    "choice_label": "Je ne vois pas le besoin d’une adaptation particulière pour les femmes"
+  },
+  {
+    "old_question_id": 40021,
+    "old_choice_id": 78,
+    "choice_label": "Un(e) élève, étudiant(e), apprenti(e) de l’enseignement agricole"
+  },
+  {
+    "old_question_id": 40021,
+    "old_choice_id": 79,
+    "choice_label": "Un parent d’élève"
+  },
+  {
+    "old_question_id": 40021,
+    "old_choice_id": 80,
+    "choice_label": "Un(e) maître de stage ou d’apprentissage"
+  },
+  {
+    "old_question_id": 40021,
+    "old_choice_id": 81,
+    "choice_label": "Un membre d’un établissement d’enseignement agricole (direction, administration, enseignement, vie scolaire, entretien et service, etc.)"
+  },
+  {
+    "old_question_id": 40021,
+    "old_choice_id": 82,
+    "choice_label": "Un(e) professionnel(le) siégeant dans les instances d’un établissement d’enseignement agricole"
+  },
+  {
+    "old_question_id": 40021,
+    "old_choice_id": 83,
+    "choice_label": "Un(e) professionnel(le) de l’agriculture sans lien avec l’enseignement agricole "
+  },
+  {
+    "old_question_id": 40021,
+    "old_choice_id": 84,
+    "choice_label": "Un(e) citoyen(ne) intéressé(e) par le sujet"
+  },
+  {
+    "old_question_id": 40022,
+    "old_choice_id": 87,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40022,
+    "old_choice_id": 88,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40023,
+    "old_choice_id": 85,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40023,
+    "old_choice_id": 86,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40024,
+    "old_choice_id": 89,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40024,
+    "old_choice_id": 90,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40025,
+    "old_choice_id": 91,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40025,
+    "old_choice_id": 92,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40026,
+    "old_choice_id": 93,
+    "choice_label": "Oui, précisez le secteur ou la formation concerné(e) "
+  },
+  {
+    "old_question_id": 40026,
+    "old_choice_id": 94,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40027,
+    "old_choice_id": 95,
+    "choice_label": "Mauvaise image"
+  },
+  {
+    "old_question_id": 40027,
+    "old_choice_id": 96,
+    "choice_label": "Je n’ai pas d’avis"
+  },
+  {
+    "old_question_id": 40027,
+    "old_choice_id": 97,
+    "choice_label": "Très bonne image"
+  },
+  {
+    "old_question_id": 40027,
+    "old_choice_id": 99,
+    "choice_label": "Bonne image"
+  },
+  {
+    "old_question_id": 40028,
+    "old_choice_id": 98,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40028,
+    "old_choice_id": 100,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40037,
+    "old_choice_id": 124,
+    "choice_label": "Oui"
+  },
+  {
+    "old_question_id": 40037,
+    "old_choice_id": 125,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 40037,
+    "old_choice_id": 126,
+    "choice_label": "Non"
+  },
+  {
+    "old_question_id": 40043,
+    "old_choice_id": 149,
+    "choice_label": "Bonne"
+  },
+  {
+    "old_question_id": 40043,
+    "old_choice_id": 150,
+    "choice_label": "Plutôt mauvaise"
+  },
+  {
+    "old_question_id": 40043,
+    "old_choice_id": 151,
+    "choice_label": "Plutôt bonne"
+  },
+  {
+    "old_question_id": 40043,
+    "old_choice_id": 152,
+    "choice_label": "Mauvaise"
+  },
+  {
+    "old_question_id": 40043,
+    "old_choice_id": 153,
+    "choice_label": "Neutre"
+  },
+  {
+    "old_question_id": 40044,
+    "old_choice_id": 154,
+    "choice_label": "Oui, tout à fait"
+  },
+  {
+    "old_question_id": 40044,
+    "old_choice_id": 155,
+    "choice_label": "Oui, plutôt"
+  },
+  {
+    "old_question_id": 40044,
+    "old_choice_id": 156,
+    "choice_label": "Je ne sais pas"
+  },
+  {
+    "old_question_id": 40044,
+    "old_choice_id": 157,
+    "choice_label": "Non, pas vraiment"
+  },
+  {
+    "old_question_id": 40044,
+    "old_choice_id": 158,
+    "choice_label": "Non, pas du tout"
+  },
+  {
+    "old_question_id": 40045,
+    "old_choice_id": 159,
+    "choice_label": "Il s’agit de la principale menace qui pèse sur la démocratie."
+  },
+  {
+    "old_question_id": 40045,
+    "old_choice_id": 160,
+    "choice_label": "Il s’agit d’une menace mais il y en a d’autres plus importantes. "
+  },
+  {
+    "old_question_id": 40045,
+    "old_choice_id": 161,
+    "choice_label": "Il s’agit d’une opportunité."
+  },
+  {
+    "old_question_id": 40045,
+    "old_choice_id": 162,
+    "choice_label": "Les technologies numériques et l’intelligence artificielle n’auront pas d’impact sur notre démocratie."
+  }
+]
