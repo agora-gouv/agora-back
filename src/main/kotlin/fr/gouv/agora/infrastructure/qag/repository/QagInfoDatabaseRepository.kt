@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.qag.repository
 
 import fr.gouv.agora.infrastructure.qag.dto.QagDTO
+import fr.gouv.agora.infrastructure.qag.dto.QagWithSupportCountAndModerationDateDTO
 import fr.gouv.agora.infrastructure.qag.dto.QagWithSupportCountDTO
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -324,6 +325,31 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
         nativeQuery = true
     )
     fun anonymizeOldQagsBeforeDate(@Param("date") date: Date)
+
+    @Query(
+        value = """
+            SELECT
+                qags.id as id,
+                title,
+                description,
+                post_date as postDate,
+                qags.status,
+                username,
+                thematique_id as thematiqueId,
+                qags.user_id as userId,
+                count(DISTINCT supports_qag.user_id) as supportCount,
+                qag_updates.moderated_date as moderatedDate
+            FROM qags
+                LEFT JOIN qag_updates ON qags.id = qag_updates.qag_id
+                LEFT JOIN supports_qag ON qags.id = supports_qag.qag_id
+            WHERE qags.status = 1
+                AND qag_updates.status = 1
+                AND qag_updates.moderated_date >= (CURRENT_TIMESTAMP - INTERVAL '7 days')
+            GROUP BY qags.id, qag_updates.moderated_date
+            ORDER BY qag_updates.moderated_date DESC
+        """, nativeQuery = true
+    )
+    fun getTrendingQagsV3(): List<QagWithSupportCountAndModerationDateDTO>
 
     @Modifying
     @Transactional

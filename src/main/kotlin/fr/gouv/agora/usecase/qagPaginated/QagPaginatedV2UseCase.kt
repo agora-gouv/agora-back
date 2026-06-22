@@ -3,6 +3,7 @@ package fr.gouv.agora.usecase.qagPaginated
 import fr.gouv.agora.domain.HeaderQag
 import fr.gouv.agora.domain.QagPreview
 import fr.gouv.agora.domain.QagWithSupportCount
+import fr.gouv.agora.infrastructure.qagPaginated.repository.TrendingQagCacheRepository
 import fr.gouv.agora.usecase.qag.QagPreviewMapper
 import fr.gouv.agora.usecase.qag.repository.QagInfoRepository
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
@@ -12,7 +13,11 @@ import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagRepository
 import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
+import java.time.Clock
+import java.time.Duration
+import java.time.Instant
 import kotlin.math.ceil
+import kotlin.math.pow
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -22,13 +27,15 @@ class QagPaginatedV2UseCase(
     private val thematiqueRepository: ThematiqueRepository,
     private val headerRepository: HeaderQagRepository,
     private val headerCacheRepository: HeaderQagCacheRepository,
+    private val trendingCacheRepository: TrendingQagCacheRepository,
     private val mapper: QagPreviewMapper,
     private val supportQagUseCase: SupportQagUseCase,
+    private val clock: Clock,
 ) {
 
     companion object {
         private const val MAX_PAGE_LIST_SIZE = 20
-        private const val TRENDING_LIST_SIZE = 20
+        private const val TRENDING_LIST_SIZE = 10
         private const val TOP = "top"
         private const val LATEST = "latest"
         private const val SUPPORTING = "supporting"
@@ -36,6 +43,10 @@ class QagPaginatedV2UseCase(
         private const val DEFAULT_TRENDING_INTERVAL = 168
         private const val DEFAULT_TRENDING_RECENT_HOURS = 24
         private const val DEFAULT_MIN_RECENT_LIKES = 5
+        private const val DEFAULT_TRENDING_SCORE_EXPONENT = 1.5
+        private const val TRENDING_MAX_OLD_QAGS = 3
+        private const val TRENDING_OLD_QAG_THRESHOLD_HOURS = 72L
+        private const val TRENDING_SLOTS = 9
     }
 
     fun getPopularQagPaginated(
@@ -82,24 +93,74 @@ class QagPaginatedV2UseCase(
         return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = SUPPORTING, pageNumber = pageNumber)
     }
 
-    fun getTrendingQag(
-        userId: String,
-    ): QagsAndMaxPageCountV2? {
-        val trendingInterval = (System.getenv("TRENDING_QAG_RECENT_HOURS")?.toIntOrNull() ?: DEFAULT_TRENDING_RECENT_HOURS)
-            .toDuration(DurationUnit.HOURS)
-        val minLikes = System.getenv("TRENDING_QAG_MIN_LIKES")?.toIntOrNull() ?: DEFAULT_MIN_RECENT_LIKES
+    fun getTrendingQag(userId: String): QagsAndMaxPageCountV2? {
+        val exponent = System.getenv("TRENDING_SCORE_EXPONENT")?.toDoubleOrNull() ?: DEFAULT_TRENDING_SCORE_EXPONENT
+        val now = Instant.now(clock)
 
-        fun curriedGetTrendingQags(): List<QagInfoWithSupportCount> {
-            return this.qagInfoRepository.getTrendingQagsWithRecentLikes(trendingInterval, minLikes)
+        val allCandidates = when (val cached = trendingCacheRepository.getTrendingQagList()) {
+            is TrendingQagCacheRepository.CacheResult.CachedTrendingQagList -> cached.qags
+            TrendingQagCacheRepository.CacheResult.CacheNotInitialized -> qagInfoRepository.getTrendingQagsV3()
+                .also { trendingCacheRepository.insertTrendingQagList(it) }
         }
 
-        val qagListWithMaxPageCount = getQagPaginated(
-            getQagMethod = RetrieveQagMethod.WithoutParams({ curriedGetTrendingQags() }),
-            userId = userId,
-            pageNumber = 1,
-            thematiqueId = null,
+        if (allCandidates.isEmpty()) return buildTrendingResult(emptyList(), userId)
+
+        // Slot 1 : dernière question acceptée (déjà triée par moderated_date DESC en SQL)
+        val pinned = allCandidates.first()
+
+        // Calcul du score : (likes + 1) / (heures_depuis_acceptation + 2) ^ exponent
+        fun score(qag: QagInfoWithSupportCount): Double {
+            val moderatedInstant = qag.moderatedDate?.toInstant() ?: qag.date.toInstant()
+            val hours = Duration.between(moderatedInstant, now).toHours().toDouble()
+            return (qag.supportCount + 1).toDouble() / (hours + 2.0).pow(exponent)
+        }
+
+        // Slots 2-10 : 9 meilleurs par score hors épinglé, avec garde-fou max 3 questions > 72h
+        val slots = mutableListOf<QagInfoWithSupportCount>()
+        var oldQagCount = 0
+        val candidates = allCandidates
+            .filter { it.id != pinned.id }
+            .sortedByDescending { score(it) }
+
+        for (qag in candidates) {
+            if (slots.size >= TRENDING_SLOTS) break
+            val moderatedInstant = qag.moderatedDate?.toInstant() ?: qag.date.toInstant()
+            val isOld = Duration.between(moderatedInstant, now).toHours() > TRENDING_OLD_QAG_THRESHOLD_HOURS
+            if (isOld && oldQagCount >= TRENDING_MAX_OLD_QAGS) continue
+            if (isOld) oldQagCount++
+            slots.add(qag)
+        }
+
+        return buildTrendingResult(listOf(pinned) + slots, userId)
+    }
+
+    private fun buildTrendingResult(qags: List<QagInfoWithSupportCount>, userId: String): QagsAndMaxPageCountV2 {
+        val qagWithSupportCountList = qags.mapNotNull { qagInfo ->
+            thematiqueRepository.getThematique(qagInfo.thematiqueId)
+                ?.let { QagWithSupportCount(qagInfo = qagInfo, thematique = it) }
+        }
+        val userSupportedQagIds = supportQagUseCase.getUserSupportedQagIds(userId)
+        val header = when (val cachedHeader = headerCacheRepository.getHeader(TRENDING)) {
+            is HeaderQagCacheResult.CachedHeaderQag -> cachedHeader.headerQag
+            HeaderQagCacheResult.HeaderQagCacheNotInitialized -> headerRepository.getLastHeader(TRENDING)
+                .also { headerQag ->
+                    if (headerQag != null) headerCacheRepository.initHeader(TRENDING, headerQag)
+                    else headerCacheRepository.initHeaderNotFound(TRENDING)
+                }
+            HeaderQagCacheResult.HeaderQagNotFound -> null
+        }
+        val qagList = qagWithSupportCountList.map { qagWithSupportCount ->
+            mapper.toPreview(
+                qag = qagWithSupportCount,
+                isSupportedByUser = userSupportedQagIds.any { qagId -> qagId == qagWithSupportCount.qagInfo.id },
+                isAuthor = qagWithSupportCount.qagInfo.userId == userId,
+            )
+        }
+        return QagsAndMaxPageCountV2(
+            maxPageCount = 1,
+            headerQag = header,
+            qags = qagList,
         )
-        return qagListWithMaxPageCount?.mapQags(userId = userId, filterType = TRENDING, pageNumber = 1)
     }
 
     private fun getQagPaginated(
