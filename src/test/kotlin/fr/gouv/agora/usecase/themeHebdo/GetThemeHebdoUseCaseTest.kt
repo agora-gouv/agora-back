@@ -78,6 +78,9 @@ internal class GetThemeHebdoUseCaseTest {
                 // Then
                 assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
                 assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
+                assertThat(result.avatarUrl).isEqualTo("https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/logo_agora_f524e2d9bd.png")
+                assertThat(result.nom).isEqualTo("Ministre à révéler")
+                assertThat(result.fonction).isEqualTo("Le ministre qui répondra dépend de votre question gagnante")
         }
 
         @Test
@@ -110,6 +113,9 @@ internal class GetThemeHebdoUseCaseTest {
                 // Then
                 assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
                 assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
+                assertThat(result.avatarUrl).isEqualTo("https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/logo_agora_f524e2d9bd.png")
+                assertThat(result.nom).isEqualTo("Ministre à révéler")
+                assertThat(result.fonction).isEqualTo("Le ministre qui répondra dépend de votre question gagnante")
         }
 
         @Test
@@ -144,6 +150,9 @@ internal class GetThemeHebdoUseCaseTest {
                 // Then
                 assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
                 assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
+                assertThat(result.avatarUrl).isEqualTo("https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/logo_agora_f524e2d9bd.png")
+                assertThat(result.nom).isEqualTo("Ministre à révéler")
+                assertThat(result.fonction).isEqualTo("Le ministre qui répondra dépend de votre question gagnante")
         }
 
         @Test
@@ -176,6 +185,9 @@ internal class GetThemeHebdoUseCaseTest {
                 // Then
                 assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
                 assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
+                assertThat(result.avatarUrl).isEqualTo("https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/logo_agora_f524e2d9bd.png")
+                assertThat(result.nom).isEqualTo("Ministre à révéler")
+                assertThat(result.fonction).isEqualTo("Le ministre qui répondra dépend de votre question gagnante")
         }
 
         @Test
@@ -192,6 +204,9 @@ internal class GetThemeHebdoUseCaseTest {
                 // Then
                 assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
                 assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
+                assertThat(result.avatarUrl).isEqualTo("https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/logo_agora_f524e2d9bd.png")
+                assertThat(result.nom).isEqualTo("Ministre à révéler")
+                assertThat(result.fonction).isEqualTo("Le ministre qui répondra dépend de votre question gagnante")
         }
 
         @Test
@@ -208,6 +223,9 @@ internal class GetThemeHebdoUseCaseTest {
                 // Then
                 assertThat(result.dateDebutTheme).isEqualTo(expectedMondayDebut)
                 assertThat(result.dateFinTheme).isEqualTo(expectedSundayFin)
+                assertThat(result.avatarUrl).isEqualTo("https://pub-6c821c1c547c4e3eaa97abd4b0ab8180.r2.dev/logo_agora_f524e2d9bd.png")
+                assertThat(result.nom).isEqualTo("Ministre à révéler")
+                assertThat(result.fonction).isEqualTo("Le ministre qui répondra dépend de votre question gagnante")
         }
 
         @Test
