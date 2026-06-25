@@ -3,6 +3,7 @@ package fr.gouv.agora.infrastructure.qag.repository
 import fr.gouv.agora.domain.QagInserting
 import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.infrastructure.qag.dto.QagDTO
+import fr.gouv.agora.infrastructure.qag.dto.QagWithSupportCountAndModerationDateDTO
 import fr.gouv.agora.infrastructure.qag.dto.QagWithSupportCountDTO
 import fr.gouv.agora.infrastructure.utils.UuidUtils
 import fr.gouv.agora.usecase.qag.repository.QagInfo
@@ -45,6 +46,21 @@ class QagInfoMapper {
             username = dto.username,
             userId = dto.userId.toString(),
             supportCount = dto.supportCount,
+        )
+    }
+
+    fun toDomain(dto: QagWithSupportCountAndModerationDateDTO): QagInfoWithSupportCount {
+        return QagInfoWithSupportCount(
+            id = dto.id.toString(),
+            thematiqueId = dto.thematiqueId,
+            title = dto.title,
+            description = dto.description,
+            date = dto.postDate,
+            status = toQagStatus(dto.status),
+            username = dto.username,
+            userId = dto.userId.toString(),
+            supportCount = dto.supportCount,
+            moderatedDate = dto.moderatedDate,
         )
     }
 

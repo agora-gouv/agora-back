@@ -13,4 +13,5 @@ data class QagInfoWithSupportCount(
     val username: String,
     val userId: String,
     val supportCount: Int,
+    val moderatedDate: Date? = null,
 )
