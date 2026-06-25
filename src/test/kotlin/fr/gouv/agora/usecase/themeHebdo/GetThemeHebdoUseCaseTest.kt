@@ -312,7 +312,7 @@ internal class GetThemeHebdoUseCaseTest {
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.sousTitre).isEqualTo("Posez vos questions sur n’importe quelle politique publique")
+                assertThat(result.sousTitre).isEqualTo("Posez vos questions sur n’importe quelle politique publique.")
         }
 
         @Test

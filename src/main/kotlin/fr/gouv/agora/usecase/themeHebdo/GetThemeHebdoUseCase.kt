@@ -25,7 +25,7 @@ class GetThemeHebdoUseCase(
         val prochainsThemes = getProchainsThemes(themeHebdoList, result)
         result.prochainsThemes = prochainsThemes
         if (result.estThemeLibre) {
-            result.sousTitre = "Posez vos questions sur n’importe quelle politique publique"
+            result.sousTitre = "Posez vos questions sur n’importe quelle politique publique."
         }
         result.periode = result.periode.uppercase()
         return result
