@@ -20,7 +20,7 @@ class ResponseQagPreviewListMapper {
     private val logger = LoggerFactory.getLogger(ResponseQagPreviewListMapper::class.java)
 
     companion object {
-        private const val MAX_RESPONSE_TEXT_LENGTH = 200
+        private const val MAX_RESPONSE_TEXT_LENGTH = 400
     }
 
     fun toResponseQagPreview(
