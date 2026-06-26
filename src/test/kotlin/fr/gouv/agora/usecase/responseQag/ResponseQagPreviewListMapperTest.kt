@@ -46,6 +46,7 @@ class ResponseQagPreviewListMapperTest {
                 responseDate = responseDate,
                 feedbackQuestion = "feedbackQuestion",
                 qagId = "qagId",
+                authorFunction = "Ministre de l'économie",
                 responseLabel = "label",
                 responseText = "Le texte de la réponse",
             )
@@ -65,6 +66,7 @@ class ResponseQagPreviewListMapperTest {
                     title = "title",
                     author = "author",
                     authorPortraitUrl = "portraitUrl",
+                    authorFunction = "Ministre de l'économie",
                     responseDate = responseDate,
                     responseText = "Le texte de la réponse",
                     username = "username",
@@ -83,6 +85,7 @@ class ResponseQagPreviewListMapperTest {
                 responseDate = responseDate,
                 feedbackQuestion = "feedbackQuestion",
                 qagId = "qagId",
+                authorFunction = null,
                 responseLabel = "label",
                 responseText = "<p>Le texte de la <strong>réponse</strong></p>",
             )
@@ -109,6 +112,7 @@ class ResponseQagPreviewListMapperTest {
                 responseDate = responseDate,
                 feedbackQuestion = "feedbackQuestion",
                 qagId = "qagId",
+                authorFunction = null,
                 responseLabel = "label",
                 responseText = "<p>premier paragraphe</p><p>deuxième paragraphe</p>",
             )
@@ -136,6 +140,7 @@ class ResponseQagPreviewListMapperTest {
                 responseDate = responseDate,
                 feedbackQuestion = "feedbackQuestion",
                 qagId = "qagId",
+                authorFunction = null,
                 responseLabel = "label",
                 responseText = shortText,
             )
@@ -163,6 +168,7 @@ class ResponseQagPreviewListMapperTest {
                 responseDate = responseDate,
                 feedbackQuestion = "feedbackQuestion",
                 qagId = "qagId",
+                authorFunction = null,
                 responseLabel = "label",
                 responseText = longText,
             )
@@ -190,6 +196,7 @@ class ResponseQagPreviewListMapperTest {
                 responseDate = responseDate,
                 feedbackQuestion = "feedbackQuestion",
                 qagId = "qagId",
+                authorFunction = null,
                 responseLabel = "label",
                 responseText = "<p>$longText</p>",
             )
@@ -216,6 +223,7 @@ class ResponseQagPreviewListMapperTest {
                 responseDate = responseDate,
                 feedbackQuestion = "feedbackQuestion",
                 qagId = "qagId",
+                authorFunction = null,
                 authorDescription = "description",
                 videoUrl = "videoUrl",
                 videoTitle = "videoTitle",
@@ -248,6 +256,7 @@ class ResponseQagPreviewListMapperTest {
                 responseDate = responseDate,
                 feedbackQuestion = "feedbackQuestion",
                 qagId = "qagId",
+                authorFunction = null,
                 authorDescription = "description",
                 videoUrl = "videoUrl",
                 videoTitle = "videoTitle",

@@ -49,6 +49,7 @@ class ResponseQagPreviewListMapper {
             title = qagInfo.title,
             author = responseQag.author,
             authorPortraitUrl = responseQag.authorPortraitUrl,
+            authorFunction = responseQag.authorFunction,
             responseDate = responseQag.responseDate,
             responseText = sanitizeResponseText(
                 when (responseQag) {

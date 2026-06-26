@@ -13,6 +13,8 @@ data class StrapiResponseQag(
     val auteur: String,
     @JsonProperty(value = "auteurPortraitUrl")
     val auteurPortraitUrl: String,
+    @JsonProperty(value = "auteurFonction")
+    val auteurFonction: String?,
     @JsonProperty(value = "reponseDate")
     val reponseDate: LocalDate,
     @JsonProperty(value = "feedbackQuestion")

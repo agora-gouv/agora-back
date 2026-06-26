@@ -56,6 +56,8 @@ data class ResponseQagPreviewWithoutOrderJson(
     val author: String,
     @JsonProperty("authorPortraitUrl")
     val authorPortraitUrl: String,
+    @JsonProperty("authorFunction")
+    val authorFunction: String?,
     @JsonProperty("responseDate")
     val responseDate: String,
     @JsonProperty("responseTexte")
