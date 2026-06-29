@@ -23,7 +23,7 @@ class ResponseQagPaginatedController(
     @GetMapping("/qags/responses/{pageNumber}")
     fun getQagResponses(
         @PathVariable pageNumber: String,
-        @RequestParam(name = "min_date", required = false) minDateStr: String?,
+        @RequestParam(name = "minDate", required = false) minDateStr: String?,
     ): ResponseEntity<*> {
         val toIntOrNull = pageNumber.toIntOrNull() ?: return ResponseEntity.badRequest().body(Unit)
 

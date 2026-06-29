@@ -20,7 +20,7 @@ class QagHomeController(
     @Operation(summary = "Get QaG Responses")
     @GetMapping("/qags/responses")
     fun getQagResponses(
-        @RequestParam(name = "min_date", required = false) minDateStr: String?,
+        @RequestParam(name = "minDate", required = false) minDateStr: String?,
     ): ResponseEntity<*> {
         val minDate = if (minDateStr != null) {
             try {
