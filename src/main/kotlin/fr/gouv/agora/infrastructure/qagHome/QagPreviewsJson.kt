@@ -83,6 +83,8 @@ data class QagPreviewJson(
     val support: SupportQagJson,
     @JsonProperty("isAuthor")
     val isAuthor: Boolean,
+    @JsonProperty("canShare")
+    val canShare: Boolean,
 )
 
 data class QagPreviewListJson(

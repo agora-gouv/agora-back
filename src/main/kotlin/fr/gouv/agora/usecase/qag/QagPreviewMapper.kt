@@ -1,6 +1,7 @@
 package fr.gouv.agora.usecase.qag
 
 import fr.gouv.agora.domain.QagPreview
+import fr.gouv.agora.domain.QagStatus
 import fr.gouv.agora.domain.QagWithSupportCount
 import fr.gouv.agora.domain.Thematique
 import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
@@ -34,6 +35,7 @@ class QagPreviewMapper {
             supportCount = qag.supportCount,
             isSupportedByUser = isSupportedByUser,
             isAuthor = isAuthor,
+            canShare = qag.status == QagStatus.MODERATED_ACCEPTED || qag.status == QagStatus.SELECTED_FOR_RESPONSE,
         )
     }
 
