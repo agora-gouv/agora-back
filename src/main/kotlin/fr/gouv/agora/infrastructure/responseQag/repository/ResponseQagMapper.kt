@@ -24,6 +24,7 @@ class ResponseQagMapper {
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
+                        authorFunction = response.auteurFonction,
                         responseText = responseContent.text.toHtmlBody(),
                         responseLabel = responseContent.label,
                     )
@@ -36,6 +37,7 @@ class ResponseQagMapper {
                         responseDate = response.reponseDate.toDate(),
                         feedbackQuestion = response.feedbackQuestion,
                         qagId = response.questionId,
+                        authorFunction = response.auteurFonction,
                         authorDescription = responseContent.auteurDescription,
                         videoUrl = responseContent.getVideoUrl(),
                         videoWidth = responseContent.videoWidth,

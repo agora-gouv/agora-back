@@ -37,6 +37,7 @@ class QagPaginatedJsonMapper(
                 isSupportedByUser = domain.isSupportedByUser,
             ),
             isAuthor = domain.isAuthor,
+            canShare = domain.canShare,
         )
     }
 

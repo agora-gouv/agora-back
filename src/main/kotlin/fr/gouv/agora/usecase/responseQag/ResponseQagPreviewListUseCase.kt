@@ -9,6 +9,7 @@ import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.springframework.stereotype.Service
+import java.util.Date
 
 @Service
 class ResponseQagPreviewListUseCase(
@@ -19,9 +20,10 @@ class ResponseQagPreviewListUseCase(
     private val mapper: ResponseQagPreviewListMapper,
     private val orderMapper: ResponseQagPreviewOrderMapper,
 ) {
-    fun getResponseQagPreviewList(): ResponseQagPreviewList {
+    fun getResponseQagPreviewList(minDate: Date? = null): ResponseQagPreviewList {
         val qagsSelectedForResponse = qagInfoRepository.getQagsSelectedForResponse()
         val qagsResponses = responseQagRepository.getResponsesQag(qagsSelectedForResponse.map { it.id })
+            .let { responses -> if (minDate != null) responses.filter { it.responseDate >= minDate } else responses }
 
         val qagAndResponseList = qagsSelectedForResponse
             .fold(emptyList<Pair<QagInfoWithSupportCount, ResponseQag?>>()) { acc, qagSelectedForResponse ->

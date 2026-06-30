@@ -27,6 +27,7 @@ class ResponseQagPaginatedJsonMapper(
             title = domain.title,
             author = domain.author,
             authorPortraitUrl = domain.authorPortraitUrl,
+            authorFunction = domain.authorFunction ?: "",
             responseDate = dateMapper.toFormattedDate(domain.responseDate),
             responseTexte = domain.responseText ?: "",
             username = domain.username,

@@ -67,7 +67,8 @@ class QagHomeJsonMapper(
                 supportCount = qagPreview.supportCount,
                 isSupportedByUser = qagPreview.isSupportedByUser,
             ),
-            isAuthor = qagPreview.isAuthor
+            isAuthor = qagPreview.isAuthor,
+            canShare = qagPreview.canShare,
         )
     }
 

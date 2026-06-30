@@ -12,6 +12,7 @@ import fr.gouv.agora.usecase.responseQag.ResponseQagPreviewListMapper
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
@@ -21,6 +22,7 @@ import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Date
 
 @ExtendWith(MockitoExtension::class)
 internal class GetResponseQagPreviewPaginatedListUseCaseTest {
@@ -57,14 +59,14 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
     @Test
     fun `getResponseQagPreviewPaginatedList - when pageNumber is higher than maxPageNumber - should return null`() {
         // Given
-        given(responseQagRepository.getResponsesQagCount()).willReturn(3)
+        given(responseQagRepository.getResponsesQagCount(minDate = null)).willReturn(3)
 
         // When
         val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 2)
 
         // Then
         assertThat(result).isEqualTo(null)
-        then(responseQagRepository).should(only()).getResponsesQagCount()
+        then(responseQagRepository).should(only()).getResponsesQagCount(minDate = null)
         then(qagInfoRepository).shouldHaveNoInteractions()
         then(thematiqueRepository).shouldHaveNoInteractions()
     }
@@ -72,12 +74,12 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
     @Test
     fun `getResponseQagPreviewPaginatedList - when has responses without qag - should return emptyList`() {
         // Given
-        given(responseQagRepository.getResponsesQagCount()).willReturn(1)
+        given(responseQagRepository.getResponsesQagCount(minDate = null)).willReturn(1)
 
         val responseQag = mock(ResponseQagVideo::class.java).also {
             given(it.qagId).willReturn("qagId")
         }
-        given(responseQagRepository.getResponsesQag(from = 0, 5)).willReturn(listOf(responseQag))
+        given(responseQagRepository.getResponsesQag(from = 0, pageSize = 5, minDate = null)).willReturn(listOf(responseQag))
 
         given(qagInfoRepository.getQagsInfo(qagIds = listOf("qagId"))).willReturn(emptyList())
 
@@ -91,7 +93,7 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
                 maxPageNumber = 1,
             )
         )
-        then(responseQagRepository).should().getResponsesQagCount()
+        then(responseQagRepository).should().getResponsesQagCount(minDate = null)
         then(responseQagRepository).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
     }
@@ -99,12 +101,12 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
     @Test
     fun `getResponseQagPreviewPaginatedList - when has responses with qag but no thematique - should return emptyList`() {
         // Given
-        given(responseQagRepository.getResponsesQagCount()).willReturn(11)
+        given(responseQagRepository.getResponsesQagCount(minDate = null)).willReturn(11)
 
         val responseQag = mock(ResponseQagText::class.java).also {
             given(it.qagId).willReturn("qagId")
         }
-        given(responseQagRepository.getResponsesQag(from = 5, 5)).willReturn(listOf(responseQag))
+        given(responseQagRepository.getResponsesQag(from = 5, pageSize = 5, minDate = null)).willReturn(listOf(responseQag))
 
         val qag = mock(QagInfo::class.java).also {
             given(it.id).willReturn("qagId")
@@ -121,7 +123,7 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
                 maxPageNumber = 3,
             )
         )
-        then(responseQagRepository).should().getResponsesQagCount()
+        then(responseQagRepository).should().getResponsesQagCount(minDate = null)
         then(responseQagRepository).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
     }
@@ -129,12 +131,12 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
     @Test
     fun `getResponseQagPreviewPaginatedList - when has responses with qag and thematique - should return mapped response`() {
         // Given
-        given(responseQagRepository.getResponsesQagCount()).willReturn(11)
+        given(responseQagRepository.getResponsesQagCount(minDate = null)).willReturn(11)
 
         val responseQag = mock(ResponseQagVideo::class.java).also {
             given(it.qagId).willReturn("qagId")
         }
-        given(responseQagRepository.getResponsesQag(from = 10, 5)).willReturn(listOf(responseQag))
+        given(responseQagRepository.getResponsesQag(from = 10, pageSize = 5, minDate = null)).willReturn(listOf(responseQag))
 
         val qag = mock(QagInfo::class.java).also {
             given(it.id).willReturn("qagId")
@@ -165,8 +167,74 @@ internal class GetResponseQagPreviewPaginatedListUseCaseTest {
                 maxPageNumber = 3,
             )
         )
-        then(responseQagRepository).should().getResponsesQagCount()
+        then(responseQagRepository).should().getResponsesQagCount(minDate = null)
         then(responseQagRepository).shouldHaveNoMoreInteractions()
         then(qagInfoRepository).should(only()).getQagsInfo(listOf("qagId"))
+    }
+
+    @Nested
+    inner class `getResponseQagPreviewPaginatedList - with minDate` {
+
+        @Test
+        fun `getResponseQagPreviewPaginatedList - when minDate is provided and pageNumber exceeds filtered count - should return null`() {
+            // Given
+            val minDate = Date(1_000_000)
+            given(responseQagRepository.getResponsesQagCount(minDate = minDate)).willReturn(3)
+
+            // When
+            val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 2, minDate = minDate)
+
+            // Then
+            assertThat(result).isNull()
+            then(responseQagRepository).should(only()).getResponsesQagCount(minDate = minDate)
+            then(qagInfoRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `getResponseQagPreviewPaginatedList - when minDate is provided - should pass minDate to repository for count and fetch`() {
+            // Given
+            val minDate = Date(1_000_000)
+            given(responseQagRepository.getResponsesQagCount(minDate = minDate)).willReturn(1)
+
+            val responseQag = mock(ResponseQagVideo::class.java).also {
+                given(it.qagId).willReturn("qagId")
+            }
+            given(responseQagRepository.getResponsesQag(from = 0, pageSize = 5, minDate = minDate))
+                .willReturn(listOf(responseQag))
+
+            given(qagInfoRepository.getQagsInfo(qagIds = listOf("qagId"))).willReturn(emptyList())
+
+            // When
+            val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 1, minDate = minDate)
+
+            // Then
+            assertThat(result).isEqualTo(
+                ResponseQagPaginatedList(
+                    responsesQag = emptyList(),
+                    maxPageNumber = 1,
+                )
+            )
+            then(responseQagRepository).should().getResponsesQagCount(minDate = minDate)
+            then(responseQagRepository).should().getResponsesQag(from = 0, pageSize = 5, minDate = minDate)
+            then(responseQagRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `getResponseQagPreviewPaginatedList - when minDate is provided - maxPageNumber should reflect filtered count`() {
+            // Given
+            val minDate = Date(1_000_000)
+            // 6 responses after filter => 2 pages of 5
+            given(responseQagRepository.getResponsesQagCount(minDate = minDate)).willReturn(6)
+            given(responseQagRepository.getResponsesQag(from = 0, pageSize = 5, minDate = minDate))
+                .willReturn(emptyList())
+            given(qagInfoRepository.getQagsInfo(qagIds = emptyList())).willReturn(emptyList())
+
+            // When
+            val result = useCase.getResponseQagPreviewPaginatedList(pageNumber = 1, minDate = minDate)
+
+            // Then
+            assertThat(result).isNotNull
+            assertThat(result!!.maxPageNumber).isEqualTo(2)
+        }
     }
 }

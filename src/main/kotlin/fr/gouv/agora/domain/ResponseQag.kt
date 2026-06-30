@@ -8,6 +8,7 @@ sealed class ResponseQag {
     abstract val responseDate: Date
     abstract val feedbackQuestion: String
     abstract val qagId: String
+    abstract val authorFunction: String?
 }
 
 data class ResponseQagVideo(
@@ -16,6 +17,7 @@ data class ResponseQagVideo(
     override val responseDate: Date,
     override val feedbackQuestion: String,
     override val qagId: String,
+    override val authorFunction: String?,
     val authorDescription: String,
     val videoUrl: String,
     val videoTitle: String,
@@ -31,6 +33,7 @@ data class ResponseQagText(
     override val responseDate: Date,
     override val feedbackQuestion: String,
     override val qagId: String,
+    override val authorFunction: String?,
     val responseLabel: String,
     val responseText: String,
 ) : ResponseQag()

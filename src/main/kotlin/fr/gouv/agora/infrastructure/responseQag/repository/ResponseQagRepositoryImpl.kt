@@ -4,6 +4,7 @@ import fr.gouv.agora.domain.ResponseQag
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.responseQag.repository.ResponseQagRepository
 import org.springframework.stereotype.Component
+import java.util.Date
 import kotlin.math.min
 
 @Component
@@ -25,14 +26,21 @@ class ResponseQagRepositoryImpl(
         return strapiRepository.getResponsesQag(listOf(qagUUID)).let(mapper::toDomain).firstOrNull()
     }
 
-    override fun getResponsesQagCount(): Int {
-        return strapiRepository.getResponsesCount()
+    override fun getResponsesQagCount(minDate: Date?): Int {
+        val allResponses = strapiRepository.getResponsesQag().let(mapper::toDomain)
+        return if (minDate != null) {
+            allResponses.count { it.responseDate >= minDate }
+        } else {
+            strapiRepository.getResponsesCount()
+        }
     }
 
-    override fun getResponsesQag(from: Int, pageSize: Int): List<ResponseQag> {
+    override fun getResponsesQag(from: Int, pageSize: Int, minDate: Date?): List<ResponseQag> {
         val strapiResponses = strapiRepository.getResponsesQag().let(mapper::toDomain)
 
-        val responsesQag = (strapiResponses).sortedByDescending { it.responseDate }
+        val responsesQag = strapiResponses
+            .let { if (minDate != null) it.filter { r -> r.responseDate >= minDate } else it }
+            .sortedByDescending { it.responseDate }
         val toIndex = min(responsesQag.size, from + pageSize)
         if (from > toIndex) return emptyList()
 

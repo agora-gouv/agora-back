@@ -12,4 +12,5 @@ data class QagPreview(
     val supportCount: Int,
     val isSupportedByUser: Boolean,
     val isAuthor: Boolean,
+    val canShare: Boolean,
 )

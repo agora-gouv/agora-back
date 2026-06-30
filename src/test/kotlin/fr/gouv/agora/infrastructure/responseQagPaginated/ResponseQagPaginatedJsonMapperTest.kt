@@ -113,6 +113,7 @@ internal class ResponseQagPaginatedJsonMapperTest {
         title = "Titre de la QAG",
         author = "Auteur",
         authorPortraitUrl = "https://portrait.url",
+        authorFunction = null,
         responseDate = date,
         responseText = responseText,
         username = "utilisateur",
