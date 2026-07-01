@@ -1,10 +1,3 @@
 [
-  { "id": "cluster-emploi", "mots": ["emploi", "chômage", "travail", "smic", "retraite", "salaire", "licenciement", "apprentissage", "alternance"] },
-  { "id": "cluster-sante", "mots": ["santé", "hôpital", "médecin", "soins", "médicament", "vaccin", "maladie", "infirmier", "désert médical"] },
-  { "id": "cluster-education", "mots": ["école", "éducation", "lycée", "collège", "université", "enseignant", "professeur", "baccalauréat", "enseignement"] },
-  { "id": "cluster-logement", "mots": ["logement", "loyer", "propriétaire", "immobilier", "hlm", "locataire", "hébergement", "habitation", "logements"] },
-  { "id": "cluster-securite", "mots": ["sécurité", "police", "crime", "délinquance", "justice", "prison", "terrorisme", "violence", "gendarme"] },
-  { "id": "cluster-environnement", "mots": ["environnement", "écologie", "climat", "pollution", "énergie", "renouvelable", "recyclage", "biodiversité", "nucléaire"] },
-  { "id": "cluster-transport", "mots": ["train", "sncf", "autoroute", "voiture", "vélo", "bus", "métro", "mobilité"] },
-  { "id": "cluster-numerique", "mots": ["numérique", "internet", "intelligence artificielle", "cybersécurité", "données", "algorithme", "technologie", "digital"] }
+  { "id": "cluster-tesla", "mots": ["Tesla",  "FSD", "conduite autonome", "supervisée" ,"self-driving"] }
 ]
