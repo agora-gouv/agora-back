@@ -1,6 +1,8 @@
 package fr.gouv.agora.usecase.themeHebdo
 
 import fr.gouv.agora.domain.ThemeHebdo
+import fr.gouv.agora.usecase.themeHebdo.repository.CurrentThemeHebdoCacheRepository
+import fr.gouv.agora.usecase.themeHebdo.repository.CurrentThemeHebdoCacheResult
 import fr.gouv.agora.usecase.themeHebdo.repository.ThemeHebdoRepository
 import java.time.Clock
 import java.time.Instant
@@ -25,6 +27,8 @@ internal class GetThemeHebdoUseCaseTest {
         @InjectMocks private lateinit var useCase: GetThemeHebdoUseCase
 
         @Mock private lateinit var themeHebdoRepository: ThemeHebdoRepository
+
+        @Mock private lateinit var currentThemeHebdoCacheRepository: CurrentThemeHebdoCacheRepository
 
         @Mock private lateinit var clock: Clock
 
@@ -312,7 +316,7 @@ internal class GetThemeHebdoUseCaseTest {
                 val result = useCase.getThemeHebdo()
 
                 // Then
-                assertThat(result.sousTitre).isEqualTo("Posez vos questions sur n’importe quelle politique publique.")
+                assertThat(result.sousTitre).isEqualTo("Posez vos questions sur n'importe quelle politique publique.")
         }
 
         @Test
@@ -432,6 +436,43 @@ internal class GetThemeHebdoUseCaseTest {
 
                         // Then
                         assertThat(result.prochainsThemes).isEmpty()
+                }
+        }
+
+        @Nested
+        inner class GetCurrentThemeHebdoCacheTests {
+
+                @Test
+                fun `getCurrentThemeHebdo - when cache is not initialized - should compute theme and store in cache`() {
+                        // Given
+                        `when`(clock.millis()).thenReturn(now.toEpochMilli())
+                        `when`(clock.instant()).thenReturn(now)
+                        val themeHebdo = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, estThemeLibre = true)
+                        `when`(themeHebdoRepository.getThemeHebdoList()).thenReturn(listOf(themeHebdo))
+                        `when`(currentThemeHebdoCacheRepository.getCurrentThemeHebdo())
+                                .thenReturn(CurrentThemeHebdoCacheResult.CacheNotInitialized)
+
+                        // When
+                        val result = useCase.getCurrentThemeHebdo()
+
+                        // Then
+                        assertThat(result.estThemeLibre).isTrue()
+                        org.mockito.Mockito.verify(currentThemeHebdoCacheRepository).insertCurrentThemeHebdo(result)
+                }
+
+                @Test
+                fun `getCurrentThemeHebdo - when cache is populated - should return cached value without calling repository`() {
+                        // Given
+                        val cachedTheme = buildThemeHebdo(dateDebutTheme = yesterday, dateFinTheme = tomorrow, estThemeLibre = false)
+                        `when`(currentThemeHebdoCacheRepository.getCurrentThemeHebdo())
+                                .thenReturn(CurrentThemeHebdoCacheResult.CachedCurrentThemeHebdo(cachedTheme))
+
+                        // When
+                        val result = useCase.getCurrentThemeHebdo()
+
+                        // Then
+                        assertThat(result).isEqualTo(cachedTheme)
+                        org.mockito.Mockito.verifyNoInteractions(themeHebdoRepository)
                 }
         }
 }

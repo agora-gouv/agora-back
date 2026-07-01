@@ -1,6 +1,8 @@
 package fr.gouv.agora.usecase.themeHebdo
 
 import fr.gouv.agora.domain.ThemeHebdo
+import fr.gouv.agora.usecase.themeHebdo.repository.CurrentThemeHebdoCacheRepository
+import fr.gouv.agora.usecase.themeHebdo.repository.CurrentThemeHebdoCacheResult
 import fr.gouv.agora.usecase.themeHebdo.repository.ThemeHebdoRepository
 import org.springframework.stereotype.Service
 import java.time.Clock
@@ -15,6 +17,7 @@ import java.util.Locale
 @Service
 class GetThemeHebdoUseCase(
     private val themeHebdoRepository: ThemeHebdoRepository,
+    private val currentThemeHebdoCacheRepository: CurrentThemeHebdoCacheRepository,
     private val clock: Clock,
 ) {
 
@@ -25,10 +28,21 @@ class GetThemeHebdoUseCase(
         val prochainsThemes = getProchainsThemes(themeHebdoList, result)
         result.prochainsThemes = prochainsThemes
         if (result.estThemeLibre) {
-            result.sousTitre = "Posez vos questions sur n’importe quelle politique publique."
+            result.sousTitre = "Posez vos questions sur n'importe quelle politique publique."
         }
         result.periode = result.periode.uppercase()
         return result
+    }
+
+    fun getCurrentThemeHebdo(): ThemeHebdo {
+        return when (val cached = currentThemeHebdoCacheRepository.getCurrentThemeHebdo()) {
+            is CurrentThemeHebdoCacheResult.CachedCurrentThemeHebdo -> cached.themeHebdo
+            CurrentThemeHebdoCacheResult.CacheNotInitialized -> {
+                val theme = getThemeHebdo()
+                currentThemeHebdoCacheRepository.insertCurrentThemeHebdo(theme)
+                theme
+            }
+        }
     }
 
     private fun isCurrentDateInRange(themeHebdo: ThemeHebdo): Boolean {
