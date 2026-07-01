@@ -10,8 +10,10 @@ import fr.gouv.agora.usecase.qag.repository.QagInfoWithSupportCount
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheRepository
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagCacheResult
 import fr.gouv.agora.usecase.qagPaginated.repository.HeaderQagRepository
+import fr.gouv.agora.usecase.qagPaginated.repository.TrendingClusterRepository
 import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
+import fr.gouv.agora.usecase.themeHebdo.GetThemeHebdoUseCase
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.Duration
@@ -31,6 +33,8 @@ class QagPaginatedV2UseCase(
     private val mapper: QagPreviewMapper,
     private val supportQagUseCase: SupportQagUseCase,
     private val clock: Clock,
+    private val getThemeHebdoUseCase: GetThemeHebdoUseCase,
+    private val trendingClusterRepository: TrendingClusterRepository,
 ) {
 
     companion object {
@@ -47,6 +51,7 @@ class QagPaginatedV2UseCase(
         private const val TRENDING_MAX_OLD_QAGS = 3
         private const val TRENDING_OLD_QAG_THRESHOLD_HOURS = 72L
         private const val TRENDING_SLOTS = 9
+        private const val MAX_PER_CLUSTER = 2
     }
 
     fun getPopularQagPaginated(
@@ -115,7 +120,13 @@ class QagPaginatedV2UseCase(
             return (qag.supportCount + 1).toDouble() / (hours + 2.0).pow(exponent)
         }
 
+        // Déterminer si le filtre cluster est actif (semaine à thème libre)
+        val estThemeLibre = getThemeHebdoUseCase.getCurrentThemeHebdo().estThemeLibre
+        val clusters = if (estThemeLibre) trendingClusterRepository.getClusters() else emptyList()
+        val clusterCount = mutableMapOf<String, Int>()
+
         // Slots 2-10 : 9 meilleurs par score hors épinglé, avec garde-fou max 3 questions > 72h
+        // et garde-fou max 2 questions par cluster (si thème libre)
         val slots = mutableListOf<QagInfoWithSupportCount>()
         var oldQagCount = 0
         val candidates = allCandidates
@@ -128,6 +139,27 @@ class QagPaginatedV2UseCase(
             val isOld = Duration.between(moderatedInstant, now).toHours() > TRENDING_OLD_QAG_THRESHOLD_HOURS
             if (isOld && oldQagCount >= TRENDING_MAX_OLD_QAGS) continue
             if (isOld) oldQagCount++
+
+            if (estThemeLibre) {
+                // Trouver TOUS les clusters qui matchent (un QAG peut appartenir à plusieurs clusters)
+                val matchingClusters = clusters.mapNotNull { cluster ->
+                    val matchedWord = cluster.mots.firstOrNull { mot -> qag.title.contains(mot, ignoreCase = true) }
+                    if (matchedWord != null) Pair(cluster, matchedWord) else null
+                }
+
+                if (matchingClusters.isNotEmpty()) {
+                    // Rejeter si AU MOINS UN cluster matchant est plein
+                    val isRejected = matchingClusters.any { (cluster, _) ->
+                        clusterCount.getOrDefault(cluster.id, 0) >= MAX_PER_CLUSTER
+                    }
+                    if (isRejected) continue
+                    // Accepté : incrémenter TOUS les clusters matchants
+                    matchingClusters.forEach { (cluster, _) ->
+                        clusterCount[cluster.id] = clusterCount.getOrDefault(cluster.id, 0) + 1
+                    }
+                }
+            }
+
             slots.add(qag)
         }
 
