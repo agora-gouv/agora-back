@@ -13,26 +13,26 @@
 | 1.2 | Variables d'environnement dans `.env.example` | ✅ DONE |
 | 2.1 | Script SQL migration (2 tables) | ✅ DONE |
 | 2.2 | Entités JPA + repositories Spring Data | ✅ DONE |
-| 3.1 | Domain `AcmeCertificate.kt` | ⬜ TODO |
-| 3.2 | Domain `AcmeAccount.kt` | ⬜ TODO |
-| 4.1 | Interface `AcmeChallengeStore.kt` | ⬜ TODO |
-| 4.2 | Interface `AcmeCertificateRepository.kt` | ⬜ TODO |
-| 4.3 | Interface `AcmeAccountRepository.kt` | ⬜ TODO |
-| 4.4 | Interface `CloudflareCertificateDeployer.kt` | ⬜ TODO |
-| 5.1 | Config Spring `AcmeConfig.kt` | ⬜ TODO |
-| 6.1 | Implémentation `AcmeChallengeStoreImpl.kt` | ⬜ TODO |
-| 6.2 | Implémentation `AcmeCertificateRepositoryImpl.kt` | ⬜ TODO |
-| 6.3 | Implémentation `AcmeAccountRepositoryImpl.kt` | ⬜ TODO |
-| 6.4 | Utilitaire `AcmeCryptoHelper.kt` (chiffrement AES-256) | ⬜ TODO |
-| 6.5 | Implémentation `CloudflareCertificateDeployerImpl.kt` | ⬜ TODO |
-| 7.1 | Controller `AcmeController.kt` (endpoint HTTP-01) | ⬜ TODO |
-| 7.2 | Modifier `WebSecurityConfig.kt` (endpoint public) | ⬜ TODO |
-| 8.1 | Use case `AcmeCertificateRenewalUseCase.kt` | ⬜ TODO |
-| 9.1 | Brancher dans `DailyTasksHandler.kt` | ⬜ TODO |
-| 10.1 | Tests `AcmeCertificateRenewalUseCaseTest` | ⬜ TODO |
-| 10.2 | Tests `AcmeChallengeStoreImplTest` | ⬜ TODO |
-| 10.3 | Tests `AcmeCryptoHelperTest` | ⬜ TODO |
-| 11.1 | Validation finale : tous les tests passent | ⬜ TODO |
+| 3.1 | Domain `AcmeCertificate.kt` | ✅ DONE |
+| 3.2 | Domain `AcmeAccount.kt` | ✅ DONE |
+| 4.1 | Interface `AcmeChallengeStore.kt` | ✅ DONE |
+| 4.2 | Interface `AcmeCertificateRepository.kt` | ✅ DONE |
+| 4.3 | Interface `AcmeAccountRepository.kt` | ✅ DONE |
+| 4.4 | Interface `CloudflareCertificateDeployer.kt` | ✅ DONE |
+| 5.1 | Config Spring `AcmeConfig.kt` | ✅ DONE |
+| 6.1 | Implémentation `AcmeChallengeStoreImpl.kt` | ✅ DONE |
+| 6.2 | Implémentation `AcmeCertificateRepositoryImpl.kt` | ✅ DONE |
+| 6.3 | Implémentation `AcmeAccountRepositoryImpl.kt` | ✅ DONE |
+| 6.4 | Utilitaire `AcmeCryptoHelper.kt` (chiffrement AES-256) | ✅ DONE |
+| 6.5 | Implémentation `CloudflareCertificateDeployerImpl.kt` | ✅ DONE |
+| 7.1 | Controller `AcmeController.kt` (endpoint HTTP-01) | ✅ DONE |
+| 7.2 | Modifier `WebSecurityConfig.kt` (endpoint public) | ✅ DONE |
+| 8.1 | Use case `AcmeCertificateRenewalUseCase.kt` | ✅ DONE |
+| 9.1 | Brancher dans `DailyTasksHandler.kt` | ✅ DONE |
+| 10.1 | Tests `AcmeCertificateRenewalUseCaseTest` | ✅ DONE |
+| 10.2 | Tests `AcmeChallengeStoreImplTest` | ✅ DONE |
+| 10.3 | Tests `AcmeCryptoHelperTest` | ✅ DONE |
+| 11.1 | Validation finale : tous les tests passent | ✅ DONE |
 | 11.2 | Checklist Cloudflare (hors code) | ⬜ TODO |
 
 ---
