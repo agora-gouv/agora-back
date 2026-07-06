@@ -9,8 +9,8 @@
 
 | Étape | Description | Statut |
 |---|---|---|
-| 1.1 | Dépendances acme4j dans `build.gradle.kts` | ⬜ TODO |
-| 1.2 | Variables d'environnement dans `.env.example` | ⬜ TODO |
+| 1.1 | Dépendances acme4j dans `build.gradle.kts` | ✅ DONE |
+| 1.2 | Variables d'environnement dans `.env.example` | ✅ DONE |
 | 2.1 | Script SQL migration (2 tables) | ⬜ TODO |
 | 2.2 | Entités JPA + repositories Spring Data | ⬜ TODO |
 | 3.1 | Domain `AcmeCertificate.kt` | ⬜ TODO |
