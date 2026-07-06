@@ -11,8 +11,8 @@
 |---|---|---|
 | 1.1 | Dépendances acme4j dans `build.gradle.kts` | ✅ DONE |
 | 1.2 | Variables d'environnement dans `.env.example` | ✅ DONE |
-| 2.1 | Script SQL migration (2 tables) | ⬜ TODO |
-| 2.2 | Entités JPA + repositories Spring Data | ⬜ TODO |
+| 2.1 | Script SQL migration (2 tables) | ✅ DONE |
+| 2.2 | Entités JPA + repositories Spring Data | ✅ DONE |
 | 3.1 | Domain `AcmeCertificate.kt` | ⬜ TODO |
 | 3.2 | Domain `AcmeAccount.kt` | ⬜ TODO |
 | 4.1 | Interface `AcmeChallengeStore.kt` | ⬜ TODO |
