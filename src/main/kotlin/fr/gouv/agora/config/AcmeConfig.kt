@@ -28,4 +28,10 @@ class AcmeConfig {
 
     @Value("\${CLOUDFLARE_API_TOKEN:}")
     val cloudflareApiToken: String = ""
+
+    @Value("\${ACME_SERVER_INTERACTION_ENABLED:true}")
+    val acmeServerInteractionEnabled: Boolean = true
+
+    @Value("\${ACME_CLOUDFLARE_INTERACTION_ENABLED:true}")
+    val cloudflareInteractionEnabled: Boolean = true
 }

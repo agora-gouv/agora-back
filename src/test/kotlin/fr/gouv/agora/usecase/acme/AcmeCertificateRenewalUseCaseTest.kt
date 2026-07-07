@@ -104,6 +104,7 @@ class AcmeCertificateRenewalUseCaseTest {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(acmeConfig.cloudflareInteractionEnabled).willReturn(true)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
             val existingCert = AcmeCertificate(
@@ -130,6 +131,7 @@ class AcmeCertificateRenewalUseCaseTest {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(acmeConfig.cloudflareInteractionEnabled).willReturn(true)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
             val existingCert = AcmeCertificate(
@@ -153,6 +155,7 @@ class AcmeCertificateRenewalUseCaseTest {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(acmeConfig.cloudflareInteractionEnabled).willReturn(true)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
             val existingCert = AcmeCertificate(
@@ -181,6 +184,7 @@ class AcmeCertificateRenewalUseCaseTest {
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
             given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+            given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
             val existingCert = AcmeCertificate(
@@ -212,6 +216,7 @@ class AcmeCertificateRenewalUseCaseTest {
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
             given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+            given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
             given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
@@ -223,6 +228,110 @@ class AcmeCertificateRenewalUseCaseTest {
 
             then(certificateRepository).should().loadCertificate("agora.gouv.fr")
             then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+        }
+
+        @Test
+        fun `renewIfNeeded - when ACME_SERVER_INTERACTION_ENABLED is false and provisioning is needed - should skip everything and not call any dependency`() {
+            // Given
+            given(acmeConfig.enabled).willReturn(true)
+            given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(acmeConfig.acmeServerInteractionEnabled).willReturn(false)
+            given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+            given(clock.zone).willReturn(FIXED_CLOCK.zone)
+            given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+
+            // When
+            useCase.renewIfNeeded()
+
+            // Then — aucune interaction ACME ni Cloudflare
+            then(accountRepository).shouldHaveNoInteractions()
+            then(challengeStore).shouldHaveNoInteractions()
+            then(cloudflareDeployer).shouldHaveNoInteractions()
+            then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+            then(certificateRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `renewIfNeeded - when ACME_SERVER_INTERACTION_ENABLED is false and certificate expires soon - should skip ACME provisioning`() {
+            // Given
+            given(acmeConfig.enabled).willReturn(true)
+            given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(acmeConfig.acmeServerInteractionEnabled).willReturn(false)
+            given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+            given(clock.zone).willReturn(FIXED_CLOCK.zone)
+            val existingCert = AcmeCertificate(
+                domain = "agora.gouv.fr",
+                certificatePem = "cert-pem",
+                privateKeyPem = "key-pem",
+                expiresAt = NOW.plusDays(10),
+                status = AcmeCertificateStatus.DEPLOYED,
+            )
+            given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
+
+            // When
+            useCase.renewIfNeeded()
+
+            // Then — aucune interaction ACME ni Cloudflare
+            then(accountRepository).shouldHaveNoInteractions()
+            then(challengeStore).shouldHaveNoInteractions()
+            then(cloudflareDeployer).shouldHaveNoInteractions()
+            then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+            then(certificateRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `renewIfNeeded - when ACME_CLOUDFLARE_INTERACTION_ENABLED is false and certificate is TO_DEPLOY - should skip Cloudflare deployment`() {
+            // Given
+            given(acmeConfig.enabled).willReturn(true)
+            given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            // cloudflareInteractionEnabled retourne false (défaut mock), on le précise explicitement pour la lisibilité
+            given(acmeConfig.cloudflareInteractionEnabled).willReturn(false)
+            given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+            given(clock.zone).willReturn(FIXED_CLOCK.zone)
+            val existingCert = AcmeCertificate(
+                domain = "agora.gouv.fr",
+                certificatePem = "cert-pem",
+                privateKeyPem = "key-pem",
+                expiresAt = NOW.plusDays(60),
+                status = AcmeCertificateStatus.TO_DEPLOY,
+            )
+            given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
+
+            // When
+            useCase.renewIfNeeded()
+
+            // Then — Cloudflare n'est pas appelé, markAsDeployed non plus
+            then(cloudflareDeployer).shouldHaveNoInteractions()
+            then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+            then(certificateRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `renewIfNeeded - when ACME_SERVER_INTERACTION_ENABLED is false but certificate is TO_DEPLOY - should still deploy to Cloudflare`() {
+            // Given
+            given(acmeConfig.enabled).willReturn(true)
+            given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            // needsProvisioning = false (cert valide, TO_DEPLOY) → le guard acmeServerInteractionEnabled n'est jamais évalué
+            given(acmeConfig.cloudflareInteractionEnabled).willReturn(true)
+            given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+            given(clock.zone).willReturn(FIXED_CLOCK.zone)
+            val existingCert = AcmeCertificate(
+                domain = "agora.gouv.fr",
+                certificatePem = "cert-pem",
+                privateKeyPem = "key-pem",
+                expiresAt = NOW.plusDays(60),
+                status = AcmeCertificateStatus.TO_DEPLOY,
+            )
+            given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
+
+            // When
+            useCase.renewIfNeeded()
+
+            // Then — Cloudflare est appelé avec le cert en base (pas de provisioning ACME)
+            then(accountRepository).shouldHaveNoInteractions()
+            then(challengeStore).shouldHaveNoInteractions()
+            then(cloudflareDeployer).should().deployCertificate("cert-pem", "key-pem")
+            then(certificateRepository).should().markAsDeployed("agora.gouv.fr")
         }
     }
 }

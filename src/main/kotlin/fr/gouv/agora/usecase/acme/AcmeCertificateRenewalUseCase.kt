@@ -79,6 +79,11 @@ class AcmeCertificateRenewalUseCase(
         val certPem: String
         val domainPrivKeyPem: String
 
+        if (needsProvisioning && !acmeConfig.acmeServerInteractionEnabled) {
+            logger.info("ACME server interaction is disabled (ACME_SERVER_INTERACTION_ENABLED=false). Skipping certificate provisioning.")
+            return
+        }
+
         if (needsProvisioning) {
             // 2. Chargement/création keypair compte
             val storedAccount = accountRepository.loadAccount(serverUrl)
@@ -206,6 +211,11 @@ class AcmeCertificateRenewalUseCase(
         }
 
         // 16. Déploiement Cloudflare
+        if (!acmeConfig.cloudflareInteractionEnabled) {
+            logger.info("Cloudflare interaction is disabled (ACME_CLOUDFLARE_INTERACTION_ENABLED=false). Skipping certificate deployment to Cloudflare.")
+            return
+        }
+
         cloudflareDeployer.deployCertificate(certPem, domainPrivKeyPem)
 
         // 18. Mise à jour du statut en base → DEPLOYED
