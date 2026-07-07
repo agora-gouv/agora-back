@@ -1,7 +1,10 @@
 package fr.gouv.agora.infrastructure.acme.repository
 
+import fr.gouv.agora.domain.AcmeCertificateStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -32,6 +35,10 @@ data class AcmeCertificateDAO(
 
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "VARCHAR(50)", nullable = false)
+    val status: AcmeCertificateStatus = AcmeCertificateStatus.TO_DEPLOY,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

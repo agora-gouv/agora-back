@@ -5,4 +5,5 @@ import fr.gouv.agora.domain.AcmeCertificate
 interface AcmeCertificateRepository {
     fun loadCertificate(domain: String): AcmeCertificate?  // null si aucun certificat en base
     fun saveCertificate(certificate: AcmeCertificate)
+    fun markAsDeployed(domain: String)
 }

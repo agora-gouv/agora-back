@@ -2,6 +2,7 @@ package fr.gouv.agora.usecase.acme
 
 import fr.gouv.agora.config.AcmeConfig
 import fr.gouv.agora.domain.AcmeCertificate
+import fr.gouv.agora.domain.AcmeCertificateStatus
 import fr.gouv.agora.usecase.acme.repository.AcmeAccountRepository
 import fr.gouv.agora.usecase.acme.repository.AcmeCertificateRepository
 import fr.gouv.agora.usecase.acme.repository.AcmeChallengeStore
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
+import org.mockito.BDDMockito.willThrow
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -71,28 +73,106 @@ class AcmeCertificateRenewalUseCaseTest {
         }
 
         @Test
-        fun `renewIfNeeded - when certificate expires in more than 30 days - should not renew`() {
+        fun `renewIfNeeded - when certificate is valid and status is DEPLOYED - should do nothing`() {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
-            val farFutureExpiry = NOW.plusDays(60)
             val existingCert = AcmeCertificate(
                 domain = "agora.gouv.fr",
                 certificatePem = "cert-pem",
                 privateKeyPem = "key-pem",
-                expiresAt = farFutureExpiry,
+                expiresAt = NOW.plusDays(60),
+                status = AcmeCertificateStatus.DEPLOYED,
             )
             given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
 
             // When
             useCase.renewIfNeeded()
 
-            // Then — aucune interaction avec les repos au-delà du chargement du cert
+            // Then — aucune action au-delà du chargement du certificat
             then(accountRepository).shouldHaveNoInteractions()
             then(challengeStore).shouldHaveNoInteractions()
             then(cloudflareDeployer).shouldHaveNoInteractions()
+            then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+            then(certificateRepository).shouldHaveNoMoreInteractions()
+        }
+
+        @Test
+        fun `renewIfNeeded - when certificate is valid but status is TO_DEPLOY - should skip ACME provisioning and deploy to Cloudflare directly`() {
+            // Given
+            given(acmeConfig.enabled).willReturn(true)
+            given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+            given(clock.zone).willReturn(FIXED_CLOCK.zone)
+            val existingCert = AcmeCertificate(
+                domain = "agora.gouv.fr",
+                certificatePem = "cert-pem",
+                privateKeyPem = "key-pem",
+                expiresAt = NOW.plusDays(60),
+                status = AcmeCertificateStatus.TO_DEPLOY,
+            )
+            given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
+
+            // When
+            useCase.renewIfNeeded()
+
+            // Then — Cloudflare est appelé avec le certificat existant, sans provisioning ACME
+            then(accountRepository).shouldHaveNoInteractions()
+            then(challengeStore).shouldHaveNoInteractions()
+            then(cloudflareDeployer).should().deployCertificate("cert-pem", "key-pem")
+            then(certificateRepository).should().markAsDeployed("agora.gouv.fr")
+        }
+
+        @Test
+        fun `renewIfNeeded - when certificate is valid and TO_DEPLOY and Cloudflare deployment succeeds - should mark certificate as deployed`() {
+            // Given
+            given(acmeConfig.enabled).willReturn(true)
+            given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+            given(clock.zone).willReturn(FIXED_CLOCK.zone)
+            val existingCert = AcmeCertificate(
+                domain = "agora.gouv.fr",
+                certificatePem = "cert-pem",
+                privateKeyPem = "key-pem",
+                expiresAt = NOW.plusDays(60),
+                status = AcmeCertificateStatus.TO_DEPLOY,
+            )
+            given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
+
+            // When
+            useCase.renewIfNeeded()
+
+            // Then
+            then(certificateRepository).should().markAsDeployed("agora.gouv.fr")
+        }
+
+        @Test
+        fun `renewIfNeeded - when certificate is valid and TO_DEPLOY and Cloudflare deployment fails - should NOT mark certificate as deployed`() {
+            // Given
+            given(acmeConfig.enabled).willReturn(true)
+            given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+            given(clock.zone).willReturn(FIXED_CLOCK.zone)
+            val existingCert = AcmeCertificate(
+                domain = "agora.gouv.fr",
+                certificatePem = "cert-pem",
+                privateKeyPem = "key-pem",
+                expiresAt = NOW.plusDays(60),
+                status = AcmeCertificateStatus.TO_DEPLOY,
+            )
+            given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
+            willThrow(RuntimeException("Cloudflare error")).given(cloudflareDeployer)
+                .deployCertificate("cert-pem", "key-pem")
+
+            // When
+            val thrown = runCatching { useCase.renewIfNeeded() }
+
+            // Then — l'exception est propagée et markAsDeployed n'est jamais appelé
+            assertThat(thrown.isFailure).isTrue()
+            then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+            then(certificateRepository).shouldHaveNoMoreInteractions()
         }
 
         @Test
@@ -103,12 +183,12 @@ class AcmeCertificateRenewalUseCaseTest {
             given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
-            val soonExpiry = NOW.plusDays(10)
             val existingCert = AcmeCertificate(
                 domain = "agora.gouv.fr",
                 certificatePem = "cert-pem",
                 privateKeyPem = "key-pem",
-                expiresAt = soonExpiry,
+                expiresAt = NOW.plusDays(10),
+                status = AcmeCertificateStatus.DEPLOYED,
             )
             given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
             // accountRepository retourne null → le use case essaiera de créer un compte ACME

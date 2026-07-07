@@ -7,4 +7,5 @@ data class AcmeCertificate(
     val certificatePem: String,  // PEM chain complet (cert + intermédiaires)
     val privateKeyPem: String,   // PEM clé privée (en clair en mémoire, chiffré en base)
     val expiresAt: LocalDateTime,
+    val status: AcmeCertificateStatus = AcmeCertificateStatus.TO_DEPLOY,
 )
