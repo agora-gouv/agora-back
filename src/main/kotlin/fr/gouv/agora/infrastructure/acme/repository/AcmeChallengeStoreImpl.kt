@@ -2,20 +2,26 @@ package fr.gouv.agora.infrastructure.acme.repository
 
 import fr.gouv.agora.usecase.acme.repository.AcmeChallengeStore
 import org.springframework.stereotype.Component
-import java.util.concurrent.ConcurrentHashMap
+import java.time.LocalDateTime
 
 @Component
-class AcmeChallengeStoreImpl : AcmeChallengeStore {
-
-    private val store = ConcurrentHashMap<String, String>()
+class AcmeChallengeStoreImpl(
+    private val jpaRepository: AcmeChallengeJpaRepository,
+) : AcmeChallengeStore {
 
     override fun storeChallenge(token: String, keyAuthorization: String) {
-        store[token] = keyAuthorization
+        val dao = AcmeChallengeDAO(
+            token = token,
+            keyAuthorization = keyAuthorization,
+            createdAt = LocalDateTime.now(),
+        )
+        jpaRepository.save(dao)
     }
 
-    override fun getChallenge(token: String): String? = store[token]
+    override fun getChallenge(token: String): String? =
+        jpaRepository.findById(token).orElse(null)?.keyAuthorization
 
     override fun clearChallenge(token: String) {
-        store.remove(token)
+        jpaRepository.deleteById(token)
     }
 }

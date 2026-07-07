@@ -3,9 +3,12 @@ package fr.gouv.agora.usecase.acme
 import fr.gouv.agora.config.AcmeConfig
 import fr.gouv.agora.domain.AcmeCertificate
 import fr.gouv.agora.domain.AcmeCertificateStatus
+import fr.gouv.agora.domain.AcmeOrder
+import fr.gouv.agora.domain.AcmeOrderStatus
 import fr.gouv.agora.usecase.acme.repository.AcmeAccountRepository
 import fr.gouv.agora.usecase.acme.repository.AcmeCertificateRepository
 import fr.gouv.agora.usecase.acme.repository.AcmeChallengeStore
+import fr.gouv.agora.usecase.acme.repository.AcmeOrderRepository
 import fr.gouv.agora.usecase.acme.repository.CloudflareCertificateDeployer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -36,6 +39,9 @@ class AcmeCertificateRenewalUseCaseTest {
 
     @Mock
     private lateinit var challengeStore: AcmeChallengeStore
+
+    @Mock
+    private lateinit var orderRepository: AcmeOrderRepository
 
     @Mock
     private lateinit var cloudflareDeployer: CloudflareCertificateDeployer
@@ -69,6 +75,7 @@ class AcmeCertificateRenewalUseCaseTest {
             then(certificateRepository).shouldHaveNoInteractions()
             then(accountRepository).shouldHaveNoInteractions()
             then(challengeStore).shouldHaveNoInteractions()
+            then(orderRepository).shouldHaveNoInteractions()
             then(cloudflareDeployer).shouldHaveNoInteractions()
         }
 
@@ -94,6 +101,7 @@ class AcmeCertificateRenewalUseCaseTest {
             // Then — aucune action au-delà du chargement du certificat
             then(accountRepository).shouldHaveNoInteractions()
             then(challengeStore).shouldHaveNoInteractions()
+            then(orderRepository).shouldHaveNoInteractions()
             then(cloudflareDeployer).shouldHaveNoInteractions()
             then(certificateRepository).should().loadCertificate("agora.gouv.fr")
             then(certificateRepository).shouldHaveNoMoreInteractions()
@@ -127,7 +135,7 @@ class AcmeCertificateRenewalUseCaseTest {
         }
 
         @Test
-        fun `renewIfNeeded - when certificate is valid and TO_DEPLOY and Cloudflare deployment succeeds - should mark certificate as deployed`() {
+        fun `renewIfNeeded - when certificate is valid and TO_DEPLOY and Cloudflare deployment succeeds - should mark certificate as deployed and clean up order`() {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
@@ -148,6 +156,7 @@ class AcmeCertificateRenewalUseCaseTest {
 
             // Then
             then(certificateRepository).should().markAsDeployed("agora.gouv.fr")
+            then(orderRepository).should().deleteOrder("agora.gouv.fr")
         }
 
         @Test
@@ -176,6 +185,7 @@ class AcmeCertificateRenewalUseCaseTest {
             assertThat(thrown.isFailure).isTrue()
             then(certificateRepository).should().loadCertificate("agora.gouv.fr")
             then(certificateRepository).shouldHaveNoMoreInteractions()
+            then(orderRepository).shouldHaveNoInteractions()
         }
 
         @Test
@@ -195,9 +205,9 @@ class AcmeCertificateRenewalUseCaseTest {
                 status = AcmeCertificateStatus.DEPLOYED,
             )
             given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
+            // Pas d'order en cours en base
+            given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(null)
             // accountRepository retourne null → le use case essaiera de créer un compte ACME
-            // On ne peut pas aller plus loin sans un vrai serveur ACME, mais on vérifie que
-            // le flot a bien dépassé le guard clause d'expiration
             given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
 
             // When / Then — l'exception vient du fait qu'il n'y a pas de vrai serveur ACME,
@@ -205,8 +215,9 @@ class AcmeCertificateRenewalUseCaseTest {
             val thrown = runCatching { useCase.renewIfNeeded() }
             assertThat(thrown.isFailure).isTrue()
 
-            // Le certificateRepository a bien été interrogé
+            // Le certificateRepository et orderRepository ont bien été interrogés
             then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+            then(orderRepository).should().loadOrder("agora.gouv.fr")
             then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
         }
 
@@ -220,6 +231,7 @@ class AcmeCertificateRenewalUseCaseTest {
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
             given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+            given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(null)
             given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
 
             // When / Then
@@ -227,6 +239,7 @@ class AcmeCertificateRenewalUseCaseTest {
             assertThat(thrown.isFailure).isTrue()
 
             then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+            then(orderRepository).should().loadOrder("agora.gouv.fr")
             then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
         }
 
@@ -246,6 +259,7 @@ class AcmeCertificateRenewalUseCaseTest {
             // Then — aucune interaction ACME ni Cloudflare
             then(accountRepository).shouldHaveNoInteractions()
             then(challengeStore).shouldHaveNoInteractions()
+            then(orderRepository).shouldHaveNoInteractions()
             then(cloudflareDeployer).shouldHaveNoInteractions()
             then(certificateRepository).should().loadCertificate("agora.gouv.fr")
             then(certificateRepository).shouldHaveNoMoreInteractions()
@@ -274,6 +288,7 @@ class AcmeCertificateRenewalUseCaseTest {
             // Then — aucune interaction ACME ni Cloudflare
             then(accountRepository).shouldHaveNoInteractions()
             then(challengeStore).shouldHaveNoInteractions()
+            then(orderRepository).shouldHaveNoInteractions()
             then(cloudflareDeployer).shouldHaveNoInteractions()
             then(certificateRepository).should().loadCertificate("agora.gouv.fr")
             then(certificateRepository).shouldHaveNoMoreInteractions()
@@ -284,7 +299,6 @@ class AcmeCertificateRenewalUseCaseTest {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
-            // cloudflareInteractionEnabled retourne false (défaut mock), on le précise explicitement pour la lisibilité
             given(acmeConfig.cloudflareInteractionEnabled).willReturn(false)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
@@ -311,7 +325,6 @@ class AcmeCertificateRenewalUseCaseTest {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
-            // needsProvisioning = false (cert valide, TO_DEPLOY) → le guard acmeServerInteractionEnabled n'est jamais évalué
             given(acmeConfig.cloudflareInteractionEnabled).willReturn(true)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
             given(clock.zone).willReturn(FIXED_CLOCK.zone)
@@ -332,6 +345,64 @@ class AcmeCertificateRenewalUseCaseTest {
             then(challengeStore).shouldHaveNoInteractions()
             then(cloudflareDeployer).should().deployCertificate("cert-pem", "key-pem")
             then(certificateRepository).should().markAsDeployed("agora.gouv.fr")
+            then(orderRepository).should().deleteOrder("agora.gouv.fr")
+        }
+
+        @Nested
+        inner class ResumeOrder {
+
+            @Test
+            fun `renewIfNeeded - when pending order exists in database - should check it before starting new order`() {
+                // Given
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val pendingOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/12345",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusHours(1),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(pendingOrder)
+                // Le compte ACME doit exister pour une reprise
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When / Then — la reprise tente de récupérer le compte et échoue car pas de vrai serveur
+                val thrown = runCatching { useCase.renewIfNeeded() }
+                assertThat(thrown.isFailure).isTrue()
+
+                // L'order en base a bien été chargé
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                // Le compte ACME a été recherché pour la reprise
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+            }
+
+            @Test
+            fun `renewIfNeeded - when no pending order in database - should not query orderRepository further`() {
+                // Given
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(null)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When / Then — démarre un nouvel order (échoue car pas de vrai serveur ACME)
+                val thrown = runCatching { useCase.renewIfNeeded() }
+                assertThat(thrown.isFailure).isTrue()
+
+                // loadOrder est appelé une seule fois pour la vérification
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(orderRepository).shouldHaveNoMoreInteractions()
+            }
         }
     }
 }
