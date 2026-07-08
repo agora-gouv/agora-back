@@ -317,6 +317,7 @@ class AcmeCertificateRenewalUseCase(
                 else -> logger.info("Order status: ${order.status} (attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS)")
             }
         }
+        throw AcmeChallengeTimeoutException("ACME order timed out after $POLLING_MAX_ATTEMPTS attempts for domain $domain")
     }
 
     private fun downloadCertificate(order: org.shredzone.acme4j.Order, domain: String): String {

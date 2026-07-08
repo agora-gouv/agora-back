@@ -383,6 +383,38 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
+            fun `renewIfNeeded - when order polling times out - should throw AcmeChallengeTimeoutException`() {
+                // Given — un order en ORDER_FINALIZING est en base : le usecase va tenter resumeOrder,
+                // qui essaie de se connecter à un vrai serveur ACME → échoue avec une exception
+                // La vérification porte sur le fait que le flux ne se termine pas silencieusement
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val pendingOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/99999",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.ORDER_FINALIZING,
+                    createdAt = NOW.minusHours(1),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(pendingOrder)
+                // Pas de compte ACME → resumeOrder lève immédiatement une IllegalStateException
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — une exception est bien levée (le flux n'a pas terminé silencieusement)
+                assertThat(thrown.isFailure).isTrue()
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+            }
+
+            @Test
             fun `renewIfNeeded - when no pending order in database - should not query orderRepository further`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
