@@ -261,8 +261,12 @@ class AcmeCertificateRenewalUseCase(
                 challengeStore.storeChallenge(challenge.token, challenge.authorization)
 
                 try {
-                    challenge.trigger()
-                    pollUntilChallengeValid(challenge, domain)
+                    if (challenge.status != org.shredzone.acme4j.Status.VALID) {
+                        challenge.trigger()
+                        pollUntilChallengeValid(challenge, domain)
+                    } else {
+                        logger.info("Challenge already VALID for $domain, skipping trigger.")
+                    }
                 } finally {
                     challengeStore.clearChallenge(challenge.token)
                 }

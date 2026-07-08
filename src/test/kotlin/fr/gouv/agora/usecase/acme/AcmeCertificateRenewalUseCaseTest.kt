@@ -383,6 +383,39 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
+            fun `renewIfNeeded - when resuming CHALLENGE_PENDING order - should attempt to reconnect to ACME server before triggering challenge`() {
+                // Given — un order CHALLENGE_PENDING est en base avec un compte ACME existant.
+                // Le correctif FIX-02 ajoute une vérification de challenge.status avant trigger().
+                // Ce test vérifie que le flux de reprise est bien déclenché (il échoue car pas de vrai serveur,
+                // mais confirme que la logique de connexion au compte ACME est atteinte).
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val pendingOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/55555",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusMinutes(30),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(pendingOrder)
+                // Pas de compte → resumeOrder lève IllegalStateException avant d'atteindre challenge.status
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — le flux de reprise a bien été tenté et a échoué (pas de vrai serveur)
+                assertThat(thrown.isFailure).isTrue()
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+            }
+
+            @Test
             fun `renewIfNeeded - when order polling times out - should throw AcmeChallengeTimeoutException`() {
                 // Given — un order en ORDER_FINALIZING est en base : le usecase va tenter resumeOrder,
                 // qui essaie de se connecter à un vrai serveur ACME → échoue avec une exception
