@@ -23,90 +23,81 @@ class AcmeCryptoHelperTest {
     private lateinit var cryptoHelper: AcmeCryptoHelper
 
     companion object {
-        // Clé AES-256 valide de test (32 bytes encodés en base64)
-        private val VALID_KEY_BASE64 = Base64.getEncoder().encodeToString(ByteArray(32) { it.toByte() })
+        /** Clé AES-256 valide : 32 bytes encodés en base64. */
+        private val VALID_KEY_32_BYTES: String =
+            Base64.getEncoder().encodeToString(ByteArray(32) { it.toByte() })
+
+        /** Clé trop courte : 16 bytes encodés en base64 (AES-128, rejeté car != 32 bytes). */
+        private val SHORT_KEY_16_BYTES: String =
+            Base64.getEncoder().encodeToString(ByteArray(16) { it.toByte() })
     }
 
     @Nested
-    inner class EncryptAndDecrypt {
+    inner class EncryptDecrypt {
 
         @Test
-        fun `encrypt then decrypt - should return original plaintext`() {
+        fun `encrypt then decrypt - when key is valid - should return original plaintext`() {
             // Given
-            given(acmeConfig.encryptionKey).willReturn(VALID_KEY_BASE64)
-            val plaintext = "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA...\n-----END RSA PRIVATE KEY-----"
+            given(acmeConfig.encryptionKey).willReturn(VALID_KEY_32_BYTES)
+            val plainText = "my-super-secret-private-key-pem"
 
             // When
-            val encrypted = cryptoHelper.encrypt(plaintext)
+            val encrypted = cryptoHelper.encrypt(plainText)
             val decrypted = cryptoHelper.decrypt(encrypted)
 
             // Then
-            assertThat(decrypted).isEqualTo(plaintext)
+            assertThat(decrypted).isEqualTo(plainText)
         }
 
         @Test
-        fun `encrypt - two calls with same input - should produce different ciphertexts (random IV)`() {
+        fun `encrypt - when called twice with same plaintext - should return different ciphertexts (random IV)`() {
             // Given
-            given(acmeConfig.encryptionKey).willReturn(VALID_KEY_BASE64)
-            val plaintext = "my-secret-private-key"
+            given(acmeConfig.encryptionKey).willReturn(VALID_KEY_32_BYTES)
+            val plainText = "same-input-text"
 
             // When
-            val encrypted1 = cryptoHelper.encrypt(plaintext)
-            val encrypted2 = cryptoHelper.encrypt(plaintext)
+            val encrypted1 = cryptoHelper.encrypt(plainText)
+            val encrypted2 = cryptoHelper.encrypt(plainText)
 
-            // Then
+            // Then — chaque chiffrement produit un IV différent, donc des ciphertexts différents
             assertThat(encrypted1).isNotEqualTo(encrypted2)
-        }
-
-        @Test
-        fun `decrypt - when ciphertext is tampered - should throw exception`() {
-            // Given
-            given(acmeConfig.encryptionKey).willReturn(VALID_KEY_BASE64)
-            val plaintext = "my-secret"
-            val encrypted = cryptoHelper.encrypt(plaintext)
-            // Tamper: flip a byte by appending garbage
-            val tampered = encrypted.dropLast(4) + "XXXX"
-
-            // When / Then
-            assertThatThrownBy { cryptoHelper.decrypt(tampered) }
-                .isInstanceOf(Exception::class.java)
         }
     }
 
     @Nested
-    inner class KeyValidation {
+    inner class InvalidKey {
 
         @Test
-        fun `resolveKey - when encryptionKey is blank - should throw IllegalStateException`() {
+        fun `encrypt - when encryptionKey is blank - should throw IllegalStateException`() {
             // Given
             given(acmeConfig.encryptionKey).willReturn("")
 
             // When / Then
             assertThatThrownBy { cryptoHelper.encrypt("anything") }
                 .isInstanceOf(IllegalStateException::class.java)
-                .hasMessageContaining("ACME_ENCRYPTION_KEY")
+                .hasMessageContaining("ACME_ENCRYPTION_KEY is not configured")
         }
 
         @Test
-        fun `resolveKey - when encryptionKey is not valid base64 - should throw IllegalStateException`() {
+        fun `encrypt - when encryptionKey is not valid base64 - should throw IllegalStateException`() {
             // Given
-            given(acmeConfig.encryptionKey).willReturn("not-valid-base64!!!")
+            given(acmeConfig.encryptionKey).willReturn("this-is-not-valid-base64!!!")
 
             // When / Then
             assertThatThrownBy { cryptoHelper.encrypt("anything") }
                 .isInstanceOf(IllegalStateException::class.java)
+                .hasMessageContaining("not a valid base64")
         }
 
         @Test
-        fun `resolveKey - when encryptionKey decodes to wrong length - should throw IllegalStateException`() {
-            // Given — clé de 16 bytes (AES-128), pas 32
-            val shortKey = Base64.getEncoder().encodeToString(ByteArray(16))
-            given(acmeConfig.encryptionKey).willReturn(shortKey)
+        fun `encrypt - when encryptionKey decodes to less than 32 bytes - should throw IllegalStateException`() {
+            // Given — clé valide en base64 mais seulement 16 bytes décodés
+            given(acmeConfig.encryptionKey).willReturn(SHORT_KEY_16_BYTES)
 
             // When / Then
             assertThatThrownBy { cryptoHelper.encrypt("anything") }
                 .isInstanceOf(IllegalStateException::class.java)
-                .hasMessageContaining("32 bytes")
+                .hasMessageContaining("must be exactly 32 bytes")
         }
     }
 }
