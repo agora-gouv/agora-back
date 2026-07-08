@@ -44,8 +44,10 @@ class CloudflareCertificateDeployerImpl(
         if (response.statusCode.is2xxSuccessful) {
             logger.info("Certificate successfully deployed to Cloudflare")
         } else {
+            val errorBody = response.body?.toString() ?: "empty body"
+            logger.error("Cloudflare API error ${response.statusCode}: $errorBody")
             throw CloudflareDeploymentException(
-                "Cloudflare API returned ${response.statusCode} when deploying certificate for zone ${acmeConfig.cloudflareZoneId}"
+                "Cloudflare API returned ${response.statusCode} for zone ${acmeConfig.cloudflareZoneId}: $errorBody"
             )
         }
     }
