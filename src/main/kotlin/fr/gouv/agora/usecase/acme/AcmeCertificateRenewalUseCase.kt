@@ -53,6 +53,7 @@ class AcmeCertificateRenewalUseCase(
             return
         }
 
+        val startTime = System.currentTimeMillis()
         val domain = acmeConfig.domain
         val serverUrl = acmeConfig.serverUrl
         val now = LocalDateTime.now(clock)
@@ -130,7 +131,8 @@ class AcmeCertificateRenewalUseCase(
         certificateRepository.markAsDeployed(domain)
         orderRepository.deleteOrder(domain)
 
-        logger.info("ACME certificate deployed successfully to Cloudflare for domain $domain.")
+        val durationMs = System.currentTimeMillis() - startTime
+        logger.info("ACME certificate deployed successfully to Cloudflare for domain $domain in ${durationMs}ms.")
     }
 
     private fun startNewOrder(domain: String, serverUrl: String): Pair<String, String> {
