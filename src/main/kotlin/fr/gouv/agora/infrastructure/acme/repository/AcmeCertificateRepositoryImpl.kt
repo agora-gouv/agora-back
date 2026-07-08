@@ -30,7 +30,7 @@ class AcmeCertificateRepositoryImpl(
             privateKey = cryptoHelper.encrypt(certificate.privateKeyPem),
             expiresAt = certificate.expiresAt,
             createdAt = LocalDateTime.now(),
-            status = AcmeCertificateStatus.TO_DEPLOY,
+            status = certificate.status,
         )
         jpaRepository.save(dao)
     }
