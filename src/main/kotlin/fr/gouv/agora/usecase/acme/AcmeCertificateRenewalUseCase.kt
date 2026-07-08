@@ -163,6 +163,19 @@ class AcmeCertificateRenewalUseCase(
                 .create(session)
         }
 
+        // Persistance immédiate du compte ACME (avant challenge.trigger) pour éviter la perte
+        // de la keypair en cas d'exception pendant le flux ACME (DEBT-02)
+        val accountKeyWriter = StringWriter()
+        KeyPairUtils.writeKeyPair(accountKeyPair, accountKeyWriter)
+        accountRepository.saveAccount(
+            AcmeAccount(
+                serverUrl = serverUrl,
+                accountUrl = account.location?.toString(),
+                keyPem = accountKeyWriter.toString(),
+            )
+        )
+        logger.info("ACME account persisted early for $serverUrl (accountUrl=${account.location})")
+
         // 5. Order
         val order = account.newOrder().domain(domain).create()
 
@@ -225,17 +238,6 @@ class AcmeCertificateRenewalUseCase(
                 privateKeyPem = domainPrivKeyPem,
                 expiresAt = expiresAt,
                 status = AcmeCertificateStatus.TO_DEPLOY,
-            )
-        )
-
-        // 17. Persistance compte ACME
-        val accountKeyWriter = StringWriter()
-        KeyPairUtils.writeKeyPair(accountKeyPair, accountKeyWriter)
-        accountRepository.saveAccount(
-            AcmeAccount(
-                serverUrl = serverUrl,
-                accountUrl = account.location?.toString(),
-                keyPem = accountKeyWriter.toString(),
             )
         )
 
