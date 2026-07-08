@@ -44,6 +44,7 @@ class AcmeCertificateRenewalUseCase(
         private const val RENEWAL_THRESHOLD_DAYS = 30L
         private const val POLLING_MAX_ATTEMPTS = 10
         private const val POLLING_INTERVAL_MS = 3_000L
+        private const val ORDER_EXPIRY_HOURS = 24L
     }
 
     fun renewIfNeeded() {
@@ -93,10 +94,19 @@ class AcmeCertificateRenewalUseCase(
             val pendingOrder = orderRepository.loadOrder(domain)
 
             if (pendingOrder != null) {
-                logger.info("Found pending ACME order for $domain with status ${pendingOrder.status}. Attempting resume.")
-                val result = resumeOrder(pendingOrder, domain, serverUrl)
-                certPem = result.first
-                domainPrivKeyPem = result.second
+                val orderAgeHours = java.time.Duration.between(pendingOrder.createdAt, now).toHours()
+                if (orderAgeHours >= ORDER_EXPIRY_HOURS) {
+                    logger.warn("Stale ACME order for $domain (created ${pendingOrder.createdAt}, age ${orderAgeHours}h > ${ORDER_EXPIRY_HOURS}h). Deleting and starting fresh.")
+                    orderRepository.deleteOrder(domain)
+                    val result = startNewOrder(domain, serverUrl)
+                    certPem = result.first
+                    domainPrivKeyPem = result.second
+                } else {
+                    logger.info("Found pending ACME order for $domain with status ${pendingOrder.status}. Attempting resume.")
+                    val result = resumeOrder(pendingOrder, domain, serverUrl)
+                    certPem = result.first
+                    domainPrivKeyPem = result.second
+                }
             } else {
                 val result = startNewOrder(domain, serverUrl)
                 certPem = result.first

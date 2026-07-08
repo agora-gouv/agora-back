@@ -448,6 +448,101 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
+            fun `renewIfNeeded - when pending order is older than 24h - should delete stale order and start fresh`() {
+                // Given
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val staleOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/stale123",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusHours(25),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(staleOrder)
+                // Pas de compte ACME → startNewOrder va échouer lors de la connexion au serveur ACME,
+                // mais on vérifie que deleteOrder a bien été appelé avant
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — l'order périmé a été supprimé et un nouvel order a été démarré
+                assertThat(thrown.isFailure).isTrue()
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(orderRepository).should().deleteOrder("agora.gouv.fr")
+                // accountRepository interrogé pour le nouveau startNewOrder (pas pour resumeOrder)
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+            }
+
+            @Test
+            fun `renewIfNeeded - when pending order is exactly 24h old - should also be considered stale and deleted`() {
+                // Given
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                // 24h01 → juste au-dessus du seuil, doit être supprimé
+                val staleOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/stale456",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.ORDER_FINALIZING,
+                    createdAt = NOW.minusHours(24).minusMinutes(1),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(staleOrder)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — l'order périmé est bien supprimé
+                assertThat(thrown.isFailure).isTrue()
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(orderRepository).should().deleteOrder("agora.gouv.fr")
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+            }
+
+            @Test
+            fun `renewIfNeeded - when pending order is less than 24h old - should resume it without deleting`() {
+                // Given
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val recentOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/recent789",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusHours(23),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(recentOrder)
+                // Pas de compte → resumeOrder échoue avec IllegalStateException
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — deleteOrder n'est PAS appelé à ce stade (l'order est récent)
+                assertThat(thrown.isFailure).isTrue()
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(orderRepository).shouldHaveNoMoreInteractions()
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+            }
+
+            @Test
             fun `renewIfNeeded - when no pending order in database - should not query orderRepository further`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
