@@ -311,7 +311,10 @@ class AcmeCertificateRenewalUseCase(
             Thread.sleep(POLLING_INTERVAL_MS)
             challenge.update()
             when (challenge.status) {
-                org.shredzone.acme4j.Status.VALID -> return
+                org.shredzone.acme4j.Status.VALID -> {
+                    logger.info("ACME HTTP-01 challenge VALID after ${attempt + 1} attempt(s) for domain $domain")
+                    return
+                }
                 org.shredzone.acme4j.Status.INVALID -> {
                     throw AcmeChallengeFailedException("ACME HTTP-01 challenge INVALID for domain $domain")
                 }
@@ -328,7 +331,10 @@ class AcmeCertificateRenewalUseCase(
             Thread.sleep(POLLING_INTERVAL_MS)
             order.update()
             when (order.status) {
-                org.shredzone.acme4j.Status.VALID -> return
+                org.shredzone.acme4j.Status.VALID -> {
+                    logger.info("ACME order VALID after ${attempt + 1} attempt(s) for domain $domain")
+                    return
+                }
                 org.shredzone.acme4j.Status.INVALID -> throw AcmeChallengeFailedException("ACME order became INVALID for domain $domain")
                 else -> logger.info("Order status: ${order.status} (attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS)")
             }
