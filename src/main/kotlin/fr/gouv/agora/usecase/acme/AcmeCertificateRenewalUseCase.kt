@@ -58,8 +58,20 @@ class AcmeCertificateRenewalUseCase(
         val serverUrl = acmeConfig.serverUrl
         val now = LocalDateTime.now(clock)
 
+        logger.info(
+            "Starting ACME renewal check for domain=$domain " +
+                "[acmeServerInteraction=${acmeConfig.acmeServerInteractionEnabled}, " +
+                "cloudflareInteraction=${acmeConfig.cloudflareInteractionEnabled}]"
+        )
+
         // 1. Vérification expiration + statut de déploiement
         val existingCert = certificateRepository.loadCertificate(domain)
+
+        if (existingCert != null) {
+            logger.info("Loaded existing certificate for $domain: status=${existingCert.status}, expiresAt=${existingCert.expiresAt}")
+        } else {
+            logger.info("No existing certificate found in database for $domain")
+        }
 
         val needsProvisioning = when {
             existingCert == null -> {
@@ -85,6 +97,7 @@ class AcmeCertificateRenewalUseCase(
         val certPem: String
         val domainPrivKeyPem: String
 
+        try {
         if (needsProvisioning && !acmeConfig.acmeServerInteractionEnabled) {
             logger.info("ACME server interaction is disabled (ACME_SERVER_INTERACTION_ENABLED=false). Skipping certificate provisioning.")
             return
@@ -129,10 +142,17 @@ class AcmeCertificateRenewalUseCase(
 
         // Mise à jour du statut en base → DEPLOYED + nettoyage de l'order
         certificateRepository.markAsDeployed(domain)
+        logger.info("Certificate status updated to DEPLOYED in database for $domain")
         orderRepository.deleteOrder(domain)
+        logger.info("ACME order cleaned up from database for $domain")
 
         val durationMs = System.currentTimeMillis() - startTime
         logger.info("ACME certificate deployed successfully to Cloudflare for domain $domain in ${durationMs}ms.")
+        } catch (e: Exception) {
+            val durationMs = System.currentTimeMillis() - startTime
+            logger.error("ACME renewal failed for domain $domain after ${durationMs}ms: ${e.message}", e)
+            throw e
+        }
     }
 
     private fun startNewOrder(domain: String, serverUrl: String): Pair<String, String> {

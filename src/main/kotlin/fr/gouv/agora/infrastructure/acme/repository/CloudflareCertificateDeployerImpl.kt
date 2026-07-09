@@ -42,7 +42,8 @@ class CloudflareCertificateDeployerImpl(
         )
 
         if (response.statusCode.is2xxSuccessful) {
-            logger.info("Certificate successfully deployed to Cloudflare")
+            val certPreview = certificatePem.lines().firstOrNull { it.isNotBlank() && !it.startsWith("-----") }?.take(40) ?: "N/A"
+            logger.info("Certificate successfully deployed to Cloudflare (cert preview: $certPreview...)")
         } else {
             val errorBody = response.body?.toString() ?: "empty body"
             logger.error("Cloudflare API error ${response.statusCode}: $errorBody")
