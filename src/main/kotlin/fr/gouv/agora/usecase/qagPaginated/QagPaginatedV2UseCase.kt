@@ -14,6 +14,7 @@ import fr.gouv.agora.usecase.qagPaginated.repository.TrendingClusterRepository
 import fr.gouv.agora.usecase.supportQag.SupportQagUseCase
 import fr.gouv.agora.usecase.thematique.repository.ThematiqueRepository
 import fr.gouv.agora.usecase.themeHebdo.GetThemeHebdoUseCase
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.Duration
@@ -36,6 +37,8 @@ class QagPaginatedV2UseCase(
     private val getThemeHebdoUseCase: GetThemeHebdoUseCase,
     private val trendingClusterRepository: TrendingClusterRepository,
 ) {
+
+    private val logger = LoggerFactory.getLogger(QagPaginatedV2UseCase::class.java)
 
     companion object {
         private const val MAX_PAGE_LIST_SIZE = 20
@@ -123,6 +126,7 @@ class QagPaginatedV2UseCase(
         // Déterminer si le filtre cluster est actif (semaine à thème libre)
         val estThemeLibre = getThemeHebdoUseCase.getCurrentThemeHebdo().estThemeLibre
         val clusters = if (estThemeLibre) trendingClusterRepository.getClusters() else emptyList()
+        logger.info("[Trending] Clusters actifs pour filtrage : ${clusters.map { "${it.id} → [${it.mots.joinToString(", ")}]" }}")
         val clusterCount = mutableMapOf<String, Int>()
 
         // Slots 2-10 : 9 meilleurs par score hors épinglé, avec garde-fou max 3 questions > 72h
