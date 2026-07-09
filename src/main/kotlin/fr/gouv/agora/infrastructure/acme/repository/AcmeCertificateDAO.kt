@@ -39,6 +39,9 @@ data class AcmeCertificateDAO(
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "VARCHAR(50)", nullable = false)
     val status: AcmeCertificateStatus = AcmeCertificateStatus.TO_DEPLOY,
+
+    @Column(name = "deployed_at", nullable = true)
+    val deployedAt: LocalDateTime? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

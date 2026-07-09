@@ -111,12 +111,15 @@ class AcmeCertificateRepositoryImplTest {
     inner class MarkAsDeployed {
 
         @Test
-        fun `markAsDeployed - when called - should delegate to jpaRepository with DEPLOYED status`() {
+        fun `markAsDeployed - when called - should delegate to jpaRepository with DEPLOYED status and deployedAt timestamp`() {
+            // Given
+            val deployedAt = LocalDateTime.of(2026, 6, 25, 3, 0, 0)
+
             // When
-            repository.markAsDeployed("example.com")
+            repository.markAsDeployed("example.com", deployedAt)
 
             // Then
-            then(jpaRepository).should().updateStatusForLatestByDomain("example.com", AcmeCertificateStatus.DEPLOYED)
+            then(jpaRepository).should().markAsDeployedForLatestByDomain("example.com", AcmeCertificateStatus.DEPLOYED, deployedAt)
         }
     }
 }

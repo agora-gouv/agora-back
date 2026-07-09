@@ -8,4 +8,5 @@ data class AcmeCertificate(
     val privateKeyPem: String,   // PEM clé privée (en clair en mémoire, chiffré en base)
     val expiresAt: LocalDateTime,
     val status: AcmeCertificateStatus = AcmeCertificateStatus.TO_DEPLOY,
+    val deployedAt: LocalDateTime? = null,  // null si pas encore déployé sur Cloudflare
 )

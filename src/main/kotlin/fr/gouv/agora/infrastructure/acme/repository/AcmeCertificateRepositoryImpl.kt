@@ -20,6 +20,7 @@ class AcmeCertificateRepositoryImpl(
             privateKeyPem = cryptoHelper.decrypt(dao.privateKey),
             expiresAt = dao.expiresAt,
             status = dao.status,
+            deployedAt = dao.deployedAt,
         )
     }
 
@@ -35,7 +36,7 @@ class AcmeCertificateRepositoryImpl(
         jpaRepository.save(dao)
     }
 
-    override fun markAsDeployed(domain: String) {
-        jpaRepository.updateStatusForLatestByDomain(domain, AcmeCertificateStatus.DEPLOYED)
+    override fun markAsDeployed(domain: String, deployedAt: LocalDateTime) {
+        jpaRepository.markAsDeployedForLatestByDomain(domain, AcmeCertificateStatus.DEPLOYED, deployedAt)
     }
 }

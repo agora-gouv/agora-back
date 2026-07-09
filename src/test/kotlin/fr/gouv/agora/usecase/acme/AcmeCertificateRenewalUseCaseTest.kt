@@ -131,7 +131,7 @@ class AcmeCertificateRenewalUseCaseTest {
             then(accountRepository).shouldHaveNoInteractions()
             then(challengeStore).shouldHaveNoInteractions()
             then(cloudflareDeployer).should().deployCertificate("cert-pem", "key-pem")
-            then(certificateRepository).should().markAsDeployed("agora.gouv.fr")
+            then(certificateRepository).should().markAsDeployed("agora.gouv.fr", NOW)
         }
 
         @Test
@@ -155,7 +155,7 @@ class AcmeCertificateRenewalUseCaseTest {
             useCase.renewIfNeeded()
 
             // Then
-            then(certificateRepository).should().markAsDeployed("agora.gouv.fr")
+            then(certificateRepository).should().markAsDeployed("agora.gouv.fr", NOW)
             then(orderRepository).should().deleteOrder("agora.gouv.fr")
         }
 
@@ -344,7 +344,7 @@ class AcmeCertificateRenewalUseCaseTest {
             then(accountRepository).shouldHaveNoInteractions()
             then(challengeStore).shouldHaveNoInteractions()
             then(cloudflareDeployer).should().deployCertificate("cert-pem", "key-pem")
-            then(certificateRepository).should().markAsDeployed("agora.gouv.fr")
+            then(certificateRepository).should().markAsDeployed("agora.gouv.fr", NOW)
             then(orderRepository).should().deleteOrder("agora.gouv.fr")
         }
 

@@ -141,7 +141,7 @@ class AcmeCertificateRenewalUseCase(
         cloudflareDeployer.deployCertificate(certPem, domainPrivKeyPem)
 
         // Mise à jour du statut en base → DEPLOYED + nettoyage de l'order
-        certificateRepository.markAsDeployed(domain)
+        certificateRepository.markAsDeployed(domain, LocalDateTime.now(clock))
         logger.info("Certificate status updated to DEPLOYED in database for $domain")
         orderRepository.deleteOrder(domain)
         logger.info("ACME order cleaned up from database for $domain")
