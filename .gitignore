@@ -41,3 +41,5 @@ out/
 agents.md
 log.txt
 dump.rdb
+/architecture-decisions/ACME/2026-06-25-acme-v2-test-plan.md
+/architecture-decisions/ACME/2026-07-08-acme-review-correctifs.md
