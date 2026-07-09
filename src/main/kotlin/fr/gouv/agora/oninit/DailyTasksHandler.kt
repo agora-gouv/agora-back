@@ -1,6 +1,5 @@
 package fr.gouv.agora.oninit
 
-import fr.gouv.agora.usecase.acme.AcmeCertificateRenewalUseCase
 import fr.gouv.agora.usecase.consultation.ConsultationCacheClearUseCase
 import fr.gouv.agora.usecase.consultationAggregate.PickConsultationsToAggregateUseCase
 import fr.gouv.agora.usecase.suspiciousUser.DeleteSuspiciousSupportsUseCase
@@ -13,7 +12,6 @@ class DailyTasksHandler(
     private val pickConsultationsToAggregateUseCase: PickConsultationsToAggregateUseCase,
     private val suspiciousActivityDetectUseCase: SuspiciousActivityDetectUseCase,
     private val deleteSuspiciousSupportsUseCase: DeleteSuspiciousSupportsUseCase,
-    private val acmeCertificateRenewalUseCase: AcmeCertificateRenewalUseCase,
 ) : CustomCommandHandler {
 
     override fun handleTask(arguments: Map<String, String>?) {
@@ -21,7 +19,6 @@ class DailyTasksHandler(
         pickConsultationsToAggregateUseCase.aggregateConsultations()
         suspiciousActivityDetectUseCase.flagSuspiciousUsers()
         deleteSuspiciousSupportsUseCase.execute()
-        acmeCertificateRenewalUseCase.renewIfNeeded()
         // TODOs
         // - Delete everything related to a user when last connection date is over 2 years (except QaG if status is SELECTED_FOR_RESPONSE)
         // - Remove feedback link to userId ?
