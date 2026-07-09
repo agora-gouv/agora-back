@@ -2,10 +2,13 @@ package fr.gouv.agora.infrastructure.acme
 
 import fr.gouv.agora.usecase.acme.AcmeCertificateRenewalUseCase
 import fr.gouv.agora.usecase.acme.AcmeCertificateUploadUseCase
+import fr.gouv.agora.usecase.acme.CloudflareHealthCheckResult
+import fr.gouv.agora.usecase.acme.CloudflareHealthCheckUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -16,6 +19,7 @@ import java.time.LocalDateTime
 class AcmeAdminController(
     private val acmeCertificateRenewalUseCase: AcmeCertificateRenewalUseCase,
     private val acmeCertificateUploadUseCase: AcmeCertificateUploadUseCase,
+    private val cloudflareHealthCheckUseCase: CloudflareHealthCheckUseCase,
 ) {
 
     @Operation(
@@ -50,10 +54,44 @@ class AcmeAdminController(
         )
         return ResponseEntity.ok("Certificat enregistré avec succès avec le statut TO_DEPLOY")
     }
+
+    @Operation(
+        summary = "Vérifier le paramétrage Cloudflare (health check zone)",
+        description = "Interroge l'API Cloudflare pour récupérer les informations de la zone configurée. " +
+            "Permet de vérifier que le CLOUDFLARE_ZONE_ID et le CLOUDFLARE_API_TOKEN sont correctement configurés.",
+        responses = [
+            ApiResponse(responseCode = "200", description = "Informations de la zone Cloudflare récupérées avec succès"),
+            ApiResponse(responseCode = "401", description = "Unauthorized : droits administrateur requis"),
+            ApiResponse(responseCode = "503", description = "Erreur lors de l'appel à l'API Cloudflare"),
+        ]
+    )
+    @GetMapping("/admin/acme/cloudflare/zone-info")
+    fun getCloudflareZoneInfo(): ResponseEntity<Any> {
+        return when (val result = cloudflareHealthCheckUseCase.getZoneInfo()) {
+            is CloudflareHealthCheckResult.ZoneInfo -> ResponseEntity.ok(
+                CloudflareZoneInfoJson(
+                    zoneId = result.info.zoneId,
+                    name = result.info.name,
+                    status = result.info.status,
+                    plan = result.info.plan,
+                )
+            )
+            is CloudflareHealthCheckResult.Disabled -> ResponseEntity.ok(
+                mapOf("message" to result.message)
+            )
+        }
+    }
 }
 
 data class AcmeCertificateUploadJson(
     val certificatePem: String,
     val privateKeyPem: String,
     val expiresAt: LocalDateTime,
+)
+
+data class CloudflareZoneInfoJson(
+    val zoneId: String,
+    val name: String,
+    val status: String,
+    val plan: String,
 )
