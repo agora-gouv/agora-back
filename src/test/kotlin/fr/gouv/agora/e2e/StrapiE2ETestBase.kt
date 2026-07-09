@@ -32,6 +32,9 @@ abstract class StrapiE2ETestBase {
     val cmsStrapiHttpClient: CmsStrapiHttpClient = CmsStrapiHttpClient(
         httpClient = HttpClient.newHttpClient(),
         objectMapper = objectMapper,
+        strapiSuspended = false,
+        cmsAuthToken = cmsAuthToken.orEmpty(),
+        cmsApiUrl = cmsApiUrl.orEmpty(),
     )
 
     /**
