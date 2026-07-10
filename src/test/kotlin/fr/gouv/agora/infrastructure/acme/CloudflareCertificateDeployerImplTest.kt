@@ -39,7 +39,7 @@ class CloudflareCertificateDeployerImplTest {
         given(
             restTemplate.exchange(
                 org.mockito.ArgumentMatchers.anyString(),
-                org.mockito.ArgumentMatchers.eq(HttpMethod.PATCH),
+                org.mockito.ArgumentMatchers.eq(HttpMethod.POST),
                 org.mockito.ArgumentMatchers.any(),
                 org.mockito.ArgumentMatchers.eq(Map::class.java),
             )
@@ -73,7 +73,7 @@ class CloudflareCertificateDeployerImplTest {
             // Then — on capture l'HttpEntity envoyée
             org.mockito.BDDMockito.then(restTemplate).should().exchange(
                 org.mockito.ArgumentMatchers.anyString(),
-                org.mockito.ArgumentMatchers.eq(HttpMethod.PATCH),
+                org.mockito.ArgumentMatchers.eq(HttpMethod.POST),
                 httpEntityCaptor.capture(),
                 org.mockito.ArgumentMatchers.eq(Map::class.java),
             )
@@ -96,7 +96,7 @@ class CloudflareCertificateDeployerImplTest {
             // Then
             org.mockito.BDDMockito.then(restTemplate).should().exchange(
                 org.mockito.ArgumentMatchers.anyString(),
-                org.mockito.ArgumentMatchers.eq(HttpMethod.PATCH),
+                org.mockito.ArgumentMatchers.eq(HttpMethod.POST),
                 httpEntityCaptor.capture(),
                 org.mockito.ArgumentMatchers.eq(Map::class.java),
             )

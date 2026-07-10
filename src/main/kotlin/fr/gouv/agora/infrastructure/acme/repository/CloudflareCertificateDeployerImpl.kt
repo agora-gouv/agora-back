@@ -36,7 +36,7 @@ class CloudflareCertificateDeployerImpl(
 
         val response = restTemplate.exchange(
             url,
-            HttpMethod.PATCH,
+            HttpMethod.POST,
             HttpEntity(body, headers),
             Map::class.java,
         )
