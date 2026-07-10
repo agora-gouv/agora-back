@@ -38,7 +38,8 @@ class AdminTasksController(
     )
     @PostMapping("/admin/cache/clear")
     fun clearCache(): ResponseEntity<String> {
-        val clearedCount = clearCacheUseCase.clearAllCaches()
-        return ResponseEntity.ok("Cache Redis vidé avec succès ($clearedCount cache(s) vidé(s))")
+        val clearedCacheNames = clearCacheUseCase.clearAllCaches()
+        val cacheList = clearedCacheNames.joinToString(separator = "\n") { "- $it" }
+        return ResponseEntity.ok("Cache Redis vidé avec succès (${clearedCacheNames.size} cache(s) vidé(s)) :\n$cacheList")
     }
 }

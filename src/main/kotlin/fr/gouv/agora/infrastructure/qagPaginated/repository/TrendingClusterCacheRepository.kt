@@ -33,5 +33,9 @@ class TrendingClusterCacheRepository(
         getCache()?.put(CACHE_KEY, clusters)
     }
 
+    fun clearCache() {
+        getCache()?.clear()
+    }
+
     private fun getCache() = cacheManager.getCache(CACHE_NAME)
 }

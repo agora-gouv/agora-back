@@ -21,6 +21,10 @@ class TrendingClusterRepositoryImpl(
         }
     }
 
+    override fun clearCache() {
+        cacheRepository.clearCache()
+    }
+
     private fun getClustersAndCacheIt(): List<TrendingCluster> {
         val clusters = strapiRepository.getClusters().data.mapNotNull { dto ->
             val keywords = dto.keywords

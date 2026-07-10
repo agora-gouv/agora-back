@@ -1,5 +1,6 @@
 package fr.gouv.agora.usecase.cache
 
+import fr.gouv.agora.usecase.qagPaginated.repository.TrendingClusterRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -28,18 +29,27 @@ class ClearCacheUseCaseTest {
     @Mock
     private lateinit var eternalCacheManager: CacheManager
 
+    @Mock
+    private lateinit var trendingClusterRepository: TrendingClusterRepository
+
     private lateinit var useCase: ClearCacheUseCase
 
     @BeforeEach
     fun setUp() {
-        useCase = ClearCacheUseCase(cacheManager, shortTermCacheManager, longTermCacheManager, eternalCacheManager)
+        useCase = ClearCacheUseCase(
+            cacheManager,
+            shortTermCacheManager,
+            longTermCacheManager,
+            eternalCacheManager,
+            trendingClusterRepository,
+        )
     }
 
     @Nested
     inner class `clearAllCaches - when all managers have caches` {
 
         @Test
-        fun `clearAllCaches - when all managers have caches - should clear each cache and return total count`() {
+        fun `clearAllCaches - when all managers have caches - should clear each cache and return their names`() {
             // Given
             val cache1 = mock(Cache::class.java)
             val cache2 = mock(Cache::class.java)
@@ -59,10 +69,11 @@ class ClearCacheUseCaseTest {
             val result = useCase.clearAllCaches()
 
             // Then
-            assertThat(result).isEqualTo(3)
+            assertThat(result).containsExactlyInAnyOrder("cache-a", "cache-b", "short-cache", "trendingClusterCache")
             then(cache1).should().clear()
             then(cache2).should().clear()
             then(cache3).should().clear()
+            then(trendingClusterRepository).should().clearCache()
         }
     }
 
@@ -70,7 +81,7 @@ class ClearCacheUseCaseTest {
     inner class `clearAllCaches - when all managers are empty` {
 
         @Test
-        fun `clearAllCaches - when no caches exist - should return 0`() {
+        fun `clearAllCaches - when no caches exist - should return only trendingClusterCache`() {
             // Given
             given(cacheManager.cacheNames).willReturn(emptySet())
             given(shortTermCacheManager.cacheNames).willReturn(emptySet())
@@ -81,7 +92,8 @@ class ClearCacheUseCaseTest {
             val result = useCase.clearAllCaches()
 
             // Then
-            assertThat(result).isEqualTo(0)
+            assertThat(result).containsExactly("trendingClusterCache")
+            then(trendingClusterRepository).should().clearCache()
         }
     }
 
@@ -89,7 +101,7 @@ class ClearCacheUseCaseTest {
     inner class `clearAllCaches - when getCache returns null` {
 
         @Test
-        fun `clearAllCaches - when getCache returns null - should skip clear but still count the cache name`() {
+        fun `clearAllCaches - when getCache returns null - should still include the cache name in result`() {
             // Given
             val cache = mock(Cache::class.java)
             given(cacheManager.cacheNames).willReturn(setOf("cache-present", "cache-null"))
@@ -104,8 +116,29 @@ class ClearCacheUseCaseTest {
             val result = useCase.clearAllCaches()
 
             // Then
-            assertThat(result).isEqualTo(2)
+            assertThat(result).containsExactlyInAnyOrder("cache-present", "cache-null", "trendingClusterCache")
             then(cache).should().clear()
+            then(trendingClusterRepository).should().clearCache()
+        }
+    }
+
+    @Nested
+    inner class `clearAllCaches - trending cluster cache` {
+
+        @Test
+        fun `clearAllCaches - should always call clearCache on trendingClusterRepository and include it in result`() {
+            // Given
+            given(cacheManager.cacheNames).willReturn(emptySet())
+            given(shortTermCacheManager.cacheNames).willReturn(emptySet())
+            given(longTermCacheManager.cacheNames).willReturn(emptySet())
+            given(eternalCacheManager.cacheNames).willReturn(emptySet())
+
+            // When
+            val result = useCase.clearAllCaches()
+
+            // Then
+            assertThat(result).contains("trendingClusterCache")
+            then(trendingClusterRepository).should().clearCache()
         }
     }
 }
