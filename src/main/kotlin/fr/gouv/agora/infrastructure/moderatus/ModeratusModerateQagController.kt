@@ -29,6 +29,7 @@ class ModeratusModerateQagController(
         @RequestParam("status") status: String,
         @RequestParam("motif") reason: String?,
         @RequestParam("kill") shouldDeleteFlag: String?,
+        @RequestParam("motif_id") motifId: String?,
     ): ResponseEntity<*> {
         val userId = when (val loginResult = moderatusLoginUseCase.login(loginToken)) {
             is ModeratusLoginResult.Success -> loginResult.userId
@@ -42,6 +43,7 @@ class ModeratusModerateQagController(
             status = status,
             reason = reason,
             shouldDeleteFlag = shouldDeleteFlag?.toIntOrNull() ?: 0,
+            motifId = motifId,
         )) {
             is ModerateQagOptionsMapper.Result.Success -> result.options
             is ModerateQagOptionsMapper.Result.Error -> return ResponseEntity.badRequest()

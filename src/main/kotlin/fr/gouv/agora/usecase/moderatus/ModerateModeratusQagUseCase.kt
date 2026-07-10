@@ -47,6 +47,7 @@ class ModerateModeratusQagUseCase(
         return when (updateQagStatus) {
             is QagUpdateResult.Success -> {
                 notifyUpdateIfRequired(qagInfo = qagInfo, isAccepted = moderateQagOptions.isAccepted)
+                qagInfoRepository.updateQagMotifId(qagId = qagInfo.id, motifId = moderateQagOptions.motifId)
                 qagUpdatesRepository.insertQagUpdates(
                     QagInsertingUpdates(
                         qagId = qagInfo.id,
@@ -54,6 +55,7 @@ class ModerateModeratusQagUseCase(
                         userId = moderateQagOptions.userId,
                         reason = moderateQagOptions.reason,
                         shouldDelete = moderateQagOptions.shouldDelete,
+                        motifId = moderateQagOptions.motifId,
                     )
                 )
                 ModeratusQagModerateResult.SUCCESS
@@ -93,4 +95,5 @@ data class ModerateQagOptions(
     val isAccepted: Boolean,
     val reason: String?,
     val shouldDelete: Boolean,
+    val motifId: String?,
 )

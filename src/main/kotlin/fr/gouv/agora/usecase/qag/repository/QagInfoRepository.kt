@@ -32,6 +32,7 @@ interface QagInfoRepository {
     fun getQagWithSupportCount(qagId: String): QagInfoWithSupportCount?
     fun insertQagInfo(qagInserting: QagInserting): QagInsertionResult
     fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult
+    fun updateQagMotifId(qagId: String, motifId: String?)
     fun getMostPopularQags(): List<QagInfoWithSupportCount>
     fun getTrendingQags(interval: Duration): List<QagInfoWithSupportCount>
     fun getTrendingQagsWithRecentLikes(interval: Duration, minLikes: Int): List<QagInfoWithSupportCount>

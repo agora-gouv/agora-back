@@ -195,6 +195,11 @@ interface QagInfoDatabaseRepository : JpaRepository<QagDTO, UUID> {
     @Query(value = "UPDATE qags SET status = :newStatus WHERE id = :qagId", nativeQuery = true)
     fun updateQagStatus(@Param("qagId") qagId: UUID, @Param("newStatus") newStatus: Int): Int
 
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE qags SET motif_id = :motifId WHERE id = :qagId", nativeQuery = true)
+    fun updateQagMotifId(@Param("qagId") qagId: UUID, @Param("motifId") motifId: String?)
+
     @Query(
         value = """SELECT $QAG_WITH_SUPPORT_COUNT_PROJECTION 
             FROM $QAG_WITH_SUPPORT_JOIN

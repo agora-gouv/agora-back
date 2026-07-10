@@ -18,6 +18,7 @@ data class QagUpdatesDTO(
     val moderatedDate: Date,
     val reason: String?,
     val shouldDeleteFlag: Int,
+    val motifId: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

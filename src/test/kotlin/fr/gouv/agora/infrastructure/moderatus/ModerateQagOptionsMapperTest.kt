@@ -20,6 +20,7 @@ internal class ModerateQagOptionsMapperTest {
         isAccepted = true,
         reason = null,
         shouldDelete = false,
+        motifId = null,
     )
 
     @Test
@@ -31,6 +32,7 @@ internal class ModerateQagOptionsMapperTest {
             status = "Coucou !",
             reason = null,
             shouldDeleteFlag = null,
+            motifId = null,
         )
 
         // Then
@@ -46,6 +48,7 @@ internal class ModerateQagOptionsMapperTest {
             status = "OK",
             reason = "Parce que !",
             shouldDeleteFlag = null,
+            motifId = null,
         )
 
         // Then
@@ -68,6 +71,7 @@ internal class ModerateQagOptionsMapperTest {
             status = "NOK",
             reason = "Comme ça",
             shouldDeleteFlag = 0,
+            motifId = null,
         )
 
         // Then
@@ -90,6 +94,7 @@ internal class ModerateQagOptionsMapperTest {
             status = "OK",
             reason = null,
             shouldDeleteFlag = null,
+            motifId = null,
         )
 
         // Then
@@ -109,6 +114,7 @@ internal class ModerateQagOptionsMapperTest {
             status = "OK",
             reason = null,
             shouldDeleteFlag = 56,
+            motifId = null,
         )
 
         // Then
@@ -128,6 +134,7 @@ internal class ModerateQagOptionsMapperTest {
             status = "NOK",
             reason = null,
             shouldDeleteFlag = 1,
+            motifId = null,
         )
 
         // Then
@@ -150,6 +157,7 @@ internal class ModerateQagOptionsMapperTest {
             status = "OK",
             reason = null,
             shouldDeleteFlag = 1,
+            motifId = null,
         )
 
         // Then
@@ -159,6 +167,26 @@ internal class ModerateQagOptionsMapperTest {
                     isAccepted = true,
                     shouldDelete = false,
                 )
+            )
+        )
+    }
+
+    @Test
+    fun `toModerateQagOptions - when motifId is provided - should return motifId in options`() {
+        // When
+        val result = mapper.toModerateQagOptions(
+            qagId = "qagId",
+            userId = "userId",
+            status = "OK",
+            reason = null,
+            shouldDeleteFlag = null,
+            motifId = "motif42",
+        )
+
+        // Then
+        assertThat(result).isEqualTo(
+            Result.Success(
+                expectedModerateQagOptions.copy(motifId = "motif42")
             )
         )
     }

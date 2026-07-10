@@ -21,6 +21,7 @@ data class QagDTO(
     val thematiqueId: String,
     @JoinTable(joinColumns = [JoinColumn(table = "agora_users", referencedColumnName = "id")])
     val userId: UUID,
+    val motifId: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

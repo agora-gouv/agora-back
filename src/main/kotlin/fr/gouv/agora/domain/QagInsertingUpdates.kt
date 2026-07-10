@@ -6,4 +6,5 @@ data class QagInsertingUpdates(
     val userId: String,
     val reason: String?,
     val shouldDelete: Boolean,
+    val motifId: String?,
 )
