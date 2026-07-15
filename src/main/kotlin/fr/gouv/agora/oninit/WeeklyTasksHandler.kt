@@ -15,7 +15,8 @@ class WeeklyTasksHandler(
 ) : CustomCommandHandler {
 
     override fun handleTask(arguments: Map<String, String>?) {
-        if (isThemeHebdoTransitionUseCase.isInTransition()) {
+        val ignoreTransition = arguments?.get("force_question_selection") == "true"
+        if (ignoreTransition || isThemeHebdoTransitionUseCase.isInTransition()) {
             selectMostPopularQagUseCase.putMostPopularQagInSelectedStatus()
             archiveOldQagUseCase.archiveOldQag()
         }
