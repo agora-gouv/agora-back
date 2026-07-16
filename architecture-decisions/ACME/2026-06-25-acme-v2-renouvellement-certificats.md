@@ -145,7 +145,7 @@ config/
 │  12. Télécharger le certificat signé                            │
 │  13. Persister le certificat via AcmeCertificateRepository      │
 │  14. Déployer le certificat sur Cloudflare via API              │
-│      → PATCH /zones/{zone_id}/custom_certificates               │
+│      → POST /zones/{zone_id}/custom_certificates                │
 └─────────────────────────────────────────────────────────────────┘
                            │
          HTTP GET (port 80) │  ← Sectigo valide le challenge
@@ -224,7 +224,7 @@ val account = AccountBuilder()
 Une fois le certificat émis par Sectigo, il est uploadé sur Cloudflare via l'API REST :
 
 ```http
-PATCH https://api.cloudflare.com/client/v4/zones/{CLOUDFLARE_ZONE_ID}/custom_certificates
+POST https://api.cloudflare.com/client/v4/zones/{CLOUDFLARE_ZONE_ID}/custom_certificates
 Authorization: Bearer {CLOUDFLARE_API_TOKEN}
 Content-Type: application/json
 

@@ -298,6 +298,7 @@ check_call() {
 check_call "directory"              "/stub/acme/directory"
 check_call "new-account"            "/stub/acme/new-account"
 check_call "new-order"              "/stub/acme/new-order"
+check_call "authorization ACME"     "/stub/acme/authz/"
 check_call "challenge HTTP-01"      "/stub/acme/challenge/"
 check_call "finalize order"         "/stub/acme/order/.*/finalize"
 check_call "download certificate"   "/stub/acme/certificate/"
@@ -343,6 +344,14 @@ if echo "$DB_CERT" | grep -qi "DEPLOYED"; then
   ok "  Certificat en base avec statut DEPLOYED"
 else
   fail "  Certificat introuvable ou statut != DEPLOYED (trouvé : $DB_CERT)"
+fi
+
+DB_ORDER_COUNT=$(run_sql "SELECT count(*) FROM acme_order WHERE domain = '${ACME_DOMAIN}';" | tr -d ' \n\t')
+info "  Lignes acme_order restantes : $DB_ORDER_COUNT"
+if [ "$DB_ORDER_COUNT" = "0" ]; then
+  ok "  acme_order nettoyé en base après déploiement (count=0)"
+else
+  fail "  acme_order non supprimé après déploiement (count=$DB_ORDER_COUNT)"
 fi
 
 # =============================================================================

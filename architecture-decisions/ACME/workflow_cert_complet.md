@@ -254,7 +254,7 @@ Order VALID
      │       └──► STOP (mode dry-run)
      │
      ├── cloudflareDeployer.deployCertificate(certPem, domainPrivKeyPem)
-     │       PATCH https://api.cloudflare.com/client/v4/zones/{zoneId}/custom_certificates
+      │       POST https://api.cloudflare.com/client/v4/zones/{zoneId}/custom_certificates
      │       Authorization: Bearer {CLOUDFLARE_API_TOKEN}
      │       Body: { certificate, private_key, bundle_method: "ubiquitous" }
      │
