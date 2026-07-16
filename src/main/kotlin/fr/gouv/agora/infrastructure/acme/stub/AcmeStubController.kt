@@ -224,6 +224,7 @@ class AcmeStubController(
         logger.info("[STUB] ACME POST /authz/$authzId → status=$status token=$token")
         val nonce = nonceStore.generateNonce()
 
+        val challengeStatus = if (status == "valid") "valid" else "pending"
         val responseBody = mapOf(
             "status" to status,
             "identifier" to mapOf("type" to "dns", "value" to domain),
@@ -232,8 +233,9 @@ class AcmeStubController(
                     "type" to "http-01",
                     "url" to "$base/challenge/$token",
                     "token" to token,
-                    "status" to if (status == "valid") "valid" else "pending",
-                )
+                    "status" to challengeStatus,
+                    "validated" to if (challengeStatus == "valid") "2026-01-01T00:00:00Z" else null,
+                ).filterValues { it != null }
             ),
         )
 
@@ -257,11 +259,14 @@ class AcmeStubController(
             order?.let { orderStore.authzs[it.authzId]?.status = "valid" }
         }
 
+        val base = baseUrl()
         val nonce = nonceStore.generateNonce()
         val responseBody = mapOf(
             "type" to "http-01",
+            "url" to "$base/challenge/$token",
             "status" to "valid",
             "token" to token,
+            "validated" to "2026-01-01T00:00:00Z",
         )
 
         return ResponseEntity(responseBody, HttpHeaders().apply { set("Replay-Nonce", nonce) }, HttpStatus.OK)
@@ -275,9 +280,8 @@ class AcmeStubController(
     @PostMapping(
         "/stub/acme/certificate/{certId}",
         consumes = ["application/jose+json", "application/json"],
-        produces = ["application/pem-certificate-chain"],
     )
-    fun getCertificate(@PathVariable certId: String, @RequestBody body: String): ResponseEntity<String> {
+    fun getCertificate(@PathVariable certId: String, @RequestBody body: String): ResponseEntity<ByteArray> {
         val generated = generatedCerts[certId]
         logger.info("[STUB] ACME POST /certificate/$certId → ${if (generated != null) "found" else "not found"}")
         stubStore.record("POST", "/stub/acme/certificate/$certId", "downloadCertificate certId=$certId")
@@ -285,8 +289,8 @@ class AcmeStubController(
         return if (generated != null) {
             ResponseEntity.ok()
                 .header("Replay-Nonce", nonceStore.generateNonce())
-                .contentType(MediaType.parseMediaType("application/pem-certificate-chain"))
-                .body(generated.certPem)
+                .header("Content-Type", "application/pem-certificate-chain")
+                .body(generated.certPem.toByteArray(Charsets.UTF_8))
         } else {
             ResponseEntity.notFound().build()
         }

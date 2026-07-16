@@ -176,9 +176,14 @@ class AcmeCertificateRenewalUseCase(
             logger.info("Using existing ACME account: ${storedAccount.accountUrl}")
             accountBuilder.onlyExisting().create(session)
         } else {
-            logger.info("Creating new ACME account with EAB credentials.")
+            val hasEab = acmeConfig.eabKid.isNotBlank() && acmeConfig.eabHmacKey.isNotBlank()
+            if (hasEab) {
+                logger.info("Creating new ACME account with EAB credentials.")
+                accountBuilder.withKeyIdentifier(acmeConfig.eabKid, acmeConfig.eabHmacKey)
+            } else {
+                logger.info("Creating new ACME account without EAB (stub/test mode).")
+            }
             accountBuilder
-                .withKeyIdentifier(acmeConfig.eabKid, acmeConfig.eabHmacKey)
                 .agreeToTermsOfService()
                 .create(session)
         }

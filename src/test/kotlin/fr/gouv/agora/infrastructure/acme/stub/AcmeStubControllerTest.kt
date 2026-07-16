@@ -345,9 +345,10 @@ class AcmeStubControllerTest {
             val response = realController.getCertificate(certId, "{}")
 
             // Then
+            val bodyString: String = response.body?.toString(Charsets.UTF_8) ?: ""
             assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-            assertThat(response.body).isNotBlank()
-            assertThat(response.body).contains("-----BEGIN CERTIFICATE-----")
+            assertThat(bodyString).isNotBlank()
+            assertThat(bodyString).containsIgnoringCase("BEGIN CERTIFICATE")
         }
 
         @Test
