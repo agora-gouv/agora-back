@@ -1,13 +1,14 @@
 package fr.gouv.agora.infrastructure.acme.stub
 
 import fr.gouv.agora.config.AcmeConfig
+import fr.gouv.agora.infrastructure.acme.repository.AcmeCryptoHelper
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.shredzone.acme4j.util.KeyPairUtils
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import java.io.StringWriter
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -31,6 +33,7 @@ class AcmeStubController(
     private val nonceStore: AcmeStubNonceStore,
     private val orderStore: AcmeStubOrderStore,
     private val certGenerator: AcmeStubCertificateGenerator,
+    private val cryptoHelper: AcmeCryptoHelper,
 ) {
     private val logger = LoggerFactory.getLogger(AcmeStubController::class.java)
 
@@ -38,6 +41,27 @@ class AcmeStubController(
     private val generatedCerts: ConcurrentHashMap<String, GeneratedCertificate> = ConcurrentHashMap()
 
     private fun baseUrl() = "http://localhost:${acmeConfig.port}/stub/acme"
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // KEYPAIR GENERATION (utilitaire pour les scripts de test)
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Génère une keypair EC P-256 compatible acme4j via KeyPairUtils,
+     * la chiffre avec AcmeCryptoHelper et renvoie le résultat chiffré en base64.
+     * Utilisé par les scripts de test pour garantir la compatibilité acme4j.
+     */
+    @Operation(summary = "[STUB] Générer une keypair EC acme4j-compatible (chiffrée)")
+    @PostMapping("/stub/acme/generate-keypair")
+    fun generateKeypair(): ResponseEntity<Map<String, String>> {
+        val keyPair = KeyPairUtils.createKeyPair(2048)
+        val writer = StringWriter()
+        KeyPairUtils.writeKeyPair(keyPair, writer)
+        val pemPkcs8 = writer.toString()
+        val encrypted = cryptoHelper.encrypt(pemPkcs8)
+        logger.info("[STUB] generate-keypair → keypair générée et chiffrée")
+        return ResponseEntity.ok(mapOf("encryptedKeyPair" to encrypted))
+    }
 
     // ──────────────────────────────────────────────────────────────────────────
     // DIRECTORY
@@ -95,6 +119,20 @@ class AcmeStubController(
     // ──────────────────────────────────────────────────────────────────────────
     // ACCOUNT
     // ──────────────────────────────────────────────────────────────────────────
+
+    @Operation(summary = "[STUB] Récupérer un compte ACME existant (utilisé par acme4j login + bindOrder)")
+    @PostMapping("/stub/acme/account/{accountId}", consumes = ["application/jose+json", "application/json"])
+    fun getAccount(@PathVariable accountId: String, @RequestBody body: String): ResponseEntity<Map<String, Any>> {
+        val base = baseUrl()
+        logger.info("[STUB] ACME POST /account/$accountId → returning existing account")
+        val nonce = nonceStore.generateNonce()
+        val responseBody = mapOf(
+            "status" to "valid",
+            "contact" to emptyList<String>(),
+            "orders" to "$base/account/$accountId/orders",
+        )
+        return ResponseEntity(responseBody, HttpHeaders().apply { set("Replay-Nonce", nonce) }, HttpStatus.OK)
+    }
 
     @Operation(summary = "[STUB] Créer ou récupérer un compte ACME")
     @PostMapping("/stub/acme/new-account", consumes = ["application/jose+json", "application/json"])
@@ -164,6 +202,7 @@ class AcmeStubController(
         val base = baseUrl()
         val order = orderStore.orders[orderId]
         logger.info("[STUB] ACME POST /order/$orderId → status=${order?.status}")
+        stubStore.record("POST", "/stub/acme/order/$orderId", "getOrder orderId=$orderId status=${order?.status}")
         val nonce = nonceStore.generateNonce()
 
         val responseBody: Map<String, Any> = if (order != null) {
@@ -222,6 +261,7 @@ class AcmeStubController(
         val domain = acmeConfig.domain.ifBlank { "stub.local" }
 
         logger.info("[STUB] ACME POST /authz/$authzId → status=$status token=$token")
+        stubStore.record("POST", "/stub/acme/authz/$authzId", "getAuthz authzId=$authzId status=$status")
         val nonce = nonceStore.generateNonce()
 
         val challengeStatus = if (status == "valid") "valid" else "pending"

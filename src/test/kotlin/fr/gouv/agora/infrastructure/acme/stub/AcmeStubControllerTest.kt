@@ -1,6 +1,7 @@
 package fr.gouv.agora.infrastructure.acme.stub
 
 import fr.gouv.agora.config.AcmeConfig
+import fr.gouv.agora.infrastructure.acme.repository.AcmeCryptoHelper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -29,6 +30,9 @@ class AcmeStubControllerTest {
 
     @Mock
     private lateinit var certGenerator: AcmeStubCertificateGenerator
+
+    @Mock
+    private lateinit var cryptoHelper: fr.gouv.agora.infrastructure.acme.repository.AcmeCryptoHelper
 
     @InjectMocks
     private lateinit var controller: AcmeStubController
@@ -94,6 +98,62 @@ class AcmeStubControllerTest {
 
             // Then
             then(stubStore).should().record("GET", "/stub/acme/directory", "directory")
+        }
+    }
+
+    @Nested
+    inner class `getAccount` {
+
+        @Test
+        fun `getAccount - when called - should return HTTP 200`() {
+            // Given
+            givenBaseUrl()
+            given(nonceStore.generateNonce()).willReturn("test-nonce-abc")
+
+            // When
+            val response = controller.getAccount("stub-account-001", "{}")
+
+            // Then
+            assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+        }
+
+        @Test
+        fun `getAccount - when called - should return account status valid`() {
+            // Given
+            givenBaseUrl()
+            given(nonceStore.generateNonce()).willReturn("test-nonce-abc")
+
+            // When
+            val response = controller.getAccount("stub-account-001", "{}")
+
+            // Then
+            assertThat(response.body!!["status"]).isEqualTo("valid")
+        }
+
+        @Test
+        fun `getAccount - when called - should return Replay-Nonce header`() {
+            // Given
+            givenBaseUrl()
+            given(nonceStore.generateNonce()).willReturn("test-nonce-abc")
+
+            // When
+            val response = controller.getAccount("stub-account-001", "{}")
+
+            // Then
+            assertThat(response.headers["Replay-Nonce"]).containsExactly("test-nonce-abc")
+        }
+
+        @Test
+        fun `getAccount - when called - should return orders link containing accountId`() {
+            // Given
+            givenBaseUrl()
+            given(nonceStore.generateNonce()).willReturn("test-nonce-abc")
+
+            // When
+            val response = controller.getAccount("stub-account-001", "{}")
+
+            // Then
+            assertThat(response.body!!["orders"].toString()).contains("stub-account-001")
         }
     }
 
@@ -328,6 +388,7 @@ class AcmeStubControllerTest {
                 nonceStore = realNonceStore,
                 orderStore = realOrderStore,
                 certGenerator = realCertGenerator,
+                cryptoHelper = cryptoHelper,
             )
 
             // Finaliser un order pour injecter un cert dans le cache
