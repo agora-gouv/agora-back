@@ -19,7 +19,7 @@ class CloudflareZoneCheckerImpl(
     private val logger = LoggerFactory.getLogger(CloudflareZoneCheckerImpl::class.java)
 
     override fun getZoneInfo(): CloudflareZoneInfo {
-        val url = "https://api.cloudflare.com/client/v4/zones/${acmeConfig.cloudflareZoneId}"
+        val url = "${acmeConfig.cloudflareBaseUrl}/zones/${acmeConfig.cloudflareZoneId}"
 
         val headers = HttpHeaders().apply {
             set("Authorization", "Bearer ${acmeConfig.cloudflareApiToken}")
