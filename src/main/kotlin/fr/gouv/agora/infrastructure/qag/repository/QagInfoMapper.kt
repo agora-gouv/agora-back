@@ -75,6 +75,7 @@ class QagInfoMapper {
                 username = domain.username,
                 thematiqueId = domain.thematiqueId,
                 userId = UUID.fromString(domain.userId),
+                motifId = null,
             )
         } catch (e: IllegalArgumentException) {
             null

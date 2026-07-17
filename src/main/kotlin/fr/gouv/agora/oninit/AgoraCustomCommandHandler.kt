@@ -13,12 +13,14 @@ class AgoraCustomCommandHandler(
     private val applicationContext: ApplicationContext,
     private val dailyTasksHandler: DailyTasksHandler,
     private val weeklyTasksHandler: WeeklyTasksHandler,
+    private val acmeCertificateRenewalTasksHandler: AcmeCertificateRenewalTasksHandler,
 ) : InitializingBean {
     private val logger: Logger = LoggerFactory.getLogger(AgoraCustomCommandHandler::class.java)
 
     companion object {
         private const val DAILY_TASKS = "dailyTasks"
         private const val WEEKLY_TASKS = "weeklyTasks"
+        private const val ACME_CERTIFICATE_RENEWAL_TASKS = "acmeCertificateRenewalTasks"
     }
 
     override fun afterPropertiesSet() {
@@ -40,6 +42,7 @@ class AgoraCustomCommandHandler(
         return when (command) {
             DAILY_TASKS -> dailyTasksHandler
             WEEKLY_TASKS -> weeklyTasksHandler
+            ACME_CERTIFICATE_RENEWAL_TASKS -> acmeCertificateRenewalTasksHandler
             else -> null
         }
     }

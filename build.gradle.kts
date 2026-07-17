@@ -34,6 +34,8 @@ dependencies {
     implementation("redis.clients:jedis")
     implementation("com.google.firebase:firebase-admin:9.3.0")
     implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20220608.1")
+    implementation("org.shredzone.acme4j:acme4j-client:2.16")
+    implementation("org.shredzone.acme4j:acme4j-utils:2.16")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")

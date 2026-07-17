@@ -32,6 +32,7 @@ class QagUpdatesMapper {
                 moderatedDate = Date(),
                 reason = domain.reason,
                 shouldDeleteFlag = if (domain.shouldDelete) SHOULD_DELETE_TRUE else SHOULD_DELETE_FALSE,
+                motifId = domain.motifId,
             )
         } catch (e: IllegalArgumentException) {
             null

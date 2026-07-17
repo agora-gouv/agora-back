@@ -17,6 +17,7 @@ class ModerateQagOptionsMapper {
         status: String,
         reason: String?,
         shouldDeleteFlag: Int?,
+        motifId: String?,
     ): Result {
         val isAccepted = when (status) {
             "OK" -> true
@@ -31,6 +32,7 @@ class ModerateQagOptionsMapper {
                 isAccepted = isAccepted,
                 reason = reason,
                 shouldDelete = !isAccepted && shouldDeleteFlag == 1,
+                motifId = motifId,
             )
         )
     }

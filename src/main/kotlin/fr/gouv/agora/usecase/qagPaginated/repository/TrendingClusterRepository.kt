@@ -4,4 +4,5 @@ import fr.gouv.agora.domain.TrendingCluster
 
 interface TrendingClusterRepository {
     fun getClusters(): List<TrendingCluster>
+    fun clearCache()
 }

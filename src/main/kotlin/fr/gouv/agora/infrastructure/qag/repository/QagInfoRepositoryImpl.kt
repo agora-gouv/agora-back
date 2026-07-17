@@ -116,6 +116,12 @@ class QagInfoRepositoryImpl(
         } ?: QagInsertionResult.Failure
     }
 
+    override fun updateQagMotifId(qagId: String, motifId: String?) {
+        qagId.toUuidOrNull()?.let { qagUUID ->
+            databaseRepository.updateQagMotifId(qagId = qagUUID, motifId = motifId)
+        }
+    }
+
     override fun updateQagStatus(qagId: String, newQagStatus: QagStatus): QagUpdateResult {
         return qagId.toUuidOrNull()?.let { qagUUID ->
             val updatedQagsCount = databaseRepository.updateQagStatus(
