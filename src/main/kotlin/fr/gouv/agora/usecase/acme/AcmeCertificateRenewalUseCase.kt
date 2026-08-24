@@ -44,7 +44,7 @@ class AcmeCertificateRenewalUseCase(
         private const val RENEWAL_THRESHOLD_DAYS = 30L
         private const val POLLING_MAX_ATTEMPTS = 10
         private const val POLLING_INTERVAL_MS = 3_000L
-        private const val ORDER_EXPIRY_HOURS = 24L
+        private const val ORDER_EXPIRY_HOURS = 7 * 24L  // 168h = 7 jours (compatible avec validation OV longue)
     }
 
     fun renewIfNeeded() {
