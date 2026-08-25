@@ -118,6 +118,10 @@ class AcmeCertificateRenewalUseCase(
                 } else {
                     logger.info("Found pending ACME order for $domain with status ${pendingOrder.status}. Attempting resume.")
                     val result = resumeOrder(pendingOrder, domain, serverUrl)
+                    if (result == null) {
+                        logger.info("ACME challenge still pending for $domain. No further action this run. Will retry on next scheduled execution.")
+                        return
+                    }
                     certPem = result.first
                     domainPrivKeyPem = result.second
                 }
@@ -235,8 +239,17 @@ class AcmeCertificateRenewalUseCase(
 
             // 8. Polling jusqu'à VALID
             pollUntilChallengeValid(challenge, domain)
-        } finally {
+
+            // Nettoyage du challenge uniquement en cas de succès
             challengeStore.clearChallenge(challenge.token)
+        } catch (e: AcmeChallengeTimeoutException) {
+            // Ne pas effacer le challenge : Sectigo peut valider plus tard.
+            // L'order reste en base (statut CHALLENGE_PENDING) pour reprise lors du prochain run.
+            logger.warn("Challenge timed out for $domain. Leaving challenge token in store for next retry run.")
+            throw e
+        } catch (e: Exception) {
+            challengeStore.clearChallenge(challenge.token)
+            throw e
         }
 
         // Mise à jour statut order → ORDER_FINALIZING
@@ -269,7 +282,7 @@ class AcmeCertificateRenewalUseCase(
         return Pair(certPem, domainPrivKeyPem)
     }
 
-    private fun resumeOrder(pendingOrder: AcmeOrder, domain: String, serverUrl: String): Pair<String, String> {
+    private fun resumeOrder(pendingOrder: AcmeOrder, domain: String, serverUrl: String): Pair<String, String>? {
         logger.info("Resuming ACME order for $domain at status ${pendingOrder.status} (orderUrl=${pendingOrder.orderUrl})")
 
         val storedAccount = accountRepository.loadAccount(serverUrl)
@@ -289,38 +302,55 @@ class AcmeCertificateRenewalUseCase(
 
         return when (pendingOrder.status) {
             AcmeOrderStatus.CHALLENGE_PENDING -> {
-                logger.info("Resuming from CHALLENGE_PENDING: re-triggering challenge for $domain")
+                logger.info("Resuming from CHALLENGE_PENDING: checking challenge status for $domain")
 
                 val authorization = order.authorizations.first()
                 authorization.update()
                 val challenge = authorization.findChallenge(Http01Challenge.TYPE) as Http01Challenge?
                     ?: throw IllegalStateException("No HTTP-01 challenge available for domain $domain during resume")
 
-                // Re-stocker le challenge en base (l'ancien a peut-être été nettoyé)
+                // Re-stocker le challenge pour que l'endpoint HTTP-01 reste disponible côté Sectigo
                 challengeStore.storeChallenge(challenge.token, challenge.authorization)
 
-                try {
-                    if (challenge.status != org.shredzone.acme4j.Status.VALID) {
-                        challenge.trigger()
-                        pollUntilChallengeValid(challenge, domain)
-                    } else {
-                        logger.info("Challenge already VALID for $domain, skipping trigger.")
+                when (challenge.status) {
+                    org.shredzone.acme4j.Status.VALID -> {
+                        logger.info("Challenge already VALID for $domain. Proceeding to order finalization.")
+                        challengeStore.clearChallenge(challenge.token)
+
+                        orderRepository.updateOrderStatus(domain, AcmeOrderStatus.ORDER_FINALIZING)
+
+                        val domainKeyPair = KeyPairUtils.readKeyPair(StringReader(domainPrivKeyPem))
+                        val csrBuilder = CSRBuilder()
+                        csrBuilder.addDomain(domain)
+                        csrBuilder.sign(domainKeyPair)
+                        order.execute(csrBuilder.encoded)
+
+                        pollUntilOrderValid(order, domain)
+                        val certPem = downloadAndPersistCertificate(order, domain, domainPrivKeyPem)
+                        Pair(certPem, domainPrivKeyPem)
                     }
-                } finally {
-                    challengeStore.clearChallenge(challenge.token)
+
+                    org.shredzone.acme4j.Status.INVALID -> {
+                        logger.error("Challenge INVALID for $domain during resume. Order cannot be completed.")
+                        challengeStore.clearChallenge(challenge.token)
+                        throw AcmeChallengeFailedException("ACME HTTP-01 challenge INVALID for domain $domain during resume")
+                    }
+
+                    else -> {
+                        // PENDING ou PROCESSING : Sectigo n'a pas encore validé.
+                        // On re-trigger au cas où pour signaler notre disponibilité, puis on sort proprement.
+                        // L'order reste en base (CHALLENGE_PENDING), la prochaine exécution re-vérifiera.
+                        logger.info(
+                            "Challenge status is ${challenge.status} for $domain. " +
+                                "Sectigo has not yet validated. Will retry on next scheduled execution."
+                        )
+                        if (challenge.status != org.shredzone.acme4j.Status.PROCESSING) {
+                            logger.info("Re-triggering challenge for $domain to notify Sectigo of token availability.")
+                            challenge.trigger()
+                        }
+                        null
+                    }
                 }
-
-                orderRepository.updateOrderStatus(domain, AcmeOrderStatus.ORDER_FINALIZING)
-
-                val domainKeyPair = KeyPairUtils.readKeyPair(StringReader(domainPrivKeyPem))
-                val csrBuilder = CSRBuilder()
-                csrBuilder.addDomain(domain)
-                csrBuilder.sign(domainKeyPair)
-                order.execute(csrBuilder.encoded)
-
-                pollUntilOrderValid(order, domain)
-                val certPem = downloadAndPersistCertificate(order, domain, domainPrivKeyPem)
-                Pair(certPem, domainPrivKeyPem)
             }
 
             AcmeOrderStatus.ORDER_FINALIZING -> {
