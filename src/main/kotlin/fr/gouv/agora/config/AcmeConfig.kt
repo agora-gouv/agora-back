@@ -41,6 +41,9 @@ class AcmeConfig {
     @Value("\${ACME_STUB_MODE:false}")
     val stubMode: Boolean = false
 
+    @Value("\${ACME_CRON_ENABLED:false}")
+    val cronEnabled: Boolean = false
+
     @Value("\${server.port:8080}")
     val port: Int = 8080
 }
