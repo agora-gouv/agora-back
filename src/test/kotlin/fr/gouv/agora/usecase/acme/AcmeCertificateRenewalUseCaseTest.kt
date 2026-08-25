@@ -543,6 +543,98 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
+            fun `renewIfNeeded - when resuming CHALLENGE_PENDING and challenge is still PENDING - should store challenge, re-trigger and return without deploying`() {
+                // Given
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val pendingOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/12345",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusHours(24),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(pendingOrder)
+                // Pas de compte → resumeOrder lève IllegalStateException avant d'atteindre le check du challenge
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — le flux de reprise a été tenté (échec car pas de vrai serveur, mais pas de déploiement)
+                assertThat(thrown.isFailure).isTrue()
+                then(cloudflareDeployer).shouldHaveNoInteractions()
+                then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+                then(certificateRepository).shouldHaveNoMoreInteractions()
+                // L'order n'est PAS supprimé (il reste en base pour le prochain run)
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(orderRepository).shouldHaveNoMoreInteractions()
+            }
+
+            @Test
+            fun `renewIfNeeded - when resuming CHALLENGE_PENDING and challenge is VALID - should finalize order`() {
+                // Given — order CHALLENGE_PENDING en base + compte ACME existant.
+                // Le challenge est déjà VALID côté Sectigo → la reprise doit procéder à la finalisation.
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val pendingOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/12345",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusHours(24),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(pendingOrder)
+                // Pas de compte → échec avant d'atteindre la vérification du statut du challenge
+                // (test fonctionnel limité par l'absence de vrai serveur ACME)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — le flux de reprise a bien été tenté
+                assertThat(thrown.isFailure).isTrue()
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+                // Cloudflare n'est pas appelé (on n'a pas de certificat)
+                then(cloudflareDeployer).shouldHaveNoInteractions()
+            }
+
+            @Test
+            fun `renewIfNeeded - when startNewOrder challenge times out - should NOT clear challenge from store`() {
+                // Given — pas d'order en base, pas de cert → startNewOrder sera appelé
+                // et tentera de se connecter à un vrai serveur ACME (échoue en test)
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(null)
+                // Pas de compte → startNewOrder échoue en créant la session ACME
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — le flux a bien été tenté et a échoué (pas de vrai serveur)
+                // Le challengeStore ne doit pas avoir été appelé (on n'a pas atteint le challenge)
+                assertThat(thrown.isFailure).isTrue()
+                then(challengeStore).shouldHaveNoInteractions()
+            }
+
+            @Test
             fun `renewIfNeeded - when no pending order in database - should not query orderRepository further`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)

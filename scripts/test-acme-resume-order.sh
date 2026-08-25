@@ -226,11 +226,14 @@ ENCRYPTED_DOMAIN_KEY=$(generate_encrypted_keypair)
 ok "Keypair domaine générée et chiffrée"
 
 # =============================================================================
-# CAS A — Reprise depuis CHALLENGE_PENDING
+# CAS A — Reprise depuis CHALLENGE_PENDING (nouveau comportement en 2 runs)
 # =============================================================================
-scenario "A — Reprise depuis CHALLENGE_PENDING (crash avant finalisation)"
-info "  Le UseCase doit : re-trigger challenge → finaliser → télécharger cert → déployer Cloudflare"
-info "  Il NE doit PAS appeler : new-order, new-account"
+scenario "A — Reprise depuis CHALLENGE_PENDING (challenge pas encore validé par Sectigo)"
+info "  Nouveau comportement : Sectigo peut prendre du temps pour valider le challenge HTTP-01."
+info "  Run 1 : Le UseCase détecte CHALLENGE_PENDING, re-trigger le challenge, sort proprement (HTTP 200)."
+info "          Il NE doit PAS appeler : new-order, new-account, finalize, certificate, cloudflare."
+info "  Run 2 : Le challenge est désormais VALID côté stub → finalise + télécharge cert + déploie."
+info "          Il NE doit PAS appeler : new-order, new-account."
 
 step "A.1 — Purge des données ACME"
 run_sql "DELETE FROM acme_order       WHERE domain = '${ACME_DOMAIN}';" > /dev/null
@@ -245,18 +248,15 @@ curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $JWT" "$BASE_URL/admin/
 ORDER_LOCATION=$(create_stub_order)
 if [ -z "$ORDER_LOCATION" ]; then
   fail "Impossible de créer un order dans le stub (aucun Location header reçu)"
-  # Ne pas exit — continuer pour afficher le bilan complet
   ORDER_LOCATION="$BASE_URL/stub/acme/order/fallback-id"
 else
   ok "Order créé dans le stub : $ORDER_LOCATION"
 fi
 
-# Extraire l'orderId depuis l'URL
 ORDER_ID=$(basename "$ORDER_LOCATION")
 info "  orderId stub : $ORDER_ID"
 
 step "A.3 — Insertion de l'account et de l'order en base (status=CHALLENGE_PENDING)"
-# Insérer le compte ACME (nécessaire pour resumeOrder qui charge le compte)
 run_sql "
 INSERT INTO acme_account (server_url, account_url, key_pem, created_at)
 VALUES (
@@ -268,7 +268,6 @@ VALUES (
 " > /dev/null
 ok "acme_account inséré"
 
-# Insérer l'order en base avec status=CHALLENGE_PENDING
 run_sql "
 INSERT INTO acme_order (domain, order_url, domain_key_pem, status, created_at)
 VALUES (
@@ -281,12 +280,13 @@ VALUES (
 " > /dev/null
 ok "acme_order inséré (status=CHALLENGE_PENDING, order_url=$ORDER_LOCATION)"
 
-step "A.4 — Reset du stub store (on ne veut pas compter les appels du setup)"
+step "A.4 — Reset du stub store (run 1 — challenge encore PENDING)"
 curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $JWT" "$BASE_URL/admin/stub/acme/calls/reset"
 ok "Stub store réinitialisé"
 
-step "A.5 — Appel POST /admin/acme/renew-certificate (reprise depuis CHALLENGE_PENDING)"
-info "  Appel en cours (peut prendre ~10s selon le polling stub)..."
+# ── Run 1 : le challenge est PENDING dans le stub ─────────────────────────────
+step "A.5 — Run 1 : POST /admin/acme/renew-certificate (challenge PENDING → re-trigger + exit propre)"
+info "  Le UseCase doit re-trigger le challenge et sortir sans déployer (HTTP 200)."
 RENEW_RESPONSE=$(curl -s -w "\n__HTTP_STATUS__:%{http_code}" \
   -X POST \
   -H "Authorization: Bearer $JWT" \
@@ -296,44 +296,93 @@ RENEW_STATUS=$(echo "$RENEW_RESPONSE" | grep "__HTTP_STATUS__" | cut -d: -f2)
 info "  HTTP Status : $RENEW_STATUS"
 info "  Body        : $RENEW_BODY"
 if [ "$RENEW_STATUS" = "200" ]; then
-  ok "Reprise exécutée (HTTP 200)"
+  ok "Run 1 terminé proprement (HTTP 200)"
 else
-  fail "Reprise échouée (HTTP $RENEW_STATUS)"
+  fail "Run 1 échoué (HTTP $RENEW_STATUS)"
 fi
 
-step "A.6 — Vérification des appels stub enregistrés"
-CALLS_JSON=$(curl -s -H "Authorization: Bearer $JWT" "$BASE_URL/admin/stub/acme/calls")
-info "  Appels enregistrés :"
-echo "$CALLS_JSON" | jq -r '.[] | "    \(.method) \(.endpoint)"' 2>/dev/null || echo "    (impossible de parser)"
+step "A.6 — Vérification run 1 : re-trigger challenge, pas de finalisation"
+CALLS_JSON_A1=$(curl -s -H "Authorization: Bearer $JWT" "$BASE_URL/admin/stub/acme/calls")
+info "  Appels enregistrés (run 1) :"
+echo "$CALLS_JSON_A1" | jq -r '.[] | "    \(.method) \(.endpoint)"' 2>/dev/null || echo "    (impossible de parser)"
 
 check_call_present() {
-  local label="$1" pattern="$2"
-  if echo "$CALLS_JSON" | jq -r '.[].endpoint' 2>/dev/null | grep -q "$pattern"; then
+  local label="$1" pattern="$2" calls_var="$3"
+  if echo "$calls_var" | jq -r '.[].endpoint' 2>/dev/null | grep -q "$pattern"; then
     ok "  Appel présent    : $label ($pattern)"
   else
     fail "  Appel manquant   : $label ($pattern)"
   fi
 }
 check_call_absent() {
-  local label="$1" pattern="$2"
-  if echo "$CALLS_JSON" | jq -r '.[].endpoint' 2>/dev/null | grep -q "$pattern"; then
-    fail "  Appel inattendu  : $label ($pattern) — ne devrait pas être appelé en reprise"
+  local label="$1" pattern="$2" calls_var="$3"
+  if echo "$calls_var" | jq -r '.[].endpoint' 2>/dev/null | grep -q "$pattern"; then
+    fail "  Appel inattendu  : $label ($pattern) — ne devrait pas être appelé"
   else
     ok "  Appel absent (normal) : $label ($pattern)"
   fi
 }
 
-# En reprise CHALLENGE_PENDING : pas de new-order ni new-account
-check_call_absent "new-order"           "/stub/acme/new-order"
-check_call_absent "new-account"         "/stub/acme/new-account"
-# Mais le reste du flux doit avoir eu lieu
-check_call_present "authorization ACME" "/stub/acme/authz/"
-check_call_present "challenge HTTP-01"  "/stub/acme/challenge/"
-check_call_present "finalize order"     "/stub/acme/order/"
-check_call_present "download cert"      "/stub/acme/certificate/"
-check_call_present "deploy Cloudflare"  "/stub/cloudflare/zones/"
+# Run 1 : pas de new-order/account, le challenge est consulté (authz) et re-triggeré
+check_call_absent  "new-order"        "/stub/acme/new-order"    "$CALLS_JSON_A1"
+check_call_absent  "new-account"      "/stub/acme/new-account"  "$CALLS_JSON_A1"
+check_call_present "authorization"    "/stub/acme/authz/"       "$CALLS_JSON_A1"
+check_call_present "challenge trigger" "/stub/acme/challenge/"  "$CALLS_JSON_A1"
+# Pas de finalisation ni déploiement lors du run 1
+check_call_absent  "finalize order"   "/stub/acme/order/.*/finalize"     "$CALLS_JSON_A1"
+check_call_absent  "download cert"    "/stub/acme/certificate/"          "$CALLS_JSON_A1"
+check_call_absent  "deploy Cloudflare" "/stub/cloudflare/zones/"         "$CALLS_JSON_A1"
 
-step "A.7 — Vérification en base : certificat DEPLOYED + acme_order nettoyé"
+step "A.7 — Vérification run 1 : order toujours CHALLENGE_PENDING, pas de certificat"
+DB_ORDER_STATUS_A1=$(run_sql "SELECT status FROM acme_order WHERE domain = '${ACME_DOMAIN}' ORDER BY created_at DESC LIMIT 1;" | tr -d ' \n\t')
+info "  Statut acme_order : $DB_ORDER_STATUS_A1"
+if echo "$DB_ORDER_STATUS_A1" | grep -qi "CHALLENGE_PENDING"; then
+  ok "acme_order toujours CHALLENGE_PENDING — reprise différée ✓"
+else
+  fail "Statut acme_order inattendu : $DB_ORDER_STATUS_A1"
+fi
+
+DB_CERT_COUNT_A1=$(run_sql "SELECT count(*) FROM acme_certificate WHERE domain = '${ACME_DOMAIN}';" | tr -d ' \n\t')
+if [ "$DB_CERT_COUNT_A1" = "0" ]; then
+  ok "Aucun certificat en base après le run 1 ✓"
+else
+  fail "Un certificat a été créé trop tôt (count=$DB_CERT_COUNT_A1)"
+fi
+
+# ── Run 2 : après re-trigger, le stub a marqué le challenge VALID ─────────────
+step "A.8 — Reset du stub store (run 2 — challenge désormais VALID dans le stub)"
+curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $JWT" "$BASE_URL/admin/stub/acme/calls/reset"
+ok "Stub store réinitialisé pour le run 2"
+
+step "A.9 — Run 2 : POST /admin/acme/renew-certificate (challenge VALID → finalise + déploie)"
+info "  Le UseCase doit trouver le challenge VALID, finaliser l'order et déployer (HTTP 200)."
+RENEW_RESPONSE_A2=$(curl -s -w "\n__HTTP_STATUS__:%{http_code}" \
+  -X POST \
+  -H "Authorization: Bearer $JWT" \
+  "$BASE_URL/admin/acme/renew-certificate")
+RENEW_BODY_A2=$(echo "$RENEW_RESPONSE_A2" | grep -v "__HTTP_STATUS__")
+RENEW_STATUS_A2=$(echo "$RENEW_RESPONSE_A2" | grep "__HTTP_STATUS__" | cut -d: -f2)
+info "  HTTP Status : $RENEW_STATUS_A2"
+info "  Body        : $RENEW_BODY_A2"
+if [ "$RENEW_STATUS_A2" = "200" ]; then
+  ok "Run 2 terminé avec succès (HTTP 200)"
+else
+  fail "Run 2 échoué (HTTP $RENEW_STATUS_A2)"
+fi
+
+step "A.10 — Vérification run 2 : finalisation + déploiement"
+CALLS_JSON_A2=$(curl -s -H "Authorization: Bearer $JWT" "$BASE_URL/admin/stub/acme/calls")
+info "  Appels enregistrés (run 2) :"
+echo "$CALLS_JSON_A2" | jq -r '.[] | "    \(.method) \(.endpoint)"' 2>/dev/null || echo "    (impossible de parser)"
+
+check_call_absent  "new-order"        "/stub/acme/new-order"     "$CALLS_JSON_A2"
+check_call_absent  "new-account"      "/stub/acme/new-account"   "$CALLS_JSON_A2"
+check_call_present "authorization"    "/stub/acme/authz/"        "$CALLS_JSON_A2"
+check_call_present "finalize order"   "/stub/acme/order/"        "$CALLS_JSON_A2"
+check_call_present "download cert"    "/stub/acme/certificate/"  "$CALLS_JSON_A2"
+check_call_present "deploy Cloudflare" "/stub/cloudflare/zones/" "$CALLS_JSON_A2"
+
+step "A.11 — Vérification en base : certificat DEPLOYED + acme_order nettoyé"
 DB_CERT_STATUS=$(run_sql "SELECT status FROM acme_certificate WHERE domain = '${ACME_DOMAIN}' ORDER BY created_at DESC LIMIT 1;" | tr -d ' \n\t')
 info "  Statut acme_certificate : $DB_CERT_STATUS"
 if echo "$DB_CERT_STATUS" | grep -qi "DEPLOYED"; then
