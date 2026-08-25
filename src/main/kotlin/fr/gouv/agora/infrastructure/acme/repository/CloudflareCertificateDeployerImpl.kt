@@ -19,7 +19,7 @@ class CloudflareCertificateDeployerImpl(
     private val logger = LoggerFactory.getLogger(CloudflareCertificateDeployerImpl::class.java)
 
     override fun deployCertificate(certificatePem: String, privateKeyPem: String) {
-        val url = "https://api.cloudflare.com/client/v4/zones/${acmeConfig.cloudflareZoneId}/custom_certificates"
+        val url = "${acmeConfig.cloudflareBaseUrl}/zones/${acmeConfig.cloudflareZoneId}/custom_certificates"
 
         val headers = HttpHeaders().apply {
             set("Authorization", "Bearer ${acmeConfig.cloudflareApiToken}")

@@ -34,4 +34,16 @@ class AcmeConfig {
 
     @Value("\${ACME_CLOUDFLARE_INTERACTION_ENABLED:false}")
     val cloudflareInteractionEnabled: Boolean = false
+
+    @Value("\${CLOUDFLARE_BASE_URL:https://api.cloudflare.com/client/v4}")
+    val cloudflareBaseUrl: String = "https://api.cloudflare.com/client/v4"
+
+    @Value("\${ACME_STUB_MODE:false}")
+    val stubMode: Boolean = false
+
+    @Value("\${ACME_CRON_ENABLED:false}")
+    val cronEnabled: Boolean = false
+
+    @Value("\${server.port:8080}")
+    val port: Int = 8080
 }

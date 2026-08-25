@@ -39,6 +39,7 @@ class CloudflareZoneCheckerImplTest {
             // Given
             given(acmeConfig.cloudflareZoneId).willReturn("zone-abc123")
             given(acmeConfig.cloudflareApiToken).willReturn("token-xyz")
+            given(acmeConfig.cloudflareBaseUrl).willReturn("https://api.cloudflare.com/client/v4")
 
             val apiResponse: Map<String, Any> = mapOf(
                 "result" to mapOf(
@@ -71,6 +72,7 @@ class CloudflareZoneCheckerImplTest {
             // Given
             given(acmeConfig.cloudflareZoneId).willReturn("zone-abc123")
             given(acmeConfig.cloudflareApiToken).willReturn("token-xyz")
+            given(acmeConfig.cloudflareBaseUrl).willReturn("https://api.cloudflare.com/client/v4")
 
             val apiResponse: Map<String, Any> = mapOf(
                 "result" to mapOf(
@@ -103,6 +105,7 @@ class CloudflareZoneCheckerImplTest {
             // Given
             given(acmeConfig.cloudflareZoneId).willReturn("zone-abc123")
             given(acmeConfig.cloudflareApiToken).willReturn("token-xyz")
+            given(acmeConfig.cloudflareBaseUrl).willReturn("https://api.cloudflare.com/client/v4")
 
             given(
                 restTemplate.exchange(
@@ -124,6 +127,7 @@ class CloudflareZoneCheckerImplTest {
             // Given
             given(acmeConfig.cloudflareZoneId).willReturn("zone-abc123")
             given(acmeConfig.cloudflareApiToken).willReturn("token-xyz")
+            given(acmeConfig.cloudflareBaseUrl).willReturn("https://api.cloudflare.com/client/v4")
 
             val apiResponse: Map<String, Any> = mapOf("success" to false)
             given(

@@ -145,7 +145,7 @@ config/
 │  12. Télécharger le certificat signé                            │
 │  13. Persister le certificat via AcmeCertificateRepository      │
 │  14. Déployer le certificat sur Cloudflare via API              │
-│      → PATCH /zones/{zone_id}/custom_certificates               │
+│      → POST /zones/{zone_id}/custom_certificates                │
 └─────────────────────────────────────────────────────────────────┘
                            │
          HTTP GET (port 80) │  ← Sectigo valide le challenge
@@ -206,7 +206,6 @@ val account = AccountBuilder()
 |---|---|---|
 | `ACME_SERVER_URL` | URL du répertoire ACME Sectigo | `https://acme.sectigo.com/v2/DV` |
 | `ACME_DOMAIN` | Domaine à certifier | `agora.gouv.fr` |
-| `ACME_ACCOUNT_KEY_BASE64` | Keypair du compte ACME encodée en base64 | `LS0tLS1CRUdJTi...` |
 | `ACME_EAB_KID` | Key ID EAB fourni par Sectigo | `abc123` |
 | `ACME_EAB_HMAC_KEY` | HMAC key EAB fournie par Sectigo (base64url) | `xyz789...` |
 | `ACME_ENABLED` | Active/désactive le renouvellement automatique | `true` / `false` |
@@ -224,7 +223,7 @@ val account = AccountBuilder()
 Une fois le certificat émis par Sectigo, il est uploadé sur Cloudflare via l'API REST :
 
 ```http
-PATCH https://api.cloudflare.com/client/v4/zones/{CLOUDFLARE_ZONE_ID}/custom_certificates
+POST https://api.cloudflare.com/client/v4/zones/{CLOUDFLARE_ZONE_ID}/custom_certificates
 Authorization: Bearer {CLOUDFLARE_API_TOKEN}
 Content-Type: application/json
 
@@ -329,7 +328,6 @@ Conformément aux conventions du projet (JUnit 5 + Mockito + AssertJ + BDDMockit
 | Cache Rule Cloudflare manquante → validation HTTP-01 échoue | Documenter et tester la Cache Rule en environnement de staging avant mise en production |
 | Cloudflare redirige HTTP → HTTPS sur le chemin ACME | Page Rule d'exception sur `/.well-known/acme-challenge/*` |
 | Race condition si plusieurs instances tournent en parallèle | Verrou distribué via Redis ou table `acme_renewal_lock` en base |
-| Perte de la keypair du compte ACME | Backup régulier de la variable `ACME_ACCOUNT_KEY_BASE64` |
 | Expiration ou révocation du token API Cloudflare | Monitoring + rotation du token, alertes Sentry sur erreur 401/403 Cloudflare |
 | Credentials EAB Sectigo compromis | Rotation immédiate depuis le portail Sectigo Certificate Manager |
 | Sectigo n'a pas d'environnement de staging public | Utiliser un domaine de test dédié pour les premiers essais |

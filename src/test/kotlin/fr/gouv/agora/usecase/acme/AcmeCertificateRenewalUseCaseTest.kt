@@ -448,7 +448,7 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
-            fun `renewIfNeeded - when pending order is older than 24h - should delete stale order and start fresh`() {
+            fun `renewIfNeeded - when pending order is older than 7 days - should delete stale order and start fresh`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
@@ -462,7 +462,7 @@ class AcmeCertificateRenewalUseCaseTest {
                     orderUrl = "https://acme.sectigo.com/v2/DV/order/stale123",
                     domainKeyPem = "domain-key-pem",
                     status = AcmeOrderStatus.CHALLENGE_PENDING,
-                    createdAt = NOW.minusHours(25),
+                    createdAt = NOW.minusHours(169),
                 )
                 given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(staleOrder)
                 // Pas de compte ACME → startNewOrder va échouer lors de la connexion au serveur ACME,
@@ -481,7 +481,7 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
-            fun `renewIfNeeded - when pending order is exactly 24h old - should also be considered stale and deleted`() {
+            fun `renewIfNeeded - when pending order is exactly 7 days old - should also be considered stale and deleted`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
@@ -496,7 +496,7 @@ class AcmeCertificateRenewalUseCaseTest {
                     orderUrl = "https://acme.sectigo.com/v2/DV/order/stale456",
                     domainKeyPem = "domain-key-pem",
                     status = AcmeOrderStatus.ORDER_FINALIZING,
-                    createdAt = NOW.minusHours(24).minusMinutes(1),
+                    createdAt = NOW.minusHours(168).minusMinutes(1),
                 )
                 given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(staleOrder)
                 given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
@@ -512,7 +512,7 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
-            fun `renewIfNeeded - when pending order is less than 24h old - should resume it without deleting`() {
+            fun `renewIfNeeded - when pending order is less than 7 days old - should resume it without deleting`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
@@ -526,7 +526,7 @@ class AcmeCertificateRenewalUseCaseTest {
                     orderUrl = "https://acme.sectigo.com/v2/DV/order/recent789",
                     domainKeyPem = "domain-key-pem",
                     status = AcmeOrderStatus.CHALLENGE_PENDING,
-                    createdAt = NOW.minusHours(23),
+                    createdAt = NOW.minusHours(167),
                 )
                 given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(recentOrder)
                 // Pas de compte → resumeOrder échoue avec IllegalStateException

@@ -44,7 +44,7 @@ class AcmeCertificateRenewalUseCase(
         private const val RENEWAL_THRESHOLD_DAYS = 30L
         private const val POLLING_MAX_ATTEMPTS = 10
         private const val POLLING_INTERVAL_MS = 3_000L
-        private const val ORDER_EXPIRY_HOURS = 24L
+        private const val ORDER_EXPIRY_HOURS = 7 * 24L  // 168h = 7 jours (compatible avec validation OV longue)
     }
 
     fun renewIfNeeded() {
@@ -176,9 +176,14 @@ class AcmeCertificateRenewalUseCase(
             logger.info("Using existing ACME account: ${storedAccount.accountUrl}")
             accountBuilder.onlyExisting().create(session)
         } else {
-            logger.info("Creating new ACME account with EAB credentials.")
+            val hasEab = acmeConfig.eabKid.isNotBlank() && acmeConfig.eabHmacKey.isNotBlank()
+            if (hasEab) {
+                logger.info("Creating new ACME account with EAB credentials.")
+                accountBuilder.withKeyIdentifier(acmeConfig.eabKid, acmeConfig.eabHmacKey)
+            } else {
+                logger.info("Creating new ACME account without EAB (stub/test mode).")
+            }
             accountBuilder
-                .withKeyIdentifier(acmeConfig.eabKid, acmeConfig.eabHmacKey)
                 .agreeToTermsOfService()
                 .create(session)
         }

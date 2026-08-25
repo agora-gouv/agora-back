@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 .env
+.env.acme_test
 
 ### STS ###
 .apt_generated
@@ -45,3 +46,4 @@ dump.rdb
 /architecture-decisions/ACME/2026-07-08-acme-review-correctifs.md
 /architecture-decisions/ACME/2026-06-25-acme-v2-implementation-plan.md
 /architecture-decisions/ACME/2026-07-15-acme-stub-mode.md
+/.env.acme_test
