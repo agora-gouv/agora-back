@@ -305,10 +305,22 @@ class AcmeCertificateRenewalUseCase(
                 logger.info("Resuming from CHALLENGE_PENDING: checking challenge status for $domain")
 
                 val authorization = order.authorizations.first()
+
+                // Récupération et re-stockage défensif du challenge AVANT authorization.update().
+                // Cela couvre le cas où la ligne acme_challenge a disparu de la base (perte accidentelle,
+                // redémarrage, etc.) : le token et la keyAuthorization sont restaurés immédiatement,
+                // même si Sectigo répond ensuite avec un Retry-After (qui ferait sortir avant le storeChallenge
+                // si celui-ci était placé après authorization.update()).
+                val challenge = authorization.findChallenge(Http01Challenge.TYPE) as Http01Challenge?
+                    ?: throw IllegalStateException("No HTTP-01 challenge available for domain $domain during resume")
+                logger.info("Restoring challenge token in store for $domain (defensive re-store before authorization.update())")
+                challengeStore.storeChallenge(challenge.token, challenge.authorization)
+
                 try {
                     authorization.update()
                 } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
                     // Sectigo indique que l'authorization n'est pas encore traitée (Retry-After).
+                    // Le challenge est déjà re-stocké en base (ci-dessus) : Sectigo peut valider.
                     // On sort proprement : l'order reste en base (CHALLENGE_PENDING), le prochain run re-vérifiera.
                     logger.info(
                         "Authorization not completed yet for $domain (Retry-After: ${e.retryAfter}). " +
@@ -316,11 +328,6 @@ class AcmeCertificateRenewalUseCase(
                     )
                     return null
                 }
-                val challenge = authorization.findChallenge(Http01Challenge.TYPE) as Http01Challenge?
-                    ?: throw IllegalStateException("No HTTP-01 challenge available for domain $domain during resume")
-
-                // Re-stocker le challenge pour que l'endpoint HTTP-01 reste disponible côté Sectigo
-                challengeStore.storeChallenge(challenge.token, challenge.authorization)
 
                 when (challenge.status) {
                     org.shredzone.acme4j.Status.VALID -> {

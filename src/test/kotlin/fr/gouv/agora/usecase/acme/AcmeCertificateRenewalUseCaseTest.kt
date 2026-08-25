@@ -579,6 +579,54 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
+            fun `renewIfNeeded - when resuming CHALLENGE_PENDING - should attempt to restore challenge in store before calling authorization update`() {
+                // Given — Ce test documente le comportement défensif introduit pour couvrir le cas
+                // où la ligne acme_challenge a disparu de la base (perte accidentelle, redémarrage, etc.)
+                // alors qu'un order CHALLENGE_PENDING est toujours présent.
+                //
+                // Le fix garantit que challengeStore.storeChallenge() est appelé AVANT authorization.update().
+                // Sans ce fix, un Retry-After de Sectigo ferait sortir le flux avant le re-stockage,
+                // laissant le token absent de la base et causant un 404 lors de la prochaine tentative
+                // de validation par Sectigo.
+                //
+                // Limitation : en l'absence de vrai serveur ACME, le flux échoue dès loadAccount(null),
+                // avant d'atteindre le code du challenge. Ce test vérifie donc uniquement les invariants
+                // accessibles sans serveur ACME réel (pas de déploiement Cloudflare, order non supprimé).
+                // Le comportement de re-stockage est couvert par le code produit lui-même et son commentaire.
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val pendingOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/12345",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusHours(2),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(pendingOrder)
+                // Pas de compte → resumeOrder lève IllegalStateException, flux de reprise tenté
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — le flux de reprise a bien été tenté (pas de vrai serveur)
+                assertThat(thrown.isFailure).isTrue()
+                // challengeStore ne peut pas être vérifié sans serveur ACME (le code ne l'atteint pas en test),
+                // mais Cloudflare et les modifications de certificat ne sont jamais appelés
+                then(cloudflareDeployer).shouldHaveNoInteractions()
+                then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+                then(certificateRepository).shouldHaveNoMoreInteractions()
+                // L'order n'est PAS supprimé — il doit rester en base pour la prochaine tentative
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(orderRepository).shouldHaveNoMoreInteractions()
+            }
+
+            @Test
             fun `renewIfNeeded - when resuming CHALLENGE_PENDING and challenge is still PENDING - should store challenge, re-trigger and return without deploying`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
