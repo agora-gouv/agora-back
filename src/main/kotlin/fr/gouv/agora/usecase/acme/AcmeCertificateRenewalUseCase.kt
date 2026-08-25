@@ -305,7 +305,17 @@ class AcmeCertificateRenewalUseCase(
                 logger.info("Resuming from CHALLENGE_PENDING: checking challenge status for $domain")
 
                 val authorization = order.authorizations.first()
-                authorization.update()
+                try {
+                    authorization.update()
+                } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
+                    // Sectigo indique que l'authorization n'est pas encore traitée (Retry-After).
+                    // On sort proprement : l'order reste en base (CHALLENGE_PENDING), le prochain run re-vérifiera.
+                    logger.info(
+                        "Authorization not completed yet for $domain (Retry-After: ${e.retryAfter}). " +
+                            "Will retry on next scheduled execution."
+                    )
+                    return null
+                }
                 val challenge = authorization.findChallenge(Http01Challenge.TYPE) as Http01Challenge?
                     ?: throw IllegalStateException("No HTTP-01 challenge available for domain $domain during resume")
 

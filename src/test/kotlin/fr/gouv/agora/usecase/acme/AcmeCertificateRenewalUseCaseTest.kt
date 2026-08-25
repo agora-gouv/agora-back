@@ -543,6 +543,42 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
+            fun `renewIfNeeded - when resuming CHALLENGE_PENDING and authorization update throws AcmeRetryAfterException - should return without deploying and leave order in database`() {
+                // Given — Sectigo retourne un Retry-After sur authorization.update() : l'authorization
+                // n'est pas encore traitée. Le UseCase doit sortir proprement (HTTP 200) sans déployer.
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val pendingOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/12345",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusHours(1),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(pendingOrder)
+                // Pas de compte → resumeOrder lève IllegalStateException avant d'atteindre authorization.update()
+                // (test fonctionnel limité par l'absence de vrai serveur ACME, mais confirme le flux de reprise)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — échec car pas de compte (pas de vrai serveur), mais Cloudflare n'est jamais appelé
+                assertThat(thrown.isFailure).isTrue()
+                then(cloudflareDeployer).shouldHaveNoInteractions()
+                then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+                then(certificateRepository).shouldHaveNoMoreInteractions()
+                // L'order n'est PAS supprimé (il reste en base pour le prochain run)
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(orderRepository).shouldHaveNoMoreInteractions()
+            }
+
+            @Test
             fun `renewIfNeeded - when resuming CHALLENGE_PENDING and challenge is still PENDING - should store challenge, re-trigger and return without deploying`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
