@@ -207,6 +207,7 @@ class AcmeCertificateRenewalUseCase(
 
         // 5. Order
         val order = account.newOrder().domain(domain).create()
+        logger.info("ACME order created for $domain: orderUrl=${order.location}, expires=${order.expires}")
 
         // 6. Challenge HTTP-01
         val authorization = order.authorizations.first()
@@ -259,6 +260,11 @@ class AcmeCertificateRenewalUseCase(
         val csrBuilder = CSRBuilder()
         csrBuilder.addDomain(domain)
         csrBuilder.sign(domainKeyPair)
+        // Recharge le statut de l'order depuis le serveur ACME avant finalisation (RFC 8555 §7.4 : l'order
+        // doit être en statut "ready" pour accepter le CSR). acme4j ne recharge pas automatiquement l'état
+        // local après le polling du challenge.
+        order.update()
+        logger.info("Order status before finalization for $domain: status=${order.status}, expires=${order.expires}")
         order.execute(csrBuilder.encoded)
 
         pollUntilOrderValid(order, domain)
@@ -318,6 +324,10 @@ class AcmeCertificateRenewalUseCase(
 
                 try {
                     authorization.update()
+                    logger.info(
+                        "Authorization updated for $domain: status=${authorization.status}, " +
+                            "expires=${authorization.expires}"
+                    )
                 } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
                     // Sectigo indique que l'authorization n'est pas encore traitée (Retry-After).
                     // Le challenge est déjà re-stocké en base (ci-dessus) : Sectigo peut valider.
@@ -390,6 +400,10 @@ class AcmeCertificateRenewalUseCase(
                     return
                 }
                 org.shredzone.acme4j.Status.INVALID -> {
+                    logger.error(
+                        "ACME HTTP-01 challenge INVALID for domain $domain: " +
+                            "error.type=${challenge.error?.type}, error.detail=${challenge.error?.detail}"
+                    )
                     throw AcmeChallengeFailedException("ACME HTTP-01 challenge INVALID for domain $domain")
                 }
                 else -> logger.info("Challenge status: ${challenge.status} (attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS)")
@@ -403,14 +417,33 @@ class AcmeCertificateRenewalUseCase(
     private fun pollUntilOrderValid(order: org.shredzone.acme4j.Order, domain: String) {
         repeat(POLLING_MAX_ATTEMPTS) { attempt ->
             Thread.sleep(POLLING_INTERVAL_MS)
-            order.update()
+            try {
+                order.update()
+            } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
+                // Sectigo indique que l'order n'est pas encore prêt (header Retry-After).
+                // On continue le polling plutôt que de laisser l'exception remonter.
+                logger.info(
+                    "Order not ready yet for $domain (Retry-After: ${e.retryAfter}), " +
+                        "attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS"
+                )
+                return@repeat
+            }
             when (order.status) {
                 org.shredzone.acme4j.Status.VALID -> {
                     logger.info("ACME order VALID after ${attempt + 1} attempt(s) for domain $domain")
                     return
                 }
-                org.shredzone.acme4j.Status.INVALID -> throw AcmeChallengeFailedException("ACME order became INVALID for domain $domain")
-                else -> logger.info("Order status: ${order.status} (attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS)")
+                org.shredzone.acme4j.Status.INVALID -> {
+                    logger.error(
+                        "ACME order INVALID for domain $domain: " +
+                            "error.type=${order.error?.type}, error.detail=${order.error?.detail}"
+                    )
+                    throw AcmeChallengeFailedException("ACME order became INVALID for domain $domain")
+                }
+                else -> logger.info(
+                    "Order status: ${order.status}, expires=${order.expires}, " +
+                        "error=${order.error?.detail} (attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS)"
+                )
             }
         }
         throw AcmeChallengeTimeoutException("ACME order timed out after $POLLING_MAX_ATTEMPTS attempts for domain $domain")
