@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class AcmeController(private val challengeStore: AcmeChallengeStore) {
 
-    @GetMapping("/.well-known/acme-challenge/{token}")
+    @GetMapping("/acme_challenge/{token}")
     fun getChallenge(@PathVariable token: String): ResponseEntity<String> {
         val keyAuthorization = challengeStore.getChallenge(token)
             ?: return ResponseEntity.notFound().build()

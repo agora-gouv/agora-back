@@ -71,7 +71,7 @@ class WebSecurityConfig(private val authenticationTokenFilter: AuthenticationTok
                 .permitAll()
                 .requestMatchers("/theme_hebdo")
                 .permitAll()
-                .requestMatchers("/.well-known/acme-challenge/**")
+                .requestMatchers("/acme_challenge/**")
                 .permitAll()
                 .requestMatchers("/stub/**")
                 .permitAll()
