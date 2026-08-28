@@ -372,79 +372,81 @@ class AcmeCertificateRenewalUseCase(
                 challengeStore.storeChallenge(challenge.token, challenge.authorization)
                 logger.info("[resumeOrder] Challenge token restored in store for $domain")
 
-                try {
+                // Tenter de récupérer le statut de l'authorization depuis Sectigo.
+                // En cas de Retry-After, on ne connaît pas encore le statut exact mais le challenge
+                // est forcément PENDING ou PROCESSING — on doit quand même re-trigger si besoin.
+                val authorizationUpdateSucceeded = try {
                     logger.info("[resumeOrder] Calling authorization.update() for $domain...")
                     authorization.update()
                     logger.info(
                         "[resumeOrder] Authorization updated for $domain: status=${authorization.status}, " +
                             "expires=${authorization.expires}"
                     )
+                    true
                 } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
                     // Sectigo indique que l'authorization n'est pas encore traitée (Retry-After).
-                    // Le challenge est déjà re-stocké en base (ci-dessus) : Sectigo peut valider.
-                    // On sort proprement : l'order reste en base (CHALLENGE_PENDING), le prochain run re-vérifiera.
+                    // Le challenge est déjà re-stocké en base (ci-dessus) : on doit quand même
+                    // re-trigger pour s'assurer que Sectigo est bien notifié de la disponibilité du token.
                     logger.info(
                         "[resumeOrder] Authorization not completed yet for $domain (Retry-After: ${e.retryAfter}). " +
-                            "Will retry on next scheduled execution."
+                            "Challenge status unknown — will re-trigger if not PROCESSING."
                     )
-                    return null
+                    false
                 }
 
-                logger.info("[resumeOrder] Challenge status after authorization.update() for $domain: ${challenge.status}")
+                // Si on a pu lire le statut et que le challenge est VALID → finaliser l'order
+                if (authorizationUpdateSucceeded && challenge.status == org.shredzone.acme4j.Status.VALID) {
+                    logger.info("[resumeOrder] Challenge already VALID for $domain. Proceeding to order finalization.")
+                    challengeStore.clearChallenge(challenge.token)
+                    logger.info("[resumeOrder] Challenge token cleared from store for $domain (token=${challenge.token})")
 
-                when (challenge.status) {
-                    org.shredzone.acme4j.Status.VALID -> {
-                        logger.info("[resumeOrder] Challenge already VALID for $domain. Proceeding to order finalization.")
-                        challengeStore.clearChallenge(challenge.token)
-                        logger.info("[resumeOrder] Challenge token cleared from store for $domain (token=${challenge.token})")
+                    orderRepository.updateOrderStatus(domain, AcmeOrderStatus.ORDER_FINALIZING)
+                    logger.info("[resumeOrder] Order status updated to ORDER_FINALIZING in database for $domain")
 
-                        orderRepository.updateOrderStatus(domain, AcmeOrderStatus.ORDER_FINALIZING)
-                        logger.info("[resumeOrder] Order status updated to ORDER_FINALIZING in database for $domain")
+                    logger.info("[resumeOrder] Generating CSR for domain=$domain")
+                    val domainKeyPair = KeyPairUtils.readKeyPair(StringReader(domainPrivKeyPem))
+                    val csrBuilder = CSRBuilder()
+                    csrBuilder.addDomain(domain)
+                    csrBuilder.sign(domainKeyPair)
+                    logger.info("[resumeOrder] CSR generated for $domain")
 
-                        logger.info("[resumeOrder] Generating CSR for domain=$domain")
-                        val domainKeyPair = KeyPairUtils.readKeyPair(StringReader(domainPrivKeyPem))
-                        val csrBuilder = CSRBuilder()
-                        csrBuilder.addDomain(domain)
-                        csrBuilder.sign(domainKeyPair)
-                        logger.info("[resumeOrder] CSR generated for $domain")
+                    logger.info("[resumeOrder] Submitting CSR to ACME server for $domain (orderUrl=${order.location})...")
+                    order.execute(csrBuilder.encoded)
+                    logger.info("[resumeOrder] CSR submitted for $domain. Polling for order finalization...")
 
-                        logger.info("[resumeOrder] Submitting CSR to ACME server for $domain (orderUrl=${order.location})...")
-                        order.execute(csrBuilder.encoded)
-                        logger.info("[resumeOrder] CSR submitted for $domain. Polling for order finalization...")
-
-                        pollUntilOrderValid(order, domain)
-                        val certPem = downloadAndPersistCertificate(order, domain, domainPrivKeyPem)
-                        Pair(certPem, domainPrivKeyPem)
-                    }
-
-                    org.shredzone.acme4j.Status.INVALID -> {
-                        logger.error(
-                            "[resumeOrder] Challenge INVALID for $domain during resume. Order cannot be completed. " +
-                                "error.type=${challenge.error?.type}, error.detail=${challenge.error?.detail}"
-                        )
-                        challengeStore.clearChallenge(challenge.token)
-                        logger.info("[resumeOrder] Challenge token cleared from store after INVALID for $domain")
-                        throw AcmeChallengeFailedException("ACME HTTP-01 challenge INVALID for domain $domain during resume")
-                    }
-
-                    else -> {
-                        // PENDING ou PROCESSING : Sectigo n'a pas encore validé.
-                        // On re-trigger au cas où pour signaler notre disponibilité, puis on sort proprement.
-                        // L'order reste en base (CHALLENGE_PENDING), la prochaine exécution re-vérifiera.
-                        logger.info(
-                            "[resumeOrder] Challenge status is ${challenge.status} for $domain. " +
-                                "Sectigo has not yet validated. Will retry on next scheduled execution."
-                        )
-                        if (challenge.status != org.shredzone.acme4j.Status.PROCESSING) {
-                            logger.info("[resumeOrder] Re-triggering challenge for $domain (challengeUrl=${challenge.location}) to notify Sectigo of token availability.")
-                            challenge.trigger()
-                            logger.info("[resumeOrder] Challenge re-triggered for $domain.")
-                        } else {
-                            logger.info("[resumeOrder] Challenge is PROCESSING for $domain — skipping re-trigger, Sectigo is already working on it.")
-                        }
-                        null
-                    }
+                    pollUntilOrderValid(order, domain)
+                    val certPem = downloadAndPersistCertificate(order, domain, domainPrivKeyPem)
+                    return Pair(certPem, domainPrivKeyPem)
                 }
+
+                // Si on a pu lire le statut et que le challenge est INVALID → erreur non récupérable
+                if (authorizationUpdateSucceeded && challenge.status == org.shredzone.acme4j.Status.INVALID) {
+                    logger.error(
+                        "[resumeOrder] Challenge INVALID for $domain during resume. Order cannot be completed. " +
+                            "error.type=${challenge.error?.type}, error.detail=${challenge.error?.detail}"
+                    )
+                    challengeStore.clearChallenge(challenge.token)
+                    logger.info("[resumeOrder] Challenge token cleared from store after INVALID for $domain")
+                    throw AcmeChallengeFailedException("ACME HTTP-01 challenge INVALID for domain $domain during resume")
+                }
+
+                // Dans tous les autres cas (Retry-After, PENDING, PROCESSING) :
+                // re-trigger si le challenge n'est pas PROCESSING, puis sortir proprement.
+                // L'order reste en base (CHALLENGE_PENDING), la prochaine exécution re-vérifiera.
+                val currentStatus = if (authorizationUpdateSucceeded) challenge.status else null
+                logger.info(
+                    "[resumeOrder] Challenge not yet validated for $domain " +
+                        "(authorizationUpdateSucceeded=$authorizationUpdateSucceeded, challengeStatus=$currentStatus). " +
+                        "Will retry on next scheduled execution."
+                )
+                if (currentStatus != org.shredzone.acme4j.Status.PROCESSING) {
+                    logger.info("[resumeOrder] Re-triggering challenge for $domain (challengeUrl=${challenge.location}) to notify Sectigo of token availability.")
+                    challenge.trigger()
+                    logger.info("[resumeOrder] Challenge re-triggered for $domain.")
+                } else {
+                    logger.info("[resumeOrder] Challenge is PROCESSING for $domain — skipping re-trigger, Sectigo is already working on it.")
+                }
+                null
             }
 
             AcmeOrderStatus.ORDER_FINALIZING -> {
