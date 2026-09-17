@@ -23,7 +23,7 @@ FROM components_question_choixes
                                     components_question_question_conditionnelles.id
                             )                                                                            AS "question_id",
                             consultations.titre_consultation,
-                            consultations.id                                                             AS "consultation_id"
+                             consultations.document_id                                                    AS "consultation_id"
                      FROM consultations
                               LEFT JOIN consultations_cmps ON consultations_cmps.entity_id = consultations.id
 
