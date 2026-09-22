@@ -21,7 +21,7 @@ FROM consultations_cmps
          LEFT JOIN components_question_question_conditionnelles ON consultations_cmps.cmp_id = components_question_question_conditionnelles.id
          LEFT JOIN components_question_question_ouvertes ON consultations_cmps.cmp_id = components_question_question_ouvertes.id
 
-WHERE TRUE
+WHERE consultations.published_at IS NOT NULL
     [[AND consultations.document_id = {{consultation_id}}]]
     [[AND consultations_cmps.cmp_id = {{component_id}}]]
 ORDER BY consultations_cmps.order;
