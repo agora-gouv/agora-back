@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 .env
 .env.acme_test
+*.pdf
 
 .DS_Store
 
