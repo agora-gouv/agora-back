@@ -30,6 +30,7 @@ class CloudflareCertificateDeployerImpl(
             "certificate" to certificatePem,
             "private_key" to privateKeyPem,
             "bundle_method" to "ubiquitous",
+            "type" to "sni_custom",
         )
 
         logger.info("Deploying certificate to Cloudflare for zone ${acmeConfig.cloudflareZoneId}")

@@ -81,6 +81,7 @@ class CloudflareCertificateDeployerImplTest {
             assertThat(sentBody["certificate"]).isEqualTo("my-cert")
             assertThat(sentBody["private_key"]).isEqualTo("my-key")
             assertThat(sentBody["bundle_method"]).isEqualTo("ubiquitous")
+            assertThat(sentBody["type"]).isEqualTo("sni_custom")
         }
 
         @Test
