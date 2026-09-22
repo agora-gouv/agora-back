@@ -226,7 +226,7 @@ class AcmeStubController(
     fun finalizeOrder(@PathVariable orderId: String, @RequestBody body: String): ResponseEntity<Map<String, Any>> {
         val base = baseUrl()
         val order = orderStore.orders[orderId]
-        val domain = order?.domain ?: acmeConfig.domain.ifBlank { "stub.local" }
+        val domain = order?.domain ?: acmeConfig.allDomains.firstOrNull() ?: acmeConfig.domain.ifBlank { "stub.local" }
 
         logger.info("[STUB] ACME POST /order/$orderId/finalize")
         stubStore.record("POST", "/stub/acme/order/$orderId/finalize", "finalizeOrder orderId=$orderId")

@@ -14,6 +14,13 @@ class AcmeConfig {
     @Value("\${ACME_DOMAIN:}")
     val domain: String = ""
 
+    @Value("\${ACME_SANS:}")
+    val sans: String = ""  // Sous-domaines additionnels (SANs), séparés par des virgules. Vide = certificat mono-domaine.
+
+    // Domaine principal + SANs. Le domaine principal est toujours le premier (CN du certificat).
+    val allDomains: List<String>
+        get() = listOf(domain) + sans.split(",").map(String::trim).filter(String::isNotBlank)
+
     @Value("\${ACME_EAB_KID:}")
     val eabKid: String = ""
 
