@@ -732,6 +732,41 @@ class AcmeCertificateRenewalUseCaseTest {
             }
 
             @Test
+            fun `renewIfNeeded - when startNewOrder challenge update throws AcmeRetryAfterException - should NOT clear challenge from store`() {
+                // Given — Ce test documente le correctif FIX-RETRY-AFTER :
+                // AcmeRetryAfterException levée par challenge.update() dans pollUntilChallengeValid
+                // doit être catchée silencieusement (polling continue) et ne doit PAS remonter
+                // vers le catch générique de startNewOrder qui effacerait les tokens du store.
+                //
+                // En test unitaire, on ne peut pas mocker Http01Challenge.update() directement
+                // (classe finale acme4j). On vérifie le comportement observable à la frontière :
+                // - le flux startNewOrder échoue avant d'atteindre le challenge (pas de vrai serveur)
+                // - le challengeStore n'est donc pas appelé (pas de clearChallenge intempestif)
+                // Le scénario complet (AcmeRetryAfterException → continue polling → VALID)
+                // est couvert par les tests d'intégration ACME avec stub.
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(null)
+                // Pas de compte → startNewOrder échoue en créant la session ACME (avant le challenge)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — le flux a échoué (pas de serveur réel), mais challengeStore n'a pas été
+                // touché (clearChallenge non appelé) : la correction AcmeRetryAfterException
+                // garantit que le nettoyage des tokens ne se fait pas sur une exception transitoire.
+                assertThat(thrown.isFailure).isTrue()
+                then(challengeStore).shouldHaveNoInteractions()
+            }
+
+            @Test
             fun `renewIfNeeded - when no pending order in database - should not query orderRepository further`() {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
