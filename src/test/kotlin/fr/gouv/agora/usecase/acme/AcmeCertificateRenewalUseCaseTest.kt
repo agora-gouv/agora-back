@@ -193,6 +193,7 @@ class AcmeCertificateRenewalUseCaseTest {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
             given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
             given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -226,6 +227,7 @@ class AcmeCertificateRenewalUseCaseTest {
             // Given
             given(acmeConfig.enabled).willReturn(true)
             given(acmeConfig.domain).willReturn("agora.gouv.fr")
+            given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
             given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
             given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
             given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -356,6 +358,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -390,6 +393,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // mais confirme que la logique de connexion au compte ACME est atteinte).
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -422,6 +426,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // La vérification porte sur le fait que le flux ne se termine pas silencieusement
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -452,6 +457,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -485,12 +491,13 @@ class AcmeCertificateRenewalUseCaseTest {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
                 given(clock.zone).willReturn(FIXED_CLOCK.zone)
                 given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
-                // 24h01 → juste au-dessus du seuil, doit être supprimé
+                // 168h01 → juste au-dessus du seuil, doit être supprimé
                 val staleOrder = AcmeOrder(
                     domain = "agora.gouv.fr",
                     orderUrl = "https://acme.sectigo.com/v2/DV/order/stale456",
@@ -516,6 +523,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -548,6 +556,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // n'est pas encore traitée. Le UseCase doit sortir proprement (HTTP 200) sans déployer.
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -595,6 +604,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // Le comportement de re-stockage est couvert par le code produit lui-même et son commentaire.
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -631,6 +641,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -666,6 +677,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // Le challenge est déjà VALID côté Sectigo → la reprise doit procéder à la finalisation.
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -700,6 +712,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // et tentera de se connecter à un vrai serveur ACME (échoue en test)
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -723,6 +736,7 @@ class AcmeCertificateRenewalUseCaseTest {
                 // Given
                 given(acmeConfig.enabled).willReturn(true)
                 given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
                 given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
                 given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
                 given(clock.instant()).willReturn(FIXED_CLOCK.instant())
@@ -738,6 +752,146 @@ class AcmeCertificateRenewalUseCaseTest {
                 // loadOrder est appelé une seule fois pour la vérification
                 then(orderRepository).should().loadOrder("agora.gouv.fr")
                 then(orderRepository).shouldHaveNoMoreInteractions()
+            }
+        }
+
+        @Nested
+        inner class MultiSans {
+
+            @Test
+            fun `renewIfNeeded - when ACME_SANS is empty - should behave identically to single domain (backward compatibility)`() {
+                // Given — ACME_SANS vide → allDomains = [domain]
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr"))
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(null)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — flux de renouvellement déclenché identiquement au cas mono-domaine
+                assertThat(thrown.isFailure).isTrue()
+                then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+            }
+
+            @Test
+            fun `renewIfNeeded - when ACME_SANS contains one SAN - should reach ACME server provisioning with two domains`() {
+                // Given — allDomains = [agora.gouv.fr, www.agora.gouv.fr]
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr", "www.agora.gouv.fr"))
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(null)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — le flux ACME est déclenché avec allDomains incluant le SAN
+                assertThat(thrown.isFailure).isTrue()
+                then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+                // Le challengeStore ne doit pas avoir été appelé (on n'a pas atteint le challenge car pas de serveur)
+                then(challengeStore).shouldHaveNoInteractions()
+            }
+
+            @Test
+            fun `renewIfNeeded - when ACME_SANS contains multiple SANs - should reach ACME server provisioning with all domains`() {
+                // Given — allDomains = [agora.gouv.fr, www.agora.gouv.fr, api.agora.gouv.fr]
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(
+                    listOf("agora.gouv.fr", "www.agora.gouv.fr", "api.agora.gouv.fr")
+                )
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(null)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — flux ACME déclenché (échoue car pas de serveur réel)
+                assertThat(thrown.isFailure).isTrue()
+                then(certificateRepository).should().loadCertificate("agora.gouv.fr")
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
+                then(challengeStore).shouldHaveNoInteractions()
+            }
+
+            @Test
+            fun `renewIfNeeded - when ACME_SANS configured and certificate is TO_DEPLOY - should deploy to Cloudflare without new ACME provisioning`() {
+                // Given — le certificat existe déjà en TO_DEPLOY avec SANs : pas de reprovisioning ACME
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.cloudflareInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                val existingCert = AcmeCertificate(
+                    domain = "agora.gouv.fr",
+                    certificatePem = "cert-pem-multi-san",
+                    privateKeyPem = "key-pem",
+                    expiresAt = NOW.plusDays(60),
+                    status = AcmeCertificateStatus.TO_DEPLOY,
+                )
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(existingCert)
+
+                // When
+                useCase.renewIfNeeded()
+
+                // Then — déploiement Cloudflare avec le certificat multi-SAN existant, sans reprovisioning ACME
+                then(accountRepository).shouldHaveNoInteractions()
+                then(challengeStore).shouldHaveNoInteractions()
+                then(cloudflareDeployer).should().deployCertificate("cert-pem-multi-san", "key-pem")
+                then(certificateRepository).should().markAsDeployed("agora.gouv.fr", NOW)
+                then(orderRepository).should().deleteOrder("agora.gouv.fr")
+            }
+
+            @Test
+            fun `renewIfNeeded - when ACME_SANS configured and resuming stale order - should delete and restart with all domains`() {
+                // Given — order périmé en base + SANs configurés
+                given(acmeConfig.enabled).willReturn(true)
+                given(acmeConfig.domain).willReturn("agora.gouv.fr")
+                given(acmeConfig.allDomains).willReturn(listOf("agora.gouv.fr", "www.agora.gouv.fr"))
+                given(acmeConfig.serverUrl).willReturn("https://acme.sectigo.com/v2/DV")
+                given(acmeConfig.acmeServerInteractionEnabled).willReturn(true)
+                given(clock.instant()).willReturn(FIXED_CLOCK.instant())
+                given(clock.zone).willReturn(FIXED_CLOCK.zone)
+                given(certificateRepository.loadCertificate("agora.gouv.fr")).willReturn(null)
+                val staleOrder = AcmeOrder(
+                    domain = "agora.gouv.fr",
+                    orderUrl = "https://acme.sectigo.com/v2/DV/order/stale-multi",
+                    domainKeyPem = "domain-key-pem",
+                    status = AcmeOrderStatus.CHALLENGE_PENDING,
+                    createdAt = NOW.minusHours(200),
+                )
+                given(orderRepository.loadOrder("agora.gouv.fr")).willReturn(staleOrder)
+                given(accountRepository.loadAccount("https://acme.sectigo.com/v2/DV")).willReturn(null)
+
+                // When
+                val thrown = runCatching { useCase.renewIfNeeded() }
+
+                // Then — l'order périmé est supprimé, et un nouvel order est démarré avec tous les domaines
+                assertThat(thrown.isFailure).isTrue()
+                then(orderRepository).should().loadOrder("agora.gouv.fr")
+                then(orderRepository).should().deleteOrder("agora.gouv.fr")
+                then(accountRepository).should().loadAccount("https://acme.sectigo.com/v2/DV")
             }
         }
     }

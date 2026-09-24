@@ -55,11 +55,12 @@ class AcmeCertificateRenewalUseCase(
 
         val startTime = System.currentTimeMillis()
         val domain = acmeConfig.domain
+        val allDomains = acmeConfig.allDomains
         val serverUrl = acmeConfig.serverUrl
         val now = LocalDateTime.now(clock)
 
         logger.info(
-            "Starting ACME renewal check for domain=$domain " +
+            "Starting ACME renewal check for domain=$domain, SANs=${allDomains.drop(1)} " +
                 "[acmeServerInteraction=${acmeConfig.acmeServerInteractionEnabled}, " +
                 "cloudflareInteraction=${acmeConfig.cloudflareInteractionEnabled}]"
         )
@@ -112,12 +113,12 @@ class AcmeCertificateRenewalUseCase(
                 if (orderAgeHours >= ORDER_EXPIRY_HOURS) {
                     logger.warn("Stale ACME order for $domain (created ${pendingOrder.createdAt}, age ${orderAgeHours}h > ${ORDER_EXPIRY_HOURS}h). Deleting and starting fresh.")
                     orderRepository.deleteOrder(domain)
-                    val result = startNewOrder(domain, serverUrl)
+                    val result = startNewOrder(domain, allDomains, serverUrl)
                     certPem = result.first
                     domainPrivKeyPem = result.second
                 } else {
                     logger.info("Found pending ACME order for $domain with status ${pendingOrder.status}. Attempting resume.")
-                    val result = resumeOrder(pendingOrder, domain, serverUrl)
+                    val result = resumeOrder(pendingOrder, domain, allDomains, serverUrl)
                     if (result == null) {
                         logger.info("ACME challenge still pending for $domain. No further action this run. Will retry on next scheduled execution.")
                         return
@@ -126,7 +127,7 @@ class AcmeCertificateRenewalUseCase(
                     domainPrivKeyPem = result.second
                 }
             } else {
-                val result = startNewOrder(domain, serverUrl)
+                val result = startNewOrder(domain, allDomains, serverUrl)
                 certPem = result.first
                 domainPrivKeyPem = result.second
             }
@@ -161,8 +162,8 @@ class AcmeCertificateRenewalUseCase(
         }
     }
 
-    private fun startNewOrder(domain: String, serverUrl: String): Pair<String, String> {
-        logger.info("=== [startNewOrder] Starting new ACME order for domain=$domain, serverUrl=$serverUrl ===")
+    private fun startNewOrder(domain: String, allDomains: List<String>, serverUrl: String): Pair<String, String> {
+        logger.info("=== [startNewOrder] Starting new ACME order for domain=$domain, allDomains=$allDomains, serverUrl=$serverUrl ===")
 
         // 2. Chargement/création keypair compte
         val storedAccount = accountRepository.loadAccount(serverUrl)
@@ -215,26 +216,30 @@ class AcmeCertificateRenewalUseCase(
         )
         logger.info("[startNewOrder] ACME account persisted to database (serverUrl=$serverUrl, accountUrl=${account.location})")
 
-        // 5. Order
-        logger.info("[startNewOrder] Creating new ACME order for domain=$domain on server $serverUrl")
-        val order = account.newOrder().domain(domain).create()
-        logger.info("[startNewOrder] ACME order created: orderUrl=${order.location}, status=${order.status}, expires=${order.expires}")
+        // 5. Order multi-domaines (CN = domaine principal, SANs = domaines additionnels)
+        logger.info("[startNewOrder] Creating new ACME order for allDomains=$allDomains on server $serverUrl")
+        val orderBuilder = account.newOrder()
+        allDomains.forEach { orderBuilder.domain(it) }
+        val order = orderBuilder.create()
+        logger.info("[startNewOrder] ACME order created: orderUrl=${order.location}, status=${order.status}, expires=${order.expires}, domains=$allDomains")
 
-        // 6. Challenge HTTP-01
-        logger.info("[startNewOrder] Fetching authorization for domain=$domain")
-        val authorization = order.authorizations.first()
-        logger.info(
-            "[startNewOrder] Authorization retrieved: identifier=${authorization.identifier}, " +
-                "status=${authorization.status}, expires=${authorization.expires}"
-        )
+        // 6. Challenges HTTP-01 — une authorization par domaine
+        logger.info("[startNewOrder] Fetching ${order.authorizations.size} authorization(s) for allDomains=$allDomains")
+        val challenges = order.authorizations.map { authorization ->
+            logger.info(
+                "[startNewOrder] Authorization retrieved: identifier=${authorization.identifier}, " +
+                    "status=${authorization.status}, expires=${authorization.expires}"
+            )
+            val challenge = authorization.findChallenge(Http01Challenge.TYPE) as Http01Challenge?
+                ?: throw IllegalStateException("No HTTP-01 challenge available for identifier ${authorization.identifier}")
+            logger.info("[startNewOrder] HTTP-01 challenge found for ${authorization.identifier}: token=${challenge.token}, challengeUrl=${challenge.location}, status=${challenge.status}")
 
-        val challenge = authorization.findChallenge(Http01Challenge.TYPE) as Http01Challenge?
-            ?: throw IllegalStateException("No HTTP-01 challenge available for domain $domain")
-        logger.info("[startNewOrder] HTTP-01 challenge found: token=${challenge.token}, challengeUrl=${challenge.location}, status=${challenge.status}")
+            // Persistance du challenge en base (partagé entre toutes les instances)
+            challengeStore.storeChallenge(challenge.token, challenge.authorization)
+            logger.info("[startNewOrder] Challenge token stored in database for ${authorization.identifier} (token=${challenge.token})")
 
-        // Persistance du challenge en base (partagé entre toutes les instances)
-        challengeStore.storeChallenge(challenge.token, challenge.authorization)
-        logger.info("[startNewOrder] Challenge token stored in database for $domain (token=${challenge.token})")
+            Pair(authorization.identifier.domain, challenge)
+        }
 
         // 9. Keypair domaine + CSR (généré maintenant pour pouvoir persister la clé avant le polling)
         logger.info("[startNewOrder] Generating domain key pair for $domain")
@@ -257,25 +262,37 @@ class AcmeCertificateRenewalUseCase(
         logger.info("[startNewOrder] Order persisted to database for $domain (status=CHALLENGE_PENDING, orderUrl=${order.location})")
 
         try {
-            // 7. Trigger validation
-            logger.info("[startNewOrder] Triggering HTTP-01 challenge for $domain (challengeUrl=${challenge.location})...")
-            challenge.trigger()
-            logger.info("[startNewOrder] HTTP-01 challenge triggered successfully for $domain. Waiting for ACME server validation...")
+            // 7. Trigger de tous les challenges
+            challenges.forEach { (domainForChallenge, challenge) ->
+                logger.info("[startNewOrder] Triggering HTTP-01 challenge for $domainForChallenge (challengeUrl=${challenge.location})...")
+                challenge.trigger()
+                logger.info("[startNewOrder] HTTP-01 challenge triggered successfully for $domainForChallenge.")
+            }
+            logger.info("[startNewOrder] All ${challenges.size} challenge(s) triggered. Waiting for ACME server validation...")
 
-            // 8. Polling jusqu'à VALID
-            pollUntilChallengeValid(challenge, domain)
+            // 8. Polling de chaque challenge jusqu'à VALID
+            challenges.forEach { (domainForChallenge, challenge) ->
+                pollUntilChallengeValid(challenge, domainForChallenge)
+            }
 
-            // Nettoyage du challenge uniquement en cas de succès
-            challengeStore.clearChallenge(challenge.token)
-            logger.info("[startNewOrder] Challenge token cleared from store for $domain (token=${challenge.token})")
+            // Nettoyage des challenges uniquement en cas de succès total
+            challenges.forEach { (_, challenge) ->
+                challengeStore.clearChallenge(challenge.token)
+                logger.info("[startNewOrder] Challenge token cleared from store (token=${challenge.token})")
+            }
+            logger.info("[startNewOrder] All ${challenges.size} challenge(s) validated and cleared for $domain ✓")
         } catch (e: AcmeChallengeTimeoutException) {
-            // Ne pas effacer le challenge : Sectigo peut valider plus tard.
+            // Ne pas effacer les challenges : la CA peut valider plus tard.
             // L'order reste en base (statut CHALLENGE_PENDING) pour reprise lors du prochain run.
-            logger.warn("[startNewOrder] Challenge timed out for $domain. Leaving challenge token in store for next retry run.")
+            // Les tokens déjà stockés seront re-servis lors de la reprise.
+            logger.warn("[startNewOrder] Challenge timed out for $domain. Leaving all challenge tokens in store for next retry run.")
             throw e
         } catch (e: Exception) {
-            challengeStore.clearChallenge(challenge.token)
-            logger.info("[startNewOrder] Challenge token cleared from store after error for $domain (token=${challenge.token})")
+            // Erreur définitive (ex : INVALID) → nettoyer tous les tokens
+            challenges.forEach { (_, challenge) ->
+                challengeStore.clearChallenge(challenge.token)
+            }
+            logger.info("[startNewOrder] All challenge tokens cleared from store after error for $domain")
             throw e
         }
 
@@ -284,11 +301,11 @@ class AcmeCertificateRenewalUseCase(
         logger.info("[startNewOrder] Order status updated to ORDER_FINALIZING in database for $domain")
 
         // 10. Finalisation Order
-        logger.info("[startNewOrder] Generating CSR for domain=$domain")
+        logger.info("[startNewOrder] Generating CSR for allDomains=$allDomains")
         val csrBuilder = CSRBuilder()
-        csrBuilder.addDomain(domain)
+        allDomains.forEach { csrBuilder.addDomain(it) }
         csrBuilder.sign(domainKeyPair)
-        logger.info("[startNewOrder] CSR generated for $domain")
+        logger.info("[startNewOrder] CSR generated for allDomains=$allDomains")
 
         // Recharge le statut de l'order depuis le serveur ACME avant finalisation (RFC 8555 §7.4 : l'order
         // doit être en statut "ready" pour accepter le CSR). acme4j ne recharge pas automatiquement l'état
@@ -319,11 +336,11 @@ class AcmeCertificateRenewalUseCase(
         )
         logger.info("[startNewOrder] Certificate saved to database for $domain (status=TO_DEPLOY, expiresAt=$expiresAt)")
 
-        logger.info("=== [startNewOrder] New ACME order completed for domain=$domain (expiresAt=$expiresAt) ===")
+        logger.info("=== [startNewOrder] New ACME order completed for domain=$domain, allDomains=$allDomains (expiresAt=$expiresAt) ===")
         return Pair(certPem, domainPrivKeyPem)
     }
 
-    private fun resumeOrder(pendingOrder: AcmeOrder, domain: String, serverUrl: String): Pair<String, String>? {
+    private fun resumeOrder(pendingOrder: AcmeOrder, domain: String, allDomains: List<String>, serverUrl: String): Pair<String, String>? {
         logger.info("=== [resumeOrder] Resuming ACME order for domain=$domain at status=${pendingOrder.status} (orderUrl=${pendingOrder.orderUrl}) ===")
 
         val storedAccount = accountRepository.loadAccount(serverUrl)
@@ -351,64 +368,82 @@ class AcmeCertificateRenewalUseCase(
 
         return when (pendingOrder.status) {
             AcmeOrderStatus.CHALLENGE_PENDING -> {
-                logger.info("[resumeOrder] Resuming from CHALLENGE_PENDING: checking challenge status for $domain")
+                logger.info("[resumeOrder] Resuming from CHALLENGE_PENDING: checking ${order.authorizations.size} challenge(s) for $domain")
 
-                val authorization = order.authorizations.first()
-                logger.info(
-                    "[resumeOrder] Authorization state before update: identifier=${authorization.identifier}, " +
-                        "status=${authorization.status}, expires=${authorization.expires}"
-                )
-
-                // Récupération et re-stockage défensif du challenge AVANT authorization.update().
-                // Cela couvre le cas où la ligne acme_challenge a disparu de la base (perte accidentelle,
-                // redémarrage, etc.) : le token et la keyAuthorization sont restaurés immédiatement,
-                // même si Sectigo répond ensuite avec un Retry-After (qui ferait sortir avant le storeChallenge
-                // si celui-ci était placé après authorization.update()).
-                val challenge = authorization.findChallenge(Http01Challenge.TYPE) as Http01Challenge?
-                    ?: throw IllegalStateException("No HTTP-01 challenge available for domain $domain during resume")
-                logger.info("[resumeOrder] HTTP-01 challenge found: token=${challenge.token}, status=${challenge.status}, challengeUrl=${challenge.location}")
-
-                logger.info("[resumeOrder] Restoring challenge token in store for $domain (defensive re-store before authorization.update(), token=${challenge.token})")
-                challengeStore.storeChallenge(challenge.token, challenge.authorization)
-                logger.info("[resumeOrder] Challenge token restored in store for $domain")
-
-                // Tenter de récupérer le statut de l'authorization depuis Sectigo.
-                // En cas de Retry-After, on ne connaît pas encore le statut exact mais le challenge
-                // est forcément PENDING ou PROCESSING — on doit quand même re-trigger si besoin.
-                val authorizationUpdateSucceeded = try {
-                    logger.info("[resumeOrder] Calling authorization.update() for $domain...")
-                    authorization.update()
+                // Collecte de tous les challenges avec re-stockage défensif AVANT authorization.update()
+                // (couvre la perte accidentelle des lignes acme_challenge en base)
+                val authorizationChallenges = order.authorizations.map { authorization ->
                     logger.info(
-                        "[resumeOrder] Authorization updated for $domain: status=${authorization.status}, " +
-                            "expires=${authorization.expires}"
+                        "[resumeOrder] Authorization state before update: identifier=${authorization.identifier}, " +
+                            "status=${authorization.status}, expires=${authorization.expires}"
                     )
-                    true
-                } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
-                    // Sectigo indique que l'authorization n'est pas encore traitée (Retry-After).
-                    // Le challenge est déjà re-stocké en base (ci-dessus) : on doit quand même
-                    // re-trigger pour s'assurer que Sectigo est bien notifié de la disponibilité du token.
-                    logger.info(
-                        "[resumeOrder] Authorization not completed yet for $domain (Retry-After: ${e.retryAfter}). " +
-                            "Challenge status unknown — will re-trigger if not PROCESSING."
-                    )
-                    false
+                    val challenge = authorization.findChallenge(Http01Challenge.TYPE) as Http01Challenge?
+                        ?: throw IllegalStateException("No HTTP-01 challenge available for ${authorization.identifier} during resume")
+                    logger.info("[resumeOrder] HTTP-01 challenge found: token=${challenge.token}, status=${challenge.status}, challengeUrl=${challenge.location}")
+
+                    // Re-stockage défensif du challenge avant authorization.update()
+                    logger.info("[resumeOrder] Restoring challenge token in store for ${authorization.identifier} (token=${challenge.token})")
+                    challengeStore.storeChallenge(challenge.token, challenge.authorization)
+
+                    Triple(authorization, authorization.identifier.domain, challenge)
                 }
 
-                // Si on a pu lire le statut et que le challenge est VALID → finaliser l'order
-                if (authorizationUpdateSucceeded && challenge.status == org.shredzone.acme4j.Status.VALID) {
-                    logger.info("[resumeOrder] Challenge already VALID for $domain. Proceeding to order finalization.")
-                    challengeStore.clearChallenge(challenge.token)
-                    logger.info("[resumeOrder] Challenge token cleared from store for $domain (token=${challenge.token})")
+                // Mise à jour du statut de chaque authorization
+                val authorizationUpdateResults = authorizationChallenges.map { (authorization, domainForChallenge, challenge) ->
+                    val updateSucceeded = try {
+                        logger.info("[resumeOrder] Calling authorization.update() for $domainForChallenge...")
+                        authorization.update()
+                        logger.info(
+                            "[resumeOrder] Authorization updated for $domainForChallenge: status=${authorization.status}, " +
+                                "expires=${authorization.expires}"
+                        )
+                        true
+                    } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
+                        logger.info(
+                            "[resumeOrder] Authorization not completed yet for $domainForChallenge (Retry-After: ${e.retryAfter}). " +
+                                "Challenge status unknown — will re-trigger if not PROCESSING."
+                        )
+                        false
+                    }
+                    Triple(domainForChallenge, challenge, updateSucceeded)
+                }
+
+                // Si au moins une authorization est INVALID → erreur non récupérable
+                val invalidChallenge = authorizationUpdateResults.find { (_, challenge, updateSucceeded) ->
+                    updateSucceeded && challenge.status == org.shredzone.acme4j.Status.INVALID
+                }
+                if (invalidChallenge != null) {
+                    val (domainForChallenge, challenge, _) = invalidChallenge
+                    logger.error(
+                        "[resumeOrder] Challenge INVALID for $domainForChallenge during resume. Order cannot be completed. " +
+                            "error.type=${challenge.error?.type}, error.detail=${challenge.error?.detail}"
+                    )
+                    // Nettoyer tous les tokens (order irrécupérable)
+                    authorizationChallenges.forEach { (_, _, ch) -> challengeStore.clearChallenge(ch.token) }
+                    logger.info("[resumeOrder] All challenge tokens cleared from store after INVALID for $domain")
+                    throw AcmeChallengeFailedException("ACME HTTP-01 challenge INVALID for domain $domainForChallenge during resume")
+                }
+
+                // Si toutes les authorizations sont VALID → finaliser l'order
+                val allValid = authorizationUpdateResults.all { (_, challenge, updateSucceeded) ->
+                    updateSucceeded && challenge.status == org.shredzone.acme4j.Status.VALID
+                }
+                if (allValid) {
+                    logger.info("[resumeOrder] All ${authorizationUpdateResults.size} challenge(s) VALID for $domain. Proceeding to order finalization.")
+                    authorizationChallenges.forEach { (_, _, challenge) ->
+                        challengeStore.clearChallenge(challenge.token)
+                        logger.info("[resumeOrder] Challenge token cleared from store (token=${challenge.token})")
+                    }
 
                     orderRepository.updateOrderStatus(domain, AcmeOrderStatus.ORDER_FINALIZING)
                     logger.info("[resumeOrder] Order status updated to ORDER_FINALIZING in database for $domain")
 
-                    logger.info("[resumeOrder] Generating CSR for domain=$domain")
+                    logger.info("[resumeOrder] Generating CSR for allDomains=$allDomains")
                     val domainKeyPair = KeyPairUtils.readKeyPair(StringReader(domainPrivKeyPem))
                     val csrBuilder = CSRBuilder()
-                    csrBuilder.addDomain(domain)
+                    allDomains.forEach { csrBuilder.addDomain(it) }
                     csrBuilder.sign(domainKeyPair)
-                    logger.info("[resumeOrder] CSR generated for $domain")
+                    logger.info("[resumeOrder] CSR generated for allDomains=$allDomains")
 
                     logger.info("[resumeOrder] Submitting CSR to ACME server for $domain (orderUrl=${order.location})...")
                     order.execute(csrBuilder.encoded)
@@ -419,33 +454,24 @@ class AcmeCertificateRenewalUseCase(
                     return Pair(certPem, domainPrivKeyPem)
                 }
 
-                // Si on a pu lire le statut et que le challenge est INVALID → erreur non récupérable
-                if (authorizationUpdateSucceeded && challenge.status == org.shredzone.acme4j.Status.INVALID) {
-                    logger.error(
-                        "[resumeOrder] Challenge INVALID for $domain during resume. Order cannot be completed. " +
-                            "error.type=${challenge.error?.type}, error.detail=${challenge.error?.detail}"
-                    )
-                    challengeStore.clearChallenge(challenge.token)
-                    logger.info("[resumeOrder] Challenge token cleared from store after INVALID for $domain")
-                    throw AcmeChallengeFailedException("ACME HTTP-01 challenge INVALID for domain $domain during resume")
-                }
-
                 // Dans tous les autres cas (Retry-After, PENDING, PROCESSING) :
-                // re-trigger si le challenge n'est pas PROCESSING, puis sortir proprement.
+                // re-trigger les challenges non PROCESSING, puis sortir proprement.
                 // L'order reste en base (CHALLENGE_PENDING), la prochaine exécution re-vérifiera.
-                val currentStatus = if (authorizationUpdateSucceeded) challenge.status else null
-                logger.info(
-                    "[resumeOrder] Challenge not yet validated for $domain " +
-                        "(authorizationUpdateSucceeded=$authorizationUpdateSucceeded, challengeStatus=$currentStatus). " +
-                        "Will retry on next scheduled execution."
-                )
-                if (currentStatus != org.shredzone.acme4j.Status.PROCESSING) {
-                    logger.info("[resumeOrder] Re-triggering challenge for $domain (challengeUrl=${challenge.location}) to notify Sectigo of token availability.")
-                    challenge.trigger()
-                    logger.info("[resumeOrder] Challenge re-triggered for $domain.")
-                } else {
-                    logger.info("[resumeOrder] Challenge is PROCESSING for $domain — skipping re-trigger, Sectigo is already working on it.")
+                authorizationUpdateResults.forEach { (domainForChallenge, challenge, updateSucceeded) ->
+                    val currentStatus = if (updateSucceeded) challenge.status else null
+                    logger.info(
+                        "[resumeOrder] Challenge not yet validated for $domainForChallenge " +
+                            "(updateSucceeded=$updateSucceeded, challengeStatus=$currentStatus). "
+                    )
+                    if (currentStatus != org.shredzone.acme4j.Status.PROCESSING) {
+                        logger.info("[resumeOrder] Re-triggering challenge for $domainForChallenge (challengeUrl=${challenge.location}).")
+                        challenge.trigger()
+                        logger.info("[resumeOrder] Challenge re-triggered for $domainForChallenge.")
+                    } else {
+                        logger.info("[resumeOrder] Challenge is PROCESSING for $domainForChallenge — skipping re-trigger.")
+                    }
                 }
+                logger.info("[resumeOrder] Not all challenges validated for $domain. Will retry on next scheduled execution.")
                 null
             }
 
