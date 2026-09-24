@@ -310,7 +310,19 @@ class AcmeCertificateRenewalUseCase(
         // Recharge le statut de l'order depuis le serveur ACME avant finalisation (RFC 8555 §7.4 : l'order
         // doit être en statut "ready" pour accepter le CSR). acme4j ne recharge pas automatiquement l'état
         // local après le polling du challenge.
-        order.update()
+        try {
+            order.update()
+        } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
+            // Sectigo indique que l'order n'est pas encore prêt (header Retry-After) juste avant le CSR.
+            // L'order est déjà CHALLENGE_PENDING en base avec les challenges stockés.
+            // On sort proprement avec une AcmeChallengeTimeoutException pour laisser l'order en base
+            // (les challenges ne seront pas effacés) et relancer via resumeOrder au prochain run.
+            logger.info(
+                "[startNewOrder] Order not ready yet for $domain (Retry-After: ${e.retryAfter}) before CSR submission. " +
+                    "Leaving order in CHALLENGE_PENDING state for resume on next scheduled execution."
+            )
+            throw AcmeChallengeTimeoutException("ACME order not ready before CSR submission for domain $domain (Retry-After: ${e.retryAfter})")
+        }
         logger.info("[startNewOrder] Order status before CSR submission for $domain: status=${order.status}, expires=${order.expires}")
 
         logger.info("[startNewOrder] Submitting CSR to ACME server for $domain (orderUrl=${order.location})...")
@@ -361,7 +373,17 @@ class AcmeCertificateRenewalUseCase(
 
         logger.info("[resumeOrder] Binding order from URL: ${pendingOrder.orderUrl}")
         val order = login.bindOrder(java.net.URL(pendingOrder.orderUrl))
-        order.update()
+        try {
+            order.update()
+        } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
+            // Sectigo indique que l'order n'est pas encore prêt (header Retry-After).
+            // On sort proprement : la prochaine exécution reprendra la reprise.
+            logger.info(
+                "[resumeOrder] Order not ready yet for $domain (Retry-After: ${e.retryAfter}) during initial order reload. " +
+                    "Will retry on next scheduled execution."
+            )
+            return null
+        }
         logger.info("[resumeOrder] Order refreshed from ACME server: status=${order.status}, expires=${order.expires}")
 
         val domainPrivKeyPem = pendingOrder.domainKeyPem
@@ -490,7 +512,17 @@ class AcmeCertificateRenewalUseCase(
             logger.info("[pollChallenge] Waiting ${POLLING_INTERVAL_MS}ms before attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS for $domain...")
             Thread.sleep(POLLING_INTERVAL_MS)
             logger.info("[pollChallenge] Calling challenge.update() for $domain (attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS)")
-            challenge.update()
+            try {
+                challenge.update()
+            } catch (e: org.shredzone.acme4j.exception.AcmeRetryAfterException) {
+                // Sectigo indique que le challenge n'est pas encore prêt (header Retry-After).
+                // On continue le polling plutôt que de laisser l'exception remonter vers le catch
+                // générique de startNewOrder (qui effacerait les tokens du store).
+                logger.info(
+                    "[pollChallenge] Challenge not ready yet for $domain (Retry-After: ${e.retryAfter}), " +
+                        "attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS — continuing polling."
+                )
+            }
             logger.info("[pollChallenge] Challenge status after update: ${challenge.status} (attempt ${attempt + 1}/$POLLING_MAX_ATTEMPTS, domain=$domain)")
             when (challenge.status) {
                 org.shredzone.acme4j.Status.VALID -> {
