@@ -50,7 +50,7 @@ class ReponseConsultationController(
                     when (statusInsertion) {
                         InsertResult.INSERT_SUCCESS -> {
                             val askDemographicInfo =
-                                askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
+                                askForDemographicInfoUseCase.askForDemographicInfo(userId = userId, consultationId = consultationId)
                             ResponseEntity.ok()
                                 .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
                         }
