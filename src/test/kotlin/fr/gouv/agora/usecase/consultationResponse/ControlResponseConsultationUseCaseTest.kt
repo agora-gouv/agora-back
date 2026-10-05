@@ -60,7 +60,6 @@ internal class ControlResponseConsultationUseCaseTest {
         private lateinit var response: ReponseConsultationInserting
 
         @BeforeEach
-
         fun setUp() {
             question = mock(QuestionOpen::class.java).also { given(it.id).willReturn("question1") }
             response =

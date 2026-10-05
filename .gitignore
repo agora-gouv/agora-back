@@ -50,3 +50,6 @@ dump.rdb
 /architecture-decisions/ACME/2026-06-25-acme-v2-implementation-plan.md
 /architecture-decisions/ACME/2026-07-15-acme-stub-mode.md
 /.env.acme_test
+/modele_quesitonnaire.json
+/modele_questionnaire.md
+/Query Results.csv

@@ -6,6 +6,7 @@ import fr.gouv.agora.domain.QuestionMultipleChoices
 import fr.gouv.agora.domain.QuestionOpen
 import fr.gouv.agora.domain.QuestionUniqueChoice
 import fr.gouv.agora.domain.ReponseConsultationInserting
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 abstract class ResponseQuestionValidator {
@@ -52,16 +53,13 @@ class QuestionUniqueChoiceAndConditionalValidator : ResponseQuestionWithChoicesV
 }
 
 @Component
-class QuestionOpenValidator : ResponseQuestionValidator() {
-    companion object {
-        private const val OPEN_QUESTION_MAX_TEXT_LENGTH = 400
-    }
+class QuestionOpenValidator(
+    @Value("\${OPEN_QUESTION_MAX_TEXT_LENGTH:400}") private val openQuestionMaxTextLength: Int,
+) : ResponseQuestionValidator() {
 
     override fun isValid(question: Question, response: ReponseConsultationInserting): Boolean {
         if (question !is QuestionOpen) return false
 
-        val isValidOpenTextFieldLength = response.responseText.length <= OPEN_QUESTION_MAX_TEXT_LENGTH
-
-        return isValidOpenTextFieldLength
+        return response.responseText.length <= openQuestionMaxTextLength
     }
 }

@@ -65,7 +65,7 @@ internal class InsertReponseConsultationUseCaseTest {
 
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
-        private const val OPEN_QUESTION_MAX_LENGTH = 400
+        private const val OPEN_QUESTION_MAX_TEXT_LENGTH = 400
     }
 
     private val consultationInfo = ConsultationInfo(
@@ -119,8 +119,7 @@ internal class InsertReponseConsultationUseCaseTest {
                 consultationId = "consultId",
                 userId = "userId"
             )
-        )
-            .willReturn(true)
+        ).willReturn(true)
 
         // When
         val result = useCase.insertReponseConsultation(
@@ -142,7 +141,7 @@ internal class InsertReponseConsultationUseCaseTest {
     }
 
     @Test
-    fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer open question - should delete ConsultationAnswered cache and sanitize with open_text_max_length then return result from insert repository`() {
+    fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer open question - should sanitize with open_question_max_text_length then return result from insert repository`() {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
@@ -151,50 +150,33 @@ internal class InsertReponseConsultationUseCaseTest {
                 consultationId = "consultId",
                 userId = "userId"
             )
-        )
-            .willReturn(false)
+        ).willReturn(false)
 
         val questionList = listOf(
             mock(QuestionOpen::class.java).also { given(it.id).willReturn("question1") }
         )
         given(questionRepository.getConsultationQuestions(consultationId = "consultId")).willReturn(
-            Questions(
-                1,
-                questionList
-            )
+            Questions(1, questionList)
         )
 
         val consultationResponses = listOf(
-            ReponseConsultationInserting(
-                questionId = "question1",
-                choiceIds = null,
-                responseText = "salut",
-            )
+            ReponseConsultationInserting(questionId = "question1", choiceIds = null, responseText = "salut")
         )
         val consultationResponsesSanitized = listOf(
-            ReponseConsultationInserting(
-                questionId = "question1",
-                choiceIds = null,
-                responseText = "sanitizedSalut",
-            )
+            ReponseConsultationInserting(questionId = "question1", choiceIds = null, responseText = "sanitizedSalut")
         )
         val insertParameters = mock(InsertParameters::class.java)
 
         given(
-            insertConsultationResponseParametersMapper.toInsertParameters(
-                consultationId = "consultId",
-                userId = "userId",
-            )
+            insertConsultationResponseParametersMapper.toInsertParameters(consultationId = "consultId", userId = "userId")
         ).willReturn(insertParameters)
-
         given(
             insertReponseConsultationRepository.insertConsultationResponses(
                 insertParameters = insertParameters,
                 consultationResponses = consultationResponsesSanitized,
             )
         ).willReturn(InsertResult.INSERT_SUCCESS)
-
-        given(contentSanitizer.sanitize("salut", OPEN_QUESTION_MAX_LENGTH)).willReturn("sanitizedSalut")
+        given(contentSanitizer.sanitize("salut", OPEN_QUESTION_MAX_TEXT_LENGTH)).willReturn("sanitizedSalut")
 
         // When
         val result = useCase.insertReponseConsultation(
@@ -206,10 +188,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(
-            consultationId = "consultId",
-            userId = "userId",
-        )
+        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(userAnsweredConsultationRepository).should().insertUserAnsweredConsultation(
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
@@ -224,11 +203,57 @@ internal class InsertReponseConsultationUseCaseTest {
             consultationResponses = consultationResponsesSanitized,
         )
         then(questionRepository).should(times(1)).getConsultationQuestions(consultationId = "consultId")
-        then(contentSanitizer).should(only()).sanitize("salut", OPEN_QUESTION_MAX_LENGTH)
+        then(contentSanitizer).should(only()).sanitize("salut", OPEN_QUESTION_MAX_TEXT_LENGTH)
     }
 
     @Test
-    fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer unique question with choice other - should delete ConsultationAnswered cache and sanitize with other_text_max_length then return result from insert repository`() {
+    fun `insertReponseConsultation - when open question max length is overridden via env var - should sanitize with overridden max length`() {
+        // Given
+        mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0), openQuestionMaxTextLength = 2000)
+        given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
+        given(
+            userAnsweredConsultationRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId")
+        ).willReturn(false)
+
+        val questionList = listOf(
+            mock(QuestionOpen::class.java).also { given(it.id).willReturn("question1") }
+        )
+        given(questionRepository.getConsultationQuestions(consultationId = "consultId")).willReturn(
+            Questions(1, questionList)
+        )
+
+        val consultationResponses = listOf(
+            ReponseConsultationInserting(questionId = "question1", choiceIds = null, responseText = "long text")
+        )
+        val consultationResponsesSanitized = listOf(
+            ReponseConsultationInserting(questionId = "question1", choiceIds = null, responseText = "sanitized long text")
+        )
+        val insertParameters = mock(InsertParameters::class.java)
+        given(
+            insertConsultationResponseParametersMapper.toInsertParameters(consultationId = "consultId", userId = "userId")
+        ).willReturn(insertParameters)
+        given(
+            insertReponseConsultationRepository.insertConsultationResponses(
+                insertParameters = insertParameters,
+                consultationResponses = consultationResponsesSanitized,
+            )
+        ).willReturn(InsertResult.INSERT_SUCCESS)
+        given(contentSanitizer.sanitize("long text", 2000)).willReturn("sanitized long text")
+
+        // When
+        val result = useCase.insertReponseConsultation(
+            consultationId = "consultId",
+            userId = "userId",
+            consultationResponses = consultationResponses,
+        )
+
+        // Then
+        assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
+        then(contentSanitizer).should(only()).sanitize("long text", 2000)
+    }
+
+    @Test
+    fun `insertReponseConsultation - when has not answered yet and consultation not finished and answer unique question with choice other - should sanitize with other_text_max_length then return result from insert repository`() {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
@@ -237,17 +262,13 @@ internal class InsertReponseConsultationUseCaseTest {
                 consultationId = "consultId",
                 userId = "userId"
             )
-        )
-            .willReturn(false)
+        ).willReturn(false)
 
         val questionList = listOf(
             mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") }
         )
         given(questionRepository.getConsultationQuestions(consultationId = "consultId")).willReturn(
-            Questions(
-                1,
-                questionList
-            )
+            Questions(1, questionList)
         )
 
         val consultationResponses = listOf(
@@ -267,20 +288,16 @@ internal class InsertReponseConsultationUseCaseTest {
         val insertParameters = mock(InsertParameters::class.java)
 
         given(
-            insertConsultationResponseParametersMapper.toInsertParameters(
-                consultationId = "consultId",
-                userId = "userId",
-            )
+            insertConsultationResponseParametersMapper.toInsertParameters(consultationId = "consultId", userId = "userId")
         ).willReturn(insertParameters)
-
         given(
             insertReponseConsultationRepository.insertConsultationResponses(
                 insertParameters = insertParameters,
                 consultationResponses = consultationResponsesSanitized,
             )
         ).willReturn(InsertResult.INSERT_SUCCESS)
-
         given(contentSanitizer.sanitize("autre choix", OTHER_QUESTION_MAX_LENGTH)).willReturn("sanitized autre choix")
+
         // When
         val result = useCase.insertReponseConsultation(
             consultationId = "consultId",
@@ -291,10 +308,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(
-            consultationId = "consultId",
-            userId = "userId",
-        )
+        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(userAnsweredConsultationRepository).should().insertUserAnsweredConsultation(
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
@@ -313,17 +327,13 @@ internal class InsertReponseConsultationUseCaseTest {
     }
 
     @Test
-    fun `insertReponseConsultation - when has not answered yet and consultation not finished and has missing response on questions with condition - should delete ConsultationAnswered cache then return result from insert repository with added responses`() {
+    fun `insertReponseConsultation - when has not answered yet and consultation not finished and has missing response on questions with condition - should return result from insert repository with added responses`() {
         // Given
         mockDate(todayDate = LocalDateTime.of(2023, Month.OCTOBER, 19, 19, 0, 0))
         given(consultationInfoRepository.getConsultation(consultationId = "consultId")).willReturn(consultationInfo)
         given(
-            userAnsweredConsultationRepository.hasAnsweredConsultation(
-                consultationId = "consultId",
-                userId = "userId",
-            )
-        )
-            .willReturn(false)
+            userAnsweredConsultationRepository.hasAnsweredConsultation(consultationId = "consultId", userId = "userId")
+        ).willReturn(false)
 
         val questionList = listOf(
             mock(QuestionUniqueChoice::class.java).also { given(it.id).willReturn("question1") },
@@ -334,10 +344,7 @@ internal class InsertReponseConsultationUseCaseTest {
 
         val insertParameters = mock(InsertParameters::class.java)
         given(
-            insertConsultationResponseParametersMapper.toInsertParameters(
-                consultationId = "consultId",
-                userId = "userId",
-            )
+            insertConsultationResponseParametersMapper.toInsertParameters(consultationId = "consultId", userId = "userId")
         ).willReturn(insertParameters)
 
         val addedResponseUniqueChoice = ReponseConsultationInserting(
@@ -362,10 +369,7 @@ internal class InsertReponseConsultationUseCaseTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(consultationInfoRepository).should(only()).getConsultation(consultationId = "consultId")
-        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(
-            consultationId = "consultId",
-            userId = "userId",
-        )
+        then(userAnsweredConsultationRepository).should().hasAnsweredConsultation(consultationId = "consultId", userId = "userId")
         then(userAnsweredConsultationRepository).should().insertUserAnsweredConsultation(
             UserAnsweredConsultation(userId = "userId", consultationId = "consultId")
         )
@@ -383,7 +387,10 @@ internal class InsertReponseConsultationUseCaseTest {
         then(contentSanitizer).shouldHaveNoInteractions()
     }
 
-    private fun mockDate(todayDate: LocalDateTime) {
+    private fun mockDate(
+        todayDate: LocalDateTime,
+        openQuestionMaxTextLength: Int = OPEN_QUESTION_MAX_TEXT_LENGTH,
+    ) {
         useCase = InsertReponseConsultationUseCase(
             contentSanitizer = contentSanitizer,
             insertReponseConsultationRepository = insertReponseConsultationRepository,
@@ -395,6 +402,7 @@ internal class InsertReponseConsultationUseCaseTest {
             consultationAnsweredPaginatedListCacheRepository = consultationAnsweredPaginatedListCacheRepository,
             consultationResultsCacheRepository = consultationResultsCacheRepository,
             clock = TestUtils.getFixedClock(todayDate),
+            openQuestionMaxTextLength = openQuestionMaxTextLength,
         )
     }
 }
