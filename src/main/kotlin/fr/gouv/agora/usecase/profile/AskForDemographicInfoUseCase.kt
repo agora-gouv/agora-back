@@ -8,6 +8,7 @@ import fr.gouv.agora.usecase.profile.AskDemographicInfoState.HAS_DEMOGRAPHIC_INF
 import fr.gouv.agora.usecase.profile.AskDemographicInfoState.HAS_NOT_ANSWERED_ENOUGH_CONSULTATIONS
 import fr.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -16,6 +17,7 @@ class AskForDemographicInfoUseCase(
     private val userAnsweredConsultationRepository: UserAnsweredConsultationRepository,
     private val profileRepository: ProfileRepository,
     private val demographicInfoAskDateRepository: DemographicInfoAskDateRepository,
+    @Value("\${CONSULTATION_DOCUMENT_IDS_WITHOUT_DEMOGRAPHIC_ASK:}") private val consultationIdsWithoutDemographicAsk: String,
 ) {
 
     companion object {
@@ -23,7 +25,13 @@ class AskForDemographicInfoUseCase(
         private const val DAYS_BEFORE_ASKING_DEMOGRAPHIC_INFO = 30
     }
 
-    fun askForDemographicInfo(userId: String): Boolean {
+    fun askForDemographicInfo(userId: String, consultationId: String): Boolean {
+        val excludedIds = consultationIdsWithoutDemographicAsk
+            .split(",")
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+        if (consultationId in excludedIds) return false
+
         return when (processAskDemographicInfoState(userId)) {
             HAS_DEMOGRAPHIC_INFO -> false
             HAS_NOT_ANSWERED_ENOUGH_CONSULTATIONS -> false

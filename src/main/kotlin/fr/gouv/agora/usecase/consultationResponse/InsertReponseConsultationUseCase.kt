@@ -17,6 +17,7 @@ import fr.gouv.agora.usecase.qag.ContentSanitizer
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.LocalDateTime
@@ -32,13 +33,13 @@ class InsertReponseConsultationUseCase(
     private val consultationInfoRepository: ConsultationInfoRepository,
     private val consultationDetailsV2CacheRepository: ConsultationDetailsV2CacheRepository,
     private val consultationAnsweredPaginatedListCacheRepository: ConsultationAnsweredPaginatedListCacheRepository,
-    private val consultationResultsCacheRepository: ConsultationResultsCacheRepository
+    private val consultationResultsCacheRepository: ConsultationResultsCacheRepository,
+    @Value("\${OPEN_QUESTION_MAX_TEXT_LENGTH:400}") private val openQuestionMaxTextLength: Int,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(InsertReponseConsultationUseCase::class.java)
 
     companion object {
         private const val OTHER_QUESTION_MAX_LENGTH = 200
-        private const val OPEN_QUESTION_MAX_LENGTH = 400
     }
 
     fun insertReponseConsultation(
@@ -112,7 +113,7 @@ class InsertReponseConsultationUseCase(
     ): List<ReponseConsultationInserting> {
         return consultationResponses.map { response ->
             val lengthSanitizedContent = when (questionList.find { it.id == response.questionId }) {
-                is QuestionOpen -> OPEN_QUESTION_MAX_LENGTH
+                is QuestionOpen -> openQuestionMaxTextLength
                 else -> OTHER_QUESTION_MAX_LENGTH
             }
             if (response.responseText.isNotEmpty()) {

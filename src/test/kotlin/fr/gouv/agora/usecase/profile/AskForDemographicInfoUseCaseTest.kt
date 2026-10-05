@@ -5,10 +5,11 @@ import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsult
 import fr.gouv.agora.usecase.profile.repository.DemographicInfoAskDateRepository
 import fr.gouv.agora.usecase.profile.repository.ProfileRepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
@@ -16,7 +17,6 @@ import java.time.LocalDate
 @ExtendWith(MockitoExtension::class)
 internal class AskForDemographicInfoUseCaseTest {
 
-    @InjectMocks
     private lateinit var useCase: AskForDemographicInfoUseCase
 
     @Mock
@@ -41,13 +41,87 @@ internal class AskForDemographicInfoUseCaseTest {
         secondaryDepartment = Territoire.Departement.NORD,
     )
 
+    private fun buildUseCase(excludedIds: String = "") = AskForDemographicInfoUseCase(
+        userAnsweredConsultationRepository = userAnsweredConsultationRepository,
+        profileRepository = profileRepository,
+        demographicInfoAskDateRepository = demographicInfoAskDateRepository,
+        consultationIdsWithoutDemographicAsk = excludedIds,
+    )
+
+    @BeforeEach
+    fun setUp() {
+        useCase = buildUseCase()
+    }
+
+    @Nested
+    inner class `askForDemographicInfo - when consultationId is in excluded list` {
+
+        @Test
+        fun `askForDemographicInfo - when consultationId is in excluded list with single entry - should return false without any repository interaction`() {
+            // Given
+            useCase = buildUseCase(excludedIds = "excluded-doc-id")
+
+            // When
+            val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "excluded-doc-id")
+
+            // Then
+            assertThat(result).isEqualTo(false)
+            then(profileRepository).shouldHaveNoInteractions()
+            then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
+            then(demographicInfoAskDateRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `askForDemographicInfo - when consultationId is in excluded list with multiple entries - should return false without any repository interaction`() {
+            // Given
+            useCase = buildUseCase(excludedIds = "other-id, excluded-doc-id , another-id")
+
+            // When
+            val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "excluded-doc-id")
+
+            // Then
+            assertThat(result).isEqualTo(false)
+            then(profileRepository).shouldHaveNoInteractions()
+            then(userAnsweredConsultationRepository).shouldHaveNoInteractions()
+            then(demographicInfoAskDateRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `askForDemographicInfo - when consultationId is NOT in excluded list - should follow normal behavior`() {
+            // Given
+            useCase = buildUseCase(excludedIds = "other-id, another-id")
+            given(profileRepository.getProfile(userId = "1234")).willReturn(profile)
+
+            // When
+            val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "not-excluded-id")
+
+            // Then
+            assertThat(result).isEqualTo(false)
+            then(profileRepository).should(only()).getProfile(userId = "1234")
+        }
+
+        @Test
+        fun `askForDemographicInfo - when excluded list is empty - should follow normal behavior`() {
+            // Given
+            useCase = buildUseCase(excludedIds = "")
+            given(profileRepository.getProfile(userId = "1234")).willReturn(profile)
+
+            // When
+            val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "any-consultation-id")
+
+            // Then
+            assertThat(result).isEqualTo(false)
+            then(profileRepository).should(only()).getProfile(userId = "1234")
+        }
+    }
+
     @Test
     fun `askForDemographicInfo - when profile is not null - should return false`() {
         //Given
         given(profileRepository.getProfile(userId = "1234")).willReturn(profile)
 
         // When
-        val result = useCase.askForDemographicInfo(userId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "consultId")
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -63,7 +137,7 @@ internal class AskForDemographicInfoUseCaseTest {
         given(userAnsweredConsultationRepository.getAnsweredConsultationIds(userId = "1234")).willReturn(emptyList())
 
         // When
-        val result = useCase.askForDemographicInfo(userId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "consultId")
 
         // Then
         assertThat(result).isEqualTo(false)
@@ -81,7 +155,7 @@ internal class AskForDemographicInfoUseCaseTest {
         given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(null)
 
         // When
-        val result = useCase.askForDemographicInfo(userId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "consultId")
 
         // Then
         assertThat(result).isEqualTo(true)
@@ -100,7 +174,7 @@ internal class AskForDemographicInfoUseCaseTest {
         given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(datePreviousSysDateMinusAskPeriod)
 
         // When
-        val result = useCase.askForDemographicInfo(userId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "consultId")
 
         // Then
         assertThat(result).isEqualTo(true)
@@ -119,7 +193,7 @@ internal class AskForDemographicInfoUseCaseTest {
         given(demographicInfoAskDateRepository.getDate(userId = "1234")).willReturn(datePreviousSysDateMinusAskPeriod)
 
         // When
-        val result = useCase.askForDemographicInfo(userId = "1234")
+        val result = useCase.askForDemographicInfo(userId = "1234", consultationId = "consultId")
 
         // Then
         assertThat(result).isEqualTo(false)

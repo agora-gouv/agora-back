@@ -2,13 +2,17 @@ package fr.gouv.agora.infrastructure.consultationResponse
 
 import fr.gouv.agora.config.AuthentificationHelper
 import fr.gouv.agora.infrastructure.consultationResponse.InsertResponseConsultationQueue.TaskType
+import fr.gouv.agora.infrastructure.utils.IpAddressUtils
+import fr.gouv.agora.usecase.consultationResponse.CheckConsultationResponseRateLimitUseCase
 import fr.gouv.agora.usecase.consultationResponse.ControlResponseConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.InsertReponseConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository.InsertResult
 import fr.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,6 +25,7 @@ class ReponseConsultationController(
     private val insertReponseConsultationUseCase: InsertReponseConsultationUseCase,
     private val controlResponseConsultationUseCase: ControlResponseConsultationUseCase,
     private val askForDemographicInfoUseCase: AskForDemographicInfoUseCase,
+    private val checkConsultationResponseRateLimitUseCase: CheckConsultationResponseRateLimitUseCase,
     private val jsonMapper: ReponseConsultationJsonMapper,
     private val queue: InsertResponseConsultationQueue,
     private val authentificationHelper: AuthentificationHelper,
@@ -30,7 +35,12 @@ class ReponseConsultationController(
     fun postResponseConsultation(
         @PathVariable consultationId: String,
         @RequestBody responsesConsultationJson: ReponsesConsultationJson,
+        request: HttpServletRequest,
     ): HttpEntity<*> {
+        val ipAddressHash = IpAddressUtils.retrieveIpAddressHash(request)
+        if (checkConsultationResponseRateLimitUseCase.isRateLimited(ipAddressHash)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Unit)
+        }
         val userId = authentificationHelper.getUserId()!!
         return queue.executeTask(
             taskType = TaskType.InsertResponse(userId = userId),
@@ -50,7 +60,7 @@ class ReponseConsultationController(
                     when (statusInsertion) {
                         InsertResult.INSERT_SUCCESS -> {
                             val askDemographicInfo =
-                                askForDemographicInfoUseCase.askForDemographicInfo(userId = userId)
+                                askForDemographicInfoUseCase.askForDemographicInfo(userId = userId, consultationId = consultationId)
                             ResponseEntity.ok()
                                 .body(ResponseConsultationResultJson(askDemographicInfo = askDemographicInfo))
                         }
