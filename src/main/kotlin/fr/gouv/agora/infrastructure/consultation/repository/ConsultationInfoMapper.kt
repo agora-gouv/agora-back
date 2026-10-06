@@ -82,6 +82,14 @@ class ConsultationInfoMapper(private val thematiqueMapper: ThematiqueMapper) {
         }
     }
 
+    fun toConsultationPreviewFromDTOs(consultations: List<ConsultationStrapiDTO>): List<ConsultationPreview> {
+        return toConsultationPreview(StrapiDTO(data = consultations, meta = StrapiDTO.ofEmpty<ConsultationStrapiDTO>().meta))
+    }
+
+    fun toDomainFinishedFromDTOs(consultations: List<ConsultationStrapiDTO>, now: LocalDateTime): List<ConsultationPreviewFinished> {
+        return toDomainFinished(StrapiDTO(data = consultations, meta = StrapiDTO.ofEmpty<ConsultationStrapiDTO>().meta), now)
+    }
+
     fun toConsultationInfo(consultation: ConsultationStrapiDTO): ConsultationInfo {
         return ConsultationInfo(
             id = consultation.documentId,
