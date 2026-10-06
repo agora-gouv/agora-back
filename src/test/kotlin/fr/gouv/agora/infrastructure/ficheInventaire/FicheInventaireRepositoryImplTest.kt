@@ -15,13 +15,18 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
 import org.mockito.BDDMockito.then
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
+import org.springframework.cache.Cache
+import org.springframework.cache.CacheManager
 import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class)
@@ -37,6 +42,12 @@ internal class FicheInventaireRepositoryImplTest {
     @Mock
     private lateinit var thematiqueMapper: ThematiqueMapper
 
+    @Mock
+    private lateinit var shortTermCacheManager: CacheManager
+
+    @Mock
+    private lateinit var cache: Cache
+
     private val thematiqueStrapiDTO = ThematiqueStrapiDTO(
         documentId = "thema-1",
         label = "Démocratie",
@@ -47,15 +58,17 @@ internal class FicheInventaireRepositoryImplTest {
     @BeforeEach
     fun setUp() {
         given(thematiqueMapper.toDomain(thematiqueStrapiDTO)).willReturn(thematiqueDomain)
+        given(shortTermCacheManager.getCache(FicheInventaireRepositoryImpl.FICHES_INVENTAIRE_CACHE_NAME)).willReturn(cache)
     }
 
     @Nested
     inner class `getAll` {
 
         @Test
-        fun `getAll - when strapi returns empty list - should return empty list`() {
+        fun `getAll - when cache is empty and strapi returns empty list - should return empty list`() {
             // Given
             val filters = FicheInventaireFilters()
+            given(cache.get(toCacheKey(filters), List::class.java)).willReturn(null)
             val emptyStrapiDTO = StrapiDTO<FicheInventaireStrapiDTO>(
                 data = emptyList(),
                 meta = StrapiMetadata(StrapiMetaPagination(1, 100, 0, 0))
@@ -70,9 +83,10 @@ internal class FicheInventaireRepositoryImplTest {
         }
 
         @Test
-        fun `getAll - when strapi returns fiches - should return mapped domain objects`() {
+        fun `getAll - when cache is empty and strapi returns fiches - should return mapped domain objects`() {
             // Given
             val filters = FicheInventaireFilters()
+            given(cache.get(toCacheKey(filters), List::class.java)).willReturn(null)
             val fiche = buildFicheInventaireDTO(documentId = "fiche-1", titre = "Ma fiche")
             val strapiDTO = buildStrapiDTO(listOf(fiche))
             given(ficheInventaireStrapiRepository.getFichesInventaire(filters)).willReturn(strapiDTO)
@@ -87,9 +101,10 @@ internal class FicheInventaireRepositoryImplTest {
         }
 
         @Test
-        fun `getAll - when strapi returns fiche - should call thematiqueMapper with the thematique dto`() {
+        fun `getAll - when cache is empty and strapi returns fiche - should call thematiqueMapper with the thematique dto`() {
             // Given
             val filters = FicheInventaireFilters()
+            given(cache.get(toCacheKey(filters), List::class.java)).willReturn(null)
             val fiche = buildFicheInventaireDTO()
             given(ficheInventaireStrapiRepository.getFichesInventaire(filters)).willReturn(buildStrapiDTO(listOf(fiche)))
 
@@ -101,9 +116,10 @@ internal class FicheInventaireRepositoryImplTest {
         }
 
         @Test
-        fun `getAll - when strapi returns fiche - should map thematique from mapper result`() {
+        fun `getAll - when cache is empty and strapi returns fiche - should map thematique from mapper result`() {
             // Given
             val filters = FicheInventaireFilters()
+            given(cache.get(toCacheKey(filters), List::class.java)).willReturn(null)
             val fiche = buildFicheInventaireDTO()
             given(ficheInventaireStrapiRepository.getFichesInventaire(filters)).willReturn(buildStrapiDTO(listOf(fiche)))
 
@@ -112,6 +128,88 @@ internal class FicheInventaireRepositoryImplTest {
 
             // Then
             assertThat(result[0].thematique).isEqualTo(thematiqueDomain)
+        }
+
+        @Test
+        fun `getAll - when cache is empty - should store result in cache`() {
+            // Given
+            val filters = FicheInventaireFilters()
+            given(cache.get(toCacheKey(filters), List::class.java)).willReturn(null)
+            val fiche = buildFicheInventaireDTO(documentId = "fiche-1", titre = "Ma fiche")
+            given(ficheInventaireStrapiRepository.getFichesInventaire(filters)).willReturn(buildStrapiDTO(listOf(fiche)))
+
+            // When
+            repository.getAll(filters)
+
+            // Then
+            then(cache).should().put(org.mockito.ArgumentMatchers.eq(toCacheKey(filters)), org.mockito.ArgumentMatchers.any())
+        }
+
+        @Test
+        fun `getAll - when cache is populated - should return cached result without calling strapi`() {
+            // Given
+            val filters = FicheInventaireFilters()
+            val cachedFiches = listOf(
+                fr.gouv.agora.domain.FicheInventaire(
+                    id = "fiche-cached",
+                    etapeLancement = "",
+                    etapeAnalyse = "",
+                    etapeSuivi = "",
+                    titre = "Fiche en cache",
+                    debut = LocalDate.of(2024, 1, 1),
+                    fin = LocalDate.of(2024, 12, 31),
+                    porteur = "Ministère",
+                    lienSite = "https://site.fr",
+                    conditionParticipation = "Être citoyen",
+                    modaliteParticipation = "En ligne",
+                    thematique = thematiqueDomain,
+                    illustration = "https://illustration.jpg",
+                    etape = "En cours",
+                    anneeDeLancement = "2024",
+                    type = "Consultation",
+                )
+            )
+            given(cache.get(toCacheKey(filters), List::class.java)).willReturn(cachedFiches)
+
+            // When
+            val result = repository.getAll(filters)
+
+            // Then
+            assertThat(result).isEqualTo(cachedFiches)
+            then(ficheInventaireStrapiRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `getAll - when cache is populated - should not store anything in cache again`() {
+            // Given
+            val filters = FicheInventaireFilters()
+            val cachedFiches = listOf(
+                fr.gouv.agora.domain.FicheInventaire(
+                    id = "fiche-cached",
+                    etapeLancement = "",
+                    etapeAnalyse = "",
+                    etapeSuivi = "",
+                    titre = "Fiche en cache",
+                    debut = LocalDate.of(2024, 1, 1),
+                    fin = LocalDate.of(2024, 12, 31),
+                    porteur = "Ministère",
+                    lienSite = "https://site.fr",
+                    conditionParticipation = "Être citoyen",
+                    modaliteParticipation = "En ligne",
+                    thematique = thematiqueDomain,
+                    illustration = "https://illustration.jpg",
+                    etape = "En cours",
+                    anneeDeLancement = "2024",
+                    type = "Consultation",
+                )
+            )
+            given(cache.get(toCacheKey(filters), List::class.java)).willReturn(cachedFiches)
+
+            // When
+            repository.getAll(filters)
+
+            // Then
+            then(cache).should(org.mockito.BDDMockito.never()).put(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any())
         }
     }
 
@@ -182,6 +280,17 @@ internal class FicheInventaireRepositoryImplTest {
             // Then
             assertThat(result!!.illustration).isEqualTo("https://original.jpg")
         }
+    }
+
+    private fun toCacheKey(filters: FicheInventaireFilters): String {
+        return listOf(
+            "titre=${filters.titre}",
+            "thematique=${filters.thematique}",
+            "etape=${filters.etape?.sorted()?.joinToString(",")}",
+            "condition=${filters.conditionParticipation?.sorted()?.joinToString(",")}",
+            "modalite=${filters.modaliteParticipation?.sorted()?.joinToString(",")}",
+            "annee=${filters.anneeDeLancement}",
+        ).joinToString("|")
     }
 
     private fun buildFicheInventaireDTO(

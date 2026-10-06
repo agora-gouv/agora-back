@@ -95,7 +95,7 @@ class ConsultationInfoRepositoryImpl(
             ?: strapiRepository.getConsultationById(consultationIdOrSlug)
             ?: return null
         val consultationsInfo = consultationInfoMapper.toConsultationInfo(consultationFromStrapi)
-        getCache()?.put(consultationIdOrSlug, consultationsInfo)
+        putInCacheUnderBothKeys(consultationIdOrSlug, consultationsInfo)
 
         return consultationsInfo
     }
@@ -112,7 +112,7 @@ class ConsultationInfoRepositoryImpl(
             ?: strapiRepository.getConsultationByIdWithUnpublished(consultationIdOrSlug)
             ?: return null
         val consultationsInfo = consultationInfoMapper.toConsultationInfo(consultationFromStrapi)
-        getCache()?.put(consultationIdOrSlug, consultationsInfo)
+        putInCacheUnderBothKeys(consultationIdOrSlug, consultationsInfo)
 
         return consultationsInfo
     }
@@ -142,4 +142,15 @@ class ConsultationInfoRepositoryImpl(
     }
 
     private fun getCache() = cacheManager.getCache(CONSULTATION_CACHE_NAME)
+
+    private fun putInCacheUnderBothKeys(consultationIdOrSlug: String, consultationInfo: ConsultationInfo) {
+        val cache = getCache() ?: return
+        cache.put(consultationIdOrSlug, consultationInfo)
+        if (consultationInfo.id != consultationIdOrSlug) {
+            cache.put(consultationInfo.id, consultationInfo)
+        }
+        if (consultationInfo.slug != consultationIdOrSlug && consultationInfo.slug != consultationInfo.id) {
+            cache.put(consultationInfo.slug, consultationInfo)
+        }
+    }
 }
