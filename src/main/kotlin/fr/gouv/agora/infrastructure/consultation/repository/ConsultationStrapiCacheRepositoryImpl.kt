@@ -35,7 +35,7 @@ class ConsultationStrapiCacheRepositoryImpl(
     }
 
     override fun evictOngoingConsultations() {
-        logger.debug("[ConsultationStrapiCache] EVICT - $ONGOING_CONSULTATIONS_CACHE_NAME")
+        logger.info("[ConsultationStrapiCache] EVICT - $ONGOING_CONSULTATIONS_CACHE_NAME")
         shortTermCacheManager.getCache(ONGOING_CONSULTATIONS_CACHE_NAME)?.clear()
     }
 
@@ -48,7 +48,7 @@ class ConsultationStrapiCacheRepositoryImpl(
     }
 
     override fun evictFinishedConsultations() {
-        logger.debug("[ConsultationStrapiCache] EVICT - $FINISHED_CONSULTATIONS_CACHE_NAME")
+        logger.info("[ConsultationStrapiCache] EVICT - $FINISHED_CONSULTATIONS_CACHE_NAME")
         shortTermCacheManager.getCache(FINISHED_CONSULTATIONS_CACHE_NAME)?.clear()
     }
 
@@ -60,11 +60,11 @@ class ConsultationStrapiCacheRepositoryImpl(
         return try {
             val cacheEntry = shortTermCacheManager.getCache(cacheName)?.get(cacheKey)
             if (cacheEntry == null) {
-                logger.debug("[ConsultationStrapiCache] CACHE MISS - {}[{}]", cacheName, cacheKey)
+                logger.info("[ConsultationStrapiCache] CACHE MISS - {}[{}]", cacheName, cacheKey)
                 return null
             }
             val result = objectMapper.convertValue(cacheEntry.get(), LIST_TYPE_REF)
-            logger.debug("[ConsultationStrapiCache] CACHE HIT - {}[{}] → {} consultations", cacheName, cacheKey, result.size)
+            logger.info("[ConsultationStrapiCache] CACHE HIT - {}[{}] → {} consultations", cacheName, cacheKey, result.size)
             result
         } catch (e: Exception) {
             logger.warn("[ConsultationStrapiCache] CACHE READ ERROR - {}[{}]: {}", cacheName, cacheKey, e.message)
@@ -75,7 +75,7 @@ class ConsultationStrapiCacheRepositoryImpl(
     private fun putInCache(cacheName: String, cacheKey: String, data: List<ConsultationStrapiDTO>) {
         try {
             shortTermCacheManager.getCache(cacheName)?.put(cacheKey, data)
-            logger.debug("[ConsultationStrapiCache] CACHE WRITE - {}[{}] → {} consultations", cacheName, cacheKey, data.size)
+            logger.info("[ConsultationStrapiCache] CACHE WRITE - {}[{}] → {} consultations", cacheName, cacheKey, data.size)
         } catch (e: Exception) {
             logger.warn("[ConsultationStrapiCache] CACHE WRITE ERROR - {}[{}]: {}", cacheName, cacheKey, e.message)
         }
