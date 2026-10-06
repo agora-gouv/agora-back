@@ -15,6 +15,7 @@ import fr.gouv.agora.usecase.consultation.repository.ConsultationDetailsV2CacheR
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateCacheResult
 import fr.gouv.agora.usecase.consultation.repository.ConsultationUpdateUserFeedbackCacheResult
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
@@ -27,6 +28,9 @@ class ConsultationDetailsV2CacheRepositoryImpl(
     private val shortTermCacheManager: CacheManager,
     private val objectMapper: ObjectMapper,
 ) : ConsultationDetailsV2CacheRepository {
+
+    private val logger = LoggerFactory.getLogger(ConsultationDetailsV2CacheRepositoryImpl::class.java)
+
 
     companion object {
         private const val CONSULTATION_DETAILS_LATEST_CACHE_NAME = "latestConsultationDetailsV2"
@@ -166,27 +170,40 @@ class ConsultationDetailsV2CacheRepositoryImpl(
     ): ConsultationUpdateCacheResult {
         return try {
             when (val cachedValue = cacheManager.getCache(cacheName)?.get(cacheKey, String::class.java)) {
-                null -> ConsultationUpdateCacheResult.CacheNotInitialized
-                "" -> ConsultationUpdateCacheResult.CacheNotInitialized
-                else -> ConsultationUpdateCacheResult.CachedConsultationsDetails(
-                    details = fromCacheable(
-                        objectMapper.readValue(
-                            cachedValue,
-                            CacheableConsultationDetails::class.java,
+                null -> {
+                    logger.info("[ConsultationDetailsV2Cache] MISS (null) - {}[{}]", cacheName, cacheKey)
+                    ConsultationUpdateCacheResult.CacheNotInitialized
+                }
+                "" -> {
+                    logger.info("[ConsultationDetailsV2Cache] MISS (empty) - {}[{}]", cacheName, cacheKey)
+                    ConsultationUpdateCacheResult.CacheNotInitialized
+                }
+                else -> {
+                    logger.info("[ConsultationDetailsV2Cache] HIT - {}[{}]", cacheName, cacheKey)
+                    ConsultationUpdateCacheResult.CachedConsultationsDetails(
+                        details = fromCacheable(
+                            objectMapper.readValue(
+                                cachedValue,
+                                CacheableConsultationDetails::class.java,
+                            )
                         )
                     )
-                )
+                }
             }
         } catch (e: Exception) {
+            logger.warn("[ConsultationDetailsV2Cache] READ ERROR - {}[{}]: {}", cacheName, cacheKey, e.message, e)
             ConsultationUpdateCacheResult.CacheNotInitialized
         }
     }
 
     private fun initConsultationDetailsCache(cacheName: String, cacheKey: String, details: ConsultationDetailsV2?) {
-        cacheManager.getCache(cacheName)?.put(
-            cacheKey,
-            objectMapper.writeValueAsString(details?.let(::toCacheable) ?: ""),
-        )
+        try {
+            val serialized = objectMapper.writeValueAsString(details?.let(::toCacheable) ?: "")
+            cacheManager.getCache(cacheName)?.put(cacheKey, serialized)
+            logger.info("[ConsultationDetailsV2Cache] WRITE - {}[{}] details={}", cacheName, cacheKey, details != null)
+        } catch (e: Exception) {
+            logger.warn("[ConsultationDetailsV2Cache] WRITE ERROR - {}[{}]: {}", cacheName, cacheKey, e.message, e)
+        }
     }
 
     private fun toCacheable(details: ConsultationDetailsV2) = CacheableConsultationDetails(
