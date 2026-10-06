@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.usecase.consultation.repository.ConsultationStrapiCacheRepository
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
@@ -23,6 +24,8 @@ class ConsultationStrapiCacheRepositoryImpl(
         val LIST_TYPE_REF = object : TypeReference<List<ConsultationStrapiDTO>>() {}
     }
 
+    private val logger = LoggerFactory.getLogger(ConsultationStrapiCacheRepositoryImpl::class.java)
+
     override fun getOngoingConsultations(territories: List<Territoire>): List<ConsultationStrapiDTO>? {
         return getFromCache(ONGOING_CONSULTATIONS_CACHE_NAME, toTerritoryKey(territories))
     }
@@ -32,6 +35,7 @@ class ConsultationStrapiCacheRepositoryImpl(
     }
 
     override fun evictOngoingConsultations() {
+        logger.debug("[ConsultationStrapiCache] EVICT - $ONGOING_CONSULTATIONS_CACHE_NAME")
         shortTermCacheManager.getCache(ONGOING_CONSULTATIONS_CACHE_NAME)?.clear()
     }
 
@@ -44,6 +48,7 @@ class ConsultationStrapiCacheRepositoryImpl(
     }
 
     override fun evictFinishedConsultations() {
+        logger.debug("[ConsultationStrapiCache] EVICT - $FINISHED_CONSULTATIONS_CACHE_NAME")
         shortTermCacheManager.getCache(FINISHED_CONSULTATIONS_CACHE_NAME)?.clear()
     }
 
@@ -53,21 +58,26 @@ class ConsultationStrapiCacheRepositoryImpl(
 
     private fun getFromCache(cacheName: String, cacheKey: String): List<ConsultationStrapiDTO>? {
         return try {
-            val cachedValue = shortTermCacheManager.getCache(cacheName)
-                ?.get(cacheKey, String::class.java)
-                ?: return null
-            objectMapper.readValue(cachedValue, LIST_TYPE_REF)
+            val cacheEntry = shortTermCacheManager.getCache(cacheName)?.get(cacheKey)
+            if (cacheEntry == null) {
+                logger.debug("[ConsultationStrapiCache] CACHE MISS - {}[{}]", cacheName, cacheKey)
+                return null
+            }
+            val result = objectMapper.convertValue(cacheEntry.get(), LIST_TYPE_REF)
+            logger.debug("[ConsultationStrapiCache] CACHE HIT - {}[{}] → {} consultations", cacheName, cacheKey, result.size)
+            result
         } catch (e: Exception) {
+            logger.warn("[ConsultationStrapiCache] CACHE READ ERROR - {}[{}]: {}", cacheName, cacheKey, e.message)
             null
         }
     }
 
     private fun putInCache(cacheName: String, cacheKey: String, data: List<ConsultationStrapiDTO>) {
         try {
-            shortTermCacheManager.getCache(cacheName)
-                ?.put(cacheKey, objectMapper.writeValueAsString(data))
+            shortTermCacheManager.getCache(cacheName)?.put(cacheKey, data)
+            logger.debug("[ConsultationStrapiCache] CACHE WRITE - {}[{}] → {} consultations", cacheName, cacheKey, data.size)
         } catch (e: Exception) {
-            // Ne pas planter si le cache échoue
+            logger.warn("[ConsultationStrapiCache] CACHE WRITE ERROR - {}[{}]: {}", cacheName, cacheKey, e.message)
         }
     }
 }
