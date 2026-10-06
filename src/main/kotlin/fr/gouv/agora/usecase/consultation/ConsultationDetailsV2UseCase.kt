@@ -78,32 +78,29 @@ class ConsultationDetailsV2UseCase(
     private fun getUnansweredUsersConsultationDetails(
         consultationInfo: ConsultationInfo,
     ): ConsultationDetailsV2? {
-        val cachedConsultationDetails = cacheRepository.getUnansweredUsersConsultationDetails(consultationInfo.id)
-        val consultationDetails = when (cachedConsultationDetails) {
-            is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cachedConsultationDetails.details
+        return when (val cached = cacheRepository.getUnansweredUsersConsultationDetails(consultationInfo.id)) {
+            is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cached.details
             is ConsultationUpdateCacheResult.CacheNotInitialized -> {
-                updateRepository.getUnansweredUsersConsultationUpdateWithUnpublished(consultationInfo.id)
+                val consultationDetails = updateRepository.getUnansweredUsersConsultationUpdateWithUnpublished(consultationInfo.id)
                     ?.let { ConsultationDetailsV2(consultationInfo, it, getFeedbackStats(it)) }
+                cacheRepository.initUnansweredUsersConsultationDetails(consultationInfo.id, consultationDetails)
+                consultationDetails
             }
         }
-        cacheRepository.initUnansweredUsersConsultationDetails(consultationInfo.id, consultationDetails)
-
-        return consultationDetails
     }
 
     private fun getLastConsultationDetails(
         consultationInfo: ConsultationInfo,
     ): ConsultationDetailsV2? {
-        val details = when (val cacheResult = cacheRepository.getLastConsultationDetails(consultationInfo.id)) {
+        return when (val cacheResult = cacheRepository.getLastConsultationDetails(consultationInfo.id)) {
             is ConsultationUpdateCacheResult.CachedConsultationsDetails -> cacheResult.details
             is ConsultationUpdateCacheResult.CacheNotInitialized -> {
-                updateRepository.getLatestConsultationUpdate(consultationInfo.id)
+                val details = updateRepository.getLatestConsultationUpdate(consultationInfo.id)
                     ?.let { ConsultationDetailsV2(consultationInfo, it, getFeedbackStats(it)) }
+                cacheRepository.initLastConsultationDetails(consultationInfo.id, details)
+                details
             }
         }
-        cacheRepository.initLastConsultationDetails(consultationInfo.id, details)
-
-        return details
     }
 
     private fun getFeedbackStats(consultationUpdate: ConsultationUpdateInfoV2): FeedbackConsultationUpdateStats? {

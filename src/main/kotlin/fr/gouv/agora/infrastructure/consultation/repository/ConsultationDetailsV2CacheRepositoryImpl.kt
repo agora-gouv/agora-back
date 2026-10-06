@@ -183,10 +183,11 @@ class ConsultationDetailsV2CacheRepositoryImpl(
     }
 
     private fun initConsultationDetailsCache(cacheName: String, cacheKey: String, details: ConsultationDetailsV2?) {
-        cacheManager.getCache(cacheName)?.put(
-            cacheKey,
-            objectMapper.writeValueAsString(details?.let(::toCacheable) ?: ""),
-        )
+        try {
+            val serialized = objectMapper.writeValueAsString(details?.let(::toCacheable) ?: "")
+            cacheManager.getCache(cacheName)?.put(cacheKey, serialized)
+        } catch (_: Exception) {
+        }
     }
 
     private fun toCacheable(details: ConsultationDetailsV2) = CacheableConsultationDetails(
