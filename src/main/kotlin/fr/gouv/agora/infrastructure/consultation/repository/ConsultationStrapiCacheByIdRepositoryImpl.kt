@@ -18,6 +18,9 @@ class ConsultationStrapiCacheByIdRepositoryImpl(
     companion object {
         const val CONSULTATION_BY_ID_CACHE_NAME = "strapiConsultationById"
         const val CONSULTATION_BY_ID_WITH_UNPUBLISHED_CACHE_NAME = "strapiConsultationByIdWithUnpublished"
+
+        // Sentinel object stored in cache when the result is null, to avoid re-fetching Strapi
+        private const val NULL_SENTINEL = "NULL"
     }
 
     private val logger = LoggerFactory.getLogger(ConsultationStrapiCacheByIdRepositoryImpl::class.java)
@@ -47,18 +50,18 @@ class ConsultationStrapiCacheByIdRepositoryImpl(
     private fun getFromCache(cacheName: String, consultationId: String, variant: String): ConsultationStrapiDTO? {
         logger.info("[ConsultationStrapiByIdCache] GET {} - clé=\"{}\"", variant, consultationId)
         return try {
-            val cached = shortTermCacheManager.getCache(cacheName)?.get(consultationId, String::class.java)
+            val cacheEntry = shortTermCacheManager.getCache(cacheName)?.get(consultationId)
             when {
-                cached == null -> {
+                cacheEntry == null -> {
                     logger.info("[ConsultationStrapiByIdCache] MISS {} - clé=\"{}\"", variant, consultationId)
                     null
                 }
-                cached == "null" -> {
+                cacheEntry.get() == NULL_SENTINEL -> {
                     logger.info("[ConsultationStrapiByIdCache] HIT {} (null) - clé=\"{}\"", variant, consultationId)
                     null
                 }
                 else -> {
-                    val dto = objectMapper.readValue(cached, ConsultationStrapiDTO::class.java)
+                    val dto = objectMapper.convertValue(cacheEntry.get(), ConsultationStrapiDTO::class.java)
                     logger.info(
                         "[ConsultationStrapiByIdCache] HIT {} - clé=\"{}\" → slug={}",
                         variant, consultationId, dto.slug
@@ -77,8 +80,8 @@ class ConsultationStrapiCacheByIdRepositoryImpl(
 
     private fun putInCache(cacheName: String, consultationId: String, dto: ConsultationStrapiDTO?, variant: String) {
         try {
-            val serialized = if (dto != null) objectMapper.writeValueAsString(dto) else "null"
-            shortTermCacheManager.getCache(cacheName)?.put(consultationId, serialized)
+            val value = dto ?: NULL_SENTINEL
+            shortTermCacheManager.getCache(cacheName)?.put(consultationId, value)
             logger.info("[ConsultationStrapiByIdCache] WRITE {} - clé=\"{}\"", variant, consultationId)
         } catch (e: Exception) {
             logger.warn(
