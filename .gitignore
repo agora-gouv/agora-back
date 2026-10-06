@@ -53,3 +53,4 @@ dump.rdb
 /modele_quesitonnaire.json
 /modele_questionnaire.md
 /Query Results.csv
+/data/query_select_consultation_anonyme.sql

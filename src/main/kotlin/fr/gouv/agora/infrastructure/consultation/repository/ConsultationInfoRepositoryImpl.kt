@@ -7,6 +7,7 @@ import fr.gouv.agora.infrastructure.userAnsweredConsultation.repository.UserAnsw
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfo
 import fr.gouv.agora.usecase.consultation.repository.ConsultationInfoRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationStrapiCacheRepository
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 import java.time.Clock
@@ -19,6 +20,7 @@ class ConsultationInfoRepositoryImpl(
     private val consultationInfoMapper: ConsultationInfoMapper,
     private val clock: Clock,
     private val cacheManager: CacheManager,
+    private val consultationStrapiCacheRepository: ConsultationStrapiCacheRepository,
 ) : ConsultationInfoRepository {
     companion object {
         const val CONSULTATION_CACHE_NAME = "consultationCache"
@@ -27,8 +29,14 @@ class ConsultationInfoRepositoryImpl(
     override fun getOngoingConsultations(userTerritoires: List<Territoire>): List<ConsultationPreview> {
         val today = LocalDateTime.now(clock)
 
-        return strapiRepository.getConsultationsOngoing(today, userTerritoires)
-            .let { consultationInfoMapper.toConsultationPreview(it) }
+        val cached = consultationStrapiCacheRepository.getOngoingConsultations(userTerritoires)
+        if (cached != null) {
+            return consultationInfoMapper.toConsultationPreviewFromDTOs(cached)
+        }
+
+        val result = strapiRepository.getConsultationsOngoing(today, userTerritoires)
+        consultationStrapiCacheRepository.putOngoingConsultations(userTerritoires, result.data)
+        return consultationInfoMapper.toConsultationPreview(result)
     }
 
     override fun getOngoingConsultationsWithUnpublished(userTerritoires: List<Territoire>): List<ConsultationPreview> {
@@ -41,8 +49,14 @@ class ConsultationInfoRepositoryImpl(
     override fun getFinishedConsultations(userTerritoires: List<Territoire>): List<ConsultationPreviewFinished> {
         val now = LocalDateTime.now(clock)
 
-        return strapiRepository.getConsultationsFinished(now, userTerritoires)
-            .let { consultationInfoMapper.toDomainFinished(it, now) }
+        val cached = consultationStrapiCacheRepository.getFinishedConsultations(userTerritoires)
+        if (cached != null) {
+            return consultationInfoMapper.toDomainFinishedFromDTOs(cached, now)
+        }
+
+        val result = strapiRepository.getConsultationsFinished(now, userTerritoires)
+        consultationStrapiCacheRepository.putFinishedConsultations(userTerritoires, result.data)
+        return consultationInfoMapper.toDomainFinished(result, now)
     }
 
     override fun getFinishedConsultationsWithUnpublished(userTerritoires: List<Territoire>): List<ConsultationPreviewFinished> {
