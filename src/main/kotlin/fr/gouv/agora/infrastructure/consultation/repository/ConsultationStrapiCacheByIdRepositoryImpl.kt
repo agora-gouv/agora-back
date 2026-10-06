@@ -1,93 +1,99 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.usecase.consultation.repository.ConsultationStrapiCacheByIdRepository
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
+import java.time.Clock
+import java.time.Duration
+import java.time.Instant
+import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class ConsultationStrapiCacheByIdRepositoryImpl(
-    @Qualifier("shortTermCacheManager")
-    private val shortTermCacheManager: CacheManager,
-    private val objectMapper: ObjectMapper,
+    private val clock: Clock,
 ) : ConsultationStrapiCacheByIdRepository {
 
     companion object {
-        const val CONSULTATION_BY_ID_CACHE_NAME = "strapiConsultationById"
-        const val CONSULTATION_BY_ID_WITH_UNPUBLISHED_CACHE_NAME = "strapiConsultationByIdWithUnpublished"
-
-        // Sentinel object stored in cache when the result is null, to avoid re-fetching Strapi
-        private const val NULL_SENTINEL = "NULL"
+        private val TTL = Duration.ofMinutes(5)
     }
 
     private val logger = LoggerFactory.getLogger(ConsultationStrapiCacheByIdRepositoryImpl::class.java)
 
+    private data class CacheEntry(
+        val dto: ConsultationStrapiDTO?,
+        val cachedAt: Instant,
+    )
+
+    private val cacheById = ConcurrentHashMap<String, CacheEntry>()
+    private val cacheByIdWithUnpublished = ConcurrentHashMap<String, CacheEntry>()
+
     override fun getConsultationById(consultationId: String): ConsultationStrapiDTO? {
-        return getFromCache(CONSULTATION_BY_ID_CACHE_NAME, consultationId, "(byId)")
+        return getFromCache(cacheById, consultationId, "(byId)")
     }
 
     override fun putConsultationById(consultationId: String, dto: ConsultationStrapiDTO?) {
-        putInCache(CONSULTATION_BY_ID_CACHE_NAME, consultationId, dto, "(byId)")
+        putInCache(cacheById, consultationId, dto, "(byId)")
     }
 
     override fun getConsultationByIdWithUnpublished(consultationId: String): ConsultationStrapiDTO? {
-        return getFromCache(CONSULTATION_BY_ID_WITH_UNPUBLISHED_CACHE_NAME, consultationId, "(withUnpublished)")
+        return getFromCache(cacheByIdWithUnpublished, consultationId, "(withUnpublished)")
     }
 
     override fun putConsultationByIdWithUnpublished(consultationId: String, dto: ConsultationStrapiDTO?) {
-        putInCache(CONSULTATION_BY_ID_WITH_UNPUBLISHED_CACHE_NAME, consultationId, dto, "(withUnpublished)")
+        putInCache(cacheByIdWithUnpublished, consultationId, dto, "(withUnpublished)")
     }
 
     override fun evictConsultationById(consultationId: String) {
-        shortTermCacheManager.getCache(CONSULTATION_BY_ID_CACHE_NAME)?.evict(consultationId)
-        shortTermCacheManager.getCache(CONSULTATION_BY_ID_WITH_UNPUBLISHED_CACHE_NAME)?.evict(consultationId)
+        cacheById.remove(consultationId)
+        cacheByIdWithUnpublished.remove(consultationId)
         logger.info("[ConsultationStrapiByIdCache] EVICT - consultationId=\"{}\"", consultationId)
     }
 
-    private fun getFromCache(cacheName: String, consultationId: String, variant: String): ConsultationStrapiDTO? {
-        logger.info("[ConsultationStrapiByIdCache] GET {} - clé=\"{}\"", variant, consultationId)
-        return try {
-            val cacheEntry = shortTermCacheManager.getCache(cacheName)?.get(consultationId)
-            when {
-                cacheEntry == null -> {
-                    logger.info("[ConsultationStrapiByIdCache] MISS {} - clé=\"{}\"", variant, consultationId)
-                    null
-                }
-                cacheEntry.get() == NULL_SENTINEL -> {
-                    logger.info("[ConsultationStrapiByIdCache] HIT {} (null) - clé=\"{}\"", variant, consultationId)
-                    null
-                }
-                else -> {
-                    val dto = objectMapper.convertValue(cacheEntry.get(), ConsultationStrapiDTO::class.java)
-                    logger.info(
-                        "[ConsultationStrapiByIdCache] HIT {} - clé=\"{}\" → slug={}",
-                        variant, consultationId, dto.slug
-                    )
-                    dto
-                }
-            }
-        } catch (e: Exception) {
-            logger.warn(
-                "[ConsultationStrapiByIdCache] READ ERROR {} - clé=\"{}\" : {}",
-                variant, consultationId, e.message
+    private fun getFromCache(
+        cache: ConcurrentHashMap<String, CacheEntry>,
+        consultationId: String,
+        variant: String,
+    ): ConsultationStrapiDTO? {
+        val entry = cache[consultationId]
+
+        if (entry == null) {
+            logger.info("[ConsultationStrapiByIdCache] MISS {} - clé=\"{}\"", variant, consultationId)
+            return null
+        }
+
+        val ageSeconds = Duration.between(entry.cachedAt, Instant.now(clock)).seconds
+        if (ageSeconds >= TTL.seconds) {
+            cache.remove(consultationId)
+            logger.info(
+                "[ConsultationStrapiByIdCache] EXPIRED {} - clé=\"{}\" (age={}s)",
+                variant, consultationId, ageSeconds
+            )
+            return null
+        }
+
+        return if (entry.dto == null) {
+            logger.info(
+                "[ConsultationStrapiByIdCache] HIT {} (null sentinel) - clé=\"{}\"",
+                variant, consultationId
             )
             null
+        } else {
+            logger.info(
+                "[ConsultationStrapiByIdCache] HIT {} - clé=\"{}\" → slug={}",
+                variant, consultationId, entry.dto.slug
+            )
+            entry.dto
         }
     }
 
-    private fun putInCache(cacheName: String, consultationId: String, dto: ConsultationStrapiDTO?, variant: String) {
-        try {
-            val value = dto ?: NULL_SENTINEL
-            shortTermCacheManager.getCache(cacheName)?.put(consultationId, value)
-            logger.info("[ConsultationStrapiByIdCache] WRITE {} - clé=\"{}\"", variant, consultationId)
-        } catch (e: Exception) {
-            logger.warn(
-                "[ConsultationStrapiByIdCache] WRITE ERROR {} - clé=\"{}\" : {}",
-                variant, consultationId, e.message
-            )
-        }
+    private fun putInCache(
+        cache: ConcurrentHashMap<String, CacheEntry>,
+        consultationId: String,
+        dto: ConsultationStrapiDTO?,
+        variant: String,
+    ) {
+        cache[consultationId] = CacheEntry(dto = dto, cachedAt = Instant.now(clock))
+        logger.info("[ConsultationStrapiByIdCache] WRITE {} - clé=\"{}\"", variant, consultationId)
     }
 }
