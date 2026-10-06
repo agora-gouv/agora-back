@@ -6,12 +6,14 @@ import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.infrastructure.common.StrapiDTO
 import fr.gouv.agora.infrastructure.common.StrapiRequestBuilder
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
+import fr.gouv.agora.usecase.consultation.repository.ConsultationStrapiCacheByIdRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
 @Repository
 class ConsultationStrapiRepository(
     private val cmsStrapiHttpClient: CmsStrapiHttpClient,
+    private val cacheByIdRepository: ConsultationStrapiCacheByIdRepository,
 ) {
     companion object {
         private val SECTION_TYPES = listOf(
@@ -171,23 +173,29 @@ class ConsultationStrapiRepository(
     }
 
     fun getConsultationById(consultationId: String): ConsultationStrapiDTO? {
-        val uriBuilder = StrapiRequestBuilder("consultations")
+        cacheByIdRepository.getConsultationById(consultationId)?.let { return it }
+
+        val dto = StrapiRequestBuilder("consultations")
             .getByIds(listOf(consultationId))
             .withUnpublished()
             .populate(DETAIL_POPULATE)
+            .let { uriBuilder -> cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data.firstOrNull() }
 
-        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
-            .firstOrNull()
+        cacheByIdRepository.putConsultationById(consultationId, dto)
+        return dto
     }
 
     fun getConsultationByIdWithUnpublished(consultationId: String): ConsultationStrapiDTO? {
-        val uriBuilder = StrapiRequestBuilder("consultations")
+        cacheByIdRepository.getConsultationByIdWithUnpublished(consultationId)?.let { return it }
+
+        val dto = StrapiRequestBuilder("consultations")
             .getByIds(listOf(consultationId))
             .withUnpublished()
             .populate(DETAIL_POPULATE)
+            .let { uriBuilder -> cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data.firstOrNull() }
 
-        return cmsStrapiHttpClient.request<ConsultationStrapiDTO>(uriBuilder, ref).data
-            .firstOrNull()
+        cacheByIdRepository.putConsultationByIdWithUnpublished(consultationId, dto)
+        return dto
     }
 
     fun getConsultationsEnded14DaysAgo(today: LocalDateTime): StrapiDTO<ConsultationStrapiDTO> {

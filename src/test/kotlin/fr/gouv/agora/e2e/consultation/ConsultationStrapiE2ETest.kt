@@ -2,9 +2,11 @@ package fr.gouv.agora.e2e.consultation
 
 import fr.gouv.agora.e2e.StrapiE2ETestBase
 import fr.gouv.agora.infrastructure.consultation.repository.ConsultationStrapiRepository
+import fr.gouv.agora.usecase.consultation.repository.ConsultationStrapiCacheByIdRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import java.time.LocalDateTime
 
 /**
@@ -19,7 +21,10 @@ import java.time.LocalDateTime
 @Tag("e2e")
 class ConsultationStrapiE2ETest : StrapiE2ETestBase() {
 
-    private val repository = ConsultationStrapiRepository(cmsStrapiHttpClient)
+    private val repository = ConsultationStrapiRepository(
+        cmsStrapiHttpClient = cmsStrapiHttpClient,
+        cacheByIdRepository = mock(ConsultationStrapiCacheByIdRepository::class.java),
+    )
 
     // ---- GET /consultations (en cours avec non-publiées) ----
 
