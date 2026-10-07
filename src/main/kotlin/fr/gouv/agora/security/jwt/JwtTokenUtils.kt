@@ -23,10 +23,6 @@ object JwtTokenUtils {
             .compact() to expirationDate.toInstant().toEpochMilli()
     }
 
-    fun extractUserId(jwtToken: String): String {
-        return extractClaim(jwtToken) { claims -> claims.subject }
-    }
-
     fun extractJwtFromHeader(authorizationHeader: String): String? {
         return authorizationHeader
             .takeIf { it.startsWith(JWT_PREFIX) }
@@ -34,22 +30,14 @@ object JwtTokenUtils {
             ?.trim()
     }
 
-
-    fun isCorrectSignatureAndTokenNotExpired(jwtToken: String): Boolean {
-        val expiration = extractExpirationDate(jwtToken)
-        return expiration.after(Date())
-    }
-
-    private fun extractExpirationDate(jwtToken: String): Date {
-        return extractClaim(jwtToken) { claims -> claims.expiration }
-    }
-
-    private fun <T> extractClaim(jwtToken: String, claimsResolver: (Claims) -> T): T {
-        val claims = extractAllClaims(jwtToken)
-        return claimsResolver.invoke(claims)
-    }
-
-    private fun extractAllClaims(jwtToken: String): Claims {
+    /**
+     * Parse et vérifie le JWT une seule fois (signature + expiration), puis renvoie les claims.
+     *
+     * Remplace l'ancien enchaînement `isCorrectSignatureAndTokenNotExpired(jwt)` puis
+     * `extractUserId(jwt)` qui parsait/validait le JWS **deux fois** par requête authentifiée.
+     * Attention : un token expiré ou de signature invalide lève une `JwtException`.
+     */
+    fun parseClaims(jwtToken: String): Claims {
         return Jwts.parserBuilder()
             .setSigningKey(getKey())
             .build()
