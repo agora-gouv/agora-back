@@ -84,7 +84,7 @@ internal class InsertReponseConsultationRepositoryImplTest {
     }
 
     @Test
-    fun `insertConsultationResponses - when consultationResponses is not empty - should map objects to dto then insert to cache & database then return Success`() {
+    fun `insertConsultationResponses - when consultationResponses is not empty - should map objects to dto then insert to database then return Success`() {
         // Given
         val reponseConsultationInserting = mock(ReponseConsultationInserting::class.java)
         val reponseConsultationDTO = mock(ReponseConsultationDTO::class.java)
@@ -97,8 +97,7 @@ internal class InsertReponseConsultationRepositoryImplTest {
             )
         ).willReturn(listOf(reponseConsultationDTO))
 
-        val savedReponseConsultationDTO = mock(ReponseConsultationDTO::class.java)
-        given(databaseRepository.saveAll(listOf(reponseConsultationDTO))).willReturn(listOf(savedReponseConsultationDTO))
+        given(databaseRepository.saveAll(listOf(reponseConsultationDTO))).willReturn(listOf(mock(ReponseConsultationDTO::class.java)))
 
         // When
         val result = repository.insertConsultationResponses(
@@ -109,9 +108,6 @@ internal class InsertReponseConsultationRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(InsertResult.INSERT_SUCCESS)
         then(databaseRepository).should(only()).saveAll(listOf(reponseConsultationDTO))
-        then(cacheRepository).should(only()).insertReponseConsultationList(
-            consultationId = consultationId,
-            reponseConsultationList = listOf(savedReponseConsultationDTO),
-        )
+        then(cacheRepository).shouldHaveNoInteractions()
     }
 }
