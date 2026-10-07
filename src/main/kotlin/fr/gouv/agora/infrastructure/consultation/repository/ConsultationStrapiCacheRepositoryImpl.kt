@@ -1,83 +1,101 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.usecase.consultation.repository.ConsultationStrapiCacheRepository
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
+import java.time.Clock
+import java.time.Duration
+import java.time.Instant
+import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class ConsultationStrapiCacheRepositoryImpl(
-    @Qualifier("shortTermCacheManager")
-    private val shortTermCacheManager: CacheManager,
-    private val objectMapper: ObjectMapper,
+    private val clock: Clock,
 ) : ConsultationStrapiCacheRepository {
 
     companion object {
-        const val ONGOING_CONSULTATIONS_CACHE_NAME = "strapiOngoingConsultations"
-        const val FINISHED_CONSULTATIONS_CACHE_NAME = "strapiFinishedConsultations"
-
-        val LIST_TYPE_REF = object : TypeReference<List<ConsultationStrapiDTO>>() {}
+        private val TTL = Duration.ofMinutes(5)
     }
 
     private val logger = LoggerFactory.getLogger(ConsultationStrapiCacheRepositoryImpl::class.java)
 
+    private data class CacheEntry(
+        val data: List<ConsultationStrapiDTO>,
+        val cachedAt: Instant,
+    )
+
+    private val ongoingCache = ConcurrentHashMap<String, CacheEntry>()
+    private val finishedCache = ConcurrentHashMap<String, CacheEntry>()
+
     override fun getOngoingConsultations(territories: List<Territoire>): List<ConsultationStrapiDTO>? {
-        return getFromCache(ONGOING_CONSULTATIONS_CACHE_NAME, toTerritoryKey(territories))
+        return getFromCache(ongoingCache, toTerritoryKey(territories), "ongoing")
     }
 
     override fun putOngoingConsultations(territories: List<Territoire>, data: List<ConsultationStrapiDTO>) {
-        putInCache(ONGOING_CONSULTATIONS_CACHE_NAME, toTerritoryKey(territories), data)
+        putInCache(ongoingCache, toTerritoryKey(territories), data, "ongoing")
     }
 
     override fun evictOngoingConsultations() {
-        logger.info("[ConsultationStrapiCache] EVICT - $ONGOING_CONSULTATIONS_CACHE_NAME")
-        shortTermCacheManager.getCache(ONGOING_CONSULTATIONS_CACHE_NAME)?.clear()
+        ongoingCache.clear()
+        logger.info("[ConsultationStrapiCache] EVICT - ongoing")
     }
 
     override fun getFinishedConsultations(territories: List<Territoire>): List<ConsultationStrapiDTO>? {
-        return getFromCache(FINISHED_CONSULTATIONS_CACHE_NAME, toTerritoryKey(territories))
+        return getFromCache(finishedCache, toTerritoryKey(territories), "finished")
     }
 
     override fun putFinishedConsultations(territories: List<Territoire>, data: List<ConsultationStrapiDTO>) {
-        putInCache(FINISHED_CONSULTATIONS_CACHE_NAME, toTerritoryKey(territories), data)
+        putInCache(finishedCache, toTerritoryKey(territories), data, "finished")
     }
 
     override fun evictFinishedConsultations() {
-        logger.info("[ConsultationStrapiCache] EVICT - $FINISHED_CONSULTATIONS_CACHE_NAME")
-        shortTermCacheManager.getCache(FINISHED_CONSULTATIONS_CACHE_NAME)?.clear()
+        finishedCache.clear()
+        logger.info("[ConsultationStrapiCache] EVICT - finished")
     }
 
     private fun toTerritoryKey(territories: List<Territoire>): String {
         return territories.map { it.value }.sorted().joinToString(",").ifEmpty { "all" }
     }
 
-    private fun getFromCache(cacheName: String, cacheKey: String): List<ConsultationStrapiDTO>? {
-        return try {
-            val cacheEntry = shortTermCacheManager.getCache(cacheName)?.get(cacheKey)
-            if (cacheEntry == null) {
-                logger.info("[ConsultationStrapiCache] CACHE MISS - {}[{}]", cacheName, cacheKey)
-                return null
-            }
-            val result = objectMapper.convertValue(cacheEntry.get(), LIST_TYPE_REF)
-            logger.info("[ConsultationStrapiCache] CACHE HIT - {}[{}] → {} consultations", cacheName, cacheKey, result.size)
-            result
-        } catch (e: Exception) {
-            logger.warn("[ConsultationStrapiCache] CACHE READ ERROR - {}[{}]: {}", cacheName, cacheKey, e.message)
-            null
+    private fun getFromCache(
+        cache: ConcurrentHashMap<String, CacheEntry>,
+        cacheKey: String,
+        variant: String,
+    ): List<ConsultationStrapiDTO>? {
+        val entry = cache[cacheKey] ?: run {
+            logger.info("[ConsultationStrapiCache] MISS {} - clé=\"{}\"", variant, cacheKey)
+            return null
         }
+
+        val ageSeconds = Duration.between(entry.cachedAt, Instant.now(clock)).seconds
+        if (ageSeconds >= TTL.seconds) {
+            cache.remove(cacheKey)
+            logger.info(
+                "[ConsultationStrapiCache] EXPIRED {} - clé=\"{}\" (age={}s)",
+                variant, cacheKey, ageSeconds
+            )
+            return null
+        }
+
+        logger.info(
+            "[ConsultationStrapiCache] HIT {} - clé=\"{}\" → {} consultations",
+            variant, cacheKey, entry.data.size
+        )
+        return entry.data
     }
 
-    private fun putInCache(cacheName: String, cacheKey: String, data: List<ConsultationStrapiDTO>) {
-        try {
-            shortTermCacheManager.getCache(cacheName)?.put(cacheKey, data)
-            logger.info("[ConsultationStrapiCache] CACHE WRITE - {}[{}] → {} consultations", cacheName, cacheKey, data.size)
-        } catch (e: Exception) {
-            logger.warn("[ConsultationStrapiCache] CACHE WRITE ERROR - {}[{}]: {}", cacheName, cacheKey, e.message)
-        }
+    private fun putInCache(
+        cache: ConcurrentHashMap<String, CacheEntry>,
+        cacheKey: String,
+        data: List<ConsultationStrapiDTO>,
+        variant: String,
+    ) {
+        cache[cacheKey] = CacheEntry(data = data, cachedAt = Instant.now(clock))
+        logger.info(
+            "[ConsultationStrapiCache] WRITE {} - clé=\"{}\" → {} consultations",
+            variant, cacheKey, data.size
+        )
     }
 }
