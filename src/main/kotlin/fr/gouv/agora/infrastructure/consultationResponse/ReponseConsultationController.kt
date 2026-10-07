@@ -5,6 +5,7 @@ import fr.gouv.agora.infrastructure.consultationResponse.InsertResponseConsultat
 import fr.gouv.agora.infrastructure.utils.IpAddressUtils
 import fr.gouv.agora.usecase.consultationResponse.CheckConsultationResponseRateLimitUseCase
 import fr.gouv.agora.usecase.consultationResponse.ControlResponseConsultationUseCase
+import fr.gouv.agora.usecase.consultationResponse.HasAlreadyAnsweredConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.InsertReponseConsultationUseCase
 import fr.gouv.agora.usecase.consultationResponse.repository.InsertReponseConsultationRepository.InsertResult
 import fr.gouv.agora.usecase.profile.AskForDemographicInfoUseCase
@@ -26,6 +27,7 @@ class ReponseConsultationController(
     private val controlResponseConsultationUseCase: ControlResponseConsultationUseCase,
     private val askForDemographicInfoUseCase: AskForDemographicInfoUseCase,
     private val checkConsultationResponseRateLimitUseCase: CheckConsultationResponseRateLimitUseCase,
+    private val hasAlreadyAnsweredConsultationUseCase: HasAlreadyAnsweredConsultationUseCase,
     private val jsonMapper: ReponseConsultationJsonMapper,
     private val queue: InsertResponseConsultationQueue,
     private val authentificationHelper: AuthentificationHelper,
@@ -42,6 +44,9 @@ class ReponseConsultationController(
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Unit)
         }
         val userId = authentificationHelper.getUserId()!!
+        if (hasAlreadyAnsweredConsultationUseCase.hasAlreadyAnswered(consultationId, userId)) {
+            return ResponseEntity.badRequest().body(Unit)
+        }
         return queue.executeTask(
             taskType = TaskType.InsertResponse(userId = userId),
             onTaskExecuted = {
@@ -69,7 +74,7 @@ class ReponseConsultationController(
                     }
                 }
             },
-            onTaskRejected = { ResponseEntity.badRequest().body(Unit) }
+            onTaskRejected = { ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Unit) }
         )
     }
 }
