@@ -21,7 +21,7 @@ class ReferentielController(val territoiresJsonMapper: TerritoiresJsonMapper) {
         val territoires = territoiresJsonMapper.toJson(Region.values(), Pays.values())
 
         return ResponseEntity.ok()
-            .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
+            .cacheControl(CacheControl.maxAge(24, TimeUnit.HOURS).cachePublic().immutable())
             .body(territoires)
     }
 }
