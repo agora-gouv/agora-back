@@ -55,3 +55,5 @@ dump.rdb
 /Query Results.csv
 /data/query_select_consultation_anonyme.sql
 /performance/2026-10-07-analyse-logs.md
+/data/indexes/priority_indexes_octobre_2026.sql
+/performance/contribe_JOPA.md

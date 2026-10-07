@@ -1,9 +1,5 @@
 package fr.gouv.agora.infrastructure.consultation.repository
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import fr.gouv.agora.domain.Territoire
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.ConsultationStrapiDTO
 import fr.gouv.agora.infrastructure.consultation.dto.strapi.StrapiConsultationAVenir
@@ -17,38 +13,31 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.quality.Strictness
+import org.mockito.BDDMockito.given
+import java.time.Clock
+import java.time.Instant
 import java.time.LocalDateTime
 
-/**
- * Tests d'intégration partielle pour ConsultationStrapiCacheRepositoryImpl.
- *
- * On utilise un vrai ConcurrentMapCacheManager (pas de Redis mock) et un vrai ObjectMapper,
- * ce qui permet de vérifier le cycle complet put → get avec la vraie sérialisation/désérialisation.
- *
- * Note : avec l'ancienne implémentation (`get(key, String::class.java)`), les tests
- * "cache hit" échoueraient systématiquement car le type demandé ne correspond pas.
- * Ce test valide donc la correction du bug.
- */
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 internal class ConsultationStrapiCacheRepositoryImplTest {
+
+    @Mock
+    private lateinit var clock: Clock
 
     private lateinit var repository: ConsultationStrapiCacheRepositoryImpl
 
-    private val objectMapper = jacksonObjectMapper()
-        .registerKotlinModule()
-        .registerModule(JavaTimeModule())
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    private val now = Instant.parse("2024-06-01T12:00:00Z")
 
     @BeforeEach
     fun setUp() {
-        val cacheManager = ConcurrentMapCacheManager(
-            ConsultationStrapiCacheRepositoryImpl.ONGOING_CONSULTATIONS_CACHE_NAME,
-            ConsultationStrapiCacheRepositoryImpl.FINISHED_CONSULTATIONS_CACHE_NAME,
-        )
-        repository = ConsultationStrapiCacheRepositoryImpl(
-            shortTermCacheManager = cacheManager,
-            objectMapper = objectMapper,
-        )
+        given(clock.instant()).willReturn(now)
+        repository = ConsultationStrapiCacheRepositoryImpl(clock = clock)
     }
 
     // -------------------------------------------------------------------------
@@ -192,22 +181,22 @@ internal class ConsultationStrapiCacheRepositoryImplTest {
         }
 
         @Test
-        fun `getOngoingConsultations - when cache has data - should correctly deserialize LocalDateTime fields`() {
-            // Given
+        fun `getOngoingConsultations - when cache has data - should return exact same objects without serialization`() {
+            // Given : les objets sont stockés directement en mémoire, pas de sérialisation
             val data = listOf(consultationDto)
             repository.putOngoingConsultations(emptyList(), data)
 
             // When
             val result = repository.getOngoingConsultations(emptyList())
 
-            // Then
+            // Then : les LocalDateTime sont préservés sans problème de désérialisation
             assertThat(result).isNotNull
             assertThat(result!![0].dateDeDebut).isEqualTo(LocalDateTime.of(2024, 1, 1, 0, 0))
             assertThat(result[0].dateDeFin).isEqualTo(LocalDateTime.of(2024, 12, 31, 23, 59))
         }
 
         @Test
-        fun `getOngoingConsultations - when cache has data with nested objects - should correctly deserialize all nested fields`() {
+        fun `getOngoingConsultations - when cache has data with nested objects - should return all nested fields intact`() {
             // Given
             val data = listOf(consultationDtoAvecContenuRiche)
             repository.putOngoingConsultations(emptyList(), data)
@@ -259,6 +248,35 @@ internal class ConsultationStrapiCacheRepositoryImplTest {
             // Then
             assertThat(result).hasSize(2)
             assertThat(result!!.map { it.documentId }).containsExactlyInAnyOrder("consult-doc-1", "consult-doc-2")
+        }
+
+        @Test
+        fun `getOngoingConsultations - when TTL has expired - should return null`() {
+            // Given
+            repository.putOngoingConsultations(emptyList(), listOf(consultationDto))
+            // On avance l'horloge de 6 minutes (TTL = 5 min)
+            given(clock.instant()).willReturn(now.plusSeconds(6 * 60))
+
+            // When
+            val result = repository.getOngoingConsultations(emptyList())
+
+            // Then
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `getOngoingConsultations - when TTL has not expired - should return data`() {
+            // Given
+            repository.putOngoingConsultations(emptyList(), listOf(consultationDto))
+            // On avance l'horloge de 4 minutes (TTL = 5 min)
+            given(clock.instant()).willReturn(now.plusSeconds(4 * 60))
+
+            // When
+            val result = repository.getOngoingConsultations(emptyList())
+
+            // Then
+            assertThat(result).isNotNull
+            assertThat(result).hasSize(1)
         }
     }
 
@@ -340,7 +358,7 @@ internal class ConsultationStrapiCacheRepositoryImplTest {
         }
 
         @Test
-        fun `getFinishedConsultations - when cache has data with nested LocalDateTime - should correctly deserialize`() {
+        fun `getFinishedConsultations - when cache has data with nested objects - should return all nested fields intact`() {
             // Given
             val data = listOf(consultationDtoAvecContenuRiche)
             repository.putFinishedConsultations(emptyList(), data)
@@ -369,6 +387,33 @@ internal class ConsultationStrapiCacheRepositoryImplTest {
             // Then
             assertThat(resultAll!!.map { it.documentId }).containsExactly("consult-doc-1")
             assertThat(resultFrance!!.map { it.documentId }).containsExactly("consult-doc-2")
+        }
+
+        @Test
+        fun `getFinishedConsultations - when TTL has expired - should return null`() {
+            // Given
+            repository.putFinishedConsultations(emptyList(), listOf(consultationDto))
+            given(clock.instant()).willReturn(now.plusSeconds(6 * 60))
+
+            // When
+            val result = repository.getFinishedConsultations(emptyList())
+
+            // Then
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `getFinishedConsultations - when TTL has not expired - should return data`() {
+            // Given
+            repository.putFinishedConsultations(emptyList(), listOf(consultationDto))
+            given(clock.instant()).willReturn(now.plusSeconds(4 * 60))
+
+            // When
+            val result = repository.getFinishedConsultations(emptyList())
+
+            // Then
+            assertThat(result).isNotNull
+            assertThat(result).hasSize(1)
         }
     }
 
