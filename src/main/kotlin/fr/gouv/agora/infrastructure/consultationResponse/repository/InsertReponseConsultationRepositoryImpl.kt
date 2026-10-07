@@ -30,11 +30,7 @@ class InsertReponseConsultationRepositoryImpl(
                     domain = consultationResponse
                 )
             }.takeUnless { it.isEmpty() }?.let { dtoList ->
-                val savedConsultationResponseDTOList = databaseRepository.saveAll(dtoList)
-                cacheRepository.insertReponseConsultationList(
-                    consultationId = insertParameters.consultationId,
-                    reponseConsultationList = savedConsultationResponseDTOList.toList(),
-                )
+                databaseRepository.saveAll(dtoList)
             }
             InsertResult.INSERT_SUCCESS
         } catch (e: IllegalArgumentException) {
