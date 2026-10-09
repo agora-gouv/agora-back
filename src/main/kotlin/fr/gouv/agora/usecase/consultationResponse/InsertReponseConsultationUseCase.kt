@@ -73,6 +73,7 @@ class InsertReponseConsultationUseCase(
             consultationId = consultationId,
             userId = userId,
         )
+        consultationDetailsV2CacheRepository.evictParticipantCount(consultationId = consultationId)
         consultationResultsCacheRepository.evictConsultationResultsCache(consultationId = consultationId)
 
         val responseInsertResult = insertReponseConsultationRepository.insertConsultationResponses(

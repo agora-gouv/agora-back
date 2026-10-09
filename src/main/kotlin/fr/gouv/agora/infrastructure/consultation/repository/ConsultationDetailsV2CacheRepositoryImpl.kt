@@ -120,6 +120,12 @@ class ConsultationDetailsV2CacheRepositoryImpl(
             ?.put(consultationId, participantCount.toString())
     }
 
+    override fun evictParticipantCount(consultationId: String) {
+        shortTermCacheManager
+            .getCache(PARTICIPANT_COUNT_CACHE_NAME)
+            ?.evict(consultationId)
+    }
+
     override fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean? {
         return try {
             cacheManager.getCache(HAS_ANSWERED_CACHE_NAME)?.get("$consultationId/$userId")?.get()?.let { it == true }

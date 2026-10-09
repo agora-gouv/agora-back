@@ -64,11 +64,12 @@ class ConsultationDetailsUpdateV2UseCase(
     }
 
     private fun getParticipantCount(consultationId: String): Int {
-        return cacheRepository.getParticipantCount(consultationId) ?: userAnsweredRepository.getParticipantCount(
-            consultationId
-        ).also { participantCount ->
-            cacheRepository.initParticipantCount(consultationId, participantCount)
-        }
+        val cached = cacheRepository.getParticipantCount(consultationId)
+        if (cached != null) return cached
+
+        val participantCount = userAnsweredRepository.getParticipantCount(consultationId)
+        cacheRepository.initParticipantCount(consultationId, participantCount)
+        return participantCount
     }
 
     private fun getUserFeedback(consultationUpdate: ConsultationUpdateInfoV2): Boolean? {
