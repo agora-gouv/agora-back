@@ -19,6 +19,7 @@ interface ConsultationDetailsV2CacheRepository {
 
     fun getParticipantCount(consultationId: String): Int?
     fun initParticipantCount(consultationId: String, participantCount: Int)
+    fun evictParticipantCount(consultationId: String)
 
     fun hasAnsweredConsultation(consultationId: String, userId: String): Boolean?
     fun initHasAnsweredConsultation(consultationId: String, userId: String, hasAnswered: Boolean)

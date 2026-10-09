@@ -111,10 +111,11 @@ class ConsultationDetailsV2UseCase(
 
     private fun getParticipantCount(consultationWithInfo: ConsultationDetailsV2): Int {
         val consultationId = consultationWithInfo.getConsultationId()
-        val participantCount = cacheRepository.getParticipantCount(consultationId)
-            ?: userRepository.getParticipantCount(consultationId)
-        cacheRepository.initParticipantCount(consultationId, participantCount)
+        val cached = cacheRepository.getParticipantCount(consultationId)
+        if (cached != null) return cached
 
+        val participantCount = userRepository.getParticipantCount(consultationId)
+        cacheRepository.initParticipantCount(consultationId, participantCount)
         return participantCount
     }
 }
