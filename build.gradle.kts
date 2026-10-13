@@ -58,6 +58,8 @@ tasks.withType<Test> {
             excludeTags("e2e")
         }
     }
+    // Secret JWT (HS256) utilisé par les tests de génération/parsing de tokens.
+    environment("JWT_SECRET", "YWdvcmEtYmFjay10ZXN0LXNlY3JldC0wMTIzNDU2Nzg5YWJjZGVm")
     if (project.hasProperty("e2e")) {
         testLogging {
             showStandardStreams = true

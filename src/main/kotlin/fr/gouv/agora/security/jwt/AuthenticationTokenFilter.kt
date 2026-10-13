@@ -32,9 +32,8 @@ class AuthenticationTokenFilter(
     ) {
         extractJwt(request)?.let { jwtToken ->
             try {
-                if (JwtTokenUtils.isCorrectSignatureAndTokenNotExpired(jwtToken)) {
-                    loginWithUserId(JwtTokenUtils.extractUserId(jwtToken))
-                }
+                val claims = JwtTokenUtils.parseClaims(jwtToken)
+                loginWithUserId(claims.subject)
             } catch (e: JwtException) {
                 loggerSl4j.error("JwtException: $e")
             }
