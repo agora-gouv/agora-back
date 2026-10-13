@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
@@ -17,7 +18,8 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.StringRedisSerializer
@@ -31,26 +33,60 @@ class CacheConfig {
 
     companion object {
         const val DEFAULT_REDIS_USER = "default"
+
+        // Le pool par défaut de Jedis (8 connexions, attente infinie) saturait face aux 200 threads Tomcat.
+        // On bascule sur Lettuce avec un pool borné et un temps d'attente fini.
+        private const val DEFAULT_POOL_MAX_TOTAL = 32
+        private const val DEFAULT_POOL_MAX_IDLE = 16
+        private const val DEFAULT_POOL_MIN_IDLE = 4
+        private const val DEFAULT_POOL_MAX_WAIT_MS = 500L
+        private const val DEFAULT_COMMAND_TIMEOUT_MS = 1_000L
+        private const val DEFAULT_SHUTDOWN_TIMEOUT_MS = 100L
     }
 
     @Bean
-    fun getConnectionFactory(): JedisConnectionFactory {
-        val config = RedisStandaloneConfiguration()
+    fun getConnectionFactory(): LettuceConnectionFactory {
+        val standaloneConfig = RedisStandaloneConfiguration()
         System.getenv("REDIS_URL")?.let { redisUrl ->
             try {
                 val redisURI = URI.create(redisUrl)
                 val userInfo = redisURI.userInfo.split(":")
-                config.username = userInfo[0].takeUnless { it.isEmpty() } ?: DEFAULT_REDIS_USER
-                config.setPassword(userInfo[1])
-                config.hostName = redisURI.host
-                config.port = redisURI.port
+                standaloneConfig.username = userInfo[0].takeUnless { it.isEmpty() } ?: DEFAULT_REDIS_USER
+                standaloneConfig.setPassword(userInfo[1])
+                standaloneConfig.hostName = redisURI.host
+                standaloneConfig.port = redisURI.port
             } catch (e: IllegalArgumentException) {
                 logger.error("Invalid Redis URL: $redisUrl")
             }
         }
 
-        return JedisConnectionFactory(config)
+        return LettuceConnectionFactory(standaloneConfig, lettuceClientConfiguration())
     }
+
+    internal fun lettuceClientConfiguration(): LettucePoolingClientConfiguration {
+        return LettucePoolingClientConfiguration.builder()
+            .poolConfig(lettucePoolConfig())
+            .commandTimeout(Duration.ofMillis(envLong("REDIS_COMMAND_TIMEOUT_MS", DEFAULT_COMMAND_TIMEOUT_MS)))
+            .shutdownTimeout(Duration.ofMillis(envLong("REDIS_SHUTDOWN_TIMEOUT_MS", DEFAULT_SHUTDOWN_TIMEOUT_MS)))
+            .build()
+    }
+
+    internal fun lettucePoolConfig(): GenericObjectPoolConfig<Any> {
+        return GenericObjectPoolConfig<Any>().apply {
+            maxTotal = envInt("REDIS_POOL_MAX_TOTAL", DEFAULT_POOL_MAX_TOTAL)
+            maxIdle = envInt("REDIS_POOL_MAX_IDLE", DEFAULT_POOL_MAX_IDLE)
+            minIdle = envInt("REDIS_POOL_MIN_IDLE", DEFAULT_POOL_MIN_IDLE)
+            setMaxWait(Duration.ofMillis(envLong("REDIS_POOL_MAX_WAIT_MS", DEFAULT_POOL_MAX_WAIT_MS)))
+            testOnBorrow = true
+            testWhileIdle = true
+            setTimeBetweenEvictionRuns(Duration.ofSeconds(30))
+            setMinEvictableIdleTime(Duration.ofMinutes(5))
+        }
+    }
+
+    private fun envInt(name: String, default: Int): Int = System.getenv(name)?.toIntOrNull() ?: default
+
+    private fun envLong(name: String, default: Long): Long = System.getenv(name)?.toLongOrNull() ?: default
 
     @Bean
     @Primary

@@ -31,7 +31,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
-    implementation("redis.clients:jedis")
+    implementation("org.apache.commons:commons-pool2")
     implementation("com.google.firebase:firebase-admin:9.3.0")
     implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20220608.1")
     implementation("org.shredzone.acme4j:acme4j-client:2.16")
