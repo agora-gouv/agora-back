@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 // et de la lib React https://github.com/strapi/blocks-react-renderer/
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    include = JsonTypeInfo.As.PROPERTY,
     property = "type",
     visible = true,
     defaultImpl = StrapiRichUnknownNode::class
