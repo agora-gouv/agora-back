@@ -24,7 +24,6 @@ import fr.gouv.agora.usecase.consultationResults.repository.ConsultationResultsC
 import fr.gouv.agora.usecase.question.repository.QuestionRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -172,7 +171,7 @@ internal class ConsultationResultsUseCaseTest {
                     QuestionInputData(
                         questionId = "question1",
                         choices = listOf(
-                            ChoiceInputData(choiceId = "q1c1", responseCount = 1, expectedRatio = 1.0),
+                            ChoiceInputData(choiceId = "q1c1", responseCount = 1, expectedRatio = 0.5),
                         ),
                         notApplicableCount = 1,
                         expectedSeenRatio = 0.5,
@@ -186,8 +185,8 @@ internal class ConsultationResultsUseCaseTest {
                     QuestionInputData(
                         questionId = "question1",
                         choices = listOf(
-                            ChoiceInputData(choiceId = "q1c1", responseCount = 8, expectedRatio = 1.0),
-                            ChoiceInputData(choiceId = "q1c2", responseCount = 4, expectedRatio = 0.5),
+                            ChoiceInputData(choiceId = "q1c1", responseCount = 8, expectedRatio = 0.8),
+                            ChoiceInputData(choiceId = "q1c2", responseCount = 4, expectedRatio = 0.4),
                         ),
                         notApplicableCount = 2,
                         expectedSeenRatio = 0.8,
@@ -370,7 +369,6 @@ internal class ConsultationResultsUseCaseTest {
         }
 
         @Test
-        @Disabled("TODO 20 mai 2025 : désactiver les seenRatio jusqu'au fix des formulaires front qui n'envoient pas les questions vues mais pas répondues")
         fun `getConsultationResults - when getConsultationQuestions return questionWithChoices with choices - should return result with choices with ratio 0`() {
             // Given
             val choixPossible = mock(ChoixPossibleDefault::class.java)
@@ -419,7 +417,6 @@ internal class ConsultationResultsUseCaseTest {
 
     }
 
-    @Disabled("TODO 20 mai 2025 : désactiver les seenRatio jusqu'au fix des formulaires front qui n'envoient pas les questions vues mais pas répondues")
     @ParameterizedTest(name = "getConsultationResults / consultationResponseRepository - {0} - should return expected")
     @MethodSource("getConsultationResultsParameters")
     fun `getConsultationResults - when given inputs returned by consultationResponseRepository - should return expected`(
@@ -478,7 +475,6 @@ internal class ConsultationResultsUseCaseTest {
         then(cacheRepository).shouldHaveNoMoreInteractions()
     }
 
-    @Disabled("TODO 20 mai 2025 : désactiver les seenRatio jusqu'au fix des formulaires front qui n'envoient pas les questions vues mais pas répondues")
     @ParameterizedTest(name = "getConsultationResults / consultationResultAggregatedRepository - {0} - should return expected")
     @MethodSource("getConsultationResultsParameters")
     fun `getConsultationResults - when given inputs returned by consultationResultAggregatedRepository - should return expected`(

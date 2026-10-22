@@ -16,10 +16,17 @@ import java.util.*
 interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultationDTO, UUID> {
 
     @Query(
-        value = """SELECT question_id as questionId, choice_id as choiceId, count(*) as responseCount
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE consultation_id = :consultationId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT question_id as questionId, choice_id as choiceId, count(*) as responseCount
             FROM reponses_consultation
             WHERE consultation_id = :consultationId
             AND choice_id IS NOT NULL
+            AND participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (question_id, choice_id)
             """,
         nativeQuery = true,
@@ -139,11 +146,18 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationConsultationFrequency(@Param("consultationId") consultationId: String): List<DemographicInfoCountDTO>
 
     @Query(
-        value = """SELECT choice_id as choiceId, gender as key, count(DISTINCT users_profile.user_id) AS count
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE question_id = :questionId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT choice_id as choiceId, gender as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE question_id = :questionId
             AND choice_id IS NOT NULL
+            AND reponses_consultation.participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (choice_id, gender)
             """,
         nativeQuery = true,
@@ -151,11 +165,18 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationGenderByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
-        value = """SELECT choice_id as choiceId, year_of_birth as key, count(DISTINCT users_profile.user_id) AS count
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE question_id = :questionId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT choice_id as choiceId, year_of_birth as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE question_id = :questionId
             AND choice_id IS NOT NULL
+            AND reponses_consultation.participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (choice_id, year_of_birth)
             """,
         nativeQuery = true,
@@ -163,11 +184,18 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationYearOfBirthByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
-        value = """SELECT choice_id as choiceId, department as key, count(DISTINCT users_profile.user_id) AS count
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE question_id = :questionId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT choice_id as choiceId, department as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE question_id = :questionId
             AND choice_id IS NOT NULL
+            AND reponses_consultation.participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (choice_id, department)
             """,
         nativeQuery = true,
@@ -175,11 +203,18 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationDepartmentByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
-        value = """SELECT choice_id as choiceId, city_type as key, count(DISTINCT users_profile.user_id) AS count
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE question_id = :questionId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT choice_id as choiceId, city_type as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE question_id = :questionId
             AND choice_id IS NOT NULL
+            AND reponses_consultation.participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (choice_id, city_type)
             """,
         nativeQuery = true,
@@ -187,11 +222,18 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationCityTypeByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
-        value = """SELECT choice_id as choiceId, job_category as key, count(DISTINCT users_profile.user_id) AS count
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE question_id = :questionId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT choice_id as choiceId, job_category as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE question_id = :questionId
             AND choice_id IS NOT NULL
+            AND reponses_consultation.participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (choice_id, job_category)
             """,
         nativeQuery = true,
@@ -199,11 +241,18 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationJobCategoryByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
-        value = """SELECT choice_id as choiceId, vote_frequency as key, count(DISTINCT users_profile.user_id) AS count
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE question_id = :questionId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT choice_id as choiceId, vote_frequency as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE question_id = :questionId
             AND choice_id IS NOT NULL
+            AND reponses_consultation.participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (choice_id, vote_frequency)
             """,
         nativeQuery = true,
@@ -211,11 +260,18 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationVoteFrequencyByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
-        value = """SELECT choice_id as choiceId, public_meeting_frequency as key, count(DISTINCT users_profile.user_id) AS count
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE question_id = :questionId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT choice_id as choiceId, public_meeting_frequency as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE question_id = :questionId
             AND choice_id IS NOT NULL
+            AND reponses_consultation.participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (choice_id, public_meeting_frequency)
             """,
         nativeQuery = true,
@@ -223,11 +279,18 @@ interface ReponseConsultationDatabaseRepository : JpaRepository<ReponseConsultat
     fun getConsultationPublicMeetingFrequencyByChoice(@Param("questionId") questionId: String): List<DemographicInfoCountByChoiceDTO>
 
     @Query(
-        value = """SELECT choice_id as choiceId, consultation_frequency as key, count(DISTINCT users_profile.user_id) AS count
+        value = """WITH latest_participation AS (
+                SELECT DISTINCT ON (user_id) participation_id
+                FROM reponses_consultation
+                WHERE question_id = :questionId
+                ORDER BY user_id, participation_date DESC
+            )
+            SELECT choice_id as choiceId, consultation_frequency as key, count(DISTINCT users_profile.user_id) AS count
             FROM reponses_consultation LEFT JOIN users_profile
             ON reponses_consultation.user_id = users_profile.user_id
             WHERE question_id = :questionId
             AND choice_id IS NOT NULL
+            AND reponses_consultation.participation_id IN (SELECT participation_id FROM latest_participation)
             GROUP BY (choice_id, consultation_frequency)
             """,
         nativeQuery = true,

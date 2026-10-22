@@ -90,27 +90,26 @@ class ConsultationResultsUseCase(
                 .filter { it.questionId == question.id && it.choiceId == UuidUtils.NOT_APPLICABLE_CHOICE_UUID }
                 .sumOf { it.responseCount }
         } else 0
-        val participantCountWithoutNotApplicable = participantCount - notApplicableCount
 
-        // TODO 20 mai 2025 : désactiver les seenRatio jusqu'au fix des formulaires front qui n'envoient
-        // pas les questions vues mais pas répondues
-        // + remettre les tests correspondants (chercher "TODO 20 mai 2025")
-        // ancien code :
-        // if (participantCount > 0) {
-        //     1 - (notApplicableCount.toDouble() / participantCount)
-        // } else 0.0,
-        val disableSeenRatio = 1.0
+        val seenRatio = if (participantCount > 0) {
+            1 - (notApplicableCount.toDouble() / participantCount)
+        } else 0.0
 
         return QuestionResults(
             question = question,
-            seenRatio = disableSeenRatio,
+            seenRatio = seenRatio,
             responses = question.choixPossibleList.map { choix ->
+                val choiceCount = if (choix.id == UuidUtils.SKIP_QUESTION_CHOICE_UUID) {
+                    notApplicableCount
+                } else {
+                    consultationResponseList
+                        .filter { it.questionId == question.id && it.choiceId == choix.id }
+                        .sumOf { it.responseCount }
+                }
                 buildChoiceResults(
                     choix = choix,
-                    participantCount = participantCountWithoutNotApplicable,
-                    choiceCount = consultationResponseList
-                        .filter { it.questionId == question.id && it.choiceId == choix.id }
-                        .sumOf { it.responseCount },
+                    participantCount = participantCount,
+                    choiceCount = choiceCount,
                 )
             }
         )
