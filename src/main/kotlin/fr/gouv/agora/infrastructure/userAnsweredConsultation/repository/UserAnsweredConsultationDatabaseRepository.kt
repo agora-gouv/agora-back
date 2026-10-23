@@ -11,7 +11,7 @@ import java.util.*
 interface UserAnsweredConsultationDatabaseRepository : JpaRepository<UserAnsweredConsultationDTO, UUID> {
 
     @Query(
-        value = "SELECT count(DISTINCT user_id) FROM user_answered_consultation WHERE consultation_id = :consultationId",
+        value = "SELECT count(DISTINCT user_id) FROM reponses_consultation WHERE consultation_id = :consultationId",
         nativeQuery = true
     )
     fun getParticipantCount(@Param("consultationId") consultationId: String): Int

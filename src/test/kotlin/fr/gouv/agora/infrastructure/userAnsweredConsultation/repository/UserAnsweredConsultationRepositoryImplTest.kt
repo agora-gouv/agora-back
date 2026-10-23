@@ -26,6 +26,24 @@ internal class UserAnsweredConsultationRepositoryImplTest {
     private lateinit var mapper: UserAnsweredConsultationMapper
 
     @Nested
+    inner class GetParticipantCountTestCases {
+
+        @Test
+        fun `getParticipantCount - should return count from database`() {
+            // Given
+            val consultationId = UUID.randomUUID().toString()
+            given(databaseRepository.getParticipantCount(consultationId = consultationId)).willReturn(42)
+
+            // When
+            val result = repository.getParticipantCount(consultationId = consultationId)
+
+            // Then
+            assertThat(result).isEqualTo(42)
+            then(databaseRepository).should(only()).getParticipantCount(consultationId = consultationId)
+        }
+    }
+
+    @Nested
     inner class HasAnsweredConsultationTestCases {
 
         @Test
