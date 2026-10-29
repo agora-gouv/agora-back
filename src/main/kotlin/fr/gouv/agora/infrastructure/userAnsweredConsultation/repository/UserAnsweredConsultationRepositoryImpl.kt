@@ -4,16 +4,30 @@ import fr.gouv.agora.domain.UserAnsweredConsultation
 import fr.gouv.agora.infrastructure.utils.UuidUtils.toUuidOrNull
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationRepository
 import fr.gouv.agora.usecase.consultationResponse.repository.UserAnsweredConsultationResult
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class UserAnsweredConsultationRepositoryImpl(
     private val databaseRepository: UserAnsweredConsultationDatabaseRepository,
     private val mapper: UserAnsweredConsultationMapper,
+    @Value("\${CONSULTATION_PARTICIPANT_COUNT_OVERRIDES:}") private val participantCountOverridesRaw: String,
 ) : UserAnsweredConsultationRepository {
 
+    private val participantCountOverrides: Map<String, Int> by lazy {
+        participantCountOverridesRaw
+            .split(",")
+            .filter { it.contains(":") }
+            .associate { entry ->
+                val (id, count) = entry.trim().split(":")
+                id.trim() to (count.trim().toIntOrNull() ?: 0)
+            }
+            .filter { it.value > 0 }
+    }
+
     override fun getParticipantCount(consultationId: String): Int {
-        return databaseRepository.getParticipantCount(consultationId = consultationId)
+        return participantCountOverrides[consultationId]
+            ?: databaseRepository.getParticipantCount(consultationId = consultationId)
     }
 
     override fun getAnsweredConsultationIds(userId: String): List<String> {

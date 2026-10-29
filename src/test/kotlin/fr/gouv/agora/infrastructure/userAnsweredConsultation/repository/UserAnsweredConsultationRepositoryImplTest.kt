@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
@@ -16,21 +15,27 @@ import java.util.*
 @ExtendWith(MockitoExtension::class)
 internal class UserAnsweredConsultationRepositoryImplTest {
 
-    @InjectMocks
-    private lateinit var repository: UserAnsweredConsultationRepositoryImpl
-
     @Mock
     private lateinit var databaseRepository: UserAnsweredConsultationDatabaseRepository
 
     @Mock
     private lateinit var mapper: UserAnsweredConsultationMapper
 
+    private val repository get() = buildRepository()
+
+    private fun buildRepository(overridesRaw: String = "") = UserAnsweredConsultationRepositoryImpl(
+        databaseRepository = databaseRepository,
+        mapper = mapper,
+        participantCountOverridesRaw = overridesRaw,
+    )
+
     @Nested
     inner class GetParticipantCountTestCases {
 
         @Test
-        fun `getParticipantCount - should return count from database`() {
+        fun `getParticipantCount - when no override configured - should return count from user_answered_consultation`() {
             // Given
+            val repository = buildRepository(overridesRaw = "")
             val consultationId = UUID.randomUUID().toString()
             given(databaseRepository.getParticipantCount(consultationId = consultationId)).willReturn(42)
 
@@ -40,6 +45,51 @@ internal class UserAnsweredConsultationRepositoryImplTest {
             // Then
             assertThat(result).isEqualTo(42)
             then(databaseRepository).should(only()).getParticipantCount(consultationId = consultationId)
+        }
+
+        @Test
+        fun `getParticipantCount - when override configured for this consultationId - should return override value without calling database`() {
+            // Given
+            val consultationId = UUID.randomUUID().toString()
+            val repository = buildRepository(overridesRaw = "$consultationId:15248")
+
+            // When
+            val result = repository.getParticipantCount(consultationId = consultationId)
+
+            // Then
+            assertThat(result).isEqualTo(15248)
+            then(databaseRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `getParticipantCount - when override configured for another consultationId - should return count from database`() {
+            // Given
+            val consultationId = UUID.randomUUID().toString()
+            val otherConsultationId = UUID.randomUUID().toString()
+            val repository = buildRepository(overridesRaw = "$otherConsultationId:9999")
+            given(databaseRepository.getParticipantCount(consultationId = consultationId)).willReturn(42)
+
+            // When
+            val result = repository.getParticipantCount(consultationId = consultationId)
+
+            // Then
+            assertThat(result).isEqualTo(42)
+            then(databaseRepository).should(only()).getParticipantCount(consultationId = consultationId)
+        }
+
+        @Test
+        fun `getParticipantCount - when multiple overrides configured - should return matching override value`() {
+            // Given
+            val consultationId1 = UUID.randomUUID().toString()
+            val consultationId2 = UUID.randomUUID().toString()
+            val repository = buildRepository(overridesRaw = "$consultationId1:1000,$consultationId2:2000")
+
+            // When
+            val result = repository.getParticipantCount(consultationId = consultationId2)
+
+            // Then
+            assertThat(result).isEqualTo(2000)
+            then(databaseRepository).shouldHaveNoInteractions()
         }
     }
 
